@@ -24,6 +24,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import { DropdownModule } from 'primeng/dropdown';
+import { EmailvalidationsService } from '../../../services/email-validation/emailvalidations.service';
 
 interface PhoneCode {
   code: string;
@@ -93,7 +94,8 @@ export class AddDestributionCenterComponent implements OnInit {
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private distributionService: DestributionService
+    private distributionService: DestributionService,
+    private emailValidationService: EmailvalidationsService
   ) { }
 
   ngOnInit() {
@@ -106,97 +108,117 @@ export class AddDestributionCenterComponent implements OnInit {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
   private initializeForm() {
-    this.distributionForm = this.fb.group(
-      {
-        name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
-        company: ['', Validators.required],
-        contact1: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
-        contact1Code: ['+94', Validators.required],
-        contact2: ['', [Validators.pattern(/^\d{9}$/)]],
-        contact2Code: ['+94'],
-        latitude: [
-          '',
-          [
-            Validators.required,
-            this.numericDecimalValidator
-          ],
+  this.distributionForm = this.fb.group(
+    {
+      name: ['', [Validators.required, this.englishLettersOnlyValidator], [this.nameExistsValidator()]],
+      company: ['', Validators.required],
+      contact1: ['', [Validators.required, this.mobileNumberValidator]], // Updated validator
+      contact1Code: ['+94', Validators.required], // Fixed property name
+      contact2: ['', [this.mobileNumberValidator]], // Updated validator - optional field
+      contact2Code: ['+94'], // Fixed property name
+      latitude: [
+        '',
+        [
+          Validators.required,
+          this.latitudeRangeValidator
         ],
-        longitude: [
-          '',
-          [
-            Validators.required,
-            this.numericDecimalValidator
-          ],
+      ],
+      longitude: [
+        '',
+        [
+          Validators.required,
+          this.longitudeRangeValidator
         ],
-        email: ['', [Validators.required, Validators.email]],
-        country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
-        province: ['', Validators.required],
-        district: ['', Validators.required],
-        city: ['', Validators.required],
-        regCode: ['', Validators.required], // Remove disabled: true
-      },
-      { validator: this.contactNumbersMatchValidator }
-    );
+      ],
+      email: ['', [Validators.required, this.customEmailValidator.bind(this)]],
+      country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
+      province: ['', Validators.required],
+      district: ['', Validators.required],
+      city: ['', Validators.required],
+      regCode: ['', Validators.required],
+    },
+    { validators: [this.contactNumbersMatchValidator] } // Updated to use validators array
+  );
 
-    // Watch province changes to update districts
-    this.distributionForm
-      .get('province')
-      ?.valueChanges.subscribe((province) => {
-        if (!this.updatingDropdowns && province) {
+  // Watch province changes to update districts
+  this.distributionForm
+    .get('province')
+    ?.valueChanges.subscribe((province) => {
+      if (!this.updatingDropdowns && province) {
+        this.updatingDropdowns = true;
+        this.distributionForm.get('district')?.setValue('');
+        this.updatingDropdowns = false;
+      }
+    });
+
+  // Watch district changes to update province
+  this.distributionForm
+    .get('district')
+    ?.valueChanges.subscribe((district) => {
+      if (!this.updatingDropdowns && district) {
+        const matchingProvince = this.findProvinceByDistrict(district);
+        if (matchingProvince) {
           this.updatingDropdowns = true;
-          this.distributionForm.get('district')?.setValue('');
+          this.distributionForm.get('province')?.setValue(matchingProvince);
           this.updatingDropdowns = false;
         }
-      });
+      }
+    });
 
-    // Watch district changes to update province
-    this.distributionForm
-      .get('district')
-      ?.valueChanges.subscribe((district) => {
-        if (!this.updatingDropdowns && district) {
-          const matchingProvince = this.findProvinceByDistrict(district);
-          if (matchingProvince) {
-            this.updatingDropdowns = true;
-            this.distributionForm.get('province')?.setValue(matchingProvince);
-            this.updatingDropdowns = false;
-          }
+  // Watch contact number changes to validate duplicates
+  this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact1Code')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
+    this.distributionForm.updateValueAndValidity();
+  });
+
+  // Optimize name validation with debounce
+  this.distributionForm
+    .get('name')
+    ?.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap((value) => {
+        if (value && value.length >= 3) {
+          return this.distributionService.checkDistributionCentreNameExists(
+            value
+          );
         }
-      });
+        return of({ exists: false });
+      })
+    )
+    .subscribe();
+}
 
-    // Watch contact number changes to validate duplicates
-    this.distributionForm.get('contact1')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact1Code')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact2')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    this.distributionForm.get('contact2Code')?.valueChanges.subscribe(() => {
-      this.distributionForm.updateValueAndValidity();
-    });
-
-    // Optimize name validation with debounce
-    this.distributionForm
-      .get('name')
-      ?.valueChanges.pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        switchMap((value) => {
-          if (value && value.length >= 3) {
-            return this.distributionService.checkDistributionCentreNameExists(
-              value
-            );
-          }
-          return of({ exists: false });
-        })
-      )
-      .subscribe();
+private mobileNumberValidator(control: AbstractControl): { [key: string]: any } | null {
+  if (!control.value) {
+    return null; // Let required validator handle empty values for required fields
   }
+  
+  const value = control.value.toString().trim();
+  
+  // Check if it's exactly 9 digits
+  if (!/^\d{9}$/.test(value)) {
+    return { invalidMobileFormat: true };
+  }
+  
+  // Check if it starts with 7
+  if (!value.startsWith('7')) {
+    return { mustStartWith7: true };
+  }
+  
+  return null;
+}
 
   private englishLettersOnlyValidator(control: AbstractControl) {
     if (!control.value) return null;
@@ -230,44 +252,50 @@ export class AddDestributionCenterComponent implements OnInit {
     };
   }
 
-  private contactNumbersMatchValidator(formGroup: FormGroup) {
-    const contact1Control = formGroup.get('contact1');
-    const contact1CodeControl = formGroup.get('contact1Code');
-    const contact2Control = formGroup.get('contact2');
-    const contact2CodeControl = formGroup.get('contact2Code');
+  private contactNumbersMatchValidator(formGroup: AbstractControl): { [key: string]: any } | null {
+  const contact1Control = formGroup.get('contact1');
+  const contact1CodeControl = formGroup.get('contact1Code');
+  const contact2Control = formGroup.get('contact2');
+  const contact2CodeControl = formGroup.get('contact2Code');
 
-    if (
-      !contact1Control ||
-      !contact2Control ||
-      !contact1CodeControl ||
-      !contact2CodeControl
-    ) {
-      return null;
-    }
+  if (
+    !contact1Control ||
+    !contact2Control ||
+    !contact1CodeControl ||
+    !contact2CodeControl
+  ) {
+    return null;
+  }
 
-    const contact1 = contact1Control.value;
-    const contact2 = contact2Control.value;
-    const contact1Code = contact1CodeControl.value;
-    const contact2Code = contact2CodeControl.value;
+  const contact1 = contact1Control.value;
+  const contact2 = contact2Control.value;
+  const contact1Code = contact1CodeControl.value;
+  const contact2Code = contact2CodeControl.value;
 
-    if (
-      contact1 &&
-      contact2 &&
-      contact1 === contact2 &&
-      contact1Code === contact2Code
-    ) {
-      contact2Control.setErrors({ sameContactNumbers: true });
-      return { sameContactNumbers: true };
+  // Only validate if both numbers are provided
+  if (contact1 && contact2 && contact1.trim() !== '' && contact2.trim() !== '') {
+    // Check if both number and country code are the same
+    if (contact1 === contact2 && contact1Code === contact2Code) {
+      // Set error on contact2 field specifically
+      if (contact2Control.errors) {
+        contact2Control.errors['duplicateContactNumbers'] = true;
+      } else {
+        contact2Control.setErrors({ duplicateContactNumbers: true });
+      }
+      return { duplicateContactNumbers: true };
     } else {
-      if (contact2Control.errors?.['sameContactNumbers']) {
-        delete contact2Control.errors['sameContactNumbers'];
+      // Clear the duplicate error if numbers are different
+      if (contact2Control.errors?.['duplicateContactNumbers']) {
+        delete contact2Control.errors['duplicateContactNumbers'];
         if (Object.keys(contact2Control.errors).length === 0) {
           contact2Control.setErrors(null);
         }
       }
-      return null;
     }
   }
+  
+  return null;
+}
 
 
 
@@ -289,6 +317,14 @@ export class AddDestributionCenterComponent implements OnInit {
     }
   }
 
+  onKeyDown(event: KeyboardEvent, fieldType: string) {
+  // Prevent space bar for coordinate fields
+  if (fieldType === 'coordinates' && event.key === ' ') {
+    event.preventDefault();
+  }
+  
+  // You can add other key restrictions here if needed
+}
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.distributionForm.get(fieldName);
@@ -299,135 +335,193 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   getFieldError(fieldName: string): string {
-    const field = this.distributionForm.get(fieldName);
+  const field = this.distributionForm.get(fieldName);
 
-    if (!field?.errors) return '';
+  if (!field?.errors) return '';
 
-    if (field.errors['required']) {
-      return `${this.getFieldLabel(fieldName)} is required`;
-    }
-    if (field.errors['email']) {
-      return 'Please enter a valid email in the format: example@domain.com';
-    }
-    if (field.errors['pattern']) {
-      if (fieldName.includes('contact')) {
-        return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
-      }
-    }
-    if (field.errors['numericDecimal']) {
-      return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
-    }
-    if (field.errors['englishLettersOnly']) {
-      return 'Centre Name should contain only English letters and spaces';
-    }
-    if (field.errors['sameContactNumbers']) {
-      return 'Contact Number 02 must be different from Contact Number 01';
-    }
-    if (field.errors['nameExists']) {
-      return 'Distribution Centre Name already exists';
-    }
-
-    return '';
+  if (field.errors['required']) {
+    return `${this.getFieldLabel(fieldName)} is required`;
   }
+  if (field.errors['email'] || field.errors['customEmail']) {
+    return field.errors['customEmail'] || 'Please enter a valid email';
+  }
+  if (field.errors['invalidMobileFormat']) {
+    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+  }
+  if (field.errors['mustStartWith7']) {
+    return 'Mobile number must start with 7 (format: +947XXXXXXXX)';
+  }
+  if (field.errors['duplicateContactNumbers']) {
+    return 'Contact Number - 1 and Contact Number - 2 cannot be the same';
+  }
+  if (field.errors['pattern']) {
+    if (fieldName.includes('contact')) {
+      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+    }
+  }
+  if (field.errors['numericDecimal']) {
+    return `${this.getFieldLabel(fieldName)} must be a valid number (e.g., 6.9271 or -79.8612)`;
+  }
+  if (field.errors['sameContactNumbers']) {
+    return 'Contact Number - 1 and Contact Number - 2 cannot be the same';
+  }
+  if (field.errors['nameExists']) {
+    return 'Distribution Centre Name already exists';
+  }
+  if (field.errors['latitudeRange']) {
+    return 'Latitude must be between -90 and 90';
+  }
+  if (field.errors['longitudeRange']) {
+    return 'Longitude must be between -180 and 180';
+  }
+
+  return '';
+}
 
   onInputChange(event: any, fieldType: string) {
-    const target = event.target as HTMLInputElement;
-    let value = target.value;
-    let shouldUpdate = true;
+  const target = event.target as HTMLInputElement;
+  let value = target.value;
+  let shouldUpdate = true;
 
-    switch (fieldType) {
-      case 'text':
-        // For text fields, prevent leading spaces
-        if (value.length > 0 && value.startsWith(' ')) {
-          value = value.trimStart();
-          target.value = value;
+  switch (fieldType) {
+    case 'text':
+      // For text fields, prevent leading spaces
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      break;
+    case 'email':
+      // For email fields, trim leading spaces
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      break;
+    case 'centreName':
+      // For centre name, prevent leading spaces and ensure first letter is capital
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      // Capitalize first letter in real-time
+      if (value.length > 0) {
+        const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+        if (capitalizedValue !== value) {
+          target.value = capitalizedValue;
+          value = capitalizedValue;
         }
-        break;
-      case 'email':
-        // For email fields, trim leading spaces
-        if (value.length > 0 && value.startsWith(' ')) {
-          value = value.trimStart();
-          target.value = value;
-        }
-        break;
-      case 'centreName':
-        // For centre name, prevent leading spaces and ensure first letter is capital
-        if (value.length > 0 && value.startsWith(' ')) {
-          value = value.trimStart();
-          target.value = value;
-        }
-        // Capitalize first letter in real-time
-        if (value.length > 0) {
-          const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
-          if (capitalizedValue !== value) {
-            target.value = capitalizedValue;
-            value = capitalizedValue;
-          }
-        }
-        break;
-      case 'phone':
-        // For phone numbers, allow only digits
-        const originalValue = value;
-        value = value.replace(/[^0-9]/g, '');
-        if (originalValue !== value) {
-          target.value = value;
-        }
-        break;
-      case 'coordinates':
-        // For latitude/longitude, allow numbers, dots, and minus signs
-        const coordOriginalValue = value;
-        value = value.replace(/[^0-9.-]/g, '');
-        if (coordOriginalValue !== value) {
-          target.value = value;
-        }
-        break;
-    }
+      }
+      break;
 
-    // Mark field as touched to trigger validation display
-    const fieldName = target.getAttribute('formControlName');
-    if (fieldName) {
-      this.distributionForm.get(fieldName)?.markAsTouched();
-    }
+      case 'city':
+      // For city field, prevent leading spaces and ensure first letter is capital
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      // Capitalize first letter in real-time
+      if (value.length > 0) {
+        const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+        if (capitalizedValue !== value) {
+          target.value = capitalizedValue;
+          value = capitalizedValue;
+        }
+      }
+      break;
+    case 'phone':
+      // For phone numbers, allow only digits and enforce starting with 7
+      const originalValue = value;
+      value = value.replace(/[^0-9]/g, '');
+      
+      // Limit to 9 digits max
+      if (value.length > 9) {
+        value = value.substring(0, 9);
+      }
+      
+      // If user tries to enter something other than 7 as first digit, reset to 7
+      if (value.length > 0 && !value.startsWith('7')) {
+        // If they're typing the first digit and it's not 7, replace with 7
+        if (value.length === 1) {
+          value = '7';
+        } else {
+          // If they're editing and first digit is not 7, keep only digits starting from position 1
+          // but ensure first digit is 7
+          value = '7' + value.substring(1);
+        }
+      }
+      
+      if (originalValue !== value) {
+        target.value = value;
+      }
+      break;
+    case 'coordinates':
+      // For latitude/longitude, allow numbers, dots, and minus signs
+      const coordOriginalValue = value;
+      value = value.replace(/[^0-9.-]/g, '');
+      if (coordOriginalValue !== value) {
+        target.value = value;
+      }
+      break;
+  }
 
-    // Update reg code in real-time when city changes
-    if (fieldName === 'city') {
-      setTimeout(() => this.updateRegCode(), 0);
+  // Mark field as touched to trigger validation display
+  const fieldName = target.getAttribute('formControlName');
+  if (fieldName) {
+    const formControl = this.distributionForm.get(fieldName);
+    if (formControl) {
+      formControl.markAsTouched();
+      // Trigger validation for contact number fields to check for duplicates
+      if (fieldName.includes('contact')) {
+        setTimeout(() => {
+          this.distributionForm.updateValueAndValidity();
+        }, 0);
+      }
     }
   }
+
+  // Update reg code in real-time when city changes
+  if (fieldName === 'city') {
+    setTimeout(() => this.updateRegCode(), 0);
+  }
+}
+
 
 
 
 
   // Updated updateRegCode method to handle real-time updates
-  updateRegCode() {
-    const province = this.distributionForm.get('province')?.value;
-    const district = this.distributionForm.get('district')?.value;
-    const city = this.distributionForm.get('city')?.value;
+  // Updated updateRegCode method to handle real-time updates and prepend "D"
+updateRegCode() {
+  const province = this.distributionForm.get('province')?.value;
+  const district = this.distributionForm.get('district')?.value;
+  const city = this.distributionForm.get('city')?.value;
 
-    if (province && district && city && city.trim().length > 0) {
-      // Use API call for reg code generation if available
-      this.isLoadingregcode = true;
-      this.distributionService
-        .generateRegCode(province, district, city.trim())
-        .subscribe({
-          next: (response) => {
-            this.distributionForm.patchValue({ regCode: response.regCode });
-            this.isLoadingregcode = false;
-          },
-          error: (error) => {
-            // Fallback to local generation if API fails
-            const regCode = `${province.slice(0, 2).toUpperCase()}${district
-              .slice(0, 1)
-              .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
-            this.distributionForm.patchValue({ regCode });
-            this.isLoadingregcode = false;
-          }
-        });
-    } else {
-      // Clear reg code if required fields are empty
-      this.distributionForm.patchValue({ regCode: '' });
-    }
+  if (province && district && city && city.trim().length > 0) {
+    // Use API call for reg code generation if available
+    this.isLoadingregcode = true;
+    this.distributionService
+      .generateRegCode(province, district, city.trim())
+      .subscribe({
+        next: (response) => {
+          // Prepend "D" to the reg code from API
+          this.distributionForm.patchValue({ regCode: `D-${response.regCode}` });
+          this.isLoadingregcode = false;
+        },
+        error: (error) => {
+          // Fallback to local generation if API fails - prepend "D"
+          const regCode = `D${province.slice(0, 2).toUpperCase()}${district
+            .slice(0, 1)
+            .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
+          this.distributionForm.patchValue({ regCode });
+          this.isLoadingregcode = false;
+        }
+      });
+  } else {
+    // Clear reg code if required fields are empty
+    this.distributionForm.patchValue({ regCode: '' });
   }
+}
 
   // Updated onProvinceChange method
   onProvinceChange() {
@@ -507,17 +601,19 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   fetchAllCompanies() {
-    this.distributionService.getAllCompanies().subscribe(
-      (res) => {
-        this.companyList = res.data;
-        // Convert to dropdown options format
-        this.companyOptions = this.companyList.map(company => ({
-          label: company.companyNameEnglish,
-          value: company.id
-        }));
-      },
-      (error) => console.error('Error fetching companies:', error)
-    );
+   this.distributionService.getAllCompanies().subscribe(
+  (res) => {
+    console.log('Raw API data:', res.data); // Check if 15 companies are here
+    this.companyList = res.data;
+    this.companyOptions = this.companyList.map(company => ({
+      label: company.companyNameEnglish,
+      value: company.id
+    }));
+    console.log('Dropdown options:', this.companyOptions); // Verify all 15 appear
+  },
+  (error) => console.error('Error fetching companies:', error)
+);
+
   }
 
   // Add method to initialize province options
@@ -529,137 +625,328 @@ export class AddDestributionCenterComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.distributionForm.valid) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to create this distribution centre?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Create it!',
-        cancelButtonText: 'No, Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.isLoading = true;
-          this.submitError = null;
-          this.submitSuccess = null;
+  // Mark all fields as touched to show validation messages
+  Object.keys(this.distributionForm.controls).forEach((key) => {
+    this.distributionForm.get(key)?.markAsTouched();
+  });
 
-          // Get form values including disabled fields
-          const formValue = this.distributionForm.getRawValue();
+  // Collect all validation errors
+  const missingFields: string[] = [];
+  const formControls = this.distributionForm.controls;
 
-          const formData: DistributionCentreRequest = {
-            ...formValue,
-            latitude: parseFloat(formValue.latitude).toString(),
-            longitude: parseFloat(formValue.longitude).toString(),
-          };
+  // Check each form control for validation errors
+  Object.keys(formControls).forEach((key) => {
+    const control = formControls[key];
+    
+    if (control.errors && control.touched) {
+      // Customize error messages based on field name and error type
+      if (key === 'name' && control.errors['required']) {
+        missingFields.push('Distribution Centre Name is Required');
+      } else if (key === 'regCode' && control.errors['required']) {
+        missingFields.push('Registration Code is Required');
+      } else if (key === 'email' && control.errors['required']) {
+        missingFields.push('Email Address is Required');
+      } else if (key === 'email' && control.errors['email']) {
+        missingFields.push('Email Address - Must be a valid email format');
+      } else if (key === 'contact1' && control.errors['required']) {
+        missingFields.push('Contact Number -1 Number is Required');
+      } else if (key === 'contact1' && control.errors['pattern']) {
+        missingFields.push('Contact Number -1 - Must be a valid phone number format');
+      } else if (key === 'contact2' && control.errors['pattern']) {
+        missingFields.push('Contact Number -2 Number - Must be a valid phone number format');
+      } else if (key === 'latitude' && control.errors['required']) {
+        missingFields.push('Latitude is Required');
+      } else if (key === 'latitude' && control.errors['pattern']) {
+        missingFields.push('Latitude - Must be a valid coordinate');
+      } else if (key === 'longitude' && control.errors['required']) {
+        missingFields.push('Longitude is Required');
+      } else if (key === 'longitude' && control.errors['pattern']) {
+        missingFields.push('Longitude - Must be a valid coordinate');
+      } else if (key === 'address' && control.errors['required']) {
+        missingFields.push('Address is Required');
+      } else if (key === 'city' && control.errors['required']) {
+        missingFields.push('City is Required');
+      } else if (key === 'district' && control.errors['required']) {
+        missingFields.push('District is Required');
+      } else if (key === 'province' && control.errors['required']) {
+        missingFields.push('Province is Required');
+      } else if (control.errors['required']) {
+        // Generic required field message for other fields
+        const fieldName = this.formatFieldName(key);
+        missingFields.push(fieldName);
 
-          this.distributionService
-            .createDistributionCentre(formData)
-            .subscribe({
-              next: (response) => {
-                this.isLoading = false;
+        console.log('missingFields', missingFields);
+      }
+    }
+  });
 
-                if (response.success) {
-                  this.submitSuccess =
-                    response.message ||
-                    'Distribution centre created successfully!';
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: this.submitSuccess,
-                    timer: 2000,
-                    showConfirmButton: false,
-                  });
-                  this.navigatePath('/distribution-hub/action');
-                } else {
-                  this.submitError =
-                    response.error || 'Failed to create distribution centre';
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: this.submitError,
-                  });
-                }
-              },
-              error: (error) => {
-                this.isLoading = false;
-                console.error('Error creating distribution centre:', error);
+  // If there are validation errors, show them and stop the submission
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
 
-                // Default error message
-                let errorMessage = 'An unexpected error occurred.';
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
 
-                if (error.error && error.error.error) {
-                  // Use the specific error message from the backend
-                  errorMessage = error.error.error;
-                } else if (error.status === 400) {
-                  errorMessage = 'Invalid data. Please check your inputs.';
-                } else if (error.status === 401) {
-                  errorMessage = 'Unauthorized. Please log in again.';
-                } else if (error.status === 409) {
-                  // Check if we have more specific conflict information
-                  if (error.error && error.error.conflictingRecord) {
-                    const conflict = error.error.conflictingRecord;
-                    switch (conflict.conflictType) {
-                      case 'name':
-                        errorMessage = 'A distribution center with this name already exists.';
-                        break;
-                      case 'regCode':
-                        errorMessage = 'A distribution center with this registration code already exists.';
-                        break;
-                      case 'contact':
-                        errorMessage = 'A distribution center with this contact number already exists.';
-                        break;
-                      default:
-                        errorMessage = 'A distribution center with these details already exists.';
-                    }
-                  } else {
-                    errorMessage = 'A distribution center with these details already exists.';
-                  }
-                } else if (error.status === 500) {
-                  errorMessage = 'Server error. Please try again later.';
-                }
+  // If form is valid, proceed with confirmation
+  if (this.distributionForm.valid) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to create this distribution centre?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Create it!',
+      cancelButtonText: 'No, Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.submitError = null;
+        this.submitSuccess = null;
 
-                this.submitError = errorMessage;
+        // Get form values including disabled fields
+        const formValue = this.distributionForm.getRawValue();
 
+        const formData: DistributionCentreRequest = {
+          ...formValue,
+          latitude: parseFloat(formValue.latitude).toString(),
+          longitude: parseFloat(formValue.longitude).toString(),
+        };
+
+        this.distributionService
+          .createDistributionCentre(formData)
+          .subscribe({
+            next: (response) => {
+              this.isLoading = false;
+
+              if (response.success) {
+                this.submitSuccess =
+                  response.message ||
+                  'Distribution centre created successfully!';
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success!',
+                  text: this.submitSuccess,
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+                this.navigatePath('/distribution-hub/action/view-destribition-center');
+              } else {
+                this.submitError =
+                  response.error || 'Failed to create distribution centre';
                 Swal.fire({
                   icon: 'error',
-                  title: 'Submission Failed',
+                  title: 'Oops...',
                   text: this.submitError,
                 });
-              },
-            });
-        }
-      });
-    } else {
-      Object.keys(this.distributionForm.controls).forEach((key) => {
-        this.distributionForm.get(key)?.markAsTouched();
-      });
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Form',
-        text: 'Please correct the errors in the form before submitting.',
-      });
-    }
+              }
+            },
+            error: (error) => {
+              this.isLoading = false;
+              console.error('Error creating distribution centre:', error);
+
+              // Default error message
+              let errorMessage = 'An unexpected error occurred.';
+
+              if (error.error && error.error.error) {
+                // Use the specific error message from the backend
+                errorMessage = error.error.error;
+              } else if (error.status === 400) {
+                errorMessage = 'Invalid data. Please check your inputs.';
+              } else if (error.status === 401) {
+                errorMessage = 'Unauthorized. Please log in again.';
+              } else if (error.status === 409) {
+                // Check if we have more specific conflict information
+                if (error.error && error.error.conflictingRecord) {
+                  const conflict = error.error.conflictingRecord;
+                  switch (conflict.conflictType) {
+                    case 'name':
+                      errorMessage = 'A distribution center with this name already exists.';
+                      break;
+                    case 'regCode':
+                      errorMessage = 'A distribution center with this registration code already exists.';
+                      break;
+                    case 'email':
+                      errorMessage = 'Email already exists.';
+                      break;
+                    case 'contact1':
+                      errorMessage = 'Mobile Number already exists.';
+                      break;
+                    default:
+                      errorMessage = 'A distribution center with these details already exists.';
+                  }
+                } else {
+                  errorMessage = 'A distribution center with these details already exists.';
+                }
+              } else if (error.status === 500) {
+                errorMessage = 'Server error. Please try again later.';
+              }
+
+              this.submitError = errorMessage;
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Submission Failed',
+                text: this.submitError,
+              });
+            },
+          });
+      }
+    });
   }
+}
+
+// Helper function to format field names for display
+formatFieldName(key: string): string {
+  // Convert camelCase to Title Case with spaces
+  const result = key.replace(/([A-Z])/g, ' $1');
+  return result.charAt(0).toUpperCase() + result.slice(1);
+}
+
+private formatErrorMessagesForAlert(errors: {field: string, message: string}[]): string {
+  if (errors.length === 0) {
+    return 'Please correct the errors in the form before submitting.';
+  }
+  
+  let html = '<div class="text-left"><p class="mb-3">Please correct the following errors:</p><ul class="list-disc pl-5">';
+  
+  errors.forEach(error => {
+    html += `<li class="mb-1"><span class="font-semibold">${error.field}:</span> ${error.message}</li>`;
+  });
+  
+  html += '</ul></div>';
+  
+  return html;
+}
+
+private getAllValidationErrors(): {field: string, message: string}[] {
+  const errors: {field: string, message: string}[] = [];
+  
+  Object.keys(this.distributionForm.controls).forEach((key) => {
+    const control = this.distributionForm.get(key);
+    if (control && control.invalid && (control.dirty || control.touched)) {
+      const errorMessage = this.getFieldError(key);
+      if (errorMessage) {
+        errors.push({
+          field: this.getFieldLabel(key),
+          message: errorMessage
+        });
+      }
+    }
+  });
+  
+  return errors;
+}
 
   clearMessages() {
     this.submitError = null;
     this.submitSuccess = null;
   }
 
-  onCancel() {
-    this.distributionForm.reset({
-      contact1Code: '+94',
-      contact2Code: '+94',
-    });
-  }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'All entered data will be lost!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Reset',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.distributionForm.reset({
+        contact1Code: '+94',
+        contact2Code: '+94',
+      });
+    }
+  });
+}
+
+
+ 
 
   back(): void {
-    this.router.navigate(['/distribution-hub/action/view-destribition-center']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+    }
+  });
+}
+
 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
+  private customEmailValidator(control: AbstractControl): { [key: string]: any } | null {
+  if (!control.value || control.value.trim() === '') {
+    return null; // Let required validator handle empty values
+  }
+  
+  const validation = this.emailValidationService.validateEmail(control.value);
+  return validation.isValid ? null : { customEmail: validation.errorMessage };
+}
+
+private latitudeRangeValidator(control: AbstractControl) {
+  if (!control.value) return null;
+  
+  const numericDecimal = /^-?\d+(\.\d+)?$/;
+  if (!numericDecimal.test(control.value)) {
+    return { numericDecimal: true };
+  }
+  
+  const value = parseFloat(control.value);
+  if (value < -90 || value > 90) {
+    return { latitudeRange: true };
+  }
+  
+  return null;
+}
+
+private longitudeRangeValidator(control: AbstractControl) {
+  if (!control.value) return null;
+  
+  const numericDecimal = /^-?\d+(\.\d+)?$/;
+  if (!numericDecimal.test(control.value)) {
+    return { numericDecimal: true };
+  }
+  
+  const value = parseFloat(control.value);
+  if (value < -180 || value > 180) {
+    return { longitudeRange: true };
+  }
+  
+  return null;
+}
+
+
 }
 
 class CompanyList {

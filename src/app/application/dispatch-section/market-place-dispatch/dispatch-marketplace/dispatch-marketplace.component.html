@@ -1,0 +1,35 @@
+<!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex space-x-4 pb-5 border-b border-gray-300">
+      <button (click)="togglePackageType(true)"
+        [ngClass]="isPremade ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 w-64 flex items-center justify-center rounded-xl gap-2 ">
+        <i *ngIf="isPremade" class="fa fa-check"></i>
+        Premade Packages
+      </button>
+
+      <button (click)="togglePackageType(false)"
+        [ngClass]="!isPremade ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 w-64 flex items-center justify-center rounded-xl gap-2 ">
+        <i *ngIf="!isPremade" class="fa fa-check"></i>
+        Custom Packages
+      </button>
+    </div>
+
+    <div class="h-5"></div>
+
+    <div *ngIf="isPremade">
+     <app-market-place-premade-packages/>
+    </div>
+
+    <div *ngIf="!isPremade">
+       <app-marketplace-custome-package/>
+  </div>
+</div>

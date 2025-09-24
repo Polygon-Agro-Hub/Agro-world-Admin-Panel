@@ -1,0 +1,191 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+
+<button class="mb-5 text-black dark:text-textDark" onclick="history.back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<!-- Error Message -->
+<div *ngIf="errorMessage" class="mb-4">
+  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+    {{ errorMessage }}
+  </div>
+</div>
+
+<!-- Main Container -->
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1000px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+
+    <!-- Header Section -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm  p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <span class="text-black dark:text-gray-300 font-medium">Farmer :</span>
+            <span class="text-black dark:text-textDark font-semibold">{{ fullName }}</span>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="text-black dark:text-gray-300 font-medium">Category :</span>
+          <span class="text-black dark:text-textDark font-semibold">{{ category }}</span>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-black dark:text-gray-300 font-medium">Farm :</span>
+          <span class="text-black dark:text-textDark font-semibold">{{ farmName }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Building Details Section -->
+    <div *ngIf="hasData"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-sm  p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Left Column -->
+        <div class="space-y-6">
+          <!-- Ownership -->
+          <div class="flex items-start space-x-4">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Ownership</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-semibold flex-1">
+              {{ buildingDetails?.ownership || 'N/A' }}
+            </span>
+          </div>
+
+          <!-- District -->
+          <div class="flex items-start space-x-4">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">District</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-semibold flex-1">
+              {{ buildingDetails?.district || 'N/A' }}
+            </span>
+          </div>
+
+          <!-- Est. Value for Own Building -->
+          <div class="flex items-start space-x-4"
+            *ngIf="ownershipType === 'Own Building (with title ownership)' && ownershipDetails?.estimateValue">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Est. Value</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-textLight dark:text-textDark font-semibold flex-1">
+              Rs. {{ ownershipDetails?.estimateValue | number:'1.0-2' }}
+            </span>
+          </div>
+
+          <!-- Issued Date for Own Building -->
+          <div class="flex items-start space-x-4"
+            *ngIf="ownershipType === 'Own Building (with title ownership)' && ownershipDetails?.issuedDate">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Issued Date</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-semibold flex-1">
+              {{ ownershipDetails?.issuedDate | date:'MMM dd, yyyy' }}
+            </span>
+          </div>
+
+          <!-- Start Date for Leased Building -->
+          <div class="flex items-start space-x-4"
+            *ngIf="ownershipType === 'Leased Building' && ownershipDetails?.startDate">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Start Date</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-semibold flex-1">
+              {{ ownershipDetails?.startDate | date:'MMM dd, yyyy' }}
+            </span>
+          </div>
+
+          <!-- Duration for Leased Building -->
+          <div class="flex items-start space-x-4"
+            *ngIf="ownershipType === 'Leased Building' && (ownershipDetails?.durationYears || ownershipDetails?.durationMonths)">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Duration</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-semibold flex-1">
+              <span *ngIf="ownershipDetails?.durationYears">{{ ownershipDetails?.durationYears }} years</span>
+              <span *ngIf="ownershipDetails?.durationYears && ownershipDetails?.durationMonths"> </span>
+              <span *ngIf="ownershipDetails?.durationMonths">   {{ ownershipDetails?.durationMonths }} months</span>
+            </span>
+          </div>
+
+          <!-- Lease Amount for Leased Building -->
+          <div class="flex items-start space-x-4"
+            *ngIf="ownershipType === 'Leased Building' && ownershipDetails?.leastAmountAnnually">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Annual Amount</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-textLight dark:text-textDark font-semibold flex-1">
+              Rs. {{ ownershipDetails?.leastAmountAnnually | number:'1.0-2'}} /year
+            </span>
+          </div>
+
+          <!-- Issued Date for Permit Building -->
+          <div class="flex items-start space-x-4"
+            *ngIf="ownershipType === 'Permit Building' && ownershipDetails?.issuedDate">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Issued Date</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-semibold flex-1">
+              {{ ownershipDetails?.issuedDate | date:'MMM dd, yyyy' }}
+            </span>
+          </div>
+
+          <!-- Permit Fee for Permit Building -->
+          <div class="flex items-start space-x-4"
+            *ngIf="ownershipType === 'Permit Building' && ownershipDetails?.permitFeeAnnually">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Permit Fee</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-textLight dark:text-textDark font-semibold flex-1">
+              Rs. {{ ownershipDetails?.permitFeeAnnually| number:'1.0-2' }} /year
+            </span>
+          </div>
+
+          <!-- Payment for Shared/No Ownership -->
+          <div class="flex items-start space-x-4"
+            *ngIf="ownershipType === 'Shared / No Ownership' && ownershipDetails?.paymentAnnually">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Annual Payment</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-textLight dark:text-textDark font-semibold flex-1">
+              Rs. {{ ownershipDetails?.paymentAnnually | number:'1.0-2'}}
+            </span>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="space-y-6">
+          <!-- Type -->
+          <div class="flex items-start space-x-4">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Type</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-semibold flex-1">
+              {{ buildingDetails?.type || 'N/A' }}
+            </span>
+          </div>
+
+          <!-- Floor Area -->
+          <div class="flex items-start space-x-4">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">Floor Area</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-textLight dark:text-textDark font-semibold flex-1">
+              <span *ngIf="buildingDetails?.floorArea">{{ buildingDetails?.floorArea | number:'1.0-2' }} sq. ft.</span>
+              <span *ngIf="!buildingDetails?.floorArea">N/A</span>
+            </span>
+          </div>
+
+          <!-- General Condition -->
+          <div class="flex items-start space-x-4">
+            <span class="text-black dark:text-gray-300 font-medium min-w-28">General Condition</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-semibold flex-1">
+              {{ buildingDetails?.generalCondition || 'N/A' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Data Section -->
+    <div *ngIf="!hasData && !isLoading && !errorMessage" class="flex flex-col items-center w-full py-12">
+      <p class="text-[#494949] my-6 dark:text-white">--No Building Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+
+  </div>
+</div>

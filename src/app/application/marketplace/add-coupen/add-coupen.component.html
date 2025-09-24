@@ -9,12 +9,9 @@
       Add a Coupon
     </p>
     <div>
-      <span
-        class="bg-[#74788D] text-lg text-white px-3 py-2 rounded-lg mx-2 cursor-pointer"
-        onclick="history.back()"
-      >
-        Cancel
-      </span>
+     <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+            Cancel
+          </button>
       <span
         class="bg-[#3980C0] text-lg text-white px-5 py-2 rounded-lg mx-2 cursor-pointer"
         (click)="onSubmit()"
@@ -28,26 +25,26 @@
     <div
       class="bg-[#FFFFFF] dark:bg-tileBlack px-20 pt-12 pb-12 shadow-md rounded-md w-[60%] h-full"
     >
-      <div class="mb-8">
-        <label class="text-[#534E4E] dark:text-textDark">Code *</label>
-        <input
-          type="text"
-          id="code"
-          name="code"
-          [(ngModel)]="coupenObj.code"
-          (input)="onCodeInput($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-      </div>
+   <div class="mb-8">
+  <label class="text-[#534E4E] dark:text-textDark">Code *</label>
+  <input
+    type="text"
+    id="code"
+    name="code"
+    [(ngModel)]="coupenObj.code"
+    #codeInput="ngModel"
+    required
+    (input)="onCodeInput($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  <div *ngIf="codeInput.touched && codeInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Code is required.
+  </div>
+  <div *ngIf="checkPrecentageValueMessage === 'Coupon with this code already exists'" class="text-red-500 text-sm mt-1">
+    {{ checkPrecentageValueMessage }}
+  </div>
+</div>
 
-      <div
-        *ngIf="
-          checkPrecentageValueMessage === 'Coupon with this code already exists'
-        "
-        class="text-red-500 text-sm mt-1"
-      >
-        {{ checkPrecentageValueMessage }}
-      </div>
 
       <div class="mb-16">
         <label class="text-[#534E4E] dark:text-textDark">Type *</label>
@@ -96,7 +93,7 @@
               id="freeDelivery"
               name="type"
               [(ngModel)]="coupenObj.type"
-              [value]="'Free Delivary'"
+              [value]="'Free Delivery'"
               (change)="clearValidationMessages()"
             />
             <label
@@ -107,51 +104,51 @@
             </label>
           </div>
         </div>
+        
       </div>
 
-      <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark"
-          >Discount Percentage *</label
-        >
-        <input
-          type="number"
-          id="percentage"
-          name="percentage"
-          [(ngModel)]="coupenObj.percentage"
-          min="0"
-          max="100"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          (change)="checkPrecentageValue(coupenObj.percentage)"
-          (keydown)="preventNegative($event)"
-        />
-        <div
-          *ngIf="coupenObj.type === 'Percentage'"
-          class="text-red-500 text-sm mt-1"
-        >
-          <div>{{ checkPrecentageValueMessage }}</div>
-        </div>
-      </div>
+     <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
+  <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
+  <input
+    type="number"
+    id="percentage"
+    name="percentage"
+    [(ngModel)]="coupenObj.percentage"
+    #percentageInput="ngModel"
+    required
+    min="0"
+    max="100"
+    (input)="validateDecimalInput($event, 'percentage')"
+    (change)="checkPrecentageValue(coupenObj.percentage)"
+    (keydown)="preventNegative($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  <div *ngIf="percentageInput.touched && percentageInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Discount percentage is required.
+  </div>
+  <div class="text-red-500 text-sm mt-1">{{ checkPrecentageValueMessage }}</div>
+</div>
 
-      <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark"
-          >Discount Amount *</label
-        >
-        <input
-          type="number"
-          id="fixDiscount"
-          name="fixDiscount"
-          [(ngModel)]="coupenObj.fixDiscount"
-          min="0"
-          (change)="checkFixAmountValue(coupenObj.fixDiscount)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-        <div
-          *ngIf="coupenObj.type === 'Fixed Amount'"
-          class="text-red-500 text-sm mt-1"
-        >
-          <div>{{ checkfixAmountValueMessage }}</div>
-        </div>
-      </div>
+<!-- Fixed Amount -->
+<div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
+  <label class="text-[#534E4E] dark:text-textDark">Discount Amount *</label>
+  <input
+    type="number"
+    id="fixDiscount"
+    name="fixDiscount"
+    [(ngModel)]="coupenObj.fixDiscount"
+    #fixDiscountInput="ngModel"
+    required
+    min="0"
+    (input)="validateDecimalInput($event, 'fixDiscount')"
+    (change)="checkFixAmountValue(coupenObj.fixDiscount)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  <div *ngIf="fixDiscountInput.touched && fixDiscountInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Discount amount is required.
+  </div>
+  <div class="text-red-500 text-sm mt-1">{{ checkfixAmountValueMessage }}</div>
+</div>
 
       <div class="flex flex-row mb-6">
         <input
@@ -169,17 +166,24 @@
         </label>
       </div>
 
-      <div *ngIf="coupenObj.checkLimit" class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Price Limit *</label>
-        <input
-          type="number"
-          id="priceLimit"
-          name="priceLimit"
-          [(ngModel)]="coupenObj.priceLimit"
-          min="0"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-      </div>
+     <div *ngIf="coupenObj.checkLimit" class="mb-6">
+  <label class="text-[#534E4E] dark:text-textDark">Price Limit *</label>
+  <input
+    type="number"
+    id="priceLimit"
+    name="priceLimit"
+    [(ngModel)]="coupenObj.priceLimit"
+    #priceLimitInput="ngModel"
+    required
+    min="0"
+    (input)="validateDecimalInput($event, 'priceLimit')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  <div *ngIf="priceLimitInput.touched && priceLimitInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Price limit is required.
+  </div>
+</div>
+
     </div>
 
     <div class="flex flex-col justify-start px-6 w-[40%]">
@@ -245,20 +249,25 @@
             [(ngModel)]="coupenObj.startDate"
             (onSelect)="checkStartDate()"
             placeholder="Start Date"
+                #startDateInput="ngModel"
+    required
             [showIcon]="true"
             [showClear]="true"
             [showButtonBar]="true"
             iconDisplay="input"
             [style]="{ width: '100%' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 cursor-pointer
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                      [&_.p-datepicker-header]:dark:text-white
                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            inputStyleClass="mt-2 block cursor-pointer w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
             [appendTo]="'body'"
           />
+           <div *ngIf="startDateInput.touched && startDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Start date is required.
+  </div>
         </div>
 
         <div class="mb-6">
@@ -271,21 +280,27 @@
             [(ngModel)]="coupenObj.endDate"
             (onSelect)="checkExpireDate()"
             placeholder="End Date"
+              #endDateInput="ngModel"
+    required
             [showIcon]="true"
             [showClear]="true"
             [showButtonBar]="true"
             iconDisplay="input"
             [style]="{ width: '100%' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 cursor-pointer
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                      [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                      [&_.p-datepicker-header]:dark:text-white
                      [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
-            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            inputStyleClass="mt-2 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
             [appendTo]="'body'"
           />
+               <div *ngIf="endDateInput.touched && endDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+    Expire date is required.
+  </div>
         </div>
+     
       </div>
     </div>
   </div>

@@ -157,15 +157,34 @@ import { WholesaleComplaintsComponent } from './application/Complaints/wholesale
 import { W } from '@angular/cdk/keycodes';
 import { EditCoupenComponent } from './application/marketplace/edit-coupen/edit-coupen.component';
 import { ViewWholwsaleOrdersComponent } from './application/marketplace/view-wholwsale-orders/view-wholwsale-orders.component';
-import{SelectedwholesaleComplaintsComponent } from './application/Complaints/selected-wholesale-complaints/selected-wholesale-complaints.component';
+import { SelectedwholesaleComplaintsComponent } from './application/Complaints/selected-wholesale-complaints/selected-wholesale-complaints.component';
 import { CustomerOrdersComponent } from './application/sales-dash-section/customer-orders/customer-orders.component';
-import {ViewHeadPortalComponent} from './application/distribution-hub/view-head-portal/view-head-portal.component';
+import { ViewHeadPortalComponent } from './application/distribution-hub/view-head-portal/view-head-portal.component';
 import { ViewCurrentCenterTargetComponent } from './application/collection-hub-section/view-current-center-target/view-current-center-target.component';
 import { ViewCenterHeadComponent } from './application/collection-hub-section/view-center-head/view-center-head.component';
-import {ViewPackageHistoryComponent} from './application/marketplace/view-package-history/view-package-history.component';
+import { ViewPackageHistoryComponent } from './application/marketplace/view-package-history/view-package-history.component';
 import { TestingComponent } from './application/collection-hub-section/testing/testing.component';
 import { CenterCollectionExpenceComponent } from './application/collection-hub-section/center-collection-expence/center-collection-expence.component';
-
+import { DispatchMarketplaceComponent } from './application/dispatch-section/market-place-dispatch/dispatch-marketplace/dispatch-marketplace.component';
+import { ViewPremadePackagesComponent } from './application/dispatch-section/market-place-dispatch/view-premade-packages/view-premade-packages.component';
+import { DispachPackagesComponent } from './application/dispatch-section/dispatch-items/dispach-packages/dispach-packages.component';
+import { DispatchAdditionalItemsComponent } from './application/dispatch-section/dispatch-items/dispatch-additional-items/dispatch-additional-items.component';
+import { AssignCitiesComponent } from './application/distribution-hub/assign-cities/assign-cities.component';
+import { MainDashboardLayoutComponent } from './application/distribution-hub/polygon-centers-dashboard/main-dashboard-layout/main-dashboard-layout.component';
+import { UpdateDistributionOfficerComponent } from './application/steckholders-section/update-distribution-officer/update-distribution-officer.component';
+import { ViewDistributionOfficerComponent } from './application/steckholders-section/view-distribution-officer/view-distribution-officer.component';
+import { CreateDistributionOfficerComponent } from './application/steckholders-section/create-distribution-officer/create-distribution-officer.component';
+import { SelectedOfficerTargetComponent } from './application/distribution-hub/polygon-centers-dashboard/selected-officer-target/selected-officer-target.component';
+import { ViewFarmerStaffComponent } from './application/steckholders-section/view-farmer-staff/view-farmer-staff.component';
+import { ViewExpencesFarmerReportComponent } from './application/collection-hub-section/view-expences-farmer-report/view-expences-farmer-report.component';
+import { ViewFarmOwnerComponent } from './application/steckholders-section/view-farm-owner/view-farm-owner.component';
+import { EditUserStaffComponent } from './application/steckholders-section/edit-user-staff/edit-user-staff.component';
+import { FarmerFarmsComponent } from './application/plant-care-app/farmer-farms/farmer-farms.component'
+import { FarmersFarmsFixedAssetsBuildingComponent } from './application/plant-care-app/farmers-farms-fixed-assets-building/farmers-farms-fixed-assets-building.component';
+import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/farmer-list-farmers-farms/farmer-list-farmers-farms.component';
+import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-app/farmers-farms-fixed-assets-lands/farmers-farms-fixed-assets-lands.component';
+import { FinanceDashboardComponent } from './application/finance/finance-dashboard/finance-dashboard.component';
+import path from 'path';
 export const routes: Routes = [
   {
     path: '',
@@ -241,6 +260,8 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View crop calendar task' },
               },
+
+
               {
                 path: 'edit-crop-task/:id',
                 component: EditTaskComponent,
@@ -260,6 +281,11 @@ export const routes: Routes = [
                 data: {
                   permission: 'View users that enroll with crop calendars',
                 },
+              },
+              {
+                path: 'farmers-farm',
+                component: FarmerFarmsComponent,
+
               },
               {
                 path: 'view-crop-task-by-user',
@@ -286,6 +312,10 @@ export const routes: Routes = [
                 path: 'report-farmer-list',
                 component: ReportsFarmerListComponent,
               },
+              {
+                path: 'Farmers-farms-list',
+                component: FarmerListFarmersFarmsComponent,
+              }, 
               {
                 path: 'report-farmer-current-assert/:userId/:name',
                 component: ReportCurrentAssertsComponent,
@@ -317,6 +347,14 @@ export const routes: Routes = [
               {
                 path: 'assets/fixed-asset-category/machinary&tools-fixed-asset',
                 component: MachToolsFixeedAssetsComponent,
+              },
+              {
+                path: 'assets/fixed-asset-category/building-fixed-asset/details',
+                component: FarmersFarmsFixedAssetsBuildingComponent,
+              },
+                           {
+                path: 'assets/fixed-asset-category/land-fixed-asset/details',
+                component: FarmersFarmsFixedAssetsLandComponent,
               },
               {
                 path: 'add-new-crop-task/:cropId/:indexId/:userId/:onCulscropID ',
@@ -380,6 +418,13 @@ export const routes: Routes = [
             ],
           },
         ],
+      },
+
+      {
+        path:'finance',
+        children:[
+          {path:'dashboard',component:FinanceDashboardComponent}
+        ]
       },
 
       {
@@ -462,6 +507,28 @@ export const routes: Routes = [
                 path: '',
                 component: SteckholdersComponent,
               },
+              {
+                path: 'view-distribution-officers',
+                children: [
+                  {
+                    path: '',
+                    component: ViewDistributionOfficerComponent,
+                  },
+                  {
+                    path: 'create-distribution-officer',
+                    component: CreateDistributionOfficerComponent,
+                  },
+                  {
+                    path: 'update-distribution-officer/:id',
+                    component: UpdateDistributionOfficerComponent,
+                  }
+                ],
+              },
+
+              {
+                path: 'add-distribution-0fficer',
+                component: AddDistributionOfficerComponent,
+              },
 
               {
                 path: 'farmers',
@@ -496,6 +563,19 @@ export const routes: Routes = [
                     canActivate: [PermissionGuard],
                     data: { permission: 'Bulk onboarding plan care users' },
                   },
+                  {
+                    path: 'view-farmer-staff/:id',
+                    component: ViewFarmerStaffComponent,
+                  },
+                  {
+                    path: 'view-farmer-owner/:id',
+                    component: ViewFarmOwnerComponent,
+                  },
+                  {
+                    path: 'edit-user-staff/:id',
+                    component: EditUserStaffComponent,
+                  }
+
                 ],
               },
 
@@ -638,7 +718,7 @@ export const routes: Routes = [
             component: CollectionAllViewComponent,
           },
           {
-            path: 'view-current-centre-target',
+            path: 'view-current-centre-target/:centerId',
             component: ViewCurrentCenterTargetComponent,
           },
           {
@@ -707,11 +787,18 @@ export const routes: Routes = [
             path: 'view-center-head/:id',
             component: ViewCenterHeadComponent,
           },
-        {
-          path: 'center-collection-expense/:id',
-          component: CenterCollectionExpenceComponent
-        }
-          
+          {
+            path: 'center-collection-expense/:id',
+            component: CenterCollectionExpenceComponent,
+          },
+          {
+            path: 'view-center-officers',
+            component: ViewCollectiveOfficerComponent,
+          },
+          {
+            path: 'farmer-report-invoice/:invNo',
+            component: ViewExpencesFarmerReportComponent,
+          },
         ],
       },
 
@@ -727,8 +814,6 @@ export const routes: Routes = [
             component: RecievedOrdersComponent,
           },
 
-      
-          
           {
             path: 'define-packages',
             component: DefinePackagesComponent,
@@ -774,6 +859,22 @@ export const routes: Routes = [
             path: 'custom-additional-items',
             component: CustomAdditionalItemsComponent,
           },
+          {
+            path: 'marketplace-dispatch',
+            component: DispatchMarketplaceComponent,
+          },
+          {
+            path: 'view-premade-packages/:id/:inv',
+            component: ViewPremadePackagesComponent,
+          },
+          {
+            path: 'dispatch-package/:id/:orderId',
+            component: DispachPackagesComponent,
+          },
+          {
+            path: 'dispatch-additional-items/:id',
+            component: DispatchAdditionalItemsComponent,
+          },
         ],
       },
 
@@ -817,9 +918,9 @@ export const routes: Routes = [
               },
               {
                 path: 'view-packages-history',
-                component:ViewPackageHistoryComponent,
+                component: ViewPackageHistoryComponent,
               },
-               {
+              {
                 path: 'view-packages-list',
                 component: ViewPackageListComponent,
               },
@@ -873,7 +974,7 @@ export const routes: Routes = [
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
               },
-               {
+              {
                 path: 'view-package-history',
                 component: ViewPackageHistoryComponent,
               },
@@ -1047,7 +1148,26 @@ export const routes: Routes = [
               },
               {
                 path: 'view-polygon-centers',
-                component: ViewPolygonCentersComponent,
+                children: [
+                  {
+                    path: '',
+                    component: ViewPolygonCentersComponent,
+                  },
+                  {
+                    path: 'distribution-center-dashboard/:id',
+                    component: MainDashboardLayoutComponent
+                  },
+                  {
+                    path: 'edit-distribution-officer/:id',
+                    component: UpdateDistributionOfficerComponent
+                  },
+
+                  {
+                    path: 'selected-officer-target',
+                    component: SelectedOfficerTargetComponent
+                  },
+
+                ]
               },
               {
                 path: 'view-distribution-centre/:id',
@@ -1060,6 +1180,10 @@ export const routes: Routes = [
               {
                 path: 'view-head-portal/:id',
                 component: ViewHeadPortalComponent,
+              },
+              {
+                path: 'assign-cities',
+                component: AssignCitiesComponent,
               },
             ],
           },
@@ -1074,4 +1198,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

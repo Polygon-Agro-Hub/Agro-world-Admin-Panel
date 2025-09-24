@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-fixed-asset-category',
   standalone: true,
-  imports: [LoadingSpinnerComponent, CommonModule],
+  imports: [ CommonModule],
   templateUrl: './fixed-asset-category.component.html',
   styleUrl: './fixed-asset-category.component.css',
 })
@@ -20,74 +20,115 @@ export class FixedAssetCategoryComponent {
     private route: ActivatedRoute
   ) {}
 
-  userId: any | null = null;
+  userId: number | null = null;
+  farmId: number | null = null;
   firstName: string = '';
   lastName: string = '';
   fullName: string = '';
-
+  farmName: string = '';
+  
+  hasData: boolean = true; 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.userId = params['id'] ? +params['id'] : null;
-      this.firstName = params['firstName'] ? params['firstName'] : null;
-      this.lastName = params['lastName'] ? params['lastName'] : null;
+      // Extract userId (note: your URL has 'userId' not 'id')
+      this.userId = params['userId'] ? +params['userId'] : null;
+      
+      // Extract farmId
+      this.farmId = params['farmId'] ? +params['farmId'] : null;
+      
+      // Extract other string parameters
+      this.firstName = params['firstName'] || '';
+      this.lastName = params['lastName'] || '';
+      this.farmName = params['farmName'] || '';
     });
 
     this.fullName = `${this.firstName} ${this.lastName}`;
+    
+    // Log the extracted values for debugging
+    console.log('Extracted parameters:', {
+      userId: this.userId,
+      farmId: this.farmId,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      farmName: this.farmName,
+      fullName: this.fullName
+    });
   }
 
-  buildingCategory(id: number) {
+buildingCategory(userId: number, farmId: number) {
     this.router.navigate(
       ['/plant-care/action/assets/fixed-asset-category/building-fixed-asset'],
       {
         queryParams: {
-          id,
+          userId: userId,
+          farmId: farmId,
           category: 'Building and Infrastructures',
           fullName: this.fullName,
+          farmName: this.farmName
         },
       }
     );
   }
 
-  landCategory(id: number) {
+  landCategory(userId: number, farmId: number) {
     this.router.navigate(
       ['/plant-care/action/assets/fixed-asset-category/land-fixed-asset'],
       {
-        queryParams: { id, category: 'Land', fullName: this.fullName },
-      }
-    );
-  }
-
-  machCategory(id: number) {
-    this.router.navigate(
-      [
-        '/plant-care/action/assets/fixed-asset-category/machinary&tools-fixed-asset',
-      ],
-      {
-        queryParams: {
-          id,
-          category: 'Machinery and Vehicles',
+        queryParams: { 
+          userId: userId,
+          farmId: farmId,
+          category: 'Land', 
           fullName: this.fullName,
+          farmName: this.farmName
         },
       }
     );
   }
 
-  toolsCategory(id: number) {
+  machCategory(userId: number, farmId: number) {
     this.router.navigate(
       [
         '/plant-care/action/assets/fixed-asset-category/machinary&tools-fixed-asset',
       ],
       {
         queryParams: {
-          id,
+          userId: userId,
+          farmId: farmId,
+          category: 'Machinery and Vehicles',
+          fullName: this.fullName,
+          farmName: this.farmName
+        },
+      }
+    );
+  }
+
+  toolsCategory(userId: number, farmId: number) {
+    this.router.navigate(
+      [
+        '/plant-care/action/assets/fixed-asset-category/machinary&tools-fixed-asset',
+      ],
+      {
+        queryParams: {
+          userId: userId,
+          farmId: farmId,
           category: 'Tools and Equipments',
           fullName: this.fullName,
+          farmName: this.farmName
         },
       }
     );
   }
 
   navigatePath(path: string) {
-    this.router.navigate([path]);
+    // Include all parameters when navigating to preserve context
+    this.router.navigate([path], {
+      queryParams: {
+        userId: this.userId,
+        farmId: this.farmId,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        farmName: this.farmName
+      }
+    });
   }
 }

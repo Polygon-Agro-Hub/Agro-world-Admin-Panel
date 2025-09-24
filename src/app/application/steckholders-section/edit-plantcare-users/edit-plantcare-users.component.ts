@@ -931,6 +931,41 @@ export class EditPlantcareUsersComponent implements OnInit {
     { languageName: 'Tamil' },
   ];
 
+  onNICInput(event: any): void {
+  let value = event.target.value;
+  
+  // Trim leading spaces
+  value = value.replace(/^\s+/, '');
+  
+  // Update the form control value
+  this.userForm.get('NICnumber')?.setValue(value, { emitEvent: false });
+  event.target.value = value;
+}
+
+onNICKeyPress(event: KeyboardEvent): void {
+  const charCode = event.which ? event.which : event.keyCode;
+  const currentValue = (event.target as HTMLInputElement).value;
+  
+  // Allow only numbers, V/v, and control keys
+  if (
+    (charCode < 48 || charCode > 57) && // 0-9
+    charCode !== 86 && // V
+    charCode !== 118 && // v
+    charCode !== 8 && // backspace
+    charCode !== 9 && // tab
+    charCode !== 46 && // delete
+    charCode !== 37 && // left arrow
+    charCode !== 39 // right arrow
+  ) {
+    event.preventDefault();
+  }
+  
+  // If V/v is pressed, ensure it's at the end and only one V
+  if ((charCode === 86 || charCode === 118) && currentValue.includes('V')) {
+    event.preventDefault();
+  }
+}
+
   ngOnInit() {
     this.setupDropdownOptions();
     this.route.queryParams.subscribe((params) => {
@@ -1218,9 +1253,27 @@ export class EditPlantcareUsersComponent implements OnInit {
     return true;
   }
 
-  back(): void {
-    this.router.navigate(['/steckholders/action/farmers']);
-  }
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/steckholders/action/farmers']);
+    }
+  });
+}
+
+
 
   triggerFileInput(event: Event): void {
     event.preventDefault();
@@ -1251,185 +1304,466 @@ export class EditPlantcareUsersComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    if (this.userForm.valid) {
-      if (this.selectedImage) {
-        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!validImageTypes.includes(this.selectedImage.type)) {
-          Swal.fire({
-            title: 'Invalid File!',
-            text: 'Please upload a valid image file (jpg, png, gif).',
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
-          return;
-        }
-      }
+  // onSubmit() {
+  //   if (this.userForm.valid) {
+  //     if (this.selectedImage) {
+  //       const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  //       if (!validImageTypes.includes(this.selectedImage.type)) {
+  //         Swal.fire({
+  //           title: 'Invalid File!',
+  //           text: 'Please upload a valid image file (jpg, png, gif).',
+  //           icon: 'error',
+  //           confirmButtonText: 'OK',
+  //         });
+  //         return;
+  //       }
+  //     }
 
-      const token = this.tokenService.getToken();
-      if (!token) {
-        Swal.fire('Error', 'Authentication token not found', 'error');
-        return;
-      }
+  //     const token = this.tokenService.getToken();
+  //     if (!token) {
+  //       Swal.fire('Error', 'Authentication token not found', 'error');
+  //       return;
+  //     }
 
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you really want to update this plant care user?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, update it!',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const headers = new HttpHeaders({
-            Authorization: `Bearer ${token}`,
-          });
+  //     Swal.fire({
+  //       title: 'Are you sure?',
+  //       text: 'Do you really want to update this plant care user?',
+  //       icon: 'warning',
+  //       showCancelButton: true,
+  //       confirmButtonColor: '#3085d6',
+  //       cancelButtonColor: '#d33',
+  //       confirmButtonText: 'Yes, update it!',
+  //       cancelButtonText: 'Cancel',
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         const headers = new HttpHeaders({
+  //           Authorization: `Bearer ${token}`,
+  //         });
 
-          const formData = new FormData();
-          formData.append('firstName', this.userForm.get('firstName')?.value || '');
-          formData.append('lastName', this.userForm.get('lastName')?.value || '');
-          formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value || '');
-          formData.append('NICnumber', this.userForm.get('NICnumber')?.value || '');
-          formData.append('district', this.userForm.get('district')?.value || '');
-          formData.append('membership', this.userForm.get('membership')?.value || '');
-          formData.append('language', this.userForm.get('language')?.value || '');
-          formData.append('accHolderName', this.userForm.get('accHolderName')?.value || '');
-          formData.append('accNumber', this.userForm.get('accNumber')?.value || '');
-          formData.append('bankName', this.userForm.get('bankName')?.value || '');
-          formData.append('branchName', this.userForm.get('branchName')?.value || '');
+  //         const formData = new FormData();
+  //         formData.append('firstName', this.userForm.get('firstName')?.value || '');
+  //         formData.append('lastName', this.userForm.get('lastName')?.value || '');
+  //         formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value || '');
+  //         formData.append('NICnumber', this.userForm.get('NICnumber')?.value || '');
+  //         formData.append('district', this.userForm.get('district')?.value || '');
+  //         formData.append('membership', this.userForm.get('membership')?.value || '');
+  //         formData.append('language', this.userForm.get('language')?.value || '');
+  //         formData.append('accHolderName', this.userForm.get('accHolderName')?.value || '');
+  //         formData.append('accNumber', this.userForm.get('accNumber')?.value || '');
+  //         formData.append('bankName', this.userForm.get('bankName')?.value || '');
+  //         formData.append('branchName', this.userForm.get('branchName')?.value || '');
 
-          if (this.selectedImage) {
-            formData.append('image', this.selectedImage);
-          }
+  //         if (this.selectedImage) {
+  //           formData.append('image', this.selectedImage);
+  //         }
 
-          this.isLoading = true;
-          this.http
-            .put(`${environment.API_URL}auth/update-plant-care-user/${this.itemId}`, formData, { headers })
-            .subscribe(
-              (data: any) => {
-                this.isLoading = false;
-                this.userForm.patchValue(data);
-                Swal.fire('Updated!', 'Plant care user has been updated.', 'success').then(() => {
-                  this.router.navigate(['/steckholders/action/farmers']);
-                });
-                this.loadUserData(this.itemId!);
-              },
-              (error) => {
-                this.isLoading = false;
-                let errorMessage = 'There was an error updating the plant care user.';
-                if (error.error?.error) {
-                  errorMessage = error.error.error;
-                } else if (error.error?.message) {
-                  errorMessage = error.error.message;
-                } else if (error.status === 400) {
-                  errorMessage = 'Invalid data sent to server. Please check your inputs.';
-                }
-                Swal.fire('Error!', errorMessage, 'error');
-              }
-            );
-        }
-      });
-    } else {
-      Object.keys(this.userForm.controls).forEach((key) => {
-        const control = this.userForm.get(key);
-        control!.markAsTouched();
-      });
-      Swal.fire('Error', 'Please fill all required fields correctly.', 'error');
+  //         this.isLoading = true;
+  //         this.http
+  //           .put(`${environment.API_URL}auth/update-plant-care-user/${this.itemId}`, formData, { headers })
+  //           .subscribe(
+  //             (data: any) => {
+  //               this.isLoading = false;
+  //               this.userForm.patchValue(data);
+  //               Swal.fire('Updated!', 'Plant care user has been updated.', 'success').then(() => {
+  //                 this.router.navigate(['/steckholders/action/farmers']);
+  //               });
+  //               this.loadUserData(this.itemId!);
+  //             },
+  //             (error) => {
+  //               this.isLoading = false;
+  //               let errorMessage = 'There was an error updating the plant care user.';
+  //               if (error.error?.error) {
+  //                 errorMessage = error.error.error;
+  //               } else if (error.error?.message) {
+  //                 errorMessage = error.error.message;
+  //               } else if (error.status === 400) {
+  //                 errorMessage = 'Invalid data sent to server. Please check your inputs.';
+  //               }
+  //               Swal.fire('Error!', errorMessage, 'error');
+  //             }
+  //           );
+  //       }
+  //     });
+  //   } else {
+  //     Object.keys(this.userForm.controls).forEach((key) => {
+  //       const control = this.userForm.get(key);
+  //       control!.markAsTouched();
+  //     });
+  //     Swal.fire('Error', 'Please fill all required fields correctly.', 'error');
+  //   }
+  // }
+
+onSubmitCreate() {
+  // Log form values to verify
+  console.log('userForm values before submit:', this.userForm.value);
+
+  const missingFields: string[] = [];
+
+  // Validate form fields
+  if (this.userForm.get('firstName')?.invalid) {
+    if (this.userForm.get('firstName')?.errors?.['required']) {
+      missingFields.push('First Name is Required');
     }
   }
 
-  onSubmitCreate() {
-    if (this.userForm.valid) {
-      if (this.selectedImage) {
-        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!validImageTypes.includes(this.selectedImage.type)) {
-          Swal.fire({
-            title: 'Invalid File!',
-            text: 'Please upload a valid image file (jpg, png, gif).',
-            icon: 'error',
-            confirmButtonText: 'OK',
-          });
-          return;
-        }
-      }
-
-      const token = this.tokenService.getToken();
-      if (!token) {
-        Swal.fire('Error', 'Authentication token not found', 'error');
-        return;
-      }
-
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you really want to create a new plant care user?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, create it!',
-        cancelButtonText: 'Cancel',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const headers = new HttpHeaders({
-            Authorization: `Bearer ${token}`,
-          });
-
-          const formData = new FormData();
-          formData.append('firstName', this.userForm.get('firstName')?.value || '');
-          formData.append('lastName', this.userForm.get('lastName')?.value || '');
-          formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value || '');
-          formData.append('NICnumber', this.userForm.get('NICnumber')?.value || '');
-          formData.append('district', this.userForm.get('district')?.value || '');
-          formData.append('membership', this.userForm.get('membership')?.value || '');
-          formData.append('language', this.userForm.get('language')?.value || '');
-          formData.append('accNumber', this.userForm.get('accNumber')?.value || '');
-          formData.append('accHolderName', this.userForm.get('accHolderName')?.value || '');
-          formData.append('bankName', this.userForm.get('bankName')?.value || '');
-          formData.append('branchName', this.userForm.get('branchName')?.value || '');
-
-          if (this.selectedImage) {
-            formData.append('image', this.selectedImage);
-          }
-
-          this.isLoading = true;
-          this.http
-            .post(`${environment.API_URL}auth/create-plant-care-user`, formData, { headers })
-            .subscribe(
-              (response: any) => {
-                this.isLoading = false;
-                Swal.fire('Created!', 'A new plant care user has been created.', 'success').then(() => {
-                  this.router.navigate(['/steckholders/action/farmers']);
-                });
-                this.userForm.reset();
-                this.imagePreview = '';
-                this.selectedImage = null;
-                this.itemId = null;
-              },
-              (error) => {
-                this.isLoading = false;
-                let errorMessage = 'There was an error creating the plant care user.';
-                if (error.error?.error) {
-                  errorMessage = error.error.error;
-                } else if (error.status === 400) {
-                  errorMessage = 'Validation error. Please check your inputs.';
-                }
-                Swal.fire('Error!', errorMessage, 'error');
-              }
-            );
-        }
-      });
-    } else {
-      Object.keys(this.userForm.controls).forEach((key) => {
-        const control = this.userForm.get(key);
-        control!.markAsTouched();
-      });
-      Swal.fire('Error', 'Please fill all required fields correctly.', 'error');
+  if (this.userForm.get('lastName')?.invalid) {
+    if (this.userForm.get('lastName')?.errors?.['required']) {
+      missingFields.push('Last Name is Required');
     }
   }
 
-  onCancel() {
-    this.router.navigate(['/steckholders/action/farmers']);
+  if (this.userForm.get('phoneNumber')?.invalid) {
+    if (this.userForm.get('phoneNumber')?.errors?.['required']) {
+      missingFields.push('Mobile Number is Required');
+    } else if (this.userForm.get('phoneNumber')?.errors?.['pattern']) {
+      missingFields.push('Mobile Number - Must be in format +947XXXXXXXX');
+    }
   }
+
+  if (this.userForm.get('NICnumber')?.invalid) {
+    if (this.userForm.get('NICnumber')?.errors?.['required']) {
+      missingFields.push('NIC Number is Required');
+    } else if (this.userForm.get('NICnumber')?.errors?.['pattern']) {
+      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+    }
+  }
+
+  if (this.userForm.get('district')?.invalid) {
+    missingFields.push('District is Required');
+  }
+
+  if (this.userForm.get('membership')?.invalid) {
+    missingFields.push('Membership is Required');
+  }
+
+  if (this.userForm.get('language')?.invalid) {
+    missingFields.push('Language is Required');
+  }
+
+  if (this.userForm.get('accHolderName')?.invalid) {
+    missingFields.push('Account Holder Name is Required');
+  }
+
+  if (this.userForm.get('accNumber')?.invalid) {
+    if (this.userForm.get('accNumber')?.errors?.['required']) {
+      missingFields.push('Account Number is Required');
+    } else if (this.userForm.get('accNumber')?.errors?.['pattern']) {
+      missingFields.push('Account Number - Must contain only numbers');
+    }
+  }
+
+  if (this.userForm.get('bankName')?.invalid) {
+    missingFields.push('Bank Name is Required');
+  }
+
+  if (this.userForm.get('branchName')?.invalid) {
+    missingFields.push('Branch Name is Required');
+  }
+
+  // Validate image if selected
+  if (this.selectedImage) {
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!validImageTypes.includes(this.selectedImage.type)) {
+      missingFields.push('Profile Image - Must be a valid image file (jpg, png, gif)');
+    }
+    if (this.selectedImage.size > 5000000) {
+      missingFields.push('Profile Image - File size must not exceed 5MB');
+    }
+  }
+
+  // If errors, show popup and stop submission
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    this.isLoading = false;
+
+    // Mark all fields as touched to show real-time errors
+    Object.keys(this.userForm.controls).forEach((key) => {
+      const control = this.userForm.get(key);
+      control!.markAsTouched();
+    });
+    return;
+  }
+
+  // If valid, confirm creation
+  const token = this.tokenService.getToken();
+  if (!token) {
+    Swal.fire('Error', 'Authentication token not found', 'error');
+    return;
+  }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to create a new plant care user?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, create it!',
+    cancelButtonText: 'Cancel',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      const formData = new FormData();
+      formData.append('firstName', this.userForm.get('firstName')?.value || '');
+      formData.append('lastName', this.userForm.get('lastName')?.value || '');
+      formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value || '');
+      formData.append('NICnumber', this.userForm.get('NICnumber')?.value || '');
+      formData.append('district', this.userForm.get('district')?.value || '');
+      formData.append('membership', this.userForm.get('membership')?.value || '');
+      formData.append('language', this.userForm.get('language')?.value || '');
+      formData.append('accHolderName', this.userForm.get('accHolderName')?.value || '');
+      formData.append('accNumber', this.userForm.get('accNumber')?.value || '');
+      formData.append('bankName', this.userForm.get('bankName')?.value || '');
+      formData.append('branchName', this.userForm.get('branchName')?.value || '');
+
+      if (this.selectedImage) {
+        formData.append('image', this.selectedImage);
+      }
+
+      this.isLoading = true;
+      this.http
+        .post(`${environment.API_URL}auth/create-plant-care-user`, formData, { headers })
+        .subscribe(
+          (response: any) => {
+            this.isLoading = false;
+            Swal.fire('Created!', 'A new plant care user has been created.', 'success').then(() => {
+              this.router.navigate(['/steckholders/action/farmers']);
+            });
+            this.userForm.reset();
+            this.imagePreview = '';
+            this.selectedImage = null;
+            this.itemId = null;
+          },
+          (error) => {
+            this.isLoading = false;
+            let errorMessage = 'There was an error creating the plant care user.';
+            if (error.error?.error) {
+              errorMessage = error.error.error;
+            } else if (error.status === 400) {
+              errorMessage = 'Validation error. Please check your inputs.';
+            }
+            Swal.fire('Error!', errorMessage, 'error');
+          }
+        );
+    } else {
+      this.isLoading = false;
+    }
+  });
+}
+onSubmit() {
+  // Log form values to verify
+  console.log('userForm values before submit:', this.userForm.value);
+
+  const missingFields: string[] = [];
+
+  // Validate form fields
+  if (this.userForm.get('firstName')?.invalid) {
+    if (this.userForm.get('firstName')?.errors?.['required']) {
+      missingFields.push('First Name is Required');
+    }
+  }
+
+  if (this.userForm.get('lastName')?.invalid) {
+    if (this.userForm.get('lastName')?.errors?.['required']) {
+      missingFields.push('Last Name is Required');
+    }
+  }
+
+  if (this.userForm.get('phoneNumber')?.invalid) {
+    if (this.userForm.get('phoneNumber')?.errors?.['required']) {
+      missingFields.push('Mobile Number is Required');
+    } else if (this.userForm.get('phoneNumber')?.errors?.['pattern']) {
+      missingFields.push('Mobile Number - Must be in format +947XXXXXXXX');
+    }
+  }
+
+  if (this.userForm.get('NICnumber')?.invalid) {
+    if (this.userForm.get('NICnumber')?.errors?.['required']) {
+      missingFields.push('NIC Number is Required');
+    } else if (this.userForm.get('NICnumber')?.errors?.['pattern']) {
+      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+    }
+  }
+
+  if (this.userForm.get('district')?.invalid) {
+    missingFields.push('District is Required');
+  }
+
+  if (this.userForm.get('membership')?.invalid) {
+    missingFields.push('Membership is Required');
+  }
+
+  if (this.userForm.get('language')?.invalid) {
+    missingFields.push('Language is Required');
+  }
+
+  if (this.userForm.get('accHolderName')?.invalid) {
+    missingFields.push('Account Holder Name is Required');
+  }
+
+  if (this.userForm.get('accNumber')?.invalid) {
+    if (this.userForm.get('accNumber')?.errors?.['required']) {
+      missingFields.push('Account Number is Required');
+    } else if (this.userForm.get('accNumber')?.errors?.['pattern']) {
+      missingFields.push('Account Number - Must contain only numbers');
+    }
+  }
+
+  if (this.userForm.get('bankName')?.invalid) {
+    missingFields.push('Bank Name is Required');
+  }
+
+  if (this.userForm.get('branchName')?.invalid) {
+    missingFields.push('Branch Name is Required');
+  }
+
+  // Validate image if selected
+  if (this.selectedImage) {
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!validImageTypes.includes(this.selectedImage.type)) {
+      missingFields.push('Profile Image - Must be a valid image file (jpg, png, gif)');
+    }
+    if (this.selectedImage.size > 5000000) {
+      missingFields.push('Profile Image - File size must not exceed 5MB');
+    }
+  }
+
+  // If errors, show popup and stop submission
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    this.isLoading = false;
+
+    // Mark all fields as touched to show real-time errors
+    Object.keys(this.userForm.controls).forEach((key) => {
+      const control = this.userForm.get(key);
+      control!.markAsTouched();
+    });
+    return;
+  }
+
+  // If valid, confirm update
+  const token = this.tokenService.getToken();
+  if (!token) {
+    Swal.fire('Error', 'Authentication token not found', 'error');
+    return;
+  }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to update this plant care user?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, update it!',
+    cancelButtonText: 'Cancel',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
+
+      const formData = new FormData();
+      formData.append('firstName', this.userForm.get('firstName')?.value || '');
+      formData.append('lastName', this.userForm.get('lastName')?.value || '');
+      formData.append('phoneNumber', this.userForm.get('phoneNumber')?.value || '');
+      formData.append('NICnumber', this.userForm.get('NICnumber')?.value || '');
+      formData.append('district', this.userForm.get('district')?.value || '');
+      formData.append('membership', this.userForm.get('membership')?.value || '');
+      formData.append('language', this.userForm.get('language')?.value || '');
+      formData.append('accHolderName', this.userForm.get('accHolderName')?.value || '');
+      formData.append('accNumber', this.userForm.get('accNumber')?.value || '');
+      formData.append('bankName', this.userForm.get('bankName')?.value || '');
+      formData.append('branchName', this.userForm.get('branchName')?.value || '');
+
+      if (this.selectedImage) {
+        formData.append('image', this.selectedImage);
+      }
+
+      this.isLoading = true;
+      this.http
+        .put(`${environment.API_URL}auth/update-plant-care-user/${this.itemId}`, formData, { headers })
+        .subscribe(
+          (data: any) => {
+            this.isLoading = false;
+            this.userForm.patchValue(data);
+            Swal.fire('Updated!', 'Plant care user has been updated.', 'success').then(() => {
+              this.router.navigate(['/steckholders/action/farmers']);
+            });
+            this.loadUserData(this.itemId!);
+          },
+          (error) => {
+            this.isLoading = false;
+            let errorMessage = 'There was an error updating the plant care user.';
+            if (error.error?.error) {
+              errorMessage = error.error.error;
+            } else if (error.error?.message) {
+              errorMessage = error.error.message;
+            } else if (error.status === 400) {
+              errorMessage = 'Invalid data sent to server. Please check your inputs.';
+            }
+            Swal.fire('Error!', errorMessage, 'error');
+          }
+        );
+    } else {
+      this.isLoading = false;
+    }
+  });
+}
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/steckholders/action/farmers']);
+    }
+  });
+}
+
+
 }

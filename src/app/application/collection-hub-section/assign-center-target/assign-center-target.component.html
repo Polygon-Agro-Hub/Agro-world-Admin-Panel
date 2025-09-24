@@ -23,30 +23,34 @@
           />
         </div>
       </div> -->
+<div class="mr-5">
+  <p-calendar
+    id="toDate"
+    [(ngModel)]="selectDate"
+    (onSelect)="onDateChange($event)"
+    (onClear)="onDateChange(null)"
+    (onClose)="checkDateSelection()"
+    [showIcon]="true"
+    [showClear]="true"
+    [showButtonBar]="true"
+    placeholder="Select Date"
+    iconDisplay="input"
+    [style]="{ width: '16rem', height: '2rem' }"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d]
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+    [appendTo]="'body'"
+  ></p-calendar>
 
-      <div class="mr-5">
-        <p-calendar
-  id="toDate"
-  [(ngModel)]="selectDate"
-  (onSelect)="onDateChange($event)"
-  (onClear)="onDateChange($event)"       
-  [showIcon]="true"
-  [showClear]="true"              
-  [showButtonBar]="true"
-  iconDisplay="input"
-  [style]="{ width: '16rem', height: '2rem' }"
-  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                   [&_.p-datepicker-header]:dark:text-white
-                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                   
-                   [&_.p-button:hover]:dark:bg-[#6b7280]"
-  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-  [appendTo]="'body'"
-/>
-      </div>
+  <!-- Validation message -->
+  <p *ngIf="dateError" class="text-red-500 mt-1">Please select the date to display target.</p>
+</div>
+
 
       <div
         class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
@@ -56,7 +60,7 @@
           (keyup.enter)="onSearch()"
           (keyup.esc)="offSearch()"
           type="text"
-          placeholder="Search by Variety Name"
+          placeholder="Search by Crop / Variety Name"
           class="bg-transparent  outline-none w-full text-textLight dark:text-textDark"
         />
         <button
@@ -103,6 +107,15 @@
     </div>
   </div>
 
+  <div *ngIf="!hasData" class="flex flex-col justify-start items-center pt-32 h-screen">
+    <p class="text-[#494949] dark:text-textDark mb-4">
+      -- No Data Available --
+    </p>
+    <div class="items-center">
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+    </div>
+  </div>
+
   <div
     *ngIf="hasData"
     class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack rounded-lg my-8"
@@ -144,47 +157,67 @@
                 min="0"
                 class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingA"
-                (change)="validateForm()"
+                (change)="validateForm()" 
+                (keypress)="allowOnlyDigits($event)"
+  (input)="removeLeadingZeros(item)"
               />
               <button
                 *ngIf="!isNew && !item.editingA && isDateValid"
-                (click)="item.editingA = true"
+                (click)="(item.editingA = true) && pressEditIcon(item,'A')"
               >
                 <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
               </button>
-              <button
+              <!-- <button
                 *ngIf="!isNew && item.editingA && isDateValid"
                 class="bg-[#3980C0] px-3 py-2 text-white rounded-lg"
                 (click)="saveGrade('A', item, item.targetA, item.idA)"
               >
                 Save
-              </button>
+              </button> -->
+
+              <button *ngIf="!isNew && item.editingA && isDateValid"
+                                class="px-3 py-2 text-white rounded-lg" [ngClass]="{
+                                    'bg-[#415CFF]': item.preValueA !== item.targetA,
+                                    'bg-[#6B7D8C]': item.preValueA === item.targetA || item.targetA < 0 || item.targetA < item.preValueA
+                                  }"
+                                (click)="item.preValueA !== item.targetA && item.targetA >= 0 && saveGrade('A', item, item.targetA, item.idA)">
+                                Save
+                            </button>
             </td>
 
             <!-- Grade B Column -->
             <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
               <input
-                [(ngModel)]="item.targetB"
-                type="number"
-                name="targetB"
-                min="0"
-                class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
-                [disabled]="!isNew && !item.editingB"
-                (change)="validateForm()"
-              />
+  [(ngModel)]="item.targetB"
+  type="text"
+  name="targetB"
+  class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
+  [disabled]="!isNew && !item.editingB"
+  (keypress)="allowOnlyDigits($event)"
+  (input)="removeLeadingZeros(item)"
+  (change)="validateForm()"
+/>
               <button
                 *ngIf="!isNew && !item.editingB && isDateValid"
-                (click)="item.editingB = true"
+                (click)="(item.editingB = true) && pressEditIcon(item,'B')"
               >
                 <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
               </button>
-              <button
+
+              <button *ngIf="!isNew && item.editingB && isDateValid" [ngClass]="{
+                'bg-[#415CFF]': item.preValueB !== item.targetB,
+                'bg-[#6B7D8C]': item.preValueB === item.targetB || item.targetB < 0 || item.targetB < item.preValueB
+              }" class="px-3 py-2 text-white rounded-lg"
+                (click)="item.preValueB !== item.targetB && item.targetB >= 0 && saveGrade('B', item, item.targetB, item.idB)">
+                Save
+            </button>
+              <!-- <button
                 *ngIf="!isNew && item.editingB && isDateValid"
                 class="bg-[#3980C0] px-3 py-2 text-white rounded-lg"
                 (click)="saveGrade('B', item, item.targetB, item.idB)"
               >
                 Save
-              </button>
+              </button> -->
             </td>
 
             <!-- Grade C Column -->
@@ -197,26 +230,37 @@
                 class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingC"
                 (change)="validateForm()"
+                (keypress)="allowOnlyDigits($event)"
+                (input)="removeLeadingZeros(item)"
               />
               <button
                 *ngIf="!isNew && !item.editingC && isDateValid"
-                (click)="item.editingC = true"
+                (click)="(item.editingC = true) && pressEditIcon(item,'C')"
               >
                 <i class="fa-solid fa-pen-to-square text-[#3980C0] text-xl"></i>
               </button>
-              <button
+
+              <button *ngIf="!isNew && item.editingC && isDateValid" [ngClass]="{
+                'bg-[#415CFF]': item.preValueC !== item.targetC,
+                'bg-[#6B7D8C]': (item.preValueC === item.targetC) || item.targetC < 0 || item.targetC < item.preValueC
+              }" class="px-3 py-2 text-white rounded-lg"
+                (click)="item.preValueC !== item.targetC && item.targetC >= 0 && saveGrade('C', item, item.targetC, item.idC)">
+                Save
+            </button>
+              <!-- <button
                 *ngIf="!isNew && item.editingC && isDateValid"
                 class="bg-[#3980C0] px-3 py-2 text-white rounded-lg"
                 (click)="saveGrade('C', item, item.targetC, item.idC)"
               >
                 Save
-              </button>
+              </button> -->
             </td>
           </tr>
         </tbody>
       </table>
+  
     </div>
-
+        
     <div
       *ngIf="isNew && isDateValid"
       class="flex flex-row justify-center items-center my-7 gap-8"

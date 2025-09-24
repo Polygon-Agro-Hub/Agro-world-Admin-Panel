@@ -12,6 +12,7 @@ export interface PlantCareUser {
   NICnumber: string;
   profileImage: string;
   createdAt: string;
+  
 }
 
 export interface FixedAsset {
@@ -31,6 +32,28 @@ export interface FixedAsset {
   createdAt: string;
 }
 
+export interface Farm {
+  id: number;
+  farmName: string;
+  farmIndex: number;
+  extentha: number;
+  extentac: number;
+  extentp: number;
+  district: string;
+  plotNo: string;
+  street: string;
+  city: string;
+  staffCount: number;
+  appUserCount: number;
+  imageId: number;
+  isBlock: number;
+  createdAt: string;
+}
+
+export interface FarmResponse {
+  result: Farm[];
+}
+
 @Injectable({
   providedIn: "root",
 })
@@ -44,7 +67,7 @@ export class PlantcareUsersService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   getAllPlantCareUsers(
     page: number,
@@ -107,6 +130,8 @@ export class PlantcareUsersService {
   // }
 
   uploadUserXlsxFile(formData: FormData): Observable<any> {
+    console.log(formData);
+    
     return this.http
       .post(`${this.apiUrl}auth/upload-user-xlsx`, formData, {
         responseType: "json",
@@ -157,4 +182,57 @@ export class PlantcareUsersService {
       headers,
     });
   }
+
+
+  getAllFarmerStaff(id: number, role: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}auth/get-all-farmer-staff?id=${id}`
+    if (role) {
+      url += `&role=${role}`
+    }
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
+
+  getFarmerFarms(userId: number): Observable<FarmResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<FarmResponse>(`${this.apiUrl}auth//get-all-farmer-farms?userId=${userId}`, { headers });
+  }
+  
+deleteFarm(farmId: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.delete<any>(`${this.apiUrl}auth/delete-farm?farmId=${farmId}`, { headers });
 }
+
+  
+  getFarmOwnerById(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  const url = `${this.apiUrl}auth/get-farm-owner?id=${id}`;
+
+  return this.http.get(url, { headers });
+}
+
+updateFarmOwner(ownerId: number, data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`
+  });
+  return this.http.put(`${this.apiUrl}auth/update-farm-owner/${ownerId}`, data, { headers });
+}
+
+
+}
+

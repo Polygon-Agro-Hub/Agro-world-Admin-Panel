@@ -1,101 +1,96 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-
 <!-- Creating Area -->
 <div *ngIf="this.itemId==null">
-  <button (click)="backCreate()" class="mb-5 text-textLight dark:text-textDark">
+  <button (click)="backCreate()" class=" text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
   <div class="h-[20px]"></div>
 
-
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
     <h2 class="text-xl font-semibold text-center mb-4 dark:text-textDark">ADD CROP GROUP</h2>
-
 
     <div class="space-y-4">
       <!-- Crop Name -->
       <div>
         <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By English*
+          Crop Name By English *
         </label>
-        <input type="text" id="cropName" [(ngModel)]="cropGroup.cropNameEnglish" name="cropName"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropEngNameInput="ngModel"
-          pattern="^(?!\d+$)[a-zA-Z\s]*$"
-          (keydown)="allowOnlyEnglish($event)"
-          required />
-      
-        <!-- Error: Required Field -->
-        <div *ngIf="cropEngNameInput.touched && !cropGroup.cropNameEnglish" class="text-red-500 text-sm mt-1">
-          <div>English Crop name is required</div>
-        </div>
-      
-        <!-- Error: Pattern Validation -->
-        <div *ngIf="cropEngNameInput.touched && cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-          <div>Crop name cannot be only numbers and special characters are not allowed</div>
+        <input type="text" id="cropName" name="cropName" [(ngModel)]="cropGroup.cropNameEnglish"
+          #cropEngNameInput="ngModel" (input)="capitalizeFirstLetter($event)" pattern="^(?!\d+$)[a-zA-Z\s]*$" required
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark" />
+
+        <!-- Validation Errors -->
+        <div *ngIf="cropEngNameInput.touched">
+          <div *ngIf="cropEngNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            English Crop name is required
+          </div>
+          <!-- <div *ngIf="cropEngNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+            Crop name cannot be only numbers and special characters are not allowed
+          </div> -->
         </div>
       </div>
 
       <!-- Crop Name Sinhala -->
       <div>
         <label for="cropNameSin" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By Sinhala*
+          Crop Name By Sinhala *
         </label>
         <input type="text" id="cropNameSin" [(ngModel)]="cropGroup.cropNameSinahala" name="cropNameSinhala"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropSinNameInput="ngModel"
-          pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$"
-          (keydown)="allowOnlySinhala($event)"
-          required />
-      
-        <!-- Error: Required Field -->
-        <div *ngIf="cropSinNameInput.touched && !cropGroup.cropNameSinahala" class="text-red-500 text-sm mt-1">
-          <div>Sinhala Crop name is required</div>
-        </div>
-      
-        <!-- Error: Pattern Validation -->
-        <div *ngIf="cropSinNameInput.touched && cropSinNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-          <div>Crop name cannot be only numbers and only Sinhala characters and numbers are allowed</div>
+          #cropSinNameInput="ngModel" pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$" required />
+
+        <!-- Validation Errors -->
+        <div *ngIf="cropSinNameInput.touched">
+          <div *ngIf="cropSinNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            Sinhala Crop name is required
+          </div>
+          <!-- <div *ngIf="cropSinNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+            Crop name cannot be only numbers and only Sinhala characters are allowed
+          </div> -->
         </div>
       </div>
 
       <!-- Crop Name Tamil -->
       <div>
         <label for="cropNameTam" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Crop Name By Tamil*
+          Crop Name By Tamil *
         </label>
         <input type="text" id="cropNameTam" [(ngModel)]="cropGroup.cropNameTamil" name="cropNameTamil"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #cropTamilNameInput="ngModel"
-          pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$"
-          (keydown)="allowOnlyTamil($event)"
-          required />
-      
-        <!-- Error: Required Field -->
-        <div *ngIf="cropTamilNameInput.touched && !cropGroup.cropNameTamil" class="text-red-500 text-sm mt-1">
-          <div>Tamil Crop name is required</div>
-        </div>
-      
-        <!-- Error: Pattern Validation -->
-        <div *ngIf="cropTamilNameInput.touched && cropTamilNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-          <div>Crop name cannot be only numbers and only Tamil characters and numbers are allowed</div>
+          #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$" required />
+
+        <!-- Validation Errors -->
+        <div *ngIf="cropTamilNameInput.touched">
+          <div *ngIf="cropTamilNameInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            Tamil Crop name is required
+          </div>
+          <!-- <div *ngIf="cropTamilNameInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+            Crop name cannot be only numbers and only Tamil characters are allowed
+          </div> -->
         </div>
       </div>
 
       <!-- Select Parent Category -->
       <div>
-        <label for="parentCategory" class="block text-sm font-medium text-gray-700 dark:text-textDark">Select Parent
-          Category*</label>
-        <select id="parentCategory" [(ngModel)]="cropGroup.parentCategory" name="parentCategory"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
-          #parentCategoryInput="ngModel">
-          <option value="" disabled>Select Category</option>
-          <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-        </select>
-        <div *ngIf="parentCategoryInput.touched && !cropGroup.parentCategory" class="text-red-500 text-sm mt-1">
-          <div>Parent Category is required</div>
+        <label for="parentCategory" class="block text-sm font-medium mb-1 text-gray-700 dark:text-textDark">Select
+          Parent
+          Category *</label>
+        <p-dropdown id="parentCategory" [(ngModel)]="cropGroup.parentCategory" [options]="categories"
+          placeholder="Select Category" [filter]="true" showClear="true" [ngClass]="{
+    'border-red-500':
+      !cropGroup.parentCategory && parentCategoryInput?.touched
+  }" class="w-full mt-2 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack rounded-md  py-2 shadow-sm"
+          #parentCategoryInput="ngModel" panelStyleClass="custom-dropdown-panel" styleClass="w-full"
+          class="block w-full p-dropdown-custom">
+        </p-dropdown>
+
+
+        <!-- Validation Error -->
+        <div *ngIf="parentCategoryInput.touched && parentCategoryInput.errors?.['required']"
+          class="text-red-500 text-sm mt-1">
+          Parent Category is required
         </div>
       </div>
 
@@ -104,13 +99,17 @@
 
       <!-- Button -->
       <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
-        Add Image*
+        Add Image *
         <span
           class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
           <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
         </span>
       </button>
 
+      <!-- Image Validation Error -->
+      <div *ngIf="imageTouched && !selectedFile" class="text-red-500 text-sm mt-1">
+        Please select an image
+      </div>
 
       <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
         <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
@@ -121,12 +120,14 @@
 
       <!-- Add Background Color -->
       <div class="flex items-center space-x-4">
-        <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color*</label>
+        <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
         <ngx-colors ngx-colors-trigger [(ngModel)]="cropGroup.bgColor" (colorChange)="onColorChange($event)"
-          style="display: inline-block; margin:5px;" #bgColorInput="ngModel">
+          style="display: inline-block; margin:5px;" #bgColorInput="ngModel" required>
         </ngx-colors>
-        <div *ngIf="bgColorInput.touched && !cropGroup.bgColor" class="text-red-500 text-sm mt-1">
-          <div>Background Color is required</div>
+
+        <!-- Validation Error -->
+        <div *ngIf="bgColorInput.touched && bgColorInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+          Background Color is required
         </div>
       </div>
 
@@ -135,30 +136,19 @@
         <button type="button" (click)="onCancel()"
           class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
         <button type="submit" (click)="onSubmit()"
-          class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md"
-          [disabled]="cropEngNameInput.invalid || cropSinNameInput.invalid || cropTamilNameInput.invalid">Save</button>
+          class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
       </div>
     </div>
-
   </div>
-
 </div>
 
-
-
-
-
-
-
 <!-- Editing Area -->
-
 <div *ngIf="this.itemId!=null">
-  <button (click)="backCreate()" class="mb-5 text-textLight dark:text-textDark">
+  <button (click)="backCreate()" class=" text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
   <div class="h-[20px]"></div>
-
 
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
     <h2 class="text-xl font-semibold text-center mb-4 dark:text-textDark">EDIT CROP GROUP</h2>
@@ -168,72 +158,78 @@
         <!-- Crop Name -->
         <div>
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Crop Name By English*
+            Crop Name By English *
           </label>
-          <input type="text" id="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish" name="cropNameEnglish"
+          <input type="text" id="cropNameEnglish" name="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish"
+            #cropNameEnglishInput="ngModel"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required #cropNameEnglishInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" 
-          (keydown)="allowOnlyEnglish($event)" />
+            required pattern="^(?!\d+$)[a-zA-Z0-9]*$" (input)="capitalizeFirstLetter($event)" />
 
-          <div *ngIf="cropNameEnglishInput.touched && !newsItems[0].cropNameEnglish" class="text-red-500 text-sm mt-1">
-            <div>English Crop name is required</div>
-          </div>
-
-          <div *ngIf="cropNameEnglishInput.touched && cropNameEnglishInput.errors?.['pattern']"
-            class="text-red-500 text-sm mt-1">
-            <div>Cannot enter numbers only & Can not enter special character</div>
+          <!-- Validation Errors -->
+          <div *ngIf="cropNameEnglishInput.touched">
+            <div *ngIf="cropNameEnglishInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              English Crop name is required
+            </div>
+            <!-- <div *ngIf="cropNameEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Cannot enter numbers only & Can not enter special character
+            </div> -->
           </div>
         </div>
 
-
+        <!-- Crop Name Sinhala -->
         <div>
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
-            Sinhala*</label>
+            Sinhala *</label>
           <input type="text" id="cropNameSinhala" [(ngModel)]="newsItems[0].cropNameSinhala" name="cropNameSinhala"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark" 
-            required #cropNameSinhalaInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$"  (keydown)="allowOnlySinhala($event)" />
-          <div *ngIf="cropNameSinhalaInput.touched && !newsItems[0].cropNameSinhala" class="text-red-500 text-sm mt-1">
-            <div>Sinhala Crop name is required</div>
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
+            required #cropNameSinhalaInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
+
+          <!-- Validation Errors -->
+          <div *ngIf="cropNameSinhalaInput.touched">
+            <div *ngIf="cropNameSinhalaInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Sinhala Crop name is required
+            </div>
+            <!-- <div *ngIf="cropNameSinhalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Cannot enter numbers only & Can not enter special character
+            </div> -->
           </div>
-          <!-- <div *ngIf="cropNameSinhalaInput.touched && cropNameSinhalaInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-            <div>Can not enter special character</div>
-          </div> -->
-          <!-- <div *ngIf="cropNameSinhalaInput.touched && cropNameSinhalaInput.errors?.['pattern']"
-            class="text-red-500 text-sm mt-1">
-            <div>Cannot enter numbers only & Can not enter special character</div>
-          </div> -->
         </div>
 
+        <!-- Crop Name Tamil -->
         <div>
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
-            Tamil*</label>
+            Tamil *</label>
           <input type="text" id="cropNameTamil" [(ngModel)]="newsItems[0].cropNameTamil" name="cropNameTamil"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required #cropNameTamilInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" (keydown)="allowOnlyTamil($event)"/>
-          <div *ngIf="cropNameTamilInput.touched && !newsItems[0].cropNameTamil" class="text-red-500 text-sm mt-1">
-            <div>Tamil Crop name is required</div>
+            required #cropNameTamilInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
+
+          <!-- Validation Errors -->
+          <div *ngIf="cropNameTamilInput.touched">
+            <div *ngIf="cropNameTamilInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+              Tamil Crop name is required
+            </div>
+            <!-- <div *ngIf="cropNameTamilInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+              Cannot enter numbers only & Can not enter special character
+            </div> -->
           </div>
-          <!-- <div *ngIf="cropNameTamilInput.touched && cropNameTamilInput.errors?.['pattern1']" class="text-red-500 text-sm mt-1">
-            <div>Can not enter special character</div>
-          </div> -->
-          <!-- <div *ngIf="cropNameTamilInput.touched && cropNameTamilInput.errors?.['pattern']"
-            class="text-red-500 text-sm mt-1">
-            <div>Cannot enter numbers only & Can not enter special character</div>
-          </div> -->
         </div>
 
         <!-- Select Parent Category -->
         <div>
-          <label for="parentCategory" class="block text-sm font-medium text-gray-700 dark:text-textDark">Select Parent
-            Category*</label>
-          <select id="parentCategory" [(ngModel)]="newsItems[0].category" name="parentCategory" #categoryInput="ngModel"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required>
-            <option value="" disabled>Select Category</option>
-            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-          </select>
-          <div *ngIf="categoryInput.touched && !newsItems[0].category" class="text-red-500 text-sm mt-1">
-            <div>Parent Category is required</div>
+          <label for="parentCategory" class="block text-sm font-medium text-gray-700 mb-1 dark:text-textDark">Select
+            Parent
+            Category *</label>
+          <p-dropdown id="parentCategory" [(ngModel)]="newsItems[0].category" [options]="categories" name="category"
+            placeholder="Select Category" optionLabel="label" optionValue="value" [filter]="true" showClear="false"
+            class="w-full mt-1  py-2 shadow-sm rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [ngClass]="{'border-red-500': !newsItems[0].category && categoryInput?.touched}" #categoryInput="ngModel"
+            required panelStyleClass="custom-dropdown-panel" styleClass="w-full" class="block w-full p-dropdown-custom">
+          </p-dropdown>
+
+
+          <!-- Validation Error -->
+          <div *ngIf="categoryInput.touched && categoryInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            Parent Category is required
           </div>
         </div>
 
@@ -242,13 +238,12 @@
 
         <!-- Button -->
         <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput($event)">
-          Add Image*
+          Add Image *
           <span
             class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-blue-500 font-bold">
             <i class="fa-solid fa-plus" style="color: #4A90E2;"></i>
           </span>
         </button>
-
 
         <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark w-full block">
           <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
@@ -260,24 +255,26 @@
 
         <!-- Add Background Color -->
         <div class="flex items-center space-x-4">
-          <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color*</label>
+          <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
           <ngx-colors ngx-colors-trigger [(ngModel)]="newsItems[0].bgColor" (colorChange)="onColorChange($event)"
-            style="display: inline-block; margin:5px;">
+            style="display: inline-block; margin:5px;" #bgColorInputEdit="ngModel" required>
           </ngx-colors>
+
+          <!-- Validation Error -->
+          <div *ngIf="bgColorInputEdit.touched && bgColorInputEdit.errors?.['required']"
+            class="text-red-500 text-sm mt-1">
+            Background Color is required
+          </div>
         </div>
 
         <!-- Buttons -->
         <div class="flex justify-end space-x-4 mt-6">
           <button type="button" (click)="onCancel()"
             class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md">Cancel</button>
-          <button type="submit" (click)="updateNews()"  [disabled]="!newsItems[0].cropNameEnglish || !newsItems[0].cropNameSinhala || !newsItems[0].cropNameTamil || !newsItems[0].category || !newsItems[0].bgColor"
+          <button type="submit" (click)="updateNews()"
             class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md">Save</button>
         </div>
       </div>
     </form>
-
   </div>
-
 </div>
-
-<!-- [disabled]="cropForm.invalid" -->

@@ -358,10 +358,12 @@ export class ProcumentsService {
 
     return this.http.get<any>(url, { headers }).pipe(
       map((response) => {
+        console.log('response', response)
         if (response.success) {
           return {
             invNo: response.data.invNo,
             packages: response.data.packages,
+            additionalItems:response.additionalItems
           };
         } else {
           throw new Error(response.message);
@@ -436,19 +438,8 @@ export class ProcumentsService {
     return this.http.get<any>(url, { headers });
   }
 
-  // updateDefinePackageItemData(array: any, id: number): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-  
-  //   const url = `${this.apiUrl}dispatch/update-package-data`;
-  
-  //   // Send the array as a named field in the body
-  //   return this.http.post<any>(url, { packedItems: array, id}, { headers });
-  // }
-
-  updateDefinePackageItemData(array: any): Observable<any> {
+  updateDefinePackageItemData(array: any, id:number): Observable<any> {
+    console.log('array', array)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -457,7 +448,7 @@ export class ProcumentsService {
     const url = `${this.apiUrl}procument/update-define-package-data`;
   
     // Send the array as a named field in the body
-    return this.http.post<any>(url, { definePackageItems: array}, { headers });
+    return this.http.post<any>(url, { definePackageItems: array, orderId:id}, { headers });
   }
 
   getExcludedItems(orderId: number): Observable<any> {

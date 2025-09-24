@@ -14,6 +14,7 @@ export class TargetService {
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getSavedCenterCrops(
+
     id: number,
     date: string,
     searchText: string = ''
@@ -24,7 +25,7 @@ export class TargetService {
     });
 
     console.log('date', date)
-
+    
     let url = `${this.apiUrl}/get-saved-center-crops/${id}/${date}`;
     if (searchText) {
       url += `?searchText=${searchText}`;

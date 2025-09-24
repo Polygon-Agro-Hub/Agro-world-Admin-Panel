@@ -31,9 +31,28 @@ export class MarketEditPackagesComponent {
     private router: Router
   ) {}
 
+ 
+
   back(): void {
-    this.router.navigate(['market/action/view-packages-list']);
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+ this.router.navigate(['market/action/view-packages-list']);
   }
+
+  });
+}
+
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -190,10 +209,14 @@ preventNegative(event: any): void {
       showCancelButton: true,
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
       if (result.isConfirmed) {
         this.packageObj = new Package();
-        this.router.navigate(['/market/action']);
+         this.router.navigate(['market/action/view-packages-list']);
       }
     });
   }
@@ -250,21 +273,87 @@ preventNegative(event: any): void {
     }
   }
 
-  allowDecimalNumbers(event: KeyboardEvent) {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode >= 48 && charCode <= 57) return true;
-    if (charCode === 46) {
-      const currentValue = (event.target as HTMLInputElement).value;
-      return currentValue.indexOf('.') === -1;
-    }
-    if ([8, 9, 13, 37, 39].includes(charCode)) return true;
+  allowDecimalNumbers(event: KeyboardEvent): boolean {
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  const key = event.key;
+  
+  // Allow: backspace, delete, tab, escape, enter
+  if ([8, 9, 13, 27].includes(event.keyCode)) {
+    return true;
+  }
+  
+  // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+  if ((event.ctrlKey || event.metaKey) && [65, 67, 86, 88].includes(event.keyCode)) {
+    return true;
+  }
+  
+  // Allow: left arrow, right arrow, home, end
+  if ([37, 39, 36, 35].includes(event.keyCode)) {
+    return true;
+  }
+  
+  // Only allow numbers and one decimal point
+  if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode !== 46) {
     event.preventDefault();
     return false;
   }
+  
+  // Check for existing decimal point
+  if (event.key === '.' && value.includes('.')) {
+    event.preventDefault();
+    return false;
+  }
+  
+  // If there's already a decimal point, limit to 2 decimal places
+  if (value.includes('.')) {
+    const decimalParts = value.split('.');
+    if (decimalParts[1].length >= 2) {
+      event.preventDefault();
+      return false;
+    }
+  }
+  
+  return true;
+}
 
   trackByFn(index: number, item: any): any {
     return item.productTypeId;
   }
+
+  validateDecimalInput(event: any): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  // Remove any invalid characters
+  value = value.replace(/[^0-9.]/g, '');
+  
+  // Handle cases with multiple decimal points
+  const decimalParts = value.split('.');
+  if (decimalParts.length > 2) {
+    value = decimalParts[0] + '.' + decimalParts.slice(1).join('');
+  }
+  
+  // Ensure maximum of 2 decimal places
+  if (decimalParts.length === 2) {
+    value = decimalParts[0] + '.' + decimalParts[1].slice(0, 2);
+  }
+  
+  // Update the input value
+  input.value = value;
+  
+  // Update the model if needed
+  if (input.name === 'productPrice') {
+    this.packageObj.productPrice = value ? parseFloat(value) : 0;
+  } else if (input.name === 'serviceFee') {
+    this.packageObj.serviceFee = value ? parseFloat(value) : 0;
+  } else if (input.name === 'packageFee') {
+    this.packageObj.packageFee = value ? parseFloat(value) : 0;
+  }
+  
+  this.calculateApproximatedPrice();
+}
+
 }
 
 class Package {

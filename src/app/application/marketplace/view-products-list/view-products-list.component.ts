@@ -32,11 +32,12 @@ export class ViewProductsListComponent {
   itemsPerPage: number = 10;
   hasData: boolean = true;
   totalItems: number = 0;
-  displayOptions = [
-    { name: '%, Actual', value: 'D&AP' },
-    { name: 'Actual, Sale', value: 'AP&SP' },
-    { name: '%, Actual, Sale', value: 'AP&SP&D' },
-  ];
+displayOptions = [
+  { name: '%, Actual', value: 'D&AP' },
+  { name: 'Actual, Sale', value: 'AP&SP' },
+  { name: '%, Actual, Sale', value: 'AP&SP&D' },
+  { name: 'No Discount', value: 'NoDiscount' }, // Changed from 'No' to 'NoDiscount'
+];
   selectedDisplayType: any = null;
 
   categoryOption = [
@@ -54,38 +55,47 @@ export class ViewProductsListComponent {
   ) {}
 
 fetchAllProducts(
-    page: number = 1,
-    limit: number = this.itemsPerPage,
-    search: string = this.searchVariety,
-    displayType: string = this.selectedDisplayType?.value,
-    category: string = this.selectedCategoryOption?.value
-  ) {
-    this.isLoading = true;
-    // Trim the search string to remove leading/trailing spaces
-    const trimmedSearch = search.trim();
-    const displayTypeValue = displayType || '';
-    const categoryValue = category || '';
-    this.viewProductsList
-      .getProductList(page, limit, trimmedSearch, displayTypeValue, categoryValue)
-      .subscribe(
-        (response) => {
-          console.log('this is the response', response);
-          this.viewProductList = response.items;
-          this.hasData = this.viewProductList.length > 0;
-          this.totalItems = response.total;
-          this.isLoading = false;
-        },
-        (error) => {
-          console.error('Error fetching all Products', error);
-          this.isLoading = false;
-          if (error.status === 401) {
-            Swal.fire('Unauthorized', 'Please log in again.', 'error');
-          } else {
-            Swal.fire('Error', 'Failed to fetch products.', 'error');
-          }
-        }
-      );
+  page: number = 1,
+  limit: number = this.itemsPerPage,
+  search: string = this.searchVariety,
+  displayType: string = this.selectedDisplayType?.value,
+  category: string = this.selectedCategoryOption?.value
+) {
+  this.isLoading = true;
+  const trimmedSearch = search.trim();
+  
+  // Handle "No Discount" case
+  let displayTypeValue = displayType || '';
+  let discountFilter = '';
+  
+  if (displayTypeValue === 'NoDiscount') {
+    displayTypeValue = ''; // Clear displayType filter
+    discountFilter = 'zero'; // Add special flag for discount filter
   }
+  
+  const categoryValue = category || '';
+  
+  this.viewProductsList
+    .getProductList(page, limit, trimmedSearch, displayTypeValue, categoryValue, discountFilter)
+    .subscribe(
+      (response) => {
+        console.log('this is the response', response);
+        this.viewProductList = response.items;
+        this.hasData = this.viewProductList.length > 0;
+        this.totalItems = response.total;
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching all Products', error);
+        this.isLoading = false;
+        if (error.status === 401) {
+          Swal.fire('Unauthorized', 'Please log in again.', 'error');
+        } else {
+          Swal.fire('Error', 'Failed to fetch products.', 'error');
+        }
+      }
+    );
+}
 
   onDisplayTypeChange() {
     this.page = 1;
@@ -137,6 +147,14 @@ searchProduct() {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+        icon: '!border-gray-200 dark:!border-gray-500',
+        confirmButton: 'hover:!bg-[#3085d6] dark:hover:!bg[#3085d6]',
+        cancelButton: '',
+        actions: 'gap-2'
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         this.http
@@ -146,21 +164,30 @@ searchProduct() {
           .subscribe(
             (data: any) => {
               if (data) {
-                Swal.fire(
-                  'Deleted!',
-                  'The product has been deleted.',
-                  'success'
-                );
+                Swal.fire({
+                  title: 'Deleted',
+                  text: 'The product has been deleted.',
+                  icon: 'success',
+                  customClass: {
+                    popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                    title: 'dark:text-white',
+                  }
+                });
                 this.fetchAllProducts();
               }
             },
             (error) => {
               console.error('Error deleting product:', error);
-              Swal.fire(
-                'Error',
-                'There was a problem deleting the product.',
-                'error'
-              );
+              
+              Swal.fire({
+                title: 'Error',
+                text: 'There was a problem deleting the product.',
+                icon: 'error',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
+              });
             }
           );
       } else if (result.dismiss === Swal.DismissReason.cancel) {

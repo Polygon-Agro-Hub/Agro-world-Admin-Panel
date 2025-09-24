@@ -1,0 +1,188 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div 
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex flex-col items-start">
+                <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
+                    {{farmerName}}
+                </h2>
+                 <p class="text-lg text-textLight dark:text-textDark">
+                    ({{farmerNumber}})
+                 </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div>
+                    <p-dropdown
+                        styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+                        [options]="roleArr" [checkmark]="false" optionLabel="label" optionValue="value"
+                        [showClear]="!!selectedRole" placeholder="Role" [(ngModel)]="selectedRole"
+                        (onChange)="fetchData()" />
+                </div>
+
+
+
+                <div
+                    class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+
+                    <!-- Input field -->
+                    <input type="text" placeholder="Search by NIC"
+                        class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" />
+                    <!-- [(ngModel)]="" (keydown.enter)="" /> -->
+
+                    <!-- Search button -->
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                        </svg>
+                    </button>
+
+                    <!-- Clear button -->
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
+            <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
+
+
+        <div *ngIf="hasData" class="w-full py-4">
+            <!-- Added py-4 for vertical padding -->
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
+                <thead>
+                    <tr>
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            <!-- Reduced px-4 to px-3 -->
+                            No({{staffArr.length | number : '2.0'}})
+                        </th>
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            <!-- Reduced px-4 to px-3 -->
+                        </th>
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            <!-- Reduced px-4 to px-3 -->
+                            Name
+                        </th>
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            <!-- Reduced px-4 to px-3 -->
+                            Role
+                        </th>
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            <!-- Reduced px-4 to px-3 -->
+                            Phone
+                        </th>
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            <!-- Reduced px-4 to px-3 -->
+                            NIC
+                        </th>
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                            <!-- Reduced px-4 to px-3 -->
+                            View
+                        </th>
+
+            
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+                            <!-- Reduced px-4 to px-3 -->
+                            Last Modified By
+                        </th>
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of staffArr; let i = index"
+                        class="border-b border-gray-200 dark:border-[#4B555A]">
+                        <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+                            {{ (i+1) | number:'2.0' }}
+                        </td>
+                        <td class="px-3 py-3">
+                            <!-- Reduced px-4 to px-3 -->
+                            <img *ngIf="item.image != null" class="profile-pic" [src]="item.image" />
+
+                            <div *ngIf="item.image == null"
+                                class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 mr-3 cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                        </td>
+                        <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+                            {{ item.firstName }} {{ item.lastName }}
+                        </td>
+                        <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+                            {{ item.role }}
+                        </td>
+                        <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+                            {{ item.phoneNumber === null ? '-' : item.phoneCode + ' ' + item.phoneNumber}}
+                        </td>
+                        <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+                            {{ item.nic === null ? '-' : item.nic }}
+                        </td>
+  <td class="px-3 py-3 text-center">
+  <button 
+    class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+    (click)="viewFarmerStaff(item.id)">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+</td>
+
+                    
+
+                <td class="px-3 py-3 text-center">{{ item.modifiedByUserName || '--' }}</td>
+                        <td class="px-3 py-3 text-center">
+                            <!-- Reduced px-4 to px-3 -->
+                            <div class="flex justify-center space-x-4">
+
+
+                                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                                 (click)="editFarmerStaff(item.id)">
+
+                                    <svg fill="currentColor" viewBox="0 0 32 32" version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <title>Edit</title>
+                                        <path
+                                            d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                                        </path>
+                                    </svg>
+                                </button>
+
+                                <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]">
+                                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <title>Delete</title>
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

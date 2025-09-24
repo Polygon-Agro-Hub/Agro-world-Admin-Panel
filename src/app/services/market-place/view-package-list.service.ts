@@ -11,7 +11,7 @@ export class ViewPackageListService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   // getAllMarketplacePackages(
   //   searchText: string = '',
@@ -60,6 +60,16 @@ export class ViewPackageListService {
         headers,
         params,
       }
+    );
+  }
+
+  changePackageStatus(data: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.patch<any>(
+      `${this.apiUrl}market-place/change-package-status`, data, { headers, }
     );
   }
 }

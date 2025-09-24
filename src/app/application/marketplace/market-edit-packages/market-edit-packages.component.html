@@ -56,29 +56,32 @@
       <div class="grid grid-cols-3 gap-8 mb-6">
         <div>
           <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Total Package Price (Rs.)*</label>
-          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.productPrice" name="productPrice"
-            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
-            placeholder="Enter Amount" />
+          <input type="text" [(ngModel)]="packageObj.productPrice" name="productPrice"
+    (blur)="validateDecimalInput($event)"
+    (keypress)="allowDecimalNumbers($event)"
+    (change)="calculateApproximatedPrice()"
+    class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+    placeholder="Enter Amount" />
         </div>
 
         <div>
           <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Service Fee (Rs.)*</label>
-          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.serviceFee" name="serviceFee"
-            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
-            placeholder="Enter Amount" />
+          <input type="text" [(ngModel)]="packageObj.serviceFee" name="serviceFee"
+    (blur)="validateDecimalInput($event)"
+    (keypress)="allowDecimalNumbers($event)"
+    (change)="calculateApproximatedPrice()"
+    class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+    placeholder="Enter Amount" />
         </div>
 
         <div>
           <label class="block text-sm text-[#534E4E] dark:text-textDark mb-2">Packaging Fee (Rs.)*</label>
-          <input type="number" min="0" step="0.01" [(ngModel)]="packageObj.packageFee" name="packageFee"
-            (change)="calculateApproximatedPrice()" (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
-            placeholder="Enter Amount" />
+          <input type="text" [(ngModel)]="packageObj.packageFee" name="packageFee"
+    (blur)="validateDecimalInput($event)"
+    (keypress)="allowDecimalNumbers($event)"
+    (change)="calculateApproximatedPrice()"
+    class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 focus:outline-none dark:bg-gray-800 dark:text-white"
+    placeholder="Enter Amount" />
         </div>
       </div>
       <!-- Final Price -->

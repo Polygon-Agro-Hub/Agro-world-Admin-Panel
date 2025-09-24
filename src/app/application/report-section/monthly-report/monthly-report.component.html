@@ -1,3 +1,4 @@
+<!-- Loading Spinner -->
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div>
@@ -8,22 +9,55 @@
   </button>
 
   <!-- Date Range Selector -->
-  <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg mb-6 overflow-hidden">
-    <div class="flex flex-col md:flex-row justify-between items-stretch gap-4 p-4">
+  <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg mb-6 overflow-visible">
+    <div class="flex flex-col md:flex-row justify-between items-stretch gap-4 p-4 relative z-10">
       <!-- From Date -->
       <div class="flex items-center gap-2 w-full">
         <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap">From:</label>
-        <input id="fromDate" type="date"
-          class="p-2 w-full border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
-          placeholder="YYYY/MM/DD" [(ngModel)]="fromDate" [max]="maxDate" />
+        <p-calendar
+          id="fromDate"
+          [(ngModel)]="fromDate"
+          placeholder="YYYY/MM/DD"
+          [showIcon]="true"
+          [showClear]="false"
+          [showButtonBar]="true"
+          iconDisplay="input"
+          appendTo="body"
+          [style]="{ width: '31rem', height: '2rem' }"
+          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+          inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-[25rem] h-8 pr-12"
+        />
       </div>
 
       <!-- To Date -->
       <div class="flex items-center gap-2 w-full">
         <label for="toDate" class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap">To:</label>
-        <input id="toDate" type="date"
-          class="p-2 w-full border rounded-md text-gray-800 dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300"
-          placeholder="YYYY/MM/DD" [(ngModel)]="toDate" [max]="maxDate" />
+        <p-calendar
+          id="toDate"
+          [(ngModel)]="toDate"
+          placeholder="YYYY/MM/DD"
+          [showIcon]="true"
+          [showClear]="false"
+          [showButtonBar]="true"
+          iconDisplay="input"
+          appendTo="body"
+          [maxDate]="todayDate"
+          [style]="{ width: '31rem', height: '2rem' }"
+          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+          inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-[25rem] h-8 pr-12"
+        />
       </div>
 
       <!-- Go Button -->
@@ -57,49 +91,34 @@
 
       <!-- Officer Info Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mb-6">
-        <!-- From Date -->
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">From</p>
-          <p class="dark:text-textDark text-gray-800">: {{ fromDate }}</p>
+          <p class="dark:text-textDark text-gray-800">: {{ convertToISO(fromDate) | date : 'yyyy-mm-dd' }}</p>
         </div>
-
-        <!-- To Date -->
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">To</p>
-          <p class="dark:text-textDark text-gray-800">: {{ toDate }}</p>
+          <p class="dark:text-textDark text-gray-800">: {{ convertToISO(toDate) | date : 'yyyy-mm-dd' }}</p>
         </div>
-
-        <!-- EMP ID -->
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">EMP ID</p>
           <p class="dark:text-textDark text-gray-800">: {{ officerData.empId }}</p>
         </div>
-
-        <!-- Role -->
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">Role</p>
           <p class="dark:text-textDark text-gray-800">: {{ officerData.jobRole }}</p>
         </div>
-
-        <!-- First Name -->
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">First Name</p>
           <p class="dark:text-textDark text-gray-800">: {{ officerData.firstNameEnglish }}</p>
         </div>
-
-        <!-- Last Name -->
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">Last Name</p>
           <p class="dark:text-textDark text-gray-800">: {{ officerData.lastNameEnglish }}</p>
         </div>
-
-        <!-- Total Weight -->
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">Weight</p>
-          <p class="dark:text-textDark text-gray-800">: {{finalTotalWeight }}</p>
+          <p class="dark:text-textDark text-gray-800">: {{finalTotalWeight }} Kg</p>
         </div>
-
-        <!-- Total Farmers -->
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">Farmers</p>
           <p class="dark:text-textDark text-gray-800">: {{ finalTotalFarmers }}</p>
@@ -119,14 +138,13 @@
           <tbody>
             <tr *ngFor="let report of dailyReports">
               <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.date | date: 'yyyy-MM-dd' }}</td>
-              <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalWeight }}</td>
+              <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalWeight }} Kg</td>
               <td class="border border-gray-300 px-4 py-2 text-center dark:text-textDark">{{ report.totalPayments }}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Generated Time -->
       <p class="text-xs text-gray-500 mt-4 dark:text-textDark" *ngIf="generatedDate && generatedTime">
         This report is generated on {{ generatedDate }} , at {{ generatedTime }}.
       </p>

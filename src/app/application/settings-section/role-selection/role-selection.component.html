@@ -57,7 +57,7 @@
           type="text"
           #roleInput="ngModel"
           required
-          class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+          class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
           placeholder="Enter Department name"
         />
       </div>
@@ -70,18 +70,21 @@
           >Email Address</label
         >
         <input
-          [(ngModel)]="createRolesObj.email"
-          name="email"
-          type="email"
-          #emailInput="ngModel"
-          required
-          class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-          placeholder="Enter email address"
-        />
+      [(ngModel)]="createRolesObj.email"
+      name="email"
+      type="email"
+      #emailInput="ngModel"
+      required
+      (blur)="validateCreateEmail()"
+      (input)="validateCreateEmail()"
+      class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+      placeholder="Enter email address"
+      [class.border-red-500]="emailError"
+    />
       </div>
-      <div *ngIf="emailInput.invalid && emailInput.touched" class="text-red-500 text-sm text-center">
-        Valid email is required.
-      </div>
+      <div *ngIf="emailError" class="text-red-500 text-sm text-center">
+      {{ emailError }}
+    </div>
 
       <!-- Modal Footer with buttons -->
       <div class="flex justify-center mt-4">
@@ -92,7 +95,7 @@
           Cancel
         </button>
         <button
-          [disabled]="roleInput.invalid || emailInput.invalid"
+          [disabled]="!createRolesObj.role || !createRolesObj.email || emailError"
           (click)="onSubmit()"
           class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
         >
@@ -127,7 +130,7 @@
           type="text"
           #roleInput="ngModel"
           required
-          class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+          class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
           placeholder="Enter Department name"
         />
       </div>
@@ -140,18 +143,21 @@
           >Email Address</label
         >
         <input
-          [(ngModel)]="selectedRole.email"
-          name="email"
-          type="email"
-          #emailInput="ngModel"
-          required
-          class="w-full ml-5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-          placeholder="Enter email address"
-        />
+      [(ngModel)]="selectedRole.email"
+      name="editEmail"
+      type="email"
+      #editEmailInput="ngModel"
+      required
+      (blur)="validateEditEmail()"
+      (input)="validateEditEmail()"
+      class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+      placeholder="Enter email address"
+      [class.border-red-500]="editEmailError"
+    />
       </div>
-      <div *ngIf="emailInput.invalid && emailInput.touched" class="text-red-500 text-sm text-center">
-        Valid email is required.
-      </div>
+      <div *ngIf="editEmailError" class="text-red-500 text-sm text-center">
+      {{ editEmailError }}
+    </div>
 
       <!-- Modal Footer with buttons -->
       <div class="flex justify-center mt-4">
@@ -162,7 +168,7 @@
           Cancel
         </button>
         <button
-        [disabled]="roleInput.invalid || emailInput.invalid"
+        [disabled]="!selectedRole.role || !selectedRole.email || editEmailError"
           (click)="onEditOnSubmit()"
           class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
         >

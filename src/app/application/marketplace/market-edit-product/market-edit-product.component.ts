@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { ThemeService } from '../../../services/theme.service';
 import { ChipsModule } from 'primeng/chips';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-market-edit-product',
@@ -22,7 +23,8 @@ import { ChipsModule } from 'primeng/chips';
     FormsModule,
     MatIconModule,
     CommonModule,
-     ChipsModule,
+    ChipsModule,
+    DropdownModule
   ],
   templateUrl: './market-edit-product.component.html',
   styleUrl: './market-edit-product.component.css',
@@ -43,23 +45,73 @@ export class MarketEditProductComponent implements OnInit {
   // discountPercentage: number = 0.0;
   isNoDiscount: boolean = true;
 
+  categoryOptions = [
+    { label: 'Retail', value: 'Retail' },
+    { label: 'WholeSale', value: 'WholeSale' }
+  ];
+
+  // In your component.ts
+  unitTypeOptions = [
+    { label: 'Kg', value: 'Kg' },
+    { label: 'g', value: 'g' }
+  ];
+
+  displayTypeOptions = [
+    { label: 'With Discount and Actual Price', value: 'D&AP' },
+    { label: 'With Actual Price and Sale Price', value: 'AP&SP' },
+    { label: 'With Actual Price,Sale Price and Discount', value: 'AP&SP&D' }
+  ];
+
+
   constructor(
     private marketSrv: MarketPlaceService,
     private router: Router,
     private route: ActivatedRoute,
     public themeService: ThemeService
-  ) {}
+  ) { }
+
 
   back(): void {
-    this.router.navigate(['market/action/view-products-list']);
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['market/action/view-products-list']);
+      }
+    });
   }
 
+
+  // ngOnInit(): void {
+  //   this.productId = this.route.snapshot.params['id'];
+  //   this.getAllCropVerity();
+  //   this.calculeSalePrice();
+  //   this.getProduct();
+  // }
+
   ngOnInit(): void {
-    this.productId = this.route.snapshot.params['id'];
-    this.getAllCropVerity();
-    this.calculeSalePrice();
-    this.getProduct();
-  }
+  this.productId = this.route.snapshot.params['id'];
+  this.marketSrv.getCropVerity().subscribe(
+    (res) => {
+      this.cropsObj = res;
+      console.log('Crops fetched successfully:', res);
+      // Fetch product after crops are loaded
+      this.getProduct();
+    },
+    (error) => {
+      console.error('Error: Crop variety fetching issue', error);
+    }
+  );
+}
 
   trimDisplayName() {
     if (this.productObj.cropName) {
@@ -74,29 +126,52 @@ export class MarketEditProductComponent implements OnInit {
     }
   }
 
-  getProduct() {
-    this.marketSrv.getProductById(this.productId).subscribe((res) => {
-      console.log('product:', res);
-      this.storedDisplayType = res.displaytype;
-      this.productObj = res;
-      console.log('this is product', this.productObj);
-      this.storedDisplayType;
-      this.productObj.selectId = res.cropGroupId;
-      this.selectedImage = res.image;
-      this.onCropChange();
-      // this.productObj.varietyId = res.cropId;
-      console.log('this is variety ID', this.productObj.varietyId);
-      this.templateKeywords.update(() => res.tags || []);
-      this.calculeSalePrice();
-      if (res.promo) {
-        this.productObj.promo = true;
-      } else {
-        this.productObj.promo = false;
-      }
-    });
-  }
+  // getProduct() {
+  //   this.marketSrv.getProductById(this.productId).subscribe((res) => {
+  //     console.log('product:', res);
+  //     this.storedDisplayType = res.displaytype;
+  //     this.productObj = res;
+  //     console.log('this is product', this.productObj);
+  //     this.storedDisplayType;
+  //     this.productObj.selectId = res.cropGroupId;
+  //     this.selectedImage = res.image;
+  //     this.onCropChange();
+  //     // this.productObj.varietyId = res.cropId;
+  //     console.log('this is variety ID', this.productObj.varietyId);
+  //     this.templateKeywords.update(() => res.tags || []);
+  //     this.calculeSalePrice();
+  //     if (res.promo) {
+  //       this.productObj.promo = true;
+  //     } else {
+  //       this.productObj.promo = false;
+  //     }
+  //     console.log("--------------verityes------------------");
+  //     console.log(this.selectedVarieties);
 
-  
+
+  //   });
+  // }
+
+getProduct() {
+  this.marketSrv.getProductById(this.productId).subscribe((res) => {
+    console.log('product:', res);
+    this.storedDisplayType = res.displaytype;
+    this.productObj = res;
+    this.productObj.selectId = res.cropGroupId;
+    this.selectedImage = res.image;
+    this.templateKeywords.update(() => res.tags || []);
+    this.productObj.promo = !!res.promo; // Convert to boolean
+    // Call onCropChange to populate selectedVarieties
+    this.onCropChange();
+    // Ensure varietyId is set correctly
+    this.productObj.varietyId = res.varietyId;
+    this.selectVerityImage(); // Update the selected image
+    this.calculeSalePrice();
+    console.log('this is product', this.productObj);
+    console.log('this is variety ID', this.productObj.varietyId);
+    console.log('selected varieties', this.selectedVarieties);
+  });
+}
   getAllCropVerity() {
     this.marketSrv.getCropVerity().subscribe(
       (res) => {
@@ -109,29 +184,73 @@ export class MarketEditProductComponent implements OnInit {
     );
   }
 
+  // onCropChange() {
+  //   console.log("oncropCange", this.productObj.selectId);
+
+  //   const sample = this.cropsObj.filter(
+  //     (crop) => crop.cropId === +this.productObj.selectId
+  //   );
+
+  //   console.log('Filtered crops:', sample);
+
+  //   if (sample.length > 0) {
+  //     this.selectedVarieties = sample[0].variety;
+  //     console.log('Selected crop varieties:', this.selectedVarieties);
+  //     this.isVerityVisible = true;
+  //   } else {
+  //     console.log('No crop found with selectId:', this.productObj.selectId);
+  //   }
+  // }
+
   onCropChange() {
-    const sample = this.cropsObj.filter(
-      (crop) => crop.cropId === +this.productObj.selectId
-    );
+  console.log('onCropChange selectId:', this.productObj.selectId);
+  const sample = this.cropsObj.filter(
+    (crop) => crop.cropId === +this.productObj.selectId
+  );
+  console.log('Filtered crops:', sample);
+  if (sample.length > 0) {
+    this.selectedVarieties = sample[0].variety;
+    this.isVerityVisible = true;
+    console.log('Selected crop varieties:', this.selectedVarieties);
+  } else {
+    this.selectedVarieties = [];
+    this.isVerityVisible = false;
+    console.log('No crop found with selectId:', this.productObj.selectId);
+  }
+  // Update the selected image after changing varieties
+  this.selectVerityImage();
+}
 
-    console.log('Filtered crops:', sample);
+// selectVerityImage() {
+//   if (!this.productObj.varietyId) {
+//     this.selectedImage = null;
+//     return;
+//   }
 
-    if (sample.length > 0) {
-      this.selectedVarieties = sample[0].variety;
-      console.log('Selected crop varieties:', this.selectedVarieties);
-      this.isVerityVisible = true;
-    } else {
-      console.log('No crop found with selectId:', this.productObj.selectId);
-    }
+//   // Find the selected variety object
+//   const selectedVariety = this.selectedVarieties.find(
+//     (v) => v.id === Number(this.productObj.varietyId)
+//   );
+
+//   // Map image if found
+//   this.selectedImage = selectedVariety ? selectedVariety.image : null;
+//   console.log("Selected Image:", this.selectedImage);
+// }
+
+
+selectVerityImage() {
+  if (!this.productObj.varietyId) {
+    this.selectedImage = null;
+    console.log('No varietyId selected');
+    return;
   }
 
-  selectVerityImage() {
-    const sample = this.selectedVarieties.filter(
-      (verity) => verity.id === +this.productObj.varietyId
-    );
-    console.log(sample[0].image);
-    this.selectedImage = sample[0].image;
-  }
+  const selectedVariety = this.selectedVarieties.find(
+    (v) => v.id === Number(this.productObj.varietyId)
+  );
+  this.selectedImage = selectedVariety ? selectedVariety.image : null;
+  console.log('Selected Image:', this.selectedImage);
+}
 
   // calculeSalePrice() {
   //   this.productObj.discount =
@@ -144,23 +263,27 @@ export class MarketEditProductComponent implements OnInit {
 
   onCancel() {
     console.log('pob', this.productObj)
-    // Swal.fire({
-    //   icon: 'warning',
-    //   title: 'Are you sure?',
-    //   text: 'You may lose the added data after canceling!',
-    //   showCancelButton: true,
-    //   confirmButtonText: 'Yes, Cancel',
-    //   cancelButtonText: 'No, Keep Editing',
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     this.productObj = new MarketPrice();
-    //     this.selectedVarieties = [];
-    //     this.isVerityVisible = false;
-    //     this.templateKeywords.update(() => []);
-    //     this.updateTags();
-    //     this.navigatePath('/market/action/view-products-list');
-    //   }
-    // });
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productObj = new MarketPrice();
+        this.selectedVarieties = [];
+        this.isVerityVisible = false;
+        this.templateKeywords.update(() => []);
+        this.updateTags();
+        this.navigatePath('/market/action/view-products-list');
+      }
+    });
   }
 
   navigatePath(path: string) {
@@ -175,77 +298,82 @@ export class MarketEditProductComponent implements OnInit {
     this.updateTags();
     console.log(this.productObj.promo);
 
+    // Validate min and max quantities
+    if (this.productObj.category === 'WholeSale' && !this.validateMinMaxQuantities()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Minimum quantity cannot be greater than maximum quantity.',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    // Check for empty required fields
+    const emptyFields = [];
+
+    if (!this.productObj.category) emptyFields.push('Category');
+    if (!this.productObj.cropName) emptyFields.push('Display Name');
+    if (!this.productObj.varietyId) emptyFields.push('Variety');
+    if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
+    if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
+    if (this.templateKeywords().length === 0) emptyFields.push('Tags');
+    if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
+    if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
+
+    if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)) {
+      emptyFields.push('Maximum Quantity');
+    }
+
     if (this.productObj.promo) {
-      if (
-        !this.productObj.category ||
-        !this.productObj.cropName ||
-        !this.productObj.varietyId ||
-        !this.productObj.normalPrice ||
-        !this.productObj.unitType ||
-        !this.productObj.startValue ||
-        !this.productObj.changeby ||
-        !this.productObj.discountedPrice ||
-        !this.productObj.salePrice ||
-        (this.productObj.category === 'WholeSale' &&
-          !this.productObj.maxQuantity) ||
-        this.productObj.startValue <= 0.0 ||
-        this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' &&
-          this.productObj.maxQuantity <= 0.0)
-      ) {
-        Swal.fire(
-          'Warning',
-          'Please fill in all the required fields correctly',
-          'warning'
-        );
-        return;
+      if (!this.productObj.displaytype) {
+        emptyFields.push('Display Type');
+      } else {
+        console.log("discount precentage->", this.productObj.discountedPrice);
+
+        if (this.productObj.displaytype === 'D&AP') {
+          if (this.productObj.discountedPrice <= 0) emptyFields.push('Discount Percentage');
+        } else if (this.productObj.displaytype === 'AP&SP') {
+          if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
+        } else if (this.productObj.displaytype === 'AP&SP&D') {
+          if (this.productObj.discountedPrice <= 0) emptyFields.push('Discount Percentage');
+          if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
+        }
       }
-    } else {
-      if (
-        !this.productObj.category ||
-        !this.productObj.cropName ||
-        !this.productObj.varietyId ||
-        !this.productObj.normalPrice ||
-        !this.productObj.unitType ||
-        !this.productObj.startValue ||
-        !this.productObj.changeby ||
-        (this.productObj.category === 'WholeSale' &&
-          !this.productObj.maxQuantity) ||
-        this.productObj.startValue <= 0.0 ||
-        this.productObj.startValue <= 0.0 ||
-        (this.productObj.category === 'WholeSale' &&
-          this.productObj.maxQuantity <= 0.0)
-      ) {
-        Swal.fire(
-          'Warning',
-          'Please fill in all the required fields correctly',
-          'warning'
-        );
-        return;
-      }
+
+    }
+
+    if (emptyFields.length > 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Required Fields',
+        html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
+        confirmButtonText: 'OK'
+      });
+      return;
     }
 
     this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
       (res) => {
         if (res.status) {
-          Swal.fire('Success', 'Product Created Successfully', 'success');
+          Swal.fire('Success', 'Product Updated Successfully', 'success');
           this.router.navigate(['/market/action/view-products-list']);
         } else {
-          Swal.fire('Error', 'Product Creation Failed', 'error');
+          Swal.fire('Error', 'Product Update Failed', 'error');
         }
       },
       (error) => {
-        console.error('Product creation error:', error);
-        Swal.fire(
-          'Error',
-          'An error occurred while creating the product',
-          'error'
-        );
+        console.error('Product update error:', error);
+        let errorMessage = 'An error occurred while updating the product';
+        if (error.error && error.error.error) {
+          errorMessage = error.error.error;
+        }
+        Swal.fire('Error', errorMessage, 'error');
       }
     );
     console.log('Form submitted:', this.productObj);
   }
-updateTags() {
+  updateTags() {
     this.productObj.tags = this.templateKeywords().join(', ');
   }
   addTemplateKeyword(event: MatChipInputEvent): void {
@@ -358,6 +486,144 @@ updateTags() {
       this.productObj.startValue = 0.0;
     }
   }
+
+  validateDecimalInput(event: KeyboardEvent): boolean {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    const key = event.key;
+
+    // Allow control keys
+    const controlKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Clear', 'Copy', 'Paste'];
+    if (controlKeys.includes(key)) {
+      return true;
+    }
+
+    // Allow numbers and decimal point
+    if (!/^[0-9.]$/.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+
+    // Prevent multiple decimal points
+    if (key === '.' && value.includes('.')) {
+      event.preventDefault();
+      return false;
+    }
+
+    // Check if adding this character would exceed 2 decimal places
+    if (value.includes('.')) {
+      const decimalPart = value.split('.')[1];
+      if (decimalPart && decimalPart.length >= 2 && key !== '.') {
+        event.preventDefault();
+        return false;
+      }
+    }
+
+    // Prevent decimal point at the beginning
+    if (key === '.' && value === '') {
+      event.preventDefault();
+      return false;
+    }
+
+    return true;
+  }
+
+  validatePriceFormat(value: any, fieldName: string): boolean {
+    if (value === null || value === undefined || value === '') {
+      return true; // Allow empty values, required validation will handle this
+    }
+
+    const stringValue = value.toString();
+
+    // Check for invalid formats like 12..00, 99.999, etc.
+    const validPriceRegex = /^\d+(\.\d{1,2})?$/;
+
+    if (!validPriceRegex.test(stringValue)) {
+      // Show error message or handle invalid format
+      console.error(`Invalid format for ${fieldName}: ${stringValue}`);
+      return false;
+    }
+
+    return true;
+  }
+
+  formatPrice(event: any, fieldName: string): void {
+    const input = event.target;
+    let value = input.value;
+
+    if (value && !isNaN(value)) {
+      const numericValue = parseFloat(value);
+      if (numericValue >= 0) {
+        const formattedValue = numericValue.toFixed(2);
+        input.value = formattedValue;
+
+        // Update the model based on field name
+        switch (fieldName) {
+          case 'normalPrice':
+            this.productObj.normalPrice = parseFloat(formattedValue);
+            break;
+          case 'discountedPrice':
+            this.productObj.discountedPrice = parseFloat(formattedValue);
+            break;
+          case 'salePrice':
+            this.productObj.salePrice = parseFloat(formattedValue);
+            break;
+          case 'startValue':
+            this.productObj.startValue = parseFloat(formattedValue);
+            break;
+          case 'changeby':
+            this.productObj.changeby = parseFloat(formattedValue);
+            break;
+          case 'maxQuantity':
+            this.productObj.maxQuantity = parseFloat(formattedValue);
+            break;
+        }
+
+        // Recalculate sale price if needed
+        if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
+          this.calculeSalePrice();
+        }
+      }
+    }
+  }
+
+  validateMinMaxQuantities(): boolean {
+    if (this.productObj.category === 'WholeSale' &&
+      this.productObj.maxQuantity > 0 &&
+      this.productObj.startValue > this.productObj.maxQuantity) {
+      return false;
+    }
+    return true;
+  }
+
+getMinQuantityError(): string {
+    const startValue = parseFloat(this.productObj.startValue.toString());
+    const maxQuantity = parseFloat(this.productObj.maxQuantity?.toString() || '0');
+    if (isNaN(startValue) || startValue <= 0) {
+      return 'Please enter a value greater than 0.';
+    }
+    if (
+      this.productObj.category === 'WholeSale' &&
+      maxQuantity > 0 &&
+      startValue > maxQuantity
+    ) {
+      return 'Minimum quantity cannot be greater than maximum quantity.';
+    }
+    return '';
+  }
+
+  getMaxQuantityError(): string {
+    const maxQuantity = parseFloat(this.productObj.maxQuantity?.toString() || '0');
+    const startValue = parseFloat(this.productObj.startValue.toString());
+    if (isNaN(maxQuantity) || maxQuantity <= 0) {
+      return 'Please enter a value greater than 0.';
+    }
+    if (startValue > 0 && maxQuantity < startValue) {
+      return 'Maximum quantity must be greater than or equal to minimum quantity.';
+    }
+    return '';
+  }
+
 }
 
 class Crop {
@@ -379,13 +645,11 @@ class MarketPrice {
   changeby!: number;
   tags: string = '';
   category!: string;
-  // displayType!: string;
-  variety!: string;
-
   selectId!: number;
   displaytype!: string;
   salePrice: number = 0;
   discount: number = 0.0;
+  variety?: string; // Make variety optional
 }
 
 class Variety {

@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -10,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import {  ComplaintsService } from '../../../services/complaints/complaints.service';
+import { ComplaintsService } from '../../../services/complaints/complaints.service';
 
 interface Complaint {
   id: string;
@@ -28,6 +26,7 @@ interface Complaint {
 interface DropdownOption {
   label: string;
   value: string;
+  isExcluded?: boolean; // Added to support exclusion styling
 }
 
 interface ApiResponse {
@@ -62,7 +61,7 @@ export class RetailComplaintsComponent implements OnInit {
   messageContent = '';
   selectedComplaint = {} as Complaint;
 
-  // filters + pagination
+  // Filters + pagination
   searchText = '';
   rpst: string | null = null;
   filterComCategory: string | null = null;
@@ -73,7 +72,7 @@ export class RetailComplaintsComponent implements OnInit {
 
   hasData: boolean = false;
 
-  // dropdown data
+  // Dropdown data
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
@@ -84,7 +83,7 @@ export class RetailComplaintsComponent implements OnInit {
   constructor(
     private router: Router,
     private datePipe: DatePipe,
-    private  ComplaintsService: ComplaintsService
+    private complaintsService: ComplaintsService
   ) {}
 
   ngOnInit(): void {
@@ -95,25 +94,27 @@ export class RetailComplaintsComponent implements OnInit {
   private fetchComplaints(): void {
     this.isLoading = true;
 
-    this. ComplaintsService.fetchComplaints().subscribe({
+    this.complaintsService.fetchComplaints().subscribe({
       next: (resp: ApiResponse) => {
-        console.log('ApiResponsethis', resp)
+        console.log('ApiResponse', resp);
         if (resp.data.length === 0) {
           this.hasData = false;
         }
         this.hasData = true;
-        this.complaints = resp.data.map(item => ({
-          id: item.id.toString(),
-          refNo: item.refNo,
-          complainCategory: item.categoryEnglish,
-          firstName: item.firstName,
-          lastName: item.lastName,
-          contactNumber: item.ContactNumber,
-          createdAt: this.formatDate(item.createdAt),
-          status: this.normalizeStatus(item.status, item.createdAt),
-          reply: item.reply || undefined,
-          complain: item.complain,
-        }));
+        this.complaints = resp.data
+          .map(item => ({
+            id: item.id.toString(),
+            refNo: item.refNo,
+            complainCategory: item.categoryEnglish,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            contactNumber: item.ContactNumber,
+            createdAt: this.formatDate(item.createdAt),
+            status: this.normalizeStatus(item.status, item.createdAt),
+            reply: item.reply || undefined,
+            complain: item.complain,
+          }))
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort by latest date
         this.filteredComplaints = [...this.complaints];
         this.totalItems = this.filteredComplaints.length;
         this.comCategories = Array.from(
@@ -135,83 +136,76 @@ export class RetailComplaintsComponent implements OnInit {
         } else {
           alert('Failed to load complaints. Please try again later.');
         }
-      }
+      },
     });
   }
 
-private fetchComplaintCategories(): void {
-  this.ComplaintsService.fetchComplaintCategories().subscribe({
-    next: (resp: { categories: { id: number; categoryEnglish: string }[] }) => {
-      this.comCategories = resp.categories.map((c: { id: number; categoryEnglish: string }) => ({
-        label: c.categoryEnglish,
-        value: c.categoryEnglish,
-      }));
-    },
-    error: (err) => {
-      if (err.message.includes('No authentication token found')) {
-        alert('No authentication token found. Please log in.');
-        this.router.navigate(['login']);
-      } else {
-        console.error('Category fetch error', err);
-      }
-    }
-  });
-}
+  private fetchComplaintCategories(): void {
+    this.complaintsService.fetchComplaintCategories().subscribe({
+      next: (resp: { categories: { id: number; categoryEnglish: string }[] }) => {
+        this.comCategories = resp.categories.map((c: { id: number; categoryEnglish: string }) => ({
+          label: c.categoryEnglish,
+          value: c.categoryEnglish,
+        }));
+      },
+      error: (err) => {
+        if (err.message.includes('No authentication token found')) {
+          alert('No authentication token found. Please log in.');
+          this.router.navigate(['login']);
+        } else {
+          console.error('Category fetch error', err);
+        }
+      },
+    });
+  }
 
   private formatDate(dateString: string): string {
-    return (
-      this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') ||
-      ''
-    );
+    return this.datePipe.transform(new Date(dateString), 'yyyy-MM-dd hh:mm a') || '';
   }
 
- private normalizeStatus(status: string | null | undefined, createdAt: string): string {
-  if (!status) {
-    return 'Unknown'; // Fallback status if null or undefined
+  private normalizeStatus(status: string | null | undefined, createdAt: string): string {
+    if (!status) {
+      return 'Unknown';
+    }
+    if (status.toLowerCase() === 'opened') {
+      const diff = (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
+      return diff >= 3 ? 'Pending' : 'Assigned';
+    }
+    return status;
   }
-  if (status.toLowerCase() === 'opened') {
-    const diff = (Date.now() - new Date(createdAt).getTime()) / (1000 * 3600 * 24);
-    return diff >= 3 ? 'Pending' : 'Assigned';
+
+  applyFilters(): void {
+    const txt = this.searchText.trim().toLowerCase();
+
+    this.filteredComplaints = this.complaints
+      .filter(item => {
+        const matchesSearch = !txt || [
+          item.refNo,
+          item.complainCategory,
+          item.firstName,
+          item.lastName,
+          item.contactNumber,
+        ].some(field => field?.toLowerCase().includes(txt));
+
+        const matchesReply =
+          this.rpst === 'Yes' ? !!item.reply :
+          this.rpst === 'No' ? !item.reply :
+          true;
+
+        const matchesCat =
+          !this.filterComCategory || item.complainCategory === this.filterComCategory;
+
+        const matchesStat =
+          !this.filterStatus || item.status === this.filterStatus;
+
+        return matchesSearch && matchesReply && matchesCat && matchesStat;
+      })
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort by latest date
+
+    this.totalItems = this.filteredComplaints.length;
+    this.page = 1;
+    this.hasData = this.filteredComplaints.length > 0;
   }
-  return status;
-}
-
-applyFilters(): void {
-  const txt = this.searchText.trim().toLowerCase();
-
-  this.filteredComplaints = this.complaints.filter(item => {
-    const matchesSearch = !txt || [
-      item.refNo,
-      item.complainCategory,
-      item.firstName,
-      item.lastName,
-      item.contactNumber
-    ].some(field => field?.toLowerCase().includes(txt));
-
-    const matchesReply =
-  this.rpst === 'Yes'
-    ? !!item.reply
-    : this.rpst === 'No'
-    ? !item.reply
-    : true;
-
-    const matchesCat =
-      !this.filterComCategory || item.complainCategory === this.filterComCategory;
-
-    const matchesStat =
-      !this.filterStatus || item.status === this.filterStatus;
-
-    return matchesSearch && matchesReply && matchesCat && matchesStat;
-  });
-
-  this.totalItems = this.filteredComplaints.length;
-  this.page = 1;
-
-  // ✅ Set true if results exist, false if not
-  this.hasData = this.filteredComplaints.length > 0 ? true : false;
-}
-
-
 
   searchComplain(): void {
     console.log('[searchComplain] searchText =', this.searchText);
@@ -224,7 +218,7 @@ applyFilters(): void {
   }
 
   regStatusFil(): void {
-    console.log('replyStatus', this.rpst)
+    console.log('replyStatus', this.rpst);
     this.applyFilters();
   }
 
@@ -255,6 +249,7 @@ applyFilters(): void {
     this.display = false;
     this.messageContent = '';
   }
+
 
   submitReply(): void {
     // your existing POST logic…

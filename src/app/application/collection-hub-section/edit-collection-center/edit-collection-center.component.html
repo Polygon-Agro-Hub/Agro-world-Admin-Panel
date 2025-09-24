@@ -7,7 +7,7 @@
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-    Update Collection Centres
+    Edit Collection Centres
   </h2>
 
   <form (ngSubmit)="onSubmit()">
@@ -180,7 +180,7 @@
             *ngIf="!centerFetchData.contact01"
             class="text-red-500 text-sm mt-1"
           >
-            Phone Number - 1 is required.
+            Contact Number 01 is required.
           </div>
           <div
             *ngIf="
@@ -190,14 +190,14 @@
             "
             class="text-red-500 text-sm mt-1"
           >
-            Phone Number must be exactly 9 digits.
+            Please enter a valid Contact Number (format: +947XXXXXXXX)
           </div>
 
           <div
             *ngIf="isPhoneInvalidMap['phone01'] && centerFetchData.contact01"
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+          Please enter a valid Contact Number (format: +947XXXXXXXX)
           </div>
         </div>
       </div>
@@ -291,8 +291,7 @@
             "
             class="text-red-500 text-sm mt-1"
           >
-            Phone Number - 2 should be different from Phone Number - 1.
-          </div>
+Contact Number - 1 and Contact Number - 2 cannot be the same          </div>
 
           <div
             *ngIf="
@@ -302,14 +301,14 @@
             "
             class="text-red-500 text-sm mt-1"
           >
-            Phone Number must be exactly 9 digits.
+            Please enter a valid Contact Number (format: +947XXXXXXXX)
           </div>
 
           <div
             *ngIf="isPhoneInvalidMap['phone02'] && centerFetchData.contact02"
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc )
+          Please enter a valid Contact Number (format: +947XXXXXXXX)
           </div>
         </div>
       </div>
@@ -391,66 +390,73 @@
 
       <!-- Province -->
       <div>
-        <label
-          for="province"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Province *</label
-        >
-        <select
-          id="province"
-          name="province"
-          [(ngModel)]="selectProvince"
-          (change)="onProvinceChange()"
-          [value]="centerFetchData.province"
-          #provinceInput="ngModel"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        >
-          <option selected disabled>-- select --</option>
-          <option *ngFor="let item of ProvinceData" [value]="item.province">
-            {{ item.province }}
-          </option>
-        </select>
-        <!-- ... validation ... -->
-        <div
-          *ngIf="!centerFetchData.province && districtInput.touched"
-          class="text-red-500 text-sm mt-1"
-        >
-          <div>Province is required</div>
-        </div>
-      </div>
+  <label
+    for="province"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >Province *</label
+  >
+  <p-dropdown
+    id="province"
+    name="province"
+    [(ngModel)]="centerFetchData.province"
+    (onChange)="onProvinceChange()"
+    [options]="ProvinceData"
+    optionLabel="province"
+    optionValue="province"
+    filter="true"
+    filterBy="province"
+    placeholder="-- select --"
+    [showClear]="true"
+    [autoDisplayFirst]="false"
+    #provinceInput="ngModel"
+    required
+    styleClass="w-full mt-1" 
+    panelStyleClass="custom-dropdown-panel" 
+    class="mt-1 block w-full p-dropdown-custom"
+  ></p-dropdown>
+  <div
+    *ngIf="provinceInput.touched && !centerFetchData.province"
+    class="text-red-500 text-sm mt-1"
+  >
+    <div>Province is required</div>
+  </div>
+</div>
 
       <!-- District -->
       <div>
-        <label
-          for="district"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >District *</label
-        >
-        <select
-          id="district"
-          name="district"
-          [value]="centerFetchData.district"
-          [(ngModel)]="centerFetchData.district"
-          (change)="onDistrictChange()"
-          #districtInput="ngModel"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        >
-          <option selected disabled>-- select --</option>
-          <option
-            *ngFor="let item of selectedDistrict"
-            [value]="item.districtName"
-          >
-            {{ item.districtName }}
-          </option>
-        </select>
-        <!-- ... validation ... -->
-        <div
-          *ngIf="!centerFetchData.district && districtInput.touched"
-          class="text-red-500 text-sm mt-1"
-        >
-          <div>Province is required</div>
-        </div>
-      </div>
+  <label
+    for="district"
+    class="block text-sm font-medium text-gray-700 dark:text-textDark"
+    >District *</label
+  >
+  <p-dropdown
+    id="district"
+    name="district"
+    [(ngModel)]="centerFetchData.district"
+    (onChange)="onDistrictChange()"
+    [options]="selectedDistrict"
+    optionLabel="districtName"
+    optionValue="districtName"
+    filter="true"
+    filterBy="districtName"
+    placeholder="-- select --"
+    [showClear]="true"
+    [autoDisplayFirst]="false"
+    #districtInput="ngModel"
+    required
+    [style]="{ 'min-height': '38px' }"
+    styleClass="w-full mt-1" 
+    panelStyleClass="custom-dropdown-panel" 
+    class="mt-1 block w-full p-dropdown-custom"
+    [disabled]="!centerFetchData.province"
+  ></p-dropdown>
+  <div
+    *ngIf="districtInput.touched && !centerFetchData.district"
+    class="text-red-500 text-sm mt-1"
+  >
+    <div>District is required</div>
+  </div>
+</div>
 
       <div>
         <label
@@ -508,23 +514,7 @@
       <button
         type="submit"
         class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
-        [disabled]="
-          !centerFetchData.centerName ||
-          !centerFetchData.buildingNumber ||
-          !centerFetchData.city ||
-          !centerFetchData.companies ||
-          !centerFetchData.contact01 ||
-          !centerFetchData.country ||
-          !centerFetchData.district ||
-          !centerFetchData.province ||
-          !centerFetchData.street ||
-          contact01.invalid ||
-          isPhoneInvalidMap['phone01'] ||
-          (centerFetchData.contact02 &&
-            (centerFetchData.contact01 === centerFetchData.contact02 ||
-              isPhoneInvalidMap['phone02'] ||
-              contact02.invalid))
-        "
+       
       >
         Save
       </button>

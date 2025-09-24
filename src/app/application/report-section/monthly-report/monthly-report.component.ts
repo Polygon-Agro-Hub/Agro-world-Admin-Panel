@@ -14,11 +14,12 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-monthly-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, CalendarModule,],
   templateUrl: './monthly-report.component.html',
   styleUrl: './monthly-report.component.css',
 })
@@ -40,13 +41,14 @@ export class MonthlyReportComponent implements OnInit {
   maxDate: string = '';
   hasData: boolean = false;
   go: boolean = false;
+  todayDate: any;
 
   constructor(
     private collectionoOfficer: CollectionCenterService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.officerId = this.route.snapshot.params['id'];
@@ -54,6 +56,7 @@ export class MonthlyReportComponent implements OnInit {
     const today = new Date();
     this.maxDate = today.toISOString().split('T')[0];
     this.visible = false;
+    this.todayDate = new Date();
   }
 
   // downloadReport(): void {
@@ -199,14 +202,14 @@ export class MonthlyReportComponent implements OnInit {
       // Info Section
       pdf.setFontSize(10); // Reduce the font size for the info section
       const leftDetails = [
-        { label: 'From', value: this.fromDate },
+        { label: 'From', value: this.formatDateForDisplay(this.fromDate) },
         { label: 'EMP ID', value: this.officerData.empId },
         { label: 'First Name', value: this.officerData.firstNameEnglish },
-        { label: 'Weight', value: this.finalTotalWeight },
+        { label: 'Weight', value: this.finalTotalWeight + 'Kg'},
       ];
 
       const rightDetails = [
-        { label: 'To', value: this.toDate },
+        { label: 'To', value: this.formatDateForDisplay(this.toDate) },
         { label: 'Role', value: this.officerData.jobRole },
         { label: 'Last Name', value: this.officerData.lastNameEnglish },
         { label: 'Farmers', value: this.finalTotalFarmers },
@@ -235,8 +238,8 @@ export class MonthlyReportComponent implements OnInit {
       // Table Section
       const tableHeaders = ['Date', 'Total Weight', 'Total Farmers'];
       const tableData = this.dailyReports.map((report) => [
-        report.date,
-        report.totalWeight,
+        this.formatDateForDisplay(report.date),
+        report.totalWeight + 'Kg',
         report.totalPayments,
       ]);
 
@@ -322,8 +325,8 @@ export class MonthlyReportComponent implements OnInit {
     this.isLoading = true;
     this.collectionoOfficer
       .getCollectionReportByOfficerId(
-        this.fromDate,
-        this.toDate,
+        this.convertToISO(this.fromDate),
+        this.convertToISO(this.toDate),
         this.officerId
       )
       .subscribe(
@@ -362,5 +365,50 @@ export class MonthlyReportComponent implements OnInit {
 
   back(): void {
     this.router.navigate(['/reports/collective-officer-report']);
+  }
+
+  convertToISO(date: any): string {
+    if (date instanceof Date) {
+      // Create UTC date with the same year, month, and day
+      const utcDate = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+      ));
+      return utcDate.toISOString();
+    } else if (typeof date === 'string') {
+      const parsedDate = new Date(date);
+      if (!isNaN(parsedDate.getTime())) {
+        const utcDate = new Date(Date.UTC(
+          parsedDate.getFullYear(),
+          parsedDate.getMonth(),
+          parsedDate.getDate()
+        ));
+        return utcDate.toISOString();
+      }
+    }
+    return date;
+  }
+
+  formatDateForDisplay(date: any): string {
+    if (!date) return '';
+
+    let dateObj: Date;
+
+    if (date instanceof Date) {
+      dateObj = date;
+    } else if (typeof date === 'string') {
+      dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) return '';
+    } else {
+      return '';
+    }
+
+    // Format as YYYY-MM-DD for display
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }

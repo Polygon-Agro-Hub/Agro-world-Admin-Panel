@@ -32,7 +32,7 @@ export class PackageItemViewComponent implements OnInit {
 
   id!: number | null;
   invNo!: string | null;
-  total!: number;
+  total: number = 0;
   name!: string;
   fullTotal!: number;
   packageItemsArr: packageItems[] = [];
@@ -83,6 +83,26 @@ export class PackageItemViewComponent implements OnInit {
     this.getAllProducts();
 
   }
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    // keep default button styling
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+     this.router.navigate(["/dispatch/salesdash-orders"]);
+    }
+  });
+}
 
   getPackageItemData(id: number) {
     this.isLoading = true;
@@ -132,29 +152,31 @@ export class PackageItemViewComponent implements OnInit {
     );
   }
   
-  getAllProducts() {
-    this.isLoading = true;
+getAllProducts() {
+  this.isLoading = true;
 
-    this.dispatchService.getAllProducts().subscribe(
-      (response) => {
-        console.log(response);
+  this.dispatchService.getAllProducts().subscribe(
+    (response) => {
+      console.log(response);
 
-        this.productItemsArr = response.items
+      // Sort products alphabetically by productName
+      this.productItemsArr = response.items.sort((a: ProductItems, b: ProductItems) => 
+        a.productName.localeCompare(b.productName)
+      );
 
-        this.isLoading = false;
+      this.isLoading = false;
 
-        console.log('prodcut array', this.productItemsArr);
-      },
-      (error) => {
-        console.error('Error fetching package items:', error);
-        if (error.status === 401) {
-          // Handle unauthorized error if needed
-        }
-        this.isLoading = false;
+      console.log('product array', this.productItemsArr);
+    },
+    (error) => {
+      console.error('Error fetching package items:', error);
+      if (error.status === 401) {
+        // Handle unauthorized error if needed
       }
-    );
-  }
-
+      this.isLoading = false;
+    }
+  );
+}
   onCheckboxChange(item: packageItems, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     item.packedStatus = isChecked ? 1 : 0;
@@ -202,7 +224,7 @@ export class PackageItemViewComponent implements OnInit {
       (res) => {
         this.isLoading = false;
         console.log('Updated successfully:', res);
-        Swal.fire('Success', 'Product Updated Successfully', 'success');
+        Swal.fire('Success', 'Order dispatched successfully!', 'success');
         this.router.navigate(['/dispatch/salesdash-orders']);
       },
       (err) => {
@@ -283,12 +305,37 @@ export class PackageItemViewComponent implements OnInit {
     }
   }
 
-  validateQuantity() {
-    if (this.quantity === null || this.quantity < 1) {
-      this.quantity = 1;
+validateQuantity(): void {
+  if (this.quantity !== null && this.quantity !== undefined) {
+    // Match numbers with up to 3 decimal places
+    const regex = /^\d{0,3}(\.\d{0,3})?$/;
+
+    if (!regex.test(this.quantity.toString())) {
+      // Trim to 3 decimals if user types more
+      this.quantity = parseFloat(parseFloat(this.quantity.toString()).toFixed(3));
     }
-    this.calculateTotal();
   }
+}
+blockInvalidDecimal($event: KeyboardEvent) {
+  const input = $event.target as HTMLInputElement;
+  const value = input.value;
+
+  // Allow navigation / control keys
+  if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes($event.key)) {
+    return;
+  }
+
+  // If there's a decimal point already
+  if (value.includes('.')) {
+    const decimalPart = value.split('.')[1];
+
+    // Block typing more than 3 digits after decimal
+    if (decimalPart && decimalPart.length >= 3) {
+      $event.preventDefault();
+    }
+  }
+}
+
 
   blockInvalidKeys(event: KeyboardEvent) {
     // Prevent entering minus sign, 'e' or other invalid characters
@@ -339,20 +386,16 @@ export class PackageItemViewComponent implements OnInit {
     );
   }
 
-  onCancelPopup() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the edited data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/dispatch/salesdash-orders']);
-      }
-    })
-  };
+onCancelPopup() {
+  // Clear all form data
+  this.selectedProductId = null;
+  this.quantity = null;
+  this.unitPrice = null;
+  this.totalPrice = null;
+  
+  // Close the popup
+  this.isPopupOpen = false;
+}
 
 
 

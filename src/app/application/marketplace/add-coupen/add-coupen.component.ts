@@ -21,9 +21,46 @@ export class AddCoupenComponent {
 
   constructor(private marketSrv: MarketPlaceService, private router: Router) {}
 
+
+
   back(): void {
-    this.router.navigate(['market/action']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+     customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['market/action']);
+    }
+  });
+}
+
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+     customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['market/action']);
+    }
+  });
+}
+
 
   clearValidationMessages(): void {
     this.checkPrecentageValueMessage = '';
@@ -75,43 +112,61 @@ export class AddCoupenComponent {
     }
   }
 
-  onSubmit() {
-  // Reset messages
+onSubmit() {
   this.clearValidationMessages();
 
-  // Check required fields for all types
-  if (
-    !this.coupenObj.code ||
-    !this.coupenObj.endDate ||
-    !this.coupenObj.startDate ||
-    !this.coupenObj.type
-  ) {
-    Swal.fire('Warning', 'Please fill in all the required fields', 'warning');
-    return;
-  }
+  // Collect missing required fields
+  const missingFields = [];
+
+  if (!this.coupenObj.code) missingFields.push('Code *');
+  if (!this.coupenObj.startDate) missingFields.push('Start Date *');
+  if (!this.coupenObj.endDate) missingFields.push('Expire Date *');
+  if (!this.coupenObj.type) missingFields.push('Type *');
+  if (!this.coupenObj.type) missingFields.push('Type *');
 
   // Type-specific validations
   if (this.coupenObj.type === 'Percentage') {
     if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
-      this.checkPrecentageValueMessage = 'Percentage value is required';
-      Swal.fire('Warning', 'Please fill Discount Percentage field', 'warning');
-      return;
+      missingFields.push('Discount Percentage *');
+      this.checkPrecentageValueMessage = 'Discount Percentage is required';
     }
   } else if (this.coupenObj.type === 'Fixed Amount') {
     if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
-      this.checkfixAmountValueMessage = 'Fix amount value is required';
-      Swal.fire('Warning', 'Please fill Discount Amount field', 'warning');
-      return;
+      missingFields.push('Discount Amount *');
+      this.checkfixAmountValueMessage = 'Discount Amount is required';
     }
   }
 
-  // Price limit validation if checkbox is checked
   if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-    Swal.fire('Warning', 'Please fill Price Limit field', 'warning');
-    return;
+    missingFields.push('Price Limit *');
   }
 
-  // If all validations pass, save the coupon
+  if (missingFields.length > 0) {
+  // Format missing fields as left-aligned bullet points
+  const bulletPoints = missingFields
+    .map(field => `<div style="text-align: left; margin: 5px 0;">• ${field}</div>`)
+    .join('');
+  
+  Swal.fire({
+    title: 'Validation Error',
+    html: `
+      <div style="text-align: left;">
+        <p>Please fill in the following required field(s):</p>
+        ${bulletPoints}
+      </div>
+    `,
+    icon: 'error',
+    confirmButtonText: 'OK',
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+  });
+  return;
+}
+
+  // Save the coupon
   this.marketSrv.createCoupen(this.coupenObj).subscribe({
     next: (res) => {
       if (res.status) {
@@ -120,6 +175,11 @@ export class AddCoupenComponent {
           title: 'Coupon Created',
           text: 'The coupon was created successfully!',
           confirmButtonText: 'OK',
+          customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
         }).then(() => {
           this.coupenObj = new Coupen();
           this.router.navigate(['market/action/view-coupen']);
@@ -128,9 +188,8 @@ export class AddCoupenComponent {
     },
     error: (err) => {
       if (err.error && err.error.error === 'Coupon with this code already exists') {
-        // Show validation message under the code input
-        this.checkPrecentageValueMessage = ''; // Clear other messages
-        this.checkfixAmountValueMessage = ''; // Clear other messages
+        this.checkPrecentageValueMessage = '';
+        this.checkfixAmountValueMessage = '';
         Swal.fire('Error', 'Coupon with this code already exists', 'error');
       } else {
         Swal.fire('Error', err.error?.error || 'Coupon with this code already exists', 'error');
@@ -138,6 +197,30 @@ export class AddCoupenComponent {
     }
   });
 }
+
+
+validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // Regex to match numbers with up to 2 decimal places
+  const regex = /^\d+(\.\d{0,2})?$/;
+
+  if (value === '') {
+    this.coupenObj[field] = null!;
+    return;
+  }
+
+  if (!regex.test(value)) {
+    while (value.length > 0 && !regex.test(value)) {
+      value = value.slice(0, -1);
+    }
+    input.value = value;
+  }
+
+  this.coupenObj[field] = value ? parseFloat(value) : null!;
+}
+
 
   checkPrecentageValue(num: number) {
     if (num === null || isNaN(num)) {
@@ -172,7 +255,7 @@ export class AddCoupenComponent {
 
   preventNegative(e: KeyboardEvent) {
     // Prevent minus key, comma, and period (for negative numbers in some locales)
-    if (e.key === '-' || e.key === ',' || e.key === '.') {
+    if (e.key === '-' || e.key === ',' ) {
       e.preventDefault();
     }
 

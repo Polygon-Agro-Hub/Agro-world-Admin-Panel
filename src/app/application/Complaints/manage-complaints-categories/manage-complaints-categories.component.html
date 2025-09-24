@@ -23,7 +23,7 @@
     <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="flex justify-between items-center mb-8">
             <div class="flex items-center">
- <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+ <h2 class="text-2xl font-normal text-textLight dark:text-textDark text-[22px]">
   {{ selectedCategoryName }} : Manage Complaint Categories
 </h2>
 
@@ -33,18 +33,18 @@
 
         <table class="text-lg">
             <tr class="border-b-2 border-[#A4A4A4]">
-                <td class="px-6 py-2 dark:text-white text-[#5C5C5C]">No</td>
-                <td class="px-6 py-2 dark:text-white text-[#5C5C5C]">Category Name</td>
-                <td class="px-6 py-2 dark:text-white text-[#5C5C5C]">Admin Role Name</td>
-                <td class="px-10 py-2 dark:text-white text-[#5C5C5C]"></td>
+                <td class="px-6 py-2 dark:text-white text-[#5C5C5C] text-[16px]">No</td>
+                <td class="px-6 py-2 dark:text-white text-[#5C5C5C] text-[16px]">Category Name</td>
+                <td class="px-6 py-2 dark:text-white text-[#5C5C5C]  text-[16px]">Last Modified By</td>
+                <td class="px-10 py-2 dark:text-white text-[#5C5C5C] text-[16px]"></td>
             </tr>
             <tbody>
                 <tr class="border-b-2 border-[#A4A4A4]" *ngFor="let item of categoriesArr; let i = index;">
-                    <td class="px-6 py-2 dark:text-white">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
-                    <td class="px-6 py-2 dark:text-white">{{item.categoryEnglish}}</td>
-                    <td class="px-6 py-2 dark:text-white">{{item.role}}</td>
+                    <td class="px-6 py-2 dark:text-white text-[16px]">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
+                    <td class="px-6 py-2 dark:text-white text-[16px]">{{item.categoryEnglish}}</td>
+                    <td class="px-6 py-2 dark:text-white text-[16px]">{{item.role}}</td>
                     <td class="px-10 py-2">
-                        <i class="fa-regular fa-pen-to-square text-xl text-[#3980C0]"
+                        <i class="fa-regular fa-pen-to-square text-xl text-[#3980C0] text-[16px] hover:text-[#87c6fd] cursor-pointer"
                             (click)="editComplain(item.id)"></i>
                     </td>
                 </tr>

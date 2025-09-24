@@ -1,45 +1,48 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()"> 
+<button class="mb-5 text-black dark:text-textDark" onclick="history.back()"> 
     <i class="fa-solid fa-arrow-left"></i>
     Back
-  </button>
-  
-
-
+</button>
 
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex flex-col items-center justify-center mb-8">
-        <div class="flex items-center justify-center">
-            <h2 class="text-md font-normal text-gray-500 dark:text-textDark text-center">Farmer : {{this.fullName}}</h2>
+     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <span class="text-black dark:text-gray-300 font-medium">Farmer :</span>
+            <span class="text-black dark:text-textDark font-semibold">{{ fullName }}</span>
+          </div>
         </div>
-        <div class="flex items-center justify-center">
-            <h2 class="text-md font-normal text-gray-500 dark:text-textDark text-center">Category : {{this.category}}</h2>
+        <div class="flex items-center space-x-2">
+          <span class="text-black dark:text-gray-300 font-medium">Category :</span>
+          <span class="text-black dark:text-textDark font-semibold">{{ category }}</span>
         </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-black dark:text-gray-300 font-medium">Farm :</span>
+          <span class="text-black dark:text-textDark font-semibold">{{ farmName }}</span>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="!hasData" class="text-center py-8">
-        <p class="text-gray-500 dark:text-textDark text-lg">No data to display</p>
-    </div>
-    
+<div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20"> <p class="text-[#494949] dark:text-textDark mb-4"> -- No Data Available -- </p> <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" /> </div>
     <div *ngIf="hasData" class="overflow-x-auto">
         <table class="w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
-                    
-                    <th class="px-4 py-3 font-normal text-gray-500  text-center">Extent</th>
-                    <th class="px-4 py-3 font-normal text-gray-500  text-center">Ownership</th>
-                    <th class="px-4 py-3 font-normal text-gray-500  text-center">District</th>
-                    <th class="px-4 py-3 font-normal text-gray-500  text-center">Perennial Crops</th>
+                    <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-left">Extent</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Ownership</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">District</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Perennial Crops</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="
-            let item of fixedAssetB
-          ">
-                   
-                    
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+                <tr *ngFor="let item of fixedAssetB">
+                    <td class="px-6 py-3 text-gray-500 dark:text-textDark text-left">
                         {{ item.extentha }} ha, {{ item.extentac }} ac, {{ item.extentp }} p,
                     </td>
                     <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.ownership }}</td>
@@ -47,11 +50,25 @@
                     <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
                         {{ item.perennialCrop === 0 ? 'No' : 'Yes' }}
                     </td>
-                 
-                    
-                    
-                    
-                    
+                    <td class="px-4 py-3 text-center">
+                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200" 
+                                type="button" (click)="viewFixedAssetOwnershipDetails(item.buildingfixedassetId)">
+                            <svg
+                                class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

@@ -1,4 +1,5 @@
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()"
+>
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
@@ -8,20 +9,22 @@
 
     <div>
 
-        <div class="mb-5">
-            <!-- Role Input -->
-            <label for="typeName" class="block text-[#534E4E] dark:text-textDark my-2">Type Name</label>
-            <input id="typeName" name="typeName" [(ngModel)]="productObj.typeName"
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                placeholder="Ex : Up County Fruits" #typeNameInput="ngModel" required (input)="onTypeNameInput($event)"/>
+       <div class="mb-5">
+        <!-- Type Name Input -->
+        <label for="typeName" class="block text-[#534E4E] dark:text-textDark my-2">Type Name</label>
+        <input id="typeName" name="typeName" [(ngModel)]="productObj.typeName"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            placeholder="Ex: Up Country Fruits" #typeNameInput="ngModel" required
+            pattern="^[A-Za-z\s]*$" (input)="onTypeNameInput($event)"/>
 
-            <!-- Error: Required Field -->
-            <div *ngIf="typeNameInput.touched && !productObj.typeName" class="text-red-500 text-sm mt-1">
-                <div>Type Name is required</div>
-            </div>
+        <!-- Error Messages -->
+        <div *ngIf="typeNameInput.touched && typeNameInput.errors" class="text-red-500 text-sm mt-1">
+            <div *ngIf="typeNameInput.errors['required']">Type Name is required</div>
+            <div *ngIf="typeNameInput.errors['pattern']">Type Name must contain only English letters.</div>
         </div>
+    </div>
 
-        <div class="mb-5">
+       <div class="mb-5">
             <!-- Role Input -->
             <label for="cropName" class="block text-[#534E4E] dark:text-textDark my-2">
                 Short Code (Must have 3 initials)
@@ -29,21 +32,20 @@
 
             <input id="shortCode" name="shortCode" [(ngModel)]="productObj.shortCode" #shortCodeInput="ngModel"
                 class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-                placeholder="Ex : UCF" required maxlength="3" pattern="^[A-Za-z]{1,3}$" (input)="onShortCodeInput($event)"/>
+                placeholder="Ex : UCF" required maxlength="3" pattern="^[A-Za-z]{1,3}$" (input)="onShortCodeInput($event)" />
 
             <!-- Error: Required Field -->
             <div *ngIf="shortCodeInput.touched && shortCodeInput.errors" class="text-red-500 text-sm mt-1">
                 <div *ngIf="shortCodeInput.errors['required']">Short Code is required</div>
                 <div *ngIf="shortCodeInput.errors['maxlength']">Short Code cannot be longer than 3 characters</div>
-                <div *ngIf="shortCodeInput.errors['pattern']">Only letters (A-Z) allowed</div>
+                <div *ngIf="shortCodeInput.errors['pattern']">Short Code must be 1 to 3 uppercase letters (A–Z) only.</div>
             </div>
         </div>
-
     </div>
     <div class="flex justify-end mt-6">
-        <button class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md cursor-pointer" onclick="history.back()">
+           <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
             Cancel
-        </button>
+          </button>
         <button (click)="editType()" class="px-6 py-2 bg-[#3980C0] text-white rounded-md">
             Save
         </button>

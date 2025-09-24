@@ -17,7 +17,7 @@
           class="flex gap-3 p-4 border-b border-gray-300 dark:border-gray-700"
         >
           <button
-            class="px-4 py-2 border rounded-full cursor-pointer flex items-center gap-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-blue-400"
+            class="px-4 py-2 border rounded-full cursor-pointer flex items-center gap-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-blue-400 dark:text-textDark"
             [class.bg-blue-600]="activeTab === 'retail'"
             [class.text-blue-400]="activeTab === 'retail'"
             [class.border-blue-600]="activeTab === 'retail'"
@@ -30,7 +30,7 @@
             Retail Buyer Subscriptions
           </button>
           <button
-            class="px-4 py-2 border rounded-full cursor-pointer flex items-center gap-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-blue-400 dark:text-gray-300"
+            class="px-4 py-2 border rounded-full cursor-pointer flex items-center gap-2 transition-colors duration-200 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-blue-400  dark:text-textDark"
             [class.bg-blue-600]="activeTab === 'wholesale'"
             [class.text-blue-400]="activeTab === 'wholesale'"
             [class.border-blue-600]="activeTab === 'wholesale'"
@@ -45,53 +45,70 @@
         </div>
         <div class="px-10">
           <div class="flex justify-between items-center p-4">
-            <span class="font-semibold text-gray-600 dark:text-gray-300"
+            <span class="font-semibold text-textLight dark:text-textDark"
               >All ({{ totalItems }})</span
             >
-            <div class="relative flex items-center w-80">
-              <input
-                type="text"
-                class="w-full pr-12 pl-4 py-2.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm border-none outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-                [(ngModel)]="searchText"
-                (ngModelChange)="onSearchChange()"
-                placeholder="Search by Customer Name / Email"
-                aria-label="Search by Customer Name or Email"
-              />
-              <span
-                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
-              >
-                <img
-                  class="w-5 h-5"
-                  src="./assets/icons/search.png"
-                  alt="Search icon"
-                />
-              </span>
-              <button
-                *ngIf="searchText"
-                type="button"
-                class="text-gray-500 hover:text-gray-700 focus:outline-none absolute top-1/2 transform -translate-y-1/2 transition-colors duration-200"
-                (click)="clearSearch()"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
+           <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-80">
+  <input
+    type="text"
+    placeholder="Search by Customer Name / Email"
+    class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-200 text-sm"
+    [(ngModel)]="searchText"
+    (keydown)="blockFirstSpace($event)"
+    (ngModelChange)="onSearchChange()"
+    aria-label="Search by Customer Name or Email"
+  />
+
+  <!-- Search button -->
+  <button
+    type="button"
+    class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+    (click)="onSearchChange()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+      />
+    </svg>
+  </button>
+
+  <!-- Clear button -->
+  <button
+    *ngIf="searchText"
+    type="button"
+    (click)="clearSearch()"
+    class="text-gray-500 hover:text-gray-700 focus:outline-none"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M6 18L18 6M6 6l12 12"
+      />
+    </svg>
+  </button>
+</div>
+
           </div>
 
           <!-- Download Section -->
-          <div class="px-10">
+          <div class="px-2">
             <button
               class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
               (click)="downloadExcel()"
@@ -101,88 +118,57 @@
             </button>
           </div>
 
-          <!-- Table -->
-          <ng-container *ngIf="!isLoading; else loading">
-            <div class="h-[calc(100vh-200px)] overflow-y-auto">
-              <table
-                *ngIf="hasData; else noData"
-                class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-              >
-                <thead>
-                  <tr>
-                    <th
-                      class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left"
-                    >
-                      Customer Name
-                    </th>
-                    <th
-                      class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left"
-                    >
-                      Email
-                    </th>
-                    <th
-                      class="p-3 text-gray-600 dark:text-gray-400 font-normal text-left"
-                    >
-                      Time
-                    </th>
-                    <th class="p-3"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    *ngFor="
-                      let user of filteredSubscriptions
-                        | paginate
-                          : { itemsPerPage: itemsPerPage, currentPage: page }
-                    "
-                    class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                  >
-                    <td class="p-3 text-gray-800 dark:text-gray-200">
-                      {{ user.customerName }}
-                    </td>
-                    <td class="p-3 text-gray-800 dark:text-gray-200">
-                      {{ user.email }}
-                    </td>
-                    <td class="p-3 text-gray-800 dark:text-gray-200">
-                      {{ user.time }}
-                    </td>
-                    <td class="p-3">
-                      <img
-                        class="w-5 h-5 cursor-pointer hover:opacity-80 transition-opacity duration-200"
-                        src="./assets/icons/dlt.png"
-                        alt="Delete user"
-                        aria-label="Delete user"
-                        (click)="deleteUser(user.id)"
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <ng-template #noData>
-                <p class="p-4 text-gray-600 dark:text-gray-400">
-                  No subscriptions found.
-                </p>
-              </ng-template>
-            </div>
-          </ng-container>
+<ng-container *ngIf="!isLoading; else loading">
+  <div
+    class="overflow-y-auto max-h-[80vh] flex-1"
+  >
+    <table
+      *ngIf="hasData; else noData"
+      class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
+    >
+      <thead>
+        <tr>
+          <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Customer Name</th>
+          <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Email</th>
+          <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Time</th>
+          <th class="p-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let user of filteredSubscriptions"
+          class="border-b border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+        >
+          <td class="p-3 text-textLight dark:text-textDark">{{ user.customerName }}</td>
+          <td class="p-3 text-textLight dark:text-textDark">{{ user.email }}</td>
+          <td class="p-3 text-textLight dark:text-textDark">{{ user.time }}</td>
+          <td class="p-3">
+            <img
+              class="w-5 h-5 cursor-pointer hover:opacity-80 transition-opacity duration-200"
+              src="./assets/icons/dlt.png"
+              alt="Delete user"
+              aria-label="Delete user"
+              (click)="deleteUser(user.id)"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-          <ng-template #loading>
-            <app-loading-spinner></app-loading-spinner>
-          </ng-template>
+    <ng-template #noData>
+      <div class="flex flex-col items-center w-full px-10 py-7 mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
+    </ng-template>
+  </div>
+</ng-container>
 
-          <!-- Pagination -->
-          <div
-            *ngIf="totalItems > itemsPerPage"
-            class="p-4 flex justify-center"
-          >
-            <pagination-controls
-              (pageChange)="onPageChange($event)"
-              [maxSize]="5"
-              [directionLinks]="true"
-              [autoHide]="true"
-              class="text-gray-600 dark:text-gray-300 [&>pagination-controls]:text-gray-600 dark:[&>pagination-controls]:text-gray-300 [&>pagination-controls>a]:text-gray-600 dark:[&>pagination-controls>a]:text-gray-300 hover:[&>pagination-controls>a]:text-blue-400"
-            ></pagination-controls>
-          </div>
+<ng-template #loading>
+  <app-loading-spinner></app-loading-spinner>
+</ng-template>
+
+
         </div>
         <!-- Filter -->
       </div>

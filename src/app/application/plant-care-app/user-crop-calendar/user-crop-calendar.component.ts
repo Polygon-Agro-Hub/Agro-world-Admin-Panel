@@ -24,6 +24,7 @@ interface TaskList {
   videoLinkTamil: string;
   status: string;
   cropCalendarId: any;
+  onCulscropID: number
 }
 
 @Component({
@@ -56,6 +57,7 @@ export class UserCropCalendarComponent {
   selectedImages: string[] = [];
   firstStartingDate: string | null = null;
   cropName: string = '';
+  ongCultivationId: number | null = null;
 
   constructor(
     private ongoingCultivationService: OngoingCultivationService,
@@ -64,7 +66,7 @@ export class UserCropCalendarComponent {
     private route: ActivatedRoute,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -78,7 +80,9 @@ export class UserCropCalendarComponent {
       this.cultivationId = params['cultivationId']
         ? +params['cultivationId']
         : null;
-      this.cropName = params['cropName'] ? params['cropName'] : ''; // Changed from userName to cropName
+      this.cropName = params['cropName'] ? params['cropName'] : '';
+      this.ongCultivationId = params['ongCultivationId'] === 'null' ? null : params['ongCultivationId'];
+
     });
 
     console.log('onCulscropID', this.onCulscropID, 'cropName', this.cropName); // Updated log
@@ -123,13 +127,15 @@ export class UserCropCalendarComponent {
   deleteCroptask(id: string, cropId: any, index: any): void {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this crop Task item? This action cannot be undone.',
+      text: 'Do you really want to delete this Crop Task? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: '#ef4444', // red-500
+      cancelButtonColor: '#3b82f6', // blue-500
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      background: '#1e293b', // dark background
+      color: '#e2e8f0', // light text
     }).then((result) => {
       if (result.isConfirmed) {
         this.ongoingCultivationService
@@ -137,20 +143,28 @@ export class UserCropCalendarComponent {
           .subscribe(
             (data: any) => {
               if (data) {
-                Swal.fire(
-                  'Deleted!',
-                  'The crop calendar item has been deleted.',
-                  'success'
-                );
                 this.getchUserTaskList(this.cropCalendarId, this.userId);
+
+                // ✅ Success popup with auto close
+                Swal.fire({
+                  title: 'Deleted!',
+                  text: 'The crop task has been deleted successfully.',
+                  icon: 'success',
+                  timer: 2000,
+                  showConfirmButton: false,
+                  background: '#1e293b',
+                  color: '#e2e8f0',
+                });
               }
             },
             (error) => {
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the crop calendar.',
-                'error'
-              );
+              Swal.fire({
+                title: 'Error!',
+                text: 'There was an error deleting the crop calendar.',
+                icon: 'error',
+                background: '#1e293b',
+                color: '#e2e8f0',
+              });
             }
           );
       }
@@ -210,12 +224,13 @@ export class UserCropCalendarComponent {
       },
     }).then((result) => {
       console.log('this.onCulscropID', this.onCulscropID);
+      let ongCultivationId = this.ongCultivationId;
       if (result.isConfirmed) {
         this.router.navigate(
           [
             `/plant-care/action/add-new-crop-task/${cropId}/${indexId}/${userId}/${this.onCulscropID}`,
           ],
-          { queryParams: { cultivationId, cropName } } // Changed from userName to cropName
+          { queryParams: { cultivationId, cropName, ongCultivationId } } // Changed from userName to cropName
         );
       }
     });

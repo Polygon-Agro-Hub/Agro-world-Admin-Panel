@@ -6,7 +6,7 @@ import { DistributionHubService } from '../../../services/distribution-hub/distr
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-
+import { DropdownModule } from 'primeng/dropdown';
 interface Company {
   id: number;
   companyNameEnglish: string;
@@ -46,10 +46,16 @@ interface ApiResponse {
   data: DistributionHeadDetails;
 }
 
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
+
 @Component({
   selector: 'app-view-head-portal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule, DropdownModule , LoadingSpinnerComponent],
   templateUrl: './view-head-portal.component.html',
   styleUrls: ['./view-head-portal.component.css'],
 })
@@ -88,7 +94,20 @@ export class ViewHeadPortalComponent implements OnInit {
   employeeTypes = ['Permanent', 'Contract', 'Part-Time'];
   languages = ['Sinhala', 'Tamil', 'English'];
   banks = ['Hongkong Shanghai Bank', 'Bank of Ceylon', 'Commercial Bank', 'Hatton National Bank'];
+    countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+  { code: 'US', dialCode: '+1', name: 'United States' }
+];
 
+getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,

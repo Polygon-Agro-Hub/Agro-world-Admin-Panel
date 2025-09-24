@@ -19,8 +19,7 @@
           *</label>
         <input type="text" formControlName="name" (input)="onInputChange($event, 'centreName')"
           (blur)="onCentreNameBlur()" [class]="
-      ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-      (isFieldInvalid('name') ? 'border-red-500' : 'border-gray-300')
+      ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' 
     " />
         <div *ngIf="isFieldInvalid('name')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("name") }}
@@ -41,87 +40,99 @@
 
     <!-- Row 2 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
-      <div class="flex-1 mb-4 md:mb-0">
-        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
-          Contact Number 01 *
-        </label>
-        <div class="flex">
-          <p-dropdown formControlName="contact1Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
-            styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-            [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }">
-            <!-- Dropdown items -->
-            <ng-template let-country pTemplate="item">
-              <div class="flex items-center gap-2">
-                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                <span>{{ country.dialCode }}</span>
-              </div>
-            </ng-template>
+  <div class="flex-1 mb-4 md:mb-0">
+    <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
+      Contact Number 01 *
+    </label>
+    <div class="flex">
+      <p-dropdown formControlName="contact1Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+        styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+        [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact1Code') }">
+        <!-- Dropdown items -->
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
 
-            <!-- Selected item -->
-            <ng-template let-country pTemplate="selectedItem">
-              <div class="flex items-center gap-2" *ngIf="country">
-                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                <span>{{ country.dialCode }}</span>
-              </div>
-            </ng-template>
-          </p-dropdown>
+        <!-- Selected item -->
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
 
-          <input type="tel" formControlName="contact1" placeholder="7XXXXXXXX" maxlength="9"
-            (input)="onInputChange($event, 'phone')" [class]="
+      <input 
+        type="tel" 
+        formControlName="contact1" 
+        placeholder="7XXXXXXXX" 
+        maxlength="9"
+        (input)="onInputChange($event, 'phone')" 
+        [class]="
           'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
           (isFieldInvalid('contact1') ? 'border-red-500' : 'border-gray-300')
         " />
-        </div>
-        <div *ngIf="isFieldInvalid('contact1')" class="text-red-500 text-sm mt-1">
-          {{ getFieldError("contact1") }}
-        </div>
-      </div>
+    </div>
+    <div *ngIf="isFieldInvalid('contact1')" class="text-red-500 text-sm mt-1">
+      {{ getFieldError("contact1") }}
+    </div>
+  </div>
 
-      <div class="flex-1">
-        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
-          Contact Number 02
-        </label>
-        <div class="flex">
-          <p-dropdown formControlName="contact2Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
-            styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-            [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }">
-            <!-- Dropdown items -->
-            <ng-template let-country pTemplate="item">
-              <div class="flex items-center gap-2">
-                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                <span>{{ country.dialCode }}</span>
-              </div>
-            </ng-template>
+  <div class="flex-1">
+    <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
+      Contact Number 02
+    </label>
+    <div class="flex">
+      <p-dropdown formControlName="contact2Code" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
+        styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+        [style]="{ width: '120px' }" [ngClass]="{ 'border-red-500': isFieldInvalid('contact2Code') }">
+        <!-- Dropdown items -->
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
 
-            <!-- Selected item -->
-            <ng-template let-country pTemplate="selectedItem">
-              <div class="flex items-center gap-2" *ngIf="country">
-                <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                <span>{{ country.dialCode }}</span>
-              </div>
-            </ng-template>
-          </p-dropdown>
+        <!-- Selected item -->
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
 
-          <input type="tel" formControlName="contact2" placeholder="7XXXXXXXX" maxlength="9"
-            (input)="onInputChange($event, 'phone')" [class]="
+      <input 
+        type="tel" 
+        formControlName="contact2" 
+        placeholder="7XXXXXXXX" 
+        maxlength="9"
+        (input)="onInputChange($event, 'phone')" 
+        [class]="
           'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
           (isFieldInvalid('contact2') ? 'border-red-500' : 'border-gray-300')
         " />
-        </div>
-        <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
-          {{ getFieldError("contact2") }}
-        </div>
-      </div>
     </div>
+    <div *ngIf="isFieldInvalid('contact2')" class="text-red-500 text-sm mt-1">
+      {{ getFieldError("contact2") }}
+    </div>
+  </div>
+</div>
 
     <!-- Row 3 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Latitude *</label>
         <input type="text" formControlName="latitude" placeholder="e.g., 6.9271"
+        (keydown)="onKeyDown($event, 'coordinates')"
           (input)="onInputChange($event, 'coordinates')" [class]="
       ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
       (isFieldInvalid('latitude') ? 'border-red-500' : 'border-gray-300')
+      
     " />
         <div *ngIf="isFieldInvalid('latitude')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("latitude") }}
@@ -132,6 +143,7 @@
       <div class="flex-1">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Longitude *</label>
         <input type="text" formControlName="longitude" placeholder="e.g., 79.8612"
+        (keydown)="onKeyDown($event, 'coordinates')"
           (input)="onInputChange($event, 'coordinates')" [class]="
       ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
       (isFieldInvalid('longitude') ? 'border-red-500' : 'border-gray-300')
@@ -146,15 +158,15 @@
     <!-- Row 4 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
-        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Email *</label>
-        <input type="email" formControlName="email" (input)="onInputChange($event, 'email')" [class]="
-      ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-      (isFieldInvalid('email') ? 'border-red-500' : 'border-gray-300')
-    " />
-        <div *ngIf="isFieldInvalid('email')" class="text-red-500 text-sm mt-1">
-          {{ getFieldError("email") }}
-        </div>
-      </div>
+  <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Email *</label>
+  <input type="text" formControlName="email" (input)="onInputChange($event, 'email')" [class]="
+    ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+    (isFieldInvalid('email') ? 'border-red-500' : 'border-gray-300')
+  " />
+  <div *ngIf="isFieldInvalid('email')" class="text-red-500 text-sm mt-1">
+    {{ getFieldError("email") }}
+  </div>
+</div>
 
 
       <div class="flex-1">
@@ -199,15 +211,20 @@
     <!-- Row 6 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
-        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">City *</label>
-        <input type="text" formControlName="city" (input)="onInputChange($event, 'text')" [class]="
+  <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">City *</label>
+  <input 
+    type="text" 
+    formControlName="city" 
+    (input)="onInputChange($event, 'city')" 
+    [class]="
       ' dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
       (isFieldInvalid('city') ? 'border-red-500' : 'border-gray-300')
-    " />
-        <div *ngIf="isFieldInvalid('city')" class="text-red-500 text-sm mt-1">
-          {{ getFieldError("city") }}
-        </div>
-      </div>
+    " 
+  />
+  <div *ngIf="isFieldInvalid('city')" class="text-red-500 text-sm mt-1">
+    {{ getFieldError("city") }}
+  </div>
+</div>
       <div class="flex-1 mb-4 md:mb-0">
         <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">Distribution Centre Reg Code
           *</label>
@@ -231,10 +248,8 @@
         Cancel
       </button>
       <button type="submit" [class]="
-          'px-4 min-w-30 py-2 bg-[#3980C0] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#D3D3D3] ' +
-          (distributionForm.invalid
-            ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-            : 'bg-[#3980C0] text-white  hover:bg-[#3980C0]')
+          'px-4 min-w-30 py-2 bg-[#3980C0] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#FFFFFF] ' +
+          (distributionForm.invalid)
         ">
         Save
       </button>

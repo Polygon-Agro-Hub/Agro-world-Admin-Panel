@@ -122,39 +122,111 @@
           </div>
   
           
-  
+<!--   
           <div>
             <label for="phoneNumber1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Phone Number - 1
             </label>
             <div class="mt-1 flex">
-                <input id="phoneNumber1Code" name="phoneNumber1Code" [(ngModel)]="personalData.phoneCode1" class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-                [disabled]="true"/>
+               <input
+  id="phoneNumber1Code"
+  name="phoneNumber1Code"
+  [(ngModel)]="personalData.phoneCode1"
+  class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack w-16"
+  [disabled]="true"
+/>
+
               
               <input id="phoneNumber1" name="phoneNumber1" type="text" [(ngModel)]="personalData.phoneNumber1"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 [disabled] = 'true' />
-            </div>
-  
+            </div> -->
+  <div> 
+ <label for="phoneNumber1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Phone Number - 1
+  </label>
+  <div class="mt-1 flex">
+    <p-dropdown
+      [(ngModel)]="personalData.phoneCode1"
+      [options]="countries"
+      optionLabel="dialCode"
+      optionValue="dialCode"
+      styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+      [style]="{ width: '140px' }"
+      [disabled]="true"
+    > 
+      <!-- Dropdown items -->
+      <ng-template let-country pTemplate="item">
+        <div class="flex items-center gap-2">
+          <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+          <span>{{ country.dialCode }}</span>
+        </div>
+      </ng-template>
+
+      <!-- Selected item -->
+      <ng-template let-country pTemplate="selectedItem">
+        <div class="flex items-center gap-2" *ngIf="country">
+          <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+          <span>{{ country.dialCode }}</span>
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <input
+      id="phoneNumber1"
+      name="phoneNumber1"
+      type="text"
+      [(ngModel)]="personalData.phoneNumber1"
+      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+       readonly
+    />
+  </div>
+</div> 
             
-          </div>
+        
   
   
-          <div>
-            <label for="phoNumTwo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Phone Number - 2
-            </label>
-            <div class="mt-1 flex">
-                <input id="phoneNumber02Code" name="phoneNumber02Code" [(ngModel)]="personalData.phoneCode2"
-                class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack" [disabled]="true"/>
-              
-              <input id="phoneNumber2" name="phoneNumber2" type="number" [(ngModel)]="personalData.phoneNumber2"
-                class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-               [disabled] = 'true'/>
-            </div>
-            
-          </div>
-  
+      <div> 
+  <label for="phoneNumber2" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Phone Number - 2
+  </label>
+  <div class="mt-1 flex">
+    <p-dropdown
+      [(ngModel)]="personalData.phoneCode2"
+      [options]="countries"
+      optionLabel="dialCode"
+      optionValue="dialCode"
+      styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+      [style]="{ width: '140px' }"
+      [disabled]="true"
+    > 
+      <!-- Dropdown items -->
+      <ng-template let-country pTemplate="item">
+        <div class="flex items-center gap-2">
+          <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+          <span>{{ country.dialCode }}</span>
+        </div>
+      </ng-template>
+
+      <!-- Selected item -->
+      <ng-template let-country pTemplate="selectedItem">
+        <div class="flex items-center gap-2" *ngIf="country">
+          <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+          <span>{{ country.dialCode }}</span>
+        </div>
+      </ng-template>
+    </p-dropdown>
+
+    <input
+  id="phoneNumber2"
+  name="phoneNumber2"
+  type="text"
+  [value]="personalData.phoneNumber2 || '-'"
+  class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  readonly
+/>
+  </div>
+</div>
+
           <div>
             <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number</label>
             <input id="nic" name="nic" [(ngModel)]="personalData.nic"

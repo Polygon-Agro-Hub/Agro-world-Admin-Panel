@@ -15,17 +15,24 @@
 
       <!-- Collection Center Name -->
       <div>
-        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre
-          Name *</label>
-        <input formControlName="centerName" id="centerName" name="centerName" (input)="onCenterNameInput($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <div *ngIf="
-            collectionCenterForm.get('centerName')?.invalid &&
-            (collectionCenterForm.get('centerName')?.dirty ||
-              collectionCenterForm.get('centerName')?.touched)
-          " class="text-red-500 text-sm mt-1">
-          Centre Name is required
-        </div>
+    <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Name *</label>
+  <input
+    formControlName="centerName"
+    id="centerName"
+    name="centerName"
+    (input)="onCenterNameInput($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+  <div
+    *ngIf="
+      (collectionCenterForm.get('centerName')?.dirty ||
+        collectionCenterForm.get('centerName')?.touched) &&
+      collectionCenterForm.get('centerName')?.hasError('required')
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Centre Name is required
+  </div>
         <!-- <div *ngIf="
             collectionCenterForm
               .get('centerName')
@@ -79,47 +86,32 @@
         </div>
       </div> -->
 
-      <div class="relative">
-        <!-- Label -->
-        <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Companies *
-        </label>
+<div class="relative">
+  <label for="companies" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Companies *
+  </label>
+
+<p-multiSelect
+  [options]="filteredCompanies"
+  [(ngModel)]="selectedCompaniesIds"
+  optionLabel="companyNameEnglish"
+  optionValue="id"
+  [filter]="true"
+  filterPlaceholder="Search company..."
+  [showClear]="true"
+  placeholder="Select companies"
   
-        <!-- Readonly display input -->
-        <input type="text" [value]="selectedCompaniesNames.join(', ')" readonly
-          class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
-          placeholder="Select companies" (click)="onCompanyInputClick()" />
-  
-        <!-- Dropdown list -->
-        <div *ngIf="dropdownOpen"
-          class="absolute z-10 mt-2 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-auto">
-          <!-- Search input inside dropdown -->
-          <input type="text" (input)="filterCompanies($event)"
-            placeholder="Search company..." id="companySearchInput"
-            class="w-full p-2 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300" />
-  
-          <!-- Filtered list -->
-          <div *ngFor="let company of filteredCompanies"
-            class="px-4 py-2 cursor-pointer dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
-            (click)="toggleSelection(company)">
-            <div class="flex flex-row gap-2">
-              <input
-              type="checkbox"
-              [checked]="selectedCompaniesIds.includes(company.id)"
-              class="mr-2"
-              (click)="$event.stopPropagation()"
-            />
-            <div class="dark:text-white">{{ company.companyNameEnglish }}</div>
-            </div>
-          </div>
-        </div>
-  
-  
-        <!-- Validation message -->
-        <div *ngIf="companyTouched && companyDisplayText === ''" class="text-red-500 text-sm mt-1">
-          Company is required
-        </div>
-      </div>
+  [styleClass]="'w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
+>
+</p-multiSelect>
+
+
+
+  <div *ngIf="companyTouched && !selectedCompaniesIds.length" class="text-red-500 text-sm mt-1">
+    Company is required
+  </div>
+</div>
+
       
 
       <!-- <div *ngIf="accHolderNameInput.touched && (accHolderNameInput.errors?.['required'] || !personalData.accHolderName)"  class="text-red-500 text-sm mt-1">
@@ -133,17 +125,6 @@
         </label>
       
         <div class="mt-1 flex">
-          <!-- Country Code Dropdown -->
-          <!-- <select
-            formControlName="contact01Code"
-            id="contact01Code"
-            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-          >
-            <option value="+94">+94 (LK)</option>
-            <option value="+1">+1 (US)</option>
-            <option value="+44">+44 (UK)</option>
-            <option value="+91">+91 (India)</option>
-          </select> -->
           <p-dropdown
   [options]="countries"
   formControlName="contact01Code"
@@ -201,7 +182,7 @@
             *ngIf="collectionCenterForm.get('contact01')?.errors?.['required']"
             class="text-red-500 text-sm mt-1"
           >
-            Phone Number - 1 is required.
+            Contact Number 01 is required.
           </div>
       
           <div
@@ -215,7 +196,7 @@
             *ngIf="isPhoneInvalidMap['phone01'] && collectionCenterForm.get('contact01')?.value"
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc.)
+          Please enter a valid Contact Number (format: +947XXXXXXXX)
           </div>
         </div>
       </div>
@@ -228,15 +209,6 @@
         </label>
       
         <div class="mt-1 flex">
-          <!-- Country Code Select -->
-          <!-- <select formControlName="contact02Code" id="contact02Code"
-            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack">
-            <option value="+94">+94 (LK)</option>
-            <option value="+1">+1 (US)</option>
-            <option value="+44">+44 (UK)</option>
-            <option value="+91">+91 (India)</option>
-          </select> -->
-
           <p-dropdown
   [options]="countries"
   formControlName="contact02Code"
@@ -294,8 +266,7 @@
       !isPhoneInvalidMap['phone02'] && !isPhoneInvalidMap['phone02']"
 
     class="text-red-500 text-sm mt-1">
-  Phone Number - 2 should be different from Phone Number - 1.
-</div>
+Contact Number - 1 and Contact Number - 2 cannot be the same</div>
       
           <div
             *ngIf="collectionCenterForm.get('contact02')?.errors?.['pattern'] && !isPhoneInvalidMap['phone02']"
@@ -308,7 +279,7 @@
             *ngIf="isPhoneInvalidMap['phone02'] && collectionCenterForm.get('contact02')?.value"
             class="text-red-500 text-sm mt-1"
           >
-            Please enter a valid Phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc.)
+          Please enter a valid Contact Number (format: +947XXXXXXXX)
           </div>
         </div>
 
@@ -318,8 +289,9 @@
       <div>
         <label for="buildingNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Building
           Number *</label>
-        <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber" (input)="trimBuildingNumber()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="buildingNumber" id="buildingNumber" name="buildingNumber" 
+       (input)="trimBuildingNumber()"
+       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('buildingNumber')?.invalid &&
             (collectionCenterForm.get('buildingNumber')?.dirty ||
@@ -332,8 +304,9 @@
       <!-- Street Name -->
       <div>
         <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
-        <input formControlName="street" id="street" name="street" (input)="trimStreetName()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="street" id="street" name="street" 
+       (input)="trimStreetName()"
+       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('street')?.invalid &&
             (collectionCenterForm.get('street')?.dirty ||
@@ -347,8 +320,9 @@
 
       <div>
         <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
-        <input formControlName="city" id="city" name="city" (input)="trimBuildingNumber()" (input)="onProvinceChange()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <input formControlName="city" id="city" name="city" 
+       (input)="trimCity()"
+       class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="
             collectionCenterForm.get('city')?.invalid &&
             (collectionCenterForm.get('city')?.dirty ||
@@ -421,7 +395,7 @@
       </div> -->
 
       <div>
-        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Reg Code *</label>
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Reg Code</label>
         <div class="relative">
           <input formControlName="regCode" id="regCode" name="regCode" [value]="isLoadingregcode ? 'Loading...' : ''"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -434,15 +408,7 @@
         Cancel
       </div>
       <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
-  [disabled]="
-    collectionCenterForm.get('contact01')?.invalid ||
-    isPhoneInvalidMap['phone01'] ||
-    collectionCenterForm.get('contact02')?.value && 
-      ((collectionCenterForm.get('contact01')?.value === collectionCenterForm.get('contact02')?.value) ||
-      collectionCenterForm.get('contact02')?.invalid ||
-      isPhoneInvalidMap['phone02'])
-
-  "
+  
     
 >
   Save

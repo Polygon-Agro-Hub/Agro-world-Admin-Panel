@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { ViewCropTasksComponent } from '../view-crop-tasks/view-crop-tasks.component';
 
 class CropTask {
   'cropId': string;
@@ -18,7 +19,7 @@ class CropTask {
   'videoLinkEnglish': string;
   'videoLinkSinhala': string;
   'videoLinkTamil': string;
-  'id': string;
+  'id': number;
 }
 
 @Component({
@@ -29,6 +30,7 @@ class CropTask {
     NgxPaginationModule,
     FormsModule,
     LoadingSpinnerComponent,
+    ViewCropTasksComponent
   ],
   templateUrl: './view-crop-task.component.html',
   styleUrl: './view-crop-task.component.css',
@@ -73,7 +75,7 @@ export class ViewCropTaskComponent implements OnInit {
       );
   }
 
-  deleteCroptask(id: string, cropId: string, indexId: string): void {
+  deleteCroptask(id: number, cropId: string, indexId: string): void {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this crop task item? This action cannot be undone.',
@@ -90,7 +92,7 @@ export class ViewCropTaskComponent implements OnInit {
             if (data) {
               Swal.fire(
                 'Deleted!',
-                'The crop calendar item has been deleted.',
+                'The crop task item has been deleted.',
                 'success'
               );
               this.fetchAllCropTask();
@@ -108,7 +110,7 @@ export class ViewCropTaskComponent implements OnInit {
     });
   }
 
-  editCropTask(id: string) {
+  editCropTask(id: number) {
     this.router.navigate([`plant-care/action/edit-crop-task/${id}`]);
   }
 
@@ -143,5 +145,12 @@ export class ViewCropTaskComponent implements OnInit {
 
   Back(): void {
     this.router.navigate(['/plant-care/action/view-crop-calender']);
+  }
+
+  ispopup:boolean=false;
+  selectCropId!:number;
+  togglePopup(id:number ) {
+    this.ispopup = true;
+    this.selectCropId=id;
   }
 }

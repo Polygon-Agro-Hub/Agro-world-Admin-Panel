@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { Country, COUNTRIES } from '../../../../assets/country-data';
-
+import { MultiSelectModule } from 'primeng/multiselect';
 @Component({
   selector: 'app-add-collection-center',
   standalone: true,
@@ -21,6 +21,7 @@ import { Country, COUNTRIES } from '../../../../assets/country-data';
     CommonModule,
     ReactiveFormsModule,
     DropdownModule,
+    MultiSelectModule,
     InputTextModule,
     FormsModule,
   ],
@@ -28,6 +29,7 @@ import { Country, COUNTRIES } from '../../../../assets/country-data';
   styleUrls: ['./add-collection-center.component.css'],
 })
 export class AddCollectionCenterComponent implements OnInit {
+  isLoading: boolean = false;
   collectionCenterForm: FormGroup;
   centerData: CollectionCenter = new CollectionCenter();
   selectProvince: string = '';
@@ -258,6 +260,7 @@ isFieldInvalid(field: string): boolean {
   }
 }
 
+
   onDistrictChange() {
     const selectedProvince = this.collectionCenterForm.get('province')?.value;
     const selectedDistrict = this.collectionCenterForm.get('district')?.value;
@@ -297,131 +300,242 @@ isFieldInvalid(field: string): boolean {
     }
   }
 
-  onSubmit() {
-    // const contact01 = this.collectionCenterForm.get('contact01')?.value;
-    // const contact02 = this.collectionCenterForm.get('contact02')?.value;
+ onSubmit() {
+  // Mark all form fields as touched to trigger validation
+  this.collectionCenterForm.markAllAsTouched();
 
-    // const isSameNumber = contact01 === contact02;
-    // const isInvalidPhone = this.isPhoneInvalidMap['phone02'];
-    // const isContact02Invalid = this.collectionCenterForm.get('contact02')?.invalid;
+  const missingFields: string[] = [];
 
-    // if (contact02 && (isSameNumber || isInvalidPhone || isContact02Invalid)) {
-    //   if (isSameNumber) {
-    //     Swal.fire({
-    //       icon: 'error',
-    //       title: 'Duplicate Phone Number',
-    //       text: 'Phone Number - 2 should be different from Phone Number - 1.'
-    //     });
-    //   } else if (isInvalidPhone) {
-    //     Swal.fire({
-    //       icon: 'error',
-    //       title: 'Invalid Phone Format',
-    //       text: 'Please enter a valid phone number (e.g., 77XXXXXXX, 72XXXXXXX, etc).'
-    //     });
-    //   } else if (isContact02Invalid) {
-    //     Swal.fire({
-    //       icon: 'error',
-    //       title: 'Invalid Phone Number',
-    //       text: 'Phone Number must be exactly 9 digits.'
-    //     });
-    //   }
-    //   return; // prevent form submission
-    // }
+  // Validation for form fields
+  if (!this.collectionCenterForm.get('centerName')?.value || this.collectionCenterForm.get('centerName')?.value.trim() === '') {
+    missingFields.push('Collection Centre Name is Required');
+  }
 
-    // Proceed if no errors
-    if (this.collectionCenterForm.valid) {
-      // your form submit logic here
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Form submitted successfully!',
-      });
+  if (!this.selectedCompaniesIds || this.selectedCompaniesIds.length === 0) {
+    missingFields.push('Companies - At least one company must be selected');
+  }
+
+  if (!this.collectionCenterForm.get('contact01')?.value) {
+    missingFields.push('Contact Number - 1 is Required');
+  } else if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact01')?.value) || this.isPhoneInvalidMap['phone01']) {
+    missingFields.push('Contact Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+  }
+
+  if (this.collectionCenterForm.get('contact02')?.value) {
+    if (!/^[0-9]{9}$/.test(this.collectionCenterForm.get('contact02')?.value) || this.isPhoneInvalidMap['phone02']) {
+      missingFields.push('Contact Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
     }
-
-    const requiredFields = [
-      { key: 'buildingNumber', label: 'Building Number' },
-      { key: 'street', label: 'Street' },
-      { key: 'city', label: 'City' },
-      { key: 'centerName', label: 'Center Name' },
-      { key: 'contact01', label: 'Contact Number' },
-      { key: 'district', label: 'District' },
-      { key: 'province', label: 'Province' },
-      { key: 'regCode', label: 'Registration Code' },
-      { key: 'contact01Code', label: 'Contact Code' },
-    ];
-
-    const missingFields = requiredFields
-      .filter((field) => !this.collectionCenterForm.value[field.key])
-      .map((field) => `- ${field.label}`);
-
-    if (this.selectedCompaniesIds.length === 0) {
-      missingFields.push(`- Company Name`);
+    if (this.collectionCenterForm.get('contact01')?.value === this.collectionCenterForm.get('contact02')?.value) {
+      missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
     }
+  }
 
-    if (missingFields.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Form Validation Error',
-        html: `<p>Please fill in the following required fields:</p><ul>${missingFields
-          .map((f) => `<li>${f}</li>`)
-          .join('')}</ul>`,
-      });
-      return;
-    }
+  // if (!this.collectionCenterForm.get('contact01Code')?.value) {
+  //   missingFields.push('Contact Number - 1 Code');
+  // }
 
-    this.centerData = {
-      ...this.centerData,
-      ...this.collectionCenterForm.value,
-    };
+  // if (this.collectionCenterForm.get('contact02')?.value && !this.collectionCenterForm.get('contact02Code')?.value) {
+  //   missingFields.push('Contact Number - 2 Code');
+  // }
 
-    this.collectionCenterService
-      .createCollectionCenter(this.centerData, this.selectedCompaniesIds)
-      .subscribe(
-        (res) => {
-          console.log(res);
+  if (!this.collectionCenterForm.get('buildingNumber')?.value || this.collectionCenterForm.get('buildingNumber')?.value.trim() === '') {
+    missingFields.push('Building Number  is Required');
+  }
+
+  if (!this.collectionCenterForm.get('street')?.value || this.collectionCenterForm.get('street')?.value.trim() === '') {
+    missingFields.push('Street Name is Required');
+  }
+
+  if (!this.collectionCenterForm.get('city')?.value || this.collectionCenterForm.get('city')?.value.trim() === '') {
+    missingFields.push('City is Required');
+  }
+
+  if (!this.collectionCenterForm.get('province')?.value) {
+    missingFields.push('Province is Required');
+  }
+
+  if (!this.collectionCenterForm.get('district')?.value) {
+    missingFields.push('District is Required');
+  }
+
+  if (!this.collectionCenterForm.get('country')?.value) {
+    missingFields.push('Country is Required');
+  }
+
+  if (!this.collectionCenterForm.get('regCode')?.value) {
+    missingFields.push('Collection Centre Reg Code is Required');
+  }
+
+  // Display validation errors if any
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
+
+  // Confirmation dialog
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to create this Collection Centre?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, create it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+
+      // Prepare data for submission
+      const formData = {
+        centerName: this.collectionCenterForm.get('centerName')?.value.trim(),
+        companyIds: this.selectedCompaniesIds,
+        contact01Code: this.collectionCenterForm.get('contact01Code')?.value,
+        contact01: this.collectionCenterForm.get('contact01')?.value,
+        contact02Code: this.collectionCenterForm.get('contact02Code')?.value || null,
+        contact02: this.collectionCenterForm.get('contact02')?.value || null,
+        buildingNumber: this.collectionCenterForm.get('buildingNumber')?.value.trim(),
+        street: this.collectionCenterForm.get('street')?.value.trim(),
+        city: this.collectionCenterForm.get('city')?.value.trim(),
+        province: this.collectionCenterForm.get('province')?.value,
+        district: this.collectionCenterForm.get('district')?.value,
+        country: this.collectionCenterForm.get('country')?.value,
+        regCode: this.collectionCenterForm.get('regCode')?.value,
+      };
+
+      // Call the service to create the Collection Centre
+      this.collectionCenterService.createCollectionCenter(formData, this.selectedCompaniesIds).subscribe({
+        next: (res: any) => {
+          this.isLoading = false;
           if (res.status) {
-            Swal.fire(
-              'Success',
-              'Collection centre Created Successfully',
-              'success'
-            );
-            this.router.navigate(['/collection-hub/view-collection-centers']);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Collection Centre created successfully!',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            }).then(() => {
+              this.router.navigate(['/collection-hub/view-collection-centers']);
+            });
           } else {
-            if (res.message === 'This RegCode already exists!') {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Something went wrong while creating the Collection centre.',
-              });
-            }
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: res.message === 'This RegCode already exists!' 
+                ? 'The registration code is already in use.' 
+                : 'Something went wrong while creating the Collection Centre.',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
           }
         },
-        (error) => {
-          console.log('Error:', error);
-        }
-      );
-  }
+        error: (error: any) => {
+          this.isLoading = false;
+          let errorMessage = 'An unexpected error occurred';
+          if (error.error && error.error.error) {
+            switch (error.error.error) {
+              case 'Duplicate reg code':
+                errorMessage = 'The registration code is already in use.';
+                break;
+              case 'Duplicate contact number':
+                errorMessage = 'The contact number is already registered.';
+                break;
+              case 'Invalid company selection':
+                errorMessage = 'One or more selected companies are invalid.';
+                break;
+              default:
+                errorMessage = error.error.error || 'An unexpected error occurred';
+            }
+          }
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: errorMessage,
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Cancelled',
+        text: 'Collection Centre creation has been cancelled',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+    }
+  });
+}
 
   onCancel() {
-    Swal.fire({
-      icon: 'info',
-      title: 'Cancelled',
-      text: 'Form has been cleared!',
-      timer: 2000,
-      showConfirmButton: false,
-    }).then(() => {
-      this.collectionCenterForm.reset();
-      this.selectedDistrict = [];
-      this.selectProvince = '';
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'All entered data will be lost!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Reset',
+    cancelButtonText: 'No, Keep Editing',
+        customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
       this.router.navigate(['/collection-hub/view-collection-centers']);
-    });
-  }
+    }
+  });
+}
 
-  getAllCompanies() {
-    this.collectionCenterService.getAllCompanyList().subscribe((res) => {
-      this.CompanyData = res;
-    });
-  }
+
+getAllCompanies() {
+  this.collectionCenterService.getAllCompanyList().subscribe((res) => {
+    console.log('Raw response from service:', res);
+    this.CompanyData = res;
+
+ 
+
+    this.filteredCompanies = this.CompanyData.filter(
+      (item) => item.id != null && item.companyNameEnglish
+    );
+    this.filteredCompanies = this.filteredCompanies.filter(
+      (item, index, self) => index === self.findIndex(i => i.id === item.id)
+    );
+    console.log('Companies for dropdown:', this.filteredCompanies);
+  });
+}
+
 
   noNumbersValidator(control: any) {
     const regex = /^[A-Za-z\s]*$/;
@@ -431,9 +545,26 @@ isFieldInvalid(field: string): boolean {
     return null;
   }
 
+
   back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+        customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
     this.router.navigate(['/collection-hub']);
-  }
+    }
+  });
+}
+
 
   ProvinceData = [
     {
@@ -500,28 +631,37 @@ isFieldInvalid(field: string): boolean {
   ];
 
   trimBuildingNumber(): void {
-    const control = this.collectionCenterForm.get('buildingNumber');
-    if (control) {
-      const value = control.value || '';
-      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
-    }
+  const control = this.collectionCenterForm.get('buildingNumber');
+  if (control) {
+    let value = control.value || '';
+    value = value.replace(/^\s+/, '');
+    // Capitalize first letter
+    value = this.capitalizeFirstLetter(value);
+    control.setValue(value, { emitEvent: false });
   }
+}
 
   trimCity(): void {
-    const control = this.collectionCenterForm.get('buildingNumber');
-    if (control) {
-      const value = control.value || '';
-      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
-    }
+  const control = this.collectionCenterForm.get('city');
+  if (control) {
+    let value = control.value || '';
+    value = value.replace(/^\s+/, '');
+    // Capitalize first letter
+    value = this.capitalizeFirstLetter(value);
+    control.setValue(value, { emitEvent: false });
   }
+}
 
   trimStreetName(): void {
-    const control = this.collectionCenterForm.get('street');
-    if (control) {
-      const value = control.value || '';
-      control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
-    }
+  const control = this.collectionCenterForm.get('street');
+  if (control) {
+    let value = control.value || '';
+    value = value.replace(/^\s+/, '');
+    // Capitalize first letter
+    value = this.capitalizeFirstLetter(value);
+    control.setValue(value, { emitEvent: false });
   }
+}
 
   onCenterNameInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -537,11 +677,11 @@ isFieldInvalid(field: string): boolean {
       input = input.trimStart();
     }
 
-    // Remove invalid characters (only allow A-Z, a-z, and space)
-    const filteredInput = input.replace(/[^A-Za-z ]/g, '');
-    if (filteredInput !== input) {
-      this.specialCharOrNumberError = true;
-    }
+   
+  const filteredInput = input.replace(/[^A-Za-z\u0D80-\u0DFF\u0B80-\u0BFF ]/g, '');
+  if (filteredInput !== input) {
+    this.specialCharOrNumberError = true;
+  }
 
     // Capitalize the first letter (if input is not empty)
     const capitalizedInput =
@@ -557,15 +697,20 @@ isFieldInvalid(field: string): boolean {
     // If you're storing it separately too
     this.centerData.centerName = capitalizedInput;
   }
+
+  capitalizeFirstLetter(input: string): string {
+  if (!input) return '';
+  return input.charAt(0).toUpperCase() + input.slice(1);
+}
 }
 
 class CollectionCenter {
   regCode!: string;
   centerName!: string;
   contact01!: string;
-  contact01Code!: string;
+  contact01Code: string = '+94';
   contact02!: string;
-  contact02Code!: string;
+  contact02Code: string = '+94';
   buildingNumber!: string;
   street!: string;
   district!: string;

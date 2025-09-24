@@ -1,5 +1,5 @@
 <div>
-  <button class="text-textLight dark:text-textDark" onclick="history.back()">
+  <button class="text-textLight dark:text-textDark" (click)="back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -51,18 +51,19 @@
           for="taskEnglish"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task English
+          Task English *
         </label>
-        <input
-          type="text"
-          id="taskEnglish"
-          [(ngModel)]="taskItems.taskEnglish"
-          (keydown)="onKeyDown($event, taskItems.taskEnglish)"
-          (input)="validateEnglishInput($event)"
-          #taskEnglish="ngModel"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+       <input
+  type="text"
+  id="taskEnglish"
+  [(ngModel)]="taskItems.taskEnglish"
+  (keydown)="onKeyDown($event, taskItems.taskEnglish)"
+ (input)="validateAndCapitalizeEnglish($event, 'taskEnglish')"
+  #taskEnglish="ngModel"
+  required
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
         <div
           *ngIf="
             taskEnglish.invalid && (taskEnglish.dirty || taskEnglish.touched)
@@ -77,18 +78,19 @@
           for="taskTypeEnglish"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Type
+          Task Type *
         </label>
-        <input
-          type="text"
-          id="taskTypeEnglish"
-          [(ngModel)]="taskItems.taskTypeEnglish"
-          (keydown)="onKeyDown($event, taskItems.taskTypeEnglish)"
-          (input)="validateEnglishInput($event)"
-          #taskTypeEnglish="ngModel"
-          required
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+      <input
+  type="text"
+  id="taskTypeEnglish"
+  [(ngModel)]="taskItems.taskTypeEnglish"
+  (keydown)="onKeyDown($event, taskItems.taskTypeEnglish)"
+(input)="validateAndCapitalizeEnglish($event, 'taskTypeEnglish')"
+  #taskTypeEnglish="ngModel"
+  required
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
         <div
           *ngIf="
             taskTypeEnglish.invalid &&
@@ -104,14 +106,14 @@
           for="taskCategoryEnglish"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Category
+          Task Category *
         </label>
         <input
           type="text"
           id="taskCategoryEnglish"
           [(ngModel)]="taskItems.taskCategoryEnglish"
           (keydown)="onKeyDown($event, taskItems.taskCategoryEnglish)"
-          (input)="validateEnglishInput($event)"
+         (input)="validateAndCapitalizeEnglish($event, 'taskCategoryEnglish')"
           #taskCategoryEnglish="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -131,14 +133,14 @@
           for="taskDescriptionEnglish"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Description
+          Task Description *
         </label>
         <input
           type="text"
           id="taskDescriptionEnglish"
           [(ngModel)]="taskItems.taskDescriptionEnglish"
           (keydown)="onKeyDown($event, taskItems.taskDescriptionEnglish)"
-          (input)="validateEnglishInput($event)"
+         (input)="validateAndCapitalizeEnglish($event, 'taskDescriptionEnglish')"
           #taskDescriptionEnglish="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -161,14 +163,13 @@
           for="taskSinhala"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Sinhala
+          Task Sinhala *
         </label>
         <input
           type="text"
           id="taskSinhala"
           [(ngModel)]="taskItems.taskSinhala"
           (keydown)="onKeyDown($event, taskItems.taskSinhala)"
-          (input)="validateSinhalaInput($event)"
           #taskSinhala="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -187,14 +188,13 @@
           for="taskTypeSinhala"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Type
+          Task Type *
         </label>
         <input
           type="text"
           id="taskTypeSinhala"
           [(ngModel)]="taskItems.taskTypeSinhala"
           (keydown)="onKeyDown($event, taskItems.taskTypeSinhala)"
-          (input)="validateSinhalaInput($event)"
           #taskTypeSinhala="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -214,14 +214,13 @@
           for="taskCategorySinhala"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Category
+          Task Category *
         </label>
         <input
           type="text"
           id="taskCategorySinhala"
           [(ngModel)]="taskItems.taskCategorySinhala"
           (keydown)="onKeyDown($event, taskItems.taskCategorySinhala)"
-          (input)="validateSinhalaInput($event)"
           #taskCategorySinhala="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -241,14 +240,13 @@
           for="taskDescriptionSinhala"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Description
+          Task Description *
         </label>
         <input
           type="text"
           id="taskDescriptionSinhala"
           [(ngModel)]="taskItems.taskDescriptionSinhala"
           (keydown)="onKeyDown($event, taskItems.taskDescriptionSinhala)"
-          (input)="validateSinhalaInput($event)"
           #taskDescriptionSinhala="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -271,14 +269,13 @@
           for="taskTamil"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Tamil
+          Task Tamil *
         </label>
         <input
           type="text"
           id="taskTamil"
           [(ngModel)]="taskItems.taskTamil"
           (keydown)="onKeyDown($event, taskItems.taskTamil)"
-          (input)="validateTamilInput($event)"
           #taskTamil="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -295,14 +292,13 @@
           for="taskTypeTamil"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Type
+          Task Type *
         </label>
         <input
           type="text"
           id="taskTypeTamil"
           [(ngModel)]="taskItems.taskTypeTamil"
           (keydown)="onKeyDown($event, taskItems.taskTypeTamil)"
-          (input)="validateTamilInput($event)"
           #taskTypeTamil="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -322,14 +318,13 @@
           for="taskCategoryTamil"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Category
+          Task Category *
         </label>
         <input
           type="text"
           id="taskCategoryTamil"
           [(ngModel)]="taskItems.taskCategoryTamil"
           (keydown)="onKeyDown($event, taskItems.taskCategoryTamil)"
-          (input)="validateTamilInput($event)"
           #taskCategoryTamil="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -349,14 +344,13 @@
           for="taskDescriptionTamil"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Task Description
+          Task Description *
         </label>
         <input
           type="text"
           id="taskDescriptionTamil"
           [(ngModel)]="taskItems.taskDescriptionTamil"
           (keydown)="onKeyDown($event, taskItems.taskDescriptionTamil)"
-          (input)="validateTamilInput($event)"
           #taskDescriptionTamil="ngModel"
           required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -379,7 +373,7 @@
       <label
         for="startingDate"
         class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >Starting Date
+        >Starting Date *
       </label>
       <input
         type="date"
@@ -407,30 +401,20 @@
         class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >Number of required images</label
       >
-      <input
-        type="number"
-        min="0"
-        id="reqImages"
-        [(ngModel)]="taskItems.reqImages"
-        name="reqImages"
-        #reqImages="ngModel"
-        required
-        rows="3"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-      />
-      <div
-        *ngIf="reqImages.invalid && (reqImages.dirty || reqImages.touched)"
-        class="text-red-500 text-sm mt-1"
-      >
-        Number of required images is required
-      </div>
-    </div>
+    
+ <input
+  type="text"
+  id="reqImages"
+  formControlName="reqImages"
+  (input)="allowOnlyNumbers($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
 
     <div class="md:col-span-2 my-3">
       <label
         class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
       >
-        Want to Add Images?*
+        Want to Add Images? *
       </label>
       <div class="flex items-center space-x-4">
         <label class="inline-flex items-center">
@@ -462,7 +446,7 @@
       <label
         for="imageLink"
         class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >Image Link</label
+        >Link for Images *</label
       >
       <input
         min="0"
@@ -482,54 +466,78 @@
       </div>
     </div>
 
-    <div class="md:col-span-2 my-3">
-      <label
-        for="videoLinkEnglish"
-        class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >Video Link English</label
-      >
+   <div class="md:col-span-2 my-3">
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+    Want to Add Videos? *
+  </label>
+  <div class="flex items-center space-x-4">
+    <label class="inline-flex items-center">
       <input
-        min="0"
-        id="videoLinkEnglish"
-        [(ngModel)]="taskItems.videoLinkEnglish"
-        name="videoLinkEnglish"
-        rows="3"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        type="radio"
+        name="hasVideoLink"
+        [(ngModel)]="hasVideoLink"
+        [value]="true"
+        (change)="onVideoLinkChange(true)"
+        class="text-[#3980C0] focus:ring-[#3980C0]"
       />
-    </div>
-    <div class="md:col-span-2 my-3">
-      <label
-        for="videoLinkSinhala"
-        class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >Video Link Sinhala</label
-      >
+      <span class="ml-2 text-textLight dark:text-textDark">Yes</span>
+    </label>
+    <label class="inline-flex items-center">
       <input
-        min="0"
-        id="videoLinkSinhala"
-        [(ngModel)]="taskItems.videoLinkSinhala"
-        name="videoLinkSinhala"
-        rows="3"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        type="radio"
+        name="hasVideoLink"
+        [(ngModel)]="hasVideoLink"
+        [value]="false"
+        (change)="onVideoLinkChange(false)"
+        class="text-[#3980C0] focus:ring-[#3980C0]"
       />
-    </div>
-    <div class="md:col-span-2 my-3">
-      <label
-        for="videoLinkTamil"
-        class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >Video Link Tamil</label
-      >
-      <input
-        min="0"
-        id="videoLinkTamil"
-        [(ngModel)]="taskItems.videoLinkTamil"
-        name="videoLinkTamil"
-        rows="3"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-      />
-    </div>
+      <span class="ml-2 text-textLight dark:text-textDark">No</span>
+    </label>
+  </div>
+</div>
+
+<!-- Conditional video fields -->
+<div class="md:col-span-2 my-3" *ngIf="hasVideoLink">
+  <label for="videoLinkEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Video Link English *
+  </label>
+  <input
+    id="videoLinkEnglish"
+    [(ngModel)]="taskItems.videoLinkEnglish"
+    name="videoLinkEnglish"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+
+  <label for="videoLinkSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark mt-3">
+    Video Link Sinhala *
+  </label>
+  <input
+    id="videoLinkSinhala"
+    [(ngModel)]="taskItems.videoLinkSinhala"
+    name="videoLinkSinhala"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+
+  <label for="videoLinkTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark mt-3">
+    Video Link Tamil *
+  </label>
+  <input
+    id="videoLinkTamil"
+    [(ngModel)]="taskItems.videoLinkTamil"
+    name="videoLinkTamil"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  />
+</div>
 
     <div class="flex justify-end mt-6">
       <div class="w-[20px]"></div>
+         <button
+          type="button"
+          class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
       <button
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
         type="button"

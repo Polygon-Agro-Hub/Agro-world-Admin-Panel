@@ -5,16 +5,14 @@
   Back
 </button>
 
-<div
-  class="w-full mx-auto pt-6 py-6 px-12 bg-white dark:bg-tileBlack rounded-lg shadow-md"
->
+<div class="w-full mx-auto pt-6 py-6 px-12 bg-white dark:bg-tileBlack rounded-lg shadow-md">
   <h2 class="font-medium text-[#292929] mb-6 dark:text-textDark">
-  
- </h2>
+
+  </h2>
 
   <!-- Personal Details -->
-  <h3 class="font-medium text-[#292929] mb-4 dark:text-textDark">Personal Details</h3>
-  
+  <h2 class="font-medium text-[#292929] mb-4 dark:text-textDark">Preview Distribution Centre Head Details</h2>
+
   <!-- Row 1: EMP ID / User Name, Company Name -->
   <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
     <div class="flex-1 mb-4 md:mb-0">
@@ -79,23 +77,92 @@
     </div>
   </div>
 
-  <!-- Row 5: Phone Number 1, Phone Number 2 -->
-  <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
-    <div class="flex-1 mb-4 md:mb-0">
-      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Phone Number 1</label>
-      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
-        <!-- {{ headForm.get('phoneCode01')?.value }} {{ headForm.get('phoneNumber01')?.value }} -->
-        {{ headForm.get('phoneNumber01')?.value ? headForm.get('phoneCode01')?.value + ' ' + headForm.get('phoneNumber01')?.value : ' - ' }}
-      </p>
-    </div>
-    <div class="flex-1">
-      <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">Phone Number 2 (Optional)</label>
-      <p class="dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md">
-        {{ headForm.get('phoneNumber02')?.value ? headForm.get('phoneCode02')?.value + ' ' + headForm.get('phoneNumber02')?.value : ' - ' }}
+<!-- Row 5: Phone Number 1, Phone Number 2 -->
+<div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">
+  
+  <!-- Phone Number 1 -->
+  <div class="flex-1 mb-4 md:mb-0">
+    <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+      Phone Number 1
+    </label>
+    <div class="flex gap-x-2">
+      <!-- Dropdown -->
+      <p-dropdown
+        formControlName="phoneCode01"
+        [options]="countries"
+        optionLabel="dialCode"
+        optionValue="dialCode"
+        styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+        [style]="{ width: '140px' }"
+        [disabled]="true"
+      >
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
 
-      </p>
+      <!-- Input -->
+      <input
+        type="text"
+        class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [readonly]="true"
+        [value]="headForm.get('phoneNumber01')?.value || '-'"
+      />
     </div>
   </div>
+
+  <!-- Phone Number 2 -->
+  <div class="flex-1">
+    <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+      Phone Number 2 (Optional)
+    </label>
+    <div class="flex gap-x-2">
+      <!-- Dropdown -->
+      <p-dropdown
+        formControlName="phoneCode02"
+        [options]="countries"
+        optionLabel="dialCode"
+        optionValue="dialCode"
+        styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+        [style]="{ width: '140px' }"
+        [disabled]="true"
+      >
+        <ng-template let-country pTemplate="item">
+          <div class="flex items-center gap-2">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+        <ng-template let-country pTemplate="selectedItem">
+          <div class="flex items-center gap-2" *ngIf="country">
+            <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+            <span>{{ country.dialCode }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+      <!-- Input -->
+      <input
+        type="text"
+        class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [readonly]="true"
+        [value]="headForm.get('phoneNumber02')?.value || '-'"
+      />
+    </div>
+  </div>
+
+</div>
+
+
 
   <!-- Row 6: NIC Number, Email -->
   <div class="flex flex-col md:flex-row md:space-x-4 mb-6 gap-8">

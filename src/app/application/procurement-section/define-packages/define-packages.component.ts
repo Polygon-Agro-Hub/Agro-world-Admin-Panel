@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TodoDefinePackagesComponent } from '../todo-define-packages/todo-define-packages.component';
 import { CompletedDefinePackageComponent } from '../completed-define-package/completed-define-package.component';
 import { ViewSendToDispatchComponent } from '../view-send-to-dispatch/view-send-to-dispatch.component';
@@ -12,17 +12,28 @@ import { ViewSendToDispatchComponent } from '../view-send-to-dispatch/view-send-
     CommonModule,
     HttpClientModule,
     TodoDefinePackagesComponent,
-    CompletedDefinePackageComponent,
+    // CompletedDefinePackageComponent,
     ViewSendToDispatchComponent,
   ],
   templateUrl: './define-packages.component.html',
   styleUrl: './define-packages.component.css',
 })
-export class DefinePackagesComponent {
+export class DefinePackagesComponent implements OnInit {
   isPremade = true;
   activeTab: string = 'todo';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private route: ActivatedRoute) { }
+  // In define-packages.component.ts - update the ngOnInit method
+ngOnInit(): void {
+  this.route.queryParams.subscribe(params => {
+    const tab = params['tab'];
+    if (tab === 'sent') {
+      this.activeTab = 'sent';
+    } else {
+      this.activeTab = 'todo';
+    }
+  });
+}
 
   back(): void {
     this.router.navigate(['/procurement']);
@@ -36,3 +47,4 @@ export class DefinePackagesComponent {
     this.activeTab = tab;
   }
 }
+

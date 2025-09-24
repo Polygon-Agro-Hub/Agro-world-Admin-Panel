@@ -155,8 +155,10 @@ export class ManageApplicationsComponent {
         <h1 class="mb-8 font-semibold text-black dark:text-textDark">Add New Application</h1>
         <div class="flex items-center gap-4">
           <label for="appName" class="whitespace-nowrap text-base dark:text-textDark">Application Name</label>
-          <input id="appName" type="text"
-               class="text-sm rounded-lg p-3 w-full max-w-xs border h-10 border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400" />
+     <input id="appName" type="text"
+       oninput="this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1); if(this.value.startsWith(' ')){this.value = ''}"
+       class="text-sm rounded-lg p-3 w-full max-w-xs border h-10 border-gray-300 bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-400" />
+
         </div>
       </div>
     `,

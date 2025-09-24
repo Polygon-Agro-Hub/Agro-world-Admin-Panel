@@ -11,7 +11,7 @@ import { CollectionOfficerService } from '../../../services/collection-officer/c
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { DropdownModule } from 'primeng/dropdown';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -98,13 +98,19 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
   { code: 'IN', dialCode: '+91', name: 'India' },
   { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'US', dialCode: '+1', name: 'United States' }
 ];
 
 getFlagUrl(countryCode: string): string {
   return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
 }
+
+dropdownOpen = false;
+
+  jobRoles = [
+    'Collection Centre Manager',
+    'Collection Officer',
+    'Customer Officer'
+  ];
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -138,6 +144,7 @@ getFlagUrl(countryCode: string): string {
   languagesTouched: boolean = false;
   empTypeTouched: boolean = false;
   errorMessage: string = '';
+  jobRoleTouched: boolean = false;
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
@@ -149,6 +156,67 @@ getFlagUrl(countryCode: string): string {
   ) { }
 
   selectedLanguages: string[] = [];
+
+markAllFieldsAsTouched(): void {
+  // Mark all form fields as touched
+  const requiredFields: (keyof Personal)[] = [
+    'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
+    'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
+    'nic', 'email', 'companyId', 'centerId', 'jobRole', 'houseNumber',
+    'streetName', 'city', 'district', 'province', 'accHolderName',
+    'accNumber', 'confirmAccNumber'
+  ];
+
+  requiredFields.forEach(field => {
+    this.touchedFields[field] = true;
+  });
+
+  // Mark language and employee type as touched
+  this.languagesTouched = true;
+  this.empTypeTouched = true;
+}
+
+markPageOneFieldsAsTouched(): void {
+  const pageOneFields: (keyof Personal)[] = [
+    'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
+    'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
+    'nic', 'email', 'companyId', 'centerId', 'jobRole', 'irmId'
+  ];
+
+  pageOneFields.forEach(field => {
+    this.touchedFields[field] = true;
+  });
+
+  this.languagesTouched = true;
+  this.empTypeTouched = true;
+  this.jobRoleTouched = true;
+}
+
+toggleDropdown() {
+  this.dropdownOpen = !this.dropdownOpen;
+}
+
+closeDropdown() {
+  this.dropdownOpen = false;
+}
+
+selectjobRole(role: string) {
+
+  if (role === "Collection Centre Manager") {
+    this.personalData.jobRole = "Collection Center Manager";
+    this.toggleDropdown()
+    console.log('dropdownOpen', this.dropdownOpen)
+  } else {
+    this.personalData.jobRole = role;
+    this.toggleDropdown()
+    console.log('dropdownOpen', this.dropdownOpen)
+  }
+
+  this.EpmloyeIdCreate(); // call your method
+}
+
+
+
 
   onCheckboxChange1(lang: string, event: any) {
     if (event.target.checked) {
@@ -171,87 +239,414 @@ getFlagUrl(countryCode: string): string {
     }
   }
 
-  onSubmit() {
+back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/steckholders/action/collective-officer']);
+    }
+  });
+}
+
+onJobRoleBlur(): void {
+  this.jobRoleTouched = true;
+}
+
+isJobRoleSelected(): boolean {
+  return !!this.personalData.jobRole && this.personalData.jobRole !== '';
+}
+
+
+onSubmit() {
+  // Mark all fields as touched to show validation messages
+  this.markAllFieldsAsTouched();
+
+  const missingFields: string[] = [];
+
+  // Check required fields for pageOne
+  if (!this.personalData.empType) {
+    missingFields.push('Staff Employee Type is Required');
+  }
+
+  if (!this.isAtLeastOneLanguageSelected()) {
+    missingFields.push('Preferred Languages is Required');
+  }
+
+  if (!this.personalData.companyId) {
+    missingFields.push('Company Name is Required');
+  }
+
+  if (!this.personalData.centerId) {
+    missingFields.push('Collection Centre Name is Required');
+  }
+
+  if (!this.personalData.jobRole) {
+    missingFields.push('Job Role is Required');
+  }
+
+  if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
+    missingFields.push('Manager Name is Required');
+  }
+
+  if (!this.personalData.firstNameEnglish) {
+    missingFields.push('First Name (in English) is Required');
+  }
+
+  if (!this.personalData.lastNameEnglish) {
+    missingFields.push('Last Name (in English) is Required');
+  }
+
+  if (!this.personalData.firstNameSinhala) {
+    missingFields.push('First Name (in Sinhala) is Required');
+  }
+
+  if (!this.personalData.lastNameSinhala) {
+    missingFields.push('Last Name (in Sinhala) is Required');
+  }
+
+  if (!this.personalData.firstNameTamil) {
+    missingFields.push('First Name (in Tamil) is Required');
+  }
+
+  if (!this.personalData.lastNameTamil) {
+    missingFields.push('Last Name (in Tamil) is Required');
+  }
+
+  if (!this.personalData.irmId && this.personalData.jobRole === 'Collection Officer') {
+    missingFields.push('Collection Centre Manager is Required');
+  }
+
+  if (!this.personalData.phoneNumber01) {
+    missingFields.push('Mobile Number - 01 is Required');
+  } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+    missingFields.push('Mobile Number - 01 - Must be 9 digits');
+  }
+
+  if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+    missingFields.push('Mobile Number - 02 - Must be 9 digits');
+  }
+
+  if (this.areDuplicatePhoneNumbers()) {
+    missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+  }
+
+  if (!this.personalData.nic) {
+    missingFields.push('NIC Number is Required');
+  } else if (!this.isValidNIC(this.personalData.nic)) {
+    missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+  }
+
+  if (!this.personalData.email) {
+    missingFields.push('Email is Required');
+  } else if (!this.isValidEmail(this.personalData.email)) {
+    missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+  }
+
+  // Check required fields for pageTwo
+  if (!this.personalData.houseNumber) {
+    missingFields.push('House Number is Required');
+  }
+
+  if (!this.personalData.streetName) {
+    missingFields.push('Street Name is Required');
+  }
+
+  if (!this.personalData.city) {
+    missingFields.push('City is Required');
+  }
+
+  if (!this.personalData.district) {
+    missingFields.push('District is Required');
+  }
+
+  if (!this.personalData.province) {
+    missingFields.push('Province is Required');
+  }
+
+  if (!this.personalData.accHolderName) {
+    missingFields.push('Account Holder Name is Required');
+  }
+
+  if (!this.personalData.accNumber) {
+    missingFields.push('Account Number is Required');
+  }
+
+  if (!this.personalData.confirmAccNumber) {
+    missingFields.push('Confirm Account Number is Required');
+  } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
+    missingFields.push('Confirm Account Number - Must match Account Number');
+  }
+
+  if (!this.selectedBankId) {
+    missingFields.push('Bank Name is Required');
+  }
+
+  if (!this.selectedBranchId) {
+    missingFields.push('Branch Name is Required');
+  }
+
+  // If errors, show list and stop - validation messages will now be visible
+  if (missingFields.length > 0) {
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
+
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to create the collection officer?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, create it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.collectionOfficerService
-          .createCollectiveOfficer(this.personalData, this.selectedImage)
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              this.officerId = res.officerId;
-              this.errorMessage = '';
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+    });
+    return;
+  }
 
-              Swal.fire(
-                'Success',
-                'Collection Officer Created Successfully',
-                'success'
-              );
-              this.navigatePath('/steckholders/action/collective-officer');
-            },
-            (error: any) => {
-              this.isLoading = false;
-              let errorMessage = 'An unexpected error occurred';
+  // If valid, confirm creation
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to create the collection officer?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, create it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.collectionOfficerService
+        .createCollectiveOfficer(this.personalData, this.selectedImage)
+        .subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            this.officerId = res.officerId;
+            this.errorMessage = '';
 
-              if (error.error && error.error.error) {
-                switch (error.error.error) {
-                  case 'NIC already exists':
-                    errorMessage = 'The NIC number is already registered.';
-                    break;
-                  case 'Email already exists':
-                    errorMessage = 'The email address is already in use.';
-                    break;
-                  case 'Primary phone number already exists':
-                    errorMessage = 'The primary phone number is already registered.';
-                    break;
-                  case 'Secondary phone number already exists':
-                    errorMessage = 'The secondary phone number is already registered.';
-                    break;
-                  case 'Invalid file format or file upload error':
-                    errorMessage = 'Invalid file format or error uploading the file.';
-                    break;
+            Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
+            this.navigatePath('/steckholders/action/collective-officer');
+          },
+          (error: any) => {
+            this.isLoading = false;
+            let errorMessage = 'An unexpected error occurred';
+            let messages: string[] = [];
+          
+            if (error.error && Array.isArray(error.error.errors)) {
+              // Map backend error keys to user-friendly messages
+              messages = error.error.errors.map((err: string) => {
+                switch (err) {
+                  case 'NIC':
+                    return 'The NIC number is already registered.';
+                  case 'Email':
+                    return 'Email already exists.';
+                  case 'PhoneNumber01':
+                    return 'Mobile Number 1 already exists.';
+                  case 'PhoneNumber02':
+                    return 'Mobile Number 2 already exists.';
                   default:
-                    errorMessage = error.error.error || 'An unexpected error occurred';
+                    return 'Validation error: ' + err;
                 }
-              }
-
-              this.errorMessage = errorMessage;
-              Swal.fire('Error', this.errorMessage, 'error');
+              });
             }
-          );
-      } else {
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-      }
-    });
+          
+            if (messages.length > 0) {
+              errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+              messages.forEach(m => {
+                errorMessage += `<li>${m}</li>`;
+              });
+              errorMessage += '</ul></div>';
+          
+              Swal.fire({
+                icon: 'error',
+                title: 'Duplicate Information',
+                html: errorMessage,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+              return;
+            }
+          }
+          
+        );
+    } else {
+      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+    }
+  });
+}
+
+
+// Or combine both into a single function
+capitalizeNames() {
+  if (this.personalData.firstNameEnglish) {
+    this.personalData.firstNameEnglish = 
+      this.personalData.firstNameEnglish.charAt(0).toUpperCase() + 
+      this.personalData.firstNameEnglish.slice(1);
+  }
+  if (this.personalData.lastNameEnglish) {
+    this.personalData.lastNameEnglish = 
+      this.personalData.lastNameEnglish.charAt(0).toUpperCase() + 
+      this.personalData.lastNameEnglish.slice(1);
+  }
+}
+// Prevent spaces anywhere in the input after typing starts
+blockSpaces(event: KeyboardEvent) {
+  if (event.key === ' ') {
+    event.preventDefault(); // stop space character
+  }
+}
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.navigatePath('/steckholders/action/collective-officer');
+    }
+  });
+}
+
+nextFormCreate(page: 'pageOne' | 'pageTwo') {
+  if (page === 'pageTwo') {
+    // Mark page one fields as touched to show validation messages
+    this.markPageOneFieldsAsTouched();
+
+    const missingFields: string[] = [];
+
+    // Validate pageOne fields
+    if (!this.personalData.empType) {
+      missingFields.push('Staff Employee Type is Required');
+    }
+
+    if (!this.isAtLeastOneLanguageSelected()) {
+      missingFields.push('Preferred Language is Required');
+    }
+
+    if (!this.personalData.companyId) {
+      missingFields.push('Company Name is Required');
+    }
+
+    if (!this.personalData.irmId && this.personalData.jobRole === 'Collection Officer') {
+      missingFields.push('Collection Centre Manager is Required');
+    }
+
+    if (!this.personalData.centerId) {
+      missingFields.push('Collection Centre Name is Required');
+    }
+
+    if (!this.personalData.jobRole) {
+      missingFields.push('Job Role is Required');
+    }
+
+    if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
+      missingFields.push('Manager Name is Required');
+    }
+
+    if (!this.personalData.firstNameEnglish) {
+      missingFields.push('First Name (in English) is Required');
+    }
+
+    if (!this.personalData.lastNameEnglish) {
+      missingFields.push('Last Name (in English) is Required');
+    }
+
+    if (!this.personalData.firstNameSinhala) {
+      missingFields.push('First Name (in Sinhala) is Required');
+    }
+
+    if (!this.personalData.lastNameSinhala) {
+      missingFields.push('Last Name (in Sinhala) is Required');
+    }
+
+    if (!this.personalData.firstNameTamil) {
+      missingFields.push('First Name (in Tamil) is Required');
+    }
+
+    if (!this.personalData.lastNameTamil) {
+      missingFields.push('Last Name (in Tamil) is Required');
+    }
+
+    if (!this.personalData.phoneNumber01) {
+      missingFields.push('Mobile Number - 01 is Required');
+    } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+      missingFields.push('Mobile Number - 01 - Must be 9 digits ');
+    }
+
+    if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+      missingFields.push('Mobile Number - 02 - Must be 9 digits');
+    }
+
+    if (this.personalData.phoneNumber01 && this.personalData.phoneNumber02 && this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
+      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+    }
+
+    if (!this.personalData.nic) {
+      missingFields.push('NIC Number is Required');
+    } else if (!this.isValidNIC(this.personalData.nic)) {
+      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+    }
+
+    if (!this.personalData.email) {
+      missingFields.push('Email is Required');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+    }
+
+    // If errors exist, the validation messages will now be visible due to touched fields
+    // Show popup and stop navigation
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
   }
 
-  onCancel() {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
-      }
-    });
-  }
+  // Navigate to the selected page
+  this.selectedPage = page;
+}
 
-  nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    this.selectedPage = page;
-  }
 
   ngOnInit(): void {
     this.loadBanks();
@@ -417,7 +812,7 @@ getFlagUrl(countryCode: string): string {
 
     const rolePrefixes: { [key: string]: string } = {
       'Collection Center Head': 'CCH',
-      'Collection Center Manager': 'CCM',
+      'Collection Centre Manager': 'CCM',
       'Customer Officer': 'CUO',
       'Collection Officer': 'COO',
     };
@@ -452,21 +847,21 @@ getFlagUrl(countryCode: string): string {
     });
   }
 
-  updateProvince(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const selectedDistrict = target.value;
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
+updateProvince(event: DropdownChangeEvent): void {
+  const selectedDistrict = event.value;
+
+  const selected = this.districts.find(
+    (district) => district.name === selectedDistrict
+  );
+
+  if (this.itemId === null) {
+    if (selected) {
+      this.personalData.province = selected.province;
+    } else {
+      this.personalData.province = '';
     }
   }
-
+}
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
     this.personalData.empType = selectedType;
@@ -492,6 +887,39 @@ getFlagUrl(countryCode: string): string {
       this.personalData[fieldName] = value;
     }
   }
+onLetterKeyPress(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+  const char = event.key;
+  
+  // Block space if it's at the start (cursor at position 0)
+  if (char === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Allow all letters (\p{L}) and space (but not at the beginning), block numbers and special characters
+  const regex = /^[\p{L} ]$/u;
+  if (!regex.test(char)) {
+    event.preventDefault(); // block the key
+  }
+}
+
+// Add this method to handle input events and remove leading spaces
+onSinhalaTamilInput(event: Event, fieldName: 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  
+  // Remove leading spaces
+  if (value.startsWith(' ')) {
+    value = value.trimStart();
+    this.personalData[fieldName] = value;
+    
+    // Force update the model to reflect the change
+    setTimeout(() => {
+      input.value = value;
+    }, 0);
+  }
+}
 
   // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
@@ -511,21 +939,17 @@ getFlagUrl(countryCode: string): string {
   }
 
   // Updated formatTamilName function
-  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Allow only Tamil unicode characters and spaces
-      value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
-
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      this.personalData[fieldName] = value;
-    }
+formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Allow only Tamil letters (\u0B80-\u0BFF) and spaces
+    value = value.replace(/[^\u0B80-\u0BFF ]/g, '');
+    // Trim spaces and remove multiple consecutive spaces
+    value = value.trim().replace(/\s{2,}/g, ' ');
+    this.personalData[fieldName] = value;
   }
+}
+
 
   // Updated formatAccountHolderName function
   formatAccountHolderName(): void {
@@ -570,29 +994,48 @@ getFlagUrl(countryCode: string): string {
 
     const char = String.fromCharCode(event.which);
     // Allow letters, numbers, and space for address fields
-    if (!/[a-zA-Z0-9\s]/.test(char)) {
-      event.preventDefault();
-    }
+    if (!/[a-zA-Z0-9\s\-\/\\#]/.test(char)) {
+    event.preventDefault();
+  }
   }
 
   // Format address fields to handle spaces
   formatAddressField(fieldName: 'houseNumber' | 'streetName' | 'city'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove leading/trailing spaces and replace multiple spaces with single space
+    value = value.trim().replace(/\s{2,}/g, ' ');
 
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      // Capitalize first letter of each word for streetName and city
-      if (fieldName === 'streetName' || fieldName === 'city') {
-        value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
-      }
-
-      this.personalData[fieldName] = value;
+    // Capitalize first letter of each word for streetName and city
+    if (fieldName === 'streetName' || fieldName === 'city') {
+      value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
     }
+    
+    // For houseNumber, capitalize the first letter only if it's alphabetic
+    if (fieldName === 'houseNumber' && value.length > 0) {
+      const firstChar = value.charAt(0);
+      if (/[a-zA-Z]/.test(firstChar)) {
+        value = firstChar.toUpperCase() + value.slice(1);
+      }
+    }
+
+    this.personalData[fieldName] = value;
   }
+}
+
+onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  let trimmedValue = inputElement.value.trimStart();
+
+  // ✅ Capitalize the first letter (if not empty)
+  if (trimmedValue.length > 0) {
+    trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+  }
+
+  modelRef[fieldName] = trimmedValue;
+  inputElement.value = trimmedValue;
+}
+
   // Check if name has invalid characters (numbers or special characters)
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];
@@ -651,10 +1094,25 @@ getFlagUrl(countryCode: string): string {
   }
 
   isValidEmail(email: string): boolean {
-    if (!email) return false;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+  if (!email) return false;
+  
+  // Updated email regex to allow + character
+  const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
+  
+  // Check for invalid patterns
+  if (email.includes('..')) {
+    return false; // Consecutive dots
   }
+  if (email.startsWith('.') || email.endsWith('.')) {
+    return false; // Leading or trailing dot
+  }
+  // Updated special characters check to exclude + from invalid characters
+  if (/[!#$%^&*()=<>?\/\\]/.test(email.replace(/\+/g, ''))) {
+    return false; // Invalid special characters (excluding +)
+  }
+  
+  return emailRegex.test(email);
+}
 
   // Updated NIC validation
   isValidNIC(nic: string): boolean {
@@ -671,10 +1129,12 @@ getFlagUrl(countryCode: string): string {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    if (!phone) return false;
-    const phoneRegex = /^[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+  if (!phone) return false;
+  
+  // Must start with 7 and have exactly 9 digits total
+  const phoneRegex = /^7\d{8}$/;
+  return phoneRegex.test(phone);
+}
 
   // Check if phone numbers are duplicate
   areDuplicatePhoneNumbers(): boolean {
@@ -704,7 +1164,15 @@ getFlagUrl(countryCode: string): string {
       this.confirmAccountNumberError = false;
     }
   }
-
+  validateAccNumber(): void {
+   
+    if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.personalData.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
@@ -889,36 +1357,42 @@ preventNICInvalidCharacters(event: KeyboardEvent): void {
 }
 
 // Format NIC input
-formatNIC(): void {
-  let value = this.personalData.nic;
-  if (value) {
-    // Remove all spaces and invalid characters
-    value = value.replace(/[^0-9Vv]/g, '');
-    
-    // Convert 'v' to 'V' and ensure only one V at the end
-    if (value.includes('v') || value.includes('V')) {
-      // Remove all V's first
-      value = value.replace(/[Vv]/g, '');
-      // Add single V at the end if original had V/v
-      value = value + 'V';
-    }
-    
-    // Limit length based on format
-    if (value.includes('V')) {
-      // 9 digits + V format
-      if (value.length > 10) {
-        value = value.substring(0, 9) + 'V';
-      }
-    } else {
-      // 12 digits format
-      if (value.length > 12) {
-        value = value.substring(0, 12);
+formatNIC() {
+    if (this.personalData.nic) {
+      // Convert to uppercase and remove any spaces
+      this.personalData.nic = this.personalData.nic
+        .toUpperCase()
+        .replace(/\s/g, '');
+
+      // If it ends with 'v', convert to 'V'
+      if (this.personalData.nic.endsWith('v')) {
+        this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
       }
     }
-    
-    this.personalData.nic = value;
   }
-}
+
+  validateNICInput(event: KeyboardEvent) {
+    // Allow navigation keys
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+      'Home',
+      'End',
+    ];
+
+    if (allowedKeys.includes(event.key)) {
+      return; // Allow these special keys
+    }
+
+    // Allow only numbers or uppercase V (but not lowercase v)
+    const nicInputPattern = /^[0-9V]$/;
+    if (!nicInputPattern.test(event.key.toUpperCase())) {
+      event.preventDefault();
+    }
+  }
 
 // Add these new functions for account number handling
 preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {
@@ -957,8 +1431,8 @@ preventEmailInvalidCharacters(event: KeyboardEvent): void {
     return;
   }
   
-  // Allow alphanumeric, @, ., -, _
-  if (!/[a-zA-Z0-9@.\-_]/.test(char)) {
+  // Updated to allow alphanumeric, @, ., -, _, and +
+  if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
     event.preventDefault();
   }
 }
@@ -977,18 +1451,22 @@ formatEmail(): void {
   }
 }
 
-  preventSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
-    if (!this.handleSpaceRestrictions(event)) {
-      return;
-    }
+preventSpecialCharacters(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const char = String.fromCharCode(event.which);
 
-    const char = String.fromCharCode(event.which);
-    // Allow only letters (a-z, A-Z) and space
-    if (!/[a-zA-Z\s]/.test(char)) {
-      event.preventDefault();
-    }
+  // Block space if it's at the start (cursor at position 0)
+  if (char === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
   }
+
+  // Allow only letters (a-z, A-Z) and spaces elsewhere
+  if (!/[a-zA-Z\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
+
 
   preventNonSinhalaCharacters(event: KeyboardEvent): void {
     // Handle space restrictions first
@@ -1013,26 +1491,50 @@ formatEmail(): void {
     }
   }
   // Prevent non-numeric characters for phone numbers
-  preventNonNumeric(event: KeyboardEvent): void {
-    const char = String.fromCharCode(event.which);
-    // Allow only numbers (0-9)
-    if (!/[0-9]/.test(char)) {
-      event.preventDefault();
-    }
+  preventNonNumeric(event: KeyboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+  const input = event.target as HTMLInputElement;
+  const char = String.fromCharCode(event.which);
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
+  
+  // Allow only numbers (0-9)
+  if (!/[0-9]/.test(char)) {
+    event.preventDefault();
+    return;
   }
+  
+  // If this is the first character, it must be '7'
+  if (cursorPosition === 0 && currentValue.length === 0 && char !== '7') {
+    event.preventDefault();
+    return;
+  }
+  
+  // If user tries to insert a character at position 0 that's not '7'
+  if (cursorPosition === 0 && char !== '7') {
+    event.preventDefault();
+  }
+}
 
   formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove non-numeric characters
-      value = value.replace(/[^0-9]/g, '');
-      // Limit to 9 digits
-      if (value.length > 9) {
-        value = value.substring(0, 9);
-      }
-      this.personalData[fieldName] = value;
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Ensure it starts with 7
+    if (value.length > 0 && value.charAt(0) !== '7') {
+      // If first digit is not 7, remove it
+      value = value.replace(/^[^7]*/, '');
     }
+    
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    
+    this.personalData[fieldName] = value;
   }
+}
 
   changeCenter(event: any){
     console.log('Center changed:', this.personalData.centerId);
@@ -1041,11 +1543,38 @@ formatEmail(): void {
     // this.centerOptions = [];
     this.getAllCollectionManagers();
   }
+
+  getEmailErrorMessage(email: string): string {
+  if (!email) {
+    return 'Email is required';
+  }
+  
+  if (email.includes('..')) {
+    return 'Email cannot contain consecutive dots';
+  }
+  if (email.startsWith('.')) {
+    return 'Email cannot start with a dot';
+  }
+  if (email.endsWith('.')) {
+    return 'Email cannot end with a dot';
+  }
+  if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
+    return 'Email contains invalid special characters';
+  }
+  if (!/@/.test(email)) {
+    return 'Email must contain an @ symbol';
+  }
+  if (!/\./.test(email.split('@')[1])) {
+    return 'Email domain must contain a dot (.)';
+  }
+  
+  return 'Please enter a valid email in the format: example@domain.com';
+}
   
 }
 
 class Personal {
-  jobRole: string = 'Collection Center Manager';
+  jobRole: string = '';
   empId!: string;
   centerId!: number | string;
   irmId!: number | string;

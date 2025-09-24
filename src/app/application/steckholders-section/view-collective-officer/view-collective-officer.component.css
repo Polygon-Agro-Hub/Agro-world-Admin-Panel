@@ -135,3 +135,20 @@
     color: #8B8B8B;
     /* gray-300 */
 }
+
+/* Reduce dropdown item padding */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
+}
+
+/* ::ng-deep .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important;
+  }
+
+::ng-deep .dark .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important; 
+} */

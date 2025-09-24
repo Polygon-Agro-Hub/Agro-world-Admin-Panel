@@ -16,211 +16,164 @@
 
       <!-- Collection Center Name -->
       <div>
-        <label
-          for="centerName"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Centre Name</label
-        >
+        <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre
+          Name</label>
 
-        <input
-          id="centerName"
-          name="centerName"
-          [(ngModel)]="centerFetchData.centerName"
+        <input id="centerName" name="centerName" [(ngModel)]="centerFetchData.centerName"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          disabled="ture"
-        />
+          disabled="ture" />
       </div>
 
       <div class="relative">
         <!-- Input Field -->
-        <label
-          for="companies"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >
+        <label for="companies" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Company Name
         </label>
-        <input
-          id="companies"
-          name="companies"
-          [(ngModel)]="centerFetchData.companies"
+        <input id="companies" name="companies" [(ngModel)]="centerFetchData.companies"
           class="mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div>
-        <label
-          for="contact01Code"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >
+        <label for="contact01Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Contact Number 01
         </label>
 
-        <div class="mt-1 flex">
-          <input
-            id="code1"
-            [(ngModel)]="centerFetchData.code1"
-            name="code1"
-            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-            [disabled]="true"
-          />
+       <div class="mt-1 flex gap-x-2">
+  <!-- Phone Code Dropdown -->
+  <p-dropdown
+    formControlName="phoneCode01"
+    [options]="countries"
+    optionLabel="dialCode"
+    optionValue="dialCode"
+    styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+    
+    [disabled]="true"
+  >
+    <ng-template let-country pTemplate="item">
+      <div class="flex items-center gap-2">
+        <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+        <span>{{ country.dialCode }}</span>
+      </div>
+    </ng-template>
+    <ng-template let-country pTemplate="selectedItem">
+      <div class="flex items-center gap-2" *ngIf="country">
+        <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+        <span>{{ country.dialCode }}</span>
+      </div>
+    </ng-template>
+  </p-dropdown>
 
-          <!-- Contact Number Input -->
-          <div class="flex flex-col w-full">
-            <input
-              type="text"
-              [(ngModel)]="centerFetchData.contact01"
-              id="contact01"
-              name="contact01"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              [disabled]="true"
-            />
-          </div>
-        </div>
+  <!-- Contact Number Input -->
+  <input
+    type="text"
+    [(ngModel)]="centerFetchData.contact01"
+    id="contact01"
+    name="contact01"
+    class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    [disabled]="true"
+  />
+</div>
+
       </div>
 
       <!-- Contact Number 02 -->
       <div>
-        <label
-          for="contact02Code"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Contact Number 02</label
-        >
-        <div class="mt-1 flex">
-          <input
-            [(ngModel)]="centerFetchData.code2"
-            id="code2"
-            name="code2"
-            class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-            [disabled]="true"
-          />
+        <label for="contact02Code" class="block text-sm font-medium text-gray-700 dark:text-textDark">Contact Number
+          02</label>
+       <div class="mt-1 flex gap-x-2">
+  <!-- Phone Code 2 Dropdown -->
+  <p-dropdown
+    formControlName="phoneCode02"
+    [options]="countries"
+    optionLabel="dialCode"
+    optionValue="dialCode"
+    styleClass="border border-gray-300 rounded-l-md bg-gray-50 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown"
+    [disabled]="true"
+  >
+    <!-- Dropdown items -->
+    <ng-template let-country pTemplate="item">
+      <div class="flex items-center gap-2">
+        <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+        <span>{{ country.dialCode }}</span>
+      </div>
+    </ng-template>
 
-          <div class="flex flex-col w-full">
-            <input
-              type="number"
-              [(ngModel)]="centerFetchData.contact02"
-              id="contact02"
-              name="contact02"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              [disabled]="true"
-            />
-          </div>
-        </div>
+    <!-- Selected item -->
+    <ng-template let-country pTemplate="selectedItem">
+      <div class="flex items-center gap-2" *ngIf="country">
+        <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+        <span>{{ country.dialCode }}</span>
+      </div>
+    </ng-template>
+  </p-dropdown>
+
+  <!-- Contact Number 2 Input -->
+  <input
+    type="text"
+    [ngModel]="formatContactNumber(centerFetchData.contact02)"
+    (ngModelChange)="onContact02Change($event)"
+    id="contact02"
+    name="contact02"
+    class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    [disabled]="true"
+  />
+</div>
+
       </div>
 
       <!-- Building Number -->
       <div>
-        <label
-          for="buildingNumber"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Building Number</label
-        >
-        <input
-          type="text"
-          id="buildingNumber"
-          name="buildingNumber"
-          [value]="centerFetchData.buildingNumber"
+        <label for="buildingNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Building
+          Number</label>
+        <input type="text" id="buildingNumber" name="buildingNumber" [value]="centerFetchData.buildingNumber"
           [(ngModel)]="centerFetchData.buildingNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <!-- Street Name -->
       <div>
-        <label
-          for="street"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Street Name</label
-        >
-        <input
-          id="street"
-          name="street"
-          [value]="centerFetchData.street"
-          [(ngModel)]="centerFetchData.street"
+        <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name</label>
+        <input id="street" name="street" [value]="centerFetchData.street" [(ngModel)]="centerFetchData.street"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div>
-        <label
-          for="city"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >City</label
-        >
-        <input
-          type="text"
-          id="city"
-          name="city"
-          [value]="centerFetchData.city"
-          [(ngModel)]="centerFetchData.city"
+        <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City</label>
+        <input type="text" id="city" name="city" [value]="centerFetchData.city" [(ngModel)]="centerFetchData.city"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div>
-        <label
-          for="province"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Province</label
-        >
-        <input
-          id="province"
-          name="province"
-          [(ngModel)]="selectProvince"
+        <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">Province</label>
+        <input id="province" name="province" [(ngModel)]="selectProvince"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <!-- District -->
       <div>
-        <label
-          for="district"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >District</label
-        >
-        <input
-          id="district"
-          name="district"
-          [value]="centerFetchData.district"
-          [(ngModel)]="centerFetchData.district"
+        <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District</label>
+        <input id="district" name="district" [value]="centerFetchData.district" [(ngModel)]="centerFetchData.district"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div>
-        <label
-          for="country"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Country</label
-        >
-        <input
-          id="country"
-          name="country"
-          [(ngModel)]="centerFetchData.country"
+        <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country</label>
+        <input id="country" name="country" [(ngModel)]="centerFetchData.country"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [disabled]="true"
-        />
+          [disabled]="true" />
       </div>
 
       <div>
-        <label
-          for="regCode"
-          class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Reg Code</label
-        >
-        <input
-          id="regCode"
-          name="regCode"
-          [(ngModel)]="centerFetchData.regCode"
-          #regCodeInput="ngModel"
+        <label for="regCode" class="block text-sm font-medium text-gray-700 dark:text-textDark">Reg Code</label>
+        <input id="regCode" name="regCode" [(ngModel)]="centerFetchData.regCode" #regCodeInput="ngModel"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [disabled]="true"
-        />
+          [disabled]="true" />
         <!-- ... validation ... -->
       </div>
     </div>

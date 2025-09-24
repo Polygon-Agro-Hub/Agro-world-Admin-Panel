@@ -93,6 +93,28 @@ export class CreateAdminUserComponent implements OnInit {
       }
     });
   }
+  back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      // keep default button styling
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/steckholders/action/admin']);
+      }
+    });
+  }
+
+
 
   setPasswordValidation(isRequired: boolean) {
     const passwordControl = this.userForm.get('password');
@@ -139,11 +161,24 @@ export class CreateAdminUserComponent implements OnInit {
       const value: string = control.value;
       if (!value) return null;
 
-      // Stricter email regex
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      const valid = emailRegex.test(value);
+      // Comprehensive email regex pattern
+      const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
 
-      return !valid ? { invalidEmail: true } : null;
+      // Check for common invalid patterns
+      if (value.includes('..')) {
+        return { invalidEmail: 'Email cannot contain consecutive dots' };
+      }
+      if (value.startsWith('.') || value.endsWith('.')) {
+        return { invalidEmail: 'Email cannot start or end with a dot' };
+      }
+      if (/[!#$%^&*()=<>?\/\\]/.test(value)) {
+        return { invalidEmail: 'Email contains invalid special characters' };
+      }
+      if (!emailRegex.test(value)) {
+        return { invalidEmail: 'Please enter a valid email in the format: example@domain.com' };
+      }
+
+      return null;
     };
   }
 
@@ -208,6 +243,10 @@ export class CreateAdminUserComponent implements OnInit {
         default:
           return 'This field is required';
       }
+    }
+
+    if (control?.hasError('invalidEmail')) {
+      return control.getError('invalidEmail'); // This will return our specific message
     }
 
     if (control?.hasError('email')) {
@@ -317,136 +356,263 @@ export class CreateAdminUserComponent implements OnInit {
   }
 
   // Updated updateAdmin method
-  updateAdmin(id: any) {
-    if (this.userForm.invalid) {
-      this.userForm.markAllAsTouched();
+  updateAdmin(itemId: number | null) {
+    // Log form values to verify
+    console.log('userForm values before update:', this.userForm.value);
 
-      const validationErrors = this.getValidationErrors();
+    const missingFields: string[] = [];
 
-      if (validationErrors) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Validation Errors',
-          text: validationErrors,
-          confirmButtonText: 'OK'
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Validation Error',
-          text: 'Please fill out all required fields correctly.',
-        });
+    // Validate form fields
+    if (this.userForm.get('userName')?.invalid) {
+      if (this.userForm.get('userName')?.errors?.['required']) {
+        missingFields.push('User Name');
+      } else if (this.userForm.get('userName')?.errors?.['pattern']) {
+        missingFields.push('User Name - Must contain only letters and spaces');
       }
-      return;
     }
 
-    const token = this.tokenService.getToken();
-    if (!token || this.itemId === null) {
+    if (this.userForm.get('mail')?.invalid) {
+      if (this.userForm.get('mail')?.errors?.['required']) {
+        missingFields.push('Email');
+      } else if (this.userForm.get('mail')?.errors?.['email']) {
+        missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+      }
+    }
+
+    if (this.userForm.get('role')?.invalid) {
+      missingFields.push('Department');
+    }
+
+    if (this.userForm.get('position')?.invalid) {
+      missingFields.push('Position');
+    }
+
+    // If errors, show popup and stop submission
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
+
       Swal.fire({
         icon: 'error',
-        title: 'Error',
-        text: 'Missing authentication or ID.',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+
+      // Mark all fields as touched to show real-time errors
+      Object.keys(this.userForm.controls).forEach((key) => {
+        const control = this.userForm.get(key);
+        control!.markAsTouched();
       });
       return;
     }
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    });
-
-    this.http
-      .post(
-        `${environment.API_URL}auth/edit-admin-user/${id}`,
-        this.userForm.value,
-        { headers }
-      )
-      .subscribe(
-        () => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Admin updated successfully!',
-          });
-          this.userForm.reset();
-          this.navigatePath('/steckholders/action/admin');
-        },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text:
-              'Error updating Admin: ' +
-              (error.error?.error || 'Unknown error'),
-          });
-        }
-      );
-  }
-
-  // Updated createAdmin method
-  createAdmin() {
-    if (this.userForm.invalid) {
-      this.userForm.markAllAsTouched();
-
-      const validationErrors = this.getValidationErrors();
-
-      if (validationErrors) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Validation Errors',
-          text: validationErrors,
-          confirmButtonText: 'OK'
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Validation Error',
-          text: 'Please fill out all required fields correctly.',
-        });
-      }
+    // If valid, confirm update
+    const token = this.tokenService.getToken();
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Authentication token not found',
+        confirmButtonText: 'OK',
+      });
       return;
     }
 
-    const token = this.tokenService.getToken();
-    if (!token) return;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to update this admin user?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+        this.http
+          .put(`${environment.API_URL}auth/update-admin/${itemId}`, this.userForm.value, { headers })
+          .subscribe(
+            () => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Admin updated successfully!',
+              }).then(() => {
+                this.navigatePath('/steckholders/action/admin');
+              });
+            },
+            (error) => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Unsuccess',
+                text: error.error?.error || 'Update failed',
+              });
+            }
+          );
+      }
     });
-
-    this.http
-      .post(`${environment.API_URL}auth/create-admin`, this.userForm.value, {
-        headers,
-      })
-      .subscribe(
-        () => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Admin created successfully!',
-          });
-          this.userForm.reset();
-          this.navigatePath('/steckholders/action/admin');
-        },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Unsuccess',
-            text: error.error?.error || 'Creation failed',
-          });
-        }
-      );
   }
+  // Updated createAdmin method
+  createAdmin() {
+    // Log form values to verify
+    console.log('userForm values before create:', this.userForm.value);
+
+    const missingFields: string[] = [];
+
+    // Validate form fields
+    if (this.userForm.get('userName')?.invalid) {
+      if (this.userForm.get('userName')?.errors?.['required']) {
+        missingFields.push('User Name');
+      } else if (this.userForm.get('userName')?.errors?.['pattern']) {
+        missingFields.push('User Name - Must contain only letters and spaces');
+      }
+    }
+
+    if (this.userForm.get('mail')?.invalid) {
+      if (this.userForm.get('mail')?.errors?.['required']) {
+        missingFields.push('Email');
+      } else if (this.userForm.get('mail')?.errors?.['email']) {
+        missingFields.push('Email - Invalid format (e.g., example@domain.com)');
+      }
+    }
+
+    if (this.userForm.get('role')?.invalid) {
+      missingFields.push('Department');
+    }
+
+    if (!this.isSuperAdminSelected && this.userForm.get('position')?.invalid) {
+      missingFields.push('Position');
+    }
+
+    if (this.userForm.get('password')?.invalid) {
+      if (this.userForm.get('password')?.errors?.['required']) {
+        missingFields.push('Password');
+      } else if (this.userForm.get('password')?.errors?.['minlength']) {
+        missingFields.push('Password - Must be at least 8 characters');
+      }
+    }
+
+    // If errors, show popup and stop submission
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+
+      // Mark all fields as touched to show real-time errors
+      Object.keys(this.userForm.controls).forEach((key) => {
+        const control = this.userForm.get(key);
+        control!.markAsTouched();
+      });
+      return;
+    }
+
+    // If valid, confirm creation
+    const token = this.tokenService.getToken();
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Authentication token not found',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to create a new admin user?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+
+        this.http
+          .post(`${environment.API_URL}auth/create-admin`, this.userForm.value, { headers })
+          .subscribe(
+            () => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Admin created successfully!',
+              }).then(() => {
+                this.userForm.reset();
+                this.navigatePath('/steckholders/action/admin');
+              });
+            },
+            (error) => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Unsuccess',
+                text: error.error?.error || 'Creation failed',
+              });
+            }
+          );
+      }
+    });
+  }
+
 
 
   openPopup() {
     this.isPopupVisible = true;
   }
-
   onCancel() {
-    this.userForm.reset();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/steckholders/action/admin']);
+      }
+    });
   }
+
+
 
   onCancel2() {
     this.userForm.reset();

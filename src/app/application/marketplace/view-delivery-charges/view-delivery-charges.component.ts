@@ -11,7 +11,10 @@ import Swal from 'sweetalert2';
 interface DeliveryCharge {
   id: number;
   city: string;
+  district: string;
+  province: string;
   charge: number;
+  userName:string;
 }
 
 interface ApiResponse {
@@ -96,8 +99,8 @@ export class ViewDeliveryChargesComponent implements OnInit {
       this.deliveryChargeService.getAllDeliveryCharges().subscribe({
         next: (dbData: any[]) => {
           const excelData = [
-            ['City Name', 'Charge (Rs.)'],
-            ...dbData.map((item) => [item.city || item.cityName, item.charge]),
+            ['Province', 'District', 'City', 'Charge'],
+            ...dbData.map((item) => [item.province, item.district, item.city, item.charge]),
           ];
 
           const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(excelData);
@@ -160,7 +163,51 @@ export class ViewDeliveryChargesComponent implements OnInit {
       id: null,
     };
   }
+onChargeInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+  const selectionStart = input.selectionStart ?? 0;
+  const selectionEnd = input.selectionEnd ?? 0;
 
+  // Remove invalid characters except digits and dot
+  value = value.replace(/[^0-9.]/g, '');
+
+  // Prevent multiple dots
+  const parts = value.split('.');
+  if (parts.length > 2) {
+    value = parts[0] + '.' + parts[1];
+  }
+
+  // Limit to 2 digits after decimal
+  if (parts[1]?.length > 2) {
+    parts[1] = parts[1].substring(0, 2);
+    value = parts[0] + '.' + parts[1];
+  }
+
+  // Only update if changed
+  if (input.value !== value) {
+    input.value = value;
+
+    // Restore caret position intelligently:
+    let newPos = selectionStart;
+
+    // If user just typed a dot at the end, keep cursor after the dot
+    if (value.endsWith('.') && selectionStart === value.length - 1) {
+      newPos = value.length;
+    } else if (selectionStart > value.length) {
+      newPos = value.length;
+    }
+
+    input.setSelectionRange(newPos, newPos);
+  }
+
+  // Update bound model
+ this.editData.charge = value ? parseFloat(parseFloat(value).toFixed(2)) : null;
+
+}
+
+
+  
   updateDeliveryCharge(): void {
     if (!this.editData.id || this.editData.charge === null) {
       Swal.fire({

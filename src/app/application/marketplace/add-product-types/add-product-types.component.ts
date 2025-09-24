@@ -40,119 +40,173 @@ export class AddProductTypesComponent {
     });
   }
 
-  onTypeNameInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const original = input.value;
-    const trimmed = original.replace(/^\s+/, ''); // Remove leading spaces
-    if (original !== trimmed) {
-      input.value = trimmed; // Update the input's display value
+  back(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/market/action']);
     }
-    this.productObj.typeName = trimmed; // Update the model
+  });
+}
+
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/market/action']);
+    }
+  });
+}
+
+
+
+onTypeNameInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
+  // Allow only English letters (A–Z, a–z) and spaces
+  value = value.replace(/[^A-Za-z\s]/g, '');
+
+  input.value = value;
+  this.productObj.typeName = value;
+}
+
+onShortCodeInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // 1. Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
+  // 2. Remove anything that is NOT a letter (A–Z or a–z)
+  value = value.replace(/[^A-Za-z]/g, '');
+
+  // 3. Convert to uppercase
+  value = value.toUpperCase();
+
+  // 4. Assign back to input and model
+  input.value = value;
+  this.productObj.shortCode = value;
+}
+
+createType() {
+  // Check if fields are empty
+  const missingFields: string[] = [];
+  
+  if (!this.productObj.typeName) {
+    missingFields.push('Type Name');
+  }
+  if (!this.productObj.shortCode) {
+    missingFields.push('Short Code');
   }
   
-  onShortCodeInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const original = input.value;
-    const trimmedAndCapitalized = original.replace(/^\s+/, '').toUpperCase();
-    input.value = trimmedAndCapitalized;
-    this.productObj.shortCode = trimmedAndCapitalized;
+  if (missingFields.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: `${missingFields.join(' and ')} ${missingFields.length > 1 ? 'are' : 'is'} required.`,
+    });
+    return;
   }
   
-  createType() {
-    // Check if fields are empty
-    if (!this.productObj.typeName || !this.productObj.shortCode) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Type Name and Short Code are required.',
-      });
-      return;
-    }
+  // Validate shortCode: must be exactly 3 uppercase letters (A-Z)
+  const shortCodePattern = /^[A-Z]{3}$/;
+  if (!shortCodePattern.test(this.productObj.shortCode)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Short Code must be exactly 3 uppercase letters (A–Z) only.',
+    });
+    return;
+  }
 
-    // Validate shortCode: only A-Z letters, 1-3 characters
-    const shortCodePattern = /^[A-Za-z]{1,3}$/;
-    if (!shortCodePattern.test(this.productObj.shortCode)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Short Code must contain only letters (A-Z) and be 1-3 characters long.',
-      });
-      return;
-    }
+  // Check for duplicate product type name and short code
+  const duplicateType = this.existingProductTypes.find(
+    product => 
+      product.typeName.toLowerCase() === this.productObj.typeName.toLowerCase() &&
+      product.shortCode.toLowerCase() === this.productObj.shortCode.toLowerCase()
+  );
 
-    // Check for duplicate product type name and short code
-    const duplicateType = this.existingProductTypes.find(
-      product => 
-        product.typeName.toLowerCase() === this.productObj.typeName.toLowerCase() &&
-        product.shortCode.toLowerCase() === this.productObj.shortCode.toLowerCase()
-    );
+  if (duplicateType) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'You already have a product type with this name and short code',
+    });
+    return;
+  }
 
-    if (duplicateType) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'You already have a product type with this name and short code',
-      });
-      return;
-    }
+  // Check for duplicate product type name
+  const duplicateName = this.existingProductTypes.find(
+    product => product.typeName.toLowerCase() === this.productObj.typeName.toLowerCase()
+  );
 
-    // Check for duplicate product type name
-    const duplicateName = this.existingProductTypes.find(
-      product => product.typeName.toLowerCase() === this.productObj.typeName.toLowerCase()
-    );
+  if (duplicateName) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'You already have a product type with this name',
+    });
+    return;
+  }
 
-    if (duplicateName) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'You already have a product type with this name',
-      });
-      return;
-    }
+  // Check for duplicate short code
+  const duplicateCode = this.existingProductTypes.find(
+    product => product.shortCode.toLowerCase() === this.productObj.shortCode.toLowerCase()
+  );
 
-    // Check for duplicate short code
-    const duplicateCode = this.existingProductTypes.find(
-      product => product.shortCode.toLowerCase() === this.productObj.shortCode.toLowerCase()
-    );
+  if (duplicateCode) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'You already have a product type with this short code',
+    });
+    return;
+  }
 
-    if (duplicateCode) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'You already have a product type with this short code',
-      });
-      return;
-    }
-
-    // Proceed with API call
-    this.marketSrv.createProductType(this.productObj).subscribe({
-      next: (res) => {
-        if (res.status) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: res.message || 'Product type created successfully.',
-          });
-          this.router.navigate(['/market/action/view-product-types']);
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: res.message || 'Failed to create product type.',
-          });
-        }
-      },
-      error: (err) => {
-        console.error(err);
+  // Proceed with API call
+  this.marketSrv.createProductType(this.productObj).subscribe({
+    next: (res) => {
+      if (res.status) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: res.message || 'Product type created successfully.',
+        });
+        this.router.navigate(['/market/action/view-product-types']);
+      } else {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'An error occurred while creating the product type.',
+          text: res.message || 'Failed to create product type.',
         });
-      },
-    });
-  }
-}
+      }
+    },
+    error: (err) => {
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while creating the product type.',
+      });
+    },
+  });
+}}
 
 class ProductType {
   typeName!: string;

@@ -70,7 +70,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private tokenService: TokenService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -92,7 +92,12 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     this.loadingChart = true;
     this.loadingTable = true;
 
-    const url = `${environment.API_URL}auth/collection-officer/get-collection-officer-report/${this.id}/${this.createdDate}`;
+    let formattedDate = '';
+    if (this.createdDate) {
+      formattedDate = this.convertToISO(this.createdDate);
+    }
+
+    const url = `${environment.API_URL}auth/collection-officer/get-collection-officer-report/${this.id}/${formattedDate}`;
 
     if (this.id) {
       this.http.get<CropReport>(url, { headers }).subscribe(
@@ -132,7 +137,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       animationEnabled: true,
       exportEnabled: true,
       title: {
-        text: `Crop Report by Grade ${this.createdDate}`,
+        text: `Crop Report by Grade ${this.formatDateForDisplay(this.createdDate)}`,
       },
       axisY: {
         title: "Weight (Kg)",
@@ -357,5 +362,50 @@ export class CollectionOfficerReportViewComponent implements OnInit {
 
   back(): void {
     this.router.navigate(["/reports/collective-officer-report"]);
+  }
+
+  convertToISO(date: any): string {
+    if (date instanceof Date) {
+      // Create UTC date with the same year, month, and day
+      const utcDate = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+      ));
+      return utcDate.toISOString();
+    } else if (typeof date === 'string') {
+      const parsedDate = new Date(date);
+      if (!isNaN(parsedDate.getTime())) {
+        const utcDate = new Date(Date.UTC(
+          parsedDate.getFullYear(),
+          parsedDate.getMonth(),
+          parsedDate.getDate()
+        ));
+        return utcDate.toISOString();
+      }
+    }
+    return date;
+  }
+
+  formatDateForDisplay(date: any): string {
+    if (!date) return '';
+
+    let dateObj: Date;
+
+    if (date instanceof Date) {
+      dateObj = date;
+    } else if (typeof date === 'string') {
+      dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) return '';
+    } else {
+      return '';
+    }
+
+    // Format as YYYY-MM-DD for display
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }

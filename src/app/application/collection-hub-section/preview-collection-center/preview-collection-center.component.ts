@@ -10,7 +10,12 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-
+import { DropdownModule } from 'primeng/dropdown';
+interface PhoneCode {
+  code: string;
+  dialCode: string;
+  name: string;
+}
 @Component({
   selector: 'app-preview-collection-center',
   standalone: true,
@@ -18,6 +23,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    DropdownModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './preview-collection-center.component.html',
@@ -38,7 +44,20 @@ export class PreviewCollectionCenterComponent implements OnInit {
   city: string = '';
   isLoading = false;
   isView: boolean = false;
+    countries: PhoneCode[] = [
+  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+  { code: 'IN', dialCode: '+91', name: 'India' },
+  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+  { code: 'US', dialCode: '+1', name: 'United States' }
+];
 
+getFlagUrl(countryCode: string): string {
+  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+}
   constructor(
     private collectionCenterService: CollectionCenterService,
     private router: Router,
@@ -331,6 +350,24 @@ export class PreviewCollectionCenterComponent implements OnInit {
         );
     }
   }
+
+  formatContactNumber(value: number | null): string {
+  // Handle null, undefined, 0, and NaN cases
+  if (value === null || value === undefined || value === 0 || isNaN(value)) {
+    return '-';
+  }
+  return value.toString();
+}
+
+onContact02Change(value: string) {
+  if (value === '-' || value === '') {
+    this.centerFetchData.contact02 = null;
+  } else {
+    const parsedValue = parseInt(value, 10);
+    this.centerFetchData.contact02 = isNaN(parsedValue) ? null : parsedValue;
+  }
+}
+
 }
 
 class CollectionCenter {
@@ -338,7 +375,7 @@ class CollectionCenter {
   centerName!: string;
   contact01!: number;
   code1!: string;
-  contact02!: number;
+  contact02!: number | null;
   code2!: string;
   buildingNumber!: string;
   street!: string;

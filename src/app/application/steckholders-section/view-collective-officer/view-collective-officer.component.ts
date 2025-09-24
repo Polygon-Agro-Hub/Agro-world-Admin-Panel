@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild  } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgModel  } from '@angular/forms';
 import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -49,11 +49,13 @@ interface JobRole {
   styleUrls: ['./view-collective-officer.component.css'],
 })
 export class ViewCollectiveOfficerComponent {
+  @ViewChild('selectedCenterIdInput') selectedCenterIdInput!: NgModel;
+  @ViewChild('selectedIrmIdInput') selectedIrmIdInput!: NgModel;
   collectionOfficers: CollectionOfficers[] = [];
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Collection Officer' },
-    { id: 2, jobRole: 'Collection Center Manager' },
-    { id: 3, jobRole: 'Customer Officer' },
+    { id: 2, jobRole: 'Collection Centre Manager' },
+
   ];
   centerNames: CenterName[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];
@@ -105,7 +107,8 @@ export class ViewCollectiveOfficerComponent {
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,
-    status: string = this.selectStatus
+    status: string = this.selectStatus,
+    centerId: string | null = this.selectedCenterId
   ) {
     this.isLoading = true;
     this.route.queryParams.subscribe((params) => {
@@ -124,7 +127,6 @@ export class ViewCollectiveOfficerComponent {
           this.searchNIC,
           this.statusFilter?.id,
           this.role?.jobRole,
-
         )
         .subscribe(
           (response) => {
@@ -153,13 +155,14 @@ export class ViewCollectiveOfficerComponent {
           this.searchNIC,
           this.statusFilter?.id,
           this.role?.jobRole,
-          this.centerId ? this.centerId : 0
+          this.centerId ? this.centerId : ''
         )
         .subscribe(
           (response) => {
             this.isLoading = false;
             this.collectionOfficers = response.items;
             this.totalItems = response.total;
+            this.hasData = response.total > 0;
           },
           (error) => {
             this.isLoading = false;
@@ -188,12 +191,34 @@ export class ViewCollectiveOfficerComponent {
     );
   }
 
-  fetchManagerNames() {
-    this.collectionService.getCollectionCenterManagerNames().subscribe(
+  onCenterChange() {
+    if (this.selectedCenterId) {
+      const numericCenterId = parseInt(this.selectedCenterId);
+      console.log(this.selectedCenterId);
+
+
+      this.fetchManagerNames(numericCenterId);
+
+    } else {
+      this.collectionCenterManagerNames = [];
+    }
+  }
+
+  fetchManagerNames(centerId: number) {
+    this.collectionService.getCollectionCenterManagerNames(centerId).subscribe(
       (response) => {
-        this.collectionCenterManagerNames = response;
+        console.log('Manager names response:', response);
+
+        this.collectionCenterManagerNames = response.data || response;
+        this.collectionCenterManagerNames = this.collectionCenterManagerNames.map(manager => ({
+          ...manager,
+          displayLabel: `${manager.empId} - ${manager.firstNameEnglish} ${manager.lastNameEnglish}`
+        }));
       },
-      (error) => { }
+      (error) => {
+        console.error('Error fetching managers:', error);
+        this.collectionCenterManagerNames = [];
+      }
     );
   }
 
@@ -201,7 +226,9 @@ export class ViewCollectiveOfficerComponent {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchCenterNames();
-    this.fetchManagerNames();
+    if (this.centerId !== null) {
+      this.fetchManagerNames(this.centerId);
+    }
     // this.route.queryParams.subscribe((params) => {
     //   this.centerId = params['id'] ? +params['id'] : null;
     // });
@@ -229,52 +256,75 @@ export class ViewCollectiveOfficerComponent {
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
-  deleteCollectionOfficer(id: number) {
-    const token = this.tokenService.getToken();
-    if (!token) return;
+ deleteCollectionOfficer(id: number) {
+  const token = this.tokenService.getToken();
+  if (!token) return;
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this Collection Officer? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.collectionService.deleteOfficer(id).subscribe(
-          (data) => {
-            this.isLoading = false;
-            if (data.status) {
-              Swal.fire(
-                'Deleted!',
-                'The Collection Officer has been deleted.',
-                'success'
-              );
-              this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
-            } else {
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the Collection Officer.',
-                'error'
-              );
-            }
-          },
-          () => {
-            this.isLoading = false;
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the Collection Officer.',
-              'error'
-            );
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this Collection Officer? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+      confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+      cancelButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2'
+    },
+    buttonsStyling: false, // let Tailwind handle button styling
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.collectionService.deleteOfficer(id).subscribe(
+        (data) => {
+          this.isLoading = false;
+          if (data.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'The Collection Officer has been deleted.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              },
+              buttonsStyling: false
+            });
+            this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'There was an error deleting the Collection Officer.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              },
+              buttonsStyling: false
+            });
           }
-        );
-      }
-    });
-  }
+        },
+        () => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'There was an error deleting the Collection Officer.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
+            buttonsStyling: false
+          });
+        }
+      );
+    }
+  });
+}
 
   editCollectionOfficer(id: number) {
     this.navigatePath(
@@ -286,18 +336,28 @@ export class ViewCollectiveOfficerComponent {
     const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
     const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
 
+    // Dynamic message based on status
+    let message = '';
+    if (item.status === 'Approved') {
+      message = 'Are you sure you want to reject this collection officer?';
+    } else if (item.status === 'Rejected') {
+      message = 'Are you sure you want to approve this collection officer?';
+    } else if (item.status === 'Not Approved') {
+      message = 'Are you sure you want to approve or reject this collection officer?';
+    }
+
     const tableHtml = `
-      <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
-        <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
-        <div>
-          <p class="text-center dark:text-white">Are you sure you want to approve or reject this collection officer?</p>
-        </div>
-        <div class="flex justify-center mt-4">
-          ${showRejectButton ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>' : ''}
-          ${showApproveButton ? '<button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>' : ''}
-        </div>
+    <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
+      <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
+      <div>
+        <p class="text-center dark:text-white">${message}</p>
       </div>
-    `;
+      <div class="flex justify-center mt-4">
+        ${showRejectButton ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>' : ''}
+        ${showApproveButton ? '<button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>' : ''}
+      </div>
+    </div>
+  `;
 
     Swal.fire({
       html: tableHtml,
@@ -323,7 +383,7 @@ export class ViewCollectiveOfficerComponent {
                     Swal.fire({
                       icon: 'success',
                       title: 'Success!',
-                      text: 'The Collection officer was approved successfully.',
+                      text: 'The Collection Officer was approved successfully.',
                       showConfirmButton: false,
                       timer: 3000,
                     });
@@ -366,7 +426,7 @@ export class ViewCollectiveOfficerComponent {
                     Swal.fire({
                       icon: 'success',
                       title: 'Success!',
-                      text: 'The Collection officer was rejected successfully.',
+                      text: 'The Collection Officer was rejected successfully.',
                       showConfirmButton: false,
                       timer: 3000,
                     });
@@ -416,7 +476,7 @@ export class ViewCollectiveOfficerComponent {
 
   onSearch() {
     this.searchNIC = this.searchNIC?.trim() || ''
-    console.log('searchNIC', "'",this.searchNIC,"'")
+    console.log('searchNIC', "'", this.searchNIC, "'")
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
 
@@ -438,11 +498,15 @@ export class ViewCollectiveOfficerComponent {
 
   editCloseModel() {
     this.selectedOfficer = null;
+    this.selectedCenterId = null;
+    this.selectedIrmId = null;
     this.iseditModalOpen = false;
   }
 
   editModalOpen(role: any) {
     this.selectedOfficer = role;
+    this.selectedCenterId = null;
+    this.selectedIrmId = null;
     this.iseditModalOpen = true;
   }
 
@@ -452,9 +516,12 @@ export class ViewCollectiveOfficerComponent {
 
   handleClaimButtonClick(item: CollectionOfficers) {
     this.selectedOfficer = item;
+    console.log('this.selectedOfficer', this.selectedOfficer)
     this.selectOfficerId = item.id;
 
     if (item.claimStatus === 0) {
+      this.selectedCenterId = null; // Reset selection
+      this.selectedIrmId = null; // Reset selection
       this.iseditModalOpen = true;
     } else if (item.claimStatus === 1) {
       this.showDisclaimView = true;
@@ -469,7 +536,7 @@ export class ViewCollectiveOfficerComponent {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'User disclaimed successfully!',
+            text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
           }).then((result) => {
             if (result.isConfirmed) {
@@ -490,17 +557,33 @@ export class ViewCollectiveOfficerComponent {
   }
 
   claimOfficer() {
-    if (!this.selectedCenterId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please select a center.',
-        confirmButtonText: 'OK',
-      });
-      return;
+    const centerControl = (this as any).selectedCenterIdInput;
+    const managerControl = (this as any).selectedIrmIdInput;
+  
+    if (centerControl) {
+      centerControl.control.markAsTouched();
+    }
+    if (managerControl) {
+      managerControl.control.markAsTouched();
+    }
+  
+    if (this.selectedOfficer?.jobRole === 'Collection Officer') {
+      // Require both center and manager
+      if (!this.selectedCenterId || !this.selectedIrmId) {
+        return;
+      }
+    } else {
+      // For other roles, require only center
+      if (!this.selectedCenterId) {
+        return;
+      }
     }
 
-    const payload = { centerId: this.selectedCenterId };
+    // Prepare payload - include manager ID if selected
+    const payload: any = { centerId: this.selectedCenterId };
+    if (this.selectedIrmId) {
+      payload.managerId = this.selectedIrmId;
+    }
 
     this.collectionOfficerService
       .claimOfficer(this.selectOfficerId, payload)
@@ -514,6 +597,8 @@ export class ViewCollectiveOfficerComponent {
           }).then((result) => {
             if (result.isConfirmed) {
               this.iseditModalOpen = false;
+              this.selectedCenterId = null;
+              this.selectedIrmId = null;
               this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
             }
           });
@@ -554,4 +639,5 @@ class ManagerNames {
   id!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
+  empId!: string;
 }

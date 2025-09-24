@@ -80,62 +80,81 @@ export class ViewSelectedSalesDashComplainComponent implements OnInit {
   //   this.hideDialog(); // Close the dialog after submission
   // }
 
-  submitComplaint() {
-    this.isLoading = true;
-    const token = this.tokenService.getToken();
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
-    this.hideDialog();
-
-    console.log(this.complainId);
-    console.log(this.messageContent);
-    if (this.complain.reply === null || this.complain.reply === undefined) {
-      Swal.fire('Warning', 'Pleace write reply before sending', 'warning');
-      this.isLoading = false;
-      return;
-    }
-
-    const body = { reply: this.complain.reply };
-
-    this.http
-      .put(
-        `${environment.API_URL}complain/reply-complain/${this.complainId}`,
-        body,
-        { headers },
-      )
-      .subscribe(
-        (res: any) => {
-          console.log("Sales Dash updated successfully", res);
-
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Reply was sent successfully!",
-          });
-          this.fetchComplain();
-          this.isLoading = false;
-          this.router.navigate(['/complaints/view-sales-dash-complain'])
-        },
-        (error) => {
-          console.error("Error updating news", error);
-
-          Swal.fire({
-            icon: "error",
-            title: "Unsuccessful",
-            text: "Error sending reply",
-          });
-          this.fetchComplain();
-          this.isLoading = false;
-        },
-      );
+submitComplaint() {
+  this.isLoading = true;
+  const token = this.tokenService.getToken();
+  if (!token) {
+    console.error("No token found");
+    return;
   }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.hideDialog();
+
+  console.log(this.complainId);
+  console.log(this.messageContent);
+  if (this.complain.reply === null || this.complain.reply === undefined) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Warning',
+      text: 'Please write a reply before sending',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    this.isLoading = false;
+    return;
+  }
+
+  const body = { reply: this.complain.reply };
+
+  this.http
+    .put(
+      `${environment.API_URL}complain/reply-complain/${this.complainId}`,
+      body,
+      { headers },
+    )
+    .subscribe(
+      (res: any) => {
+        console.log("Sales Dash updated successfully", res);
+
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: "Reply was sent successfully!",
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+
+        this.fetchComplain();
+        this.isLoading = false;
+        this.router.navigate(['/complaints/view-sales-dash-complain']);
+      },
+      (error) => {
+        console.error("Error updating news", error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Unsuccessful",
+          text: "Error sending reply",
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+
+        this.fetchComplain();
+        this.isLoading = false;
+      },
+    );
+}
+
 
 
 

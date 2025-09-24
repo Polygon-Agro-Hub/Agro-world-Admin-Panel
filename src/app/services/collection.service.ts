@@ -10,8 +10,8 @@ import { TokenService } from "./token/services/token.service";
 export class CollectionService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
- 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   fetchAllCollectionOfficercenter(
     page: number,
@@ -21,7 +21,7 @@ export class CollectionService {
     searchNIC: string = '',
     company: string,
     role: string,
-    centerId: number
+    centerId: any = ''
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -30,8 +30,10 @@ export class CollectionService {
     console.log(company);
 
 
-    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers?page=${page}&limit=${limit}&centerId=${centerId}`;
-
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers?page=${page}&limit=${limit}`;
+    if (centerId) {
+      url += `&centerId=${centerId}`;
+    }
     if (company) {
       url += `&company=${company}`;
     }
@@ -44,7 +46,7 @@ export class CollectionService {
       url += `&status=${status}`
     }
 
-  
+
 
     if (role) {
       url += `&role=${role}`;
@@ -88,7 +90,7 @@ export class CollectionService {
       url += `&status=${status}`
     }
 
-  
+
 
     if (role) {
       url += `&role=${role}`;
@@ -100,7 +102,7 @@ export class CollectionService {
     return this.http.get<any>(url, { headers });
   }
 
-  fetchAllCollectionOfficerProfile(id:number): Observable<any> {
+  fetchAllCollectionOfficerProfile(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -109,32 +111,32 @@ export class CollectionService {
     let url = `${this.apiUrl}auth/collection-officer/get-collection-officer/${id}`;
 
     return this.http.get<any>(url, { headers });
-  }fetchAllCollectionOfficerStatus(
-  page: number,
-  limit: number,
-  nic: string = '',
-  centerName: string = ''
-): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
+  } fetchAllCollectionOfficerStatus(
+    page: number,
+    limit: number,
+    nic: string = '',
+    centerName: string = ''
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
 
-  console.log('Center name sent to API:', centerName);
+    console.log('Center name sent to API:', centerName);
 
-  let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-officers-status?page=${page}&limit=${limit}`;
 
-  if (centerName.trim()) {
-    url += `&centerName=${encodeURIComponent(centerName.trim())}`; // ✅ Fixed typo and added trim
+    if (centerName) {
+      url += `&centerName=${centerName}`; // ✅ Fixed typo and added trim
+    }
+
+    if (nic) {
+      url += `&nic=${nic}`; // Changed from searchNIC to nic
+    }
+    console.log('API URL:', url);
+    return this.http.get<any>(url, { headers });
   }
-
- if (nic.trim()) {
-    url += `&nic=${encodeURIComponent(nic.trim())}`; // Changed from searchNIC to nic
-  }
-  console.log('API URL:', url);
-  return this.http.get<any>(url, { headers });
-}
-    getCompanyNames(): Observable<any> {
+  getCompanyNames(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -174,13 +176,13 @@ export class CollectionService {
     return this.http.get<any>(url, { headers });
   }
 
-  getCollectionCenterManagerNames(): Observable<any> {
+  getCollectionCenterManagerNames(centerId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-manager-names`;
+    let url = `${this.apiUrl}auth/collection-officer/get-all-collection-manager-names/${centerId}`;
     return this.http.get<any>(url, { headers });
   }
 
@@ -210,7 +212,7 @@ export class CollectionService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    
+
 
     let url = `${this.apiUrl}auth/get-purchase-report?page=${page}&limit=${limit}`;
 
@@ -245,7 +247,7 @@ export class CollectionService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<any>(`${this.apiUrl}auth/get-centers-for-purchase-report`, {headers});
+    return this.http.get<any>(`${this.apiUrl}auth/get-centers-for-purchase-report`, { headers });
   }
 
 
@@ -261,7 +263,7 @@ export class CollectionService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    
+
 
     let url = `${this.apiUrl}auth/get-collection-report?page=${page}&limit=${limit}`;
 
@@ -289,6 +291,19 @@ export class CollectionService {
     //   url += `&nic=${searchNIC}`;
     // }
     return this.http.get<any>(url, { headers });
+  }
+
+  getFarmerReportInvoice(invNo: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}auth/get-farmer-report-invoice-details/${invNo}`
+
+    return this.http.get(url, {
+      headers,
+    });
   }
 
 

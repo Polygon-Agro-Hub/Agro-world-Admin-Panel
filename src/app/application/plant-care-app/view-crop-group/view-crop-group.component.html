@@ -53,23 +53,24 @@
         <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
 
         <!-- Category Dropdown -->
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] mr-4"
-          [options]="categoryOptions"
-          [checkmark]="true"
-          optionLabel="label"
-          [showClear]="selectedCategory !== null"
-          placeholder="Category"
-          [(ngModel)]="selectedCategory"
-          (onChange)="onCategoryChange()"
-        >
-          <ng-template
-            pTemplate="selectedicon"
-            *ngIf="selectedCategory === null"
-          >
-            <i class="pi pi-filter"></i>
-          </ng-template>
-        </p-dropdown>
+<div>
+  <p-dropdown
+    styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+    [options]="categoryOptions"
+    optionLabel="label"
+    optionValue="value"
+    placeholder="Category"
+    [(ngModel)]="selectedCategory"
+    [showClear]="true"
+    [checkmark]="false"
+    (onChange)="onCategoryChange()"
+  >
+    <ng-template pTemplate="selectedicon" *ngIf="selectedCategory === null">
+      <i class="pi pi-filter"></i>
+    </ng-template>
+  </p-dropdown>
+</div>
+
 
         <div
           *ngIf="

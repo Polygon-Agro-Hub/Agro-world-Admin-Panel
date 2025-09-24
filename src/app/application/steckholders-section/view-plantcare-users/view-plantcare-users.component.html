@@ -26,6 +26,14 @@
     <i class="fa-solid fa-file-import pr-4"></i>
     Bulk Upload
   </button>
+
+  <button *ngIf="
+      permissionService.hasPermission('Bulk onboarding plan care users') ||
+      tokenService.getUserDetails().role === '1'
+    " class="text-[#3980C0] text-lg flex items-center mb-5" (click)="downloadTemplate()">
+    <i class="fa-solid fa-download mr-3"></i>
+    <span class="underline">Download Template</span>
+  </button>
 </div>
 
 <div *ngIf="
@@ -50,7 +58,7 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="registerStatusFilter" [checkmark]="true" optionLabel="status" optionValue="value"
-            [showClear]="false" placeholder="Register Status" [(ngModel)]="regStatus" (onChange)="regStatusFil()" />
+            [showClear]="!!regStatus" placeholder="Register Status" [(ngModel)]="regStatus" (onChange)="regStatusFil()" />
         </div>
 
         <div *ngIf="
@@ -60,7 +68,7 @@
           ">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtFilter" [checkmark]="true" optionLabel="status" optionValue="value" [showClear]="false"
+            [options]="districtFilter" [checkmark]="true" optionLabel="status" optionValue="value" [showClear]="!!district"
             placeholder="District" [(ngModel)]="district" (onChange)="regStatusFil()" />
         </div>
 
@@ -140,6 +148,10 @@
             </th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               <!-- Reduced px-4 to px-3 -->
+              Staff
+            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+              <!-- Reduced px-4 to px-3 -->
               Status
             </th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
@@ -209,6 +221,11 @@
               <span *ngIf="!item.farmerQr" class="text-textLight dark:text-textDark italic">
                 Unregistered
               </span>
+            </td>
+            <td class="px-3 py-3 text-center">
+              <!-- Reduced px-4 to px-3 -->
+              <button (click)="viewFarmerStaff(item.id, item.firstName + ' ' + item.lastName, item.phoneNumber)"><i
+                  class="fa-solid fa-users text-[#3980C0] text-xl"></i></button>
             </td>
 
             <td class="px-3 py-3 text-center">

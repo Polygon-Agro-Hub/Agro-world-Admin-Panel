@@ -18,14 +18,14 @@
           ? (firstStartingDate | date : "yyyy/MM/dd")
           : "Not available"
       }}
-    </div>
-    <div class="flex justify-between items-center mb-4">
-      <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          {{ cropName }}
-        </h2>
-      </div>
-    </div>
+    
+<div class="flex justify-center items-center mb-4">
+  <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
+    {{ cropName }}
+  </h2>
+  </div>
+</div>
+
     <div>
       <table
         class="w-full divide-y divide-gray-200 table-auto whitespace-nowrap"
@@ -89,7 +89,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
+          <!-- <tr
             *ngFor="
               let task of taskList
                 | paginate
@@ -99,6 +99,9 @@
                       totalItems: totalItems
                     }
             "
+          > -->
+          <tr
+            *ngFor="let task of taskList"
           >
             <td
               *ngIf="
@@ -115,7 +118,7 @@
                     this.cropCalendarId,
                     task.taskIndex,
                     this.userId,
-                    this.cultivationId,
+                    task.onCulscropID,
                     this.userName
                   )
                 "
@@ -129,7 +132,7 @@
               {{ task.taskIndex }}
             </td>
             <td class="px-4 py-3 text-textLight dark:text-textDark text-center">
-              {{ task.startingDate | date : "yyyy-MM-dd" }}
+              {{ task.startingDate === null ? '----' : task.startingDate | date : "yyyy-MM-dd" }}
             </td>
             <td class="px-4 py-3 text-textLight dark:text-textDark text-center">
               {{ task.taskEnglish }}
@@ -337,7 +340,7 @@
           </tr>
         </tbody>
       </table>
-      <pagination-controls
+      <!-- <pagination-controls
         (pageChange)="onPageChange($event)"
         [responsive]="true"
         [previousLabel]="'Previous'"
@@ -346,7 +349,7 @@
         [screenReaderPageLabel]="'page'"
         [screenReaderCurrentLabel]="'Youre on page'"
       >
-      </pagination-controls>
+      </pagination-controls> -->
     </div>
   </div>
 </div>

@@ -1,5 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<div>
+
+<div *ngIf="!isLoading">
   <button
     class="mb-5 text-textLight dark:text-textDark"
     onclick="history.back()"
@@ -7,76 +8,70 @@
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
+
   <div
     class="pt-5 pr-12 pl-12 pb-10 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    <div class="flex flex-col items-center mb-8">
-      <h3 class="flex dark:text-textDark">
-        Farmer:
-        <p class="pl-3 dark:text-textDark">{{ this.name }}</p>
-      </h3>
-      <h3 class="flex dark:text-textDark">
-        Category:
-        <p class="pl-3 dark:text-textDark">{{ this.category }}</p>
-      </h3>
-    </div>
+<div class="flex items-center mb-4 gap-[27rem]">
+  <!-- Left: Farmer -->
+  <div class="flex items-center space-x-1">
+    <span class="font-medium dark:text-textDark">Farmer:</span>
+    <span class="font-semibold dark:text-textDark">{{ name || 'NULL' }}</span>
+  </div>
 
+  <!-- Right: Category -->
+  <div class="flex items-center space-x-1">
+    <span class="font-medium dark:text-textDark">Category:</span>
+    <span class="font-semibold dark:text-textDark">{{ category || 'NULL' }}</span>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+    <!-- Show only when there is no data -->
     <div *ngIf="!hasData" class="text-center py-8">
-      <p class="text-gray-500 text-lg dark:text-textDark">No data to display</p>
+      <p class="text-gray-500 text-lg dark:text-textDark">-- No Data Available --</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mt-4 mx-auto" />
     </div>
 
+    <!-- Table when data is available -->
     <div *ngIf="hasData" class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
-            <th
-              class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
-            >
+            <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">
               Asset Name
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Brand
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Batch No.
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Volume/Weight
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Unit
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
-              No.of Units
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              No. of Units
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Unit Price
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Total Price
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Warranty Status
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               View
             </th>
           </tr>
@@ -91,19 +86,19 @@
               {{ item.batchNum }}
             </td>
             <td class="px-4 py-3 dark:text-textDark text-center">
-              {{ item.unitVolume }}
+              {{ item.unitVolume | number }}
             </td>
             <td class="px-4 py-3 dark:text-textDark text-center">
               {{ item.unit }}
             </td>
             <td class="px-4 py-3 dark:text-textDark text-center">
-              {{ item.numOfUnit }}
+              {{ item.numOfUnit | number }}
             </td>
             <td class="px-4 py-3 dark:text-textDark text-center">
-              {{ item.unitPrice }}
+              {{ item.unitPrice | number: '1.0-2' }}
             </td>
             <td class="px-4 py-3 dark:text-textDark text-center">
-              {{ item.total }}
+              {{ item.total | number: '1.0-2' }}
             </td>
             <td class="px-4 py-3 dark:text-textDark text-center">
               <div *ngIf="item.status == 'Still valid'">
@@ -124,17 +119,7 @@
             <td class="px-4 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
-                (click)="
-                  viewRecord(
-                    item.id,
-                    this.name,
-                    this.category,
-                    item.asset,
-                    item.unit,
-                    item.unitPrice,
-                    item.batchNum
-                  )
-                "
+                (click)="viewRecord(item.id, name, category, item.asset, item.unit, item.unitPrice, item.batchNum)"
               >
                 <svg
                   viewBox="0 0 24 24"

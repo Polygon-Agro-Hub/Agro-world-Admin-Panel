@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 
@@ -50,13 +50,14 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   isWithinLimit = true;
 
   showAdditionalItemsModal: boolean = false;
-  showExcludedItemsModal: boolean = false; 
-excludedItemsCount: any;
+  showExcludedItemsModal: boolean = false;
+  excludedItemsCount: any;
 
   constructor(
     private procurementService: ProcumentsService,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private router:Router
+  ) { }
 
   goBack() {
     window.history.back();
@@ -91,10 +92,10 @@ excludedItemsCount: any;
       .subscribe(
         (response) => {
           console.log('response', response);
-    
+
           this.excludedItemsArr = response;
           console.log('excludeItemsArr', this.excludedItemsArr)
-    
+
           this.loading = false;
         },
         (error) => {
@@ -131,6 +132,7 @@ excludedItemsCount: any;
         );
 
         if (matchingItem) {
+          console.log('matching items, ', matchingItem)
           productType.productId = matchingItem.productId;
           productType.quantity = matchingItem.qty;
           productType.selectedProductPrice = matchingItem.price;
@@ -195,7 +197,9 @@ excludedItemsCount: any;
           };
 
           if (pkg.productTypes && Array.isArray(pkg.productTypes)) {
+            console.log('packagede', pkg.productTypes)
             packageDetail.productTypes = pkg.productTypes.map((pt: any) => {
+
               const productType: ProductTypes = {
                 id: pt.id, // This is orderpackageitems.id (if needed for updates)
                 typeName: pt.typeName,
@@ -265,7 +269,7 @@ excludedItemsCount: any;
     });
     console.log('orderDetails here we go again ', this.orderDetails)
   }
-  
+
 
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
@@ -296,19 +300,19 @@ excludedItemsCount: any;
   onProductSelected(productType: ProductTypes, event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedProductId = Number(selectElement.value);
-  
+
     const selectedProduct = this.marketplaceItems.find(
       (item) => item.id === selectedProductId
     );
-  
+
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
       productType.displayName = selectedProduct.displayName;
-  
+
       // ✅ Add this line to control the red styling
       productType.isExcluded = selectedProduct.isExcluded;
-  
+
       // Update calculated price based on current quantity
       if (productType.quantity && productType.quantity > 0) {
         productType.calculatedPrice =
@@ -321,14 +325,14 @@ excludedItemsCount: any;
       productType.selectedProductPrice = 0;
       productType.calculatedPrice = 0;
       productType.quantity = 0;
-      
+
       // ✅ Reset styling state if no valid product selected
       productType.isExcluded = false;
     }
-  
+
     this.calculateTotalPrice();
   }
-  
+
 
   onQuantityChanged(productType: ProductTypes, event: Event) {
     const inputElement = event.target as HTMLInputElement;
@@ -572,12 +576,14 @@ excludedItemsCount: any;
       Swal.fire({
         icon: 'success',
         title: 'Dispatched!',
-        html: `All ${results.length} packages were updated successfully`,
+        html: `Order has been successfully dispatched`,
         confirmButtonColor: '#3085d6',
       });
 
       // Optionally refresh data or navigate back
       this.fetchOrderDetails(this.orderId.toString());
+      this.goToDispatchTab();
+
       // this.goBack(); // Uncomment if you want to navigate back after success
     } catch (error) {
       console.error('Dispatch error:', error);
@@ -588,6 +594,11 @@ excludedItemsCount: any;
         confirmButtonColor: '#3085d6',
       });
     }
+  }
+  goToDispatchTab() {
+    this.router.navigate(['/procurement/define-packages'], {
+      queryParams: { tab: 'sent' }
+    });
   }
 }
 

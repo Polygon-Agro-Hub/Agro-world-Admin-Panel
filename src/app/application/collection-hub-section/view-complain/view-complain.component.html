@@ -86,7 +86,7 @@
         >
           <input
             type="text"
-            placeholder="Search.."
+            placeholder="Search by Ref No, NIC, First/Last Name"
             [(ngModel)]="searchText"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             (keydown.enter)="searchComplain()"
@@ -279,26 +279,31 @@
             <td class="px-4 py-3 text-green-500 text-center">
               <span
                 *ngIf="item.reply === null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+                class="px-4 py-3 italic opacity-60 text-center text-textLight dark:text-textDark"
                 >No</span
               >
               <span
                 *ngIf="item.reply != null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+                class="px-4 py-3 underline text-center text-textLight dark:text-textDark"
                 >Yes</span
               >
             </td>
 
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <div *ngIf="item.reply === null">
+    <div *ngIf="item.reply === null">
                 <button
                   disabled
                   class="w-5 h-5 text-blue-100"
+                 (click)="fetchComplain(item.id, item.farmerName, item.lastName,  item.language)"
                 >
-                  <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
+                  <!-- <i class="fa-solid fa-file-export"></i> -->
+                  <img
+                    src="assets/icons/viewreply.png"
+                    alt="View Reply"
+                    class="w-6 h-6 inline-block opacity-50 cursor-not-allowed"
+                  />
                 </button>
               </div>
-
               <div *ngIf="item.reply != null">
                 <button
                   class="w-5 h-5 text-blue-500 hover:text-blue-700"
@@ -308,6 +313,8 @@
                 </button>
               </div>
             </td>
+
+            
           </tr>
         </tbody>
       </table>

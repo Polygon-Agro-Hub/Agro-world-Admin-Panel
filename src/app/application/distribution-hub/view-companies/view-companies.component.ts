@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,13 +6,6 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import { TokenService } from '../../../services/token/services/token.service';
 import { Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
-import { Subject, Subscription } from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -22,13 +15,11 @@ import Swal from 'sweetalert2';
   templateUrl: './view-companies.component.html',
   styleUrls: ['./view-companies.component.css'],
 })
-export class ViewCompaniesComponent implements OnInit, OnDestroy {
+export class ViewCompaniesComponent implements OnInit {
   companies: CompanyDetails[] = [];
   isLoading = false;
   total: number | null = null;
   search: string = '';
-  private searchSubject = new Subject<string>();
-  private searchSubscription: Subscription | null = null;
   hasData = false;
 
   constructor(
@@ -39,60 +30,36 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.setupSearch();
     this.fetchAllCompanys(); // Initial fetch
   }
 
-  ngOnDestroy() {
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe();
-    }
-  }
-
-  private setupSearch() {
-    this.searchSubscription = this.searchSubject
-      .pipe(
-        debounceTime(300), // Wait 300ms after typing stops (adjust if needed)
-        distinctUntilChanged((prev, curr) => prev.trim() === curr.trim()), // Ignore if trimmed search term is unchanged
-        tap((term) => console.log('Search term after debounce:', term)), // Debug: Log search term
-        switchMap((searchTerm: string) => {
-          this.isLoading = true;
-          console.log('Fetching companies for term:', searchTerm); // Debug: Log API call
-          return this.distributionHubService.getAllCompanyDetails(
-            searchTerm.trim()
-          );
-        })
-      )
+  fetchAllCompanys() {
+    this.isLoading = true;
+    this.distributionHubService.getAllCompanyDetails(this.search.trim())
       .subscribe(
         (response: any) => {
-          console.log('API Response:', response); // Debug: Log response
+          console.log('API Response:', response);
           this.isLoading = false;
           this.companies = response.results || [];
           this.total = response.total || 0;
-
           this.hasData = this.companies.length > 0;
         },
         (error) => {
-          console.error('API Error:', error); // Debug: Log error
+          console.error('API Error:', error);
           this.isLoading = false;
-          this.hasData = false; // Set to false on error
-
+          this.hasData = false;
         }
       );
   }
 
-  fetchAllCompanys() {
-    this.searchSubject.next(this.search); // Trigger search with current term
-  }
-
   searchPlantCareUsers() {
-    console.log('Search triggered:', this.search); // Debug: Log manual search
-    this.searchSubject.next(this.search);
+    console.log('Search triggered:', this.search);
+    this.fetchAllCompanys();
   }
 
   clearSearch(): void {
     this.search = '';
-    this.searchSubject.next(''); // Trigger fetch with empty search
+    this.fetchAllCompanys();
   }
 
   editCompany(id: number) {
@@ -102,7 +69,7 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
   }
 
   viewCompany(id: number, isView: boolean) {
-    this.router.navigate(['/collection-hub/create-company'], {
+    this.router.navigate(['/distribution-hub/action//create-company'], {
       queryParams: { id, isView },
     });
   }
@@ -117,52 +84,73 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
     );
   }
 
-  deleteCompany(id: number) {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Unauthorized',
-        text: 'No valid token found. Please log in again.',
-      });
-      return;
-    }
-
+ deleteCompany(id: number) {
+  const token = this.tokenService.getToken();
+  if (!token) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this company? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.distributionHubService.deleteCompany(id).subscribe(
-          () => {
-            Swal.fire('Deleted!', 'The company has been deleted.', 'success');
-            this.fetchAllCompanys();
-            window.location.reload();
-          },
-          () => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the company.',
-              'error'
-            );
-          }
-        );
-      }
+      icon: 'error',
+      title: 'Unauthorized',
+      text: 'No valid token found. Please log in again.',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonColor: '#2563eb',
     });
+    return;
   }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this company? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    confirmButtonColor: '#2563eb', // Blue confirm
+    cancelButtonColor: '#dc2626',  // Red cancel
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.distributionHubService.deleteCompany(id).subscribe(
+        () => {
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'The company has been deleted.',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+            confirmButtonColor: '#2563eb',
+          });
+          this.fetchAllCompanys();
+        },
+        () => {
+          Swal.fire({
+            title: 'Error!',
+            text: 'There was an error deleting the company.',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+            confirmButtonColor: '#2563eb',
+          });
+        }
+      );
+    }
+  });
+}
 
   back(): void {
     this.router.navigate(['/distribution-hub/action']);
   }
 
   add(): void {
-    // this.router.navigate(['/distribution-hub/action/create-company']);
     this.router
       .navigate(['/distribution-hub/action/create-company'], {
         queryParams: { type: 'distribution' },
@@ -174,10 +162,8 @@ export class ViewCompaniesComponent implements OnInit, OnDestroy {
 
   openImageInNewTab(imageUrl: string): void {
     if (imageUrl.startsWith('data:')) {
-      // Open a blank tab first
       const newWindow = window.open();
       if (newWindow) {
-        // Write HTML to display the image
         newWindow.document.write(`
         <html>
           <head><title>Image Preview</title></head>

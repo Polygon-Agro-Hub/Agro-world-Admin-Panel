@@ -3,6 +3,7 @@ import { environment } from '../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
+import { formatDate } from '@angular/common';
 
 export interface DistributionCentreRequest {
   name: string;
@@ -35,7 +36,7 @@ export class DestributionService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   private getHeaders(): HttpHeaders {
     const token = this.tokenService.getToken();
@@ -216,5 +217,94 @@ export class DestributionService {
       )}`,
       { headers: this.getHeaders() }
     );
+  }
+
+  getCenterTargetDetails(id:number, status: string = '', date: string = '', searchText: string = ''): Observable<ApiResponse> {
+    let url = `${this.apiUrl}distribution/get-center-target?id=${id}`;
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (date) {
+      //  let dateParam = date ? formatDate(date, 'yyyy-MM-dd', 'en-US') :
+      url += `&date=${date}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<ApiResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+
+  getDistributedCenterOfficers(id:number, role: string = '', status: string = '', searchText: string = ''): Observable<ApiResponse> {
+    let url = `${this.apiUrl}distribution/get-distribution-officers?id=${id}`;
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (role) {
+      url += `&role=${role}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+
+  getCenterOutForDlvryOrders(id:number, date: string = '', status: string = '', searchText: string = ''): Observable<ApiResponse> {
+    let url = `${this.apiUrl}distribution/get-center-out-for-dlvry-orders?id=${id}`;
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (date) {
+      //  let dateParam = date ? formatDate(date, 'yyyy-MM-dd', 'en-US') :
+      url += `&date=${date}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<ApiResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getDailyOfficerDistributedTarget(id:number): Observable<any> {
+    let url = `${this.apiUrl}distribution/officer-daily-distribution-target/${id}`;
+    
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getSelectedOfficerTargets(officerId: number, searchText: string = '', status: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+  
+    console.log('officerId', officerId )
+    let url = `${this.apiUrl}distribution/get-selected-officer-targets?officerId=${officerId}`;
+  
+    if (searchText) {
+      url += `&searchText=${searchText}`
+  
+    }
+  
+    if (status) {
+      url += `&status=${status}`
+    }
+  
+    return this.http.get<any>(url, { headers });
   }
 }

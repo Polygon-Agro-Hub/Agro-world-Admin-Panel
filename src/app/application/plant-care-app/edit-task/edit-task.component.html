@@ -1,6 +1,7 @@
 <div>
   <button
-    onclick="history.back()"
+    (click)="back()"
+
     class="mb-5 text-textLight dark:text-textDark"
   >
     <i class="fa-solid fa-arrow-left"></i>
@@ -55,13 +56,12 @@
             for="taskEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task English<span style="color: #2E2E2E">*</span>
+            Task English *
           </label>
           <input
             type="text"
             id="taskEnglish"
             formControlName="taskEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -77,13 +77,12 @@
             for="taskTypeEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Type<span style="color: #2E2E2E">*</span>
+            Task Type *
           </label>
           <input
             type="text"
             id="taskTypeEnglish"
             formControlName="taskTypeEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -99,13 +98,12 @@
             for="taskCategoryEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Category<span style="color: #2E2E2E">*</span>
+            Task Category *
           </label>
           <input
             type="text"
             id="taskCategoryEnglish"
             formControlName="taskCategoryEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -121,13 +119,12 @@
             for="taskDescriptionEnglish"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Description<span style="color: #2E2E2E">*</span>
+            Task Description *
           </label>
           <input
             type="text"
             id="taskDescriptionEnglish"
             formControlName="taskDescriptionEnglish"
-            (keydown)="allowOnlyEnglishLetters($event)"
             (input)="capitalizeFirstLetter($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
@@ -146,13 +143,12 @@
             for="taskSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Sinhala<span style="color: #2E2E2E">*</span>
+            Task Sinhala *
           </label>
           <input
             type="text"
             id="taskSinhala"
             formControlName="taskSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -167,13 +163,12 @@
             for="taskTypeSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Type<span style="color: #2E2E2E">*</span>
+            Task Type *
           </label>
           <input
             type="text"
             id="taskTypeSinhala"
             formControlName="taskTypeSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -188,13 +183,12 @@
             for="taskCategorySinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Category<span style="color: #2E2E2E">*</span>
+            Task Category *
           </label>
           <input
             type="text"
             id="taskCategorySinhala"
             formControlName="taskCategorySinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -209,13 +203,12 @@
             for="taskDescriptionSinhala"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Description<span style="color: #2E2E2E">*</span>
+            Task Description *
           </label>
           <input
             type="text"
             id="taskDescriptionSinhala"
             formControlName="taskDescriptionSinhala"
-            (keydown)="allowOnlySinhalaLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -233,13 +226,12 @@
             for="taskTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Tamil<span style="color: #2E2E2E">*</span>
+            Task Tamil *
           </label>
           <input
             type="text"
             id="taskTamil"
             formControlName="taskTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -254,13 +246,12 @@
             for="taskTypeTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Type<span style="color: #2E2E2E">*</span>
+            Task Type *
           </label>
           <input
             type="text"
             id="taskTypeTamil"
             formControlName="taskTypeTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -275,13 +266,12 @@
             for="taskCategoryTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Category<span style="color: #2E2E2E">*</span>
+            Task Category *
           </label>
           <input
             type="text"
             id="taskCategoryTamil"
             formControlName="taskCategoryTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -296,13 +286,12 @@
             for="taskDescriptionTamil"
             class="block text-sm font-medium text-textLight dark:text-textDark"
           >
-            Task Description<span style="color: #2E2E2E">*</span>
+            Task Description *
           </label>
           <input
             type="text"
             id="taskDescriptionTamil"
             formControlName="taskDescriptionTamil"
-            (keydown)="allowOnlyTamilLetters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <div
@@ -323,12 +312,14 @@
         >
           Number of required images
         </label>
-        <input
-          type="text"
-          id="reqImages"
-          formControlName="reqImages"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+ <input
+  type="text"
+  id="reqImages"
+  formControlName="reqImages"
+  (input)="allowOnlyNumbers($event)"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+/>
+
                   <!-- (keypress)="validateImagesInput($event)"
           (input)="onImagesInput($event)" -->
 
@@ -342,7 +333,7 @@
 
       <div class="mb-4">
         <label class="block text-sm font-medium text-textLight dark:text-textDark">
-          Has Image Link?
+        Want to Add Images 
         </label>
         <div class="mt-1">
           <label class="inline-flex items-center">
@@ -371,7 +362,7 @@
           for="imageLink"
           class="block text-sm font-medium text-textLight dark:text-textDark"
         >
-          Image Link<span style="color: #2E2E2E">*</span>
+         Link for Images *
         </label>
         <input
           type="text"
@@ -386,58 +377,105 @@
           Image Link is required when "Has Image Link" is set to Yes.
         </div>
       </div>
+<!-- Want to Add Videos -->
+<div class="mb-4">
+  <label class="block text-sm font-medium text-textLight dark:text-textDark">
+    Want to Add Videos 
+  </label>
+  <div class="mt-1">
+    <label class="inline-flex items-center">
+      <input
+        type="radio"
+        formControlName="hasVideoLink"
+        [value]="true"
+      />
+      <span class="ml-2 text-textLight dark:text-textDark">Yes</span>
+    </label>
+    <label class="inline-flex items-center ml-6">
+      <input
+        type="radio"
+        formControlName="hasVideoLink"
+        [value]="false"
+      />
+      <span class="ml-2 text-textLight dark:text-textDark">No</span>
+    </label>
+  </div>
+</div>
 
-      <div class="mb-4">
-        <label
-          for="videoLinkEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-          Video Link English
-        </label>
-        <input
-          type="text"
-          id="videoLinkEnglish"
-          formControlName="videoLinkEnglish"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-      </div>
-      <div class="mb-4">
-        <label
-          for="videoLinkSinhala"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-          Video Link Sinhala
-        </label>
-        <input
-          type="text"
-          id="videoLinkSinhala"
-          formControlName="videoLinkSinhala"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-      </div>
-      <div class="mb-4">
-        <label
-          for="videoLinkTamil"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-          Video Link Tamil
-        </label>
-        <input
-          type="text"
-          id="videoLinkTamil"
-          formControlName="videoLinkTamil"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-      </div>
+<!-- Video Links -->
+<div *ngIf="taskForm.get('hasVideoLink')?.value">
+  <div class="mb-4">
+    <label
+      for="videoLinkEnglish"
+      class="block text-sm font-medium text-textLight dark:text-textDark"
+    >
+      Video Link English *
+    </label>
+    <input
+      type="text"
+      id="videoLinkEnglish"
+      formControlName="videoLinkEnglish"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    />
+    <div
+      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkEnglish')?.touched && taskForm.get('videoLinkEnglish')?.hasError('required')"
+      class="text-red-500 text-sm mt-1"
+    >
+      Video Link (English) is required when "Want to Add Videos" is set to Yes.
+    </div>
+  </div>
+  <div class="mb-4">
+    <label
+      for="videoLinkSinhala"
+      class="block text-sm font-medium text-textLight dark:text-textDark"
+    >
+      Video Link Sinhala *
+    </label>
+    <input
+      type="text"
+      id="videoLinkSinhala"
+      formControlName="videoLinkSinhala"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    />
+    <div
+      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkSinhala')?.touched && taskForm.get('videoLinkSinhala')?.hasError('required')"
+      class="text-red-500 text-sm mt-1"
+    >
+      Video Link (Sinhala) is required when "Want to Add Videos" is set to Yes.
+    </div>
+  </div>
+  <div class="mb-4">
+    <label
+      for="videoLinkTamil"
+      class="block text-sm font-medium text-textLight dark:text-textDark"
+    >
+      Video Link Tamil *
+    </label>
+    <input
+      type="text"
+      id="videoLinkTamil"
+      formControlName="videoLinkTamil"
+      class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    />
+    <div
+      *ngIf="taskForm.get('hasVideoLink')?.value && taskForm.get('videoLinkTamil')?.touched && taskForm.get('videoLinkTamil')?.hasError('required')"
+      class="text-red-500 text-sm mt-1"
+    >
+      Video Link (Tamil) is required when "Want to Add Videos" is set to Yes.
+    </div>
+  </div>
+</div>
       <div class="flex justify-end mt-6">
         <div class="w-[20px]"></div>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-          [disabled]="taskForm.invalid"
-        >
-          Save
-        </button>
+         <button type="button" (click)="onCancel()"
+          class="px-4 py-2 text-sm font-medium mr-4 text-gray-700 bg-gray-200 rounded-md">Cancel</button>
+        <!-- Remove the disabled attribute from the save button -->
+<button
+  type="submit"
+  class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+>
+  Save
+</button>
       </div>
     </div>
   </form>

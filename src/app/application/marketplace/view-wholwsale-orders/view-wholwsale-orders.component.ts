@@ -55,9 +55,9 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
   ];
 
   statusOptions = [
-    { label: 'Assigned', value: 'Assigned' },
+    { label: 'Assigned', value: 'Ordered' },
     { label: 'Delivered', value: 'Delivered' },
-    { label: 'Ordered', value: 'Ordered' },
+   
     { label: 'Picked Up', value: 'Picked Up' },
     { label: 'Processing', value: 'Processing' },
   ];
@@ -195,6 +195,7 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
 
 class RetailOrders {
   id!: number;
+  orderId!: number;
   customerName!: string;
   method!: number;
   amount!: number;

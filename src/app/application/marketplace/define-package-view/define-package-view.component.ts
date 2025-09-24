@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface OrderDetailItem {
   packageId: number;
@@ -54,6 +55,7 @@ export class DefinePackageViewComponent implements OnInit {
 
   constructor(
     private marketplaceService: MarketPlaceService,
+    private router: Router,
     private route: ActivatedRoute
   ) {}
 
@@ -78,10 +80,46 @@ export class DefinePackageViewComponent implements OnInit {
       });
     });
   }
+goBack(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.history.back();
+    }
+  });
+}
 
-  goBack() {
-    window.history.back();
-  }
+onCancel() {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after canceling!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.history.back();
+    }
+  });
+
+}
 
   fetchOrderDetails(id: string) {
     console.log('Fetching order details for ID:', id);
@@ -180,24 +218,45 @@ export class DefinePackageViewComponent implements OnInit {
     }
   }
 
-  onQuantityChanged(productType: ProductTypes, event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    let quantity = parseFloat(inputElement.value);
+onQuantityChanged(productType: ProductTypes, event: Event) {
+  const inputElement = event.target as HTMLInputElement;
+  let value = inputElement.value;
 
-    if (isNaN(quantity)) {
+  // Remove any extra decimal points
+  if ((value.match(/\./g) || []).length > 1) {
+    value = value.substring(0, value.lastIndexOf('.'));
+    inputElement.value = value;
+  }
+
+  // Enforce max 3 decimal places
+  if (value.includes('.')) {
+    const parts = value.split('.');
+    if (parts[1].length > 3) {
+      value = parts[0] + '.' + parts[1].substring(0, 3);
+      inputElement.value = value;
+    }
+  }
+
+  const quantity = parseFloat(value);
+
+  if (isNaN(quantity)) {
+    productType.quantity = undefined;
+    productType.calculatedPrice = undefined;
+    inputElement.value = '';
+    return;
+  } else {
+    if (quantity <= 0) {
       productType.quantity = undefined;
       productType.calculatedPrice = undefined;
-    } else {
-      if (quantity <= 0) {
-        quantity = 0;
-        Swal.fire('Warning', 'Quantity must be greater than 0!', 'warning');
-        inputElement.value = '';
-      }
-      productType.quantity = quantity;
-      productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
+      inputElement.value = '';
+      Swal.fire('Warning', 'Quantity must be greater than 0!', 'warning');
+      return;
     }
-    this.calculateTotalPrice();
+    productType.quantity = quantity;
+    productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
   }
+  this.calculateTotalPrice();
+}
 
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
@@ -329,13 +388,15 @@ export class DefinePackageViewComponent implements OnInit {
       Swal.fire({
         icon: 'success',
         title: 'Success!',
-        text: 'Package created successfully!',
+        text: 'Package defined successfully!',
         confirmButtonColor: '#3085d6',
       }).then((result) => {
         this.isLoading = false;
-        if (result.isConfirmed) {
-          this.goBack();
-        }
+       this.isLoading = false;
+if (result.isConfirmed) {
+  this.router.navigate(['/market/action/view-packages-list']);
+}
+
       });
     } catch (error) {
       this.isLoading = false;
@@ -358,4 +419,44 @@ export class DefinePackageViewComponent implements OnInit {
     }
     return 'An unknown error occurred';
   }
+
+  validateQuantityInput(event: KeyboardEvent) {
+  const input = event.target as HTMLInputElement;
+  const key = event.key;
+
+  // Allow: backspace, delete, tab, escape, enter, arrows (up/down/left/right)
+  if (
+    ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key) ||
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    (event.ctrlKey === true && ['a', 'c', 'v', 'x'].includes(key.toLowerCase()))
+  ) {
+    return; // let it happen, don't do anything
+  }
+
+  // Ensure that it is a number and stop the keypress if not
+  if (event.key === ' ' || isNaN(Number(key))) {
+    event.preventDefault();
+    return;
+  }
+
+  // Get the current value and proposed new value
+  const currentValue = input.value;
+  const selectionStart = input.selectionStart || 0;
+  const selectionEnd = input.selectionEnd || 0;
+  const proposedValue =
+    currentValue.substring(0, selectionStart) +
+    key +
+    currentValue.substring(selectionEnd);
+
+  // Check if the proposed value matches our pattern
+  const pattern = /^\d*\.?\d{0,3}$/;
+  if (!pattern.test(proposedValue)) {
+    event.preventDefault();
+  }
+
+  // Only allow one decimal point
+  if (key === '.' && currentValue.includes('.')) {
+    event.preventDefault();
+  }
+}
 }

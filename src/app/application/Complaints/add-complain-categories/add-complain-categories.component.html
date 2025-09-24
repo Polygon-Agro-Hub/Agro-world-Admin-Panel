@@ -1,84 +1,117 @@
 <div>
-    <button onclick="history.back()" class="mb-5 text-textLight dark:text-textDark">
+    <button (click)="back()"
+ class="mb-5 text-textLight dark:text-textDark">
         <i class="fa-solid fa-arrow-left"></i>
         Back
     </button>
    
     <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
         <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark font-bold">Add Complaint Category</h2>
-
-        <div>
-           <div class="mb-5">
-  <label for="roleId" class="block text-sm font-medium text-textLight dark:text-textDark">
-    Complaint Assignee Admin Category
-  </label>
-
-  <p-dropdown 
-    inputId="roleId" 
-    [options]="roleArr" 
-    [(ngModel)]="complainObj.roleId" 
-    optionLabel="role" 
-    optionValue="id"
-    [filter]="true" 
-    placeholder="--select--"
-    class="w-full mt-1 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-  </p-dropdown>
-</div>
+<div>
+            <div class="mb-5">
+                <label for="roleId" class="block text-sm font-medium text-textLight dark:text-textDark">
+                    Complaint Assignee Admin Category *
+                </label>
+                <p-dropdown
+                    inputId="roleId"
+                    [options]="roleArr"
+                    [(ngModel)]="complainObj.roleId"
+                    optionLabel="role"
+                    optionValue="id"
+                    [filter]="true"
+                    placeholder="--select--"
+                    required
+                    #roleId="ngModel"
+                    (onChange)="markTouched(roleId)"
+                    class="w-full mt-1 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
+                </p-dropdown>
+                <span *ngIf="isFieldInvalid(roleId) || (roleId.touched && (!complainObj.roleId || complainObj.roleId === 0))" class="text-red-600 text-sm">
+                    {{ getErrorMessage('roleId') }}
+                </span>
+            </div>
 
 
            <div class="mb-5">
   <label for="categoryEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
-    Category name in English
+    Category name in English *
   </label>
-  <input
+<input
   type="text"
   id="categoryEnglish"
   name="categoryEnglish"
   [(ngModel)]="complainObj.categoryEnglish"
+  required
+  #categoryEnglish="ngModel"
   (keydown)="blockLeadingSpace($event)"
   (input)="validateEnglish()"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
 />
+
+<span *ngIf="isFieldInvalid(categoryEnglish) && !complainObj.categoryEnglish" class="text-red-600 text-sm">
+  Category name in English is required.
+</span>
 
 </div>
 
 
          <div class="mb-5">
   <label for="categorySinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
-    Category name in Sinhala
-  </label>
- <input
+    Category name in Sinhala *
+  </label> 
+<input
   type="text"
   id="categorySinhala"
   name="categorySinhala"
   [(ngModel)]="complainObj.categorySinhala"
+  required
+  #categorySinhala="ngModel"
   (keydown)="blockLeadingSpace($event)"
   (keydown)="allowOnlySinhala($event)"
-
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+  class="mt-1 block w-full p-2 border  border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
 />
 
-</div>
+<span *ngIf="isFieldInvalid(categorySinhala) && !complainObj.categorySinhala" class="text-red-600 text-sm">
+  Category name in Sinhala is required.
+</span>
+
 
 
             <div class="mb-5">
-                <label for="categoryTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Category name in Tamil</label>
-                <input type="text" id="categoryTamil" name="categoryTamil" [(ngModel)]="complainObj.categoryTamil" [(ngModel)]="complainObj.categoryTamil"
+                <label for="categoryTamil" class="block text-sm font-medium text-textLight mt-5 dark:text-textDark">Category name in Tamil *</label>
+         <input
+  type="text"
+  id="categoryTamil"
+  name="categoryTamil"
+  [(ngModel)]="complainObj.categoryTamil"
+  required
+  #categoryTamil="ngModel"
   (keydown)="blockLeadingSpace($event)"
   (keydown)="allowOnlyTamil($event)"
+  class="mt-1 block w-full p-2 border border-gray-300  rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+/>
 
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"/>
-            </div>
+<span *ngIf="isFieldInvalid(categoryTamil) && !complainObj.categoryTamil" class="text-red-600 text-sm">
+  Category name in Tamil is required.
+</span>
 
-
-            <div class="mb-10">
-                <label for="appId" class="block text-sm font-medium text-textLight dark:text-textDark">Select Displaying application</label>
-                <select id="appId" name="appId" [(ngModel)]="complainObj.appId"
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-                    <option disabled selected [value]='0'>--select--</option>
-                    <option *ngFor="let item of appsArr" [value]="item.id">{{ item.appName}}</option>
+<div class="mb-10">
+                <label for="appId" class="block text-sm font-medium text-textLight mt-5 dark:text-textDark">
+                    Select Displaying application *
+                </label>
+                <select
+                    id="appId"
+                    name="appId"
+                    [(ngModel)]="complainObj.appId"
+                    required
+                    #appId="ngModel"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                >
+                    <option disabled [value]="0">--select--</option>
+                    <option *ngFor="let item of appsArr" [value]="item.id">{{ item.appName }}</option>
                 </select>
-
+                <span *ngIf="isFieldInvalid(appId) || (appId.touched && (!complainObj.appId || complainObj.appId === 0))" class="text-red-600 text-sm">
+                    {{ getErrorMessage('appId') }}
+                </span>
             </div>
 
             <div class="flex flex-row items-center justify-end gap-5 mb-5 ">

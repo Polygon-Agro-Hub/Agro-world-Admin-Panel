@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface AdditionalItem {
   id: number;
@@ -58,11 +59,12 @@ interface PackageItem {
 @Component({
   selector: 'app-todo-define-premade-packages',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [ CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule ],
   templateUrl: './todo-define-premade-packages.component.html',
   styleUrl: './todo-define-premade-packages.component.css',
 })
 export class TodoDefinePremadePackagesComponent implements OnInit {
+
   orderdetailsArr: OrderDetails[] = [];
   excludeItemsArr: ExcludeItems[] = [];
   orderDetails: OrderDetailItem[] = [];
@@ -80,6 +82,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   showExcludedItemsModal = false;
   isNewAddPopUp: boolean = false
   excludedItemsCount!: number;
+  additionalItemsCount!: number;
 
 
   totalDefinePkgPrice: number = 0.00;
@@ -96,12 +99,31 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
   constructor(
     private procurementService: ProcumentsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
-  goBack() {
-    window.history.back();
-  }
+  goBack(): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Only go back if user confirms
+      window.history.back();
+    }
+    // If user clicks "No" or dismisses, the modal will automatically close
+  });
+}
 
   ngOnInit() {
     this.recalculatePackageTotal();
@@ -125,7 +147,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     });
 
   }
-
+isExcluded(product: MarketplaceItem): boolean {
+  return product.isExcluded;
+}
   onSelectionChange() {
     console.log('Selected option:', this.selectedOption);
     // Add any additional logic here
@@ -181,6 +205,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
         this.excludeItemsArr = response.excludeList;
         this.excludedItemsCount = response.excludeList.length;
         this.categories = response.category;
+        this.additionalItemsCount = response.additionalItems.length || 0;
 
 
         console.log('orderdetailsArr', this.orderdetailsArr);
@@ -249,7 +274,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       item.isExcluded = false; // fallback
     }
 
-    console.log(item.price);
+    console.log('price', item.price);
 
     this.recalculatePackageTotal();
   }
@@ -361,60 +386,65 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     return allowedLimit.toFixed(2);
   }
 
-  async onComplete() {
-    console.log('orderdetailsArr', this.orderdetailsArr);
-    this.loading = true;
+  onComplete() {
+  console.log('orderdetailsArr', this.orderdetailsArr);
+  this.loading = true;
 
-    const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
-      return pkg.items.some((item, itemIndex) => {
-        console.log(`Package ${pkgIndex}, Item ${itemIndex}, productId:`, item.productId, 'Type:', typeof item.productId);
-
-        return (
-          item.productId === null ||
-          item.productId === undefined ||
-          item.productId === null ||
-          item.qty === 0 ||
-          Number.isNaN(item.productId)
-        );
-      });
+  const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+    return pkg.items.some((item, itemIndex) => {
+      return (
+        item.productId === null ||
+        item.productId === undefined ||
+        item.productId === null ||
+        item.qty === 0 ||
+        Number.isNaN(item.productId)
+      );
     });
+  });
 
-    const hasExcludeProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
-      return pkg.items.some((item, itemIndex) => {
-        console.log(`Package ${pkgIndex}, Item ${itemIndex}, productId:`, item.productId, 'Type:', typeof item.productId);
-
-        return (
-          item.isExcluded === true
-        );
-      });
+  const hasExcludeProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+    return pkg.items.some((item, itemIndex) => {
+      return item.isExcluded === true;
     });
+  });
 
-    console.log('hasInvalidProduct', hasInvalidProduct);
-
-
-    if (hasInvalidProduct) {
-      this.loading = false;
-      Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
-      return;
-    } else if (hasExcludeProduct) {
-      this.loading = false;
-      Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
-      return;
-    }
-
-    this.procurementService.updateDefinePackageItemData(this.orderdetailsArr).subscribe(
-      (res) => {
-        this.loading = false;
-        console.log('Updated successfully:', res);
-        Swal.fire('Success', 'Product Updated Successfully', 'success');
-      },
-      (err) => {
-        this.loading = false;
-        console.error('Update failed:', err);
-        Swal.fire('Error', 'Product Update Unsuccessful', 'error');
-      }
-    );
+  if (hasInvalidProduct) {
+    this.loading = false;
+    Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
+    return;
+  } else if (hasExcludeProduct) {
+    this.loading = false;
+    Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
+    return;
   }
+
+  this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
+    (res) => {
+      this.loading = false;
+      console.log('Updated successfully:', res);
+      
+      // Show success message and redirect to sent tab
+      Swal.fire({
+        title: 'Success!',
+        text: 'Order has been successfully dispatched',
+        icon: 'success',
+        confirmButtonColor: '#3980C0',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect to define-packages component with sent tab
+          this.router.navigate(['/procurement/define-packages'], {
+            queryParams: { tab: 'sent' }
+          });
+        }
+      });
+    },
+    (err) => {
+      this.loading = false;
+      console.error('Update failed:', err);
+      Swal.fire('Error', 'Product Update Unsuccessful', 'error');
+    }
+  );
+}
 
 
   private getErrorMessage(error: any): string {
@@ -496,10 +526,10 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   closeAddNewItemPopUp() {
-    this.isNewAddPopUp = false;
-    this.selectPackageId = '';
-
-  }
+  this.isNewAddPopUp = false;
+  this.selectPackageId = '';
+  this.selectCategoryId = ''; // Add this line to clear the dropdown
+}
 
   addNewItems() {
     // Find the order detail that matches the selected packageId
@@ -547,18 +577,78 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   validateQuantity(item: any) {
-  // Ensure quantity is not negative
-  if (item.qty < 0) {
-    item.qty = 0;
+    // Ensure quantity is not negative
+    if (item.qty < 0) {
+      item.qty = 0;
+    }
+    this.calculatePrice(item);
   }
-  this.calculatePrice(item);
+
+  preventNegativeInput(event: KeyboardEvent) {
+    // Prevent minus key (-) from being entered
+    if (event.key === '-' || event.key === 'Subtract') {
+      event.preventDefault();
+    }
+  }
+
+  goToCompleteTab() {
+    this.router.navigate(['/procurement/define-packages'], {
+      queryParams: { tab: 'completed' }
+    });
+  }
+
+   confirmClear() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This will clear all your changes. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3980C0',
+      cancelButtonColor: '#74788D',
+      confirmButtonText: 'Yes, clear it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.clearForm();
+      }
+    });
+  }
+
+  confirmComplete() {
+  // Only show confirmation if within limit
+  if (!this.isWithinLimit) {
+    return;
+  }
+  
+  Swal.fire({
+    title: 'Send to Dispatch',
+    text: 'Are you sure you want to send this order to dispatch?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#3980C0',
+    cancelButtonColor: '#74788D',
+    confirmButtonText: 'Yes, send to dispatch!',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.onComplete(); // This should call onComplete, not completeOrder
+    }
+  });
 }
 
-preventNegativeInput(event: KeyboardEvent) {
-  // Prevent minus key (-) from being entered
-  if (event.key === '-' || event.key === 'Subtract') {
-    event.preventDefault();
+  clearForm() {
+    // Implement your clear logic here
+    // For now, just calling ngOnInit as in your original code
+    this.ngOnInit();
   }
+
+  onCancelClick() {
+  this.selectCategoryId = ''; // Clear the dropdown selection
+  this.closeAddNewItemPopUp(); // Close the popup
 }
 
 

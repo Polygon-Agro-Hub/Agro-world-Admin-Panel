@@ -15,6 +15,7 @@ interface FixedBuildingAsset {
   generalCondition: string;
   district: string;
   createdAt: any;
+  buildingfixedassetId: number;
 }
 
 @Component({
@@ -26,31 +27,35 @@ interface FixedBuildingAsset {
 })
 export class BuildingFixedAssetComponent {
   isLoading = false;
-  itemId: any | null = null;
+  userId!: number;
   category: string | null = null;
   fullName: string | null = null;
   fixedAssetB: FixedBuildingAsset[] = [];
   hasData: boolean = true;
+  farmName: string | null = null;
+  farmId!: number;
 
   constructor(
     private assetsService: AssetsService,
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.itemId = params['id'] ? +params['id'] : null;
+      this.userId = +params['userId'];
+      this.farmId = +params['farmId'];
       this.category = params['category'] || null;
+      this.farmName = params['farmName'] || null;
       this.fullName = params['fullName'] || null;
     });
-    this.assetsBuilding(this.itemId, this.category);
+    this.assetsBuilding(this.userId, this.category, this.farmId);
   }
 
-  assetsBuilding(itemId: number, category: any) {
+  assetsBuilding(userId: number, category: any, farmId: number) {
     this.isLoading = true;
-    this.assetsService.getAllBuildingFixedAsset(itemId, category).subscribe(
+    this.assetsService.getAllBuildingFixedAsset(userId, category, farmId).subscribe(
       (response) => {
         this.isLoading = false;
         this.fixedAssetB = response;
@@ -60,5 +65,16 @@ export class BuildingFixedAssetComponent {
         this.isLoading = false;
       }
     );
+  }
+
+  viewFixedAssetOwnershipDetails(buildingfixedassetId: number) {
+    this.router.navigate(['/plant-care/action/assets/fixed-asset-category/building-fixed-asset/details'], {
+      queryParams: {
+        buildingfixedassetId: buildingfixedassetId,
+        fullName: this.fullName,
+        farmName: this.farmName,
+        category: this.category
+      },
+    });
   }
 }

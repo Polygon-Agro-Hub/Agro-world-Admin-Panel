@@ -27,6 +27,7 @@ export class AssignCenterTargetComponent {
   hasData: boolean = false;
   isLoading = false;
 
+dateError: boolean = false;
   selectDate: Date | null = new Date();
 
   constructor(private TargetSrv: TargetService) {}
@@ -35,12 +36,25 @@ export class AssignCenterTargetComponent {
     this.fetchSavedCenterCrops();
   }
 
-  onDateChange(date: Date | null) {
-    this.selectDate = date;
-    console.log('selectDate:', this.selectDate);
+onDateChange(event: any) {
+  if (!event) {
+    this.selectDate = null; // Clear the date
+    this.dateError = true;
+  } else {
+    this.dateError = false;
     this.fetchSavedCenterCrops();
+    // your existing logic for fetching data
   }
+}
 
+
+checkDateSelection() {
+  if (!this.selectDate) {
+    this.dateError = true;
+  } else {
+    this.dateError = false;
+  }
+}
   fetchSavedCenterCrops() {
     this.isLoading = true;
   
@@ -67,6 +81,7 @@ export class AssignCenterTargetComponent {
       this.isNew = res.result.isNew;
       this.companyCenterId = res.companyCenterId;
       this.hasData = res.result.data.length > 0;
+      console.log('hasData', this.hasData)
     });
   }
   
@@ -96,14 +111,66 @@ export class AssignCenterTargetComponent {
   
 
   onSearch() {
+    if (this.searchText) {
+      this.searchText = this.searchText.trimStart();
+    }
     this.fetchSavedCenterCrops();
   }
+
   offSearch() {
     this.searchText = '';
     this.fetchSavedCenterCrops();
   }
 
   saveGrade(grade: string, item: any, qty: number, editId: number | null) {
+    this.isLoading = true;
+    if (grade === 'A') {
+      if (item.targetA < item.preValueA) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Input',
+          html: 'Updated target cannot be less than the initially added target',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
+      
+
+    } else if (grade === 'B') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Input',
+        html: 'Updated target cannot be less than the initially added target',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    } else {
+      if (item.targetC < item.preValueC) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Input',
+          html: 'Updated target cannot be less than the initially added target',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
+    }
+
     let data = {
       id: editId,
       qty: qty,
@@ -116,6 +183,7 @@ export class AssignCenterTargetComponent {
     this.TargetSrv.updateTargetQty(data).subscribe(
       (res) => {
         if (res.status) {
+          this.isLoading = false;
           Swal.fire({
             icon: 'success',
             title: 'Success!',
@@ -146,10 +214,31 @@ export class AssignCenterTargetComponent {
     );
   }
 
+  allowOnlyDigits(event: KeyboardEvent): void {
+    const charCode = event.key.charCodeAt(0);
+  
+    // Allow only 0-9
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+  
+  removeLeadingZeros(item: any): void {
+    if (item.targetB) {
+      item.targetB = item.targetB.replace(/^0+/, ''); // remove leading zeros
+    }
+  }
+
   validateForm() {
     this.isFormValid = this.assignCropsArr.some(
       (crop) => crop.targetA > 0 || crop.targetB > 0 || crop.targetC > 0
     );
+  }
+
+  pressEditIcon(item: AssignCrops, grade: string) {
+    if (grade === 'A') item.preValueA = item.targetA;
+    if (grade === 'B') item.preValueB = item.targetB;
+    if (grade === 'C') item.preValueC = item.targetC;
   }
 
   onCancel() {
@@ -234,6 +323,9 @@ class AssignCrops {
   idA: number | null = null;
   idB: number | null = null;
   idC: number | null = null;
+  preValueA!: number;
+  preValueB!: number;
+  preValueC!: number;
 }
 
 class NewTarget {

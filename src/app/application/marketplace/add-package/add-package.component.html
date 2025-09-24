@@ -79,13 +79,13 @@
             Total Package Price (Rs.)*
           </label>
           <input type="number" min="0" step="0.01" name="productPrice" 
-            [(ngModel)]="packageObj.productPrice"
-            (change)="calculateApproximatedPrice()" 
-            (blur)="onProductPriceBlur()"
-            (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)" 
-            placeholder="Enter Amount"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  [(ngModel)]="packageObj.productPrice"
+  (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'productPrice')" 
+  (blur)="onProductPriceBlur(); validateDecimalInput($event, 'productPrice')"
+  (input)="preventNegative($event)"
+  (keypress)="allowDecimalNumbers($event)" 
+  placeholder="Enter Amount"
+  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowProductPriceError" class="text-red-500 text-sm mt-1">
             Total Package Price must be greater than 0
           </div> -->
@@ -96,13 +96,13 @@
             Packaging Fee (Rs.)*
           </label>
           <input type="number" min="0" step="0.01" name="packageFee" 
-            [(ngModel)]="packageObj.packageFee"
-            (change)="calculateApproximatedPrice()" 
-            (blur)="onPackageFeeBlur()"
-            (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)" 
-            placeholder="Enter Amount"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  [(ngModel)]="packageObj.packageFee"
+  (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'packageFee')" 
+  (blur)="onPackageFeeBlur(); validateDecimalInput($event, 'packageFee')"
+  (input)="preventNegative($event)"
+  (keypress)="allowDecimalNumbers($event)" 
+  placeholder="Enter Amount"
+  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowPackageFeeError" class="text-red-500 text-sm mt-1">
             Packaging Fee cannot be negative
           </div> -->
@@ -113,13 +113,13 @@
             Service Fee (Rs.) *
           </label>
           <input type="number" min="0" step="0.01" name="serviceFee" 
-            [(ngModel)]="packageObj.serviceFee"
-            (change)="calculateApproximatedPrice()" 
-            (blur)="onServiceFeeBlur()"
-            (input)="preventNegative($event)"
-            (keypress)="allowDecimalNumbers($event)" 
-            placeholder="Enter Amount"
-            class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+  [(ngModel)]="packageObj.serviceFee"
+  (change)="calculateApproximatedPrice(); validateDecimalInput($event, 'serviceFee')" 
+  (blur)="onServiceFeeBlur(); validateDecimalInput($event, 'serviceFee')"
+  (input)="preventNegative($event)"
+  (keypress)="allowDecimalNumbers($event)" 
+  placeholder="Enter Amount"
+  class="w-full border border-[#D9D9D9] dark:border-gray-600 rounded-md px-3 py-2 text-black dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="shouldShowServiceFeeError" class="text-red-500 text-sm mt-1">
             Service Fee cannot be negative
           </div> -->

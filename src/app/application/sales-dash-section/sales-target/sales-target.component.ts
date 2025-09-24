@@ -61,9 +61,27 @@ export class SalesTargetComponent implements OnInit {
     private router: Router
   ) { }
 
+
+
   back(): void {
-    this.router.navigate(['sales-dash']);
-  }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the added data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+       customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/sales-dash']);
+    }
+  });
+}
+
 
   toggleCalendar() {
     this.calendar.overlayVisible = !this.calendar.overlayVisible;
@@ -74,6 +92,22 @@ export class SalesTargetComponent implements OnInit {
     this.fetchAllSalesAgents();
   }
 
+  blockFirstSpace(event: KeyboardEvent) {
+ const inputEl = event.target as HTMLInputElement;
+  const cursorPos = inputEl.selectionStart || 0;
+
+  // Prevent space if:
+  // 1. Input is empty (no leading space)
+  // 2. Previous character is space (no consecutive spaces)
+  if (
+    event.key === ' ' &&
+    (cursorPos === 0 || inputEl.value.charAt(cursorPos - 1) === ' ')
+  ) {
+    event.preventDefault();
+  }
+}
+
+
   futureDateValidator(control: any) {
     const selectedDate = new Date(control.value);
     const today = new Date();
@@ -83,77 +117,90 @@ export class SalesTargetComponent implements OnInit {
   }
 
   saveTarget() {
-    this.isLoading = true;
-    // First validate the input
-    this.validateTargetInput();
+  this.isLoading = true;
+  // First validate the input
+  this.validateTargetInput();
 
-    // Check for invalid values (0, empty, or NaN)
-    if (
-      !this.newTargetValue ||
-      this.newTargetValue <= 0 ||
-      isNaN(this.newTargetValue)
-    ) {
-      Swal.fire({
-        title: 'Invalid Target',
-        text: 'Target value must be greater than 0. Please enter a valid target.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
-      this.isLoading = false;
-      return; // Exit the function early
-    }
-
-    // Only proceed with save if value is valid
+  // Check for invalid values (0, empty, or NaN)
+  if (
+    !this.newTargetValue ||
+    this.newTargetValue <= 0 ||
+    isNaN(this.newTargetValue)
+  ) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `Do you want to save the target of ${this.newTargetValue}?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Save it!',
-      cancelButtonText: 'Cancel',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
-          (response) => {
-            if (response.status) {
-              Swal.fire({
-                title: 'Success!',
-                text: response.message,
-                icon: 'success',
-                confirmButtonText: 'OK',
-              });
-              this.newTargetValue = 0;
-              this.fetchAllSalesAgents();
-              this.isLoading = false;
-            } else {
-              Swal.fire({
-                title: 'Error!',
-                text: response.message,
-                icon: 'error',
-                confirmButtonText: 'OK',
-              });
-              this.isLoading = false;
-            }
-          },
-          (error) => {
-            console.error('Error saving target:', error);
+      title: 'Invalid Target',
+      text: 'Please Add a Target',
+      icon: 'error',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    this.isLoading = false;
+    return; // Exit the function early
+  }
+
+  // Only proceed with save if value is valid
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `Do you want to save the target of ${this.newTargetValue}?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Save it!',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.salesDashSrv.saveTarget(this.newTargetValue).subscribe(
+        (response) => {
+          if (response.status) {
             Swal.fire({
-              title: 'Failed!',
-              text: 'Failed to save target.',
+              title: 'Success!',
+              text: response.message,
+              icon: 'success',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
+            // Only reset the value on successful save
+            this.newTargetValue = 0;
+            this.fetchAllSalesAgents();
+            this.isLoading = false;
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: response.message,
               icon: 'error',
               confirmButtonText: 'OK',
             });
             this.isLoading = false;
           }
-        );
-      } else {
-        // Add this else block to clear the input when canceled
-        this.newTargetValue = 0;
-        this.isLoading = false;
-      }
-    });
-  }
+        },
+        (error) => {
+          console.error('Error saving target:', error);
+          Swal.fire({
+            title: 'Failed!',
+            text: 'Failed to save target.',
+            icon: 'error',
+            confirmButtonText: 'OK',
+          });
+          this.isLoading = false;
+        }
+      );
+    } else {
+      // REMOVED: this.newTargetValue = 0;
+      // Just set isLoading to false without clearing the input
+      this.isLoading = false;
+    }
+  });
+}
 
   formatAgentCount(): string {
     return this.agentCount < 10 ? '0' + this.agentCount : this.agentCount.toString();
@@ -263,27 +310,46 @@ export class SalesTargetComponent implements OnInit {
   
 
   preventDecimalInput(event: KeyboardEvent) {
-    const forbiddenKeys = ['.', ',', 'e', 'E', '+', '-'];
-    if (forbiddenKeys.includes(event.key)) {
-      event.preventDefault();
-    }
+  const input = event.target as HTMLInputElement;
+  const forbiddenKeys = ['.', ',', 'e', 'E', '+', '-'];
+  
+  // Prevent decimal and other forbidden characters
+  if (forbiddenKeys.includes(event.key)) {
+    event.preventDefault();
+    return;
   }
+  
+  // Prevent zero as first character
+  if (event.key === '0' && input.value.length === 0) {
+    event.preventDefault();
+  }
+}
 
   validateTargetInput() {
-    // If value is not a number, set to 0
-    if (isNaN(this.newTargetValue)) {
-      this.newTargetValue = '';
-      return;
-    }
-
-    // Round to nearest integer
-    this.newTargetValue = Math.round(this.newTargetValue);
-
-    // Ensure minimum value of 1
-    if (this.newTargetValue < 1) {
-      this.newTargetValue = '';
-    }
+  // If value is not a number, set to empty
+  if (isNaN(this.newTargetValue)) {
+    this.newTargetValue = '';
+    return;
   }
+
+  // Remove leading zeros
+  if (this.newTargetValue.toString().startsWith('0')) {
+    this.newTargetValue = this.newTargetValue.toString().replace(/^0+/, '');
+  }
+
+  // If empty after removing zeros, set to empty
+  if (this.newTargetValue === '') {
+    return;
+  }
+
+  // Round to nearest integer
+  this.newTargetValue = Math.round(this.newTargetValue);
+
+  // Ensure minimum value of 1
+  if (this.newTargetValue < 1) {
+    this.newTargetValue = '';
+  }
+}
 
   // get formControls(): { [key: string]: any } {
   //   return this.targetForm.controls;

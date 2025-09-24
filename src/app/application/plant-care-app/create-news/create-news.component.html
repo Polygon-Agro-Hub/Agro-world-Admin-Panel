@@ -7,84 +7,51 @@
   </button>
 
   <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-    <h2
-      class="text-2xl mb-6 text-center text-textLight dark:text-textDark font-bold"
-    >
+    <h2 class="text-2xl mb-6 text-center text-textLight dark:text-textDark font-bold">
       NEWS
     </h2>
 
     <div class="flex justify-between mb-10">
       <div>
-        <label
-          for="sinhalaCropName"
-          class="text-sm font-medium text-textLight dark:text-textDark"
-          >Publish Date <span class="text-[#2E2E2E]">*</span></label
-        >
-        <input
-          [(ngModel)]="createNewsObj.publishDate"
-          id="createdDateFilter"
-          type="date"
+        <label for="sinhalaCropName" class="text-sm font-medium text-textLight dark:text-textDark">Publish Date <span
+            class="text-[#2E2E2E]">*</span></label>
+        <input [(ngModel)]="createNewsObj.publishDate" id="createdDateFilter" type="date"
           class="w-64 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
-          (change)="checkPublishDate(); checkPublishExpireDate()"
-        />
+          (change)="checkPublishDate(); checkPublishExpireDate()" />
         <div *ngIf="!isPublishAfterExpireValid" class="text-red-500">
           Publish Date cannot be later than Expiry Date.
         </div>
       </div>
       <div>
-        <label
-          for="sinhalaCropName"
-          class="text-sm font-medium text-textLight dark:text-textDark"
-          >Expires on <span class="text-[#2E2E2E]">*</span></label
-        >
-        <input
-          [(ngModel)]="createNewsObj.expireDate"
-          id="createdDateFilter"
-          type="date"
+        <label for="sinhalaCropName" class="text-sm font-medium text-textLight dark:text-textDark">Expires on <span
+            class="text-[#2E2E2E]">*</span></label>
+        <input [(ngModel)]="createNewsObj.expireDate" id="createdDateFilter" type="date"
           class="w-64 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
-          [min]="createNewsObj.publishDate || today"
-          (change)="checkExpireDate()"
-        />
+          [min]="createNewsObj.publishDate || today" (change)="checkExpireDate()" />
       </div>
     </div>
 
     <div>
       <div class="mb-4">
-        <label
-          for="titleEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
           Add Title (In English) <span class="text-[#2E2E2E]">*</span>
         </label>
-        <input
-          type="text"
-          id="titleEnglish"
-          [(ngModel)]="createNewsObj.titleEnglish"
-          (ngModelChange)="onEnglishTitleChange($event)"
-          (blur)="onEnglishTitleBlur($event)"
+        <input type="text" id="titleEnglish" [(ngModel)]="createNewsObj.titleEnglish"
+          (ngModelChange)="onEnglishTitleChange($event)" (blur)="onEnglishTitleBlur($event)"
           (keydown)="preventLeadingSpace($event, 'titleEnglish')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [ngClass]="{ 'border-red-500': !isEnglishValid }"
-        />
+          [ngClass]="{ 'border-red-500': !isEnglishValid }" />
       </div>
 
       <div class="mb-4">
-        <label
-          for="descriptionEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Add Description (In English)
-          <span class="text-[#2E2E2E]">*</span></label
-        >
+        <label for="descriptionEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Add
+          Description (In English)
+          <span class="text-[#2E2E2E]">*</span></label>
         <div class="custom-editor">
-          <quill-editor
-            [(ngModel)]="createNewsObj.descriptionEnglish"
-            [styles]="{ height: '300px' }"
-            [modules]="quillConfig"
-            placeholder="Enter text here..."
-            class="text-textLight dark:text-textDark w-full text-lg"
-            #descriptionEnglishField="ngModel"
-            [required]="true"
-          ></quill-editor>
+          <quill-editor [(ngModel)]="createNewsObj.descriptionEnglish" [styles]="{ height: '300px' }"
+            [modules]="quillConfig" placeholder="Enter text here..."
+            class="text-textLight dark:text-textDark w-full text-lg" #descriptionEnglishField="ngModel"
+            [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
       </div>
     </div>
@@ -93,40 +60,23 @@
 
     <div>
       <div class="mb-4">
-        <label
-          for="titleSinhala"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="titleSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
           Add Title (In Sinhala) <span class="text-[#2E2E2E]">*</span>
         </label>
-        <input
-          type="text"
-          id="titleSinhala"
-          [(ngModel)]="createNewsObj.titleSinhala"
-          (ngModelChange)="onSinhalaTitleChange($event)"
-          (keydown)="preventLeadingSpace($event, 'titleSinhala')"
+        <input type="text" id="titleSinhala" [(ngModel)]="createNewsObj.titleSinhala"
+          (ngModelChange)="onSinhalaTitleChange($event)" (keydown)="preventLeadingSpace($event, 'titleSinhala')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [ngClass]="{ 'border-red-500': !isSinhalaValid }"
-        />
+          [ngClass]="{ 'border-red-500': !isSinhalaValid }" />
       </div>
 
       <div class="mb-4">
-        <label
-          for="descriptionSinhala"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Add Description (In Sinhala)
-          <span class="text-[#2E2E2E]">*</span></label
-        >
+        <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Add
+          Description (In Sinhala)
+          <span class="text-[#2E2E2E]">*</span></label>
         <div class="custom-editor">
-          <quill-editor
-            [(ngModel)]="createNewsObj.descriptionSinhala"
-            [styles]="{ height: '300px', fontSize: '16px' }"
-            [modules]="quillConfig"
-            placeholder="Enter text here..."
-            class="text-textLight dark:text-textDark w-full"
-            #descriptionEnglishField="ngModel"
-            [required]="true"
-          ></quill-editor>
+          <quill-editor [(ngModel)]="createNewsObj.descriptionSinhala" [styles]="{ height: '300px', fontSize: '16px' }"
+            [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
       </div>
     </div>
@@ -135,96 +85,53 @@
 
     <div>
       <div class="mb-4">
-        <label
-          for="titleTamil"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="titleTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
           Add Title (In Tamil) <span class="text-[#2E2E2E]">*</span>
         </label>
-        <input
-          type="text"
-          id="titleTamil"
-          [(ngModel)]="createNewsObj.titleTamil"
-          (ngModelChange)="onTamilTitleChange($event)"
-          (keydown)="preventLeadingSpace($event, 'titleTamil')"
+        <input type="text" id="titleTamil" [(ngModel)]="createNewsObj.titleTamil"
+          (ngModelChange)="onTamilTitleChange($event)" (keydown)="preventLeadingSpace($event, 'titleTamil')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [ngClass]="{ 'border-red-500': !isTamilValid }"
-        />
+          [ngClass]="{ 'border-red-500': !isTamilValid }" />
       </div>
 
       <div class="mb-4">
-        <label
-          for="descriptionTamil"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Add Description (In Tamil)
-          <span class="text-[#2E2E2E]">*</span></label
-        >
+        <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Add
+          Description (In Tamil)
+          <span class="text-[#2E2E2E]">*</span></label>
         <div class="custom-editor">
-          <quill-editor
-            [(ngModel)]="createNewsObj.descriptionTamil"
-            [styles]="{ height: '300px', fontSize: '16px' }"
-            [modules]="quillConfig"
-            placeholder="Enter text here..."
-            class="text-textLight dark:text-textDark w-full"
-            #descriptionEnglishField="ngModel"
-            [required]="true"
-          ></quill-editor>
+          <quill-editor [(ngModel)]="createNewsObj.descriptionTamil" [styles]="{ height: '300px', fontSize: '16px' }"
+            [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
       </div>
     </div>
 
     <!-- Hidden file input -->
-    <input
-      type="file"
-      id="imageUpload"
-      accept="image/*"
-      class="hidden text-textLight dark:text-textDark"
-      (change)="onFileSelected($event)"
-    />
+    <input type="file" id="imageUpload" accept="image/*" class="hidden text-textLight dark:text-textDark"
+      (change)="onFileSelected($event)" />
 
     <!-- Button -->
-    <button
-      class="flex items-center text-textLight dark:text-textDark"
-      (click)="triggerFileInput()"
-    >
+    <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput()">
       Add Image
       <span
-        class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-green-500 font-bold"
-      >
+        class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-green-500 font-bold">
         <i class="fa-solid fa-plus" style="color: #4a90e2"></i>
       </span>
     </button>
 
-    <div
-      *ngIf="selectedFileName"
-      class="mt-2 text-textLight dark:text-textDark"
-    >
+    <div *ngIf="selectedFileName" class="mt-2 text-textLight dark:text-textDark">
       {{ selectedFileName }}
-      <div
-        class="w-full h-72 py-5 mt-2 content-center flex justify-center border"
-      >
-        <img
-          [src]="selectedImage"
-          alt="News Iamge"
-          class="max-w-full w-auto object-contain"
-        />
+      <div class="w-full h-72 py-5 mt-2 content-center flex justify-center border">
+        <img [src]="selectedImage" alt="News Iamge" class="max-w-full w-auto object-contain" />
       </div>
     </div>
 
     <div class="flex justify-end mt-6">
       <div class="w-[20px]"></div>
-      <button
-        type="button"
-        class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2"
-        (click)="onCancel()"
-      >
+      <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button
-        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        type="button"
-        (click)="createNews()"
-      >
+      <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md" type="button" (click)="createNews()">
         Save
       </button>
     </div>
@@ -232,112 +139,67 @@
 </div>
 
 <div *ngIf="itemId != null">
-  <button (click)="backEdit()" class="mb-5 text-textLight dark:text-textDark">
+  <button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
 
   <div class="mx-auto p-6 rounded-lg shadow-md bg-tileLight dark:bg-tileBlack">
-    <h2
-      class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark"
-    >
+    <h2 class="text-2xl font-bold mb-6 text-center text-textLight dark:text-textDark">
       EDIT NEWS
     </h2>
 
     <div class="flex justify-between mb-10">
       <div>
-        <label
-          for="sinhalaCropName"
-          class="text-sm font-medium text-textLight dark:text-textDark"
-          >Publish Date <span class="text-[#2E2E2E]">*</span></label
-        >
-        <input
-          [(ngModel)]="newsItems[0].expireDate"
-          id="createdDateFilter"
-          type="date"
+        <label for="sinhalaCropName" class="text-sm font-medium text-textLight dark:text-textDark">Publish Date <span
+            class="text-[#2E2E2E]">*</span></label>
+        <input [(ngModel)]="newsItems[0].expireDate" id="createdDateFilter" type="date"
           class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
-          [min]="(newsItems[0] && newsItems[0].publishDate) || today"
-          (change)="checkExpireDateEditNews()"
-        />
+          [min]="(newsItems[0] && newsItems[0].publishDate) || today" (change)="checkExpireDateEditNews()" />
         <div *ngIf="!isPublishAfterExpireValidEditNews" class="text-red-500">
           Publish Date cannot be later than Expiry Date.
         </div>
       </div>
       <div>
-        <label
-          for="sinhalaCropName"
-          class="text-sm font-medium text-textLight dark:text-textDark"
-          >Expires on <span class="text-[#2E2E2E]">*</span></label
-        >
-        <input
-          [(ngModel)]="newsItems[0].expireDate"
-          id="createdDateFilter"
-          type="date"
+        <label for="sinhalaCropName" class="text-sm font-medium text-textLight dark:text-textDark">Expires on <span
+            class="text-[#2E2E2E]">*</span></label>
+        <input [(ngModel)]="newsItems[0].expireDate" id="createdDateFilter" type="date"
           class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
-          (change)="checkExpireDateEditNews(); checkPublishExpireDateEditNews()"
-        />
+          (change)="checkExpireDateEditNews(); checkPublishExpireDateEditNews()" />
       </div>
     </div>
 
     <div>
       <div class="mb-4">
-        <label
-          for="titleEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="titleEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">
           Add Title (In English) <span class="text-[#2E2E2E]">*</span>
         </label>
-        <input
-          type="text"
-          id="titleEnglishEdit"
-          [(ngModel)]="newsItems[0].titleEnglish"
-          (ngModelChange)="onEnglishTitleChange($event)"
-          (blur)="onEnglishTitleBlur($event)"
+        <input type="text" id="titleEnglishEdit" [(ngModel)]="newsItems[0].titleEnglish"
+          (ngModelChange)="onEnglishTitleChange($event)" (blur)="onEnglishTitleBlur($event)"
           (keydown)="preventLeadingSpace($event, 'titleEnglish')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [ngClass]="{ 'border-red-500': !isEnglishValid }"
-          pattern=".*[a-zA-Z]+.*"
-          #titleEnglish="ngModel"
-          [required]="true"
-        />
-        <div
-          *ngIf="titleEnglish.invalid && titleEnglish.touched"
-          class="text-red-500"
-        >
+          [ngClass]="{ 'border-red-500': !isEnglishValid }" pattern=".*[a-zA-Z]+.*" #titleEnglish="ngModel"
+          [required]="true" />
+        <div *ngIf="titleEnglish.invalid && titleEnglish.touched" class="text-red-500">
           English title is required.
         </div>
-        <div
-          *ngIf="titleEnglish.errors?.['pattern'] && titleEnglish.touched"
-          class="text-red-500"
-        >
+        <div *ngIf="titleEnglish.errors?.['pattern'] && titleEnglish.touched" class="text-red-500">
           Title must contain English letters and not be only numbers.
         </div>
       </div>
 
       <div class="mb-4">
-        <label
-          for="descriptionEnglish"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Add Description (In English)
-          <span class="text-[#2E2E2E]">*</span></label
-        >
+        <label for="descriptionEnglish" class="block text-sm font-medium text-textLight dark:text-textDark">Add
+          Description (In English)
+          <span class="text-[#2E2E2E]">*</span></label>
         <div class="custom-editor">
-          <quill-editor
-            [(ngModel)]="newsItems[0].descriptionEnglish"
-            [styles]="{ height: '300px' }"
-            [modules]="quillConfig"
-            placeholder="Enter text here..."
-            class="text-textLight dark:text-textDark w-full"
-            #descriptionEnglishField="ngModel"
-            [required]="true"
-          ></quill-editor>
+          <quill-editor [(ngModel)]="newsItems[0].descriptionEnglish" [styles]="{ height: '300px' }"
+            [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
+            #descriptionEnglishField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
-        <p
-          *ngIf="
+        <p *ngIf="
             descriptionEnglishField.invalid && descriptionEnglishField.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
+          " class="text-red-500 text-sm mt-1">
           English Description is required.
         </p>
       </div>
@@ -347,61 +209,33 @@
 
     <div>
       <div class="mb-4">
-        <label
-          for="titleSinhala"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="titleSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">
           Add Title (In Sinhala) <span class="text-[#2E2E2E]">*</span>
         </label>
-        <input
-          type="text"
-          id="titleSinhalaEdit"
-          [(ngModel)]="newsItems[0].titleSinhala"
-          (ngModelChange)="onSinhalaTitleChange($event)"
-          (keydown)="preventLeadingSpace($event, 'titleSinhala')"
+        <input type="text" id="titleSinhalaEdit" [(ngModel)]="newsItems[0].titleSinhala"
+          (ngModelChange)="onSinhalaTitleChange($event)" (keydown)="preventLeadingSpace($event, 'titleSinhala')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [ngClass]="{ 'border-red-500': !isSinhalaValid }"
-          pattern=".*[\u0D80-\u0DFF]+.*"
-          #titleSinhala="ngModel"
-          required
-        />
-        <div
-          *ngIf="titleSinhala.invalid && titleSinhala.touched"
-          class="text-red-500"
-        >
+          [ngClass]="{ 'border-red-500': !isSinhalaValid }" pattern=".*[\u0D80-\u0DFF]+.*" #titleSinhala="ngModel"
+          required />
+        <div *ngIf="titleSinhala.invalid && titleSinhala.touched" class="text-red-500">
           Sinhala title is required.
         </div>
-        <div
-          *ngIf="titleSinhala.errors?.['pattern'] && titleSinhala.touched"
-          class="text-red-500"
-        >
+        <div *ngIf="titleSinhala.errors?.['pattern'] && titleSinhala.touched" class="text-red-500">
           Title must contain Sinhala letters and not be only numbers.
         </div>
       </div>
 
       <div class="mb-4">
-        <label
-          for="descriptionSinhala"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Add Description (In Sinhala)</label
-        >
+        <label for="descriptionSinhala" class="block text-sm font-medium text-textLight dark:text-textDark">Add
+          Description (In Sinhala)*</label>
         <div class="custom-editor">
-          <quill-editor
-            [(ngModel)]="newsItems[0].descriptionSinhala"
-            [styles]="{ height: '300px' }"
-            [modules]="quillConfig"
-            placeholder="Enter text here..."
-            class="text-textLight dark:text-textDark w-full"
-            #descriptionSinhalaField="ngModel"
-            [required]="true"
-          ></quill-editor>
+          <quill-editor [(ngModel)]="newsItems[0].descriptionSinhala" [styles]="{ height: '300px' }"
+            [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
+            #descriptionSinhalaField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
-        <p
-          *ngIf="
+        <p *ngIf="
             descriptionSinhalaField.invalid && descriptionSinhalaField.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
+          " class="text-red-500 text-sm mt-1">
           Sinhala Description is required.
         </p>
       </div>
@@ -411,60 +245,32 @@
 
     <div>
       <div class="mb-4">
-        <label
-          for="titleTamil"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="titleTamil" class="block text-sm font-medium text-textLight dark:text-textDark">
           Add Title (In Tamil) <span class="text-[#2E2E2E]">*</span>
         </label>
-        <input
-          type="text"
-          id="titleTamilEdit"
-          [(ngModel)]="newsItems[0].titleTamil"
-          (ngModelChange)="onTamilTitleChange($event)"
-          (keydown)="preventLeadingSpace($event, 'titleTamil')"
+        <input type="text" id="titleTamilEdit" [(ngModel)]="newsItems[0].titleTamil"
+          (ngModelChange)="onTamilTitleChange($event)" (keydown)="preventLeadingSpace($event, 'titleTamil')"
           class="mt-1 block w-full p-2 border border-gray-300 dark:border-[#4B555A] rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          [ngClass]="{ 'border-red-500': !isTamilValid }"
-          pattern=".*[\u0B80-\u0BFF]+.*"
-          #titleTamil="ngModel"
-          required
-        />
-        <p
-          *ngIf="titleTamil.invalid && titleTamil.touched"
-          class="text-red-500 text-sm mt-1"
-        >
+          [ngClass]="{ 'border-red-500': !isTamilValid }" pattern=".*[\u0B80-\u0BFF]+.*" #titleTamil="ngModel"
+          required />
+        <p *ngIf="titleTamil.invalid && titleTamil.touched" class="text-red-500 text-sm mt-1">
           Title must contain Tamil letters and not be only numbers.
         </p>
-        <div
-          *ngIf="titleTamil.errors?.['pattern'] && titleTamil.touched"
-          class="text-red-500"
-        >
+        <div *ngIf="titleTamil.errors?.['pattern'] && titleTamil.touched" class="text-red-500">
           Title must contain at least one Tamil character.
         </div>
       </div>
 
       <div class="mb-4">
-        <label
-          for="descriptionTamil"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Add Description (In Tamil)
-          <span class="text-[#2E2E2E]">*</span></label
-        >
+        <label for="descriptionTamil" class="block text-sm font-medium text-textLight dark:text-textDark">Add
+          Description (In Tamil)
+          <span class="text-[#2E2E2E]">*</span></label>
         <div class="custom-editor">
-          <quill-editor
-            [(ngModel)]="newsItems[0].descriptionTamil"
-            [styles]="{ height: '300px' }"
-            [modules]="quillConfig"
-            placeholder="Enter text here..."
-            class="text-textLight dark:text-textDark w-full"
-            #descriptionTamilField="ngModel"
-            [required]="true"
-          ></quill-editor>
+          <quill-editor [(ngModel)]="newsItems[0].descriptionTamil" [styles]="{ height: '300px' }"
+            [modules]="quillConfig" placeholder="Enter text here..." class="text-textLight dark:text-textDark w-full"
+            #descriptionTamilField="ngModel" [required]="true" (onEditorCreated)="onEditorCreated($event)"></quill-editor>
         </div>
-        <p
-          *ngIf="descriptionTamilField.invalid && descriptionTamilField.touched"
-          class="text-red-500 text-sm mt-1"
-        >
+        <p *ngIf="descriptionTamilField.invalid && descriptionTamilField.touched" class="text-red-500 text-sm mt-1">
           Tamil Description is required.
         </p>
       </div>
@@ -472,80 +278,42 @@
 
     <!-- Hidden file input -->
     <div class="mb-4" *ngIf="!newsItems[0]?.image && !selectedFile">
-      <button
-        class="flex items-center text-textLight dark:text-textDark"
-        (click)="triggerFileInput()"
-      >
+      <button class="flex items-center text-textLight dark:text-textDark" (click)="triggerFileInput()">
         Add New Image
         <span
-          class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-green-500 font-bold"
-        >
+          class="flex justify-center items-center w-6 h-6 ml-2 border border-[#4A90E2] rounded text-green-500 font-bold">
           <i class="fa-solid fa-plus" style="color: #4a90e2"></i>
         </span>
       </button>
     </div>
 
     <div *ngIf="newsItems[0]?.image || selectedFile" class="mb-4">
-      <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Image Preview</label
-      >
-      <div
-        class="w-full h-72 mt-2 content-center flex justify-center border relative"
-      >
-        <img
-          [src]="selectedFile ? selectedImage || '' : newsItems[0].image"
-          alt="Market Price Image"
-          class="max-w-full h-auto rounded-md object-contain w-80"
-        />
+      <label class="block text-sm font-medium text-textLight dark:text-textDark">Image Preview</label>
+      <div class="w-full h-72 mt-2 content-center flex justify-center border relative">
+        <img [src]="selectedFile ? selectedImage || '' : newsItems[0].image" alt="Market Price Image"
+          class="max-w-full h-auto rounded-md object-contain w-80" />
         <div class="absolute top-2 right-2 flex space-x-2">
-          <button
-            class="text-blue-500 hover:text-blue-700"
-            (click)="triggerFileInput()"
-          >
+          <button class="text-blue-500 hover:text-blue-700" (click)="triggerFileInput()">
             <i class="fas fa-edit"></i>
           </button>
-          <button
-            class="text-red-500 hover:text-red-700"
-            (click)="onDeleteImage()"
-          >
+          <button class="text-red-500 hover:text-red-700" (click)="onDeleteImage()">
             <i class="fas fa-trash-alt"></i>
           </button>
         </div>
       </div>
     </div>
 
-    <input
-      type="file"
-      id="imageUpload"
-      accept="image/*"
-      class="hidden"
-      (change)="onFileSelected($event)"
-    />
+    <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
     <div class="flex justify-end mt-6">
       <div class="w-[20px]"></div>
-      <button
-        type="button"
-        class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2"
-        (click)="onCancel()"
-      >
+      <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md mr-2" (click)="onCancel()">
         Cancel
       </button>
-      <button
-        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-        type="button"
-        (click)="
-          this.newsItems[0].titleEnglish &&
-            this.newsItems[0].descriptionEnglish &&
-            this.newsItems[0].titleSinhala &&
-            this.newsItems[0].descriptionSinhala &&
-            this.newsItems[0].titleTamil &&
-            this.newsItems[0].descriptionTamil &&
-            this.newsItems[0].publishDate &&
-            this.newsItems[0].expireDate &&
+      <button class="px-4 py-2 bg-[#3980C0] text-white rounded-md" type="button" (click)="
+          
             updateNews()
-        "
-      >
+        ">
         Save
       </button>
     </div>

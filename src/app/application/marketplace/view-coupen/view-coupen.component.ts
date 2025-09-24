@@ -39,7 +39,6 @@ export class ViewCoupenComponent implements OnInit {
   itemsPerPage: number = 10;
 
   Status = [{ name: 'Enabled' }, { name: 'Finished' }, { name: 'Disabled' }];
-
   Types = [
     { name: 'Percentage' },
     { name: 'Fixed Amount' },
@@ -60,25 +59,39 @@ export class ViewCoupenComponent implements OnInit {
     const status = this.selectedStatus?.name || '';
     const types = this.selectedType?.name || '';
     const search = this.searchText || '';
+    this.isLoading = true; // Show loading spinner
     this.hasData = true;
     this.marketSrv
       .getAllCoupen(page, limit, status, types, search)
-      .subscribe((res) => {
-        // console.log(res);
+      .subscribe(
+        (res) => {
+          this.coupenObj = res.items;
+          this.totalItems = res.total;
+          this.hasData = res.items.length > 0;
+         this.checkDelete = false; // always unchecked after fetch
 
-        this.hasData = res.items.length > 0;
-        this.coupenObj = res.items;
-        this.totalItems = res.total;
-        this.isLoading = false;
-      });
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching coupons:', error);
+          this.coupenObj = [];
+          this.totalItems = 0;
+          this.hasData = false;
+          this.checkDelete = false;
+          this.isLoading = false;
+          Swal.fire('Error', 'Failed to load coupons', 'error');
+        }
+      );
   }
 
   searchCode() {
+    this.page = 1; // Reset to first page on search
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
   clearSearch() {
     this.searchText = '';
+    this.page = 1; // Reset to first page on clear search
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
@@ -88,10 +101,12 @@ export class ViewCoupenComponent implements OnInit {
   }
 
   applyFilterStatus() {
+    this.page = 1; // Reset to first page on filter change
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
   applyFilterType() {
+    this.page = 1; // Reset to first page on filter change
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
@@ -107,12 +122,12 @@ export class ViewCoupenComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log('deeteID:', id);
-
+        this.isLoading = true;
         this.marketSrv.deleteCoupenById(id).subscribe(
           (data: boolean) => {
             if (data) {
               Swal.fire('Deleted!', 'The Coupon has been deleted.', 'success');
+              this.page = 1; // Reset to first page after deletion
               this.fetchAllCoupon(this.page, this.itemsPerPage);
             } else {
               Swal.fire(
@@ -120,15 +135,17 @@ export class ViewCoupenComponent implements OnInit {
                 'The coupon could not be deleted. Please try again later.',
                 'error'
               );
+              this.isLoading = false;
             }
           },
           (error: any) => {
-            console.error('Error deleting crop calendar:', error);
+            console.error('Error deleting coupon:', error);
             Swal.fire(
               'Error!',
-              'There was an error deleting the crop calendar.',
+              'There was an error deleting the coupon.',
               'error'
             );
+            this.isLoading = false;
           }
         );
       }
@@ -138,7 +155,7 @@ export class ViewCoupenComponent implements OnInit {
   deleteAllCoupon() {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this all coupen? This action cannot be undone.',
+      text: 'Do you really want to delete all Coupons? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -147,30 +164,34 @@ export class ViewCoupenComponent implements OnInit {
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         this.marketSrv.deleteAllCoupen().subscribe(
           (data: boolean) => {
             if (data) {
               Swal.fire(
                 'Deleted!',
-                'The Coupenes has been deleted.',
+                'All Coupons have been deleted.',
                 'success'
               );
+              this.page = 1; // Reset to first page after deletion
               this.fetchAllCoupon(this.page, this.itemsPerPage);
             } else {
               Swal.fire(
                 'Failed!',
-                'The Coupenes could not be deleted. Please try again later.',
+                'The Coupons could not be deleted. Please try again later.',
                 'error'
               );
+              this.isLoading = false;
             }
           },
           (error: any) => {
-            console.error('Error deleting crop calendar:', error);
+            console.error('Error deleting all coupons:', error);
             Swal.fire(
               'Error!',
-              'There was an error deleting the crop calendar.',
+              'There was an error deleting the coupons.',
               'error'
             );
+            this.isLoading = false;
           }
         );
       }
@@ -191,11 +212,8 @@ export class ViewCoupenComponent implements OnInit {
     const trimmedValue = originalValue.trimStart(); // Remove only leading spaces
 
     if (originalValue !== trimmedValue) {
-      // Update the model and input field
       this.searchText = trimmedValue;
       input.value = trimmedValue;
-
-      // Maintain cursor position after trimming
       const cursorPosition =
         input.selectionStart - (originalValue.length - trimmedValue.length);
       setTimeout(() => {

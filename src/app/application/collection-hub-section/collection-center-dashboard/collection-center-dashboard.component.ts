@@ -75,6 +75,11 @@ export class CollectionCenterDashboardComponent {
       `/collection-hub/add-daily-target/${this.centerId}/${this.centerNameObj.centerName}/${this.centerNameObj.regCode}`,
     ]);
   }
+  
+  navigateToCollectionHub(){
+    this.router.navigate([`/collection-hub/agro-world-centers`]);
+  }
+
 
   navigateToMarketPrice() {
     this.router.navigate([

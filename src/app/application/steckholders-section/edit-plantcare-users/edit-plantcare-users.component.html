@@ -6,26 +6,6 @@
 </button>
 
 <div *ngIf="itemId !== null && !isView">
-  <div class="h-[20px]"></div>
-
-add asterick mark like  First name space asterick mark
-
-Looking at your Angular form template, I can see you want to add asterisk marks to indicate required fields. You currently have the asterisk (*) at the beginning of some labels, but it sounds like you want "First name *" format instead of "*First Name".
-
-Updated Form Template with Asterisk Formatting
-Code 
-I've updated your form template to show asterisks after the field names (like "First Name *") instead of before them. Here are the key changes I made:
-
-Changed asterisk positioning: Moved from *First Name to First Name *
-Used styled span elements: Wrapped asterisks in <span class="text-red-500">*</span> to make them red and visually distinct
-Applied consistent formatting: All required fields now follow the same pattern
-The red asterisks will now appear after each required field label, making it clear to users which fields are mandatory. The asterisks use the same red color (text-red-500) as your validation error messages for consistency.
-
-
-
-5-hour limit reached ∙ resets 5:30 PM
-Upgrade
-
 
 <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
     <h2 class="text-2xl text-center mb-6 text-textLight dark:text-textDark">

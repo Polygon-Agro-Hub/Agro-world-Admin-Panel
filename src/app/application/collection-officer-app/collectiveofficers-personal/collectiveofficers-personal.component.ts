@@ -898,10 +898,10 @@ onLetterKeyPress(event: KeyboardEvent) {
   }
   
   // Allow all letters (\p{L}) and space (but not at the beginning), block numbers and special characters
-  const regex = /^[\p{L} ]$/u;
-  if (!regex.test(char)) {
-    event.preventDefault(); // block the key
-  }
+  // const regex = /^[\p{L} ]$/u;
+  // if (!regex.test(char)) {
+  //   event.preventDefault(); // block the key
+  // }
 }
 
 // Add this method to handle input events and remove leading spaces
@@ -1462,9 +1462,9 @@ preventSpecialCharacters(event: KeyboardEvent): void {
   }
 
   // Allow only letters (a-z, A-Z) and spaces elsewhere
-  if (!/[a-zA-Z\s]/.test(char)) {
-    event.preventDefault();
-  }
+  // if (!/[a-zA-Z\s]/.test(char)) {
+  //   event.preventDefault();
+  // }
 }
 
 

@@ -148,16 +148,27 @@ bankTouched: any;
   ) {}
 
   ngOnInit(): void {
-    this.loadBanks();
-    this.loadBranches();
-    this.getAllCompanies();
+  this.loadBanksAndBranches().then(() => {
     this.route.params.subscribe((params) => {
       if (params['id']) {
         this.itemId = +params['id'];
         this.loadDistributionHeadData(this.itemId);
       }
     });
-  }
+  });
+}
+
+loadBanksAndBranches(): Promise<void> {
+  return new Promise((resolve) => {
+    this.loadBanks();
+    this.loadBranches();
+    
+    // Wait a bit for data to load
+    setTimeout(() => {
+      resolve();
+    }, 200);
+  });
+}
 
     allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
@@ -277,63 +288,61 @@ fixPastedLeadingChars(event: Event, field: string) {
 
 
   loadDistributionHeadData(id: number): void {
-    this.isLoading = true;
-    this.distributionHubSrv.getDistributionHeadDetailsById(id).subscribe(
-      (res: any) => {
-        this.personalData = res.data;
+  this.isLoading = true;
+  this.distributionHubSrv.getDistributionHeadDetailsById(id).subscribe(
+    (res: any) => {
+      this.personalData = res.data;
 
-        // Remove 'DCH' prefix from empId if it exists
-        if (
-          this.personalData.empId &&
-          this.personalData.empId.startsWith('DCH')
-        ) {
-          this.personalData.empId = this.personalData.empId.substring(3);
-        }
+      // Remove 'DCH' prefix from empId if it exists
+      if (this.personalData.empId && this.personalData.empId.startsWith('DCH')) {
+        this.personalData.empId = this.personalData.empId.substring(3);
+      }
 
-        // Set dropdown values
-        if (res.data.companyId) {
-          this.getAllDistributedCenters(res.data.companyId);
-        }
+      // Set company data
+      if (res.data.companyId) {
+        this.getAllDistributedCenters(res.data.companyId);
+      }
 
-        // Set bank and branch if available
-        if (res.data.bankName) {
-          const bank = this.banks.find((b) => b.name === res.data.bankName);
-          if (bank) {
-            this.selectedBankId = bank.ID;
-            this.onBankChange();
+      // Set bank and branch - SIMPLIFIED VERSION
+      this.setBankAndBranch(res.data.bankName, res.data.branchName);
 
-            if (res.data.branchName) {
-              const branch = this.branches.find(
-                (b) => b.name === res.data.branchName
-              );
-              if (branch) {
-                this.selectedBranchId = branch.ID;
-              }
-            }
+      // Set other data
+      if (res.data.image) {
+        this.selectedImage = res.data.image;
+      }
+
+      this.empType = res.data.empType;
+      this.personalData.confirmAccNumber = res.data.accNumber;
+      this.checkDuplicatePhoneNumbers();
+      this.isLoading = false;
+    },
+    (error) => {
+      this.isLoading = false;
+      Swal.fire('Error', 'Failed to load distribution head data', 'error');
+    }
+  );
+}
+
+setBankAndBranch(bankName: string, branchName: string): void {
+  if (bankName) {
+    const bank = this.banks.find((b) => b.name === bankName);
+    if (bank) {
+      this.selectedBankId = bank.ID;
+      this.onBankChange();
+      
+      // After a short delay to ensure branches are loaded
+      setTimeout(() => {
+        if (branchName) {
+          const branch = this.branches.find((b) => b.name === branchName);
+          if (branch) {
+            this.selectedBranchId = branch.ID;
+            this.personalData.branchName = branch.name;
           }
         }
-
-        // Set image if available
-        if (res.data.image) {
-          this.selectedImage = res.data.image;
-        }
-
-        // Set employee type
-        this.empType = res.data.empType;
-        // Always set confirmAccNumber to the fetched accNumber
-        this.personalData.confirmAccNumber = res.data.accNumber;
-
-        // Check for duplicate numbers on load
-        this.checkDuplicatePhoneNumbers();
-
-        this.isLoading = false;
-      },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire('Error', 'Failed to load distribution head data', 'error');
-      }
-    );
+      }, 50);
+    }
   }
+}
 capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'|'houseNumber'|'streetName' | 'city'): void {
   let value = this.personalData[field] || '';
 

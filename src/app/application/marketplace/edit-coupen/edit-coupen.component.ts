@@ -189,7 +189,7 @@ export class EditCoupenComponent {
     
     Swal.fire({
       icon: 'error',
-      title: 'Validation Errors',
+      title: 'Missing or Invalid Information',
       html: `
         <div class="text-left">
           <p>Please fix the following errors:</p>

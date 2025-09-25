@@ -227,6 +227,11 @@ export class ViewCompanyHeadComponent implements OnInit {
                         text: 'The Collection Centre Head was approved successfully.',
                         showConfirmButton: false,
                         timer: 3000,
+                        customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
                       });
                       this.fetchAllCompanyHeads();
                     } else {
@@ -270,6 +275,11 @@ export class ViewCompanyHeadComponent implements OnInit {
                         text: 'The Collection Centre Head was rejected successfully.',
                         showConfirmButton: false,
                         timer: 3000,
+                        customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
                       });
                       this.fetchAllCompanyHeads();
                     } else {

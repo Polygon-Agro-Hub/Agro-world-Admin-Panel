@@ -175,12 +175,26 @@ export class ViewPublicForumComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.publicForumSrv.deletePublicForumPost(id).subscribe(
           (res: any) => {
             if (res) {
-              Swal.fire('Deleted!', 'The post has been deleted.', 'success');
+             Swal.fire({
+  title: 'Deleted!',
+  text: 'The post has been deleted.',
+  icon: 'success',
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+    htmlContainer: 'text-left',
+  },
+});
               this.isPopupVisible = false;
               this.fetchPostAllReply(this.postId);
               this.loadPosts();
@@ -220,16 +234,29 @@ export class ViewPublicForumComponent implements OnInit {
     cancelButtonColor: '#d33',
     confirmButtonText: 'Yes, delete it!',
     cancelButtonText: 'Cancel',
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
 }).then((result) => {
     if (result.isConfirmed) {
         this.publicForumSrv.deleteReply(id).subscribe(
             (res: any) => {
                 if (res) {
-                    Swal.fire('Deleted!', 'The Reply has been deleted.', 'success')
-                        .then(() => {
-                            // Refresh the page after the success alert is closed
-                            location.reload();
-                        });
+                    Swal.fire({
+    title: 'Deleted!',
+    text: 'The Reply has been deleted.',
+    icon: 'success',
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+    }
+}).then(() => {
+    // Refresh the page after the success alert is closed
+    location.reload();
+});
                 }
             },
             (error) => {

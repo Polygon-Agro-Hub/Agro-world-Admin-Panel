@@ -802,6 +802,11 @@ onSubmit() {
     confirmButtonText: 'Yes, create it!',
     cancelButtonText: 'No, cancel',
     reverseButtons: true,
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;

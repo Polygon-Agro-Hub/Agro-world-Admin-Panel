@@ -195,6 +195,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   { path: 'status-451', component: Status451Component },
+  { path: 'foget-password', component: ForgoPasswordComponent },
 
   {
     path: '',

@@ -771,9 +771,9 @@ back(): void {
     missingFields.push('Contact Number Code is Required');
   }
 
-  if (this.distributionForm.get('company')?.value) {
-    missingFields.push('Company is Required');
-  }
+  // if (!this.distributionForm.get('company')?.value) {
+  //   missingFields.push('Company is Required');
+  // }
 
   const contact1Control = this.distributionForm.get('contact1');
 

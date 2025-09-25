@@ -59,7 +59,7 @@ interface PackageItem {
 @Component({
   selector: 'app-todo-define-premade-packages',
   standalone: true,
-  imports: [ CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule ],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule],
   templateUrl: './todo-define-premade-packages.component.html',
   styleUrl: './todo-define-premade-packages.component.css',
 })
@@ -104,26 +104,26 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   ) { }
 
   goBack(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Only go back if user confirms
-      window.history.back();
-    }
-    // If user clicks "No" or dismisses, the modal will automatically close
-  });
-}
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Only go back if user confirms
+        window.history.back();
+      }
+      // If user clicks "No" or dismisses, the modal will automatically close
+    });
+  }
 
   ngOnInit() {
     this.recalculatePackageTotal();
@@ -147,9 +147,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     });
 
   }
-isExcluded(product: MarketplaceItem): boolean {
-  return product.isExcluded;
-}
+  isExcluded(product: MarketplaceItem): boolean {
+    return product.isExcluded;
+  }
   onSelectionChange() {
     console.log('Selected option:', this.selectedOption);
     // Add any additional logic here
@@ -387,64 +387,95 @@ isExcluded(product: MarketplaceItem): boolean {
   }
 
   onComplete() {
-  console.log('orderdetailsArr', this.orderdetailsArr);
-  this.loading = true;
+    console.log('orderdetailsArr', this.orderdetailsArr);
+    this.loading = true;
 
-  const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
-    return pkg.items.some((item, itemIndex) => {
-      return (
-        item.productId === null ||
-        item.productId === undefined ||
-        item.productId === null ||
-        item.qty === 0 ||
-        Number.isNaN(item.productId)
-      );
+    const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+      return pkg.items.some((item, itemIndex) => {
+        return (
+          item.productId === null ||
+          item.productId === undefined ||
+          item.productId === null ||
+          item.qty === 0 ||
+          Number.isNaN(item.productId)
+        );
+      });
     });
-  });
 
-  const hasExcludeProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
-    return pkg.items.some((item, itemIndex) => {
-      return item.isExcluded === true;
+    const hasExcludeProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
+      return pkg.items.some((item, itemIndex) => {
+        return item.isExcluded === true;
+      });
     });
-  });
 
-  if (hasInvalidProduct) {
-    this.loading = false;
-    Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
-    return;
-  } else if (hasExcludeProduct) {
-    this.loading = false;
-    Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
-    return;
-  }
-
-  this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
-    (res) => {
+    if (hasInvalidProduct) {
       this.loading = false;
-      console.log('Updated successfully:', res);
-      
-      // Show success message and redirect to sent tab
+      // Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
       Swal.fire({
-        title: 'Success!',
-        text: 'Order has been successfully dispatched',
-        icon: 'success',
-        confirmButtonColor: '#3980C0',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Redirect to define-packages component with sent tab
-          this.router.navigate(['/procurement/define-packages'], {
-            queryParams: { tab: 'sent' }
-          });
+        title: 'Missing Product',
+        text: 'Please select products for all inputs before submitting.',
+        icon: 'warning',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
         }
       });
-    },
-    (err) => {
+      return;
+    } else if (hasExcludeProduct) {
       this.loading = false;
-      console.error('Update failed:', err);
-      Swal.fire('Error', 'Product Update Unsuccessful', 'error');
+      // Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
+      Swal.fire({
+        title: 'Invalid Product',
+        text: 'Please Do not Select Excluded products.',
+        icon: 'warning',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        }
+      });
+      return;
     }
-  );
-}
+
+    this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
+      (res) => {
+        this.loading = false;
+        console.log('Updated successfully:', res);
+
+        // Show success message and redirect to sent tab
+        Swal.fire({
+          title: 'Success!',
+          text: 'Order has been successfully dispatched',
+          icon: 'success',
+          confirmButtonColor: '#3980C0',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Redirect to define-packages component with sent tab
+            this.router.navigate(['/procurement/define-packages'], {
+              queryParams: { tab: 'sent' }
+            });
+          }
+        });
+      },
+      (err) => {
+        this.loading = false;
+        console.error('Update failed:', err);
+        // Swal.fire('Error', 'Product Update Unsuccessful', 'error');
+        Swal.fire({
+          title: 'Error',
+          text: 'Product Update Unsuccessful',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          }
+        });
+      }
+    );
+  }
 
 
   private getErrorMessage(error: any): string {
@@ -526,10 +557,10 @@ isExcluded(product: MarketplaceItem): boolean {
   }
 
   closeAddNewItemPopUp() {
-  this.isNewAddPopUp = false;
-  this.selectPackageId = '';
-  this.selectCategoryId = ''; // Add this line to clear the dropdown
-}
+    this.isNewAddPopUp = false;
+    this.selectPackageId = '';
+    this.selectCategoryId = ''; // Add this line to clear the dropdown
+  }
 
   addNewItems() {
     // Find the order detail that matches the selected packageId
@@ -597,7 +628,7 @@ isExcluded(product: MarketplaceItem): boolean {
     });
   }
 
-   confirmClear() {
+  confirmClear() {
     Swal.fire({
       title: 'Are you sure?',
       text: 'This will clear all your changes. This action cannot be undone.',
@@ -608,9 +639,9 @@ isExcluded(product: MarketplaceItem): boolean {
       confirmButtonText: 'Yes, clear it!',
       cancelButtonText: 'Cancel',
       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.clearForm();
@@ -619,26 +650,30 @@ isExcluded(product: MarketplaceItem): boolean {
   }
 
   confirmComplete() {
-  // Only show confirmation if within limit
-  if (!this.isWithinLimit) {
-    return;
-  }
-  
-  Swal.fire({
-    title: 'Send to Dispatch',
-    text: 'Are you sure you want to send this order to dispatch?',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: '#3980C0',
-    cancelButtonColor: '#74788D',
-    confirmButtonText: 'Yes, send to dispatch!',
-    cancelButtonText: 'Cancel'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.onComplete(); // This should call onComplete, not completeOrder
+    // Only show confirmation if within limit
+    if (!this.isWithinLimit) {
+      return;
     }
-  });
-}
+
+    Swal.fire({
+      title: 'Send to Dispatch',
+      text: 'Are you sure you want to send this order to dispatch?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3980C0',
+      cancelButtonColor: '#74788D',
+      confirmButtonText: 'Yes, send to dispatch!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.onComplete(); // This should call onComplete, not completeOrder
+      }
+    });
+  }
 
   clearForm() {
     // Implement your clear logic here
@@ -647,9 +682,9 @@ isExcluded(product: MarketplaceItem): boolean {
   }
 
   onCancelClick() {
-  this.selectCategoryId = ''; // Clear the dropdown selection
-  this.closeAddNewItemPopUp(); // Close the popup
-}
+    this.selectCategoryId = ''; // Clear the dropdown selection
+    this.closeAddNewItemPopUp(); // Close the popup
+  }
 
 
 }
@@ -665,7 +700,7 @@ class OrderDetails {
   definePackageId!: number;
   definePkgPrice: number = 0.00;
   items!: OrderItem[];
-  packageQty:number = 1;
+  packageQty: number = 1;
 
 }
 

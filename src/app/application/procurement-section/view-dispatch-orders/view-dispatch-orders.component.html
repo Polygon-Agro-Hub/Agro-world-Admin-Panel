@@ -27,8 +27,8 @@
 
       <!-- Additional Items (outside loop) -->
       <div class="text-sm flex flex-col justify-center items-center">
-        <div class="text-gray-700 dark:text-gray-300">Additional Items :</div>
-        <button class="w-5 h-5 text-blue-500 hover:text-blue-700  disabled:opacity-50"
+        <div class="text-gray-700 dark:text-gray-300 mt-1">Additional Items :</div>
+        <button class="w-5 h-5 text-blue-500 hover:text-blue-700 disabled:opacity-50"
           [disabled]="!additionalItems || additionalItems.length === 0" (click)="openAdditionalItemsModal()">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -40,7 +40,7 @@
 
       <div class="text-sm flex flex-col justify-center items-center">
         <div class="text-gray-700 dark:text-gray-300 mt-1">Excluded Items :</div>
-        <button class="w-5 h-5 text-blue-500 hover:text-blue-700 disabled:opacity-50 "
+        <button class="w-5 h-5 text-blue-500 hover:text-blue-700 disabled:opacity-50"
           [disabled]="!excludedItemsArr || excludedItemsArr.length === 0" (click)="openExcludedItemsModal()">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -59,29 +59,41 @@
       <div>
         <div class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-4 rounded-xl">
           <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-            Package : {{ item.displayName }} (Rs.{{ item.productPrice | number:'1.2-2' }}) <span class="text-[#3980C0] text-lg mx-3">(x{{item.packageQty}})</span>
+            Package : {{ item.displayName }} (Rs.{{ item.productPrice | number:'1.2-2' }}) <span
+              class="text-[#3980C0] text-lg mx-3">(x{{item.packageQty}})</span>
           </span>
         </div>
 
         <div class="space-y-3">
           <span *ngFor="let typeItems of item.productTypes">
             <div class="flex items-center space-x-3 border-b-2 py-4 px-5">
-              <div class="w-8 text-sm text-gray-700 dark:text-gray-300">
+              <div class="w-8 text-sm text-gray-700 dark:text-white">
                 {{ typeItems.shortCode }}
               </div>
-              <select
-                class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm appearance-none cursor-default"
+              <!-- <select
+                class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-white dark:text-gray-400 text-sm appearance-none cursor-default"
                 disabled (change)="onProductSelected(typeItems, $event)">
                 <option value="">--Select Product--</option>
-                <option *ngFor="let product of marketplaceItems" [value]="product.id" [selected]="
+                <option class="dark:text-white" *ngFor="let product of marketplaceItems" [value]="product.id" [selected]="
                     product.id === typeItems.productId ||
                     product.displayName === typeItems.productDescription
                   ">
                   {{ product.displayName }}
                 </option>
+              </select> -->
+              <select
+                class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm appearance-none cursor-default"
+                readonly (change)="onProductSelected(typeItems, $event)" onfocus="this.blur()"
+                style="pointer-events: none;" 
+                >
+                <option value="">--Select Product--</option>
+                <option *ngFor="let product of marketplaceItems" [value]="product.id"
+                  [selected]="product.id === typeItems.productId || product.displayName === typeItems.productDescription">
+                  {{ product.displayName }}
+                </option>
               </select>
               <input type="number" step="0.01" min="0" placeholder="--Quantity in kg--"
-                class="rounded-xl w-36 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 text-sm appearance-none"
+                class="rounded-xl w-36 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm appearance-none"
                 readonly [value]="typeItems.quantity || ''" />
               <div class="w-16 text-right text-sm text-gray-900 dark:text-gray-100">
                 Rs.{{ (typeItems.calculatedPrice ?? 0) | number:'1.2-2' }}
@@ -127,30 +139,41 @@
     </div>
 
     <!-- Modal Content -->
-    <div class="px-6 py-4 flex-1 overflow-hidden">
-      <div class="h-full overflow-y-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 border-separate border-spacing-x-8">
-          <!-- Table Header -->
-          <thead
-            class="uppercase text-[#8492A3] dark:text-gray-400 border-b border-gray-300 dark:border-gray-700 text-sm font-medium sticky top-0 bg-white dark:bg-gray-800 z-10">
-            <tr>
-              <th class="py-3 text-center w-20 whitespace-nowrap">
-                Item ({{ excludedItemsArr.length }})
-              </th>
-              <th class="py-3 text-left whitespace-nowrap">
-                Item Name
-              </th>
-            </tr>
-          </thead>
+    <div class="px-6 py-4 flex-1 overflow-hidden flex flex-col">
+      <!-- Scrollable container -->
+      <div
+        class="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+        <div class="min-w-full">
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <!-- Table Header -->
+            <thead class="sticky top-0 bg-white dark:bg-gray-800 z-10">
+              <tr>
+                <th class="py-3 text-center w-20 whitespace-nowrap border-b border-gray-300 dark:border-gray-700">
+                  Item ({{ excludedItemsArr.length }})
+                </th>
+                <th class="py-3 text-left whitespace-nowrap border-b border-gray-300 dark:border-gray-700">
+                  Item Name
+                </th>
+              </tr>
+            </thead>
 
-          <!-- Table Body -->
-          <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-            <tr *ngFor="let item of excludedItemsArr; let i = index">
-              <td class="py-2 text-center">{{ i + 1 }}</td>
-              <td class="py-2 text-left">{{ item.displayName }}</td>
-            </tr>
-          </tbody>
-        </table>
+            <!-- Table Body -->
+            <tbody>
+              <tr *ngFor="let item of excludedItemsArr; let i = index"
+                class="border-b border-gray-100 dark:border-gray-700">
+                <td class="py-3 text-center">{{ i + 1 }}</td>
+                <td class="py-3 text-left">{{ item.displayName }}</td>
+              </tr>
+
+              <!-- Empty state -->
+              <tr *ngIf="excludedItemsArr.length === 0">
+                <td colspan="2" class="py-4 text-center text-gray-400 dark:text-gray-500">
+                  No excluded items
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -165,45 +188,54 @@
   </div>
 </div>
 
-
 <div *ngIf="showAdditionalItemsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="closeAdditionalItemsModal()">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-md mx-4 max-h-[90vh] flex flex-col">
     <!-- Modal Header -->
-    <div class="px-6 py-4 text-center shrink-0">
+    <div class="px-6 py-4 text-center shrink-0 border-b border-gray-200 dark:border-gray-700">
       <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
         Additional Items
       </h3>
     </div>
 
     <!-- Modal Content with Scroll -->
-    <div class="px-6 py-4 overflow-y-auto">
-      <!-- Table Header -->
-      <div
-        class="pb-4 flex justify-between items-center mb-4 text-sm font-medium text-[#8492A3] dark:text-gray-400 uppercase tracking-wide border-b border-gray-100 dark:border-gray-700">
-        <div class="flex-1">Item</div>
-        <div class="w-16 text-center">Quantity</div>
-        <div class="w-16 text-center">Unit</div>
+    <div class="flex-1 overflow-hidden flex flex-col">
+      <!-- Table Header (Fixed) -->
+      <div class="shrink-0 px-6 pt-4 pb-2">
+        <div
+          class="flex justify-between items-center text-sm font-medium text-[#8492A3] dark:text-gray-400 uppercase tracking-wide border-b border-gray-100 dark:border-gray-700 pb-2">
+          <div class="flex-1">Item</div>
+          <div class="w-16 text-center">Quantity</div>
+          <div class="w-16 text-center">Unit</div>
+        </div>
       </div>
 
-      <!-- Additional Items List -->
-      <div class="space-y-3">
-        <div *ngFor="let item of additionalItems" class="flex justify-between items-center py-2">
-          <div class="flex-1 text-sm text-[#212121] dark:text-gray-100">
-            {{ item.displayName }}
+      <!-- Scrollable Items List -->
+      <div
+        class="flex-1 overflow-y-auto px-6 pb-4 scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+        <div class="space-y-3">
+          <div *ngFor="let item of additionalItems" class="flex justify-between items-center py-2">
+            <div class="flex-1 text-sm text-[#212121] dark:text-gray-100 truncate pr-2">
+              {{ item.displayName }}
+            </div>
+            <div class="w-16 text-center text-sm text-[#000000] dark:text-gray-100">
+              {{ item.qty }}
+            </div>
+            <div class="w-16 text-center text-sm text-[#808080] dark:text-gray-400">
+              {{ item.unit }}
+            </div>
           </div>
-          <div class="w-16 text-center text-sm text-[#000000] dark:text-gray-100">
-            {{ item.qty }}
-          </div>
-          <div class="w-16 text-center text-sm text-[#808080] dark:text-gray-400">
-            {{ item.unit }}
+
+          <!-- Empty State -->
+          <div *ngIf="additionalItems.length === 0" class="text-center py-8 text-gray-400 dark:text-gray-500">
+            No additional items
           </div>
         </div>
       </div>
     </div>
 
     <!-- Modal Footer -->
-    <div class="px-6 py-4 flex justify-center shrink-0">
+    <div class="px-6 py-4 flex justify-center shrink-0 border-t border-gray-200 dark:border-gray-700">
       <button type="button"
         class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm font-medium transition-colors"
         (click)="closeAdditionalItemsModal()">

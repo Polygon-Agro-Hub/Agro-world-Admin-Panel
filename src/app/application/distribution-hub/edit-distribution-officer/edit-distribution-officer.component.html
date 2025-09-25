@@ -877,7 +877,7 @@
     placeholder="Select a bank"
     (onChange)="onBankChange()"
     
-    [showClear]="true"
+    [showClear]="false"
     [disabled]="!banks || banks.length === 0"
     class="w-full"
     inputId="bankDropdown"
@@ -903,7 +903,7 @@
     [filter]="true"
     filterPlaceholder="Search Branch"
     placeholder="Select a branch"
-    [showClear]="true"
+    [showClear]="false"
     [disabled]="!selectedBankId"
     (onChange)="onBranchChange()"
     required

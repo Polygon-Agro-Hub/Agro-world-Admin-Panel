@@ -59,7 +59,7 @@ export class CreateCenterHeadComponent implements OnInit {
   selectedLanguages: string[] = [];
   CompanyData: Company[] = [];
   lastID!: string;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
   itemId: number | null = null;
   officerId: number | null = null;
   banks: Bank[] = [];
@@ -622,38 +622,41 @@ getAllCompanies() {
 }
 
   onBankChange() {
-    if (this.selectedBankId) {
-      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+  if (this.selectedBankId) {
+    this.branches = this.allBranches[this.selectedBankId.toString()] || [];
 
-      const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
-      );
-      if (selectedBank) {
-        this.personalData.bankName = selectedBank.name;
-        this.invalidFields.delete('bankName');
-      }
-
-      this.selectedBranchId = null;
-      this.personalData.branchName = '';
-    } else {
-      this.branches = [];
-      this.personalData.bankName = '';
+    const selectedBank = this.banks.find(
+      (bank) => bank.ID === this.selectedBankId
+    );
+    if (selectedBank) {
+      this.personalData.bankName = selectedBank.name;
+      this.invalidFields.delete('bankName');
     }
+
+    this.selectedBranchId = null;
+    this.personalData.branchName = '';
+    this.personalData.bankName = selectedBank?.name || '';
+  } else {
+    this.branches = [];
+    this.personalData.bankName = '';
+    this.selectedBranchId = null;
+    this.personalData.branchName = '';
   }
+}
 
   onBranchChange() {
-    if (this.selectedBranchId) {
-      const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (selectedBranch) {
-        this.personalData.branchName = selectedBranch.name;
-        this.invalidFields.delete('branchName');
-      }
-    } else {
-      this.personalData.branchName = '';
+  if (this.selectedBranchId) {
+    const selectedBranch = this.branches.find(
+      (branch) => branch.ID === this.selectedBranchId
+    );
+    if (selectedBranch) {
+      this.personalData.branchName = selectedBranch.name;
+      this.invalidFields.delete('branchName');
     }
+  } else {
+    this.personalData.branchName = '';
   }
+}
 
 onSubmit() {
   const missingFields: string[] = [];

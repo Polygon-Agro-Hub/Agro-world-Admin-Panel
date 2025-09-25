@@ -154,7 +154,7 @@
             for="centerId"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
-            Company Name*
+            Company Name *
           </label>
           <div class="relative">
           <select
@@ -185,7 +185,7 @@
             for="enpType"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
-            Staff Employee Type*
+            Staff Employee Type *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -230,7 +230,7 @@
             for="languages"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
-            Preferred Languages*
+            Preferred Languages *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -318,7 +318,7 @@
     for="firstNameEnglish"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    First Name*
+    First Name *
   </label>
   <input
     id="firstNameEnglish"
@@ -353,7 +353,7 @@
     for="lastNameEnglish"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    Last Name*
+    Last Name *
   </label>
   <input
     id="lastNameEnglish"
@@ -386,7 +386,7 @@
 <!-- Mobile Number - 1 -->
 <div>
   <label for="phoneNumber01" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-   Mobile Number - 1*
+   Mobile Number - 1 *
   </label>
 
   <div class="mt-1 flex">
@@ -531,7 +531,7 @@
     for="nic"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    NIC Number*
+    NIC Number *
   </label>
   <input
     id="nic"
@@ -559,7 +559,7 @@
     for="email"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    Email*
+    Email *
   </label>
   <input
     type="email"
@@ -621,7 +621,7 @@
           <label
             for="house"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >House / Plot Number*</label
+            >House / Plot Number *</label
           >
           <input
             (blur)="onBlur('houseNumber')"
@@ -667,7 +667,7 @@
           <label
             for="city"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >City*</label
+            >City *</label
           >
           <input
             (blur)="onBlur('city')"
@@ -689,7 +689,7 @@
     for="districtDropdown"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    District*
+    District *
   </label>
   <p-dropdown
     id="districtDropdown"
@@ -718,7 +718,7 @@
             for="province"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
-            Province*
+            Province *
           </label>
           <input
             id="province"
@@ -734,7 +734,7 @@
           <label
             for="country"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >Country*</label
+            >Country *</label
           >
           <input
             id="country"
@@ -754,7 +754,7 @@
     for="accHolderName"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    Account Holder's Name*
+    Account Holder's Name *
   </label>
 
   <input
@@ -789,8 +789,7 @@
 
 
        <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
-            class="text-[#2E2E2E]">*</span></label>
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
         <input id="accNumber" name="accNumber"    type="number" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required pattern="^[0-9]+$"  (keypress)="allowOnlyNumbers($event)" (keydown)="blockLeadingSpace($event, 'accNumber')"   (blur)="onBlur('accNumber')"
@@ -837,7 +836,7 @@
 
         <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+          Confirm Account Number *
         </label>
         <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"   type="number"
           [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"

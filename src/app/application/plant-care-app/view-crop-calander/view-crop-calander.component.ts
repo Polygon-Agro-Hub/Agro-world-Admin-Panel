@@ -110,6 +110,11 @@ export class ViewCropCalanderComponent implements OnInit {
       title: 'Are you sure?',
       text: 'Do you really want to delete this crop calendar item? This action cannot be undone.',
       icon: 'warning',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',

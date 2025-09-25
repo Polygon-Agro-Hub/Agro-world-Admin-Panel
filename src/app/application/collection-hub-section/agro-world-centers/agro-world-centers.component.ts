@@ -347,6 +347,10 @@ export class AgroWorldCentersComponent {
       ) ?? false
     );
   }
+  navigate(){
+    this.router.navigate([`/collection-hub`]);
+    
+  }
 
   navigateAddTarget(item: CollectionCenter) {
     const agroworldCompany = item.companies.find(

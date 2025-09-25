@@ -332,6 +332,10 @@ export class ViewDistributionCenterComponent implements OnInit {
   navigateDashboard(id: number) {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
+  
+  backnavigation(){
+    this.router.navigate([`/distribution-hub/action`]);
+  }
 
 deleteDistributionCenter(id: number): void {
   Swal.fire({

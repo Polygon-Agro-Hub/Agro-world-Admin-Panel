@@ -8,6 +8,7 @@ import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
 import jsPDF from 'jspdf';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../../services/theme.service';
 
 interface IdistrictReport {
   cropName: string;
@@ -42,10 +43,12 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
   loadingChart = true;
   loadingTable = true;
   isDownloading = false;
+  
 
   constructor(
     private collectionOfficerSrv: CollectionOfficerReportService,
-    private router: Router
+    private router: Router,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -126,19 +129,40 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       color: '#3DE188',
     }));
 
+    const isDarkMode = this.themeService.isDarkTheme();
+
     this.chartOptions = {
       animationEnabled: true,
-      theme: 'light2',
+      // theme: isDarkMode ? 'dark2' : 'light2',
+      backgroundColor: "transparent", // Changed to transparent
       title: {
         text: `${this.selectedDistrict.name} - Crop Weights`,
+        fontColor: isDarkMode ? '#ffffff' : '#000000',
       },
       axisX: {
         title: 'Crops',
         reversed: true,
+        titleFontColor: isDarkMode ? '#ffffff' : '#000000',
+        labelFontColor: isDarkMode ? '#d1d5db' : '#374151',
+        lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
       },
       axisY: {
         title: 'Total Weight (Kg)',
         includeZero: true,
+        titleFontColor: isDarkMode ? '#ffffff' : '#000000',
+        labelFontColor: isDarkMode ? '#d1d5db' : '#374151',
+        lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        gridColor: isDarkMode ? '#374151' : '#e5e7eb',
+      },
+      legend: {
+        fontColor: isDarkMode ? '#d1d5db' : '#374151',
+      },
+      toolTip: {
+        backgroundColor: isDarkMode ? '#374151' : '#ffffff',
+        fontColor: isDarkMode ? '#ffffff' : '#374151',
+        borderColor: isDarkMode ? '#4b5563' : '#d1d5db',
       },
       data: [
         {

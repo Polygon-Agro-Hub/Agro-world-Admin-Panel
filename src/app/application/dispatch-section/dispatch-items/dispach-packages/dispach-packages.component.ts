@@ -27,6 +27,7 @@ export class DispachPackagesComponent implements OnInit {
   invNo: string = '';
   price: number = 0;
   packageName: string = '';
+  packgeQty:number = 1;
 
   isLoading: boolean = true;
   validationFailedMessage: string = '';
@@ -46,6 +47,9 @@ export class DispachPackagesComponent implements OnInit {
     this.price = this.route.snapshot.queryParams['price'];
     this.invNo = this.route.snapshot.queryParams['invNo'];
     this.packageName = this.route.snapshot.queryParams['packageName'];
+    this.packgeQty = this.route.snapshot.queryParams['packgeQty'];
+   
+    
 
     this.fetchData();
   }
@@ -123,7 +127,6 @@ export class DispachPackagesComponent implements OnInit {
       (res) => {
         this.isLoading = false;
         if (res.status) {
-          console.log('Updated successfully:', res);
           Swal.fire('Success', 'Packaging status has been changed successfully.', 'success');
           // this.router.navigate(['/dispatch/salesdash-orders']);
           this.location.back();
@@ -155,7 +158,6 @@ export class DispachPackagesComponent implements OnInit {
       this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
       this.validationFailedMessage = '';
     }
-    // console.log(this.packageItemsArr);
   }
 
   openPopUp(item: PakageItem) {

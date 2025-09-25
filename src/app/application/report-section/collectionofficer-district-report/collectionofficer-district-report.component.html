@@ -1,38 +1,26 @@
-<button
-  class="mb-5 text-textLight dark:text-textDark"
-  (click)="back()"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1100px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1100px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-end items-center mb-8">
       <div class="flex items-center">
         <i class="mr-6 w-6 h-6 fill-current text-gray-500">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
-              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
-            />
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
           </svg>
         </i>
 
         <div class="mr-5">
-       <p-dropdown
-  styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-  [options]="districts"
-  [checkmark]="true"
-  optionLabel="name"
-  [showClear]="selectedDistrict && selectedDistrict.name !== 'Colombo'"
-  placeholder="District"
-  [(ngModel)]="selectedDistrict"
-  (onChange)="applyFilters()"
->
-</p-dropdown>
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="districts" [checkmark]="true" optionLabel="name"
+            [showClear]="selectedDistrict && selectedDistrict.name !== 'Colombo'" placeholder="District"
+            [(ngModel)]="selectedDistrict" (onChange)="applyFilters()">
+          </p-dropdown>
 
         </div>
       </div>
@@ -46,26 +34,19 @@
       </div>
     </div>
 
-    <div
-      *ngIf="loadingChart; else chartContent"
-      class="flex justify-center items-center h-48"
-    >
+    <div *ngIf="loadingChart; else chartContent" class="flex justify-center items-center h-48">
       <app-loading-spinner></app-loading-spinner>
     </div>
     <!-- Corrected canvasjs-chart tag -->
-    <ng-template #chartContent>
+    <div class="bg-gray-100">
+      <ng-template #chartContent>
       <div class="pt-16">
-        <canvasjs-chart
-          *ngIf="chartOptions"
-          [options]="chartOptions"
-        ></canvasjs-chart>
+        <canvasjs-chart *ngIf="chartOptions" [options]="chartOptions"></canvasjs-chart>
       </div>
     </ng-template>
+    </div>
 
-    <div
-      *ngIf="loadingTable; else tableContent"
-      class="flex justify-center items-center h-48"
-    >
+    <div *ngIf="loadingTable; else tableContent" class="flex justify-center items-center h-48">
       <app-loading-spinner></app-loading-spinner>
     </div>
 
@@ -74,34 +55,19 @@
         <table class="w-full text-sm text-center rtl:text-right border-[2px]">
           <thead class="text-xs border-[2px]">
             <tr>
-              <th
-                scope="col"
-                class="px-6 py-3 text-textLight dark:text-textDark border-[2px]"
-              >
+              <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
                 Crop
               </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-textLight dark:text-textDark border-[2px]"
-              >
+              <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
                 Grade A
               </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-textLight dark:text-textDark border-[2px]"
-              >
+              <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
                 Grade B
               </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-textLight dark:text-textDark border-[2px]"
-              >
+              <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
                 Grade C
               </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-textLight dark:text-textDark border-[2px]"
-              >
+              <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
                 Total
               </th>
             </tr>
@@ -130,11 +96,8 @@
     </ng-template>
 
     <div class="flex justify-center items-center my-10">
-      <button
-        class="bg-[#3980C0] px-6 py-3 rounded-lg text-white text-lg"
-        (click)="exportToPDF()"
-        [disabled]="isDownloading"
-      >
+      <button class="bg-[#3980C0] px-6 py-3 rounded-lg text-white text-lg" (click)="exportToPDF()"
+        [disabled]="isDownloading">
         <i class="fa-solid fa-download px-1" *ngIf="!isDownloading"></i>
         <i class="fa-solid fa-spinner fa-spin px-1" *ngIf="isDownloading"></i>
         {{ isDownloading ? " Downloading..." : " Download" }}

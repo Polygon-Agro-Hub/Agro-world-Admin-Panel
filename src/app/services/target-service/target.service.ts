@@ -16,7 +16,7 @@ export class TargetService {
   getSavedCenterCrops(
 
     id: number,
-    date: string,
+    date: string = '',
     searchText: string = ''
     
   ): Observable<any> {
@@ -26,9 +26,13 @@ export class TargetService {
 
     console.log('date', date)
     
-    let url = `${this.apiUrl}/get-saved-center-crops/${id}/${date}`;
+    let url = `${this.apiUrl}/get-saved-center-crops/${id}?page=${1}`;
+    if (date) {
+      url += `&date=${date}`;
+    }
+    
     if (searchText) {
-      url += `?searchText=${searchText}`;
+      url += `&searchText=${searchText}`;
     }
 
     return this.http.get<any>(url, { headers });

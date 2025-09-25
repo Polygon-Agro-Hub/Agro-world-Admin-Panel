@@ -10,6 +10,7 @@ interface OrderDetailItem {
   displayName: string;
   productPrice: number;
   invNo: string;
+  packageQty:number;
   productTypes: ProductTypes[];
 }
 
@@ -207,6 +208,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
           const packageDetail: OrderDetailItem = {
             packageId: pkg.packageId,
             displayName: pkg.displayName,
+            packageQty:pkg.packageQty,
             productPrice:
               typeof pkg.productPrice === 'string'
                 ? parseFloat(pkg.productPrice)

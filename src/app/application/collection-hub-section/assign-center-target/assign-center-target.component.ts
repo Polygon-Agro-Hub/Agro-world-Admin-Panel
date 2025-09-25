@@ -26,6 +26,9 @@ export class AssignCenterTargetComponent {
   isFormValid: boolean = false;
   hasData: boolean = false;
   isLoading = false;
+  officerName!: string;
+
+  isDateSelected: boolean = true;
 
 dateError: boolean = false;
   selectDate: Date | null = new Date();
@@ -38,9 +41,14 @@ dateError: boolean = false;
 
 onDateChange(event: any) {
   if (!event) {
+    console.log('selectDate', this.selectDate)
     this.selectDate = null; // Clear the date
+    this.isDateSelected = false;
     this.dateError = true;
+    this.fetchSavedCenterCrops();
   } else {
+    console.log('selectDate', this.selectDate)
+    this.isDateSelected = true;
     this.dateError = false;
     this.fetchSavedCenterCrops();
     // your existing logic for fetching data
@@ -58,12 +66,12 @@ checkDateSelection() {
   fetchSavedCenterCrops() {
     this.isLoading = true;
   
-    if (!this.selectDate || !this.validateSelectDate(this.selectDate)) {
-      this.isDateValid = false;
-      console.log('isDateValid', this.isDateValid)
-      this.isLoading = false;
-      return;
-    }
+    // if (!this.selectDate || !this.validateSelectDate(this.selectDate)) {
+    //   this.isDateValid = false;
+    //   console.log('isDateValid', this.isDateValid)
+    //   this.isLoading = false;
+    //   return;
+    // }
   
     this.isDateValid = true;
     const formattedDate = this.formatDate(this.selectDate);
@@ -77,6 +85,8 @@ checkDateSelection() {
       this.isLoading = false;
   
       this.assignCropsArr = res.result.data;
+      this.officerName = res.officerName;
+      console.log('officerName', this.officerName)
       this.countCrops = res.result.data.length;
       this.isNew = res.result.isNew;
       this.companyCenterId = res.companyCenterId;
@@ -86,16 +96,16 @@ checkDateSelection() {
   }
   
 
-  validateSelectDate(date: Date): boolean {
-    const selectedDate = new Date(date);
-    const today = new Date();
+  // validateSelectDate(date: Date): boolean {
+  //   const selectedDate = new Date(date);
+  //   const today = new Date();
   
-    // Reset time portion for comparison
-    today.setHours(0, 0, 0, 0);
-    selectedDate.setHours(0, 0, 0, 0);
+  //   // Reset time portion for comparison
+  //   today.setHours(0, 0, 0, 0);
+  //   selectedDate.setHours(0, 0, 0, 0);
   
-    return selectedDate >= today;
-  }
+  //   return selectedDate >= today;
+  // }
   
 
   private formatDate(date: Date | null | undefined): string {
@@ -137,6 +147,7 @@ checkDateSelection() {
             htmlContainer: 'text-left',
           },
         });
+        this.isLoading = false;
         return;
       }
       
@@ -153,6 +164,7 @@ checkDateSelection() {
           htmlContainer: 'text-left',
         },
       });
+      this.isLoading = false;
       return;
     } else {
       if (item.targetC < item.preValueC) {
@@ -167,6 +179,7 @@ checkDateSelection() {
             htmlContainer: 'text-left',
           },
         });
+        this.isLoading = false;
         return;
       }
     }

@@ -142,10 +142,11 @@
           Latitude *
         </label>
         <input type="text" formControlName="latitude" placeholder="e.g., 6.9271"
-          (input)="onInputChange($event, 'coordinates')" [class]="
-        'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-        (isFieldInvalid('latitude') ? 'border-red-500' : 'border-gray-300')
-      " />
+        (input)="onInputChangeCor($event, 'coordinates')"
+        (blur)="onInputBlurCor($event, 'coordinates')" [class]="
+  'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+  (isFieldInvalid('latitude') ? 'border-red-500' : 'border-gray-300')
+" />
         <div *ngIf="isFieldInvalid('latitude')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("latitude") }}
         </div>
@@ -156,10 +157,11 @@
           Longitude *
         </label>
         <input type="text" formControlName="longitude" placeholder="e.g., 79.8612"
-          (input)="onInputChange($event, 'coordinates')" [class]="
-        'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-        (isFieldInvalid('longitude') ? 'border-red-500' : 'border-gray-300')
-      " />
+        (input)="onInputChangeCor($event, 'coordinates')"
+        (blur)="onInputBlurCor($event, 'coordinates')" [class]="
+  'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+  (isFieldInvalid('longitude') ? 'border-red-500' : 'border-gray-300')
+" />
         <div *ngIf="isFieldInvalid('longitude')" class="text-red-500 text-sm mt-1">
           {{ getFieldError("longitude") }}
         </div>

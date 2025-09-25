@@ -116,6 +116,7 @@ interface Items {
   price: number;
   packStatus: string;
   packageId: number;
+  packageQty:number;
 }
 
 interface Package {

@@ -116,11 +116,11 @@ export class DispatchAdditionalItemsComponent implements OnInit {
         this.isLoading = false;
         if (res.status) {
           console.log('Updated successfully:', res);
-          Swal.fire('Success', 'Order dispatched successfully!', 'success');
+          Swal.fire('Success', 'Packaging status has been changed successfully.', 'success');
           // this.router.navigate(['/dispatch/salesdash-orders']);
           this.location.back();
         } else {
-          Swal.fire('Error', 'Order dispatched Faild!', 'error');
+          Swal.fire('Error', 'Packaging status has been changed faild!', 'error');
 
         }
 

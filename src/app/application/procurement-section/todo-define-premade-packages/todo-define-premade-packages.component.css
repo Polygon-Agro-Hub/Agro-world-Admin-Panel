@@ -160,3 +160,11 @@
   background-color: #fef2f2;
   color: #dc2626;
 }
+
+::ng-deep .dark .p-dropdown-header {
+    background-color: #4b5563;
+}
+
+::ng-deep .dark .p-dropdown .p-dropdown-label {
+    color: rgb(165, 165, 165);
+}

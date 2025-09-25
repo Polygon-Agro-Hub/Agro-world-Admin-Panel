@@ -229,6 +229,7 @@ export class ViewCollectiveOfficerComponent {
     if (this.centerId !== null) {
       this.fetchManagerNames(this.centerId);
     }
+    console.log('role', this.tokenService.getUserDetails().role);
     // this.route.queryParams.subscribe((params) => {
     //   this.centerId = params['id'] ? +params['id'] : null;
     // });

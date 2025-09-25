@@ -626,23 +626,51 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
     
           <div class="pb-6">
             <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name *</label>
-            <select id="bankDropdown" name="bankDropdown" [(ngModel)]="selectedBankId" (change)="onBankChange()"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-              <option [ngValue]="null" disabled>Select a bank</option>
-              <option *ngFor="let bank of banks" [ngValue]="bank.ID">{{ bank.name }}</option>
-            </select>
+            <p-dropdown 
+    id="bankDropdown"
+    name="bankDropdown"
+    [(ngModel)]="selectedBankId"
+    (onChange)="onBankChange()"
+    [options]="banks"
+    optionLabel="name"
+    optionValue="ID"
+    placeholder="Select a bank"
+    [filter]="true"
+    filterBy="name"
+    [showClear]="true"
+    class="w-full">
+    <ng-template pTemplate="selectedItem">
+        <div *ngIf="selectedBankId">
+            {{ getSelectedBankName() }}
+        </div>
+    </ng-template>
+</p-dropdown>
           </div>
     
           
           <div class="pb-6">
             <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch
               Name *</label>
-            <select id="branchDropdown" name="branchDropdown" [(ngModel)]="selectedBranchId" (change)="onBranchChange()"
-              [disabled]="!selectedBankId"
-              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack">
-              <option [ngValue]="null" disabled>Select a branch</option>
-              <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{ branch.name }}</option>
-            </select>
+            <p-dropdown 
+    id="branchDropdown"
+    name="branchDropdown"
+    [(ngModel)]="selectedBranchId"
+    (onChange)="onBranchChange()"
+    [options]="branches"
+    optionLabel="name"
+    optionValue="ID"
+    placeholder="Select a branch"
+    [filter]="true"
+    filterBy="name"
+    [showClear]="true"
+    [disabled]="!selectedBankId"
+    class="w-full">
+    <ng-template pTemplate="selectedItem">
+        <div *ngIf="selectedBranchId">
+            {{ getSelectedBranchName() }}
+        </div>
+    </ng-template>
+</p-dropdown>
           </div>
         </div>
     

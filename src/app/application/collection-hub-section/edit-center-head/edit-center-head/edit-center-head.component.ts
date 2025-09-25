@@ -322,34 +322,47 @@ validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
 
   matchExistingBankToDropdown() {
     if (
-      this.banks.length > 0 &&
-      Object.keys(this.allBranches).length > 0 &&
-      this.personalData &&
-      this.personalData.bankName
+        this.banks.length > 0 &&
+        Object.keys(this.allBranches).length > 0 &&
+        this.personalData &&
+        this.personalData.bankName
     ) {
-      const matchedBank = this.banks.find(
-        (bank) => bank.name === this.personalData.bankName
-      );
-      if (matchedBank) {
-        this.selectedBankId = matchedBank.ID;
-        this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-        if (this.personalData.branchName) {
-          const matchedBranch = this.branches.find(
-            (branch) => branch.name === this.personalData.branchName
-          );
-          if (matchedBranch) {
-            this.selectedBranchId = matchedBranch.ID;
-          }
+        const matchedBank = this.banks.find(
+            (bank) => bank.name === this.personalData.bankName
+        );
+        if (matchedBank) {
+            this.selectedBankId = matchedBank.ID;
+            this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+            if (this.personalData.branchName) {
+                const matchedBranch = this.branches.find(
+                    (branch) => branch.name === this.personalData.branchName
+                );
+                if (matchedBranch) {
+                    this.selectedBranchId = matchedBranch.ID;
+                }
+            }
         }
-      }
     }
-  }
+}
 
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
     });
   }
+
+  getSelectedBankName(): string {
+    if (!this.selectedBankId) return '';
+    const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+    return selectedBank ? selectedBank.name : '';
+}
+
+getSelectedBranchName(): string {
+    if (!this.selectedBranchId) return '';
+    const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+    return selectedBranch ? selectedBranch.name : '';
+}
+
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -602,38 +615,32 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
 
   onBankChange() {
     if (this.selectedBankId) {
-      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-      const selectedBank = this.banks.find(
-        (bank) => bank.ID === this.selectedBankId
-      );
-      if (selectedBank) {
-        this.personalData.bankName = selectedBank.name;
-      }
-      const currentBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (!currentBranch) {
+        this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+        const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+        if (selectedBank) {
+            this.personalData.bankName = selectedBank.name;
+        }
+        // Reset branch selection when bank changes
         this.selectedBranchId = null;
         this.personalData.branchName = '';
-      }
     } else {
-      this.branches = [];
-      this.personalData.bankName = '';
+        this.branches = [];
+        this.personalData.bankName = '';
+        this.selectedBranchId = null;
+        this.personalData.branchName = '';
     }
-  }
+}
 
   onBranchChange() {
     if (this.selectedBranchId) {
-      const selectedBranch = this.branches.find(
-        (branch) => branch.ID === this.selectedBranchId
-      );
-      if (selectedBranch) {
-        this.personalData.branchName = selectedBranch.name;
-      }
+        const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+        if (selectedBranch) {
+            this.personalData.branchName = selectedBranch.name;
+        }
     } else {
-      this.personalData.branchName = '';
+        this.personalData.branchName = '';
     }
-  }
+}
 
   validateConfirmAccNumber(): void {
     this.confirmAccountNumberRequired = !this.confirmAccNumber;

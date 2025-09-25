@@ -809,6 +809,11 @@ onSubmit() {
     confirmButtonText: 'Yes, Save it!',
     cancelButtonText: 'No, cancel',
     reverseButtons: true,
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;
@@ -822,6 +827,11 @@ onSubmit() {
               title: 'Success',
               text: 'Centre Head updated successfully',
               confirmButtonText: 'OK',
+              customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
             }).then(() => {
               window.history.back();
             });
@@ -868,6 +878,11 @@ onSubmit() {
         title: 'Cancelled',
         text: 'Your action has been cancelled',
         confirmButtonText: 'OK',
+        customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
       });
     }
   });

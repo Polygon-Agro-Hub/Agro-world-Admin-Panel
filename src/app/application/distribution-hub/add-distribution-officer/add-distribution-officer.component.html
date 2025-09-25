@@ -69,7 +69,7 @@
 
         <div>
           <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Staff Employee Type*
+            Staff Employee Type *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -95,7 +95,7 @@
 
         <div>
           <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Preferred Languages*
+            Preferred Languages *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -142,7 +142,7 @@
 
      <div>
   <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    First Name*
+    First Name *
   </label>
   <input
     id="firstNameEnglish"
@@ -169,7 +169,7 @@
 
 <div>
   <label for="lastNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Last Name*
+    Last Name *
   </label>
   <input
     id="lastNameEnglish"
@@ -295,7 +295,7 @@
 
       <div>
   <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    NIC Number*
+    NIC Number *
   </label>
   <input
     id="nic"
@@ -317,7 +317,7 @@
 
 
         <div>
-  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
+  <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
   <input type="email" id="email" name="nic" [(ngModel)]="personalData.email"   
          (keydown)="blockLeadingSpace($event, 'nic')" (blur)="onBlur('email')"
             (input)="trimLeadingSpace($event)"
@@ -355,7 +355,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div class="pb-6">
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
-            Number*</label>
+            Number *</label>
           <input (blur)="onBlur('houseNumber')" id="houseNumber" name="houseNumber"
             [(ngModel)]="personalData.houseNumber"
              (keydown)="blockLeadingSpace($event, 'houseNumber')"
@@ -366,7 +366,7 @@
         </div>
 
         <div class="pb-6">
-          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name*</label>
+          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
           <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"  (keydown)="blockLeadingSpace($event, 'streetName')
           "  (input)="capitalizeWhileTyping('streetName')"
              (input)="trimLeadingSpace($event)"
@@ -375,7 +375,7 @@
         </div>
 
         <div class="pb-6">
-          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City*</label>
+          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
           <input
   (blur)="onBlur('city')"
   id="city"
@@ -391,7 +391,7 @@
         </div>
 <div class="pb-6">
   <label for="districtDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    District*
+    District *
   </label>
 
   <p-dropdown
@@ -423,7 +423,7 @@
 
         <div class="pb-6">
           <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Province*
+            Province *
           </label>
           <input id="province" name="province" [(ngModel)]="personalData.province"  (keydown)="blockLeadingSpace($event, 'nic')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -432,7 +432,7 @@
 
        <div class="pb-6">
   <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Country*
+    Country *
   </label>
   <input
     type="text"
@@ -454,7 +454,7 @@
   </h2>
   <div class="pb-6">
     <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-      Account Holder’s Name*
+      Account Holder’s Name *
     </label>
     <input
       maxlength="50"
@@ -484,8 +484,7 @@
 
 
        <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
-            class="text-[#2E2E2E]">*</span></label>
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)"(ngModelChange)="validateAccNumber()" />
@@ -503,7 +502,7 @@
 
        <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+          Confirm Account Number *
         </label>
         <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"
           [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
@@ -529,7 +528,7 @@
 
 <div class="pb-6">
   <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Bank Name*
+    Bank Name *
   </label>
 
   <p-dropdown
@@ -563,7 +562,7 @@
 
 <div class="pb-6">
   <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Branch Name*
+    Branch Name *
   </label>
 
   <p-dropdown

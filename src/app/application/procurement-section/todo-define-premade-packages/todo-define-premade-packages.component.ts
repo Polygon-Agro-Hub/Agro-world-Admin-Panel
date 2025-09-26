@@ -397,6 +397,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           item.productId === undefined ||
           item.productId === null ||
           item.qty === 0 ||
+          item.qty === null ||
           Number.isNaN(item.productId)
         );
       });
@@ -426,7 +427,7 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       // Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
       Swal.fire({
         title: 'Invalid Product',
-        text: 'Please Do not Select Excluded products.',
+        text: 'Please, do not select excluded products.',
         icon: 'warning',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

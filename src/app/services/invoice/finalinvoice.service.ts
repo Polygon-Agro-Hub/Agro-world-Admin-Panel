@@ -714,7 +714,7 @@ export class FinalinvoiceService {
 if (invoice.orderApp === 'Marketplace') {
     label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
 } else if (invoice.orderApp === 'Dash') {
-    label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
+    label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
 } else {
     label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
 }

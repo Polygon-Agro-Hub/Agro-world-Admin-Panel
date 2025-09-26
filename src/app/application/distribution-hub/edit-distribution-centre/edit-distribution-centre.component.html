@@ -177,14 +177,23 @@
     type="email" 
     formControlName="email" 
     (input)="onEmailInput($event)" 
-    [class]="
-      'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-      (isFieldInvalid('email') ? 'border-red-500' : 'border-gray-300')
-    " 
+    [ngClass]="
+            'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+            (distributionForm.get('email')?.value && !isValidGmail(distributionForm.get('email')?.value) 
+              ? 'border-red-500' 
+              : 'border-gray-300')
+          "
   />
-  <div *ngIf="isFieldInvalid('email')" class="text-red-500 text-sm mt-1">
-    {{ getFieldError("email") }}
-  </div>
+
+  <div *ngIf="!distributionForm.get('email')?.value" 
+             class="text-red-500 text-sm mt-1">
+             Email is Required
+        </div>
+
+  <div *ngIf="distributionForm.get('email')?.value && !isValidGmail(distributionForm.get('email')?.value)" 
+             class="text-red-500 text-sm mt-1">
+             Please enter a valid email
+        </div>
 </div>
 
       <div class="flex-1">

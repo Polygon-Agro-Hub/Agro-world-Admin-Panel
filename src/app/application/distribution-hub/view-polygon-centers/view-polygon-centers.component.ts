@@ -204,6 +204,7 @@ export class ViewPolygonCentersComponent implements OnInit {
         this.distributionCentreObj = response.items;
         this.hasData = this.distributionCentreObj.length > 0;
         this.totalItems = response.total;
+        console.log('distributionCentreObj', this.distributionCentreObj)
       },
       (error) => {
         if (error.status === 401) {

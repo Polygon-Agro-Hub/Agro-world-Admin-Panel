@@ -130,7 +130,7 @@ export class AddDestributionCenterComponent implements OnInit {
           this.longitudeRangeValidator
         ],
       ],
-      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/), this.customEmailValidator.bind(this)]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@gmail\.com$/), this.customEmailValidator.bind(this)]],
       country: [{ value: 'Sri Lanka', disabled: true }, Validators.required],
       province: ['', Validators.required],
       district: ['', Validators.required],
@@ -198,6 +198,14 @@ export class AddDestributionCenterComponent implements OnInit {
       })
     )
     .subscribe();
+}
+
+isValidGmail(email: string): boolean {
+  if (!email) return false;
+
+  // Strict Gmail validation: any valid username, but domain must be exactly @gmail.com
+  const pattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  return pattern.test(email);
 }
 
 private mobileNumberValidator(control: AbstractControl): { [key: string]: any } | null {
@@ -346,17 +354,17 @@ private mobileNumberValidator(control: AbstractControl): { [key: string]: any } 
     return field.errors['customEmail'] || 'Please enter a valid email';
   }
   if (field.errors['invalidMobileFormat']) {
-    return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+    return 'Please enter a valid contact number (format: +947XXXXXXXX)';
   }
   if (field.errors['mustStartWith7']) {
-    return 'Mobile number must start with 7 (format: +947XXXXXXXX)';
+    return 'Contact number must start with 7 (format: +947XXXXXXXX)';
   }
   if (field.errors['duplicateContactNumbers']) {
     return 'Contact Number - 1 and Contact Number - 2 cannot be the same';
   }
   if (field.errors['pattern']) {
     if (fieldName.includes('contact')) {
-      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+      return 'Please enter a valid contact number (format: +947XXXXXXXX)';
     }
   }
   if (field.errors['numericDecimal']) {
@@ -713,9 +721,9 @@ updateRegCode() {
         }
       } else if (key === 'contact1' && control.errors['required']) {
         missingFields.push('Contact Number is Required');
-      } else if (key === 'contact1' && this.getFieldError("contact1") === 'Please enter a valid mobile number (format: +947XXXXXXXX)') {
+      } else if (key === 'contact1' && this.getFieldError("contact1") === 'Please enter a valid contact number (format: +947XXXXXXXX)') {
         missingFields.push('Contact Number -1 - Must be a valid phone number format');
-      } else if (key === 'contact2' && this.getFieldError("contact2") === 'Please enter a valid mobile number (format: +947XXXXXXXX)' ) {
+      } else if (key === 'contact2' && this.getFieldError("contact2") === 'Please enter a valid contact number (format: +947XXXXXXXX)' ) {
         missingFields.push('Contact Number -2 - Must be a valid phone number format');
     } else if (key === 'contact2' && this.getFieldError("contact2") === 'Contact Number - 1 and Contact Number - 2 cannot be the same' ) {
       missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
@@ -760,8 +768,7 @@ updateRegCode() {
       confirmButtonText: 'OK',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
+        title: 'font-semibold text-lg'
       },
     });
     return;
@@ -776,6 +783,11 @@ updateRegCode() {
       showCancelButton: true,
       confirmButtonText: 'Yes, Create it!',
       cancelButtonText: 'No, Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -800,13 +812,18 @@ updateRegCode() {
               if (response.success) {
                 this.submitSuccess =
                   response.message ||
-                  'Distribution centre created successfully!';
+                  'Distribution Centre created successfully!';
                 Swal.fire({
                   icon: 'success',
                   title: 'Success!',
                   text: this.submitSuccess,
                   timer: 2000,
                   showConfirmButton: false,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+
+                  },
                 });
                 this.navigatePath('/distribution-hub/action/view-destribition-center');
               } else {
@@ -816,6 +833,11 @@ updateRegCode() {
                   icon: 'error',
                   title: 'Oops...',
                   text: this.submitError,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+
+                  },
                 });
               }
             },
@@ -848,7 +870,7 @@ updateRegCode() {
                       errorMessage = 'Email already exists.';
                       break;
                     case 'contact1':
-                      errorMessage = 'Mobile Number already exists.';
+                      errorMessage = 'Contact Number already exists.';
                       break;
                     default:
                       errorMessage = 'A distribution center with these details already exists.';
@@ -866,6 +888,11 @@ updateRegCode() {
                 icon: 'error',
                 title: 'Submission Failed',
                 text: this.submitError,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+
+                },
               });
             },
           });
@@ -925,9 +952,9 @@ onCancel() {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
-    text: 'All entered data will be lost!',
+    text: 'You may lose the added data after canceling!',
     showCancelButton: true,
-    confirmButtonText: 'Yes, Reset',
+    confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -935,10 +962,7 @@ onCancel() {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      this.distributionForm.reset({
-        contact1Code: '+94',
-        contact2Code: '+94',
-      });
+      window.history.back();
     }
   });
 }

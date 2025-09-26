@@ -124,6 +124,10 @@ export class SidenavComponent implements OnInit {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
       }).then((result) => {
         if (result.isConfirmed) {
           this.tokenService.clearLoginDetails();

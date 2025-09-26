@@ -232,6 +232,14 @@ getFlagUrl(countryCode: string): string {
       });
   }
 
+  isValidGmail(email: string): boolean {
+    if (!email) return false;
+  
+    // Strict Gmail validation: any valid username, but domain must be exactly @gmail.com
+    const pattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    return pattern.test(email);
+  }
+
   checkFormValidity(): void {
     console.log('Form valid:', this.distributionForm.valid);
     console.log('Form errors:', this.distributionForm.errors);
@@ -360,6 +368,7 @@ initializeForm(): void {
     ],
     email: ['', [
       Validators.required, 
+      Validators.pattern(/^[a-zA-Z0-9._%+-]+@gmail\.com$/),
       this.customEmailValidator.bind(this)
     ]],
     country: ['Sri Lanka', Validators.required],
@@ -702,6 +711,10 @@ back(): void {
       title: 'Error',
       text: message,
       confirmButtonColor: '#3085d6',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     });
   }
 
@@ -709,7 +722,7 @@ back(): void {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
-    text: 'All entered data will be lost!',
+    text: 'You may lose the added data after canceling!',
     showCancelButton: true,
     confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
@@ -845,9 +858,10 @@ if (contact2Control?.value) {
 if (emailControl?.errors) {
   if (emailControl.errors['required']) {
     missingFields.push('Email is Required');
-  } else if (emailControl.errors['pattern'] || (emailControl.value && !this.isValidEmail(emailControl.value))) {
-    missingFields.push('Email - Must be a valid email address');
+  } else if (emailControl.errors['pattern']) {
+    missingFields.push('Email Address - Please enter a valid email');
   }
+
 }
 
   if (this.distributionForm.get('company')?.invalid) {
@@ -930,7 +944,7 @@ if (emailControl?.errors) {
               Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: 'Distribution centre updated successfully!',
+                text: 'Distribution Centre updated successfully!',
                 customClass: {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 }
@@ -967,7 +981,7 @@ if (emailControl?.errors) {
                         errorMessage = 'Email already exists.';
                         break;
                     case 'contact':
-                      errorMessage = 'Mobile Number already exists.';
+                      errorMessage = 'Contact Number already exists.';
                       break;
                     default:
                       errorMessage = error.error.error || 'A distribution center with these details already exists.';
@@ -1059,7 +1073,7 @@ private formatErrorMessagesForAlert(errors: { field: string; error: string }[]):
 
    if (fieldName.includes('contact')) {
     if (field.errors['pattern']) {
-      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+      return 'Please enter a valid contact number (format: +947XXXXXXXX)';
     }
     if (field.errors['startsWithSeven']) {
       return 'Mobile number must start with 7';
@@ -1084,7 +1098,7 @@ private formatErrorMessagesForAlert(errors: { field: string; error: string }[]):
 
   if (field.errors['pattern']) {
     if (fieldName.includes('contact')) {
-      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+      return 'Please enter a valid contact number (format: +947XXXXXXXX)';
     }
   }
 

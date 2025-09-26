@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { TokenService } from '../../../services/token/services/token.service';
 import { Location } from '@angular/common';
+import { CalendarModule } from 'primeng/calendar';
 
 class CropTask {
   'id': number;
@@ -37,7 +38,7 @@ class CropTask {
 @Component({
   selector: 'app-user-task-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, CalendarModule],
   templateUrl: './user-task-edit.component.html',
   styleUrl: './user-task-edit.component.css',
 })

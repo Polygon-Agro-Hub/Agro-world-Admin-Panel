@@ -375,7 +375,7 @@ onSubmit() {
   }
 
   if (!this.personalData.accHolderName) {
-    missingFields.push('Account Holder Name is Required');
+    missingFields.push("Account Holder's Name is required.");
   }
 
   if (!this.personalData.accNumber) {

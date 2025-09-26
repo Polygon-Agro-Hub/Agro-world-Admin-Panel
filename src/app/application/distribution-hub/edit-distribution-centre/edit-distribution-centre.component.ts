@@ -311,6 +311,7 @@ getFlagUrl(countryCode: string): string {
 
   // Update fetchAllCompanies method
   fetchAllCompanies() {
+    this.isLoading = true;
     this.distributionService.getAllCompanies().subscribe(
       (res) => {
         this.companyList = res.data.map((company: any) => ({
@@ -325,6 +326,7 @@ getFlagUrl(countryCode: string): string {
         }));
 
         console.log('Company list loaded:', this.companyList);
+        this.isLoading = false;
       },
       (error) => {
         console.error('Error fetching companies:', error);

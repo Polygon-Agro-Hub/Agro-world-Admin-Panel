@@ -143,7 +143,7 @@
 
         <div *ngIf="personalData.jobRole === 'Distribution Officer'">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Manager Name*
+            Manager Name * 
           </label>
           <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
@@ -371,7 +371,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div class="pb-6">
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
-            Number*</label>
+            Number *</label>
           <input (blur)="onBlur('houseNumber')" id="houseNumber" name="houseNumber"
   [(ngModel)]="personalData.houseNumber" (input)="formatAddressField('houseNumber')"
   (keypress)="preventAddressSpecialCharacters($event)"
@@ -381,7 +381,7 @@
         </div>
 
         <div class="pb-6">
-          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name*</label>
+          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
           <input (blur)="onBlur('streetName')" id="streetName" name="streetName" 
   [(ngModel)]="personalData.streetName" (input)="formatAddressField('streetName')"
   (keypress)="preventAddressSpecialCharacters($event)"
@@ -390,7 +390,7 @@
         </div>
 
         <div class="pb-6">
-          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City*</label>
+          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
           <input (blur)="onBlur('city')" id="city" name="city" 
   [(ngModel)]="personalData.city" (input)="formatAddressField('city')"
   (keypress)="preventAddressSpecialCharacters($event)"
@@ -400,7 +400,7 @@
 
        <div class="pb-6">
   <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    District*
+    District *
   </label>
   
   <p-dropdown
@@ -430,7 +430,7 @@
 
         <div class="pb-6">
           <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Province*
+            Province *
           </label>
           <input id="province" name="province" [(ngModel)]="personalData.province"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -438,7 +438,7 @@
         </div>
 
         <div class="pb-6">
-          <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country*</label>
+          <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country *</label>
           <input id="country" name="country" [(ngModel)]="personalData.country"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             readonly value="Sri Lanka" />
@@ -451,7 +451,7 @@
       </h2>
       <div class="pb-6">
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
-          Name*</label>
+          Name *</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
           (keypress)="preventAccountHolderSpecialCharacters($event)" (blur)="onBlur('accHolderName')"
           (input)="formatAccountHolderName()"
@@ -464,7 +464,7 @@
 
       <div class="pb-6">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Account Number*
+          Account Number *
         </label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
           (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('accNumber')"(ngModelChange)="validateAccNumber()"
@@ -477,7 +477,7 @@
 
       <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Confirm Account Number*
+          Confirm Account Number *
         </label>
         <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="personalData.confirmAccNumber"
           (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('confirmAccNumber')"(ngModelChange)="validateConfirmAccNumber()" 
@@ -495,7 +495,7 @@
 
       <div class="pb-6">
         <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Bank Name*
+          Bank Name *
         </label>
         <p-dropdown [(ngModel)]="selectedBankId" [options]="bankOptions" optionLabel="label" optionValue="value"
           [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank" (onChange)="onBankChange()"
@@ -509,7 +509,7 @@
 
       <div class="pb-6">
         <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Branch Name*
+          Branch Name *
         </label>
         <p-dropdown [(ngModel)]="selectedBranchId" [options]="branchOptions" optionLabel="label" optionValue="value"
           [filter]="true" filterBy="label" [showClear]="false" [disabled]="!selectedBankId"

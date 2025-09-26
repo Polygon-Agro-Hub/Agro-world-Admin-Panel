@@ -1,8 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
-  style="min-width: 1200px">
+<div class="fixed-width-container" style="min-width: 1200px">
   <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()"
     class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
@@ -17,7 +15,7 @@
     </svg>
     Add New
   </button>
-  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg  ">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -65,7 +63,7 @@
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
-    <div *ngIf="hasData" class="overflow-x-auto">
+    <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>

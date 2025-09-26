@@ -191,24 +191,42 @@ export class SlaveCropCalendarComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
-      background: '#1e293b', // dark background (slate-800)
-      color: '#e2e8f0', // light text (slate-200)
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     });
 
     if (result.isConfirmed) {
       this.isLoading = true;
       this.ongoingCultivationService.deleteOngoingCultivation(id).subscribe({
         next: () => {
-          this.newsItems.splice(index, 1);
-          this.hasData = this.newsItems.length > 0; // Update hasData after deletion
-          this.isLoading = false;
-          Swal.fire('Deleted!', 'Cultivation has been deleted.', 'success');
-        },
-        error: (err) => {
-          this.isLoading = false;
-          console.error('Error deleting cultivation:', err);
-          Swal.fire('Error!', 'Failed to delete cultivation', 'error');
-        },
+  this.newsItems.splice(index, 1);
+  this.hasData = this.newsItems.length > 0; // Update hasData after deletion
+  this.isLoading = false;
+  Swal.fire({
+    title: 'Deleted!',
+    text: 'Cultivation has been deleted.',
+    icon: 'success',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  });
+},
+error: (err) => {
+  this.isLoading = false;
+  console.error('Error deleting cultivation:', err);
+  Swal.fire({
+    title: 'Error!',
+    text: 'Failed to delete cultivation',
+    icon: 'error',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  });
+},
       });
     }
   }

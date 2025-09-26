@@ -244,7 +244,7 @@ export class ViewCropGroupComponent {
           next: (data: any) => {
             Swal.fire({
               title: 'Deleted',
-              text: 'The product has been deleted.',
+              text: 'The crop group item has been deleted.',
               icon: 'success',
               customClass: {
                 popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
@@ -257,7 +257,7 @@ export class ViewCropGroupComponent {
           error: (error) => {
             Swal.fire({
               title: 'Error',
-              text: 'There was a problem deleting the product.',
+              text: 'There was a problem deleting the crop group item.',
               icon: 'error',
               customClass: {
                 popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',

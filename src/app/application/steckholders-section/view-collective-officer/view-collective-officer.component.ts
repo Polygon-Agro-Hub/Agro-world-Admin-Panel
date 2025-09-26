@@ -524,8 +524,10 @@ export class ViewCollectiveOfficerComponent {
       this.selectedCenterId = null; // Reset selection
       this.selectedIrmId = null; // Reset selection
       this.iseditModalOpen = true;
+      this.collectionCenterManagerNames = [];
     } else if (item.claimStatus === 1) {
       this.showDisclaimView = true;
+      
     }
   }
 
@@ -539,6 +541,12 @@ export class ViewCollectiveOfficerComponent {
             title: 'Success',
             text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
+            
           }).then((result) => {
             if (result.isConfirmed) {
               window.location.reload();
@@ -552,6 +560,11 @@ export class ViewCollectiveOfficerComponent {
             title: 'Error',
             text: 'Failed to disclaim User successfully!',
             confirmButtonText: 'Try Again',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
           });
         }
       );
@@ -595,6 +608,11 @@ export class ViewCollectiveOfficerComponent {
             title: 'Success',
             text: 'Officer claimed successfully!',
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
           }).then((result) => {
             if (result.isConfirmed) {
               this.iseditModalOpen = false;
@@ -610,6 +628,11 @@ export class ViewCollectiveOfficerComponent {
             title: 'Error',
             text: 'Failed to claim officer!',
             confirmButtonText: 'Try Again',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
           });
         }
       );

@@ -1,5 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button (click)="back()" class="text-textLight dark:text-textDark">
+<button *ngIf="!isView" (click)="back()" class="text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -872,7 +872,7 @@
       <div class="pb-6">
         <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
           (in English)</label>
-        <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
+        <input id="companyNameEnglish" name="companyNameEnglish" [disabled]="true" [(ngModel)]="companyData.companyNameEnglish"
           (blur)="onBlur('companyNameEnglish')"
           (input)="onTrimInput($event, companyData, 'companyNameEnglish')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -948,7 +948,7 @@
       <div class="pb-6">
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s Name *</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
-          (keydown)="allowOnlyValidNameCharacters($event)"
+          (keydown)="allowOnlyValidNameCharacters($event)" [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
           Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
@@ -971,7 +971,7 @@
     type="text"
     id="bankName"
     name="bankName"
-    [(ngModel)]="companyData.bankName"
+    [(ngModel)]="companyData.bankName" [disabled]="true"
     class="mt-1 block w-full p-2 border rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack
            border-gray-300 focus:ring-[#8AC440] focus:border-[#8AC440]"
     [ngClass]="{ 'border-red-500': isFieldInvalid('bankName') }"
@@ -990,7 +990,7 @@
     type="text"
     id="branchName"
     name="branchName"
-    [(ngModel)]="companyData.branchName"
+    [(ngModel)]="companyData.branchName" [disabled]="true"
     class="mt-1 block w-full p-2 border rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack
            border-gray-300 focus:ring-[#8AC440] focus:border-[#8AC440]"
     [ngClass]="{ 'border-red-500': isFieldInvalid('branchName') }"

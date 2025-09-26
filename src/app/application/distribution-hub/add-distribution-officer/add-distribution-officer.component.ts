@@ -85,8 +85,8 @@ export class AddDistributionOfficerComponent implements OnInit {
   { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
   { code: 'IN', dialCode: '+91', name: 'India' },
   { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'US', dialCode: '+1', name: 'United States' }
+  // { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+  // { code: 'US', dialCode: '+1', name: 'United States' }
 ];
 
 getFlagUrl(countryCode: string): string {
@@ -141,6 +141,8 @@ getFlagUrl(countryCode: string): string {
   ) { }
 
   ngOnInit(): void {
+
+    
     this.route.paramMap.subscribe((params) => {
       const idParam = params.get('id');
       this.id = idParam ? +idParam : null;
@@ -439,6 +441,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
+    
     // Validate pageOne before navigating to pageTwo
     if (page === 'pageTwo') {
       const validation = this.validatePageOne();
@@ -669,6 +672,8 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
   }
 
   onSubmit() {
+
+    
     // Validate pageTwo before submitting
     this.markAllFieldsAsTouched();
     const validation = this.validatePageTwo();
@@ -700,6 +705,10 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
       confirmButtonText: 'Yes, create it!',
       cancelButtonText: 'No, cancel',
       reverseButtons: true,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -711,11 +720,15 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
               this.officerId = res.officerId;
               this.errorMessage = '';
 
-              Swal.fire(
-                'Success',
-                'Created Distribution Centre Head Successfully',
-                'success'
-              ).then(() => {
+              Swal.fire({
+                title: 'Success',
+                text: 'Created Distribution Centre Head Successfully',
+                icon: 'success',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+              }).then(() => {
                 this.location.back();
               });
             },
@@ -723,7 +736,16 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
               this.isLoading = false;
               this.errorMessage =
                 error.error.error || 'An unexpected error occurred';
-              Swal.fire('Error', this.errorMessage, 'error');
+              // Swal.fire('Error', this.errorMessage, 'error');
+              Swal.fire({
+                title: 'Error',
+                text: this.errorMessage,
+                icon: 'error',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+              })
             }
           );
       } else {

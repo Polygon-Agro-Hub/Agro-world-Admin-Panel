@@ -1,58 +1,64 @@
 <!-- Fullscreen overlay container -->
-<div class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-    <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md text-center">
+<div class="fixed inset-0 bg-black bg-opacity-40 dark:bg-opacity-60 z-50 flex items-center justify-center">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900/50 p-8 w-full max-w-md text-center">
 
         <div class="mt-2 mb-4">
-            <h1 class="font-semibold text-[#000000] mb-2">Finish Up!</h1>
-            <p class="text-[#4B5563]">Marking as completed in 30 seconds.</p>
-            <p class="text-[#4B5563]">Tap 'Go Back' to edit.</p>
-          </div>
-      
-      <!-- Circular Timer (centered and clockwise) -->
-      <div class="w-full flex justify-center mb-6">
-        <div class="relative w-40 h-40">
-          <svg class="w-full h-full">
-            <!-- Background circle -->
-            <circle
-              cx="50%"
-              cy="50%"
-              r="60"
-              stroke="#e5e7eb"
-              stroke-width="8"
-              fill="transparent"
-            />
-            <!-- Progress circle -->
-            <circle
-              cx="50%"
-              cy="50%"
-              r="60"
-              [attr.stroke-dasharray]="circumference"
-              [attr.stroke-dashoffset]="dashOffset"
-              stroke="#3b82f6"
-              stroke-width="8"
-              fill="transparent"
-              stroke-linecap="round"
-              transform="rotate(-90 80 80)"
-            />
-          </svg>
-          <!-- Time in center -->
-          <div class="absolute inset-0 flex items-center justify-center text-2xl font-semibold text-gray-700">
-            {{ formattedTime }}
-          </div>
+            <h1 class="font-semibold text-[#000000] dark:text-white mb-2">Finish Up!</h1>
+            <p class="text-[#4B5563] dark:text-gray-300">Marking as completed in 30 seconds.</p>
+            <p class="text-[#4B5563] dark:text-gray-300">Tap 'Go Back' to edit.</p>
         </div>
-      </div>
+      
+        <!-- Circular Timer (centered and clockwise) -->
+        <div class="w-full flex justify-center mb-6">
+            <div class="relative w-40 h-40">
+                <svg class="w-full h-full">
+                    <!-- Background circle -->
+                    <circle
+                        cx="50%"
+                        cy="50%"
+                        r="60"
+                        stroke="#e5e7eb"
+                        stroke-width="8"
+                        fill="transparent"
+                        class="dark:stroke-gray-600"
+                    />
+                    <!-- Progress circle -->
+                    <circle
+                        cx="50%"
+                        cy="50%"
+                        r="60"
+                        [attr.stroke-dasharray]="circumference"
+                        [attr.stroke-dashoffset]="dashOffset"
+                        stroke="#3b82f6"
+                        stroke-width="8"
+                        fill="transparent"
+                        stroke-linecap="round"
+                        transform="rotate(-90 80 80)"
+                        class="dark:stroke-blue-500"
+                    />
+                </svg>
+                <!-- Time in center -->
+                <div class="absolute inset-0 flex items-center justify-center text-2xl font-semibold text-gray-700 dark:text-gray-200">
+                    {{ formattedTime }}
+                </div>
+            </div>
+        </div>
   
-      <!-- Buttons -->
-      <div class="flex flex-row gap-4">
-        
-        <button (click)="goBackToEdit()" class="border border-gray-300 text-[#D3D3D3] bg-[#74788D] hover:bg-[#74788D] py-3 px-4 rounded-lg transition min-w-48">
-          Go Back to Edit
-        </button>
+        <!-- Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button 
+                (click)="goBackToEdit()" 
+                class="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 py-3 px-4 rounded-lg transition min-w-48 font-medium"
+            >
+                Go Back to Edit
+            </button>
 
-        <button (click)="markAsCompleted()" class=" hover:bg-[#3980C0] text-[#FFFFFF] bg-[#3980C0] py-3 px-4 rounded-lg transition w-48">
-            Mark as Completed
-        </button>
-      </div>
+            <button 
+                (click)="markAsCompleted()" 
+                class="bg-[#3980C0] hover:bg-[#2c6ba8] dark:bg-blue-600 dark:hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition min-w-48 font-medium"
+            >
+                Mark as Completed
+            </button>
+        </div>
     </div>
-  </div>
-  
+</div>

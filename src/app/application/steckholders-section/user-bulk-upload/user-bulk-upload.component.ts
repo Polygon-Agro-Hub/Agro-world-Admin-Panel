@@ -42,7 +42,7 @@ export class UserBulkUploadComponent {
     private http: HttpClient,
     private plantcareUsersService: PlantcareUsersService,
     private router: Router
-  ) {}
+  ) { }
 
   back(): void {
     this.router.navigate(['steckholders/action/farmers']);
@@ -86,6 +86,10 @@ export class UserBulkUploadComponent {
         title: 'Invalid File Type',
         text: 'Please upload a CSV or XLSX file.',
         confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+          title: 'dark:text-white',
+        }
       });
     }
   }
@@ -97,6 +101,10 @@ export class UserBulkUploadComponent {
         title: 'Warning',
         text: 'Please select a file to upload',
         confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+          title: 'dark:text-white',
+        }
       });
       return;
     }
@@ -164,58 +172,110 @@ export class UserBulkUploadComponent {
         if (duplicates.length > 0) {
           this.isLoading = false;
           this.downloadExcel(duplicates, 'duplicate_entries.xlsx');
+          // Swal.fire({
+          //   icon: 'warning',
+          //   title: 'Duplicate Entries Found!',
+          //   html: `
+          //     <p>Please note: Your file contains duplicate NIC numbers or phone numbers.</p>
+          //     <br/>
+          //     <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name
+          //     }</p>
+          //     <br/>
+          //     <hr></hr>
+          //     <br/>
+          //     <p style="text-align: right;">File with duplicate entries downloaded.</p>
+          //     <br/>
+          //     <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+          //       <thead>
+          //         <tr>
+          //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
+          //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
+          //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
+          //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
+          //         </tr>
+          //       </thead>
+          //       <tbody>
+          //         ${duplicates
+          //       .map(
+          //         (user) => `
+          //           <tr>
+          //             <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
+          //             <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
+          //             <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
+          //             <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
+          //           </tr>`
+          //       )
+          //       .join('')}
+          //       </tbody>
+          //     </table>
+          //     <br/>
+          //     <p style="text-align: left;">Found <b>${duplicates.length
+          //     }</b> duplicate entries.</p>
+          //     <p style="text-align: left;">Please fix duplicates and upload again.</p>
+          //   `,
+          //   width: '80%',
+          //   confirmButtonText: 'Close',
+          //   customClass: {
+          //     popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+          //     title: 'dark:text-white',
+          //   }
+          // });
           Swal.fire({
             icon: 'warning',
             title: 'Duplicate Entries Found!',
             html: `
-              <p>Please note: Your file contains duplicate NIC numbers or phone numbers.</p>
-              <br/>
-              <p style="text-align: left;">Add Plant Care Users - ${
-                this.selectedFile!.name
-              }</p>
-              <br/>
-              <hr></hr>
-              <br/>
-              <p style="text-align: right;">File with duplicate entries downloaded.</p>
-              <br/>
-              <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
-                <thead>
-                  <tr>
-                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
-                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
-                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
-                    <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${duplicates
-                    .map(
-                      (user) => `
-                    <tr>
-                      <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
-                      <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
-                      <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
-                      <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
-                    </tr>`
-                    )
-                    .join('')}
-                </tbody>
-              </table>
-              <br/>
-              <p style="text-align: left;">Found <b>${
-                duplicates.length
-              }</b> duplicate entries.</p>
-              <p style="text-align: left;">Please fix duplicates and upload again.</p>
+              <div class="swal-content">
+                <p>Please note: Your file contains duplicate NIC numbers or phone numbers.</p>
+                <br/>
+                <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}</p>
+                <br/>
+                <hr style="border-color: #d1d5db;" class="dark:border-gray-600">
+                <br/>
+                <p style="text-align: right;">File with duplicate entries downloaded.</p>
+                <br/>
+                <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                  <thead>
+                    <tr class="dark:bg-gray-700">
+                      <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">First Name</th>
+                      <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">Last Name</th>
+                      <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">Phone Number</th>
+                      <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">NIC number</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${duplicates
+                          .map(
+                            (user) => `
+                      <tr>
+                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.firstName}</td>
+                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.lastName}</td>
+                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.phoneNumber}</td>
+                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.NICnumber}</td>
+                      </tr>`
+                          )
+                          .join('')}
+                  </tbody>
+                </table>
+                <br/>
+                <p style="text-align: left; color: #374151;" class="dark:text-gray-200">Found <b style="color: #dc2626;" class="dark:text-red-400">${duplicates.length}</b> duplicate entries.</p>
+                <p style="text-align: left; color: #374151;" class="dark:text-gray-200">Please fix duplicates and upload again.</p>
+              </div>
             `,
             width: '80%',
             confirmButtonText: 'Close',
+            customClass: {
+              popup: '!bg-white dark:!bg-gray-800 !text-gray-800 dark:!text-white',
+              title: '!text-gray-800 dark:!text-white !font-semibold',
+              htmlContainer: '!text-gray-800 dark:!text-gray-200',
+              confirmButton: '!bg-blue-500 hover:!bg-blue-600 !text-white !font-medium !py-2 !px-4 !rounded'
+            }
           });
           return;
         }
 
         const formData = new FormData();
         console.log(this.selectedFile);
-        
+
         formData.append('file', this.selectedFile);
 
         this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
@@ -233,6 +293,10 @@ export class UserBulkUploadComponent {
                 ),
                 width: '80%',
                 confirmButtonText: 'Close & Go Back',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
               });
             } else if (response.duplicateEntries) {
               this.downloadExcel(
@@ -249,6 +313,10 @@ export class UserBulkUploadComponent {
                 ),
                 width: '80%',
                 confirmButtonText: 'Close & Go Back',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
               });
             } else {
               Swal.fire({
@@ -256,6 +324,10 @@ export class UserBulkUploadComponent {
                 title: 'Success',
                 text: `Successfully uploaded ${response.rowsAffected} users!`,
                 confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
               });
             }
             this.selectedFile = null;
@@ -319,27 +391,73 @@ export class UserBulkUploadComponent {
       title: 'Upload Failed',
       text: errorMessage,
       confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+      }
     });
   }
 
+  // private buildUserTable(
+  //   users: ExistingUser[],
+  //   newUsersInserted: number
+  // ): string {
+  //   return `
+  //     <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
+  //     <br/>
+  //     <hr></hr>
+  //     <br/>
+  //     <p style="text-align: right;">File downloaded.</p>
+  //     <br/>
+  //     <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+  //       <thead>
+  //         <tr>
+  //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
+  //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
+  //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
+  //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
+  //         </tr>
+  //       </thead>
+  //       <tbody>
+  //         ${users
+  //       .map(
+  //         (user) => `
+  //           <tr>
+  //             <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
+  //             <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
+  //             <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
+  //             <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
+  //           </tr>
+  //         `
+  //       )
+  //       .join('')}
+  //       </tbody>
+  //     </table>
+  //     <br/>
+  //     <p style="text-align: left;">Successfully added <b>${newUsersInserted}</b> new users.</p>
+  //     <p style="text-align: left;">Found <b>${users.length
+  //     }</b> existing users:</p>
+  //   `;
+  // }
   private buildUserTable(
-    users: ExistingUser[],
-    newUsersInserted: number
-  ): string {
-    return `
-      <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
+  users: ExistingUser[],
+  newUsersInserted: number
+): string {
+  return `
+    <div class="dark-mode-content">
+      <p class="text-gray-800 dark:text-gray-200">Please note: These user profiles with redundancy errors were not uploaded.</p>
       <br/>
-      <hr></hr>
+      <hr class="border-gray-300 dark:border-gray-600">
       <br/>
-      <p style="text-align: right;">File downloaded.</p>
+      <p class="text-right text-gray-800 dark:text-gray-200">File downloaded.</p>
       <br/>
-      <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+      <table class="w-full text-left border-collapse">
         <thead>
           <tr>
-            <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
-            <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
-            <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
-            <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
+            <th class="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">First Name</th>
+            <th class="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">Last Name</th>
+            <th class="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">Phone Number</th>
+            <th class="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">NIC number</th>
           </tr>
         </thead>
         <tbody>
@@ -347,10 +465,10 @@ export class UserBulkUploadComponent {
             .map(
               (user) => `
             <tr>
-              <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
+              <td class="p-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">${user.firstName}</td>
+              <td class="p-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">${user.lastName}</td>
+              <td class="p-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">${user.phoneNumber}</td>
+              <td class="p-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">${user.NICnumber}</td>
             </tr>
           `
             )
@@ -358,16 +476,30 @@ export class UserBulkUploadComponent {
         </tbody>
       </table>
       <br/>
-      <p style="text-align: left;">Successfully added <b>${newUsersInserted}</b> new users.</p>
-      <p style="text-align: left;">Found <b>${
-        users.length
-      }</b> existing users:</p>
-    `;
-  }
+      <p class="text-left text-gray-800 dark:text-gray-200">Successfully added <b class="text-green-600 dark:text-green-400">${newUsersInserted}</b> new users.</p>
+      <p class="text-left text-gray-800 dark:text-gray-200">Found <b class="text-red-600 dark:text-red-400">${users.length}</b> existing users:</p>
+    </div>
+  `;
+}
 
-  onCancel(): void {
-    if (this.selectedFile) {
-      this.selectedFile = null;
-    }
+
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/steckholders/action/farmers']);
+      }
+    });
   }
 }

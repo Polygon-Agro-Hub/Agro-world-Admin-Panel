@@ -85,26 +85,38 @@ export class ViewCropTaskComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
       if (result.isConfirmed) {
         this.cropCalService.deleteCropTask(id, cropId, indexId).subscribe(
           (data: any) => {
-            if (data) {
-              Swal.fire(
-                'Deleted!',
-                'The crop task item has been deleted.',
-                'success'
-              );
-              this.fetchAllCropTask();
-            }
-          },
-          (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the crop calendar.',
-              'error'
-            );
-          }
+  if (data) {
+    Swal.fire({
+      title: 'Deleted!',
+      text: 'The crop task item has been deleted.',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    this.fetchAllCropTask();
+  }
+},
+(error) => {
+  Swal.fire({
+    title: 'Error!',
+    text: 'There was an error deleting the crop calendar.',
+    icon: 'error',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  });
+}
         );
       }
     });

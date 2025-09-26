@@ -375,16 +375,33 @@
         class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >Starting Date *
       </label>
-      <input
-        type="date"
-        id="startingDate"
-        [(ngModel)]="taskItems.startingDate"
-        name="startingDate"
-        #startingDate="ngModel"
-        required
-        [value]="taskItems.startingDate"
-        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-      />
+      <p-calendar
+    id="startingDate"
+    [(ngModel)]="taskItems.startingDate"
+    name="startingDate"
+    #startingDate="ngModel"
+    required
+    [showIcon]="true"
+    dateFormat="yy-mm-dd"
+    [showButtonBar]="true"
+    [monthNavigator]="true"
+    [yearNavigator]="true"
+    yearRange="1900:2100"
+    inputId="startingDate"
+    placeholder="Select Date"
+    [class]="'mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack'"
+    [style]="{'width': '100%'}"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                           [&_.p-datepicker-header]:dark:text-white
+                           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                           
+                           [&_.p-button:hover]:dark:bg-[#6b7280]"
+    [inputStyle]="{'width': '100%', 'border': 'none', 'background': 'transparent'}"
+    [baseZIndex]="10000">
+</p-calendar>
       <div
         *ngIf="
           startingDate.invalid && (startingDate.dirty || startingDate.touched)

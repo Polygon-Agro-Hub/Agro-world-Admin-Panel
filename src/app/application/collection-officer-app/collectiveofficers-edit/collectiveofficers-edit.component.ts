@@ -85,6 +85,7 @@ userForm: FormGroup = new FormGroup({});
   branchOptions: any[] = [];
   districtOptions: any[] = [];
   invalidFields: Set<string> = new Set();
+  managerRequiredError: boolean = false;
 
 // Remove the redundant `district` array
 // Keep only the `districts` array
@@ -135,7 +136,11 @@ setupDropdownOptions() {
     { code: 'NL', dialCode: '+31', name: 'Netherlands' }
   ];
 
-  
+  jobRoleOptions = [
+  { label: 'Collection Centre Manager', value: 'Collection Center Manager' },
+  { label: 'Collection Officer', value: 'Collection Officer' },
+  { label: 'Customer Officer', value: 'Customer Officer' }
+];
 
 
   isLanguageRequired = false;
@@ -522,6 +527,21 @@ isFieldInvalid(fieldName: string): boolean {
   }
 
 
+onManagerChange(): void {
+  this.validateManager();
+}
+
+onJobRoleChange(): void {
+  this.validateManager();
+  // If you need to reset manager when job role changes:
+  if (this.personalData.jobRole !== 'Collection Officer') {
+    this.personalData.irmId = null;
+    this.managerRequiredError = false;
+  }
+  this.EpmloyeIdCreate(); // Call the ID creation method
+}
+
+
   // Update existing formatAccountHolderName method
   formatAccountHolderName(): void {
   let value = this.personalData.accHolderName;
@@ -880,29 +900,30 @@ preventInvalidEnglishCharacters(event: KeyboardEvent): void {
   }
 
   EpmloyeIdCreate() {
-    let rolePrefix: string | undefined;
+  let rolePrefix: string | undefined;
 
-    const rolePrefixes: { [key: string]: string } = {
-      'Collection Center Head': 'CCH',
-      'Collection Centre Manager': 'CCM',
-      'Customer Officer': 'CUO',
-      'Collection Officer': 'COO',
-    };
+  const rolePrefixes: { [key: string]: string } = {
+    'Collection Center Head': 'CCH',
+    'Collection Center Manager': 'CCM', // Fixed the key to match the value
+    'Customer Officer': 'CUO',
+    'Collection Officer': 'COO',
+  };
 
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
+  rolePrefix = rolePrefixes[this.personalData.jobRole];
 
-    if (this.personalData.jobRole === this.initiateJobRole) {
-      this.lastID = this.initiateId;
-    } else {
-      if (!rolePrefix) {
-        return;
-      }
-
-      this.getLastID(rolePrefix).then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      });
+  if (this.personalData.jobRole === this.initiateJobRole) {
+    this.lastID = this.initiateId;
+  } else {
+    if (!rolePrefix) {
+      return;
     }
+
+    this.getLastID(rolePrefix).then((lastID) => {
+      this.personalData.empId = rolePrefix + lastID;
+    });
   }
+}
+
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve) => {
@@ -934,9 +955,18 @@ onCancel() {
   });
 }
 
+validateManager(): void {
+  if (this.personalData.jobRole === 'Collection Officer') {
+    this.managerRequiredError = !this.personalData.irmId;
+  } else {
+    this.managerRequiredError = false;
+  }
+}
 
 nextFormCreate(page: 'pageOne' | 'pageTwo') {
   if (page === 'pageTwo') {
+    this.validateManager();
+
     const missingFields: string[] = [];
 
     // Validate pageOne fields

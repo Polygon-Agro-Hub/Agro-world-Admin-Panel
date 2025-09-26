@@ -123,7 +123,7 @@
             productObj.displaytype === 'AP&SP&D') &&
           productObj.promo
         ">
-        <label class="text-[#534E4E]">Discount Percentage *</label>
+        <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
         <input type="number" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
           (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'discountedPrice')"
           (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$"
@@ -175,26 +175,52 @@
       >
       </p-chips>
     </section> -->
-          <section>
-            <mat-form-field class="w-full" [class.dark-mode]="themeService.isDarkTheme()" appearance="fill">
-              <mat-label class="dark:text-textDark">Tags</mat-label>
-              <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="templateKeywords"
-                class="dark:bg-tileBlack">
-                @for (keyword of templateKeywords(); track keyword) {
-                <mat-chip-row (removed)="removeTemplateKeyword(keyword)"
-                  class="chip-style dark:bg-tileHoverDark dark:text-textDark">
-                  {{ keyword }}
-                  <button matChipRemove aria-label="'remove template form' + keyword">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
-                (matChipInputTokenEnd)="addTemplateKeyword($event)"
-                class="input-style dark:bg-tileBlack dark:text-textDark dark:placeholder-textDark" />
-            </mat-form-field>
-          </section>
+
+    <!-- <div class="chip-input-wrapper">
+      <mat-form-field class="w-full" color="primary">
+        <mat-label class="dark:text-white">Tags</mat-label>
+        <mat-chip-grid #templateChipGrid class="dark:bg-gray-800">
+          @for (keyword of templateKeywords(); track keyword) {
+          <mat-chip-row 
+            (removed)="removeTemplateKeyword(keyword)" 
+            class="dark:bg-gray-700 dark:text-white hover:dark:bg-gray-600">
+            {{ keyword }}
+            <button matChipRemove [attr.aria-label]="'remove ' + keyword">
+              <mat-icon class="dark:text-white">cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          }
+        </mat-chip-grid>
+      
+        <input 
+          matInput 
+          placeholder="New keyword..." 
+          [matChipInputFor]="templateChipGrid"
+          (matChipInputTokenEnd)="addTemplateKeyword($event)"
+          class="dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" />
+      </mat-form-field>
+    </div> -->
+     <div>
+      <mat-form-field class="w-full" color="primary" >
+        <mat-label class="dark:text-white">Tags</mat-label>
+        <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="templateKeywords"
+          class="dark:bg-gray-800">
+          @for (keyword of templateKeywords(); track keyword) {
+          <mat-chip-row (removed)="removeTemplateKeyword(keyword)"
+            class="dark:bg-gray-700 dark:text-white hover:dark:bg-gray-600">
+            {{ keyword }}
+            <button matChipRemove aria-label="'remove template form' + keyword">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          }
+        </mat-chip-grid>
+        <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
+          (matChipInputTokenEnd)="addTemplateKeyword($event)"
+          class="input-style dark:bg-tileBlack dark:text-textDark dark:placeholder-textDark" />
+      </mat-form-field>
+     </div>
+          
         </div>
       </div>
     </div>

@@ -193,23 +193,32 @@
           <span *ngIf="templateKeywords().length > 0">({{ templateKeywords().length }})</span>
         </label>
 
-        <mat-form-field class="w-full" color="primary" [class.dark-mode]="themeService.isDarkTheme()">
-          <mat-label class="dark:bg-tileBlack dark-text">Tags</mat-label>
-          <mat-chip-grid #templateChipGrid class="dark:bg-tileBlack dark-text">
-            @for (keyword of templateKeywords(); track keyword) {
-            <mat-chip-row (removed)="removeTemplateKeyword(keyword)" class="chip-style dark:bg-tileHoverDark dark-text">
-              {{ keyword }}
-              <button matChipRemove [attr.aria-label]="'remove ' + keyword" class="dark-text">
-                <mat-icon class="dark-text">cancel</mat-icon>
-              </button>
-            </mat-chip-row>
-            }
-          </mat-chip-grid>
+        <div class="chip-input-wrapper">
+          <mat-form-field class="w-full" color="primary">
+            <mat-label class="">Tags</mat-label>
+            <mat-chip-grid #templateChipGrid class="">
+              @for (keyword of templateKeywords(); track keyword) {
+              <mat-chip-row 
+                (removed)="removeTemplateKeyword(keyword)" 
+                class="">
+                {{ keyword }}
+                <button matChipRemove [attr.aria-label]="'remove ' + keyword">
+                  <mat-icon class="">cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+          
+            <input 
+              matInput 
+              placeholder="New keyword..." 
+              [matChipInputFor]="templateChipGrid"
+              (matChipInputTokenEnd)="addTemplateKeyword($event)"
+              class="" />
+          </mat-form-field>
+        </div>
 
-          <input matInput placeholder="New keyword..." [matChipInputFor]="templateChipGrid"
-            (matChipInputTokenEnd)="addTemplateKeyword($event)"
-            class="input-style dark:bg-tileBlack dark-text dark-placeholder" />
-        </mat-form-field>
+        
 
         <!-- Validation message -->
         <!-- Replace your current tags validation message with this -->

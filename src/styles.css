@@ -90,3 +90,12 @@ body {
   opacity: 0.7;
 }
 
+
+/* src/styles.css */
+.chip-input-wrapper .mat-mdc-floating-label,
+.chip-input-wrapper .mdc-floating-label,
+.chip-input-wrapper label.mdc-floating-label {
+  color: var(--label-text) !important;
+  opacity: 1 !important;
+  font-weight: 500;
+}

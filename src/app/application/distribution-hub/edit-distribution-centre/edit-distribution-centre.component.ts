@@ -937,70 +937,156 @@ if (emailControl?.errors) {
 
       const id = this.route.snapshot.params['id'];
 
-      this.distributionService
-        .updateDistributionCentreDetails(id, updateData)
-        .subscribe({
-          next: (response) => {
-            this.isLoading = false;
-            if (response.success) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Distribution Centre updated successfully!',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                }
-              }).then(() => {
-                this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
-              });
-            } else {
-              this.showErrorAlert(response.error || 'Update failed');
-            }
-          },
-          error: (error) => {
-            this.isLoading = false;
-            console.error('Update error:', error);
+      // this.distributionService
+      //   .updateDistributionCentreDetails(id, updateData)
+      //   .subscribe({
+      //     next: (response) => {
+      //       console.log('response', response)
+      //       this.isLoading = false;
+      //       if (response.success) {
+      //         Swal.fire({
+      //           icon: 'success',
+      //           title: 'Success!',
+      //           text: 'Distribution Centre updated successfully!',
+      //           customClass: {
+      //             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      //           }
+      //         }).then(() => {
+      //           this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
+      //         });
+      //       } else {
+      //         this.showErrorAlert(response.error || 'Update failed');
+      //       }
+      //     },
 
-            let errorMessage = 'Update failed. Please try again.';
+          
+      //     error: (error) => {
+      //       this.isLoading = false;
+      //       console.error('Update error:', error);
+
+      //       let errorMessage = 'Update failed. Please try again.';
             
-            if (error.error) {
-              // Handle validation errors
-              if (error.status === 400 && error.error.error) {
-                errorMessage = error.error.error;
-              }
-              // Handle conflict errors
-              else if (error.status === 409) {
-                if (error.error.conflictingRecord) {
-                  const conflict = error.error.conflictingRecord;
-                  switch (conflict.conflictType) {
-                    case 'name':
-                      errorMessage = 'A distribution center with this name already exists.';
-                      break;
-                    case 'regCode':
-                      errorMessage = 'A distribution center with this registration code already exists.';
-                      break;
-                    case 'email':
-                        errorMessage = 'Email already exists.';
-                        break;
-                    case 'contact':
-                      errorMessage = 'Contact Number already exists.';
-                      break;
-                    default:
-                      errorMessage = error.error.error || 'A distribution center with these details already exists.';
-                  }
-                } else {
-                  errorMessage = error.error.error || 'A distribution center with these details already exists.';
-                }
-              }
-              // Handle other errors
-              else if (error.error.message) {
-                errorMessage = error.error.message;
-              }
-            }
+      //       if (error.error) {
+      //         // Handle validation errors
+      //         if (error.status === 400 && error.error.error) {
+      //           errorMessage = error.error.error;
+      //         }
+      //         // Handle conflict errors
+      //         else if (error.status === 409) {
+      //           if (error.error.conflictingRecord) {
+      //             const conflict = error.error.conflictingRecord;
+      //             switch (conflict.conflictType) {
+      //               case 'name':
+      //                 errorMessage = 'A distribution center with this name already exists.';
+      //                 break;
+      //               case 'regCode':
+      //                 errorMessage = 'A distribution center with this registration code already exists.';
+      //                 break;
+      //               case 'email':
+      //                   errorMessage = 'Email already exists.';
+      //                   break;
+      //               case 'contact':
+      //                 errorMessage = 'Contact Number already exists.';
+      //                 break;
+      //               default:
+      //                 errorMessage = error.error.error || 'A distribution center with these details already exists.';
+      //             }
+      //           } else {
+      //             errorMessage = error.error.error || 'A distribution center with these details already exists.';
+      //           }
+      //         }
+      //         // Handle other errors
+      //         else if (error.error.message) {
+      //           errorMessage = error.error.message;
+      //         }
+      //       }
 
-            this.showErrorAlert(errorMessage);
+      //       this.showErrorAlert(errorMessage);
+      //     },
+      //   });
+
+      this.distributionService
+  .updateDistributionCentreDetails(id, updateData)
+  .subscribe(
+    (response) => {
+      console.log('response', response);
+      this.isLoading = false;
+      if (response.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Distribution Centre updated successfully!',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          },
+        }).then(() => {
+          this.router.navigate([
+            '/distribution-hub/action/view-polygon-centers',
+          ]);
+        });
+      } else {
+        this.showErrorAlert(response.error || 'Update failed');
+      }
+    },
+    (error: any) => {
+      this.isLoading = false;
+      console.error('Update error:', error);
+
+      let errorMessage = 'An unexpected error occurred';
+      let messages: string[] = [];
+
+      if (error.error && Array.isArray(error.error.errors)) {
+        // Collect all backend conflict keys into user-friendly messages
+        messages = error.error.errors.map((err: string) => {
+          switch (err) {
+            case 'name':
+              return 'A distribution center with this name already exists.';
+            case 'regCode':
+              return 'A distribution center with this registration code already exists.';
+            case 'email':
+              return 'Email already exists.';
+            case 'contact1':
+              return 'Contact Number - 1 already exists.';
+            case 'contact2':
+              return 'Contact Number - 2 already exists.';
+            default:
+              return 'Validation error: ' + err;
+          }
+        });
+      }
+
+      if (messages.length > 0) {
+        errorMessage =
+          '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+        messages.forEach((m) => {
+          errorMessage += `<li>${m}</li>`;
+        });
+        errorMessage += '</ul></div>';
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Duplicate Information',
+          html: errorMessage,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
           },
         });
+        return;
+      }
+
+      // Fallback: single error message
+      if (error.error && error.error.error) {
+        errorMessage = error.error.error;
+      }
+
+      this.showErrorAlert(errorMessage);
+    }
+  );
+
+        
     }
   });
 }

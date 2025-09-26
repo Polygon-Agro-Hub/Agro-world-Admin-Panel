@@ -101,7 +101,7 @@ back(): void {
               scheduleDateFormattedSL: this.formatDate(item.sheduleDate) // formatted for UI
             }));
             this.totalItemssl = response.total || response.totalCount || 0;
-            this.hasDataCustom = this.totalItemssl > 0;
+            this.hasDataCustom = response.total > 0;
           } else {
             const allPackages = Array.isArray(response) ? response : [];
             this.selectdPackage = allPackages.map((item: any) => ({

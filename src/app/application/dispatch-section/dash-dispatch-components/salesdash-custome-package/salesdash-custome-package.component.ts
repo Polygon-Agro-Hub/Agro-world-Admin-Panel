@@ -98,7 +98,9 @@ back(): void {
               totalAdditionalItems: item.totalAdditionalItems,
               packedAdditionalItems: item.packedAdditionalItems,
               additionalItemsStatus: item.additionalItemsStatus,
-              scheduleDateFormattedSL: this.formatDate(item.sheduleDate) // formatted for UI
+              scheduleDateFormattedSL: this.formatDate(item.sheduleDate),
+              userName: item.userName,
+              packOfficer:item.packOfficer
             }));
             this.totalItemssl = response.total || response.totalCount || 0;
             this.hasDataCustom = response.total > 0;
@@ -115,7 +117,9 @@ back(): void {
               totalAdditionalItems: item.totalAdditionalItems,
               packedAdditionalItems: item.packedAdditionalItems,
               additionalItemsStatus: item.additionalItemsStatus,
-              scheduleDateFormattedSL: this.formatDate(item.sheduleDate)
+              scheduleDateFormattedSL: this.formatDate(item.sheduleDate),
+              userName: item.userName,
+              packOfficer: item.packOfficer
             }));
             this.totalItemssl = this.selectdPackage.length;
             this.hasDataCustom = this.totalItemssl > 0;
@@ -214,4 +218,6 @@ interface SelectdPackage {
   packedAdditionalItems: number;
   additionalItemsStatus: string;
   scheduleDateFormattedSL?: string; // for UI
+  userName:string;
+  packOfficer:string;
 }

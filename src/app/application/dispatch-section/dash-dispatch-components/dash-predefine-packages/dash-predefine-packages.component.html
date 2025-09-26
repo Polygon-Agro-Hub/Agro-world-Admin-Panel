@@ -1,4 +1,4 @@
-<app-loading-spinner *ngIf="isLoading"/>
+<app-loading-spinner *ngIf="isLoading" />
 
 <div>
     <div class="flex justify-end items-right mb-8">
@@ -22,45 +22,33 @@
             </div>
 
             <div class="flex items-center gap-2 h-8">
-                
 
-                      <div>
-            <p-calendar
-              id="deliveryDate"
-              [(ngModel)]="dateFilter"
-              (onSelect)="onFilterChange()"
-              (onClear)="onDateFilterClear()"
-              placeholder="Delivery Date"
-              [showIcon]="true"
-              [showClear]="true"
-              [showButtonBar]="true"
-              dateFormat="yy-mm-dd"
-              [monthNavigator]="true"
-              [yearNavigator]="true"
-              yearRange="1900:2030"
-              iconDisplay="input"
-              [style]="{ width: '16rem', height: '2rem' }"
-              panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+
+                <div>
+                    <p-calendar id="deliveryDate" [(ngModel)]="dateFilter" (onSelect)="onFilterChange()"
+                        (onClear)="onDateFilterClear()" placeholder="Delivery Date" [showIcon]="true" [showClear]="true"
+                        [showButtonBar]="true" dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true"
+                        yearRange="1900:2030" iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }"
+                        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                    [&_.p-datepicker-header]:dark:bg-[#2d354d] 
                    [&_.p-datepicker-header]:dark:text-white
                    [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                    [&_.p-button:hover]:dark:bg-[#6b7280]"
-              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-              [appendTo]="'body'"
-            />
-          </div>
+                        inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                        [appendTo]="'body'" />
+                </div>
 
-         
+
             </div>
 
-              
+
             <div class="w-5"></div>
-            <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
-                >
-                <input type="text" placeholder="Search by Invoice No..." class="bg-transparent outline-none w-full text-gray-600"
-                    [(ngModel)]="search" (keydown.enter)="applySearch()" />
+            <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
+                <input type="text" placeholder="Search by Invoice No..."
+                    class="bg-transparent outline-none w-full text-gray-600" [(ngModel)]="search"
+                    (keydown.enter)="applySearch()" />
                 <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
                     (click)="applySearch()">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -126,8 +114,9 @@
                     <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                         Packaging Status
                     </th>
-                     <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
-Completed By                    </th>
+                    <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                        Completed By 
+                    </th>
 
 
                 </tr>
@@ -157,10 +146,8 @@ Completed By                    </th>
                     <td class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
                         <!-- (click)="navigateToPackageItemView(item.processOrderId, item.invNo, item.packageProductsCount, item.displayName, item.fullTotal)" -->
 
-                        <button class="w-6 h-6 mr-3" 
-                        [disabled]="item.packageStatus === 'Unknown'"
-                        (click)="navigateToPackageItemView(item)"
-                        [ngClass]="{
+                        <button class="w-6 h-6 mr-3" [disabled]="item.packageStatus === 'Unknown'"
+                            (click)="navigateToPackageItemView(item)" [ngClass]="{
                             'text-gray-100 cursor-not-allowed': item.packageStatus === 'Unknown',
                           'text-yellow-500 hover:text-yellow-700': item.packageStatus === 'Opened',
                           'text-green-500 hover:text-green-700': item.packageStatus === 'Completed',
@@ -182,22 +169,21 @@ Completed By                    </th>
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                         <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.additionalProductsCount, item.displayName, item.totalAdditionalItemsPrice)" -->
 
-                        <button
-                            (click)="navigateToAdditionalItemView(item)"
-                            class="w-6 h-6 mr-3" [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
+                        <button (click)="navigateToAdditionalItemView(item)" class="w-6 h-6 mr-3"
+                            [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
                               'text-gray-300 cursor-not-allowed': item.additionalItemsStatus === 'Unknown',
                               'text-yellow-500 hover:text-yellow-700': item.additionalItemsStatus === 'Opened' && item.orderAdditionalCount > 0,
                               'text-green-500 hover:text-green-700': item.additionalItemsStatus === 'Completed' && item.orderAdditionalCount > 0,
                               'text-red-500 hover:text-red-700': item.additionalItemsStatus === 'Pending' && item.orderAdditionalCount > 0
-                            }"
-                            [disabled]="item.additionalItemsStatus === 'Unknown'">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </button>
-                        
+                            }" [disabled]="item.additionalItemsStatus === 'Unknown'">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+
                     </td>
 
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
@@ -234,6 +220,9 @@ Completed By                    </th>
                                 Completed
                             </span>
                         </ng-container>
+                    </td>
+                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                        {{ item.packOfficer !== null ? item.packOfficer : item.userName !== null ? item.userName : '--' }}
                     </td>
                 </tr>
             </tbody>

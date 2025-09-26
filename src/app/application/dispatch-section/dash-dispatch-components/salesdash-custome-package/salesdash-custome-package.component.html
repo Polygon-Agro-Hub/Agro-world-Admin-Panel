@@ -98,6 +98,9 @@
                     <th class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
                         Package Status
                     </th>
+                    <th class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
+                        Completed By
+                    </th>
 
                 </tr>
             </thead>
@@ -165,6 +168,9 @@
                                 {{ item.additionalItemsStatus }}
                             </span>
                         </div>
+                    </td>
+                     <td class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                        {{ item.packOfficer !== null ? item.packOfficer : item.userName !== null ? item.userName : '--' }}
                     </td>
                 </tr>
             </tbody>

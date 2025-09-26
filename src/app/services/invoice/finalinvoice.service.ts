@@ -558,16 +558,17 @@ export class FinalinvoiceService {
       let addTitle;
       if (invoice.orderApp === 'Marketplace') {
         addTitle = hasFamilyPacks
-          ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
-          : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
+        ? ` Additional Items(${invoice.additionalItems.length} Items)`
+          : ` Additional Items(${invoice.additionalItems.length} Items)`;
+          
       } else if (invoice.orderApp === 'Dash') {
         addTitle = hasFamilyPacks
           ? ` Custom Items(${invoice.additionalItems.length} Items)`
           : ` Custom Items(${invoice.additionalItems.length} Items)`;
       } else {
         addTitle = hasFamilyPacks
-          ? ` Additional Items(${invoice.additionalItems.length} Items)`
-          : ` Additional Items(${invoice.additionalItems.length} Items)`;
+          ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
+          : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
       }
 
       doc.setFontSize(9);

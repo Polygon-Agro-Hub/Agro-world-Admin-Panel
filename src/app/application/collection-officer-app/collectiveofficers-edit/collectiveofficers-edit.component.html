@@ -161,16 +161,30 @@
 
 <div>
 
-        <div *ngIf="personalData.jobRole === 'Collection Officer'">
-          <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Manager Name *
-          </label>
-          <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
-            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
-            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
-          </p-dropdown>
-        </div>
+       <div *ngIf="personalData.jobRole === 'Collection Officer'">
+  <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Manager Name *
+  </label>
+  <p-dropdown 
+    [(ngModel)]="personalData.irmId" 
+    [options]="managerOptions" 
+    optionLabel="label"
+    optionValue="value" 
+    [filter]="true" 
+    filterBy="label" 
+    [showClear]="false" 
+    placeholder="Select a manager"
+    styleClass="w-full mt-1" 
+    panelStyleClass="custom-dropdown-panel"
+    class="mt-1 block w-full p-dropdown-custom"
+    (onChange)="onManagerChange()">
+  </p-dropdown>
+  
+  <!-- Add this error message div -->
+  <div *ngIf="managerRequiredError" class="text-red-500 text-xs mt-1 ml-1">
+    Manager Name is Required
+  </div>
+</div>
 
 
         <div *ngIf="personalData.jobRole === 'Collection Officer'"></div>

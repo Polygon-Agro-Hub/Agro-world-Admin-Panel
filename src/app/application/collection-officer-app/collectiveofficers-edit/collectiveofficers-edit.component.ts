@@ -85,6 +85,7 @@ userForm: FormGroup = new FormGroup({});
   branchOptions: any[] = [];
   districtOptions: any[] = [];
   invalidFields: Set<string> = new Set();
+  managerRequiredError: boolean = false;
 
 // Remove the redundant `district` array
 // Keep only the `districts` array
@@ -522,6 +523,19 @@ isFieldInvalid(fieldName: string): boolean {
   }
 
 
+onManagerChange(): void {
+  this.validateManager();
+}
+
+onJobRoleChange(): void {
+  this.validateManager();
+  // If you need to reset manager when job role changes:
+  if (this.personalData.jobRole !== 'Collection Officer') {
+    this.personalData.irmId = null;
+    this.managerRequiredError = false;
+  }
+}
+
   // Update existing formatAccountHolderName method
   formatAccountHolderName(): void {
   let value = this.personalData.accHolderName;
@@ -934,9 +948,18 @@ onCancel() {
   });
 }
 
+validateManager(): void {
+  if (this.personalData.jobRole === 'Collection Officer') {
+    this.managerRequiredError = !this.personalData.irmId;
+  } else {
+    this.managerRequiredError = false;
+  }
+}
 
 nextFormCreate(page: 'pageOne' | 'pageTwo') {
   if (page === 'pageTwo') {
+    this.validateManager();
+
     const missingFields: string[] = [];
 
     // Validate pageOne fields

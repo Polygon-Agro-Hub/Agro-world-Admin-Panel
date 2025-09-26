@@ -137,25 +137,21 @@
           <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Job Role *
           </label>
-          <select id="jobRole" [(ngModel)]="personalData.jobRole" (change)="EpmloyeIdCreate()" name="jobRole"
-            placeholder="select"
-            class="form-control cursor-pointer mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500">
-            <option disabled class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              -- select --
-            </option>
-            
-            <option selected value="Collection Center Manager"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              Collection Centre Manager
-            </option>
-            <option value="Collection Officer"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              Collection Officer
-            </option>
-            <option value="Customer Officer" class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              Customer Officer
-            </option>
-          </select>
+          <p-dropdown 
+    id="jobRole"
+    [(ngModel)]="personalData.jobRole" 
+    (onChange)="EpmloyeIdCreate()"
+    name="jobRole"
+    placeholder="-- select --"
+    [options]="jobRoleOptions"
+    optionLabel="label"
+    optionValue="value"
+    [filter]="false"
+    [showClear]="false"
+    class="mt-1 block w-full p-dropdown-custom"
+    panelStyleClass="custom-dropdown-panel"
+    styleClass="w-full mt-1" >
+</p-dropdown>
         </div>
 
 

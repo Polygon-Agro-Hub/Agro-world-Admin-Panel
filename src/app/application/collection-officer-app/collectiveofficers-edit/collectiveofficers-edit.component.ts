@@ -136,7 +136,11 @@ setupDropdownOptions() {
     { code: 'NL', dialCode: '+31', name: 'Netherlands' }
   ];
 
-  
+  jobRoleOptions = [
+  { label: 'Collection Centre Manager', value: 'Collection Center Manager' },
+  { label: 'Collection Officer', value: 'Collection Officer' },
+  { label: 'Customer Officer', value: 'Customer Officer' }
+];
 
 
   isLanguageRequired = false;
@@ -534,7 +538,9 @@ onJobRoleChange(): void {
     this.personalData.irmId = null;
     this.managerRequiredError = false;
   }
+  this.EpmloyeIdCreate(); // Call the ID creation method
 }
+
 
   // Update existing formatAccountHolderName method
   formatAccountHolderName(): void {
@@ -894,29 +900,30 @@ preventInvalidEnglishCharacters(event: KeyboardEvent): void {
   }
 
   EpmloyeIdCreate() {
-    let rolePrefix: string | undefined;
+  let rolePrefix: string | undefined;
 
-    const rolePrefixes: { [key: string]: string } = {
-      'Collection Center Head': 'CCH',
-      'Collection Centre Manager': 'CCM',
-      'Customer Officer': 'CUO',
-      'Collection Officer': 'COO',
-    };
+  const rolePrefixes: { [key: string]: string } = {
+    'Collection Center Head': 'CCH',
+    'Collection Center Manager': 'CCM', // Fixed the key to match the value
+    'Customer Officer': 'CUO',
+    'Collection Officer': 'COO',
+  };
 
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
+  rolePrefix = rolePrefixes[this.personalData.jobRole];
 
-    if (this.personalData.jobRole === this.initiateJobRole) {
-      this.lastID = this.initiateId;
-    } else {
-      if (!rolePrefix) {
-        return;
-      }
-
-      this.getLastID(rolePrefix).then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      });
+  if (this.personalData.jobRole === this.initiateJobRole) {
+    this.lastID = this.initiateId;
+  } else {
+    if (!rolePrefix) {
+      return;
     }
+
+    this.getLastID(rolePrefix).then((lastID) => {
+      this.personalData.empId = rolePrefix + lastID;
+    });
   }
+}
+
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve) => {

@@ -83,6 +83,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
   languagesRequired: boolean = false;
 
+  jobRoleOptions: any[] = [
+    { label: 'Distribution Centre Manager', value: 'Distribution Center Manager' },
+    { label: 'Distribution Officer', value: 'Distribution Officer' }
+  ];
+
   countries: PhoneCode[] = [
   { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
   { code: 'VN', dialCode: '+84', name: 'Vietnam' },

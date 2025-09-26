@@ -64,24 +64,24 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   }
 
 
-   onCancel() {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Are you sure?',
-        text: 'You may lose the added data after canceling!',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Cancel',
-        cancelButtonText: 'No, Keep Editing',
-              customClass: {
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
       },
-      }).then((result) => {
-        if (result.isConfirmed) {
-         this.location.back();
-        }
-      });
-    }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+  }
 
   saveCheckedItems() {
     if (this.isLastOrder && this.isAllPacked) {
@@ -116,18 +116,42 @@ export class DispatchAdditionalItemsComponent implements OnInit {
         this.isLoading = false;
         if (res.status) {
           console.log('Updated successfully:', res);
-          Swal.fire('Success', 'Packaging status has been changed successfully.', 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Packaging status has been changed successfully.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
           // this.router.navigate(['/dispatch/salesdash-orders']);
           this.location.back();
         } else {
-          Swal.fire('Error', 'Packaging status has been changed faild!', 'error');
-
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Packaging status has been changed faild!',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
         }
 
       },
       (err) => {
         console.error('Update failed:', err);
-        Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
+         Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Packaging status has been changed faild!',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        // Swal.fire('Error', 'Packaging status has been changed faild!', 'error');
       }
     );
   }

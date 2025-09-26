@@ -375,7 +375,7 @@ onSubmit() {
   }
 
   if (!this.personalData.accHolderName) {
-    missingFields.push('Account Holder Name is Required');
+    missingFields.push("Account Holder's Name is required.");
   }
 
   if (!this.personalData.accNumber) {
@@ -724,25 +724,27 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   }
 
   getAllCollectionCetnter(id: number) {
-    this.loaded = false;
-    this.personalData.centerId = '';
-    this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
-      (res) => {
-        this.collectionCenterData = res;
-        // Convert to dropdown options format
-        this.centerOptions = this.collectionCenterData.map(center => ({
-          label: center.centerName,
-          value: center.id
-        }));
-        this.loaded = true;
-      },
-      (error) => {
-        this.collectionCenterData = [];
-        this.centerOptions = [];
-        this.loaded = true;
-      }
-    );
-  }
+  this.loaded = false;
+  this.personalData.centerId = '';
+  this.personalData.irmId = ''; // Clear manager selection
+  this.managerOptions = []; // Clear manager options
+  
+  this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
+    (res) => {
+      this.collectionCenterData = res;
+      this.centerOptions = this.collectionCenterData.map(center => ({
+        label: center.centerName,
+        value: center.id
+      }));
+      this.loaded = true;
+    },
+    (error) => {
+      this.collectionCenterData = [];
+      this.centerOptions = [];
+      this.loaded = true;
+    }
+  );
+}
 
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {

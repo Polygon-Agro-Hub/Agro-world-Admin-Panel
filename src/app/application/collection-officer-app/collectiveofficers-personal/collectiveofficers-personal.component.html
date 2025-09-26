@@ -68,7 +68,7 @@
                 class="block text-sm font-medium text-gray-700 dark:text-textDark"
               >
                 <input
-                  class="w-5 h-5"
+                  class="w-5 h-5 cursor-pointer"
                   type="radio"
                   name="enpType"
                   value="Permanent"
@@ -83,7 +83,7 @@
                 class="block text-sm font-medium text-gray-700 dark:text-textDark"
               >
                 <input
-                  class="w-5 h-5"
+                  class="w-5 h-5 cursor-pointer"
                   type="radio"
                   name="enpType"
                   value="Temporary"
@@ -107,10 +107,10 @@
             Preferred Languages *
           </label>
 
-          <div class="flex items-center space-x-4 mt-3">
+          <div class="flex items-center space-x-4 mt-3 ">
             <div class="flex items-center space-x-2">
               <input
-                class="w-5 h-5"
+                class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="sinhala"
                 name="languages"
@@ -118,11 +118,11 @@
                 (change)="onCheckboxChange('Sinhala', $event)"
                 [checked]="personalData.languages.includes('Sinhala')"
               />
-              <label for="sinhala" class="text-gray-700">Sinhala</label>
+              <label for="sinhala" class="text-gray-700 dark:text-textDark">Sinhala</label>
             </div>
             <div class="flex items-center space-x-2">
               <input
-                class="w-5 h-5"
+                class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="english"
                 name="languages"
@@ -130,11 +130,11 @@
                 (change)="onCheckboxChange('English', $event)"
                 [checked]="personalData.languages.includes('English')"
               />
-              <label for="english" class="text-gray-700">English</label>
+              <label for="english" class="text-gray-700 dark:text-textDark">English</label>
             </div>
             <div class="flex items-center space-x-2">
               <input
-                class="w-5 h-5"
+                class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="tamil"
                 name="languages"
@@ -142,7 +142,7 @@
                 (change)="onCheckboxChange('Tamil', $event)"
                 [checked]="personalData.languages.includes('Tamil')"
               />
-              <label for="tamil" class="text-gray-700">Tamil</label>
+              <label for="tamil" class="text-gray-700 dark:text-textDark">Tamil</label>
             </div>
           </div>
           <p
@@ -222,7 +222,7 @@
               class="cursor-pointer flex justify-between items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
               (click)="toggleDropdown()"
             >
-              {{ personalData.jobRole || '-- Select a Job Role --' }}
+              {{ personalData.jobRole || 'Select a Job Role' }}
               <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
             </div>
         
@@ -245,85 +245,13 @@
             Job Role is a required field
           </span>
         </div>
-        
-
-        <!-- <div>
-          <label
-            for="jobRole"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
-            Job Role *
-          </label>
-          <div class="relative">
-            <select
-              
-              id="jobRole"
-              [(ngModel)]="personalData.jobRole"
-              (change)="EpmloyeIdCreate()"
-              name="jobRole"
-              placeholder="select"
-              class="form-control cursor-pointer mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
-            >
-              <option
-                disabled
-                class="p-2 text-gray-700  dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-              >
-                -- select --
-              </option>
-              <option
-                value="Collection Center Manager"
-                class="p-2 text-gray-700 cursor-pointer dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-              >
-                Collection Centre Manager
-              </option>
-              <option
-                value="Collection Officer"
-                class="p-2 text-gray-700 cursor-pointer dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-              >
-                Collection Officer
-              </option>
-              <option
-                value="Customer Officer"
-                class="p-2 text-gray-700 cursor-pointer dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-              >
-                Customer Officer
-              </option>
-            </select>
-            <i
-              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
-            ></i>
-          </div>
-          <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm"
-            >Job Role is a required field</span
-          >
-        </div> -->
-
-        <!-- <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">EMP ID / User name</label>
-          <div class="flex mt-1">
-            <span
-              class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-              <p *ngIf="personalData.jobRole === 'Collection Center Head'">
-                CCH
-              </p>
-              <p *ngIf="personalData.jobRole === 'Collection Center Manager'">
-                CCM
-              </p>
-              <p *ngIf="personalData.jobRole === 'Collection Officer'">COO</p>
-              <p *ngIf="personalData.jobRole === 'Customer Officer'">CUO</p>
-            </span>
-            <input type="text" [value]="lastID" name="empId"
-              class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              disabled />
-          </div>
-        </div> -->
-
+      
         <div *ngIf="personalData.jobRole === 'Collection Officer'">
           <label
             for="centerId"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Manager Name*
+            Manager Name *
           </label>
           <p-dropdown
             [(ngModel)]="personalData.irmId"

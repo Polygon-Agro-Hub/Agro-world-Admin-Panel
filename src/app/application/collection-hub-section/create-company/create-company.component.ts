@@ -817,6 +817,14 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
+  isValidLocalMobile(number: string | number): boolean {
+    if (!number) return false;
+  
+    const numStr = number.toString();
+    const pattern = /^7\d{8}$/; // starts with 7 + 8 more digits (total 9)
+    return pattern.test(numStr);
+  }
+
   saveCompanyData() {
   // Validate company name uniqueness
   if (this.companyNameError) {
@@ -834,28 +842,28 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   // Validate contact numbers format
-  const contactNumberErrors: string[] = [];
-  if (this.isInvalidMobileNumber('oicConNum1')) {
-    contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
-  }
-  if (this.companyData.oicConNum2 && this.isInvalidMobileNumber('oicConNum2')) {
-    contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
-  }
+  // const contactNumberErrors: string[] = [];
+  // if (!this.isInvalidMobileNumber('oicConNum1')) {
+  //   contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
+  // }
+  // if (this.companyData.oicConNum2 && !this.isInvalidMobileNumber('oicConNum2')) {
+  //   contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
+  // }
 
-  if (contactNumberErrors.length > 0) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Invalid Contact Numbers',
-      html: `<div class="text-left"><ul class="list-disc pl-5">${contactNumberErrors.map(msg => `<li>${msg}</li>`).join('')}</ul></div>`,
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-    });
-    return;
-  }
+  // if (contactNumberErrors.length > 0) {
+  //   Swal.fire({
+  //     icon: 'error',
+  //     title: 'Invalid Contact Numbers',
+  //     html: `<div class="text-left"><ul class="list-disc pl-5">${contactNumberErrors.map(msg => `<li>${msg}</li>`).join('')}</ul></div>`,
+  //     confirmButtonText: 'OK',
+  //     customClass: {
+  //       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+  //       title: 'font-semibold text-lg',
+  //       htmlContainer: 'text-left',
+  //     },
+  //   });
+  //   return;
+  // }
 
   // Duplicate contact numbers
   if (
@@ -894,18 +902,24 @@ export class CreateCompanyComponent implements OnInit {
 
   // Check required fields
   const missingFields: string[] = [];
-  if (!this.companyData.regNumber) missingFields.push('Registration Number');
-  if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English)');
-  if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala)');
-  if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil)');
-  if (!this.companyData.email) missingFields.push('Email');
-  if (!this.companyData.accHolderName) missingFields.push('Account Holder Name');
-  if (!this.companyData.accNumber) missingFields.push('Account Number');
-  if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number');
-  if (!this.companyData.bankName) missingFields.push('Bank Name');
-  if (!this.companyData.branchName) missingFields.push('Branch Name');
-  if (!this.companyData.foName) missingFields.push('Finance Officer Name');
-  if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1');
+  if (!this.companyData.regNumber) missingFields.push('Registration Number is Required') ;
+  if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English) is Required');
+  if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala) is Required');
+  if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil) is Required');
+  if (!this.companyData.email) missingFields.push('Email is Required');
+  if (!this.companyData.accHolderName) missingFields.push('Account Holder Name is Required is Required');
+  if (!this.companyData.accNumber) missingFields.push('Account Number is Required');
+  if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number is Required');
+  if (!this.companyData.bankName) missingFields.push('Bank Name is Required');
+  if (!this.companyData.branchName) missingFields.push('Branch Name is Required');
+  if (!this.companyData.foName) missingFields.push('Finance Officer Name is Required');
+  if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1 is Required');
+  if (this.companyData.oicConNum1 && !this.isValidLocalMobile(this.companyData.oicConNum1)) {
+    missingFields.push('Please enter a valid Contact Number - 1 (format: 7XXXXXXXX)');
+  }
+  if (this.companyData.oicConNum2 && !this.isValidLocalMobile(this.companyData.oicConNum2)) {
+    missingFields.push('Please enter a valid Contact Number - 2 (format: 7XXXXXXXX)');
+  }
   if (!this.companyData.logo) missingFields.push('Company Logo (must be an image <1MB)');
   if (!this.companyData.favicon) missingFields.push('Company Favicon (must be an image <1MB)');
 
@@ -1019,13 +1033,13 @@ export class CreateCompanyComponent implements OnInit {
 
       const missingFields: string[] = [];
 
-      if (!this.companyData.regNumber) missingFields.push('Company Register Number');
-      if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English)');
-      if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala)');
-      if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil)');
-      if (!this.companyData.email) missingFields.push('Company Email');
-      if (!this.companyData.logo) missingFields.push('Company Logo');
-      if (!this.companyData.favicon) missingFields.push('Company Favicon');
+      if (!this.companyData.regNumber) missingFields.push('Company Register Number is Required');
+      if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English) is Required');
+      if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala) is Required');
+      if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil) is Required');
+      if (!this.companyData.email) missingFields.push('Company Email is Required');
+      if (!this.companyData.logo) missingFields.push('Company Logo is Required');
+      if (!this.companyData.favicon) missingFields.push('Company Favicon is Required');
 
       // Validate email format if email exists
       if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
@@ -1156,20 +1170,26 @@ export class CreateCompanyComponent implements OnInit {
 
   // Validate required fields
   const missingFields: string[] = [];
-  if (!this.companyData.regNumber) missingFields.push('Registration Number');
-  if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English)');
-  if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala)');
-  if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil)');
-  if (!this.companyData.email) missingFields.push('Email');
-  if (!this.companyData.accHolderName) missingFields.push('Account Holder Name');
-  if (!this.companyData.accNumber) missingFields.push('Account Number');
-  if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number');
-  if (!this.companyData.bankName) missingFields.push('Bank Name');
-  if (!this.companyData.branchName) missingFields.push('Branch Name');
-  if (!this.companyData.foName) missingFields.push('Finance Officer Name');
-  if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1');
-  if (!this.companyData.logo) missingFields.push('Company Logo');
-  if (!this.companyData.favicon) missingFields.push('Company Favicon');
+  if (!this.companyData.regNumber) missingFields.push('Registration Number is Required');
+  if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English) is Required');
+  if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala) is Required');
+  if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil) is Required');
+  if (!this.companyData.email) missingFields.push('Email is Required');
+  if (!this.companyData.accHolderName) missingFields.push('Account Holder Name is Required');
+  if (!this.companyData.accNumber) missingFields.push('Account Number is Required');
+  if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number is Required');
+  if (!this.companyData.bankName) missingFields.push('Bank Name is Required');
+  if (!this.companyData.branchName) missingFields.push('Branch Name is Required');
+  if (!this.companyData.foName) missingFields.push('Finance Officer Name is Required');
+  if (!this.companyData.oicConNum1) missingFields.push('Contact Number 1 is Required');
+  if (this.companyData.oicConNum1 && !this.isValidLocalMobile(this.companyData.oicConNum1)) {
+    missingFields.push('Please enter a valid Contact Number - 1 (format: 7XXXXXXXX)');
+  }
+  if (this.companyData.oicConNum2 && !this.isValidLocalMobile(this.companyData.oicConNum2)) {
+    missingFields.push('Please enter a valid Contact Number - 2 (format: 7XXXXXXXX)');
+  }
+  if (!this.companyData.logo) missingFields.push('Company Logo is Required');
+  if (!this.companyData.favicon) missingFields.push('Company Favicon is Required');
 
   if (missingFields.length > 0) {
     Swal.fire({

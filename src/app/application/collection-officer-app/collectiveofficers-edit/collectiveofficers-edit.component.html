@@ -55,14 +55,14 @@
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5" type="radio" id="permanent" name="empType" [value]="'Permanent'"
+              <input class="w-5 h-5 cursor-pointer" type="radio" id="permanent" name="empType" [value]="'Permanent'"
                 [(ngModel)]="empType" #empTypeInput="ngModel" (ngModelChange)="updateEmployeeType($event)" required />
               <label for="permanent" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                 Permanent
               </label>
             </div>
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5" type="radio" id="temporary" name="empType" [value]="'Temporary'"
+              <input class="w-5 h-5 cursor-pointer" type="radio" id="temporary" name="empType" [value]="'Temporary'"
                 [(ngModel)]="empType" (ngModelChange)="updateEmployeeType($event)" required />
               <label for="temporary" class="block text-sm font-medium text-gray-700 dark:text-textDark">
                 Temporary
@@ -84,17 +84,17 @@
           </label>
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5" type="checkbox" id="sinhala" name="languages" value="Sinhala"
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="sinhala" name="languages" value="Sinhala"
                 [checked]="selectedLanguages.includes('Sinhala')" (change)="onCheckboxChange('Sinhala', $event)" />
               <label for="sinhala" class="text-gray-700 dark:text-textDark">Sinhala</label>
             </div>
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5" type="checkbox" id="english" name="languages" value="English"
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="english" name="languages" value="English"
                 [checked]="selectedLanguages.includes('English')" (change)="onCheckboxChange('English', $event)" />
               <label for="english" class="text-gray-700 dark:text-textDark">English</label>
             </div>
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5" type="checkbox" id="tamil" name="languages" value="Tamil"
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="tamil" name="languages" value="Tamil"
                 [checked]="selectedLanguages.includes('Tamil')" (change)="onCheckboxChange('Tamil', $event)" />
               <label for="tamil" class="text-gray-700 dark:text-textDark">Tamil</label>
             </div>
@@ -121,7 +121,7 @@
           </div>
         </div>
 
-        <!-- Replace Collection Centre Name dropdown -->
+       
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Collection Centre Name *
@@ -137,69 +137,50 @@
           <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Job Role *
           </label>
-          <select id="jobRole" [(ngModel)]="personalData.jobRole" (change)="EpmloyeIdCreate()" name="jobRole"
-            placeholder="select"
-            class="form-control cursor-pointer mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500">
-            <option disabled class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              -- select --
-            </option>
-            
-            <option selected value="Collection Center Manager"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              Collection Centre Manager
-            </option>
-            <option value="Collection Officer"
-              class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              Collection Officer
-            </option>
-            <option value="Customer Officer" class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
-              Customer Officer
-            </option>
-          </select>
+          <p-dropdown 
+    id="jobRole"
+    [(ngModel)]="personalData.jobRole" 
+    (onChange)="EpmloyeIdCreate()"
+    name="jobRole"
+    placeholder="-- select --"
+    [options]="jobRoleOptions"
+    optionLabel="label"
+    optionValue="value"
+    [filter]="false"
+    [showClear]="false"
+    class="mt-1 block w-full p-dropdown-custom"
+    panelStyleClass="custom-dropdown-panel"
+    styleClass="w-full mt-1" >
+</p-dropdown>
         </div>
-
-
-
-
-
-
-
-
-
-
-        <!-- <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-textDark">EMP ID / User name</label>
-          <div class="flex mt-1">
-            <span
-              class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-              <p *ngIf="personalData.jobRole === 'Collection Center Head'">
-                CCH
-              </p>
-              <p *ngIf="personalData.jobRole === 'Collection Center Manager'">
-                CCM
-              </p>
-              <p *ngIf="personalData.jobRole === 'Collection Officer'">COO</p>
-              <p *ngIf="personalData.jobRole === 'Customer Officer'">CUO</p>
-            </span>
-            <input type="text" [value]="lastID" name="empId"
-              class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              disabled />
-          </div>
-        </div> -->
 
 
 <div>
 
-        <div *ngIf="personalData.jobRole === 'Collection Officer'">
-          <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Manager Name *
-          </label>
-          <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
-            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
-            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
-          </p-dropdown>
-        </div>
+       <div *ngIf="personalData.jobRole === 'Collection Officer'">
+  <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Manager Name *
+  </label>
+  <p-dropdown 
+    [(ngModel)]="personalData.irmId" 
+    [options]="managerOptions" 
+    optionLabel="label"
+    optionValue="value" 
+    [filter]="true" 
+    filterBy="label" 
+    [showClear]="false" 
+    placeholder="Select a manager"
+    styleClass="w-full mt-1" 
+    panelStyleClass="custom-dropdown-panel"
+    class="mt-1 block w-full p-dropdown-custom"
+    (onChange)="onManagerChange()">
+  </p-dropdown>
+  
+  <!-- Add this error message div -->
+  <div *ngIf="managerRequiredError" class="text-red-500 text-xs mt-1 ml-1">
+    Manager Name is Required
+  </div>
+</div>
 
 
         <div *ngIf="personalData.jobRole === 'Collection Officer'"></div>

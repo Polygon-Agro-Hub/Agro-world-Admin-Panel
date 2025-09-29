@@ -387,6 +387,11 @@ export class ViewCollectiveOfficerComponent {
                       text: 'The Collection Officer was approved successfully.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
                     });
                     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                   } else {
@@ -430,6 +435,11 @@ export class ViewCollectiveOfficerComponent {
                       text: 'The Collection Officer was rejected successfully.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
                     });
                     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                   } else {

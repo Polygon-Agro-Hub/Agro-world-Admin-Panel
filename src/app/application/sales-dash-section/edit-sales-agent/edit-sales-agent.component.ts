@@ -672,7 +672,7 @@ onSubmit() {
 
   // Account Holder Name
   if (!this.personalData.accHolderName) {
-    missingFields.push('Account Holder Name is Required');
+    missingFields.push("Account Holder's Name is Required");
   } else if (!this.isValidName(this.personalData.accHolderName)) {
     missingFields.push('Account Holder Name - Only letters, spaces, hyphens, and apostrophes allowed');
   }

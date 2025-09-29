@@ -39,7 +39,7 @@
           Only English letters are allowed (no numbers or special characters)
         </div> -->
         <div
-          *ngIf="(centerNameInput.touched && centerNameInput.errors?.['required']) || leadingSpaceError || specialCharOrNumberError"
+          *ngIf="(centerNameInput.touched && centerNameInput.errors?.['required']) "
           class="text-red-500 text-sm mt-1"
         >
           Centres Name is required
@@ -490,7 +490,7 @@ Contact Number - 1 and Contact Number - 2 cannot be the same          </div>
         <label
           for="regCode"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Centres Reg Code</label
+          >Collection Centre Reg Code</label
         >
         <input
           id="regCode"

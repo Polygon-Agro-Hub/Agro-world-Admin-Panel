@@ -93,6 +93,10 @@ export class ViewSelectedComplainComponent implements OnInit {
       icon: 'error',
       title: 'Error',
       text: 'Reply field is required!',
+      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     });
     this.isLoading = false;
     return;
@@ -133,6 +137,10 @@ export class ViewSelectedComplainComponent implements OnInit {
           icon: 'success',
           title: 'Success',
           text: 'Reply was sent successfully!',
+                                    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
         });
         this.fetchComplain();
         this.closeReplyPopUp();
@@ -145,6 +153,10 @@ export class ViewSelectedComplainComponent implements OnInit {
           icon: 'error',
           title: 'Unsuccessful',
           text: 'Error sending reply',
+             customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
         });
         this.fetchComplain();
         this.closeReplyPopUp();

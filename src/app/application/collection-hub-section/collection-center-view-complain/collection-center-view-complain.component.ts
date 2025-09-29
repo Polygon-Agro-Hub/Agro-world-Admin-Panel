@@ -277,6 +277,10 @@ export class CollectionCenterViewComplainComponent implements OnInit {
             icon: "success",
             title: "Success",
             text: "Reply sent successfully!",
+              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
           });
           this.fetchAllComplain(this.page, this.itemsPerPage);
         },

@@ -146,6 +146,10 @@ export class ViewCenterComplainComponent {
         icon: "warning",
         title: "Warning",
         text: "Reply cannot be empty!",
+                      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
       });
       this.isLoading = false;
       return;
@@ -171,6 +175,10 @@ export class ViewCenterComplainComponent {
             icon: "success",
             title: "Success",
             text: "Reply Sent successfully!",
+              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
           }).then((result) => {
             // This code executes when the user clicks OK
             if (result.isConfirmed) {

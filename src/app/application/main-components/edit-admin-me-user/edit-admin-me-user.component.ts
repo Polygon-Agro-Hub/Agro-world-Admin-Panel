@@ -302,6 +302,10 @@ blockLeadingSpace(event: KeyboardEvent, controlName: string) {
             icon: "success",
             title: "Success",
             text: "Admin updated successfully!",
+              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
           }).then((result) => {
             if (result.isConfirmed) {
               // Redirect to the desired route
@@ -349,6 +353,10 @@ blockLeadingSpace(event: KeyboardEvent, controlName: string) {
             icon: "success",
             title: "Success",
             text: "Admin created successfully!",
+                              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
           });
         },
         (error) => {

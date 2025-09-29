@@ -1245,7 +1245,7 @@ page: number = 1;
     }
 
     if (!this.personalData.accHolderName) {
-      missingFields.push('Account Holder Name is Required');
+      missingFields.push("Account Holder's Name is Required");
     }
 
     if (!this.personalData.accNumber) {

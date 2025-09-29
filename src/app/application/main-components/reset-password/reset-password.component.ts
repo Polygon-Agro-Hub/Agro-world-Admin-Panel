@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormsModule,
@@ -18,15 +18,13 @@ import Swal from 'sweetalert2';
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css'],
 })
-export class ResetPasswordComponent implements OnInit, OnDestroy {
+export class ResetPasswordComponent implements OnInit {
   resetForm!: FormGroup;
-  countdown: number = 180; // 3 minutes
-  timer: any;
-  expired: boolean = false;
   token: string | null = null;
-  email: string | null = null;
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
+  resendLoading: boolean = false;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -36,7 +34,6 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // get token from URL
     this.token = this.route.snapshot.paramMap.get('token');
 
     this.resetForm = this.fb.group(
@@ -53,26 +50,9 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
       },
       { validators: this.passwordMatchValidator }
     );
-
-    this.startTimer();
   }
 
-  ngOnDestroy() {
-    if (this.timer) clearInterval(this.timer);
-  }
-
-  startTimer() {
-    this.timer = setInterval(() => {
-      if (this.countdown > 0) {
-        this.countdown--;
-      } else {
-        this.expired = true;
-        clearInterval(this.timer);
-      }
-    }, 1000);
-  }
-
-  // toggle methods
+  // Toggle password visibility
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
@@ -95,24 +75,25 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     return pass === confirmPass ? null : { notMatching: true };
   }
 
-  // 🔹 Reset Password
+  // Reset Password
   onSubmit() {
     if (this.resetForm.valid && this.token) {
+      this.loading = true;
       const newPassword = this.resetForm.value.password;
 
       this.authService.resetPassword(this.token, newPassword).subscribe({
         next: (res) => {
+          this.loading = false;
           Swal.fire({
             icon: 'success',
             title: 'Password Updated',
             text: res.message || 'Password has been updated successfully',
             showConfirmButton: false,
             timer: 1500,
-          }).then(() => {
-            this.router.navigate(['/login']);
-          });
+          }).then(() => this.router.navigate(['/login']));
         },
         error: (err) => {
+          this.loading = false;
           Swal.fire({
             icon: 'error',
             title: 'Reset Failed',
@@ -123,29 +104,29 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     }
   }
 
-  // 🔹 Resend Link
+  // Resend link
   resendLink() {
-    if (!this.email) {
+    if (!this.token) {
       Swal.fire({
         icon: 'info',
-        title: 'Need Email',
-        text: 'Please go through forgot password again.',
+        title: 'Token Missing',
+        text: 'Please go through Forgot Password again.',
       });
       return;
     }
 
-    this.authService.forgotPassword(this.email).subscribe({
+    this.resendLoading = true;
+    this.authService.resendResetLink(this.token).subscribe({
       next: () => {
+        this.resendLoading = false;
         Swal.fire({
           icon: 'success',
           title: 'Link Sent',
           text: 'Password reset link has been resent to your email.',
         });
-        this.countdown = 180;
-        this.expired = false;
-        this.startTimer();
       },
       error: (err) => {
+        this.resendLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'Resend Failed',
@@ -153,13 +134,5 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
         });
       },
     });
-  }
-
-  formatTime(seconds: number): string {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, '0');
-    const s = (seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
   }
 }

@@ -288,3 +288,7 @@ div {
   max-height: 200px;     /* scrollable area for options */
   overflow-y: auto;
 }
+
+::ng-deep .dark .p-multiselect-header {
+    background-color: #4b5563;
+}

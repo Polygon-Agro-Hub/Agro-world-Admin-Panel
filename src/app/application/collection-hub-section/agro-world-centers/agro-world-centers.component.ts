@@ -202,7 +202,7 @@ export class AgroWorldCentersComponent {
           if (res) {
             Swal.fire({
               title: 'Deleted!',
-              text: 'The Collection Center has been deleted.',
+              text: 'The Collection Centre has been deleted.',
               icon: 'success',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

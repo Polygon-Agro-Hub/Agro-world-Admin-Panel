@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  HttpClient,
-  HttpClientModule,
-} from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,6 +18,7 @@ interface OngoingCultivationItem {
   firstName: string;
   lastName: string;
   NICnumber: string;
+  phoneNumber: string;
   CropCount: string;
   FarmCount: string;
 }
@@ -63,7 +61,7 @@ export class OngoingCultivationComponent {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.fetchAllNews(this.page, this.itemsPerPage);
@@ -162,7 +160,12 @@ export class OngoingCultivationComponent {
       });
   }
 
-  viewTaskByUsers(cultivationId: any, userId: any, userName: any, ongCultivationId:number) {
+  viewTaskByUsers(
+    cultivationId: any,
+    userId: any,
+    userName: any,
+    ongCultivationId: number
+  ) {
     if (cultivationId) {
       this.router.navigate(['/plant-care/action/view-crop-task-by-user'], {
         queryParams: { cultivationId, userId, userName },
@@ -170,7 +173,12 @@ export class OngoingCultivationComponent {
     }
   }
 
-  viewTaskByUser(cultivationId: any, userId: any, userName: any, ongCultivationId: number) {
+  viewTaskByUser(
+    cultivationId: any,
+    userId: any,
+    userName: any,
+    ongCultivationId: number
+  ) {
     if (userId) {
       this.router.navigate(['/plant-care/action/farmers-farm'], {
         queryParams: { userId, userName, ongCultivationId },
@@ -199,7 +207,10 @@ export class OngoingCultivationComponent {
   }
 
   onKeyDown(event: KeyboardEvent): void {
-    if ((event.code === 'Space' || event.key === ' ') && this.searchNIC.length === 0) {
+    if (
+      (event.code === 'Space' || event.key === ' ') &&
+      this.searchNIC.length === 0
+    ) {
       event.preventDefault();
     }
   }

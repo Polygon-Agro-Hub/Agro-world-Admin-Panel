@@ -253,6 +253,7 @@ div {
 
 ::ng-deep .dark .p-multiselect-item:hover {
   background-color: #4b5563; /* hover dark */
+  color: #ffffff;
 }
 
 /* Filter input */
@@ -287,4 +288,8 @@ div {
 ::ng-deep .p-multiselect-items-wrapper {
   max-height: 200px;     /* scrollable area for options */
   overflow-y: auto;
+}
+
+::ng-deep .dark .p-multiselect-header {
+    background-color: #4b5563;
 }

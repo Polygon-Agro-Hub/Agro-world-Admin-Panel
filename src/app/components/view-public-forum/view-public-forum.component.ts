@@ -66,7 +66,15 @@ export class ViewPublicForumComponent implements OnInit {
 
     this.publicForumSrv.sendMessage(id, replyData).subscribe(
       (res) => {
-        Swal.fire('Success!', 'Your reply has been sent.', 'success');
+        Swal.fire({
+  title: 'Success!',
+  text: 'Your reply has been sent.',
+  icon: 'success',
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+  }
+});
         this.isPopupVisible = false;
         this.fetchPostAllReply(this.postId);
         this.loadPosts();

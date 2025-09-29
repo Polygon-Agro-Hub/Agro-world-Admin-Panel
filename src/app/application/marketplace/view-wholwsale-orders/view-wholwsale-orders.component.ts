@@ -117,6 +117,7 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
   searchReailOrders() {
     this.searchItem = this.searchItem.trim();
     console.log(this.searchItem);
+    this.page = 1;
     this.fetchAllRetailOrders();
   }
 

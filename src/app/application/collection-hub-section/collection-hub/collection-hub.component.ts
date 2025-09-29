@@ -28,7 +28,7 @@ export class CollectionHubComponent {
     public tokenService: TokenService,
     private router: Router,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
@@ -97,6 +97,10 @@ export class CollectionHubComponent {
           icon: 'success',
           title: 'Downloaded',
           text: 'Please check your downloads folder',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
         });
         this.isDownloading = false;
       })
@@ -105,6 +109,10 @@ export class CollectionHubComponent {
           icon: 'error',
           title: 'Download Failed',
           text: error.message,
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
         });
         this.isDownloading = false;
       });

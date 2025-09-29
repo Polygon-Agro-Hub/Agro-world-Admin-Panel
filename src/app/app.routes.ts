@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth-guard.service';
 import { LoginComponent } from './application/main-components/login/login.component';
 import { SignupComponent } from './application/main-components/signup/signup.component';
-import { ForgoPasswordComponent } from './application/main-components/forgo-password/forgo-password.component';
+import { ForgotPasswordComponent } from './application/main-components/forgot-password/forgot-password.component';
 import { PlantcareComponent } from './application/plant-care-app/plantcare/plantcare.component';
 import { SteckholdersComponent } from './application/steckholders-section/steckholders/steckholders.component';
 import { ReportComponent } from './application/report-section/report/report.component';
@@ -185,6 +185,7 @@ import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/fa
 import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-app/farmers-farms-fixed-assets-lands/farmers-farms-fixed-assets-lands.component';
 import { FinanceDashboardComponent } from './application/finance/finance-dashboard/finance-dashboard.component';
 import path from 'path';
+import { ResetPasswordComponent } from './application/main-components/reset-password/reset-password.component';
 export const routes: Routes = [
   {
     path: '',
@@ -195,7 +196,8 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   { path: 'status-451', component: Status451Component },
-  { path: 'forget-password', component: ForgoPasswordComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password/:token', component: ResetPasswordComponent },
 
   {
     path: '',

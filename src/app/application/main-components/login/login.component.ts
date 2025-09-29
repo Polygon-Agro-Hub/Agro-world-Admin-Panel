@@ -42,7 +42,6 @@ export class LoginComponent {
     this.tokenService.clearLoginDetails();
     this.clearAllCookies();
     console.log('Login component initialized 7/27');
-    
   }
 
   clearAllCookies() {
@@ -55,6 +54,10 @@ export class LoginComponent {
         eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
       document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
     }
+  }
+
+  goToForgotPassword() {
+    this.router.navigate(['/forgot-password']);
   }
 
   onLogin() {

@@ -12,7 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 @Component({
   selector: 'app-dispach-packages',
   standalone: true,
-  imports: [CommonModule, FormsModule, CountDownComponent, LoadingSpinnerComponent,   DropdownModule,],
+  imports: [CommonModule, FormsModule, CountDownComponent, LoadingSpinnerComponent, DropdownModule,],
   templateUrl: './dispach-packages.component.html',
   styleUrl: './dispach-packages.component.css'
 })
@@ -27,7 +27,7 @@ export class DispachPackagesComponent implements OnInit {
   invNo: string = '';
   price: number = 0;
   packageName: string = '';
-  packgeQty:number = 1;
+  packgeQty: number = 1;
 
   isLoading: boolean = true;
   validationFailedMessage: string = '';
@@ -48,8 +48,8 @@ export class DispachPackagesComponent implements OnInit {
     this.invNo = this.route.snapshot.queryParams['invNo'];
     this.packageName = this.route.snapshot.queryParams['packageName'];
     this.packgeQty = this.route.snapshot.queryParams['packgeQty'];
-   
-    
+
+
 
     this.fetchData();
   }
@@ -84,13 +84,13 @@ export class DispachPackagesComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
-            customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
-       this.location.back();
+        this.location.back();
       }
     });
   }
@@ -127,18 +127,42 @@ export class DispachPackagesComponent implements OnInit {
       (res) => {
         this.isLoading = false;
         if (res.status) {
-          Swal.fire('Success', 'Packaging status has been changed successfully.', 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Packaging status has been changed successfully.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
           // this.router.navigate(['/dispatch/salesdash-orders']);
           this.location.back();
         } else {
-          Swal.fire('Error', 'Packaging status has been changed faild.', 'error');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Packaging status has been changed faild.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
 
         }
 
       },
       (err) => {
         console.error('Update failed:', err);
-        Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Product Update Unsuccessfull',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
       }
     );
   }
@@ -170,10 +194,10 @@ export class DispachPackagesComponent implements OnInit {
     this.isPopupOpen = false;
   }
 
-// In your component class
-isExcludedOption(product: MarketPlaceItems): boolean {
-  return product.isExcluded; // true = disabled, false = enabled
-}
+  // In your component class
+  isExcludedOption(product: MarketPlaceItems): boolean {
+    return product.isExcluded; // true = disabled, false = enabled
+  }
 
 
   replaceProduct() {
@@ -181,20 +205,43 @@ isExcludedOption(product: MarketPlaceItems): boolean {
       (res) => {
         this.isLoading = false;
         if (res.status) {
-          Swal.fire('Success', res.message, 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: res.message,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
           // this.router.navigate(['/dispatch/salesdash-orders']);
           this.isPopupOpen = false;
           this.newProductObj = null;
           this.fetchData();
         } else {
-          Swal.fire('Error', res.message, 'error');
-
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: res.message,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
         }
 
       },
       (err) => {
         console.error('Update failed:', err);
-        Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Product Update Unsuccessfull',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
       }
     );
   }
@@ -205,29 +252,29 @@ isExcludedOption(product: MarketPlaceItems): boolean {
     }
   }
 
-onProductChange() {
-  if (this.newProductObj?.isExcluded) {
-    // If the selected product is excluded, ignore it
-    Swal.fire({
-      icon: 'warning',
-      title: 'Cannot select this product',
-      text: 'This product is excluded.',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    this.newProductObj = null; // Reset selection
-    return;
-  }
+  onProductChange() {
+    if (this.newProductObj?.isExcluded) {
+      // If the selected product is excluded, ignore it
+      Swal.fire({
+        icon: 'warning',
+        title: 'Cannot select this product',
+        text: 'This product is excluded.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      this.newProductObj = null; // Reset selection
+      return;
+    }
 
-  if (this.newProductObj) {
-    // Normal behavior for allowed products
-    this.newProductObj.qty = this.newProductObj.startValue;
-    this.cangeReplacePrice();
+    if (this.newProductObj) {
+      // Normal behavior for allowed products
+      this.newProductObj.qty = this.newProductObj.startValue;
+      this.cangeReplacePrice();
+    }
   }
-}
 
 
   updateQuantity(newQty: number): void {

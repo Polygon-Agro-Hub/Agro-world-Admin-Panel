@@ -275,3 +275,154 @@
 ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;
 }
+
+
+
+:host {
+  --form-field-bg: rgb(255 255 255);
+  --label-text: rgb(97 97 97);
+  --input-text: rgb(0 0 0);
+  --input-bg: rgb(255 255 255);  /* Added back - needed for input background */
+  --placeholder-text: rgb(156 163 175);
+  --chip-bg: rgb(229 235 231);
+  --chip-hover-bg: rgb(209 213 219);  /* Added - needed for hover state */
+  --chip-text: rgb(31 41 55);
+  --icon-color: rgb(107 114 128);
+}
+
+:host-context(.dark) {
+  --form-field-bg: rgb(31 41 55);
+  --label-text: rgb(255 255 255);
+  --input-text: rgb(255 255 255);
+  --input-bg: rgb(31 41 55);  /* Added back */
+  --placeholder-text: rgb(156 163 175);
+  --chip-bg: rgb(55 65 81);
+  --chip-hover-bg: rgb(75 85 99);  /* Added */
+  --chip-text: rgb(255 255 255);
+  --icon-color: rgb(255 255 255);
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --form-field-bg: rgb(31 41 55);
+    --label-text: rgb(255 255 255);
+    --input-text: rgb(255 255 255);
+    --input-bg: rgb(31 41 55);  /* Added back */
+    --placeholder-text: rgb(156 163 175);
+    --chip-bg: rgb(55 65 81);  /* Changed from rgb(31 41 55) */
+    --chip-hover-bg: rgb(75 85 99);  /* Added */
+    --chip-text: rgb(255 255 255);
+    --icon-color: rgb(255 255 255); 
+  }
+}
+
+.mat-mdc-form-field {
+  --mdc-filled-text-field-container-color: var(--form-field-bg);
+  --mdc-filled-text-field-active-indicator-color: rgb(147 197 253);
+  --mdc-filled-text-field-focus-active-indicator-color: rgb(59 130 246);
+}
+
+.mat-mdc-floating-label {
+  --mdc-filled-text-field-label-text-color: var(--label-text);
+  --mdc-filled-text-field-focus-label-text-color: var(--label-text); /* Changed to use variable */
+}
+
+.mat-mdc-input-element {
+  color: var(--input-text) !important;
+  background-color: var(--input-bg) !important;
+  caret-color: rgb(59 130 246);
+  
+  &::placeholder {
+    color: transparent !important;
+    opacity: 0 !important;
+  }
+  
+  &::-moz-placeholder {
+    color: transparent !important;
+    opacity: 0 !important;
+  }
+  
+  &::-webkit-input-placeholder {
+    color: transparent !important;
+    opacity: 0 !important;
+  }
+  
+  &::-ms-input-placeholder {
+    color: transparent !important;
+    opacity: 0 !important;
+  }
+
+  &:focus {
+    &::placeholder {
+      color: var(--placeholder-text) !important;
+      opacity: 1 !important;
+      transition: opacity 0.15s ease-in-out;
+    }
+    
+    &::-moz-placeholder {
+      color: var(--placeholder-text) !important;
+      opacity: 1 !important;
+    }
+    
+    &::-webkit-input-placeholder {
+      color: var(--placeholder-text) !important;
+      opacity: 1 !important;
+    }
+    
+    &::-ms-input-placeholder {
+      color: var(--placeholder-text) !important;
+      opacity: 1 !important;
+    }
+  }
+}
+
+.mat-mdc-form-field.mat-form-field-label-floating .mat-mdc-input-element {
+  &::placeholder {
+    color: var(--placeholder-text) !important;
+    opacity: 1 !important;
+    transition: opacity 0.15s ease-in-out;
+  }
+  
+  &::-moz-placeholder {
+    color: var(--placeholder-text) !important;
+    opacity: 1 !important;
+  }
+  
+  &::-webkit-input-placeholder {
+    color: var(--placeholder-text) !important;
+    opacity: 1 !important;
+  }
+  
+  &::-ms-input-placeholder {
+    color: var(--placeholder-text) !important;
+    opacity: 1 !important;
+  }
+}
+
+.mat-mdc-text-field-wrapper {
+  background-color: var(--input-bg) !important;
+}
+
+.mat-mdc-chip-set {
+  background-color: var(--input-bg);
+}
+
+/* More specific chip selectors to ensure styles apply */
+.mat-mdc-chip,
+.mat-mdc-evolution-chip {
+  --mdc-chip-container-color: var(--chip-bg) !important;
+  --mdc-chip-label-text-color: var(--chip-text) !important;
+  --mdc-chip-with-trailing-icon-trailing-icon-color: var(--icon-color) !important;
+  
+  background-color: var(--chip-bg) !important;
+  color: var(--chip-text) !important;
+  
+  &:hover {
+    --mdc-chip-container-color: var(--chip-hover-bg) !important;
+    background-color: var(--chip-hover-bg) !important;
+  }
+}
+
+.mat-icon {
+  color: var(--icon-color);
+}

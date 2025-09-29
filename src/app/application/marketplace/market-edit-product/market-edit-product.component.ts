@@ -355,22 +355,47 @@ selectVerityImage() {
 
     this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
       (res) => {
+    
         if (res.status) {
           Swal.fire('Success', 'Product Updated Successfully', 'success');
           this.router.navigate(['/market/action/view-products-list']);
         } else {
-          Swal.fire('Error', 'Product Update Failed', 'error');
+          // Backend returns res.message when duplicate/conflict
+          Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: res.message || 'Product Update Failed',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
         }
       },
       (error) => {
+
         console.error('Product update error:', error);
+    
         let errorMessage = 'An error occurred while updating the product';
-        if (error.error && error.error.error) {
+    
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        } else if (error.error && error.error.error) {
           errorMessage = error.error.error;
         }
-        Swal.fire('Error', errorMessage, 'error');
+    
+        Swal.fire({
+          icon: 'error',
+          title: 'Update Failed',
+          text: errorMessage,
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
       }
     );
+    
     console.log('Form submitted:', this.productObj);
   }
   updateTags() {

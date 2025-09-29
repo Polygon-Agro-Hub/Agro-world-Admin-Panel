@@ -31,7 +31,8 @@
 }
 
 ::ng-deep .dark .p-dropdown-item {
-    color: #f9fafb;
+    color: white;
+    background-color: #4b5563;
 }
 
 ::ng-deep .p-dropdown-item:hover {
@@ -59,7 +60,7 @@
 }
 
 ::ng-deep .dark .p-dropdown-panel {
-    background-color: #374151;
+    background-color: #ffffff;
     border-color: #6b7280;
 }
 
@@ -73,7 +74,7 @@
 }
 
 ::ng-deep .dark .p-dropdown-custom .p-dropdown {
-    background-color: #374151;
+    background-color: #061E2C;
     border-color: #6b7280;
     color: #f9fafb;
 }
@@ -84,7 +85,7 @@
     padding: 0.5rem;
     border: 1px solid #d1d5db;
     border-radius: 0.375rem;
-    background-color: #f9fafb;
+    background-color: #ffffff;
     display: flex;
     align-items: center;
     position: relative;

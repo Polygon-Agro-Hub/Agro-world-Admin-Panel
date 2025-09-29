@@ -373,9 +373,9 @@ private mobileNumberValidator(control: AbstractControl): { [key: string]: any } 
   if (field.errors['sameContactNumbers']) {
     return 'Contact Number - 1 and Contact Number - 2 cannot be the same';
   }
-  if (field.errors['nameExists']) {
-    return 'Distribution Centre Name already exists';
-  }
+  // if (field.errors['nameExists']) {
+  //   return 'Distribution Centre Name already exists';
+  // }
   if (field.errors['latitudeRange']) {
     return 'Latitude must be between -90 and 90';
   }
@@ -775,7 +775,6 @@ updateRegCode() {
   }
 
   // If form is valid, proceed with confirmation
-  if (this.distributionForm.valid) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to create this distribution centre?',
@@ -804,101 +803,95 @@ updateRegCode() {
         };
 
         this.distributionService
-          .createDistributionCentre(formData)
-          .subscribe({
-            next: (response) => {
-              this.isLoading = false;
+  .createDistributionCentre(formData)
+  .subscribe(
+    (res: any) => {
+      this.isLoading = false;
+      this.submitError = '';
 
-              if (response.success) {
-                this.submitSuccess =
-                  response.message ||
-                  'Distribution Centre created successfully!';
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Success!',
-                  text: this.submitSuccess,
-                  timer: 2000,
-                  showConfirmButton: false,
-                  customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold text-lg',
+      if (res.success) {
+        // this.submitSuccess =
+          res.message || 'Distribution Centre created successfully!';
 
-                  },
-                });
-                this.navigatePath('/distribution-hub/action/view-destribition-center');
-              } else {
-                this.submitError =
-                  response.error || 'Failed to create distribution centre';
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: this.submitError,
-                  customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold text-lg',
+        Swal.fire('Success', res.message || 'Distribution Centre created successfully!', 'success');
 
-                  },
-                });
-              }
-            },
-            error: (error) => {
-              this.isLoading = false;
-              console.error('Error creating distribution centre:', error);
+        this.navigatePath('/distribution-hub/action/view-destribition-center');
+      }
+    },
+    (error: any) => {
+      this.isLoading = false;
+      console.error('Error creating distribution centre:', error);
 
-              // Default error message
-              let errorMessage = 'An unexpected error occurred.';
+      let errorMessage = 'An unexpected error occurred';
+      let messages: string[] = [];
 
-              if (error.error && error.error.error) {
-                // Use the specific error message from the backend
-                errorMessage = error.error.error;
-              } else if (error.status === 400) {
-                errorMessage = 'Invalid data. Please check your inputs.';
-              } else if (error.status === 401) {
-                errorMessage = 'Unauthorized. Please log in again.';
-              } else if (error.status === 409) {
-                // Check if we have more specific conflict information
-                if (error.error && error.error.conflictingRecord) {
-                  const conflict = error.error.conflictingRecord;
-                  switch (conflict.conflictType) {
-                    case 'name':
-                      errorMessage = 'A distribution center with this name already exists.';
-                      break;
-                    case 'regCode':
-                      errorMessage = 'A distribution center with this registration code already exists.';
-                      break;
-                    case 'email':
-                      errorMessage = 'Email already exists.';
-                      break;
-                    case 'contact1':
-                      errorMessage = 'Contact Number already exists.';
-                      break;
-                    default:
-                      errorMessage = 'A distribution center with these details already exists.';
-                  }
-                } else {
-                  errorMessage = 'A distribution center with these details already exists.';
-                }
-              } else if (error.status === 500) {
-                errorMessage = 'Server error. Please try again later.';
-              }
+      if (error.error && Array.isArray(error.error.errors)) {
+        // Map backend error keys to user-friendly messages
+        messages = error.error.errors.map((err: string) => {
+          switch (err) {
+            case 'name':
+              return 'A distribution center with this name already exists.';
+            case 'regCode':
+              return 'A distribution center with this registration code already exists.';
+            case 'email':
+              return 'Email already exists.';
+            case 'contact01':
+              return 'Contact Number - 1 already exists.';
+            case 'contact02':
+              return 'Contact Number - 2 already exists.';
+            default:
+              return 'Validation error: ' + err;
+          }
+        });
+      }
 
-              this.submitError = errorMessage;
+      if (messages.length > 0) {
+        errorMessage =
+          '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+        messages.forEach((m) => {
+          errorMessage += `<li>${m}</li>`;
+        });
+        errorMessage += '</ul></div>';
 
-              Swal.fire({
-                icon: 'error',
-                title: 'Submission Failed',
-                text: this.submitError,
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
+        Swal.fire({
+          icon: 'error',
+          title: 'Duplicate Information',
+          html: errorMessage,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
 
-                },
-              });
-            },
-          });
+      // fallback (single error messages)
+      if (error.error && error.error.error) {
+        errorMessage = error.error.error;
+      } else if (error.status === 400) {
+        errorMessage = 'Invalid data. Please check your inputs.';
+      } else if (error.status === 401) {
+        errorMessage = 'Unauthorized. Please log in again.';
+      } else if (error.status === 500) {
+        errorMessage = 'Server error. Please try again later.';
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Submission Failed',
+        text: errorMessage,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+    }
+  );
+
       }
     });
-  }
 }
 
 // Helper function to format field names for display

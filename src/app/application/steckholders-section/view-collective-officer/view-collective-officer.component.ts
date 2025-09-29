@@ -539,6 +539,11 @@ export class ViewCollectiveOfficerComponent {
             title: 'Success',
             text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
+            customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
           }).then((result) => {
             if (result.isConfirmed) {
               window.location.reload();
@@ -595,6 +600,11 @@ export class ViewCollectiveOfficerComponent {
             title: 'Success',
             text: 'Officer claimed successfully!',
             confirmButtonText: 'OK',
+            customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
           }).then((result) => {
             if (result.isConfirmed) {
               this.iseditModalOpen = false;

@@ -333,7 +333,7 @@ export class ViewPolygonCentersComponent implements OnInit {
           if (res.success) {
             Swal.fire({
               title: 'Deleted!',
-              text: 'The center has been deleted.',
+              text: 'The centre has been deleted.',
               icon: 'success',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

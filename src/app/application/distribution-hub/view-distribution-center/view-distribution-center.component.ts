@@ -358,7 +358,7 @@ deleteDistributionCenter(id: number): void {
         next: () => {
           Swal.fire({
             title: 'Deleted!',
-            text: 'Distribution center has been deleted.',
+            text: 'Distribution centre has been deleted.',
             icon: 'success',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

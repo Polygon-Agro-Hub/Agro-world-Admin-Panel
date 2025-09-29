@@ -55,7 +55,6 @@ export class ViewPublicForumComponent implements OnInit {
 
   sendMessage(id: number) {
     if (!this.replyMessage.trim()) {
-      Swal.fire('Error!', 'Please enter a message.', 'error');
       return;
     }
 

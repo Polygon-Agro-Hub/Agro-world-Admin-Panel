@@ -224,25 +224,26 @@
     >
       <!-- Added pb-4 for bottom padding -->
       <div class="flex flex-row border-t-gray-600">
-        <div class="flex flex-row w-full">
-          <div class="flex relative w-full">
-            <textarea
-              [(ngModel)]="replyMessage"
-              (input)="onReplyMassageInput($event)"
-              rows="4"
-              cols="5"
-              placeholder="Comment here..."
-              class="w-full px-4 py-2 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-tileBlack dark:text-textDark"
-            ></textarea>
-          </div>
-        </div>
-        <button
-          class="ml-2 text-[#3980C0] hover:cursor-pointer"
-          (click)="sendMessage(selectPostId)"
-        >
-          <i class="material-icons" style="font-size: 36px">send</i>
-        </button>
-      </div>
+  <div class="flex flex-row w-full">
+    <div class="flex relative w-full">
+      <textarea
+        [(ngModel)]="replyMessage"
+        (input)="onReplyMassageInput($event)"
+        rows="4"
+        cols="5"
+        placeholder="Comment here..."
+        class="w-full px-4 py-2 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-tileBlack dark:text-textDark"
+      ></textarea>
+    </div>
+  </div>
+  <button
+    class="ml-2 text-[#3980C0] hover:cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed"
+    (click)="sendMessage(selectPostId)"
+    [disabled]="!replyMessage.trim()"
+  >
+    <i class="material-icons" style="font-size: 36px">send</i>
+  </button>
+</div>
     </div>
   </div>
 </div>

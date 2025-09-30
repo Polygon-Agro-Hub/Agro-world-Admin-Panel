@@ -24,4 +24,21 @@ export class GoviLinkService {
   //     headers,
   //   });
   // }
+
+
+
+saveOfficerService(data: {
+    englishName: string;
+    tamilName: string;
+    sinhalaName: string;
+    srvFee?: number;
+  }): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`
+    });
+
+    return this.http.post(this.apiUrl + 'save-officer-service', data, { headers });
+  }
+
 }

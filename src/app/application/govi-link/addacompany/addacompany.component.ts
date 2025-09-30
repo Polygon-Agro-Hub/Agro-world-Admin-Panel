@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 
 interface Bank {
   ID: number;
@@ -57,6 +58,8 @@ export class AddacompanyComponent {
   contactNumberError1: boolean = false;
   contactNumberError2: boolean = false;
   sameNumberError: boolean = false;
+  itemId: number | null = null;
+  userForm: FormGroup;
 
   countries = [
     { name: 'Sri Lanka', code: 'LK', dialCode: '+94' },
@@ -67,7 +70,127 @@ export class AddacompanyComponent {
     { name: 'Netherlands', code: 'NL', dialCode: '+31' }
   ];
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private router: Router,) { }
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private router: Router, private goviLinkSrv: GoviLinkService) {
+    this.userForm = this.fb.group({
+      RegNumber: ['', Validators.required],
+      companyName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      phoneCode1: ['', Validators.required],
+      phoneNumber1: ['', Validators.required],
+      phoneCode2: [''],
+      phoneNumber2: [''],
+      accHolderName: ['', Validators.required],
+      accNumber: ['', Validators.required],
+      bank: ['', Validators.required],
+      branch: ['', Validators.required],
+      financeOfficerName: ['', Validators.required],
+    });
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      this.itemId = params['id'] ? +params['id'] : null;
+      this.isView = params['isView'] === 'true';
+    });
+
+    if (!this.companyData.phoneCode1) {
+      this.companyData.phoneCode1 = '+94';
+    }
+    if (!this.companyData.phoneCode2) {
+      this.companyData.phoneCode2 = '+94';
+    }
+
+    this.loadBanks();
+    this.loadBranches();
+    this.userForm.valueChanges.subscribe((formValues) => {
+      this.companyData = { ...this.companyData, ...formValues };
+    });
+    this.getCompanyData();
+  }
+
+  getCompanyData() {
+    if (this.itemId) {
+      this.isLoading = true;
+      this.goviLinkSrv.getCompanyById(this.itemId).subscribe(
+        (response: any) => {
+          this.isLoading = false;
+          this.companyData = response;
+
+          // Set default values for contact number codes if they don't exist
+          if (!this.companyData.phoneCode1) {
+            this.companyData.phoneCode1 = '+94';
+          }
+          if (!this.companyData.phoneCode2) {
+            this.companyData.phoneCode2 = '+94';
+          }
+
+          // Set confirmAccNumber to match accNumber for editing
+          if (!this.companyData.confirmAccNumber && this.companyData.accNumber) {
+            this.companyData.confirmAccNumber = this.companyData.accNumber;
+          }
+
+          this.matchExistingBankToDropdown();
+        },
+        (error) => {
+          this.isLoading = false;
+          Swal.fire(
+            'Error',
+            'Failed to fetch company data. Please try again.',
+            'error'
+          );
+        }
+      );
+    }
+  }
+
+  loadBanks() {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
+      (data) => {
+        // Sort banks alphabetically by name (case-insensitive)
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+        this.matchExistingBankToDropdown();
+      },
+      (error) => { }
+    );
+  }
+
+  loadBranches() {
+    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
+      (data) => {
+        this.allBranches = data;
+        this.matchExistingBankToDropdown();
+      },
+      (error) => { }
+    );
+  }
+
+  matchExistingBankToDropdown() {
+    if (
+      this.banks.length > 0 &&
+      Object.keys(this.allBranches).length > 0 &&
+      this.companyData &&
+      this.companyData.bank
+    ) {
+      const matchedBank = this.banks.find(
+        (bank) => bank.name === this.companyData.bank
+      );
+
+      if (matchedBank) {
+        this.selectedBankId = matchedBank.ID;
+        this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+
+        if (this.companyData.branch) {
+          const matchedBranch = this.branches.find(
+            (branch) => branch.name === this.companyData.branch
+          );
+          if (matchedBranch) {
+            this.selectedBranchId = matchedBranch.ID;
+          }
+        }
+      }
+    }
+    console.log('hit 02', console.log(this.companyData.bank));
+  }
 
   back(): void {
     Swal.fire({
@@ -296,7 +419,7 @@ export class AddacompanyComponent {
     return value ? value.replace(/^\s+/, '') : value;
   }
 
-  capitalizeFirstLetter(field: 'companyName' | 'foName' | 'accHolderName'): void {
+  capitalizeFirstLetter(field: 'companyName' | 'financeOfficerName' | 'accHolderName'): void {
     const currentValue = this.companyData[field];
     if (currentValue && currentValue.length > 0) {
       this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
@@ -613,7 +736,6 @@ class Company {
   RegNumber!: string;
   companyName!: string;
   accHolderName!: string;
-  foName!: string;
   email!: string;
   financeOfficerName!: string;
   accName!: string;

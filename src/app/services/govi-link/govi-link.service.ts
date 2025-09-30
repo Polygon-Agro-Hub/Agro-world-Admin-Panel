@@ -15,13 +15,26 @@ export class GoviLinkService {
     private tokenService: TokenService,
   ) { }
 
-  // getAllSystemApplications(): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     "Content-Type": "application/json",
-  //   });
-  //   return this.http.get(`${this.apiUrl}complain/get-all-system-applications`, {
-  //     headers,
-  //   });
-  // }
+  createCompany(companyData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}auth/create-company`;
+
+    return this.http.post(url, companyData, {
+      headers,
+    });
+  }
+
+  getCompanyById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}auth/get-company-by-id/${id}`, {
+      headers,
+    });
+  }
 }

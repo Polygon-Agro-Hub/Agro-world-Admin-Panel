@@ -324,20 +324,20 @@
     </div>
     <div class="pb-6 mx-20">
       <label
-        for="foName"
+        for="financeOfficerName"
         class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >Finance Officer’s Name *</label
       >
       <input
-        id="foName"
-        name="foName"
-        [(ngModel)]="companyData.foName"
+        id="financeOfficerName"
+        name="financeOfficerName"
+        [(ngModel)]="companyData.financeOfficerName"
         (keydown)="allowOnlyEnglishLetterss($event)"
-        (keydown)="handleInputWithSpaceTrimming($event, 'foName')"
-        (input)="capitalizeFirstLetter('foName')"
+        (keydown)="handleInputWithSpaceTrimming($event, 'financeOfficerName')"
+        (input)="capitalizeFirstLetter('financeOfficerName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
       />
-      <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm"
+      <span *ngIf="isFieldInvalid('financeOfficerName')" class="text-red-600 text-sm"
         >Finance Officer’s Name is required.</span
       >
     </div>

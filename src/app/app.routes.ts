@@ -187,6 +187,7 @@ import { FinanceDashboardComponent } from './application/finance/finance-dashboa
 import path from 'path';
 import { ResetPasswordComponent } from './application/main-components/reset-password/reset-password.component';
 import { GoviLinkDashbordComponent } from './application/govi-link/govi-link-dashbord/govi-link-dashbord.component';
+import { GovilinkComponent } from './application/govi-link/govilink/govilink.component';
 export const routes: Routes = [
   {
     path: '',
@@ -1205,7 +1206,7 @@ export const routes: Routes = [
             children: [
               {
                 path: '',
-                component: GoviLinkDashbordComponent,
+                component: GovilinkComponent,
                 
               }
             ]

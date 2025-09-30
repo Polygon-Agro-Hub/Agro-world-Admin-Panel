@@ -186,6 +186,7 @@ import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-a
 import { FinanceDashboardComponent } from './application/finance/finance-dashboard/finance-dashboard.component';
 import path from 'path';
 import { ResetPasswordComponent } from './application/main-components/reset-password/reset-password.component';
+import { GoviLinkDashbordComponent } from './application/govi-link/govi-link-dashbord/govi-link-dashbord.component';
 export const routes: Routes = [
   {
     path: '',
@@ -1197,14 +1198,15 @@ export const routes: Routes = [
         children: [
           {
             path: 'dashboard',
-            // component:GoviLinkDashboardComponent
+            component:GoviLinkDashbordComponent
           },
           {
             path: 'action',
             children: [
               {
                 path: '',
-                // component: GoviLinkComponent,
+                component: GoviLinkDashbordComponent,
+                
               }
             ]
           }

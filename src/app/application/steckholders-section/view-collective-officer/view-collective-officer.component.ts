@@ -369,6 +369,10 @@ export class ViewCollectiveOfficerComponent {
       grow: 'row',
       showClass: { popup: 'animate__animated animate__fadeIn' },
       hideClass: { popup: 'animate__animated animate__fadeOut' },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
       didOpen: () => {
         if (showApproveButton) {
           document
@@ -387,6 +391,10 @@ export class ViewCollectiveOfficerComponent {
                       text: 'The Collection Officer was approved successfully.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
                     });
                     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                   } else {
@@ -396,6 +404,10 @@ export class ViewCollectiveOfficerComponent {
                       text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
                     });
                   }
                 },
@@ -407,6 +419,10 @@ export class ViewCollectiveOfficerComponent {
                     text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold',
+                    },
                   });
                 }
               );
@@ -430,6 +446,10 @@ export class ViewCollectiveOfficerComponent {
                       text: 'The Collection Officer was rejected successfully.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
                     });
                     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                   } else {
@@ -439,6 +459,10 @@ export class ViewCollectiveOfficerComponent {
                       text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
                     });
                   }
                 },
@@ -450,6 +474,10 @@ export class ViewCollectiveOfficerComponent {
                     text: 'An error occurred while rejecting. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold',
+                    },
                   });
                 }
               );
@@ -462,9 +490,13 @@ export class ViewCollectiveOfficerComponent {
   updateStatus(item: CollectionOfficers, newStatus: string) {
     item.status = newStatus;
     Swal.fire(
-      'Updated!',
-      `The Collection Officer status has been updated to ${newStatus}.`,
-      'success'
+     { title: 'Updated!',
+     text: `The Collection Officer status has been updated to ${newStatus}.`,
+     icon: 'success',
+     customClass: {
+       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+       title: 'font-semibold',
+     }}
     );
     this.isPopupVisible = false;
   }

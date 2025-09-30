@@ -161,7 +161,7 @@
   disabled
   (blur)="onBlur('companyId')"
   id="centerId"
-  [(ngModel)]="personalData.companyId"
+[(ngModel)]="personalData.companyId"
   name="centerId"
   class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
 >
@@ -429,7 +429,7 @@
       maxlength="9"
       type="number"
       placeholder="Enter your phone number"
-      class="block w-full p-2 border rounded-r-md"
+      class="block w-full p-2 border  border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     />
   </div>
 
@@ -502,7 +502,7 @@
       [(ngModel)]="personalData.phoneNumber02"
       (input)="checkDuplicatePhoneNumbers()"
       maxlength="9"
-      class="block w-full p-2 border rounded-r-md"
+      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
       [ngClass]="{ 
         'border-red-500': getPhoneNumber02ErrorType() !== null,
         'border-gray-300': getPhoneNumber02ErrorType() === null
@@ -617,28 +617,32 @@
     </h2>
     <div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div class="pb-6">
-          <label
-            for="house"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >House / Plot Number *</label
-          >
-          <input
-            (blur)="onBlur('houseNumber')"
-            id="houseNumber"
-            name="houseNumber"
-            [(ngModel)]="personalData.houseNumber"
-             (input)="capitalizeWhileTyping('houseNumber')"
-                  (input)="trimLeadingSpace($event)"
-             (keydown)="blockLeadingSpace($event, 'houseNumber')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('houseNumber')"
-            class="text-red-600 text-sm"
-            >House Number is required.</span
-          >
-        </div>
+      <div class="mb-6">
+  <label
+    for="houseNumber"
+    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+  >
+    House Number *
+  </label>
+  <input
+    id="houseNumber"
+    name="houseNumber"
+    [(ngModel)]="personalData.houseNumber"
+    (blur)="onBlur('houseNumber')"
+    (input)="capitalizeWhileTyping('houseNumber'); trimLeadingSpace($event)"
+    (keydown)="blockLeadingSpace($event, 'houseNumber')"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    required
+    #houseNumberField="ngModel"
+  />
+  <span
+    *ngIf="houseNumberField.invalid && (houseNumberField.dirty || houseNumberField.touched)"
+    class="text-red-600 text-sm"
+  >
+    House Number is required.
+  </span>
+</div>
+   
 
         <div class="pb-6">
           <label

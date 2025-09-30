@@ -84,6 +84,7 @@ export class AddCollectionCenterComponent implements OnInit {
       province: ['', Validators.required],
       country: ['Sri Lanka', Validators.required],
       city: ['', Validators.required],
+      companies: [[], Validators.required],
       searchQuery: [''],
     });
     const defaultCountry = this.countries.find((c) => c.code === 'lk') || null;
@@ -99,6 +100,13 @@ export class AddCollectionCenterComponent implements OnInit {
       company.companyNameEnglish.toLowerCase().includes(input)
     );
   }
+
+  onCompanyChange(event: any): void {
+    this.selectedCompaniesIds = event.value;
+    this.collectionCenterForm.get('companies')?.setValue(this.selectedCompaniesIds);
+    this.collectionCenterForm.get('companies')?.markAsTouched();
+  }
+
 
   onCompanyInputClick(): void {
     this.dropdownOpen = !this.dropdownOpen;
@@ -499,13 +507,13 @@ isFieldInvalid(field: string): boolean {
   });
 }
 
-  onCancel() {
+onCancel() {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
-    text: 'All entered data will be lost!',
+    text: 'You may lose the added data after going back!',
     showCancelButton: true,
-    confirmButtonText: 'Yes, Reset',
+    confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
         customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

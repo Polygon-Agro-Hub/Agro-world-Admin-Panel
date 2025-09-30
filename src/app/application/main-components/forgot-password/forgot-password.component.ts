@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,19 +11,19 @@ import { AuthService } from '../../../services/auth.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './forgot-password.component.html',
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent implements OnDestroy {
   email: string = '';
   isLoading: boolean = false;
+  countdown: number = 0; // in seconds
+  intervalId: any;
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  // Simple email validation
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
 
-  // Navigate to login page
   goToLogin() {
     this.router.navigate(['/login']);
   }
@@ -45,6 +45,7 @@ export class ForgotPasswordComponent {
         this.isLoading = false;
         Swal.fire('Success', res.message, 'success');
         this.email = '';
+        this.startCountdown(180); // 3 minutes (in seconds)
       },
       error: (err) => {
         this.isLoading = false;
@@ -52,5 +53,33 @@ export class ForgotPasswordComponent {
         Swal.fire('Error', msg, 'error');
       },
     });
+  }
+
+  private startCountdown(seconds: number) {
+    this.countdown = seconds;
+
+    if (this.intervalId) clearInterval(this.intervalId);
+
+    this.intervalId = setInterval(() => {
+      if (this.countdown > 0) {
+        this.countdown--;
+      } else {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
+    }, 1000);
+  }
+
+  // Format as M:SS
+  get countdownText(): string {
+    const minutes = Math.floor(this.countdown / 60);
+    const secs = this.countdown % 60;
+    return `Expires in ${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 }

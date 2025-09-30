@@ -606,7 +606,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     }
 
     if (this.userForm.get('accHolderName')?.invalid) {
-      missingFields.push('Account Holder Name is Required');
+      missingFields.push("Account Holder's Name is Required");
     }
 
     if (this.userForm.get('accNumber')?.invalid) {
@@ -810,7 +810,7 @@ export class EditPlantcareUsersComponent implements OnInit {
     }
 
     if (this.userForm.get('accHolderName')?.invalid) {
-      missingFields.push('Account Holder Name is Required');
+      missingFields.push("Account Holder's Name is Required");
     }
 
     if (this.userForm.get('accNumber')?.invalid) {

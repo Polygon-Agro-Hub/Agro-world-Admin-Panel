@@ -153,6 +153,10 @@ private formatLocalDate(date: Date): string {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -163,11 +167,15 @@ private formatLocalDate(date: Date): string {
             this.isLoading = false;
           },
           (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the news item.',
-              'error'
-            );
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the news item.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              }
+            });
             this.isLoading = false;
           }
         );
@@ -258,7 +266,11 @@ openPopup(id: any) {
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
     confirmButtonText: confirmButtonText,
-    cancelButtonText: 'Cancel'
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    }
   }).then((result) => {
     if (result.isConfirmed) {
       // User confirmed, proceed with status update

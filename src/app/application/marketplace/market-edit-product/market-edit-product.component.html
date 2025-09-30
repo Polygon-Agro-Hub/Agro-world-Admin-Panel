@@ -26,24 +26,71 @@
           optionLabel="label" optionValue="value" placeholder="--Display type--" #categoryField="ngModel"
           [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
         </p-dropdown>
+        <div
+          *ngIf="categoryField.invalid && (categoryField.dirty || categoryField.touched)"
+          class="text-red-500 text-sm mt-1"
+        >
+          Category is required.
+        </div>
       </div>
 
+    <!-- Display Name -->
       <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Display Name *</label>
-        <input type="text" id="cropName" name="cropName" [(ngModel)]="productObj.cropName" (blur)="trimDisplayName()"
-          (keydown)="preventLeadingSpace($event,productObj.cropName)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        <label
+          for="cropName"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+        >
+          Display Name *
+        </label>
+        <input
+          type="text"
+          id="cropName"
+          name="cropName"
+          [(ngModel)]="productObj.cropName"
+          (blur)="trimDisplayName()"
+          (keydown)="preventLeadingSpace($event, 'cropName')"
+          required
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          #cropNameField="ngModel"
+        />
+        <div
+          *ngIf="cropNameField.invalid && (cropNameField.dirty || cropNameField.touched)"
+          class="text-red-500 text-sm mt-1"
+        >
+          Display Name is required.
+        </div>
       </div>
 
-      <!-- Crop Selection -->
-      <div class="mb-6">
-        <label class="text-[#534E4E] dark:text-textDark">Crop *</label>
-        <p-dropdown id="selectId" name="selectId" [(ngModel)]="productObj.selectId" (onChange)="onCropChange()"
-          [options]="cropsObj" optionLabel="cropNameEnglish" optionValue="cropId" [filter]="true"
-          filterBy="cropNameEnglish" placeholder="--- Select Crop ---" [showClear]="false" class="w-full mt-2">
-        </p-dropdown>
+   <div class="mb-6">
+        <label
+          for="selectId"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+        >
+          Crop *
+        </label>
+        <p-dropdown
+          id="selectId"
+          name="selectId"
+          [(ngModel)]="productObj.selectId"
+          (onChange)="onCropChange()"
+          [options]="cropsObj"
+          optionLabel="cropNameEnglish"
+          optionValue="cropId"
+          [filter]="true"
+          filterBy="cropNameEnglish"
+          placeholder="--- Select Crop ---"
+          [showClear]="false"
+          required
+          class="w-full mt-2"
+          #selectIdField="ngModel"
+        ></p-dropdown>
+        <div
+          *ngIf="selectIdField.invalid && (selectIdField.dirty || selectIdField.touched)"
+          class="text-red-500 text-sm mt-1"
+        >
+          Crop is required.
+        </div>
       </div>
-
       <!-- <div>
         <select
           id="variety"
@@ -60,22 +107,35 @@
         </select>
       </div> -->
 <div class="mb-6">
-  <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
-  <p-dropdown
-    id="variety"
-    name="varietyId"
-    [(ngModel)]="productObj.varietyId"
-    (onChange)="selectVerityImage()"
-    [options]="selectedVarieties"
-    optionLabel="varietyEnglish"
-    optionValue="id"
-    [filter]="true"
-    filterBy="varietyEnglish"
-    placeholder="--- Select Variety ---"
-    [showClear]="false"
-    class="w-full mt-2"
-  ></p-dropdown>
-</div>
+        <label
+          for="varietyId"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+        >
+          Variety *
+        </label>
+        <p-dropdown
+          id="varietyId"
+          name="varietyId"
+          [(ngModel)]="productObj.varietyId"
+          (onChange)="selectVerityImage()"
+          [options]="selectedVarieties"
+          optionLabel="varietyEnglish"
+          optionValue="id"
+          [filter]="true"
+          filterBy="varietyEnglish"
+          placeholder="--- Select Variety ---"
+          [showClear]="false"
+          required
+          class="w-full mt-2"
+          #varietyIdField="ngModel"
+        ></p-dropdown>
+        <div
+          *ngIf="varietyIdField.invalid && (varietyIdField.dirty || varietyIdField.touched)"
+          class="text-red-500 text-sm mt-1"
+        >
+          Variety is required.
+        </div>
+      </div>
 
       <div class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Price *</label>
@@ -99,36 +159,64 @@
         </div>
       </div>
 
+    <!-- Display Type -->
       <div class="mb-6" *ngIf="productObj.promo">
-        <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
-        <!-- <select id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype"
-          class="mt-2 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark">
-          <option selected></option>
-          <option value="D&AP">With Discount and Actual Price</option>
-          <option value="AP&SP">With Actual Price and Sale Price</option>
-          <option value="AP&SP&D">
-            With Actual Price,Sale Price and Discount
-          </option>
-        </select> -->
-        <p-dropdown id="displaytype" name="displaytype" [(ngModel)]="productObj.displaytype"
-          [options]="displayTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Display Type--"
-          #displayTypeField="ngModel" required [showClear]="false"
-          [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
-          [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
-        </p-dropdown>
+        <label
+          for="displaytype"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+        >
+          Display Type *
+        </label>
+        <p-dropdown
+          id="displaytype"
+          name="displaytype"
+          [(ngModel)]="productObj.displaytype"
+          [options]="displayTypeOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="-- Select Display Type --"
+          required
+          #displayTypeField="ngModel"
+          [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
+        ></p-dropdown>
+        <div
+          *ngIf="displayTypeField.invalid && (displayTypeField.dirty || displayTypeField.touched)"
+          class="text-red-500 text-sm mt-1"
+        >
+          Display Type is required.
+        </div>
       </div>
-
-      <div class="mb-6" *ngIf="
-          (productObj.displaytype === 'D&AP' ||
-            productObj.displaytype === 'AP&SP&D') &&
-          productObj.promo
-        ">
-        <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
-        <input type="number" id="discountedPrice" name="discountedPrice" [(ngModel)]="productObj.discountedPrice"
-          (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'discountedPrice')"
-          (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$"
+     <!-- Discount Percentage -->
+      <div
+        class="mb-6"
+        *ngIf="productObj.promo && (productObj.displaytype === 'D&AP' || productObj.displaytype === 'AP&SP&D')"
+      >
+        <label
+          for="discountedPrice"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+        >
+          Discount Percentage *
+        </label>
+        <input
+          type="number"
+          id="discountedPrice"
+          name="discountedPrice"
+          [(ngModel)]="productObj.discountedPrice"
+          (keydown)="validateDecimalInput($event)"
+          (blur)="formatPrice($event, 'discountedPrice')"
+          (change)="calculeSalePrice()"
+          pattern="^\d+(\.\d{1,2})?$"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          placeholder="0.00" />
+          placeholder="0.00"
+          #discountedPriceField="ngModel"
+        />
+        <div
+          *ngIf="discountedPriceField.invalid && (discountedPriceField.dirty || discountedPriceField.touched)"
+          class="text-red-500 text-sm mt-1"
+        >
+          Discount Percentage is required and must be a valid number.
+        </div>
       </div>
 
       <div class="mb-6">
@@ -141,14 +229,38 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           placeholder="0.00" />
       </div>
-
-      <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP&D'">
-        <label class="text-[#534E4E] dark:text-textDark">Sale Price *</label>
-        <input type="text" id="salePrice" name="salePrice" [(ngModel)]="productObj.salePrice"
-          (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'salePrice')"
-          (change)="calculeSalePrice()" pattern="^\d+(\.\d{1,2})?$"
+<div
+        class="mb-6"
+        *ngIf="productObj.promo && (productObj.displaytype === 'AP&SP' || productObj.displaytype === 'AP&SP&D')"
+      >
+        <label
+          for="salePrice"
+          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+        >
+          Sale Price *
+        </label>
+        <input
+          type="number"
+          min="0.00"
+          step="0.01"
+          id="salePrice"
+          name="salePrice"
+          [(ngModel)]="productObj.salePrice"
+          (keydown)="validateDecimalInput($event)"
+          (blur)="formatPrice($event, 'salePrice')"
+          (change)="calculeSalePrice()"
+          pattern="^\d+(\.\d{1,2})?$"
+          required
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          placeholder="0.00" />
+          placeholder="0.00"
+          #salePriceField="ngModel"
+        />
+        <div
+          *ngIf="salePriceField.invalid && (salePriceField.dirty || salePriceField.touched)"
+          class="text-red-500 text-sm mt-1"
+        >
+          Sale Price is required and must be a valid number.
+        </div>
       </div>
 
       <div class="mb-6" *ngIf="productObj.promo && productObj.displaytype === 'AP&SP'">
@@ -213,6 +325,7 @@
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip-row>
+          
           }
         </mat-chip-grid>
         <input placeholder="New keyword..." [matChipInputFor]="templateChipGrid"

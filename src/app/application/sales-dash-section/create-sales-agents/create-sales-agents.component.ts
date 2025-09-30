@@ -640,7 +640,7 @@ onSubmit() {
   if (!this.personalData.district) missingFields.push('District is Required');
   if (!this.personalData.province) missingFields.push('Province is Required');
 
-  if (!this.personalData.accHolderName) missingFields.push('Account Holder Name is Required');
+  if (!this.personalData.accHolderName) missingFields.push("Account Holder's Name is Required");
   else if (!this.isValidName(this.personalData.accHolderName))
     missingFields.push('Account Holder Name - Only English letters, spaces, hyphens, and apostrophes allowed');
 

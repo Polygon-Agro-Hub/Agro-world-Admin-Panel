@@ -449,6 +449,10 @@ export class CreateAdminUserComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, update it!',
       cancelButtonText: 'Cancel',
+                  customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    }
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -464,6 +468,10 @@ export class CreateAdminUserComponent implements OnInit {
                 icon: 'success',
                 title: 'Success',
                 text: 'Admin updated successfully!',
+                              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
               }).then(() => {
                 this.navigatePath('/steckholders/action/admin');
               });
@@ -569,6 +577,10 @@ export class CreateAdminUserComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, create it!',
       cancelButtonText: 'Cancel',
+                    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -584,6 +596,10 @@ export class CreateAdminUserComponent implements OnInit {
                 icon: 'success',
                 title: 'Success',
                 text: 'Admin created successfully!',
+                                              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
               }).then(() => {
                 this.userForm.reset();
                 this.navigatePath('/steckholders/action/admin');

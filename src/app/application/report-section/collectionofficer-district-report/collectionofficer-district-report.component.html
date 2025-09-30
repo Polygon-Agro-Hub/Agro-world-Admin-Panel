@@ -19,7 +19,9 @@
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="districts" [checkmark]="true" optionLabel="name"
             [showClear]="selectedDistrict && selectedDistrict.name !== 'Colombo'" placeholder="District"
-            [(ngModel)]="selectedDistrict" (onChange)="applyFilters()">
+            [(ngModel)]="selectedDistrict" (onChange)="applyFilters()"
+            class="mt-1 block w-full p-dropdown-custom">
+            
           </p-dropdown>
 
         </div>

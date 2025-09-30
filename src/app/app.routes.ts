@@ -186,6 +186,7 @@ import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-a
 import { FinanceDashboardComponent } from './application/finance/finance-dashboard/finance-dashboard.component';
 import path from 'path';
 import { ResetPasswordComponent } from './application/main-components/reset-password/reset-password.component';
+import { GoviLinkDashbordComponent } from './application/govi-link/govi-link-dashbord/govi-link-dashbord.component';
 export const routes: Routes = [
   {
     path: '',
@@ -318,7 +319,7 @@ export const routes: Routes = [
               {
                 path: 'Farmers-farms-list',
                 component: FarmerListFarmersFarmsComponent,
-              }, 
+              },
               {
                 path: 'report-farmer-current-assert/:userId/:name',
                 component: ReportCurrentAssertsComponent,
@@ -355,7 +356,7 @@ export const routes: Routes = [
                 path: 'assets/fixed-asset-category/building-fixed-asset/details',
                 component: FarmersFarmsFixedAssetsBuildingComponent,
               },
-                           {
+              {
                 path: 'assets/fixed-asset-category/land-fixed-asset/details',
                 component: FarmersFarmsFixedAssetsLandComponent,
               },
@@ -424,9 +425,9 @@ export const routes: Routes = [
       },
 
       {
-        path:'finance',
-        children:[
-          {path:'dashboard',component:FinanceDashboardComponent}
+        path: 'finance',
+        children: [
+          { path: 'dashboard', component: FinanceDashboardComponent }
         ]
       },
 
@@ -1192,6 +1193,25 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'govi-link',
+        children: [
+          {
+            path: 'dashboard',
+            component:GoviLinkDashbordComponent
+          },
+          {
+            path: 'action',
+            children: [
+              {
+                path: '',
+                component: GoviLinkDashbordComponent,
+                
+              }
+            ]
+          }
+        ]
+      }
     ],
   },
   { path: '**', component: NotFoundComponent },

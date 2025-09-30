@@ -294,110 +294,123 @@ selectVerityImage() {
   //   this.productObj.tags = this.templateKeywords().join(', ');
   // }
 
-  onSubmit() {
-    this.updateTags();
-    console.log(this.productObj.promo);
+onSubmit() {
+  this.updateTags();
+  console.log(this.productObj.promo);
 
-    // Validate min and max quantities
-    if (this.productObj.category === 'WholeSale' && !this.validateMinMaxQuantities()) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        text: 'Minimum quantity cannot be greater than maximum quantity.',
-        confirmButtonText: 'OK'
-      });
-      return;
-    }
-
-    // Check for empty required fields
-    const emptyFields = [];
-
-    if (!this.productObj.category) emptyFields.push('Category');
-    if (!this.productObj.cropName) emptyFields.push('Display Name');
-    if (!this.productObj.varietyId) emptyFields.push('Variety');
-    if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
-    if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
-    if (this.templateKeywords().length === 0) emptyFields.push('Tags');
-    if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
-    if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
-
-    if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)) {
-      emptyFields.push('Maximum Quantity');
-    }
-
-    if (this.productObj.promo) {
-      if (!this.productObj.displaytype) {
-        emptyFields.push('Display Type');
-      } else {
-        console.log("discount precentage->", this.productObj.discountedPrice);
-
-        if (this.productObj.displaytype === 'D&AP') {
-          if (this.productObj.discountedPrice <= 0) emptyFields.push('Discount Percentage');
-        } else if (this.productObj.displaytype === 'AP&SP') {
-          if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
-        } else if (this.productObj.displaytype === 'AP&SP&D') {
-          if (this.productObj.discountedPrice <= 0) emptyFields.push('Discount Percentage');
-          if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
-        }
-      }
-
-    }
-
-    if (emptyFields.length > 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Required Fields',
-        html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
-        confirmButtonText: 'OK'
-      });
-      return;
-    }
-
-    this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
-      (res) => {
-    
-        if (res.status) {
-          Swal.fire('Success', 'Product Updated Successfully', 'success');
-          this.router.navigate(['/market/action/view-products-list']);
-        } else {
-          // Backend returns res.message when duplicate/conflict
-          Swal.fire({
-            icon: 'error',
-            title: 'Update Failed',
-            text: res.message || 'Product Update Failed',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        }
+  // ✅ Validate min and max quantities
+  if (this.productObj.category === 'WholeSale' && !this.validateMinMaxQuantities()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Validation Error',
+      text: 'Minimum quantity cannot be greater than maximum quantity.',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
       },
-      (error) => {
+      confirmButtonText: 'OK',
+    });
+    return;
+  }
 
-        console.error('Product update error:', error);
-    
-        let errorMessage = 'An error occurred while updating the product';
-    
-        if (error.error && error.error.message) {
-          errorMessage = error.error.message;
-        } else if (error.error && error.error.error) {
-          errorMessage = error.error.error;
-        }
-    
+  // ✅ Check for empty required fields
+  const emptyFields: string[] = [];
+  if (!this.productObj.category) emptyFields.push('Category');
+  if (!this.productObj.cropName) emptyFields.push('Display Name');
+  if (!this.productObj.varietyId) emptyFields.push('Variety');
+  if (!this.productObj.normalPrice) emptyFields.push('Price Per kg');
+  if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
+  if (this.templateKeywords().length === 0) emptyFields.push('Tags');
+  if (!this.productObj.startValue || this.productObj.startValue <= 0.0) emptyFields.push('Minimum Quantity');
+  if (!this.productObj.changeby || this.productObj.changeby <= 0.0) emptyFields.push('Increase/Decrease by');
+
+  if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity || this.productObj.maxQuantity <= 0.0)) {
+    emptyFields.push('Maximum Quantity');
+  }
+
+  if (this.productObj.promo) {
+    if (!this.productObj.displaytype) {
+      emptyFields.push('Display Type');
+    } else {
+      console.log("discount precentage->", this.productObj.discountedPrice);
+
+      if (this.productObj.displaytype === 'D&AP') {
+        if (this.productObj.discountedPrice <= 0) emptyFields.push('Discount Percentage');
+      } else if (this.productObj.displaytype === 'AP&SP') {
+        if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
+      } else if (this.productObj.displaytype === 'AP&SP&D') {
+        if (this.productObj.discountedPrice <= 0) emptyFields.push('Discount Percentage');
+        if (this.productObj.salePrice <= 0) emptyFields.push('Sale Price');
+      }
+    }
+  }
+
+  if (emptyFields.length > 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Required Fields',
+      html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonText: 'OK',
+    });
+    return;
+  }
+
+  // ✅ Submit to backend
+  this.marketSrv.updateProduct(this.productObj, this.productId).subscribe(
+    (res) => {
+      if (res.status) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Product Updated Successfully',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        }).then(() => {
+          this.router.navigate(['/market/action/view-products-list']);
+        });
+      } else {
         Swal.fire({
           icon: 'error',
           title: 'Update Failed',
-          text: errorMessage,
+          text: res.message || 'Product Update Failed',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',
           },
         });
       }
-    );
-    
-    console.log('Form submitted:', this.productObj);
-  }
+    },
+    (error) => {
+      console.error('Product update error:', error);
+      let errorMessage = 'An error occurred while updating the product';
+
+      if (error.error && error.error.message) {
+        errorMessage = error.error.message;
+      } else if (error.error && error.error.error) {
+        errorMessage = error.error.error;
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: errorMessage,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+    }
+  );
+
+  console.log('Form submitted:', this.productObj);
+}
+
   updateTags() {
     this.productObj.tags = this.templateKeywords().join(', ');
   }

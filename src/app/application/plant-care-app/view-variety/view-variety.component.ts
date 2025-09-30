@@ -87,31 +87,49 @@ export class ViewVarietyComponent {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+         customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.cropCalendarService.deleteCropVariety(id).subscribe(
-          (data: any) => {
-            if (data) {
-              Swal.fire(
-                'Deleted!',
-                'The crop variety item has been deleted.',
-                'success'
-              );
-              this.isLoading = false;
-              this.getAllVarietiesByGroup(this.itemId);
-            }
+    if (result.isConfirmed) {
+  this.isLoading = true;
+  this.cropCalendarService.deleteCropVariety(id).subscribe(
+    (data: any) => {
+      if (data) {
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'The crop variety item has been deleted.',
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton:
+              'bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-md',
           },
-          (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the crop variety.',
-              'error'
-            );
-            this.isLoading = false;
-          }
-        );
+        });
+        this.isLoading = false;
+        this.getAllVarietiesByGroup(this.itemId);
       }
+    },
+    (error) => {
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error deleting the crop variety.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton:
+            'bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-md',
+        },
+      });
+      this.isLoading = false;
+    }
+  );
+}
+
+      
     });
   }
 

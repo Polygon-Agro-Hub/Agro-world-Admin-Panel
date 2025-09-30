@@ -36,7 +36,7 @@ export class MarketPriceBulkDeleteComponent {
     private http: HttpClient,
     private router: Router,
     private tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllXl(this.page, this.itemsPerPage);
@@ -92,6 +92,10 @@ export class MarketPriceBulkDeleteComponent {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -104,19 +108,29 @@ export class MarketPriceBulkDeleteComponent {
           })
           .subscribe(
             () => {
-              Swal.fire(
-                'Deleted!',
-                'Sucessfully deleted the uploaded market prices',
-                'success'
-              );
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'Sucessfully deleted the uploaded market prices',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
               this.fetchAllXl();
             },
             () => {
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the news item.',
-                'error'
-              );
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'There was an error deleting the news item.',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
             }
           );
       }

@@ -8,6 +8,7 @@ import { CollectionOfficerReportService } from '../../../services/collection-off
 import jsPDF from 'jspdf';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../../services/theme.service';
 
 interface IProvinceReport {
   cropName: string;
@@ -45,7 +46,8 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
 
   constructor(
     private collectionOfficerSrv: CollectionOfficerReportService,
-    private router: Router
+    private router: Router,
+    private themeService: ThemeService
   ) {}
 
   back(): void {
@@ -114,19 +116,42 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
       color: '#3DE188',
     }));
 
+    const isDarkMode = this.themeService.isDarkTheme();
+
     this.chartOptions = {
       animationEnabled: true,
-      theme: 'light2',
+      backgroundColor: "transparent",
+      // theme: 'light2',
       title: {
         text: `${this.selectedProvince.name} - Crop Weights`,
+        fontColor: isDarkMode ? '#ffffff' : '#000000',
+        
       },
       axisX: {
         title: 'Crops',
         reversed: true,
+        titleFontColor: isDarkMode ? '#ffffff' : '#000000',
+        labelFontColor: isDarkMode ? '#d1d5db' : '#374151',
+        lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        
       },
       axisY: {
         title: 'Total Weight (Kg)',
         includeZero: true,
+        titleFontColor: isDarkMode ? '#ffffff' : '#000000',
+        labelFontColor: isDarkMode ? '#d1d5db' : '#374151',
+        lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        gridColor: isDarkMode ? '#374151' : '#e5e7eb',
+      },
+      legend: {
+        fontColor: isDarkMode ? '#d1d5db' : '#374151',
+      },
+      toolTip: {
+        backgroundColor: isDarkMode ? '#374151' : '#ffffff',
+        fontColor: isDarkMode ? '#ffffff' : '#374151',
+        borderColor: isDarkMode ? '#4b5563' : '#d1d5db',
       },
       data: [
         {

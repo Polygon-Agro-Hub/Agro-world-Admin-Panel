@@ -42,8 +42,8 @@
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap">Asset Type</th>
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap ">Other Type</th>
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap ">No.of Units</th>
-          <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Unit Price</th>
-          <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Total Price</th>
+          <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap">Unit Price</th>
+          <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap">Total Price</th>
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Warranty</th>
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Warranty Status</th>
         </tr>
@@ -54,11 +54,11 @@
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.assetType || 'NULL' }}</td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.mentionOther || 'NULL' }}</td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.numberOfUnits || 'NULL' }}</td>
-      <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+      <td class="px-4 py-3 text-gray-500 dark:text-textDark whitespace-nowrap text-center">
   {{ item.unitPrice ? 'Rs. ' + (item.unitPrice | number:'1.0-0') : 'NULL' }}
 </td>
       
-<td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+<td class="px-4 py-3 text-gray-500 dark:text-textDark whitespace-nowrap text-center">
   {{ item.totalPrice ? 'Rs. ' + (item.totalPrice | number:'1.0-0') : 'NULL' }}
 </td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center" style="text-transform: capitalize;">

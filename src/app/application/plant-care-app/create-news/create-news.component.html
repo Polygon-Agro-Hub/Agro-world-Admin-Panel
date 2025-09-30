@@ -12,7 +12,37 @@
     </h2>
 
     <div class="flex justify-between mb-10">
-      <div>
+
+      <div class="mr-5">
+        <p-calendar
+  id="toDate"
+  [(ngModel)]="originalPublishDate"
+  (onSelect)="onDateChange($event)"
+  (onClear)="onDateChange($event)"       
+  [showIcon]="true"
+  [showClear]="false"              
+  [showButtonBar]="true"
+  placeholder="--Select Date--"
+  iconDisplay="input"
+  [style]="{ width: '16rem', height: '2rem' }"
+  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+  [appendTo]="'body'"
+/>
+<div *ngIf="!isPublishAfterExpireValid" class="text-red-500">
+  Publish Date cannot be later than Expiry Date.
+</div>
+      </div>
+
+      
+      <!-- <div>
         <label for="sinhalaCropName" class="text-sm font-medium text-textLight dark:text-textDark">Publish Date <span
             class="text-[#2E2E2E]">*</span></label>
         <input [(ngModel)]="createNewsObj.publishDate" id="createdDateFilter" type="date"
@@ -21,14 +51,39 @@
         <div *ngIf="!isPublishAfterExpireValid" class="text-red-500">
           Publish Date cannot be later than Expiry Date.
         </div>
+      </div> -->
+
+      <div class="mr-5">
+        <p-calendar
+  id="toDate"
+  [(ngModel)]="originalExpireDate"
+  (onSelect)="onExpireDateChange($event)"
+  (onClear)="onExpireDateChange($event)"      
+  [showIcon]="true"
+  [showClear]="false"              
+  [showButtonBar]="true"
+  placeholder="--Select Date--"
+  iconDisplay="input"
+  [style]="{ width: '16rem', height: '2rem' }"
+  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+  [appendTo]="'body'"
+/>
       </div>
-      <div>
+      <!-- <div>
         <label for="sinhalaCropName" class="text-sm font-medium text-textLight dark:text-textDark">Expires on <span
             class="text-[#2E2E2E]">*</span></label>
         <input [(ngModel)]="createNewsObj.expireDate" id="createdDateFilter" type="date"
           class="w-64 px-4 ml-2 border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] cursor-pointer"
           [min]="createNewsObj.publishDate || today" (change)="checkExpireDate()" />
-      </div>
+      </div> -->
     </div>
 
     <div>

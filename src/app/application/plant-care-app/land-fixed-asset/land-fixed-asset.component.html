@@ -34,8 +34,8 @@
             <thead>
                 <tr>
                     <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-left">Extent</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Ownership</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">District</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">Ownership</th>
+                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">District</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Perennial Crops</th>
                     <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Actions</th>
                 </tr>
@@ -45,8 +45,8 @@
                     <td class="px-6 py-3 text-gray-500 dark:text-textDark text-left">
                         {{ item.extentha }} ha, {{ item.extentac }} ac, {{ item.extentp }} p,
                     </td>
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.ownership }}</td>
-                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.district }}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">{{ item.ownership }}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">{{ item.district }}</td>
                     <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
                         {{ item.perennialCrop === 0 ? 'No' : 'Yes' }}
                     </td>

@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div *ngIf="!isLoading">
- <div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+ <div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <div class="flex flex-row items-center justify-between gap-4">
         <div>
             <p class="text-lg font-semibold dark:text-white whitespace-nowrap " *ngIf="ordersArr.length !== 0 ">
@@ -175,7 +175,7 @@
 
 
 <!-- <div  *ngIf="!isLoading" >
-    <div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full h-screen">
+    <div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full h-screen">
         <div>
           <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
             <div class="mb-2">

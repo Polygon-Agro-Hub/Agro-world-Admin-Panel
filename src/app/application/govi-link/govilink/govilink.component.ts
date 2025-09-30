@@ -61,4 +61,8 @@ export class GovilinkComponent {
     this.popupVisibleMarketPrice = false;
     this.popupVisibleCompanys = false;
   }
+
+  addCompany(): void {
+    this.router.navigate(['/govi-link/action/add-a-company']);
+  }
 }

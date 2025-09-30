@@ -21,7 +21,7 @@ export class GoviLinkService {
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}auth/create-company`;
+    const url = `${this.apiUrl}create-company`;
 
     return this.http.post(url, companyData, {
       headers,
@@ -33,7 +33,7 @@ export class GoviLinkService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}auth/get-company-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}get-company-by-id/${id}`, {
       headers,
     });
   }

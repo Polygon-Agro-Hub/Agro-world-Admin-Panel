@@ -70,7 +70,13 @@ export class AddacompanyComponent {
     { name: 'Netherlands', code: 'NL', dialCode: '+31' }
   ];
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private http: HttpClient, private router: Router, private goviLinkSrv: GoviLinkService) {
+  constructor(
+    private fb: FormBuilder, 
+    private route: ActivatedRoute, 
+    private http: HttpClient, 
+    private router: Router, 
+    private goviLinkSrv: GoviLinkService
+  ) {
     this.userForm = this.fb.group({
       RegNumber: ['', Validators.required],
       companyName: ['', Validators.required],
@@ -85,6 +91,10 @@ export class AddacompanyComponent {
       branch: ['', Validators.required],
       financeOfficerName: ['', Validators.required],
     });
+
+    
+    // Initialize modifyBy with a default value
+    this.companyData.modifyBy = 'system'; // You can get this from your auth service
   }
 
   ngOnInit() {
@@ -105,7 +115,10 @@ export class AddacompanyComponent {
     this.userForm.valueChanges.subscribe((formValues) => {
       this.companyData = { ...this.companyData, ...formValues };
     });
-    this.getCompanyData();
+    
+    if (this.itemId) {
+      this.getCompanyData();
+    }
   }
 
   getCompanyData() {
@@ -189,7 +202,6 @@ export class AddacompanyComponent {
         }
       }
     }
-    console.log('hit 02', console.log(this.companyData.bank));
   }
 
   back(): void {
@@ -345,12 +357,10 @@ export class AddacompanyComponent {
       return;
     }
 
-    const numericFields = ['accNumber', 'confirmAccNumber', 'oicConNum1', 'oicConNum2'];
-    const englishOnlyFields = ['accHolderName', 'foName'];
+    const numericFields = ['accNumber', 'confirmAccNumber', 'phoneNumber1', 'phoneNumber2'];
+    const englishOnlyFields = ['accHolderName', 'financeOfficerName'];
     const emailFields = ['email'];
-    const sinhalaFields = [''];
-    const tamilFields = [''];
-    const businessNameFields = ['companyNameEnglish'];
+    const businessNameFields = ['companyName'];
 
     if (numericFields.includes(fieldName)) {
       if (!/^[0-9]$/.test(key)) {
@@ -524,7 +534,6 @@ export class AddacompanyComponent {
   }
 
   validateAccNumber(): void {
-
     // Check if account numbers match
     if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
       this.confirmAccountNumberError =
@@ -606,7 +615,6 @@ export class AddacompanyComponent {
     } else {
       this.companyData.branch = '';
     }
-    console.log('Selected branch:', this.companyData.branch);
   }
 
   allowOnlyEnglishLetterss(event: KeyboardEvent): void {
@@ -729,6 +737,186 @@ export class AddacompanyComponent {
     return '';
   }
 
+  // Helper method to convert file to base64
+  fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+  // Form validation method
+  isFormValid(): boolean {
+  const requiredFields: (keyof Company)[] = [
+    'RegNumber',
+    'companyName',
+    'email',
+    'financeOfficerName',
+    'accHolderName',
+    'accNumber',
+    'confirmAccNumber',
+    'bank',
+    'branch',
+    'phoneCode1',
+    'phoneNumber1'
+  ];
+
+  for (const field of requiredFields) {
+    const fieldValue = this.companyData[field];
+    if (!fieldValue || fieldValue.toString().trim() === '') {
+      return false;
+    }
+  }
+
+  // Additional validations
+  if (!this.isValidEmail(this.companyData.email)) {
+    return false;
+  }
+
+  if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+    return false;
+  }
+
+  if (this.contactNumberError1 || this.sameNumberError) {
+    return false;
+  }
+
+  return true;
+}
+
+  async saveCompany(): Promise<void> {
+    // Mark all fields as touched to show validation errors
+    Object.keys(this.companyData).forEach(key => {
+      this.touchedFields[key as keyof Company] = true;
+    });
+
+    // Validate required fields
+    if (!this.isFormValid()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Please fill all required fields correctly.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        }
+      });
+      return;
+    }
+
+    // Validate email
+    if (!this.isValidEmail(this.companyData.email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Email',
+        text: this.emailValidationMessage,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        }
+      });
+      return;
+    }
+
+    // Validate account numbers match
+    if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Account Number Mismatch',
+        text: 'Account numbers do not match.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        }
+      });
+      return;
+    }
+
+    // Validate contact numbers
+    this.validateContactNumbers();
+    if (this.contactNumberError1 || this.contactNumberError2 || this.sameNumberError) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Contact Numbers',
+        text: 'Please check your contact numbers.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        }
+      });
+      return;
+    }
+
+    try {
+      this.isLoading = true;
+
+      // Prepare the data for API - map frontend fields to backend fields
+      const companyDataToSend = {
+        regNumber: this.companyData.RegNumber,
+        companyName: this.companyData.companyName,
+        email: this.companyData.email,
+        financeOfficerName: this.companyData.financeOfficerName,
+        accName: this.companyData.accHolderName, // Map accHolderName to accName
+        accNumber: this.companyData.accNumber,
+        bank: this.companyData.bank,
+        branch: this.companyData.branch,
+        phoneCode1: this.companyData.phoneCode1,
+        phoneNumber1: this.companyData.phoneNumber1,
+        phoneCode2: this.companyData.phoneCode2,
+        phoneNumber2: this.companyData.phoneNumber2,
+        logo: this.companyData.logoFile ? await this.fileToBase64(this.companyData.logoFile) : this.companyData.logo,
+        modifyBy: this.companyData.modifyBy || 'system'
+      };
+
+      this.goviLinkSrv.createCompany(companyDataToSend).subscribe(
+        (response: any) => {
+          this.isLoading = false;
+          if (response.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: response.message,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              }
+            }).then(() => {
+              this.router.navigate(['/company-list']); // Navigate to company list
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: response.message,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              }
+            });
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error creating company:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to create company. Please try again.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            }
+          });
+        }
+      );
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error in saveCompany:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An unexpected error occurred.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        }
+      });
+    }
+  }
 }
 
 class Company {
@@ -736,9 +924,9 @@ class Company {
   RegNumber!: string;
   companyName!: string;
   accHolderName!: string;
+  accName!: string;
   email!: string;
   financeOfficerName!: string;
-  accName!: string;
   accNumber!: string;
   confirmAccNumber!: string;
   bank!: string;
@@ -751,4 +939,8 @@ class Company {
   logoFile?: File;
   modifyBy!: string;
   createdAt!: string;
+
+  constructor() {
+    this.modifyBy = 'system'; // Default value
+  }
 }

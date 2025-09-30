@@ -66,6 +66,13 @@
             ×
           </button>
         </div>
+        <!-- Add validation message for logo -->
+        <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm block mt-1">
+          Company Logo is required.
+        </span>
+        <span *ngIf="logoSizeError" class="text-red-600 text-sm block mt-1">
+          Logo must be less than 1MB.
+        </span>
       </div>
     </div>
   </div>
@@ -86,9 +93,10 @@
         [(ngModel)]="companyData.RegNumber"
         (keydown)="handleInputWithSpaceTrimming($event, 'RegNumber')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{'border-red-500': isFieldInvalid('RegNumber')}"
       />
       <span *ngIf="isFieldInvalid('RegNumber')" class="text-red-600 text-sm"
-        >Register Number is required.</span
+        >Registration Number is required.</span
       >
     </div>
     <div class="pb-6 mx-20">
@@ -108,12 +116,13 @@
         (keydown)="handleInputWithSpaceTrimming($event, 'companyName')"
         (input)="capitalizeFirstLetter('companyName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{'border-red-500': isFieldInvalid('companyName')}"
       />
       <div
         *ngIf="isFieldInvalid('companyName')"
         class="text-red-500 text-sm mt-1"
       >
-        Company Name (in English) is required.
+        Company Name is required.
       </div>
     </div>
     <div class="pb-6 mx-20">
@@ -129,6 +138,7 @@
         type="email"
         (keydown)="handleInputWithSpaceTrimming($event, 'email')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{'border-red-500': isFieldInvalid('email')}"
       />
       <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm"
         >Email is required.</span
@@ -160,18 +170,14 @@
         (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
         (input)="capitalizeFirstLetter('accHolderName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{'border-red-500': isFieldInvalid('accHolderName')}"
       />
 
       <div
-        *ngIf="
-          accHolderName.invalid &&
-          (accHolderName.dirty || accHolderName.touched)
-        "
+        *ngIf="isFieldInvalid('accHolderName')"
         class="text-red-600 text-sm"
       >
-        <div *ngIf="accHolderName.errors?.['required']">
-          Account Holder's Name is required.
-        </div>
+        Account Holder's Name is required.
       </div>
     </div>
     <div class="pb-6 mx-20">
@@ -190,18 +196,13 @@
         #accNumberInput="ngModel"
         required
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{'border-red-500': isFieldInvalid('accNumber')}"
       />
       <div
-        *ngIf="accNumberInput.touched && !companyData.accNumber"
+        *ngIf="isFieldInvalid('accNumber')"
         class="text-red-500 text-sm mt-1"
       >
-        <div>Account Number is required</div>
-      </div>
-      <div
-        *ngIf="accNumberInput.touched && companyData.accNumber && accNumberInput.errors?.['pattern']"
-        class="text-red-500 text-sm mt-1"
-      >
-        <div>Account Number cannot contain special characters</div>
+        Account Number is required
       </div>
     </div>
     <div class="pb-6 mx-20">
@@ -220,24 +221,18 @@
         required
         (ngModelChange)="validateConfirmAccNumber()"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{'border-red-500': isFieldInvalid('confirmAccNumber') || confirmAccountNumberError}"
       />
 
-      <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+      <span *ngIf="isFieldInvalid('confirmAccNumber')" class="text-red-600 text-sm">
         Confirm Account Number is required.
       </span>
 
       <span
-        *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+        *ngIf="confirmAccountNumberError && !isFieldInvalid('confirmAccNumber')"
         class="text-red-600 text-sm"
       >
         Account Numbers do not match.
-      </span>
-
-      <span
-        *ngIf="confirmAccNumberInput.touched && companyData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
-        class="text-red-500 text-sm mt-1"
-      >
-        <div>Account Number cannot contain special characters</div>
       </span>
     </div>
     <div class="pb-6 mx-20">
@@ -263,21 +258,16 @@
         class="w-full"
         (onChange)="onBankChange()"
         [ngClass]="{
-          'p-invalid':
-            bankDropdown.invalid && (bankDropdown.dirty || bankDropdown.touched)
+          'p-invalid': isFieldInvalid('bank')
         }"
       >
       </p-dropdown>
 
       <div
-        *ngIf="
-          bankDropdown.invalid && (bankDropdown.dirty || bankDropdown.touched)
-        "
+        *ngIf="isFieldInvalid('bank')"
         class="text-red-600 text-sm mt-1"
       >
-        <div *ngIf="bankDropdown.errors?.['required']">
-          Bank Name is required.
-        </div>
+        Bank Name is required.
       </div>
     </div>
     <div class="pb-6 mx-20">
@@ -303,30 +293,23 @@
         [required]="true"
         class="w-full"
         [ngClass]="{
-          'p-invalid':
-            branchDropdown.invalid &&
-            (branchDropdown.dirty || branchDropdown.touched)
+          'p-invalid': isFieldInvalid('branch')
         }"
       >
       </p-dropdown>
 
       <div
-        *ngIf="
-          branchDropdown.invalid &&
-          (branchDropdown.dirty || branchDropdown.touched)
-        "
+        *ngIf="isFieldInvalid('branch')"
         class="text-red-600 text-sm mt-1"
       >
-        <div *ngIf="branchDropdown.errors?.['required']">
-          Branch Name is required.
-        </div>
+        Branch Name is required.
       </div>
     </div>
     <div class="pb-6 mx-20">
       <label
         for="financeOfficerName"
         class="block text-sm font-medium text-gray-700 dark:text-textDark"
-        >Finance Officer’s Name *</label
+        >Finance Officer's Name *</label
       >
       <input
         id="financeOfficerName"
@@ -336,9 +319,10 @@
         (keydown)="handleInputWithSpaceTrimming($event, 'financeOfficerName')"
         (input)="capitalizeFirstLetter('financeOfficerName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{'border-red-500': isFieldInvalid('financeOfficerName')}"
       />
       <span *ngIf="isFieldInvalid('financeOfficerName')" class="text-red-600 text-sm"
-        >Finance Officer’s Name is required.</span
+        >Finance Officer's Name is required.</span
       >
     </div>
     <div class="flex gap-6">
@@ -358,6 +342,7 @@
             (blur)="validateContactNumbers()"
             styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
             [style]="{ width: '140px' }"
+            [ngClass]="{'border-red-500': isFieldInvalid('phoneCode1')}"
           >
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -395,6 +380,7 @@
             (blur)="validateContactNumbers()"
             maxlength="9"
             class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [ngClass]="{'border-red-500': isFieldInvalid('phoneNumber1')}"
           />
         </div>
 

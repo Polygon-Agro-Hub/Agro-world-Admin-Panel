@@ -322,13 +322,22 @@ export class AddacompanyComponent {
   isFieldInvalid(fieldName: keyof Company): boolean {
     const value = this.companyData[fieldName];
 
-    // Special handling for logo and favicon
+    // Special handling for logo
     if (fieldName === 'logo') {
       return !!this.touchedFields[fieldName] && !value;
     }
 
+    // Special handling for bank and branch (they come from dropdowns)
+    if (fieldName === 'bank') {
+      return !!this.touchedFields[fieldName] && (!value || !this.selectedBankId);
+    }
+
+    if (fieldName === 'branch') {
+      return !!this.touchedFields[fieldName] && (!value || !this.selectedBranchId);
+    }
+
     // For other fields
-    return !!this.touchedFields[fieldName] && !value;
+    return !!this.touchedFields[fieldName] && (!value || value.toString().trim() === '');
   }
 
   removeLogo(event: Event): void {
@@ -749,102 +758,145 @@ export class AddacompanyComponent {
 
   // Form validation method
   isFormValid(): boolean {
-  const requiredFields: (keyof Company)[] = [
-    'RegNumber',
-    'companyName',
-    'email',
-    'financeOfficerName',
-    'accHolderName',
-    'accNumber',
-    'confirmAccNumber',
-    'bank',
-    'branch',
-    'phoneCode1',
-    'phoneNumber1'
-  ];
+    const requiredFields: (keyof Company)[] = [
+      'RegNumber',
+      'companyName',
+      'email',
+      'financeOfficerName',
+      'accHolderName',
+      'accNumber',
+      'confirmAccNumber',
+      'bank',
+      'branch',
+      'phoneCode1',
+      'phoneNumber1'
+    ];
 
-  for (const field of requiredFields) {
-    const fieldValue = this.companyData[field];
-    if (!fieldValue || fieldValue.toString().trim() === '') {
+    for (const field of requiredFields) {
+      const fieldValue = this.companyData[field];
+      if (!fieldValue || fieldValue.toString().trim() === '') {
+        return false;
+      }
+    }
+
+    // Additional validations
+    if (!this.isValidEmail(this.companyData.email)) {
       return false;
     }
+
+    if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+      return false;
+    }
+
+    if (this.contactNumberError1 || this.sameNumberError) {
+      return false;
+    }
+
+    return true;
   }
 
-  // Additional validations
-  if (!this.isValidEmail(this.companyData.email)) {
-    return false;
-  }
+  // Add this new method to get detailed validation errors
+  getValidationErrors(): string[] {
+    const errors: string[] = [];
 
-  if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
-    return false;
-  }
+    // Check required fields
+    if (!this.companyData.RegNumber || this.companyData.RegNumber.trim() === '') {
+      errors.push('Registration Number is required');
+    }
 
-  if (this.contactNumberError1 || this.sameNumberError) {
-    return false;
-  }
+    if (!this.companyData.companyName || this.companyData.companyName.trim() === '') {
+      errors.push('Company Name is required');
+    }
 
-  return true;
-}
+    if (!this.companyData.email || this.companyData.email.trim() === '') {
+      errors.push('Email is required');
+    } else if (!this.isValidEmail(this.companyData.email)) {
+      errors.push('Please enter a valid email address');
+    }
+
+    if (!this.companyData.financeOfficerName || this.companyData.financeOfficerName.trim() === '') {
+      errors.push('Finance Officer Name is required');
+    }
+
+    if (!this.companyData.accHolderName || this.companyData.accHolderName.trim() === '') {
+      errors.push('Account Holder Name is required');
+    }
+
+    if (!this.companyData.accNumber || this.companyData.accNumber.toString().trim() === '') {
+      errors.push('Account Number is required');
+    }
+
+    if (!this.companyData.confirmAccNumber || this.companyData.confirmAccNumber.toString().trim() === '') {
+      errors.push('Confirm Account Number is required');
+    } else if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+      errors.push('Account Numbers do not match');
+    }
+
+    if (!this.companyData.bank || this.companyData.bank.trim() === '' || !this.selectedBankId) {
+      errors.push('Bank Name is required');
+    }
+
+    if (!this.companyData.branch || this.companyData.branch.trim() === '' || !this.selectedBranchId) {
+      errors.push('Branch Name is required');
+    }
+
+    if (!this.companyData.phoneNumber1 || this.companyData.phoneNumber1.toString().trim() === '') {
+      errors.push('Contact Number 1 is required');
+    } else if (this.getContactNumber1ErrorMessage()) {
+      errors.push(this.getContactNumber1ErrorMessage());
+    }
+
+    const contactError2 = this.getContactNumber2ErrorMessage();
+    if (contactError2) {
+      errors.push(contactError2);
+    }
+
+    // Check logo
+    if (!this.companyData.logo) {
+      errors.push('Company Logo is required');
+    }
+
+    return errors;
+  }
 
   async saveCompany(): Promise<void> {
     // Mark all fields as touched to show validation errors
-    Object.keys(this.companyData).forEach(key => {
-      this.touchedFields[key as keyof Company] = true;
+    const fieldsToValidate: (keyof Company)[] = [
+      'RegNumber', 'companyName', 'email', 'financeOfficerName', 
+      'accHolderName', 'accNumber', 'confirmAccNumber', 'bank', 
+      'branch', 'phoneCode1', 'phoneNumber1', 'logo'
+    ];
+
+    fieldsToValidate.forEach(key => {
+      this.touchedFields[key] = true;
     });
 
-    // Validate required fields
-    if (!this.isFormValid()) {
+    // Get validation errors
+    const validationErrors = this.getValidationErrors();
+
+    if (validationErrors.length > 0) {
+      // Show detailed error messages in SweetAlert
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
-        text: 'Please fill all required fields correctly.',
+        html: `
+          <div class="text-left">
+            <p class="mb-3 font-semibold">Please fix the following errors:</p>
+            <ul class="list-disc list-inside space-y-1 max-h-60 overflow-y-auto">
+              ${validationErrors.map(error => `<li class="text-sm">${error}</li>`).join('')}
+            </ul>
+          </div>
+        `,
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        }
+        },
+        confirmButtonText: 'OK',
+        width: '600px'
       });
       return;
     }
 
-    // Validate email
-    if (!this.isValidEmail(this.companyData.email)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Email',
-        text: this.emailValidationMessage,
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        }
-      });
-      return;
-    }
-
-    // Validate account numbers match
-    if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Account Number Mismatch',
-        text: 'Account numbers do not match.',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        }
-      });
-      return;
-    }
-
-    // Validate contact numbers
-    this.validateContactNumbers();
-    if (this.contactNumberError1 || this.contactNumberError2 || this.sameNumberError) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Contact Numbers',
-        text: 'Please check your contact numbers.',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        }
-      });
-      return;
-    }
-
+    // If all validations pass, proceed with saving
     try {
       this.isLoading = true;
 
@@ -854,7 +906,7 @@ export class AddacompanyComponent {
         companyName: this.companyData.companyName,
         email: this.companyData.email,
         financeOfficerName: this.companyData.financeOfficerName,
-        accName: this.companyData.accHolderName, // Map accHolderName to accName
+        accName: this.companyData.accHolderName,
         accNumber: this.companyData.accNumber,
         bank: this.companyData.bank,
         branch: this.companyData.branch,
@@ -878,7 +930,7 @@ export class AddacompanyComponent {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               }
             }).then(() => {
-              this.router.navigate(['/govi-link/action']); // Navigate to company list
+              this.router.navigate(['/govi-link/action']);
             });
           } else {
             Swal.fire({

@@ -15,7 +15,7 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -37,16 +37,18 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="provinceOptions" [checkmark]="true" optionLabel="label" optionValue="value" [showClear]="!!selectProvince"
-            placeholder="Province" [(ngModel)]="selectProvince" (onChange)="applyProvinceFilters()"></p-dropdown>
+            [options]="provinceOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [showClear]="!!selectProvince" placeholder="Province" [(ngModel)]="selectProvince"
+            (onChange)="applyProvinceFilters()"></p-dropdown>
         </div>
 
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtOptions" [checkmark]="true" optionLabel="label" optionValue="value" [showClear]="!!selectDistrict"
-            placeholder="District" [(ngModel)]="selectDistrict" (onChange)="applyDistrictFilters()"></p-dropdown>
+            [options]="districtOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [showClear]="!!selectDistrict" placeholder="District" [(ngModel)]="selectDistrict"
+            (onChange)="applyDistrictFilters()"></p-dropdown>
         </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
@@ -78,9 +80,8 @@
               No
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
-              Collection Centre Reg Code
+              Reg Code
             </th>
-
             <!-- <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               <span class="block">Collection Centre</span>
               <span class="block">Reg Code</span>

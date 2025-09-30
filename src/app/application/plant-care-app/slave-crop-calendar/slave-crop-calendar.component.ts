@@ -22,6 +22,7 @@ interface CultivationItems {
 }
 
 interface NewsItem {
+  ongoingcultivationscropsid:number;
   ongoingCultivationId: any;
   cropName: string;
   cropCalendar: number;

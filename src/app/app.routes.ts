@@ -189,6 +189,9 @@ import { ResetPasswordComponent } from './application/main-components/reset-pass
 import { GoviLinkDashbordComponent } from './application/govi-link/govi-link-dashbord/govi-link-dashbord.component';
 import { GovilinkComponent } from './application/govi-link/govilink/govilink.component';
 import { AddacompanyComponent } from './application/govi-link/addacompany/addacompany.component';
+import { AddCompanyDetailsComponent } from './application/plant-care-app/add-company-details/add-company-details';
+import { ViewCompanyListComponent } from './application/plant-care-app/view-company-list/view-company-list.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -420,6 +423,18 @@ export const routes: Routes = [
                     data: { permission: 'Manage Opt-Out feedback list' },
                   },
                 ],
+              },
+              {
+                path: 'add-company-details',
+                component: AddCompanyDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Create company details' },
+              },
+              {
+                path: 'view-company-list',
+                component: ViewCompanyListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View company details' },
               },
             ],
           },

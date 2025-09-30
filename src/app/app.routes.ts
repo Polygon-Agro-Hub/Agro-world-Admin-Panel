@@ -318,7 +318,7 @@ export const routes: Routes = [
               {
                 path: 'Farmers-farms-list',
                 component: FarmerListFarmersFarmsComponent,
-              }, 
+              },
               {
                 path: 'report-farmer-current-assert/:userId/:name',
                 component: ReportCurrentAssertsComponent,
@@ -355,7 +355,7 @@ export const routes: Routes = [
                 path: 'assets/fixed-asset-category/building-fixed-asset/details',
                 component: FarmersFarmsFixedAssetsBuildingComponent,
               },
-                           {
+              {
                 path: 'assets/fixed-asset-category/land-fixed-asset/details',
                 component: FarmersFarmsFixedAssetsLandComponent,
               },
@@ -424,9 +424,9 @@ export const routes: Routes = [
       },
 
       {
-        path:'finance',
-        children:[
-          {path:'dashboard',component:FinanceDashboardComponent}
+        path: 'finance',
+        children: [
+          { path: 'dashboard', component: FinanceDashboardComponent }
         ]
       },
 
@@ -1192,6 +1192,24 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'govi-link',
+        children: [
+          {
+            path: 'dashboard',
+            // component:GoviLinkDashboardComponent
+          },
+          {
+            path: 'action',
+            children: [
+              {
+                path: '',
+                // component: GoviLinkComponent,
+              }
+            ]
+          }
+        ]
+      }
     ],
   },
   { path: '**', component: NotFoundComponent },

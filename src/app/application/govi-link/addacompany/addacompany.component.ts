@@ -878,7 +878,7 @@ export class AddacompanyComponent {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               }
             }).then(() => {
-              this.router.navigate(['/admin/govi-link/action']); // Navigate to company list
+              this.router.navigate(['/govi-link/action']); // Navigate to company list
             });
           } else {
             Swal.fire({

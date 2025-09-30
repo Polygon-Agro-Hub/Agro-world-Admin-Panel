@@ -56,6 +56,9 @@ export class SelectVarietyListComponent {
   }
 
   onSearchVarity() {
+    if (this.searchText) {
+      this.searchText = this.searchText.trimStart();
+    }
     this.fetchCenterCrops();
   }
 
@@ -82,6 +85,10 @@ export class SelectVarietyListComponent {
     Swal.fire({
       title: 'Processing...',
       allowOutsideClick: false,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
       didOpen: () => {
         Swal.showLoading();
       },
@@ -101,6 +108,10 @@ export class SelectVarietyListComponent {
                 : 'Successfully removed the variety from the centre target',
             timer: 2000,
             showConfirmButton: false,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           });
           this.fetchCenterCrops();
         } else {
@@ -109,6 +120,10 @@ export class SelectVarietyListComponent {
             title: 'Failed',
             text: res.message || 'Operation failed',
             timer: 2000,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           });
         }
       },
@@ -119,6 +134,10 @@ export class SelectVarietyListComponent {
           title: 'Error',
           text: error.message || 'An error occurred',
           timer: 2000,
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
         });
       }
     );

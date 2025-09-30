@@ -499,13 +499,13 @@ isFieldInvalid(field: string): boolean {
   });
 }
 
-  onCancel() {
+onCancel() {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
-    text: 'All entered data will be lost!',
+    text: 'You may lose the added data after going back!',
     showCancelButton: true,
-    confirmButtonText: 'Yes, Reset',
+    confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
         customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

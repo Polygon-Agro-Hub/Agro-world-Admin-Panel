@@ -907,7 +907,7 @@ export class CreateCompanyComponent implements OnInit {
   if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala) is Required');
   if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil) is Required');
   if (!this.companyData.email) missingFields.push('Email is Required');
-  if (!this.companyData.accHolderName) missingFields.push('Account Holder Name is Required is Required');
+  if (!this.companyData.accHolderName) missingFields.push(`Account Holder's Name is Required`);
   if (!this.companyData.accNumber) missingFields.push('Account Number is Required');
   if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number is Required');
   if (!this.companyData.bankName) missingFields.push('Bank Name is Required');
@@ -1051,7 +1051,7 @@ export class CreateCompanyComponent implements OnInit {
         let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
 
         missingFields.forEach(field => {
-          errorMessage += `<li>${field} is required</li>`;
+          errorMessage += `<li>${field}</li>`;
 
           // Add specific guidance for certain fields
           if (field === 'Company Logo' || field === 'Company Favicon') {
@@ -1175,7 +1175,7 @@ export class CreateCompanyComponent implements OnInit {
   if (!this.companyData.companyNameSinhala) missingFields.push('Company Name (Sinhala) is Required');
   if (!this.companyData.companyNameTamil) missingFields.push('Company Name (Tamil) is Required');
   if (!this.companyData.email) missingFields.push('Email is Required');
-  if (!this.companyData.accHolderName) missingFields.push('Account Holder Name is Required');
+  if (!this.companyData.accHolderName) missingFields.push(`Account Holder's Name is Required`);
   if (!this.companyData.accNumber) missingFields.push('Account Number is Required');
   if (!this.companyData.confirmAccNumber) missingFields.push('Confirm Account Number is Required');
   if (!this.companyData.bankName) missingFields.push('Bank Name is Required');

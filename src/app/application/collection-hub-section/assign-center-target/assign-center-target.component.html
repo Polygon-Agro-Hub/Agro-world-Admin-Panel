@@ -168,7 +168,7 @@
                 min="0"
                 class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingA"
-                (change)="validateForm()" 
+                (input)="validateForm()"
                 (keypress)="allowOnlyDigits($event)"
   (input)="removeLeadingZeros(item)"
               />
@@ -189,12 +189,12 @@
               <button *ngIf="!isNew && item.editingA && isDateValid"
                                 class="px-3 py-2 text-white rounded-lg" [ngClass]="{
                                     'bg-[#415CFF]': item.preValueA !== item.targetA,
-                                    'bg-[#6B7D8C]': item.preValueA === item.targetA || item.targetA < 0 || item.targetA < item.preValueA
+                                    'bg-[#6B7D8C]': item.preValueA === item.targetA || item.targetA <= 0 || item.targetA < item.preValueA
                                   }"
                                 (click)="item.preValueA !== item.targetA && item.targetA >= 0 && saveGrade('A', item, item.targetA, item.idA)">
                                 Save
                             </button>
-            </td>
+              </td>
 
             <!-- Grade B Column -->
             <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
@@ -206,7 +206,7 @@
   [disabled]="!isNew && !item.editingB"
   (keypress)="allowOnlyDigits($event)"
   (input)="removeLeadingZeros(item)"
-  (change)="validateForm()"
+  (input)="validateForm()"
 />
               <button
                 *ngIf="!isNew && !item.editingB && isDateValid"
@@ -217,7 +217,7 @@
 
               <button *ngIf="!isNew && item.editingB && isDateValid" [ngClass]="{
                 'bg-[#415CFF]': item.preValueB !== item.targetB,
-                'bg-[#6B7D8C]': item.preValueB === item.targetB || item.targetB < 0 || item.targetB < item.preValueB
+                'bg-[#6B7D8C]': item.preValueB === item.targetB || item.targetB <= 0 || item.targetB < item.preValueB
               }" class="px-3 py-2 text-white rounded-lg"
                 (click)="item.preValueB !== item.targetB && item.targetB >= 0 && saveGrade('B', item, item.targetB, item.idB)">
                 Save
@@ -240,7 +240,7 @@
                 min="0"
                 class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingC"
-                (change)="validateForm()"
+                (input)="validateForm()"
                 (keypress)="allowOnlyDigits($event)"
                 (input)="removeLeadingZeros(item)"
               />
@@ -253,7 +253,7 @@
 
               <button *ngIf="!isNew && item.editingC && isDateValid" [ngClass]="{
                 'bg-[#415CFF]': item.preValueC !== item.targetC,
-                'bg-[#6B7D8C]': (item.preValueC === item.targetC) || item.targetC < 0 || item.targetC < item.preValueC
+                'bg-[#6B7D8C]': (item.preValueC === item.targetC) || item.targetC <= 0 || item.targetC < item.preValueC
               }" class="px-3 py-2 text-white rounded-lg"
                 (click)="item.preValueC !== item.targetC && item.targetC >= 0 && saveGrade('C', item, item.targetC, item.idC)">
                 Save

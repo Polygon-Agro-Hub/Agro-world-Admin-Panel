@@ -20,6 +20,7 @@ import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
 import { QuillModule } from 'ngx-quill';
+import { Calendar, CalendarModule } from 'primeng/calendar';
 
 interface NewsItem {
   id: number;
@@ -46,6 +47,7 @@ interface NewsItem {
     HttpClientModule,
     QuillModule,
     LoadingSpinnerComponent,
+    CalendarModule,
   ],
   templateUrl: './create-news.component.html',
   styleUrls: ['./create-news.component.css'],
@@ -72,6 +74,11 @@ export class CreateNewsComponent {
   isPublishAfterExpireValidEditNews: boolean = true;
   currentPublishDate: string = '';
   currentExpireDate: string = '';
+
+  originalPublishDate: Date | null = null;
+  originalExpireDate: Date | null = null;
+
+  todayDate: Date = new Date();
 
   quillConfig = {
     toolbar: [
@@ -184,11 +191,11 @@ createNews() {
     missingFields.push('Description (Tamil) is Required');
   }
 
-  if (!this.createNewsObj.publishDate || this.createNewsObj.publishDate.trim() === '') {
+  if (!this.originalPublishDate || this.formatDateForBackend(this.originalPublishDate).trim() === '') {
     missingFields.push('Publish Date is Required');
   }
 
-  if (!this.createNewsObj.expireDate || this.createNewsObj.expireDate.trim() === '') {
+  if (!this.originalExpireDate || this.formatDateForBackend(this.originalExpireDate).trim() === '') {
     missingFields.push('Expire Date is Required');
   }
 
@@ -689,6 +696,29 @@ updateNews() {
   });
 }
 
+onDateChange(date: Date | null) {
+  this.originalPublishDate = date;
+  console.log('publishDate', this.originalPublishDate)
+  this.checkPublishDate();
+  this.checkPublishExpireDate();
+}
+
+onExpireDateChange(date: Date | null) {
+  this.originalExpireDate = date
+  console.log('expireDate', this.originalExpireDate)
+  this.checkExpireDate();
+}
+
+formatDateForBackend(date: Date | null): string {
+  if (!date) return '';
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
 
   getTodayDate(): string {
     const today = new Date();
@@ -699,8 +729,27 @@ updateNews() {
   }
 
   checkPublishDate() {
-  if (this.createNewsObj.publishDate < this.today) {
-    this.createNewsObj.publishDate = '';
+    console.log('checkPublishDate called')
+    console.log('today', this.todayDate)
+  if (this.originalPublishDate) {
+    this.todayDate.setHours(0, 0, 0, 0);
+    if (this.originalPublishDate < this.todayDate) {
+      setTimeout(() => {
+        this.originalPublishDate = null;
+      });
+      Swal.fire({
+            icon: 'error',
+            title: 'Missing or Invalid Information',
+            html: 'Publish date should be later than Today',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+      console.log('ordginal publish date', this.originalPublishDate)
+    }
   }
 }
 
@@ -711,10 +760,54 @@ updateNews() {
 }
 
   checkExpireDate() {
-  // Remove the Swal.fire popup and just update the validation flag
-  if (this.createNewsObj.publishDate && this.createNewsObj.expireDate) {
-    this.checkPublishExpireDate();
-  }
+    console.log('called')
+
+    if (this.originalExpireDate) {
+      console.log('expireDate', this.originalExpireDate)
+      if (this.originalPublishDate) {
+        if (this.originalExpireDate <= this.originalPublishDate) {
+          setTimeout(() => {
+            this.originalExpireDate = null;
+          });
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing or Invalid Information',
+            html: 'Expire date should be later than Publish date',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+          return;
+        }
+      }
+      this.todayDate.setHours(0, 0, 0, 0);
+  
+      if (this.originalExpireDate < this.todayDate) {
+        setTimeout(() => {
+          this.originalExpireDate = null;
+        });
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: 'Expire date should be later than Today',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
+    }
+  
+    // If both dates are valid, do further checks
+    if (this.originalPublishDate && this.originalExpireDate) {
+      this.checkPublishExpireDate();
+    }
 }
 
 
@@ -726,10 +819,11 @@ updateNews() {
 }
 
   checkPublishExpireDate() {
-  if (this.createNewsObj.publishDate && this.createNewsObj.expireDate) {
-    const publishDate = new Date(this.createNewsObj.publishDate);
-    const expireDate = new Date(this.createNewsObj.expireDate);
-    this.isPublishAfterExpireValid = publishDate <= expireDate;
+    console.log('checkPublishexpireDate called')
+  if (this.originalPublishDate && this.originalExpireDate) {
+    // const publishDate = new Date(this.createNewsObj.publishDate);
+    // const expireDate = new Date(this.createNewsObj.expireDate);
+    this.isPublishAfterExpireValid = this.originalPublishDate <= this.originalExpireDate;
   } else {
     this.isPublishAfterExpireValid = true;
   }

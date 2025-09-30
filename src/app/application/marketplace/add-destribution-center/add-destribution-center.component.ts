@@ -813,7 +813,15 @@ updateRegCode() {
         // this.submitSuccess =
           res.message || 'Distribution Centre created successfully!';
 
-        Swal.fire('Success', res.message || 'Distribution Centre created successfully!', 'success');
+        Swal.fire({
+          title: 'Success', text: 'Distribution Centre created successfully!', icon: 'success', 
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+  
+        }
+        }
+        );
 
         this.navigatePath('/distribution-hub/action/view-destribition-center');
       }

@@ -1,1 +1,483 @@
-<p>addacompany works!</p>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  *ngIf="!isView"
+  (click)="back()"
+  class="text-textLight dark:text-textDark"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="h-[20px]"></div>
+
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+  <h2 class="text-2xl font-bold mb-6 text-textLight dark:text-textDark ml-20">
+    Add Company Details
+  </h2>
+  <div class="flex justify-between items-center mb-8">
+    <div class="flex items-center my-7 ml-20">
+      <label
+        class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+      >
+        Add Logo *
+      </label>
+      <div class="relative ml-5">
+        <input
+          type="file"
+          id="logoUpload"
+          name="logoUpload"
+          accept="image/*"
+          (change)="onLogoChange($event)"
+          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+        <div
+          class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+          [ngClass]="{
+            'border-red-500': isFieldInvalid('logo') || logoSizeError
+          }"
+        >
+          <div *ngIf="!companyData.logo" class="text-center">
+            <svg
+              class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              ></path>
+            </svg>
+          </div>
+          <img
+            *ngIf="companyData.logo"
+            [src]="companyData.logo"
+            alt="Logo preview"
+            class="w-full h-full object-cover rounded-lg"
+          />
+          <button
+            *ngIf="companyData.logo"
+            (click)="removeLogo($event)"
+            type="button"
+            class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="my-5" />
+  <div>
+    <h2 class="text-2xl font-bold my-8 text-textLight dark:text-textDark ml-11">
+      Basic Information
+    </h2>
+    <div class="pb-6 mx-20">
+      <label
+        for="regNumber"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >Registration Number of the Company *</label
+      >
+      <input
+        id="regNumber"
+        name="regNumber"
+        [(ngModel)]="companyData.RegNumber"
+        (keydown)="handleInputWithSpaceTrimming($event, 'RegNumber')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      />
+      <span *ngIf="isFieldInvalid('RegNumber')" class="text-red-600 text-sm"
+        >Register Number is required.</span
+      >
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="companyName"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+      >
+        Company Name *
+      </label>
+
+      <input
+        id="companyName"
+        name="companyName"
+        [(ngModel)]="companyData.companyName"
+        #companyNameEnglish="ngModel"
+        required
+        (keydown)="handleInputWithSpaceTrimming($event, 'companyName')"
+        (input)="capitalizeFirstLetter('companyName')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      />
+      <div
+        *ngIf="isFieldInvalid('companyName')"
+        class="text-red-500 text-sm mt-1"
+      >
+        Company Name (in English) is required.
+      </div>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="email"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >Company Email Address *</label
+      >
+      <input
+        id="email"
+        name="email"
+        [(ngModel)]="companyData.email"
+        type="email"
+        (keydown)="handleInputWithSpaceTrimming($event, 'email')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      />
+      <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm"
+        >Email is required.</span
+      >
+      <span
+        *ngIf="companyData.email && !isValidEmail(companyData.email)"
+        class="text-red-600 text-sm"
+      >
+        {{ emailValidationMessage }}
+      </span>
+    </div>
+  </div>
+  <div>
+    <h2 class="text-2xl font-bold my-8 text-textLight dark:text-textDark ml-11">
+      Billing Information
+    </h2>
+    <div class="pb-6 mx-20">
+      <label
+        for="accHolderName"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >Account Holder's Name *</label
+      >
+      <input
+        id="accHolderName"
+        name="accHolderName"
+        [(ngModel)]="companyData.accHolderName"
+        #accHolderName="ngModel"
+        required
+        (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
+        (input)="capitalizeFirstLetter('accHolderName')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      />
+
+      <div
+        *ngIf="
+          accHolderName.invalid &&
+          (accHolderName.dirty || accHolderName.touched)
+        "
+        class="text-red-600 text-sm"
+      >
+        <div *ngIf="accHolderName.errors?.['required']">
+          Account Holder's Name is required.
+        </div>
+      </div>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="accNumber"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+      >
+        Account Number *
+      </label>
+      <input
+        id="accNumber"
+        name="accNumber"
+        [(ngModel)]="companyData.accNumber"
+        (ngModelChange)="validateAccNumber()"
+        (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
+        #accNumberInput="ngModel"
+        required
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      />
+      <div
+        *ngIf="accNumberInput.touched && !companyData.accNumber"
+        class="text-red-500 text-sm mt-1"
+      >
+        <div>Account Number is required</div>
+      </div>
+      <div
+        *ngIf="accNumberInput.touched && companyData.accNumber && accNumberInput.errors?.['pattern']"
+        class="text-red-500 text-sm mt-1"
+      >
+        <div>Account Number cannot contain special characters</div>
+      </div>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="confirmAccNumber"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+      >
+        Confirm Account Number *
+      </label>
+      <input
+        id="confirmAccNumber"
+        name="confirmAccNumber"
+        [(ngModel)]="companyData.confirmAccNumber"
+        (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
+        #confirmAccNumberInput="ngModel"
+        required
+        (ngModelChange)="validateConfirmAccNumber()"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      />
+
+      <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+        Confirm Account Number is required.
+      </span>
+
+      <span
+        *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired"
+        class="text-red-600 text-sm"
+      >
+        Account Numbers do not match.
+      </span>
+
+      <span
+        *ngIf="confirmAccNumberInput.touched && companyData.confirmAccNumber && !confirmAccountNumberError && confirmAccNumberInput.errors?.['pattern']"
+        class="text-red-500 text-sm mt-1"
+      >
+        <div>Account Number cannot contain special characters</div>
+      </span>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="bankDropdown"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1"
+      >
+        Bank Name *
+      </label>
+      <p-dropdown
+        id="bankDropdown"
+        name="bankDropdown"
+        [(ngModel)]="selectedBankId"
+        #bankDropdown="ngModel"
+        [options]="banks"
+        optionLabel="name"
+        optionValue="ID"
+        [filter]="true"
+        filterBy="name"
+        placeholder="Select a bank"
+        [showClear]="false"
+        required
+        class="w-full"
+        (onChange)="onBankChange()"
+        [ngClass]="{
+          'p-invalid':
+            bankDropdown.invalid && (bankDropdown.dirty || bankDropdown.touched)
+        }"
+      >
+      </p-dropdown>
+
+      <div
+        *ngIf="
+          bankDropdown.invalid && (bankDropdown.dirty || bankDropdown.touched)
+        "
+        class="text-red-600 text-sm mt-1"
+      >
+        <div *ngIf="bankDropdown.errors?.['required']">
+          Bank Name is required.
+        </div>
+      </div>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="branchDropdown"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1"
+      >
+        Branch Name *
+      </label>
+      <p-dropdown
+        [(ngModel)]="selectedBranchId"
+        name="branchDropdown"
+        #branchDropdown="ngModel"
+        (onChange)="onBranchChange()"
+        [options]="branches"
+        optionLabel="name"
+        optionValue="ID"
+        [filter]="true"
+        filterBy="name"
+        placeholder="Select a branch"
+        [showClear]="false"
+        [disabled]="!selectedBankId"
+        [required]="true"
+        class="w-full"
+        [ngClass]="{
+          'p-invalid':
+            branchDropdown.invalid &&
+            (branchDropdown.dirty || branchDropdown.touched)
+        }"
+      >
+      </p-dropdown>
+
+      <div
+        *ngIf="
+          branchDropdown.invalid &&
+          (branchDropdown.dirty || branchDropdown.touched)
+        "
+        class="text-red-600 text-sm mt-1"
+      >
+        <div *ngIf="branchDropdown.errors?.['required']">
+          Branch Name is required.
+        </div>
+      </div>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="foName"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >Finance Officer’s Name *</label
+      >
+      <input
+        id="foName"
+        name="foName"
+        [(ngModel)]="companyData.foName"
+        (keydown)="allowOnlyEnglishLetterss($event)"
+        (keydown)="handleInputWithSpaceTrimming($event, 'foName')"
+        (input)="capitalizeFirstLetter('foName')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+      />
+      <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm"
+        >Finance Officer’s Name is required.</span
+      >
+    </div>
+    <div class="flex gap-6">
+      <div class="flex-1 mx-20">
+        <label
+          for="phoneNumber1"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Company Contact Number - 1 *
+        </label>
+        <div class="mt-1 flex">
+          <p-dropdown
+            [(ngModel)]="companyData.phoneCode1"
+            [options]="countries"
+            optionLabel="dialCode"
+            optionValue="dialCode"
+            (blur)="validateContactNumbers()"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+            [style]="{ width: '140px' }"
+          >
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="24"
+                  height="18"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="24"
+                  height="18"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+
+          <input
+            id="phoneNumber1"
+            name="phoneNumber1"
+            [(ngModel)]="companyData.phoneNumber1"
+            type="tel"
+            pattern="^[0-9]{9}$"
+            required
+            #phoneNumber1="ngModel"
+            (keydown)="allowOnlyDigitsForAccountNumber($event, 'phoneNumber1')"
+            (blur)="validateContactNumbers()"
+            maxlength="9"
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
+
+        <div
+          class="mt-1 text-sm text-red-500"
+          *ngIf="getContactNumber1ErrorMessage()"
+        >
+          {{ getContactNumber1ErrorMessage() }}
+        </div>
+      </div>
+      <div class="flex-1 mx-20">
+        <label
+          for="oicConNum2"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Company Contact Number - 2
+        </label>
+        <div class="mt-1 flex">
+          <p-dropdown
+            [(ngModel)]="companyData.phoneCode2"
+            [options]="countries"
+            optionLabel="dialCode"
+            optionValue="dialCode"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+            [style]="{ width: '140px' }"
+          >
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="24"
+                  height="18"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="24"
+                  height="18"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+          <input
+            id="phoneNumber2"
+            name="phoneNumber2"
+            [(ngModel)]="companyData.phoneNumber2"
+            type="tel"
+            pattern="^[0-9]{9}$"
+            #phoneNumber2="ngModel"
+            (keydown)="allowOnlyDigitsForAccountNumber($event, 'phoneNumber2')"
+            (blur)="validateContactNumbers()"
+            maxlength="9"
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
+        <div
+          class="mt-1 text-sm text-red-500"
+          *ngIf="getContactNumber2ErrorMessage()"
+        >
+          {{ getContactNumber2ErrorMessage() }}
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-end my-10 mr-20">
+      <button
+        type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2 w-36"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md w-36"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>

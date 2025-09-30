@@ -105,6 +105,9 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   }
 
   onSearch() {
+    if (this.searchText) {
+      this.searchText = this.searchText.trimStart();
+    }
     this.fetchAllTarget();
   }
   offSearch() {

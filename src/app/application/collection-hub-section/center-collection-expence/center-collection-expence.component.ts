@@ -112,6 +112,9 @@ export class CenterCollectionExpenceComponent implements OnInit {
   }
 
   onSearch() {
+    if (this.searchText) {
+      this.searchText = this.searchText.trimStart();
+    }
     this.fetchFilteredPayments();
   }
 
@@ -127,6 +130,7 @@ export class CenterCollectionExpenceComponent implements OnInit {
 
   validateToDate() {
     if (!this.fromDate) {
+      (document.getElementById('toDate') as HTMLInputElement).value = '';
       this.toDate = null;
       Swal.fire({
         icon: 'warning',
@@ -137,27 +141,29 @@ export class CenterCollectionExpenceComponent implements OnInit {
           title: 'dark:text-white',
         }
       });
-      return;
+      // return;
     }
-
-    if (this.toDate) {
-      const from = new Date(this.fromDate);
-      const to = new Date(this.toDate);
-
-      if (to <= from) {
-        this.toDate = null;
-        Swal.fire({
-          icon: 'warning',
-          title: 'Warning',
-          text: "The 'To' date cannot be earlier than or same to the 'From' date",
-          customClass: {
-            popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-            title: 'dark:text-white',
-          }
-        });
-      }
-    }
+  
+    // if (this.toDate) {
+    //   const from = new Date(this.fromDate);
+    //   const to = new Date(this.toDate);
+  
+    //   if (to <= from) {
+    //     this.toDate = null;
+    //     (document.getElementById('toDate') as HTMLInputElement).value = '';
+    //     Swal.fire({
+    //       icon: 'warning',
+    //       title: 'Warning',
+    //       text: "The 'To' date cannot be earlier than or same to the 'From' date",
+    //       customClass: {
+    //         popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+    //         title: 'dark:text-white',
+    //       }
+    //     });
+    //   }
+    // }
   }
+  
 
   validateFromDate() {
     if (!this.toDate) {
@@ -169,7 +175,8 @@ export class CenterCollectionExpenceComponent implements OnInit {
       const to = new Date(this.toDate);
 
       if (to <= from) {
-        this.fromDate = null;
+        this.fromDate = null;  
+        setTimeout(() => this.fromDate = null); // forces re-render
         Swal.fire({
           icon: 'warning',
           title: 'Warning',

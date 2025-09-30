@@ -200,9 +200,13 @@ checkDateSelection() {
           Swal.fire({
             icon: 'success',
             title: 'Success!',
-            text: 'Grade saved successfully',
+            text: 'Target updated successfully',
             timer: 2000,
             showConfirmButton: false,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           });
           this.fetchSavedCenterCrops();
           if (grade === 'A') item.editingA = false;
@@ -213,6 +217,10 @@ checkDateSelection() {
             icon: 'error',
             title: 'Error',
             text: 'Failed to save grade',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           });
         }
       },
@@ -221,6 +229,10 @@ checkDateSelection() {
           icon: 'error',
           title: 'Error',
           text: 'An error occurred while saving the grade',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
         });
         console.error('Error saving grade:', error);
       }
@@ -243,6 +255,8 @@ checkDateSelection() {
   }
 
   validateForm() {
+
+    console.log('assignCropsArr', this.assignCropsArr)
     this.isFormValid = this.assignCropsArr.some(
       (crop) => crop.targetA > 0 || crop.targetB > 0 || crop.targetC > 0
     );
@@ -263,6 +277,10 @@ checkDateSelection() {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, discard changes!',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.fetchSavedCenterCrops();
@@ -280,6 +298,10 @@ checkDateSelection() {
       title: 'Please wait...',
       html: 'Processing your request',
       allowOutsideClick: false,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
       didOpen: () => {
         Swal.showLoading();
       },
@@ -295,6 +317,10 @@ checkDateSelection() {
             text: 'Target assigned successfully',
             timer: 2000,
             showConfirmButton: false,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           }).then(() => {
             this.fetchSavedCenterCrops();
           });
@@ -303,6 +329,10 @@ checkDateSelection() {
             icon: 'error',
             title: 'Failed',
             text: res.message || 'Failed to assign target',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           });
         }
       },
@@ -311,6 +341,10 @@ checkDateSelection() {
           icon: 'error',
           title: 'Error',
           text: error.message || 'An error occurred while assigning target',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
         });
         console.error('Error assigning target:', error);
       }

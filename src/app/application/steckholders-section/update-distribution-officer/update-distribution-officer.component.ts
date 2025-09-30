@@ -142,6 +142,11 @@ page: number = 1;
     { name: 'Vavuniya', province: 'Northern' },
   ];
 
+  jobRoleOptions: any[] = [
+    { label: 'Distribution Centre Manager', value: 'Distribution Center Manager' },
+    { label: 'Distribution Officer', value: 'Distribution Officer' }
+  ];
+
   // Update the setupDropdownOptions method to use `districts`
   setupDropdownOptions() {
     this.districts = this.districts.sort((a, b) =>
@@ -1245,7 +1250,7 @@ page: number = 1;
     }
 
     if (!this.personalData.accHolderName) {
-      missingFields.push("Account Holder's Name is Required");
+      missingFields.push(`Account Holder's Name is Required`);
     }
 
     if (!this.personalData.accNumber) {

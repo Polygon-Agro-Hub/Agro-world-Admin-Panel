@@ -203,7 +203,7 @@ closeDropdown() {
 selectjobRole(role: string) {
 
   if (role === "Collection Centre Manager") {
-    this.personalData.jobRole = "Collection Center Manager";
+    this.personalData.jobRole = "Collection Centre Manager";
     this.toggleDropdown()
     console.log('dropdownOpen', this.dropdownOpen)
   } else {
@@ -211,6 +211,7 @@ selectjobRole(role: string) {
     this.toggleDropdown()
     console.log('dropdownOpen', this.dropdownOpen)
   }
+  console.log('personalData', this.personalData)
 
   this.EpmloyeIdCreate(); // call your method
 }
@@ -269,6 +270,7 @@ isJobRoleSelected(): boolean {
 
 
 onSubmit() {
+
   // Mark all fields as touched to show validation messages
   this.markAllFieldsAsTouched();
 
@@ -534,7 +536,9 @@ onCancel() {
 }
 
 nextFormCreate(page: 'pageOne' | 'pageTwo') {
+  console.log('personalData', this.personalData)
   if (page === 'pageTwo') {
+  
     // Mark page one fields as touched to show validation messages
     this.markPageOneFieldsAsTouched();
 

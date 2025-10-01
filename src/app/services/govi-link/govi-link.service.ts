@@ -68,4 +68,20 @@ export class GoviLinkService {
     return this.http.get<any>(url, { headers });
   }
 
+  updateCompany(companyData: any, id: number): Observable<any> {
+    console.log(companyData);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.patch(
+      `${this.apiUrl}update-company/${id}`,
+      companyData,
+      {
+        headers,
+      }
+    );
+  }
+
 }

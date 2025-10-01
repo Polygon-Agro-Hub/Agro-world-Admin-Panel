@@ -938,7 +938,7 @@ export class EditacompanyComponent {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             }
           }).then(() => {
-            this.router.navigate(['/govi-link/action']);
+            this.router.navigate(['/govi-link/action/view-company-list']);
           });
         } else {
           Swal.fire({

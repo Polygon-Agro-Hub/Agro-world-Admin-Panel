@@ -259,7 +259,7 @@
                 class="text-blue-500 hover:text-blue-700 flex items-center justify-center w-6 h-6"
                 (click)="navigateEdit(item.id)"
                 [disabled]="isLoading"
-                title="Edit Collection Center"
+                title="Edit Collection Centre"
               >
                 <svg
                   width="20"
@@ -304,24 +304,6 @@
                 </svg>
               </button>
             </td>
-            <!-- <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button
-              *ngIf="permissionService.hasPermission('Edit Collection Center') || tokenService.getUserDetails().role === '1'"
-                class="text-blue-400 hover:text-blue-700"
-                (click)="navigateEdit(item.id)"
-              >
-                <i class="fa-solid fa-pen-to-square fa-xl"></i>
-              </button>
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button
-              *ngIf="permissionService.hasPermission('Delete Collection Center') || tokenService.getUserDetails().role === '1'"
-                class="text-red-500 hover:text-red-700"
-                (click)="deleteCollectionCenter(item.id)"
-              >
-                <i class="fa-solid fa-trash fa-xl"></i>
-              </button>
-            </td> -->
           </tr>
         </tbody>
       </table>

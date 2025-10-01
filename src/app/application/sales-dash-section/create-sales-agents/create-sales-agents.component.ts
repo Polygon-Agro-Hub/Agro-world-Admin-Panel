@@ -257,25 +257,11 @@ onCancel() {
 
 
   EpmloyeIdCreate() {
-    // const currentCompanyId = this.personalData.companyId;
-
     let rolePrefix: string;
 
-    // Map job roles to their respective prefixes
-    // const rolePrefixes: { [key: string]: string } = {
-    //   'Collection Center Head': 'CCH',
 
-    // };
-
-    // Get the prefix based on the job role
     rolePrefix = 'SA';
 
-    // if (!rolePrefix) {
-    //   console.error(`Invalid job role: ${this.personalData.jobRole}`);
-    //   return; // Exit if the job role is invalid
-    // }
-
-    // Fetch the last ID and assign a new Employee ID
     this.getLastID()
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
@@ -283,7 +269,6 @@ onCancel() {
       .catch((error) => {
         console.error('Error fetching last ID:', error);
       });
-    // this.personalData.companyId = currentCompanyId;
   }
 
   validateFirstName(value: string): void {

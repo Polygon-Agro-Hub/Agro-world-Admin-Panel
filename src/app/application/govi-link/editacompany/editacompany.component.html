@@ -67,7 +67,10 @@
           </button>
         </div>
         <!-- Add validation message for logo -->
-        <span *ngIf="isFieldInvalid('logo')" class="text-red-600 text-sm block mt-1">
+        <span
+          *ngIf="isFieldInvalid('logo')"
+          class="text-red-600 text-sm block mt-1"
+        >
           Company Logo is required.
         </span>
         <span *ngIf="logoSizeError" class="text-red-600 text-sm block mt-1">
@@ -93,7 +96,7 @@
         [(ngModel)]="companyData.RegNumber"
         (keydown)="handleInputWithSpaceTrimming($event, 'RegNumber')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{'border-red-500': isFieldInvalid('RegNumber')}"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('RegNumber') }"
       />
       <span *ngIf="isFieldInvalid('RegNumber')" class="text-red-600 text-sm"
         >Registration Number is required.</span
@@ -116,7 +119,7 @@
         (keydown)="handleInputWithSpaceTrimming($event, 'companyName')"
         (input)="capitalizeFirstLetter('companyName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{'border-red-500': isFieldInvalid('companyName')}"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('companyName') }"
       />
       <div
         *ngIf="isFieldInvalid('companyName')"
@@ -138,7 +141,7 @@
         type="email"
         (keydown)="handleInputWithSpaceTrimming($event, 'email')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{'border-red-500': isFieldInvalid('email')}"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('email') }"
       />
       <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm"
         >Email is required.</span
@@ -170,13 +173,10 @@
         (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
         (input)="capitalizeFirstLetter('accHolderName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{'border-red-500': isFieldInvalid('accHolderName')}"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('accHolderName') }"
       />
 
-      <div
-        *ngIf="isFieldInvalid('accHolderName')"
-        class="text-red-600 text-sm"
-      >
+      <div *ngIf="isFieldInvalid('accHolderName')" class="text-red-600 text-sm">
         Account Holder's Name is required.
       </div>
     </div>
@@ -196,7 +196,7 @@
         #accNumberInput="ngModel"
         required
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{'border-red-500': isFieldInvalid('accNumber')}"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('accNumber') }"
       />
       <div
         *ngIf="isFieldInvalid('accNumber')"
@@ -221,10 +221,16 @@
         required
         (ngModelChange)="validateConfirmAccNumber()"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{'border-red-500': isFieldInvalid('confirmAccNumber') || confirmAccountNumberError}"
+        [ngClass]="{
+          'border-red-500':
+            isFieldInvalid('confirmAccNumber') || confirmAccountNumberError
+        }"
       />
 
-      <span *ngIf="isFieldInvalid('confirmAccNumber')" class="text-red-600 text-sm">
+      <span
+        *ngIf="isFieldInvalid('confirmAccNumber')"
+        class="text-red-600 text-sm"
+      >
         Confirm Account Number is required.
       </span>
 
@@ -263,10 +269,7 @@
       >
       </p-dropdown>
 
-      <div
-        *ngIf="isFieldInvalid('bank')"
-        class="text-red-600 text-sm mt-1"
-      >
+      <div *ngIf="isFieldInvalid('bank')" class="text-red-600 text-sm mt-1">
         Bank Name is required.
       </div>
     </div>
@@ -298,10 +301,7 @@
       >
       </p-dropdown>
 
-      <div
-        *ngIf="isFieldInvalid('branch')"
-        class="text-red-600 text-sm mt-1"
-      >
+      <div *ngIf="isFieldInvalid('branch')" class="text-red-600 text-sm mt-1">
         Branch Name is required.
       </div>
     </div>
@@ -319,9 +319,11 @@
         (keydown)="handleInputWithSpaceTrimming($event, 'financeOfficerName')"
         (input)="capitalizeFirstLetter('financeOfficerName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{'border-red-500': isFieldInvalid('financeOfficerName')}"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('financeOfficerName') }"
       />
-      <span *ngIf="isFieldInvalid('financeOfficerName')" class="text-red-600 text-sm"
+      <span
+        *ngIf="isFieldInvalid('financeOfficerName')"
+        class="text-red-600 text-sm"
         >Finance Officer's Name is required.</span
       >
     </div>
@@ -342,7 +344,7 @@
             (blur)="validateContactNumbers()"
             styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
             [style]="{ width: '140px' }"
-            [ngClass]="{'border-red-500': isFieldInvalid('phoneCode1')}"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('phoneCode1') }"
           >
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -380,7 +382,7 @@
             (blur)="validateContactNumbers()"
             maxlength="9"
             class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [ngClass]="{'border-red-500': isFieldInvalid('phoneNumber1')}"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('phoneNumber1') }"
           />
         </div>
 

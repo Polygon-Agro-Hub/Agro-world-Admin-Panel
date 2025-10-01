@@ -30,10 +30,8 @@ import { TokenService } from '../../../services/token/services/token.service';
 export class ViewCompanyListComponent implements OnInit {
   companies: CertificateCompany[] = [];
   isLoading = false;
-  page: number = 1;
-  totalItems: number = 0;
-  itemsPerPage: number = 10;
   hasData: boolean = true;
+  searchTerm: string = '';
 
   constructor(
     private companyService: CertificateCompanyService,
@@ -47,55 +45,102 @@ export class ViewCompanyListComponent implements OnInit {
     this.fetchCompanies();
   }
 
-  fetchCompanies(page: number = 1, limit: number = this.itemsPerPage) {
-    this.page = page;
-    this.isLoading = true;
+  onSearch() {
+    this.fetchCompanies();
+  }
 
-    this.companyService.getAllCompaniesWithPagination(page, limit).subscribe(
+  offSearch() {
+    this.searchTerm = '';
+    this.fetchCompanies();
+  }
+
+  fetchCompanies() {
+    this.isLoading = true;
+    this.companyService.getAllCompanies(this.searchTerm).subscribe(
       (data) => {
         this.isLoading = false;
         this.companies = data.companies;
         this.hasData = this.companies.length > 0;
-        this.totalItems = data.total;
       },
       (error) => {
         this.isLoading = false;
         console.error('Error fetching companies:', error);
-        Swal.fire('Error', 'Failed to fetch companies.', 'error');
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to fetch companies.',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
       }
     );
   }
 
-  onPageChange(event: number) {
-    this.page = event;
-    this.fetchCompanies(this.page, this.itemsPerPage);
+  onSearchChange() {
+    this.fetchCompanies();
   }
 
   viewCompany(id: number | undefined) {
-    if (id === undefined) {
-      console.error('Company ID is undefined');
-      return;
-    }
-    // TODO: Implement view functionality
-    console.log('View company:', id);
+    if (!id) return;
+    this.router.navigate([`/plant-care/action/view-company-details`, id]);
   }
 
   editCompany(id: number | undefined) {
-    if (id === undefined) {
-      console.error('Company ID is undefined');
-      return;
-    }
-    // TODO: Implement edit functionality
-    console.log('Edit company:', id);
+    if (!id) return;
+    this.router.navigate([`/plant-care/action/edit-company-details`, id]);
   }
 
   deleteCompany(id: number | undefined) {
-    if (id === undefined) {
-      console.error('Company ID is undefined');
-      return;
-    }
-    // TODO: Implement delete functionality
-    console.log('Delete company:', id);
+    if (!id) return;
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.companyService.deleteCompany(id).subscribe(
+          (res) => {
+            this.isLoading = false;
+            Swal.fire({
+              title: 'Deleted!',
+              text: res.message,
+              icon: 'success',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+            this.fetchCompanies();
+          },
+          (err) => {
+            this.isLoading = false;
+            Swal.fire({
+              title: 'Error',
+              text: 'Failed to delete company.',
+              icon: 'error',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        );
+      }
+    });
   }
 
   addNew() {

@@ -17,7 +17,7 @@
 
 <div class="overflow-x-auto">
   <div
-    class="min-w-[1000px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-5"
+    class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
   >
     <div *ngIf="!hasData" class="text-center py-8">
       <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
@@ -28,57 +28,117 @@
       />
     </div>
     <div *ngIf="hasData">
-      <h2
-        class="text-xl text-left text-textLight dark:text-textDark font-bold mb-2"
-      >
-        View Certificate Companies
-      </h2>
+      <div class="flex items-center justify-between">
+        <h2
+          class="text-xl text-left text-textLight dark:text-textDark font-bold mb-2"
+        >
+          View Certificate Companies
+        </h2>
+        <!-- Search bar -->
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5"
+        >
+          <input
+            type="text"
+            placeholder="Search by Reg No Number / Name"
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+            (keyup.esc)="offSearch()"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          />
+
+          <!-- Search button -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Clear button -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="offSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4"
       >
         <thead>
           <tr>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               No
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Reg. Number
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Company Name
             </th>
 
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Certifications
             </th>
 
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Phone Number - 1
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Last Modified By
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Last Modified On
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Actions
+              
             </th>
           </tr>
         </thead>
@@ -88,33 +148,35 @@
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ (page - 1) * itemsPerPage + i + 1 }}
+              {{ ("0" + (i + 1)).slice(-2) }}
             </td>
+
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ company.regNumber }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ company.companyName }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ company.certificateCount || "--" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ company.phoneCode1 }}{{ company.phoneNumber1 }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              --
+              {{ company.modifiedByUser || "--" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              --
+              {{
+                company.modifyDate
+                  ? (company.modifyDate | date : "yyyy-MM-dd")
+                  : "--"
+              }}
             </td>
             <td class="text-center flex justify-center mt-3 space-x-3">
               <!-- VIEW -->
               <button
-                *ngIf="
-                  permissionService.hasPermission('View Collection Center') ||
-                  tokenService.getUserDetails().role === '1'
-                "
+                *ngIf="tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 text-blue-500 hover:text-blue-700"
                 (click)="viewCompany(company.id)"
                 title="View Company"
@@ -136,10 +198,7 @@
 
               <!-- EDIT -->
               <button
-                *ngIf="
-                  permissionService.hasPermission('Edit Collection Center') ||
-                  tokenService.getUserDetails().role === '1'
-                "
+                *ngIf="tokenService.getUserDetails().role === '1'"
                 class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6"
                 (click)="editCompany(company.id)"
                 [disabled]="isLoading"
@@ -161,10 +220,7 @@
 
               <!-- DELETE -->
               <button
-                *ngIf="
-                  permissionService.hasPermission('Delete Collection Center') ||
-                  tokenService.getUserDetails().role === '1'
-                "
+                *ngIf="tokenService.getUserDetails().role === '1'"
                 class="text-red-500 hover:text-red-700"
                 (click)="deleteCompany(company.id)"
                 title="Delete Company"
@@ -191,18 +247,6 @@
           </tr>
         </tbody>
       </table>
-      <div class="mt-4">
-        <pagination-controls
-          (pageChange)="onPageChange($event)"
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'Page'"
-          [screenReaderCurrentLabel]="'You are on page'"
-        >
-        </pagination-controls>
-      </div>
     </div>
   </div>
 </div>

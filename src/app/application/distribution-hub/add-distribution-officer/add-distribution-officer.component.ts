@@ -360,7 +360,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Distribution Center Head': 'DCH',
+      'Distribution Centre Head': 'DCH',
     };
 
     rolePrefix = rolePrefixes[this.personalData.jobRole];
@@ -961,7 +961,7 @@ getPhone1ValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | n
 
 class Personal {
   [key: string]: any;
-  jobRole: string = 'Distribution Center Head';
+  jobRole: string = 'Distribution Centre Head';
   empId!: string;
   centerId!: number | string;
   irmId!: number;

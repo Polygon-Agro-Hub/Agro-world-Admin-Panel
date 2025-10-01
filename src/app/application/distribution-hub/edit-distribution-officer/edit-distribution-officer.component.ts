@@ -221,7 +221,7 @@ export class EditDistributionOfficerComponent implements OnInit {
         this.personalData.irmId = data.irmId || null;
         this.personalData.firstNameEnglish = data.firstNameEnglish || '';
         this.personalData.lastNameEnglish = data.lastNameEnglish || '';
-        this.personalData.jobRole = data.jobRole || 'Distribution Center Head';
+        this.personalData.jobRole = data.jobRole || 'Distribution Centre Head';
         this.personalData.empId = data.empId ? data.empId.replace(/^DCH/, '') : '';
         this.personalData.empType = data.empType || '';
         this.personalData.phoneCode01 = data.phoneCode01 || '+94';
@@ -526,7 +526,7 @@ isFieldInvalid(fieldName: keyof Personal): boolean {
     const currentCenterId = this.personalData.centerId;
     this.getAllCollectionManagers();
     const rolePrefixes: { [key: string]: string } = {
-      'Distribution Center Head': 'DCH',
+      'Distribution Centre Head': 'DCH',
     };
     const rolePrefix = rolePrefixes[this.personalData.jobRole];
     if (!rolePrefix) {
@@ -980,7 +980,7 @@ onSubmit() {
 class Personal {
   [key: string]: any;
   id?: number;
-  jobRole: string = 'Distribution Center Head';
+  jobRole: string = 'Distribution Centre Head';
   empId!: string;
   centerId!: number;
   centerName!: string;

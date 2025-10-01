@@ -1,0 +1,114 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div
+  class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg"
+  *ngIf="company"
+>
+  <h2
+    class="text-2xl text-left mb-6 text-textLight dark:text-textDark font-bold"
+  >
+    VIEW COMPANY DETAILS
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Registration Number -->
+    <div class="my-3">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+      >
+        Registration Number
+      </label>
+      <input
+        type="text"
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [value]="company.regNumber"
+        readonly
+      />
+    </div>
+
+    <!-- Tax ID -->
+    <div class="my-3">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+      >
+        TAX ID
+      </label>
+      <input
+        type="text"
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [value]="company.taxId"
+        readonly
+      />
+    </div>
+
+    <!-- Company Name -->
+    <div class="my-3 md:col-span-2">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+      >
+        Company Name
+      </label>
+      <input
+        type="text"
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [value]="company.companyName"
+        readonly
+      />
+    </div>
+
+    <!-- Phone Number 1 -->
+    <div class="my-3">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+      >
+        Phone Number - 1
+      </label>
+      <input
+        type="text"
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [value]="company.phoneCode1 + '' + company.phoneNumber1"
+        readonly
+      />
+    </div>
+
+    <!-- Phone Number 2 -->
+    <div class="my-3">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+      >
+        Phone Number - 2
+      </label>
+      <input
+        type="text"
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [value]="
+          company.phoneNumber2
+            ? company.phoneCode2 + '' + company.phoneNumber2
+            : '--'
+        "
+        readonly
+      />
+    </div>
+
+    <!-- Address -->
+    <div class="my-3 md:col-span-2">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+      >
+        Address
+      </label>
+      <textarea
+        rows="3"
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [value]="company.address"
+        readonly
+      ></textarea>
+    </div>
+  </div>
+</div>

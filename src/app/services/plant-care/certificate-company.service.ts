@@ -16,6 +16,8 @@ export interface CertificateCompany {
   address: string;
   certificateCount?: number;
   createdAt?: string;
+  modifyDate?: string | null;
+  modifiedByUser?: string | null;
 }
 
 @Injectable({
@@ -32,7 +34,7 @@ export class CertificateCompanyService {
     company: CertificateCompany
   ): Observable<{ message: string; status: boolean; id?: number }> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
       'Content-Type': 'application/json',
     });
     return this.http.post<{ message: string; status: boolean; id?: number }>(
@@ -42,14 +44,53 @@ export class CertificateCompanyService {
     );
   }
 
-  // Get All Certificate Companies
-  getAllCompaniesWithPagination(
-    page: number,
-    limit: number
+  // Get single company by ID
+  getCompanyById(id: number): Observable<{ company: CertificateCompany }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+    return this.http.get<{ company: CertificateCompany }>(
+      `${this.apiUrl}certificate-company/${id}`,
+      { headers }
+    );
+  }
+
+  // Update company
+  updateCompany(
+    id: number,
+    company: CertificateCompany
+  ): Observable<{ message: string; status: boolean }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.put<{ message: string; status: boolean }>(
+      `${this.apiUrl}certificate-company/${id}`,
+      company,
+      { headers }
+    );
+  }
+
+  // Get All Certificate Companies with search
+  getAllCompanies(
+    search: string = ''
   ): Observable<{ companies: CertificateCompany[]; total: number }> {
-    const headers = new HttpHeaders({ Authorization: `Bearer ${this.token}` });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
     return this.http.get<{ companies: CertificateCompany[]; total: number }>(
-      `${this.apiUrl}certificate-company/all?page=${page}&limit=${limit}`,
+      `${this.apiUrl}certificate-company/all?search=${search}`,
+      { headers }
+    );
+  }
+
+  // Delete Certificate Company
+  deleteCompany(id: number): Observable<{ message: string; status: boolean }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+    return this.http.delete<{ message: string; status: boolean }>(
+      `${this.apiUrl}certificate-company/${id}`,
       { headers }
     );
   }

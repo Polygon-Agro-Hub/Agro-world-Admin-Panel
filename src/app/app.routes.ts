@@ -192,6 +192,9 @@ import { AddacompanyComponent } from './application/govi-link/addacompany/addaco
 import { AddCompanyDetailsComponent } from './application/plant-care-app/add-company-details/add-company-details';
 import { ViewCompanyListComponent } from './application/plant-care-app/view-company-list/view-company-list.component';
 import{AddServicesComponent} from './application/govi-link/add-services/add-services.component';
+import { EditCompanyDetailsComponent } from './application/plant-care-app/edit-company-details/edit-company-details';
+import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-company-details/view-company-details';
+import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
 export const routes: Routes = [
   {
     path: '',
@@ -427,14 +430,18 @@ export const routes: Routes = [
               {
                 path: 'add-company-details',
                 component: AddCompanyDetailsComponent,
-                canActivate: [PermissionGuard],
-                data: { permission: 'Create company details' },
+              },
+              {
+                path: 'edit-company-details/:id',
+                component: EditCompanyDetailsComponent,
+              },
+              {
+                path: 'view-company-details/:id',
+                component: ViewCompanyDetailsComponent,
               },
               {
                 path: 'view-company-list',
                 component: ViewCompanyListComponent,
-                canActivate: [PermissionGuard],
-                data: { permission: 'View company details' },
               },
             ],
           },
@@ -686,6 +693,17 @@ export const routes: Routes = [
                   },
                 ],
               },
+
+              {
+                path: 'field-inspectors',
+                children: [
+                  {
+                    path: '',
+                    component: ViewFieldInspectorsComponent,
+                  },
+                ],
+              },
+              
             ],
           },
         ],

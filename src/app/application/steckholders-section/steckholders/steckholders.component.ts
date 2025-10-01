@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '../../../services/token/services/token.service';
@@ -9,10 +15,9 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './steckholders.component.html',
-  styleUrl: './steckholders.component.css'
+  styleUrl: './steckholders.component.css',
 })
 export class SteckholdersComponent implements OnInit, OnDestroy {
-
   isDropdownOpen = false;
   private clickListener: any;
   isButton2Clicked = false;
@@ -21,7 +26,11 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   isButton5Clicked = false;
   isButton6Clicked = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, public tokenService: TokenService, private router: Router) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    public tokenService: TokenService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -84,13 +93,9 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
     this.isButton2Clicked = false;
   }
 
-
-
-
   navigateToViewFamers(): void {
     this.router.navigate(['/steckholders/action/farmers']);
   }
-
 
   navigateToViewAdmins(): void {
     this.router.navigate(['/steckholders/action/admin']);
@@ -109,14 +114,19 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   }
 
   navigateToViewCompaniesAgents() {
- this.router.navigate(['/collection-hub/manage-company']);
-}
+    this.router.navigate(['/collection-hub/manage-company']);
+  }
 
-navigateToViewDistribution(): void {
+  navigateToViewDistribution(): void {
     this.router.navigate(['/steckholders/action/view-distribution-officers']);
   }
 
   navigateToViewDistributionCenter(): void {
     this.router.navigate(['/distribution-hub/action/view-destribition-center']);
   }
+
+  navigateToViewFieldInspectors(): void {
+    this.router.navigate(['/steckholders/action/field-inspectors']);
+  }
+
 }

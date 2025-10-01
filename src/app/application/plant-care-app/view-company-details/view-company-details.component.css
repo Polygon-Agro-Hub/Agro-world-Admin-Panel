@@ -1,0 +1,19 @@
+/* Light mode dropdown */
+::ng-deep .p-dropdown {
+  background-color: var(--tileLight, #f9f9f9);
+  color: var(--textLight, #111);
+  border: 1px solid #d1d5db; /* Tailwind border-gray-300 */
+}
+
+/* Dark mode dropdown */
+:host-context(.dark) ::ng-deep .p-dropdown {
+  color: var(--textDark, #f5f5f5);
+  border: 1px solid #4b5563; /* Tailwind border-gray-600 */
+}
+
+/* Dropdown panel (options list) */
+:host-context(.dark) ::ng-deep .p-dropdown-panel {
+  background-color: var(--tileBlack, #1f1f1f);
+  color: var(--textDark, #f5f5f5);
+  border-color: #4b5563;
+}

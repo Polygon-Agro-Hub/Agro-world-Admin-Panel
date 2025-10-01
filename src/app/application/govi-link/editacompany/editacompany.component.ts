@@ -854,39 +854,39 @@ export class EditacompanyComponent {
   }
 
   async updateCompany(): Promise<void> {
-  // Check if company ID exists
-  if (!this.itemId) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No company ID found for update',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      }
+    // Check if company ID exists
+    if (!this.itemId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No company ID found for update',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        }
+      });
+      return;
+    }
+
+    // Mark all fields as touched to show validation errors
+    const fieldsToValidate: (keyof Company)[] = [
+      'RegNumber', 'companyName', 'email', 'financeOfficerName',
+      'accHolderName', 'accNumber', 'confirmAccNumber', 'bank',
+      'branch', 'phoneCode1', 'phoneNumber1', 'logo'
+    ];
+
+    fieldsToValidate.forEach(key => {
+      this.touchedFields[key] = true;
     });
-    return;
-  }
 
-  // Mark all fields as touched to show validation errors
-  const fieldsToValidate: (keyof Company)[] = [
-    'RegNumber', 'companyName', 'email', 'financeOfficerName',
-    'accHolderName', 'accNumber', 'confirmAccNumber', 'bank',
-    'branch', 'phoneCode1', 'phoneNumber1', 'logo'
-  ];
+    // Get validation errors
+    const validationErrors = this.getValidationErrors();
 
-  fieldsToValidate.forEach(key => {
-    this.touchedFields[key] = true;
-  });
-
-  // Get validation errors
-  const validationErrors = this.getValidationErrors();
-
-  if (validationErrors.length > 0) {
-    // Show detailed error messages in SweetAlert
-    Swal.fire({
-      icon: 'error',
-      title: 'Validation Error',
-      html: `
+    if (validationErrors.length > 0) {
+      // Show detailed error messages in SweetAlert
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        html: `
         <div class="text-left">
           <p class="mb-3 font-semibold">Please fix the following errors:</p>
           <ul class="list-disc list-inside space-y-1 max-h-60 overflow-y-auto">
@@ -894,97 +894,97 @@ export class EditacompanyComponent {
           </ul>
         </div>
       `,
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      },
-      confirmButtonText: 'OK',
-      width: '600px'
-    });
-    return;
-  }
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        },
+        confirmButtonText: 'OK',
+        width: '600px'
+      });
+      return;
+    }
 
-  // If all validations pass, proceed with updating
-  try {
-    this.isLoading = true;
+    // If all validations pass, proceed with updating
+    try {
+      this.isLoading = true;
 
-    // Prepare the data for API - map frontend fields to backend fields
-    const companyDataToSend = {
-      regNumber: this.companyData.RegNumber,
-      companyName: this.companyData.companyName,
-      email: this.companyData.email,
-      financeOfficerName: this.companyData.financeOfficerName,
-      accName: this.companyData.accHolderName,
-      accNumber: this.companyData.accNumber,
-      bank: this.companyData.bank,
-      branch: this.companyData.branch,
-      phoneCode1: this.companyData.phoneCode1,
-      phoneNumber1: this.companyData.phoneNumber1,
-      phoneCode2: this.companyData.phoneCode2,
-      phoneNumber2: this.companyData.phoneNumber2,
-      logo: this.companyData.logoFile ? await this.fileToBase64(this.companyData.logoFile) : this.companyData.logo,
-      modifyBy: this.companyData.modifyBy || 'system'
-    };
+      // Prepare the data for API - map frontend fields to backend fields
+      const companyDataToSend = {
+        regNumber: this.companyData.RegNumber,
+        companyName: this.companyData.companyName,
+        email: this.companyData.email,
+        financeOfficerName: this.companyData.financeOfficerName,
+        accName: this.companyData.accHolderName,
+        accNumber: this.companyData.accNumber,
+        bank: this.companyData.bank,
+        branch: this.companyData.branch,
+        phoneCode1: this.companyData.phoneCode1,
+        phoneNumber1: this.companyData.phoneNumber1,
+        phoneCode2: this.companyData.phoneCode2,
+        phoneNumber2: this.companyData.phoneNumber2,
+        logo: this.companyData.logoFile ? await this.fileToBase64(this.companyData.logoFile) : this.companyData.logo,
+        modifyBy: this.companyData.modifyBy || 'system'
+      };
 
-    // Use the updateCompany service method
-    this.goviLinkSrv.updateCompany(companyDataToSend, this.itemId).subscribe(
-      (response: any) => {
-        this.isLoading = false;
-        if (response.status) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: response.message || 'Company updated successfully!',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            }
-          }).then(() => {
-            this.router.navigate(['/govi-link/action/view-company-list']);
-          });
-        } else {
+      // Use the updateCompany service method
+      this.goviLinkSrv.updateCompany(companyDataToSend, this.itemId).subscribe(
+        (response: any) => {
+          this.isLoading = false;
+          if (response.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: response.message || 'Company updated successfully!',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              }
+            }).then(() => {
+              this.router.navigate(['/govi-link/action/view-company-list']);
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: response.message || 'Failed to update company.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              }
+            });
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error updating company:', error);
+
+          let errorMessage = 'Failed to update company. Please try again.';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.status === 0) {
+            errorMessage = 'Unable to connect to server. Please check your connection.';
+          }
+
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: response.message || 'Failed to update company.',
+            text: errorMessage,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             }
           });
         }
-      },
-      (error) => {
-        this.isLoading = false;
-        console.error('Error updating company:', error);
-        
-        let errorMessage = 'Failed to update company. Please try again.';
-        if (error.error?.message) {
-          errorMessage = error.error.message;
-        } else if (error.status === 0) {
-          errorMessage = 'Unable to connect to server. Please check your connection.';
+      );
+    } catch (error) {
+      this.isLoading = false;
+      console.error('Error in updateCompany:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An unexpected error occurred.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         }
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: errorMessage,
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          }
-        });
-      }
-    );
-  } catch (error) {
-    this.isLoading = false;
-    console.error('Error in updateCompany:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'An unexpected error occurred.',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      }
-    });
+      });
+    }
   }
-}
 }
 
 class Company {

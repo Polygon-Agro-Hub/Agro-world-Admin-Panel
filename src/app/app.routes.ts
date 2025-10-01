@@ -191,7 +191,8 @@ import { GovilinkComponent } from './application/govi-link/govilink/govilink.com
 import { AddacompanyComponent } from './application/govi-link/addacompany/addacompany.component';
 import { AddCompanyDetailsComponent } from './application/plant-care-app/add-company-details/add-company-details';
 import { ViewCompanyListComponent } from './application/plant-care-app/view-company-list/view-company-list.component';
-import{AddServicesComponent} from './application/govi-link/add-services/add-services.component';
+import { AddServicesComponent } from './application/govi-link/add-services/add-services.component';
+import { ViewcompanylistComponent } from './application/govi-link/viewcompanylist/viewcompanylist.component';
 export const routes: Routes = [
   {
     path: '',
@@ -1228,9 +1229,13 @@ export const routes: Routes = [
                 path: 'add-a-company',
                 component: AddacompanyComponent,
               },
-               {
+              {
+                path: 'view-company-list',
+                component: ViewcompanylistComponent
+              },
+              {
                 path: 'add-services',
-                component:AddServicesComponent,
+                component: AddServicesComponent,
               }
 
             ]

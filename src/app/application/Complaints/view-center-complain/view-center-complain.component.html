@@ -41,7 +41,7 @@
       <div class="flex flex-row justify-between">
         <div class="flex flex-col justify-between mr-6">
           <label class="block text-gray-700 dark:text-textDark ">Complainent</label>
-          <label class="block text-gray-700 dark:text-textDark mb-2">({{complain.jobRole === 'Collection Center Head' ?
+          <label class="block text-gray-700 dark:text-textDark mb-2">({{complain.jobRole === 'Collection Centre Head' ?
             'CCH' : complain.jobRole === 'Collection Centre Manager' ? 'CCM' : 'COO' }})</label>
         </div>
 
@@ -52,7 +52,7 @@
       <div class="flex flex-row justify-between gap-4">
         <div class="flex flex-col">
           <label class="block text-gray-700 dark:text-textDark">Contact</label>
-          <label class="block text-gray-700 dark:text-textDark">({{complain.jobRole === 'Collection Center Head' ?
+          <label class="block text-gray-700 dark:text-textDark">({{complain.jobRole === 'Collection Centre Head' ?
             'CCH' : complain.jobRole === 'Collection Centre Manager' ? 'CCM' : 'COO' }})</label>
         </div>
         <input type="text" [value]="complain.phoneCode01+complain.phoneNumber01"

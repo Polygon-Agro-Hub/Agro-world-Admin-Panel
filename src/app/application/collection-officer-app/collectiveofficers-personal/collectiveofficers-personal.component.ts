@@ -817,7 +817,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Collection Center Head': 'CCH',
+      'Collection Centre Head': 'CCH',
       'Collection Centre Manager': 'CCM',
       'Customer Officer': 'CUO',
       'Collection Officer': 'COO',

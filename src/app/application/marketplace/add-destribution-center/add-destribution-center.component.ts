@@ -838,9 +838,9 @@ updateRegCode() {
         messages = error.error.errors.map((err: string) => {
           switch (err) {
             case 'name':
-              return 'A distribution center with this name already exists.';
+              return 'A distribution centre with this name already exists.';
             case 'regCode':
-              return 'A distribution center with this registration code already exists.';
+              return 'A distribution centre with this registration code already exists.';
             case 'email':
               return 'Email already exists.';
             case 'contact01':

@@ -151,7 +151,7 @@ getFlagUrl(countryCode: string): string {
           if (res?.status) {
             Swal.fire(
               'Success',
-              'Collection Center updated Successfully',
+              'Collection Centre updated Successfully',
               'success'
             );
             this.router.navigate(['/collection-hub/view-collection-centers']);
@@ -176,7 +176,7 @@ getFlagUrl(countryCode: string): string {
           Swal.fire({
             icon: 'error',
             title: 'Server Error',
-            text: 'Failed to update the collection center. Please try again later.',
+            text: 'Failed to update the collection centre. Please try again later.',
           });
         }
       );
@@ -219,7 +219,7 @@ getFlagUrl(countryCode: string): string {
           }
         },
 
-        (error) => console.error('Error fetching collection center:', error)
+        (error) => console.error('Error fetching collection centre:', error)
       );
   }
 

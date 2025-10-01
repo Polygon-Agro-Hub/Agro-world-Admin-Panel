@@ -62,7 +62,7 @@
         <label class="text-[#534E4E] dark:text-textDark">Variety *</label>
         <p-dropdown id="variety" name="variety" [(ngModel)]="productObj.varietyId" [options]="selectedVarieties"
           optionLabel="varietyEnglish" optionValue="id" [filter]="true" filterBy="varietyEnglish"
-          placeholder="Select Variety" [showClear]="true" (onChange)="selectVerityImage()" #varietyField="ngModel"
+          placeholder="Select Variety" [showClear]="!!productObj.varietyId" (onChange)="selectVerityImage()" #varietyField="ngModel"
           required [class]="'mt-2 w-full rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
           [panelStyleClass]="'bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'"
           [disabled]="!isVerityVisible">

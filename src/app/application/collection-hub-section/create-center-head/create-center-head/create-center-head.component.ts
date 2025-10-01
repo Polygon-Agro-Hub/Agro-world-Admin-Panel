@@ -935,43 +935,6 @@ onSubmit() {
     return nicRegex.test(nic);
   }
 
-  // checkFormValidity(): boolean {
-  //   console.log('personalData', this.personalData)
-  //   const isFirstNameValid =
-  //     !!this.personalData.firstNameEnglish &&
-  //     !!this.personalData.firstNameSinhala &&
-  //     !!this.personalData.firstNameTamil;
-  //   const isLastNameValid =
-  //     !!this.personalData.lastNameEnglish &&
-  //     !!this.personalData.lastNameSinhala &&
-  //     !!this.personalData.lastNameTamil;
-  //   const isPhoneNumber01Valid = !!this.personalData.phoneNumber01;
-  //   const isEmailValid = this.isValidEmail(this.personalData.email);
-  //   const isNicValid = this.isValidNIC(this.personalData.nic);
-  //   const isEmpTypeSelected = !!this.empType;
-  //   const isLanguagesSelected = !!this.personalData.languages;
-  //   const isCompanySelected = !!this.personalData.companyId;
-  //   const isNicSelected = !!this.personalData.nic;
-  //   const isEmailSelected = !!this.personalData.email;
-  //   const isLanguageSelected = !!this.personalData.languages;
-    
-
-  //   return (
-  //     isFirstNameValid &&
-  //     isLastNameValid &&
-  //     isPhoneNumber01Valid &&
-  //     isEmailValid &&
-  //     isEmpTypeSelected &&
-  //     isLanguagesSelected &&
-  //     isCompanySelected &&
-  //     isNicSelected &&
-  //     isNicValid &&
-  //     isEmailSelected &&
-  //     isLanguageSelected
-  //   );
-    
-  // }
-
 handleNextClick(): void {
   console.log('phone', this.personalData.phoneCode01, this.personalData.phoneCode02);
   if (this.checkFormValidity()) {
@@ -1119,7 +1082,7 @@ navigateToPage(page: 'pageOne' | 'pageTwo'): void {
 
 
 class Personal {
-  jobRole: string = 'Collection Center Head';
+  jobRole: string = 'Collection Centre Head';
   empId!: string;
   centerId!: number;
   irmId!: number;

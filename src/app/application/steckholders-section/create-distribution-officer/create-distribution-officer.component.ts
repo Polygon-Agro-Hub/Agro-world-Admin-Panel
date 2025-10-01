@@ -84,7 +84,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   languagesRequired: boolean = false;
 
   jobRoleOptions: any[] = [
-    { label: 'Distribution Centre Manager', value: 'Distribution Center Manager' },
+    { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
     { label: 'Distribution Officer', value: 'Distribution Officer' }
   ];
 

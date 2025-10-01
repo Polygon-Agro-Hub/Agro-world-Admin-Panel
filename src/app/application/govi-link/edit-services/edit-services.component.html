@@ -1,0 +1,121 @@
+<button class="text-textLight dark:text-textDark">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="h-[20px]"></div>
+<div class="mx-auto p-12 bg-white dark:bg-tileBlack shadow-mg rounded-lg shadow-md">
+  <h2 class="text-2xl mb-6 dark:text-textDark">
+    {{ isView ? 'View Service' : 'Edit Service' }}
+  </h2>
+
+  <form #serviceForm="ngForm" (ngSubmit)="!isView && onUpdateService(serviceForm)">
+    <!-- Service Name in English -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">
+        Service Name in English *
+      </label>
+      <input
+        type="text"
+        class="w-full p-2 border rounded-md border-gray-300 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [(ngModel)]="serviceData.englishName"
+        name="englishName"
+        #englishName="ngModel"
+        [disabled]="isView"
+        required
+        pattern="^\S.*$"
+        (keydown)="!isView && blockFirstSpace($event)"
+        (keydown)="!isView && blockLeadingSpace($event)"
+        (blur)="!isView && formatEnglishName()"
+        (input)="!isView && capitalizeFirstLetter()"
+        (keypress)="allowOnlyLetters($event)"
+      />
+      <div *ngIf="!isView && englishName.invalid && (englishName.touched || englishName.dirty)" class="text-red-600 text-sm mt-1">
+        <div *ngIf="englishName.errors?.['required']">English name is required.</div>
+      </div>
+    </div>
+
+    <!-- Service Name in Sinhala -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">
+        Service Name in Sinhala *
+      </label>
+      <input
+        type="text"
+        class="w-full p-2 border rounded-md border-gray-300 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [(ngModel)]="serviceData.sinhalaName"
+        name="sinhalaName"
+        #sinhalaName="ngModel"
+        [disabled]="isView"
+        required
+        pattern="^\S.*$"
+        (keydown)="!isView && blockLeadingSpace($event)"
+        (keypress)="allowOnlyLetters($event)"
+      />
+      <div *ngIf="!isView && sinhalaName.invalid && (sinhalaName.touched || sinhalaName.dirty)" class="text-red-600 text-sm mt-1">
+        <div *ngIf="sinhalaName.errors?.['required']">Sinhala name is required.</div>
+      </div>
+    </div>
+
+    <!-- Service Name in Tamil -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">
+        Service Name in Tamil *
+      </label>
+      <input
+        type="text"
+        class="w-full p-2 border rounded-md border-gray-300 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [(ngModel)]="serviceData.tamilName"
+        name="tamilName"
+        #tamilName="ngModel"
+        [disabled]="isView"
+        required
+        pattern="^\S.*$"
+        (keydown)="!isView && blockLeadingSpace($event)"
+        (keypress)="allowOnlyLetters($event)"
+      />
+      <div *ngIf="!isView && tamilName.invalid && (tamilName.touched || tamilName.dirty)" class="text-red-600 text-sm mt-1">
+        <div *ngIf="tamilName.errors?.['required']">Tamil name is required.</div>
+      </div>
+    </div>
+
+    <!-- Service Fee -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">
+        Service Fee (Rs.) *
+      </label>
+      <input
+        type="number"
+        class="w-full p-2 border rounded-md border-gray-300 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [(ngModel)]="serviceData.srvFee"
+        name="srvFee"
+        #srvFee="ngModel"
+        [disabled]="isView"
+        required
+        min="0"
+        step="0.01"
+        (blur)="!isView && formatSrvFee()"
+        (input)="!isView && blockAfterTwoDecimals($event)"
+      />
+      <div *ngIf="!isView && srvFee.invalid && (srvFee.touched || srvFee.dirty)" class="text-red-600 text-sm mt-1">
+        <div *ngIf="srvFee.errors?.['required']">Service fee is required.</div>
+        <div *ngIf="srvFee.errors?.['min']">Service fee cannot be negative.</div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="mb-6">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+
+    <!-- Buttons (only for Edit) -->
+    <div *ngIf="!isView" class="flex justify-end mt-6">
+      <button type="button" class="px-4 py-2 bg-gray-300 text-[#939393] rounded-md mr-2" (click)="onCancel(serviceForm)">
+        Cancel
+      </button>
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+        Update
+      </button>
+    </div>
+  </form>
+</div>

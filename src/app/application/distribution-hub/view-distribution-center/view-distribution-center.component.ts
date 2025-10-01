@@ -371,11 +371,11 @@ deleteDistributionCenter(id: number): void {
         },
         error: (error) => {
           this.isLoading = false;
-          console.error('Error deleting distribution center:', error);
+          console.error('Error deleting distribution centre:', error);
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Failed to delete distribution center',
+            text: 'Failed to delete distribution centre',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',

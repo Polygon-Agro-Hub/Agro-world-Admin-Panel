@@ -120,7 +120,7 @@ export class ViewCompanyHeadComponent implements OnInit {
       this.searchText = this.searchText.replace(/^\s+/, '');
       console.log('searchText', this.searchText)
     }
-  
+
     this.page = 1; // Reset to first page on new search
     this.fetchAllCompanyHeads(
       this.companyId!,
@@ -129,7 +129,7 @@ export class ViewCompanyHeadComponent implements OnInit {
       this.searchText
     );
   }
-  
+
 
   offSearch() {
     this.searchText = '';
@@ -184,10 +184,10 @@ export class ViewCompanyHeadComponent implements OnInit {
   }
 
   openPopup(item: any) {
-      const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
-      const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
-  
-      const tableHtml = `
+    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
+    const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
+
+    const tableHtml = `
         <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
           <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
           <div>
@@ -199,115 +199,115 @@ export class ViewCompanyHeadComponent implements OnInit {
           </div>
         </div>
       `;
-  
-      Swal.fire({
-        html: tableHtml,
-        showConfirmButton: false,
-        width: 'auto',
-        background: 'transparent',
-        backdrop: 'rgba(0, 0, 0, 0.5)',
-        grow: 'row',
-        showClass: { popup: 'animate__animated animate__fadeIn' },
-        hideClass: { popup: 'animate__animated animate__fadeOut' },
-        didOpen: () => {
-          if (showApproveButton) {
-            document
-              .getElementById('approveButton')
-              ?.addEventListener('click', () => {
-                Swal.close();
-                this.isPopupVisible = false;
-                this.isLoading = true;
-                this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
-                  (res) => {
-                    this.isLoading = false;
-                    if (res.status) {
-                      Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'The Collection Centre Head was approved successfully.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-                      });
-                      this.fetchAllCompanyHeads();
-                    } else {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Something went wrong. Please try again.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                      });
-                    }
-                  },
-                  () => {
-                    this.isLoading = false;
+
+    Swal.fire({
+      html: tableHtml,
+      showConfirmButton: false,
+      width: 'auto',
+      background: 'transparent',
+      backdrop: 'rgba(0, 0, 0, 0.5)',
+      grow: 'row',
+      showClass: { popup: 'animate__animated animate__fadeIn' },
+      hideClass: { popup: 'animate__animated animate__fadeOut' },
+      didOpen: () => {
+        if (showApproveButton) {
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Collection Centre Head was approved successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold text-lg',
+                        htmlContainer: 'text-left',
+                      },
+                    });
+                    this.fetchAllCompanyHeads();
+                  } else {
                     Swal.fire({
                       icon: 'error',
                       title: 'Error!',
-                      text: 'An error occurred while approving. Please try again.',
+                      text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
                     });
                   }
-                );
-              });
-          }
-  
-          if (showRejectButton) {
-            document
-              .getElementById('rejectButton')
-              ?.addEventListener('click', () => {
-                Swal.close();
-                this.isPopupVisible = false;
-                this.isLoading = true;
-                this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
-                  (res) => {
-                    this.isLoading = false;
-                    if (res.status) {
-                      Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: 'The Collection Centre Head was rejected successfully.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-                      });
-                      this.fetchAllCompanyHeads();
-                    } else {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Something went wrong. Please try again.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                      });
-                    }
-                  },
-                  () => {
-                    this.isLoading = false;
+                },
+                () => {
+                  this.isLoading = false;
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while approving. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              );
+            });
+        }
+
+        if (showRejectButton) {
+          document
+            .getElementById('rejectButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Collection Centre Head was rejected successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold text-lg',
+                        htmlContainer: 'text-left',
+                      },
+                    });
+                    this.fetchAllCompanyHeads();
+                  } else {
                     Swal.fire({
                       icon: 'error',
                       title: 'Error!',
-                      text: 'An error occurred while rejecting. Please try again.',
+                      text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
                     });
                   }
-                );
-              });
-          }
-        },
-      });
-    }
+                },
+                () => {
+                  this.isLoading = false;
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while rejecting. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                  });
+                }
+              );
+            });
+        }
+      },
+    });
+  }
 
 }
 

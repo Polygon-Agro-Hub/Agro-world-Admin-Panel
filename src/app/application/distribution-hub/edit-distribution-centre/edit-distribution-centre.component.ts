@@ -682,12 +682,12 @@ export class EditDistributionCentreComponent implements OnInit {
   }
 
   fetchDistributionCenterById(id: number) {
-    console.log('Fetching distribution center with ID:', id);
+    console.log('Fetching distribution centre with ID:', id);
     this.isLoading = true;
 
     this.distributionService.getDistributionCentreById(id).subscribe(
       (response: DistributionCenter) => {
-        console.log('Distribution center details:', response);
+        console.log('Distribution centre details:', response);
         this.isLoading = false;
         this.distributionCenterDetails = response;
         this.hasData = !!response;
@@ -700,12 +700,12 @@ export class EditDistributionCentreComponent implements OnInit {
         if (error.status === 401) {
           this.showErrorAlert('Unauthorized access');
         } else if (error.status === 404) {
-          this.showErrorAlert('Distribution center not found');
+          this.showErrorAlert('Distribution centre not found');
           this.router.navigate([
             '/distribution-hub/action/view-destribition-center',
           ]);
         } else {
-          this.showErrorAlert('Failed to load distribution center details');
+          this.showErrorAlert('Failed to load distribution centre details');
         }
       }
     );
@@ -1023,9 +1023,9 @@ export class EditDistributionCentreComponent implements OnInit {
                 messages = error.error.errors.map((err: string) => {
                   switch (err) {
                     case 'name':
-                      return 'A distribution center with this name already exists.';
+                      return 'A distribution centre with this name already exists.';
                     case 'regCode':
-                      return 'A distribution center with this registration code already exists.';
+                      return 'A distribution centre with this registration code already exists.';
                     case 'email':
                       return 'Email already exists.';
                     case 'contact1':

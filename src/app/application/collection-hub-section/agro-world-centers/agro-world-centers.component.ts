@@ -216,7 +216,7 @@ export class AgroWorldCentersComponent {
           (error) => {
             Swal.fire({
               title: 'Error!',
-              text: 'There was an error deleting the Collection Centers',
+              text: 'There was an error deleting the Collection Centres',
               icon: 'error',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

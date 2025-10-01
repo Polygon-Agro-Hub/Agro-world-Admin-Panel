@@ -143,7 +143,7 @@ page: number = 1;
   ];
 
   jobRoleOptions: any[] = [
-    { label: 'Distribution Centre Manager', value: 'Distribution Center Manager' },
+    { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
     { label: 'Distribution Officer', value: 'Distribution Officer' }
   ];
 
@@ -869,7 +869,7 @@ page: number = 1;
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Distribution Center Manager': 'DBM',
+      'Distribution Centre Manager': 'DBM',
       'Distribution Officer': 'DIO',
     };
 

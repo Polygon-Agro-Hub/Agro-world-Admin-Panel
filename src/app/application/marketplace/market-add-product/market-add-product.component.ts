@@ -439,6 +439,10 @@ export class MarketAddProductComponent implements OnInit {
     }
   }
 
+  if(this.productObj.promo === false){
+    this.productObj.salePrice = this.productObj.normalPrice
+  }
+
   // Submit the form
   this.marketSrv.createProduct(this.productObj).subscribe(
     (res) => {

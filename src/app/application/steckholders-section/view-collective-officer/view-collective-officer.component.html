@@ -25,47 +25,33 @@
       <div class="flex align-middle justify-start items-center gap-x-12">
         <label class="block text-gray-700 pl-20 dark:text-gray-200 mb-2 ">Select Centre</label>
         <div class="flex flex-col">
-          <p-dropdown 
-  [options]="centerNames" 
-  optionLabel="centerName" 
-  optionValue="id" 
-  placeholder="Select a centre"
-  [(ngModel)]="selectedCenterId" 
-  #selectedCenterIdInput="ngModel" 
-  (onChange)="onCenterChange()" 
-  name="selectedCenterId" 
-  required
-  [styleClass]="'border min-w-52 ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'"
-  panelStyleClass="custom-dropdown-panel">
-</p-dropdown>
-        <div *ngIf="selectedCenterIdInput.touched && !selectedCenterId"
-                        class="text-red-500 ml-2 text-sm mt-1">
-                        <div>Centre Name is required</div>
-                    </div>
+          <p-dropdown [options]="centerNames" optionLabel="centerName" optionValue="id" placeholder="Select a centre"
+            [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
+            name="selectedCenterId" required
+            [styleClass]="'border min-w-52 ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'"
+            panelStyleClass="custom-dropdown-panel">
+          </p-dropdown>
+          <div *ngIf="selectedCenterIdInput.touched && !selectedCenterId" class="text-red-500 ml-2 text-sm mt-1">
+            <div>Centre Name is required</div>
+          </div>
         </div>
       </div>
 
       <!-- Conditionally show/hide the Select Manager section -->
-      <div *ngIf="selectedOfficer?.jobRole === 'Collection Officer'" class="flex mt-4 align-middle justify-start items-center gap-x-12">
+      <div *ngIf="selectedOfficer?.jobRole === 'Collection Officer'"
+        class="flex mt-4 align-middle justify-start items-center gap-x-12">
         <label class="block text-gray-700 pl-16 dark:text-gray-200 mb-2">Select Manager</label>
-       <div class="flex flex-col">
-        <p-dropdown 
-          [options]="collectionCenterManagerNames" 
-          optionLabel="displayLabel" 
-          placeholder="Select a manager"
-          [(ngModel)]="selectedIrmId"  
-          #selectedIrmIdInput="ngModel" 
-          name="selectedIrmId" 
-          required
-          panelStyleClass="custom-dropdown-panel"
-          [styleClass]="'min-w-52 border ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'">
-        </p-dropdown>
+        <div class="flex flex-col">
+          <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" placeholder="Select a manager"
+            [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel" name="selectedIrmId" required
+            panelStyleClass="custom-dropdown-panel"
+            [styleClass]="'min-w-52 border ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'">
+          </p-dropdown>
 
-      <div *ngIf="selectedIrmIdInput.touched && !selectedIrmId"
-                      class="text-red-500 ml-2 text-sm mt-1">
-                      <div>Manager Name is required</div>
-                  </div>
-       </div>
+          <div *ngIf="selectedIrmIdInput.touched && !selectedIrmId" class="text-red-500 ml-2 text-sm mt-1">
+            <div>Manager Name is required</div>
+          </div>
+        </div>
 
       </div>
     </div>

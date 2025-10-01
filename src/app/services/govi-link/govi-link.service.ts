@@ -54,4 +54,34 @@ saveOfficerService(data: {
     return this.http.post(this.apiUrl + 'save-officer-service', data, { headers });
   }
 
+  updateOfficerService(
+  id: number,
+  data: {
+    englishName: string;
+    tamilName: string;
+    sinhalaName: string;
+    srvFee?: number;
+  }
+): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.put(this.apiUrl + `update-officer-service/${id}`, data, {
+    headers,
+  });
 }
+getOfficerServiceById(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.get(this.apiUrl + `get-officer-service-by-id/${id}`, { headers });
+}
+
+
+}
+
+

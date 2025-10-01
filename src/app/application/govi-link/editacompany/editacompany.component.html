@@ -28,6 +28,7 @@
           name="logoUpload"
           accept="image/*"
           (change)="onLogoChange($event)"
+          (blur)="onFieldBlur('logo')"
           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
         <div
@@ -94,6 +95,7 @@
         id="regNumber"
         name="regNumber"
         [(ngModel)]="companyData.RegNumber"
+        (blur)="onFieldBlur('RegNumber')"
         (keydown)="handleInputWithSpaceTrimming($event, 'RegNumber')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [ngClass]="{ 'border-red-500': isFieldInvalid('RegNumber') }"
@@ -114,6 +116,7 @@
         id="companyName"
         name="companyName"
         [(ngModel)]="companyData.companyName"
+        (blur)="onFieldBlur('companyName')"
         #companyNameEnglish="ngModel"
         required
         (keydown)="handleInputWithSpaceTrimming($event, 'companyName')"
@@ -139,6 +142,7 @@
         name="email"
         [(ngModel)]="companyData.email"
         type="email"
+        (blur)="onFieldBlur('email')"
         (keydown)="handleInputWithSpaceTrimming($event, 'email')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [ngClass]="{ 'border-red-500': isFieldInvalid('email') }"
@@ -147,7 +151,11 @@
         >Email is required.</span
       >
       <span
-        *ngIf="companyData.email && !isValidEmail(companyData.email)"
+        *ngIf="
+          companyData.email &&
+          !isValidEmail(companyData.email) &&
+          touchedFields['email']
+        "
         class="text-red-600 text-sm"
       >
         {{ emailValidationMessage }}
@@ -168,6 +176,7 @@
         id="accName"
         name="accName"
         [(ngModel)]="companyData.accName"
+        (blur)="onFieldBlur('accName')"
         #accHolderName="ngModel"
         required
         (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
@@ -191,6 +200,7 @@
         id="accNumber"
         name="accNumber"
         [(ngModel)]="companyData.accNumber"
+        (blur)="onFieldBlur('accNumber')"
         (ngModelChange)="validateAccNumber()"
         (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
         #accNumberInput="ngModel"
@@ -216,14 +226,14 @@
         id="confirmAccNumber"
         name="confirmAccNumber"
         [(ngModel)]="companyData.confirmAccNumber"
+        (blur)="onFieldBlur('confirmAccNumber')"
         (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
         #confirmAccNumberInput="ngModel"
         required
         (ngModelChange)="validateConfirmAccNumber()"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [ngClass]="{
-          'border-red-500':
-            isFieldInvalid('confirmAccNumber') || confirmAccountNumberError
+          'border-red-500': isFieldInvalid('confirmAccNumber')
         }"
       />
 
@@ -231,14 +241,11 @@
         *ngIf="isFieldInvalid('confirmAccNumber')"
         class="text-red-600 text-sm"
       >
-        Confirm Account Number is required.
-      </span>
-
-      <span
-        *ngIf="confirmAccountNumberError && !isFieldInvalid('confirmAccNumber')"
-        class="text-red-600 text-sm"
-      >
-        Account Numbers do not match.
+        {{
+          !companyData.confirmAccNumber
+            ? "Confirm Account Number is required."
+            : "Account Numbers do not match."
+        }}
       </span>
     </div>
     <div class="pb-6 mx-20">
@@ -252,6 +259,7 @@
         id="bankDropdown"
         name="bankDropdown"
         [(ngModel)]="selectedBankId"
+        (onBlur)="onFieldBlur('bank')"
         #bankDropdown="ngModel"
         [options]="banks"
         optionLabel="name"
@@ -284,6 +292,7 @@
         [(ngModel)]="selectedBranchId"
         name="branchDropdown"
         #branchDropdown="ngModel"
+        (onBlur)="onFieldBlur('branch')"
         (onChange)="onBranchChange()"
         [options]="branches"
         optionLabel="name"
@@ -315,6 +324,7 @@
         id="financeOfficerName"
         name="financeOfficerName"
         [(ngModel)]="companyData.financeOfficerName"
+        (blur)="onFieldBlur('financeOfficerName')"
         (keydown)="allowOnlyEnglishLetterss($event)"
         (keydown)="handleInputWithSpaceTrimming($event, 'financeOfficerName')"
         (input)="capitalizeFirstLetter('financeOfficerName')"
@@ -341,10 +351,10 @@
             [options]="countries"
             optionLabel="dialCode"
             optionValue="dialCode"
-            (blur)="validateContactNumbers()"
+            (onBlur)="onFieldBlur('phoneNumber1')"
             styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
             [style]="{ width: '140px' }"
-            [ngClass]="{ 'border-red-500': isFieldInvalid('phoneCode1') }"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('phoneNumber1') }"
           >
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -378,6 +388,7 @@
             pattern="^[0-9]{9}$"
             required
             #phoneNumber1="ngModel"
+            (blur)="onFieldBlur('phoneNumber1')"
             (keydown)="allowOnlyDigitsForAccountNumber($event, 'phoneNumber1')"
             (blur)="validateContactNumbers()"
             maxlength="9"
@@ -388,7 +399,9 @@
 
         <div
           class="mt-1 text-sm text-red-500"
-          *ngIf="getContactNumber1ErrorMessage()"
+          *ngIf="
+            getContactNumber1ErrorMessage() && touchedFields['phoneNumber1']
+          "
         >
           {{ getContactNumber1ErrorMessage() }}
         </div>
@@ -439,6 +452,7 @@
             type="tel"
             pattern="^[0-9]{9}$"
             #phoneNumber2="ngModel"
+            (blur)="onFieldBlur('phoneNumber2')"
             (keydown)="allowOnlyDigitsForAccountNumber($event, 'phoneNumber2')"
             (blur)="validateContactNumbers()"
             maxlength="9"
@@ -447,7 +461,9 @@
         </div>
         <div
           class="mt-1 text-sm text-red-500"
-          *ngIf="getContactNumber2ErrorMessage()"
+          *ngIf="
+            getContactNumber2ErrorMessage() && touchedFields['phoneNumber2']
+          "
         >
           {{ getContactNumber2ErrorMessage() }}
         </div>

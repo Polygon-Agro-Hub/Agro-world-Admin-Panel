@@ -86,7 +86,6 @@ export class EditacompanyComponent {
       financeOfficerName: ['', Validators.required],
     });
 
-
     // Initialize modifyBy with a default value
     this.companyData.modifyBy = 'system'; // You can get this from your auth service
   }
@@ -220,6 +219,63 @@ export class EditacompanyComponent {
     });
   }
 
+  // Add this method to mark fields as touched
+  markFieldAsTouched(fieldName: keyof Company): void {
+    this.touchedFields[fieldName] = true;
+  }
+
+  // Add this method to handle field blur events
+  onFieldBlur(fieldName: keyof Company): void {
+    this.touchedFields[fieldName] = true;
+
+    // Trigger specific validations based on field
+    switch (fieldName) {
+      case 'email':
+        if (this.companyData.email) {
+          this.isValidEmail(this.companyData.email);
+        }
+        break;
+      case 'accNumber':
+        this.validateAccNumber();
+        break;
+      case 'confirmAccNumber':
+        this.validateConfirmAccNumber();
+        break;
+      case 'phoneNumber1':
+      case 'phoneNumber2':
+        this.validateContactNumbers();
+        break;
+    }
+  }
+
+  // Update your existing isFieldInvalid method to be more robust
+  isFieldInvalid(fieldName: keyof Company): boolean {
+    const value = this.companyData[fieldName];
+    const isTouched = !!this.touchedFields[fieldName];
+
+    // Special handling for logo
+    if (fieldName === 'logo') {
+      return isTouched && !value;
+    }
+
+    // Special handling for bank and branch (they come from dropdowns)
+    if (fieldName === 'bank') {
+      return isTouched && (!value || !this.selectedBankId);
+    }
+
+    if (fieldName === 'branch') {
+      return isTouched && (!value || !this.selectedBranchId);
+    }
+
+    // For confirm account number, check both required and matching
+    if (fieldName === 'confirmAccNumber') {
+      return isTouched && (!value || value.toString().trim() === '' || this.confirmAccountNumberError);
+    }
+
+    // For other fields
+    return isTouched && (!value || value.toString().trim() === '');
+  }
+
   async compressImage(
     file: File,
     maxWidth: number,
@@ -315,33 +371,12 @@ export class EditacompanyComponent {
     }
   }
 
-  isFieldInvalid(fieldName: keyof Company): boolean {
-    const value = this.companyData[fieldName];
-
-    // Special handling for logo
-    if (fieldName === 'logo') {
-      return !!this.touchedFields[fieldName] && !value;
-    }
-
-    // Special handling for bank and branch (they come from dropdowns)
-    if (fieldName === 'bank') {
-      return !!this.touchedFields[fieldName] && (!value || !this.selectedBankId);
-    }
-
-    if (fieldName === 'branch') {
-      return !!this.touchedFields[fieldName] && (!value || !this.selectedBranchId);
-    }
-
-    // For other fields
-    return !!this.touchedFields[fieldName] && (!value || value.toString().trim() === '');
-  }
-
   removeLogo(event: Event): void {
     event.stopPropagation();
     this.companyData.logo = '';
     this.selectedLogoFile = null;
     this.companyData.logoFile = undefined;
-    const logoInput = document.getElementById('logoUploadEdit') as HTMLInputElement;
+    const logoInput = document.getElementById('logoUpload') as HTMLInputElement;
     if (logoInput) logoInput.value = '';
     this.touchedFields['logo'] = true;
   }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environment/environment';
 import { TokenService } from '../token/services/token.service';
+import { environment } from '../../environment/environment.development';
 
 export interface CertificateCompany {
   id?: number;

@@ -18,7 +18,7 @@ export class GovilinkComponent {
   popupVisibleCompanys = false;
   popupVisibleAG = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
@@ -64,5 +64,8 @@ export class GovilinkComponent {
 
   addCompany(): void {
     this.router.navigate(['/govi-link/action/add-a-company']);
+  }
+  viewCompanyList(): void {
+    this.router.navigate(['/govi-link/action/view-company-list']);
   }
 }

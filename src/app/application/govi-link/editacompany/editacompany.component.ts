@@ -1,12 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { DropdownModule } from 'primeng/dropdown';
+import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Bank {
   ID: number;
@@ -24,19 +24,13 @@ interface BranchesData {
 }
 
 @Component({
-  selector: 'app-addacompany',
+  selector: 'app-editacompany',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    FormsModule,
-    LoadingSpinnerComponent,
-    DropdownModule,
-  ],
-  templateUrl: './addacompany.component.html',
-  styleUrl: './addacompany.component.css'
+  imports: [LoadingSpinnerComponent, CommonModule, FormsModule, DropdownModule],
+  templateUrl: './editacompany.component.html',
+  styleUrl: './editacompany.component.css'
 })
-export class AddacompanyComponent {
+export class EditacompanyComponent {
   isLoading = false;
   isView: boolean = false;
   logoSizeError: boolean = false;
@@ -85,7 +79,7 @@ export class AddacompanyComponent {
       phoneNumber1: ['', Validators.required],
       phoneCode2: [''],
       phoneNumber2: [''],
-      accHolderName: ['', Validators.required],
+      accName: ['', Validators.required],
       accNumber: ['', Validators.required],
       bank: ['', Validators.required],
       branch: ['', Validators.required],
@@ -93,7 +87,7 @@ export class AddacompanyComponent {
     });
 
     // Initialize modifyBy with a default value
-    this.companyData.modifyBy = 'system';
+    this.companyData.modifyBy = 'system'; // You can get this from your auth service
   }
 
   ngOnInit() {
@@ -125,9 +119,12 @@ export class AddacompanyComponent {
       this.isLoading = true;
       this.goviLinkSrv.getCompanyById(this.itemId).subscribe(
         (response: any) => {
+          console.log("API Fetching", response);
+
           this.isLoading = false;
           this.companyData = response;
 
+          // Set default values for contact number codes if they don't exist
           if (!this.companyData.phoneCode1) {
             this.companyData.phoneCode1 = '+94';
           }
@@ -135,6 +132,7 @@ export class AddacompanyComponent {
             this.companyData.phoneCode2 = '+94';
           }
 
+          // Set confirmAccNumber to match accNumber for editing
           if (!this.companyData.confirmAccNumber && this.companyData.accNumber) {
             this.companyData.confirmAccNumber = this.companyData.accNumber;
           }
@@ -156,6 +154,7 @@ export class AddacompanyComponent {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
+        // Sort banks alphabetically by name (case-insensitive)
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
@@ -200,101 +199,6 @@ export class AddacompanyComponent {
     }
   }
 
-  // New method to mark fields as touched
-  markFieldAsTouched(fieldName: keyof Company): void {
-    this.touchedFields[fieldName] = true;
-  }
-
-  isFieldInvalid(fieldName: keyof Company): boolean {
-    const value = this.companyData[fieldName];
-    const isTouched = this.touchedFields[fieldName];
-
-    // Special handling for logo
-    if (fieldName === 'logo') {
-      return !!isTouched && !value;
-    }
-
-    // Special handling for bank and branch (they come from dropdowns)
-    if (fieldName === 'bank') {
-      return !!isTouched && (!value || !this.selectedBankId);
-    }
-
-    if (fieldName === 'branch') {
-      return !!isTouched && (!value || !this.selectedBranchId);
-    }
-
-    // For confirm account number, check if it matches
-    if (fieldName === 'confirmAccNumber') {
-      if (!!isTouched && (!value || value.toString().trim() === '')) {
-        return true;
-      }
-      if (!!isTouched && this.companyData.accNumber !== this.companyData.confirmAccNumber) {
-        return true;
-      }
-    }
-
-    // For email field, check format if touched and has value
-    if (fieldName === 'email' && isTouched && value) {
-      return !this.isValidEmail(value as string);
-    }
-
-    // For other fields - required validation
-    return !!isTouched && (!value || value.toString().trim() === '');
-  }
-
-  // New method to get field-specific error messages
-  getFieldErrorMessage(fieldName: keyof Company): string {
-    const value = this.companyData[fieldName];
-    const isTouched = this.touchedFields[fieldName];
-
-    if (!isTouched) return '';
-
-    switch (fieldName) {
-      case 'RegNumber':
-        return !value ? 'Registration Number is required.' : '';
-
-      case 'companyName':
-        return !value ? 'Company Name is required.' : '';
-
-      case 'email':
-        if (!value) return 'Email is required.';
-        if (!this.isValidEmail(value as string)) return this.emailValidationMessage;
-        return '';
-
-      case 'accHolderName':
-        return !value ? 'Account Holder\'s Name is required.' : '';
-
-      case 'accNumber':
-        return !value ? 'Account Number is required.' : '';
-
-      case 'confirmAccNumber':
-        if (!value) return 'Confirm Account Number is required.';
-        if (this.companyData.accNumber !== this.companyData.confirmAccNumber) return 'Account Numbers do not match.';
-        return '';
-
-      case 'bank':
-        return (!value || !this.selectedBankId) ? 'Bank Name is required.' : '';
-
-      case 'branch':
-        return (!value || !this.selectedBranchId) ? 'Branch Name is required.' : '';
-
-      case 'financeOfficerName':
-        return !value ? 'Finance Officer\'s Name is required.' : '';
-
-      case 'phoneNumber1':
-        return this.getContactNumber1ErrorMessage();
-
-      case 'phoneCode1':
-        return !value ? 'Country code is required.' : '';
-
-      case 'logo':
-        return !value ? 'Company Logo is required.' : '';
-
-      default:
-        return '';
-    }
-  }
-
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -313,6 +217,63 @@ export class AddacompanyComponent {
         window.history.back();
       }
     });
+  }
+
+  // Add this method to mark fields as touched
+  markFieldAsTouched(fieldName: keyof Company): void {
+    this.touchedFields[fieldName] = true;
+  }
+
+  // Add this method to handle field blur events
+  onFieldBlur(fieldName: keyof Company): void {
+    this.touchedFields[fieldName] = true;
+
+    // Trigger specific validations based on field
+    switch (fieldName) {
+      case 'email':
+        if (this.companyData.email) {
+          this.isValidEmail(this.companyData.email);
+        }
+        break;
+      case 'accNumber':
+        this.validateAccNumber();
+        break;
+      case 'confirmAccNumber':
+        this.validateConfirmAccNumber();
+        break;
+      case 'phoneNumber1':
+      case 'phoneNumber2':
+        this.validateContactNumbers();
+        break;
+    }
+  }
+
+  // Update your existing isFieldInvalid method to be more robust
+  isFieldInvalid(fieldName: keyof Company): boolean {
+    const value = this.companyData[fieldName];
+    const isTouched = !!this.touchedFields[fieldName];
+
+    // Special handling for logo
+    if (fieldName === 'logo') {
+      return isTouched && !value;
+    }
+
+    // Special handling for bank and branch (they come from dropdowns)
+    if (fieldName === 'bank') {
+      return isTouched && (!value || !this.selectedBankId);
+    }
+
+    if (fieldName === 'branch') {
+      return isTouched && (!value || !this.selectedBranchId);
+    }
+
+    // For confirm account number, check both required and matching
+    if (fieldName === 'confirmAccNumber') {
+      return isTouched && (!value || value.toString().trim() === '' || this.confirmAccountNumberError);
+    }
+
+    // For other fields
+    return isTouched && (!value || value.toString().trim() === '');
   }
 
   async compressImage(
@@ -371,11 +332,12 @@ export class AddacompanyComponent {
 
   async onLogoChange(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
+    // Reset size error when a new file is selected
     this.logoSizeError = false;
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      const maxSize = 1024 * 1024;
+      const maxSize = 1024 * 1024; // 1MB
 
       if (file.size > maxSize) {
         this.logoSizeError = true;
@@ -398,6 +360,7 @@ export class AddacompanyComponent {
         reader.onload = (e) => {
           this.companyData.logo = e.target?.result as string;
           this.isLoading = false;
+          // Mark the field as touched to show validation if needed
           this.touchedFields['logo'] = true;
         };
         reader.readAsDataURL(this.selectedLogoFile);
@@ -413,7 +376,7 @@ export class AddacompanyComponent {
     this.companyData.logo = '';
     this.selectedLogoFile = null;
     this.companyData.logoFile = undefined;
-    const logoInput = document.getElementById('logoUploadEdit') as HTMLInputElement;
+    const logoInput = document.getElementById('logoUpload') as HTMLInputElement;
     if (logoInput) logoInput.value = '';
     this.touchedFields['logo'] = true;
   }
@@ -435,7 +398,7 @@ export class AddacompanyComponent {
     }
 
     const numericFields = ['accNumber', 'confirmAccNumber', 'phoneNumber1', 'phoneNumber2'];
-    const englishOnlyFields = ['accHolderName', 'financeOfficerName'];
+    const englishOnlyFields = ['accName', 'financeOfficerName'];
     const emailFields = ['email'];
     const businessNameFields = ['companyName'];
 
@@ -458,6 +421,7 @@ export class AddacompanyComponent {
     }
 
     if (businessNameFields.includes(fieldName)) {
+      // Allow letters, numbers, spaces, and common business characters
       if (!/^[\p{L}\p{Nd} .'&\-()\/,#]$/u.test(key)) {
         event.preventDefault();
         this.englishInputError = true;
@@ -468,8 +432,9 @@ export class AddacompanyComponent {
       }
     }
 
+    // Allow all characters in email fields (validation happens on blur/submit)
     if (emailFields.includes(fieldName)) {
-      return;
+      return; // Allow any character input for email
     }
 
     if (!numericFields.includes(fieldName) && key === ' ') {
@@ -504,7 +469,7 @@ export class AddacompanyComponent {
     return value ? value.replace(/^\s+/, '') : value;
   }
 
-  capitalizeFirstLetter(field: 'companyName' | 'financeOfficerName' | 'accHolderName'): void {
+  capitalizeFirstLetter(field: 'companyName' | 'financeOfficerName' | 'accName'): void {
     const currentValue = this.companyData[field];
     if (currentValue && currentValue.length > 0) {
       this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
@@ -512,29 +477,36 @@ export class AddacompanyComponent {
   }
 
   isValidEmail(email: string): boolean {
+    // Reset validation message
     this.emailValidationMessage = '';
 
+    // Check if email is empty
     if (!email) {
       return false;
     }
 
+    // Trim the email
     const trimmedEmail = email.trim();
 
+    // Check for empty string after trimming
     if (trimmedEmail === '') {
       this.emailValidationMessage = 'Email is required.';
       return false;
     }
 
+    // Check for consecutive dots
     if (trimmedEmail.includes('..')) {
       this.emailValidationMessage = 'Email cannot contain consecutive dots.';
       return false;
     }
 
+    // Check for leading dot
     if (trimmedEmail.startsWith('.')) {
       this.emailValidationMessage = 'Email cannot start with a dot.';
       return false;
     }
 
+    // Check for trailing dot
     if (trimmedEmail.endsWith('.')) {
       this.emailValidationMessage = 'Email cannot end with a dot.';
       return false;
@@ -545,24 +517,28 @@ export class AddacompanyComponent {
       return false;
     }
 
+    // Check for invalid characters (allow letters, numbers, plus sign, and specific special characters)
     const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
     if (invalidCharRegex.test(trimmedEmail)) {
       this.emailValidationMessage = 'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
       return false;
     }
 
+    // Basic email format validation
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(trimmedEmail)) {
       this.emailValidationMessage = 'Please enter a valid email in the format: example@domain.com';
       return false;
     }
 
+    // Check domain has at least one dot
     const domainPart = trimmedEmail.split('@')[1];
     if (!domainPart || domainPart.indexOf('.') === -1) {
       this.emailValidationMessage = 'Please enter a valid email domain.';
       return false;
     }
 
+    // NEW: Validate top-level domain - only allow .com and .lk
     const tld = domainPart.split('.').pop()?.toLowerCase();
     const allowedTlds = ['com', 'lk'];
 
@@ -581,11 +557,13 @@ export class AddacompanyComponent {
 
     if (allowedKeys.includes(char)) return;
 
+    // Prevent space at the start or multiple consecutive spaces
     if (char === ' ' && (input.selectionStart === 0 || input.value.endsWith(' '))) {
       event.preventDefault();
       return;
     }
 
+    // Block digits and special characters, allow only English letters and spaces
     if (!/^[a-zA-Z\s]$/.test(char)) {
       event.preventDefault();
       this.invalidCharError = true;
@@ -596,6 +574,7 @@ export class AddacompanyComponent {
   }
 
   validateAccNumber(): void {
+    // Check if account numbers match
     if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.companyData.accNumber !== this.companyData.confirmAccNumber;
@@ -607,6 +586,7 @@ export class AddacompanyComponent {
   validateConfirmAccNumber(): void {
     this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
 
+    // Check if account numbers match
     if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.companyData.accNumber !== this.companyData.confirmAccNumber;
@@ -636,10 +616,12 @@ export class AddacompanyComponent {
 
   onBankChange() {
     if (this.selectedBankId) {
+      // Update and sort branches based on selected bank
       this.branches = (
         this.allBranches[this.selectedBankId.toString()] || []
       ).sort((a, b) => a.name.localeCompare(b.name));
 
+      // Update company data with bank name
       const selectedBank = this.banks.find(
         (bank) => bank.ID === this.selectedBankId
       );
@@ -647,6 +629,7 @@ export class AddacompanyComponent {
         this.companyData.bank = selectedBank.name;
       }
 
+      // Reset branch selection if the current selection doesn't belong to this bank
       const currentBranch = this.branches.find(
         (branch) => branch.ID === this.selectedBranchId
       );
@@ -678,6 +661,7 @@ export class AddacompanyComponent {
     const key = event.key;
     const pattern = /^[a-zA-Z\s]$/;
 
+    // Allow essential control keys
     if (
       key === 'Backspace' ||
       key === 'Delete' ||
@@ -697,18 +681,22 @@ export class AddacompanyComponent {
     const num1 = this.companyData.phoneNumber1?.toString() || '';
     const num2 = this.companyData.phoneNumber2?.toString() || '';
 
+    // Reset all error flags first
     this.contactNumberError1 = false;
     this.contactNumberError2 = false;
     this.sameNumberError = false;
 
+    // Validate number 1 - only check length if there's content
     if (num1.length > 0 && num1.length !== 9) {
       this.contactNumberError1 = true;
     }
 
+    // Validate number 2 - only check length if there's content
     if (num2.length > 0 && num2.length !== 9) {
       this.contactNumberError2 = true;
     }
 
+    // Check for duplicate numbers ONLY if both numbers are complete and valid
     if (
       num1.length === 9 &&
       num2.length === 9 &&
@@ -727,18 +715,18 @@ export class AddacompanyComponent {
 
   getContactNumber1ErrorMessage(): string {
     const num1 = this.companyData.phoneNumber1?.toString() || '';
-    const isTouched = this.touchedFields['phoneNumber1'];
 
-    if (!isTouched) return '';
-
+    // Priority 1: Required validation
     if (!num1) {
       return 'Contact Number 1 is required.';
     }
 
+    // Priority 2: Format validation
     if (this.isInvalidMobileNumber('phoneNumber1')) {
       return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
     }
 
+    // Priority 3: Length validation
     if (this.contactNumberError1) {
       return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
     }
@@ -750,33 +738,38 @@ export class AddacompanyComponent {
     const code = numberField === 'phoneNumber1' ? this.companyData.phoneCode1 : this.companyData.phoneCode2;
     const number = numberField === 'phoneNumber1' ? this.companyData.phoneNumber1 : this.companyData.phoneNumber2;
 
+    // Skip validation if fields are empty or number is not 9 digits
     if (!code || !number || number.toString().length !== 9) {
       return false;
     }
 
+    // Combine code + number
     const fullNumber = `${code}${number}`;
+
+    // Validate: +947XXXXXXXX (Sri Lankan mobile format)
     const mobilePattern = /^\+947\d{8}$/;
     return !mobilePattern.test(fullNumber);
   }
 
   getContactNumber2ErrorMessage(): string {
     const num2 = this.companyData.phoneNumber2?.toString() || '';
-    const isTouched = this.touchedFields['phoneNumber2'];
 
-    if (!isTouched) return '';
-
+    // If no value, no error (this field is optional)
     if (!num2) {
       return '';
     }
 
+    // Priority 1: Format validation
     if (this.isInvalidMobileNumber('phoneNumber2')) {
       return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
     }
 
+    // Priority 2: Length validation
     if (this.contactNumberError2) {
       return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
     }
 
+    // Priority 3: Duplicate validation
     if (this.sameNumberError) {
       return 'Contact number 2 cannot be the same as Contact number 1.';
     }
@@ -784,6 +777,7 @@ export class AddacompanyComponent {
     return '';
   }
 
+  // Helper method to convert file to base64
   fileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -793,13 +787,14 @@ export class AddacompanyComponent {
     });
   }
 
+  // Form validation method
   isFormValid(): boolean {
     const requiredFields: (keyof Company)[] = [
       'RegNumber',
       'companyName',
       'email',
       'financeOfficerName',
-      'accHolderName',
+      'accName',
       'accNumber',
       'confirmAccNumber',
       'bank',
@@ -815,6 +810,7 @@ export class AddacompanyComponent {
       }
     }
 
+    // Additional validations
     if (!this.isValidEmail(this.companyData.email)) {
       return false;
     }
@@ -830,9 +826,11 @@ export class AddacompanyComponent {
     return true;
   }
 
+  // Add this new method to get detailed validation errors
   getValidationErrors(): string[] {
     const errors: string[] = [];
 
+    // Check required fields
     if (!this.companyData.RegNumber || this.companyData.RegNumber.trim() === '') {
       errors.push('Registration Number is required');
     }
@@ -851,7 +849,7 @@ export class AddacompanyComponent {
       errors.push('Finance Officer Name is required');
     }
 
-    if (!this.companyData.accHolderName || this.companyData.accHolderName.trim() === '') {
+    if (!this.companyData.accName || this.companyData.accName.trim() === '') {
       errors.push('Account Holder Name is required');
     }
 
@@ -884,6 +882,7 @@ export class AddacompanyComponent {
       errors.push(contactError2);
     }
 
+    // Check logo
     if (!this.companyData.logo) {
       errors.push('Company Logo is required');
     }
@@ -891,31 +890,47 @@ export class AddacompanyComponent {
     return errors;
   }
 
-  async saveCompany(): Promise<void> {
+  async updateCompany(): Promise<void> {
+    // Check if company ID exists
+    if (!this.itemId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No company ID found for update',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        }
+      });
+      return;
+    }
+
+    // Mark all fields as touched to show validation errors
     const fieldsToValidate: (keyof Company)[] = [
       'RegNumber', 'companyName', 'email', 'financeOfficerName',
-      'accHolderName', 'accNumber', 'confirmAccNumber', 'bank',
+      'accName', 'accNumber', 'confirmAccNumber', 'bank',
       'branch', 'phoneCode1', 'phoneNumber1', 'logo'
     ];
 
     fieldsToValidate.forEach(key => {
-      this.markFieldAsTouched(key);
+      this.touchedFields[key] = true;
     });
 
+    // Get validation errors
     const validationErrors = this.getValidationErrors();
 
     if (validationErrors.length > 0) {
+      // Show detailed error messages in SweetAlert
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
         html: `
-          <div class="text-left">
-            <p class="mb-3 font-semibold">Please fix the following errors:</p>
-            <ul class="list-disc list-inside space-y-1 max-h-60 overflow-y-auto">
-              ${validationErrors.map(error => `<li class="text-sm">${error}</li>`).join('')}
-            </ul>
-          </div>
-        `,
+        <div class="text-left">
+          <p class="mb-3 font-semibold">Please fix the following errors:</p>
+          <ul class="list-disc list-inside space-y-1 max-h-60 overflow-y-auto">
+            ${validationErrors.map(error => `<li class="text-sm">${error}</li>`).join('')}
+          </ul>
+        </div>
+      `,
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         },
@@ -925,15 +940,17 @@ export class AddacompanyComponent {
       return;
     }
 
+    // If all validations pass, proceed with updating
     try {
       this.isLoading = true;
 
+      // Prepare the data for API - map frontend fields to backend fields
       const companyDataToSend = {
         regNumber: this.companyData.RegNumber,
         companyName: this.companyData.companyName,
         email: this.companyData.email,
         financeOfficerName: this.companyData.financeOfficerName,
-        accName: this.companyData.accHolderName,
+        accName: this.companyData.accName,
         accNumber: this.companyData.accNumber,
         bank: this.companyData.bank,
         branch: this.companyData.branch,
@@ -945,25 +962,26 @@ export class AddacompanyComponent {
         modifyBy: this.companyData.modifyBy || 'system'
       };
 
-      this.goviLinkSrv.createCompany(companyDataToSend).subscribe(
+      // Use the updateCompany service method
+      this.goviLinkSrv.updateCompany(companyDataToSend, this.itemId).subscribe(
         (response: any) => {
           this.isLoading = false;
           if (response.status) {
             Swal.fire({
               icon: 'success',
               title: 'Success',
-              text: response.message,
+              text: response.message || 'Company updated successfully!',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               }
             }).then(() => {
-              this.router.navigate(['/govi-link/action']);
+              this.router.navigate(['/govi-link/action/view-company-list']);
             });
           } else {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: response.message,
+              text: response.message || 'Failed to update company.',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               }
@@ -972,11 +990,19 @@ export class AddacompanyComponent {
         },
         (error) => {
           this.isLoading = false;
-          console.error('Error creating company:', error);
+          console.error('Error updating company:', error);
+
+          let errorMessage = 'Failed to update company. Please try again.';
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.status === 0) {
+            errorMessage = 'Unable to connect to server. Please check your connection.';
+          }
+
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Failed to create company. Please try again.',
+            text: errorMessage,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             }
@@ -985,7 +1011,7 @@ export class AddacompanyComponent {
       );
     } catch (error) {
       this.isLoading = false;
-      console.error('Error in saveCompany:', error);
+      console.error('Error in updateCompany:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -1020,6 +1046,6 @@ class Company {
   createdAt!: string;
 
   constructor() {
-    this.modifyBy = 'system';
+    this.modifyBy = 'system'; // Default value
   }
 }

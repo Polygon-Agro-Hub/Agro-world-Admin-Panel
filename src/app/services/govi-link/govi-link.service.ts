@@ -40,7 +40,7 @@ export class GoviLinkService {
 
 
 
-saveOfficerService(data: {
+  saveOfficerService(data: {
     englishName: string;
     tamilName: string;
     sinhalaName: string;
@@ -52,6 +52,46 @@ saveOfficerService(data: {
     });
 
     return this.http.post(this.apiUrl + 'save-officer-service', data, { headers });
+  }
+
+  getAllCompanyDetails(search: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}get-all-companies`;
+    if (search) {
+      url += `?search=${encodeURIComponent(search)}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateCompany(companyData: any, id: number): Observable<any> {
+    console.log(companyData);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.patch(
+      `${this.apiUrl}update-company/${id}`,
+      companyData,
+      {
+        headers,
+      }
+    );
+  }
+
+  deleteCompany(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    console.log('DELETE ITEM', id);
+    return this.http.delete(`${this.apiUrl}/delete-company/${id}`, {
+      headers,
+    });
   }
 
   updateOfficerService(

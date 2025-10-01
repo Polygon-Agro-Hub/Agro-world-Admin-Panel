@@ -12,7 +12,7 @@
 
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <h2 class="text-2xl font-bold mb-6 text-textLight dark:text-textDark ml-20">
-    Add Company Details
+    Edit a Company
   </h2>
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center my-7 ml-20">
@@ -28,7 +28,7 @@
           name="logoUpload"
           accept="image/*"
           (change)="onLogoChange($event)"
-          (blur)="markFieldAsTouched('logo')"
+          (blur)="onFieldBlur('logo')"
           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
         <div
@@ -67,14 +67,15 @@
             ×
           </button>
         </div>
-        <span *ngIf="logoSizeError" class="text-red-600 text-sm block mt-1">
-          Logo must be less than 1MB.
-        </span>
+        <!-- Add validation message for logo -->
         <span
-          *ngIf="getFieldErrorMessage('logo')"
+          *ngIf="isFieldInvalid('logo')"
           class="text-red-600 text-sm block mt-1"
         >
-          {{ getFieldErrorMessage("logo") }}
+          Company Logo is required.
+        </span>
+        <span *ngIf="logoSizeError" class="text-red-600 text-sm block mt-1">
+          Logo must be less than 1MB.
         </span>
       </div>
     </div>
@@ -94,17 +95,14 @@
         id="regNumber"
         name="regNumber"
         [(ngModel)]="companyData.RegNumber"
-        (blur)="markFieldAsTouched('RegNumber')"
+        (blur)="onFieldBlur('RegNumber')"
         (keydown)="handleInputWithSpaceTrimming($event, 'RegNumber')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [ngClass]="{ 'border-red-500': isFieldInvalid('RegNumber') }"
       />
-      <span
-        *ngIf="getFieldErrorMessage('RegNumber')"
-        class="text-red-600 text-sm block mt-1"
+      <span *ngIf="isFieldInvalid('RegNumber')" class="text-red-600 text-sm"
+        >Registration Number is required.</span
       >
-        {{ getFieldErrorMessage("RegNumber") }}
-      </span>
     </div>
     <div class="pb-6 mx-20">
       <label
@@ -118,18 +116,20 @@
         id="companyName"
         name="companyName"
         [(ngModel)]="companyData.companyName"
-        (blur)="markFieldAsTouched('companyName')"
+        (blur)="onFieldBlur('companyName')"
+        #companyNameEnglish="ngModel"
+        required
         (keydown)="handleInputWithSpaceTrimming($event, 'companyName')"
         (input)="capitalizeFirstLetter('companyName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [ngClass]="{ 'border-red-500': isFieldInvalid('companyName') }"
       />
-      <span
-        *ngIf="getFieldErrorMessage('companyName')"
-        class="text-red-600 text-sm block mt-1"
+      <div
+        *ngIf="isFieldInvalid('companyName')"
+        class="text-red-500 text-sm mt-1"
       >
-        {{ getFieldErrorMessage("companyName") }}
-      </span>
+        Company Name is required.
+      </div>
     </div>
     <div class="pb-6 mx-20">
       <label
@@ -142,16 +142,23 @@
         name="email"
         [(ngModel)]="companyData.email"
         type="email"
-        (blur)="markFieldAsTouched('email')"
+        (blur)="onFieldBlur('email')"
         (keydown)="handleInputWithSpaceTrimming($event, 'email')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [ngClass]="{ 'border-red-500': isFieldInvalid('email') }"
       />
-      <span
-        *ngIf="getFieldErrorMessage('email')"
-        class="text-red-600 text-sm block mt-1"
+      <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm"
+        >Email is required.</span
       >
-        {{ getFieldErrorMessage("email") }}
+      <span
+        *ngIf="
+          companyData.email &&
+          !isValidEmail(companyData.email) &&
+          touchedFields['email']
+        "
+        class="text-red-600 text-sm"
+      >
+        {{ emailValidationMessage }}
       </span>
     </div>
   </div>
@@ -166,21 +173,21 @@
         >Account Holder's Name *</label
       >
       <input
-        id="accHolderName"
-        name="accHolderName"
-        [(ngModel)]="companyData.accHolderName"
-        (blur)="markFieldAsTouched('accHolderName')"
+        id="accName"
+        name="accName"
+        [(ngModel)]="companyData.accName"
+        (blur)="onFieldBlur('accName')"
+        #accHolderName="ngModel"
+        required
         (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
-        (input)="capitalizeFirstLetter('accHolderName')"
+        (input)="capitalizeFirstLetter('accName')"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{ 'border-red-500': isFieldInvalid('accHolderName') }"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('accName') }"
       />
-      <span
-        *ngIf="getFieldErrorMessage('accHolderName')"
-        class="text-red-600 text-sm block mt-1"
-      >
-        {{ getFieldErrorMessage("accHolderName") }}
-      </span>
+
+      <div *ngIf="isFieldInvalid('accName')" class="text-red-600 text-sm">
+        Account Holder's Name is required.
+      </div>
     </div>
     <div class="pb-6 mx-20">
       <label
@@ -193,18 +200,20 @@
         id="accNumber"
         name="accNumber"
         [(ngModel)]="companyData.accNumber"
-        (blur)="markFieldAsTouched('accNumber')"
+        (blur)="onFieldBlur('accNumber')"
         (ngModelChange)="validateAccNumber()"
         (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
+        #accNumberInput="ngModel"
+        required
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [ngClass]="{ 'border-red-500': isFieldInvalid('accNumber') }"
       />
-      <span
-        *ngIf="getFieldErrorMessage('accNumber')"
-        class="text-red-600 text-sm block mt-1"
+      <div
+        *ngIf="isFieldInvalid('accNumber')"
+        class="text-red-500 text-sm mt-1"
       >
-        {{ getFieldErrorMessage("accNumber") }}
-      </span>
+        Account Number is required
+      </div>
     </div>
     <div class="pb-6 mx-20">
       <label
@@ -217,17 +226,26 @@
         id="confirmAccNumber"
         name="confirmAccNumber"
         [(ngModel)]="companyData.confirmAccNumber"
-        (blur)="markFieldAsTouched('confirmAccNumber')"
+        (blur)="onFieldBlur('confirmAccNumber')"
         (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
+        #confirmAccNumberInput="ngModel"
+        required
         (ngModelChange)="validateConfirmAccNumber()"
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        [ngClass]="{ 'border-red-500': isFieldInvalid('confirmAccNumber') }"
+        [ngClass]="{
+          'border-red-500': isFieldInvalid('confirmAccNumber')
+        }"
       />
+
       <span
-        *ngIf="getFieldErrorMessage('confirmAccNumber')"
-        class="text-red-600 text-sm block mt-1"
+        *ngIf="isFieldInvalid('confirmAccNumber')"
+        class="text-red-600 text-sm"
       >
-        {{ getFieldErrorMessage("confirmAccNumber") }}
+        {{
+          !companyData.confirmAccNumber
+            ? "Confirm Account Number is required."
+            : "Account Numbers do not match."
+        }}
       </span>
     </div>
     <div class="pb-6 mx-20">
@@ -241,7 +259,8 @@
         id="bankDropdown"
         name="bankDropdown"
         [(ngModel)]="selectedBankId"
-        (onBlur)="markFieldAsTouched('bank')"
+        (onBlur)="onFieldBlur('bank')"
+        #bankDropdown="ngModel"
         [options]="banks"
         optionLabel="name"
         optionValue="ID"
@@ -249,19 +268,18 @@
         filterBy="name"
         placeholder="Select a bank"
         [showClear]="false"
+        required
         class="w-full"
         (onChange)="onBankChange()"
         [ngClass]="{
-          'p-invalid border-red-500': isFieldInvalid('bank')
+          'p-invalid': isFieldInvalid('bank')
         }"
       >
       </p-dropdown>
-      <span
-        *ngIf="getFieldErrorMessage('bank')"
-        class="text-red-600 text-sm block mt-1"
-      >
-        {{ getFieldErrorMessage("bank") }}
-      </span>
+
+      <div *ngIf="isFieldInvalid('bank')" class="text-red-600 text-sm mt-1">
+        Bank Name is required.
+      </div>
     </div>
     <div class="pb-6 mx-20">
       <label
@@ -273,7 +291,8 @@
       <p-dropdown
         [(ngModel)]="selectedBranchId"
         name="branchDropdown"
-        (onBlur)="markFieldAsTouched('branch')"
+        #branchDropdown="ngModel"
+        (onBlur)="onFieldBlur('branch')"
         (onChange)="onBranchChange()"
         [options]="branches"
         optionLabel="name"
@@ -283,18 +302,17 @@
         placeholder="Select a branch"
         [showClear]="false"
         [disabled]="!selectedBankId"
+        [required]="true"
         class="w-full"
         [ngClass]="{
-          'p-invalid border-red-500': isFieldInvalid('branch')
+          'p-invalid': isFieldInvalid('branch')
         }"
       >
       </p-dropdown>
-      <span
-        *ngIf="getFieldErrorMessage('branch')"
-        class="text-red-600 text-sm block mt-1"
-      >
-        {{ getFieldErrorMessage("branch") }}
-      </span>
+
+      <div *ngIf="isFieldInvalid('branch')" class="text-red-600 text-sm mt-1">
+        Branch Name is required.
+      </div>
     </div>
     <div class="pb-6 mx-20">
       <label
@@ -306,7 +324,7 @@
         id="financeOfficerName"
         name="financeOfficerName"
         [(ngModel)]="companyData.financeOfficerName"
-        (blur)="markFieldAsTouched('financeOfficerName')"
+        (blur)="onFieldBlur('financeOfficerName')"
         (keydown)="allowOnlyEnglishLetterss($event)"
         (keydown)="handleInputWithSpaceTrimming($event, 'financeOfficerName')"
         (input)="capitalizeFirstLetter('financeOfficerName')"
@@ -314,11 +332,10 @@
         [ngClass]="{ 'border-red-500': isFieldInvalid('financeOfficerName') }"
       />
       <span
-        *ngIf="getFieldErrorMessage('financeOfficerName')"
-        class="text-red-600 text-sm block mt-1"
+        *ngIf="isFieldInvalid('financeOfficerName')"
+        class="text-red-600 text-sm"
+        >Finance Officer's Name is required.</span
       >
-        {{ getFieldErrorMessage("financeOfficerName") }}
-      </span>
     </div>
     <div class="flex gap-6">
       <div class="flex-1 mx-20">
@@ -334,10 +351,10 @@
             [options]="countries"
             optionLabel="dialCode"
             optionValue="dialCode"
-            (onBlur)="markFieldAsTouched('phoneCode1')"
+            (onBlur)="onFieldBlur('phoneNumber1')"
             styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
             [style]="{ width: '140px' }"
-            [ngClass]="{ 'border-red-500': isFieldInvalid('phoneCode1') }"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('phoneNumber1') }"
           >
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
@@ -368,21 +385,26 @@
             name="phoneNumber1"
             [(ngModel)]="companyData.phoneNumber1"
             type="tel"
-            (blur)="
-              markFieldAsTouched('phoneNumber1'); validateContactNumbers()
-            "
+            pattern="^[0-9]{9}$"
+            required
+            #phoneNumber1="ngModel"
+            (blur)="onFieldBlur('phoneNumber1')"
             (keydown)="allowOnlyDigitsForAccountNumber($event, 'phoneNumber1')"
+            (blur)="validateContactNumbers()"
             maxlength="9"
             class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [ngClass]="{ 'border-red-500': isFieldInvalid('phoneNumber1') }"
           />
         </div>
-        <span
-          *ngIf="getFieldErrorMessage('phoneNumber1')"
-          class="text-red-600 text-sm block mt-1"
+
+        <div
+          class="mt-1 text-sm text-red-500"
+          *ngIf="
+            getContactNumber1ErrorMessage() && touchedFields['phoneNumber1']
+          "
         >
-          {{ getFieldErrorMessage("phoneNumber1") }}
-        </span>
+          {{ getContactNumber1ErrorMessage() }}
+        </div>
       </div>
       <div class="flex-1 mx-20">
         <label
@@ -428,20 +450,23 @@
             name="phoneNumber2"
             [(ngModel)]="companyData.phoneNumber2"
             type="tel"
-            (blur)="
-              markFieldAsTouched('phoneNumber2'); validateContactNumbers()
-            "
+            pattern="^[0-9]{9}$"
+            #phoneNumber2="ngModel"
+            (blur)="onFieldBlur('phoneNumber2')"
             (keydown)="allowOnlyDigitsForAccountNumber($event, 'phoneNumber2')"
+            (blur)="validateContactNumbers()"
             maxlength="9"
             class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
         </div>
-        <span
-          *ngIf="getFieldErrorMessage('phoneNumber2')"
-          class="text-red-600 text-sm block mt-1"
+        <div
+          class="mt-1 text-sm text-red-500"
+          *ngIf="
+            getContactNumber2ErrorMessage() && touchedFields['phoneNumber2']
+          "
         >
-          {{ getFieldErrorMessage("phoneNumber2") }}
-        </span>
+          {{ getContactNumber2ErrorMessage() }}
+        </div>
       </div>
     </div>
     <div class="flex justify-end my-10 mr-20">
@@ -454,9 +479,9 @@
       <button
         type="button"
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md w-36"
-        (click)="saveCompany()"
+        (click)="updateCompany()"
       >
-        Save
+        Update
       </button>
     </div>
   </div>

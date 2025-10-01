@@ -79,7 +79,7 @@ export class EditacompanyComponent {
       phoneNumber1: ['', Validators.required],
       phoneCode2: [''],
       phoneNumber2: [''],
-      accHolderName: ['', Validators.required],
+      accName: ['', Validators.required],
       accNumber: ['', Validators.required],
       bank: ['', Validators.required],
       branch: ['', Validators.required],
@@ -120,6 +120,8 @@ export class EditacompanyComponent {
       this.isLoading = true;
       this.goviLinkSrv.getCompanyById(this.itemId).subscribe(
         (response: any) => {
+          console.log("API Fetching", response);
+
           this.isLoading = false;
           this.companyData = response;
 
@@ -361,7 +363,7 @@ export class EditacompanyComponent {
     }
 
     const numericFields = ['accNumber', 'confirmAccNumber', 'phoneNumber1', 'phoneNumber2'];
-    const englishOnlyFields = ['accHolderName', 'financeOfficerName'];
+    const englishOnlyFields = ['accName', 'financeOfficerName'];
     const emailFields = ['email'];
     const businessNameFields = ['companyName'];
 
@@ -432,7 +434,7 @@ export class EditacompanyComponent {
     return value ? value.replace(/^\s+/, '') : value;
   }
 
-  capitalizeFirstLetter(field: 'companyName' | 'financeOfficerName' | 'accHolderName'): void {
+  capitalizeFirstLetter(field: 'companyName' | 'financeOfficerName' | 'accName'): void {
     const currentValue = this.companyData[field];
     if (currentValue && currentValue.length > 0) {
       this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
@@ -757,7 +759,7 @@ export class EditacompanyComponent {
       'companyName',
       'email',
       'financeOfficerName',
-      'accHolderName',
+      'accName',
       'accNumber',
       'confirmAccNumber',
       'bank',
@@ -812,7 +814,7 @@ export class EditacompanyComponent {
       errors.push('Finance Officer Name is required');
     }
 
-    if (!this.companyData.accHolderName || this.companyData.accHolderName.trim() === '') {
+    if (!this.companyData.accName || this.companyData.accName.trim() === '') {
       errors.push('Account Holder Name is required');
     }
 
@@ -870,7 +872,7 @@ export class EditacompanyComponent {
     // Mark all fields as touched to show validation errors
     const fieldsToValidate: (keyof Company)[] = [
       'RegNumber', 'companyName', 'email', 'financeOfficerName',
-      'accHolderName', 'accNumber', 'confirmAccNumber', 'bank',
+      'accName', 'accNumber', 'confirmAccNumber', 'bank',
       'branch', 'phoneCode1', 'phoneNumber1', 'logo'
     ];
 
@@ -913,7 +915,7 @@ export class EditacompanyComponent {
         companyName: this.companyData.companyName,
         email: this.companyData.email,
         financeOfficerName: this.companyData.financeOfficerName,
-        accName: this.companyData.accHolderName,
+        accName: this.companyData.accName,
         accNumber: this.companyData.accNumber,
         bank: this.companyData.bank,
         branch: this.companyData.branch,

@@ -187,6 +187,11 @@ import { FinanceDashboardComponent } from './application/finance/finance-dashboa
 import path from 'path';
 import { ResetPasswordComponent } from './application/main-components/reset-password/reset-password.component';
 import { GoviLinkDashbordComponent } from './application/govi-link/govi-link-dashbord/govi-link-dashbord.component';
+import { GovilinkComponent } from './application/govi-link/govilink/govilink.component';
+import { AddacompanyComponent } from './application/govi-link/addacompany/addacompany.component';
+import { AddCompanyDetailsComponent } from './application/plant-care-app/add-company-details/add-company-details';
+import { ViewCompanyListComponent } from './application/plant-care-app/view-company-list/view-company-list.component';
+import{AddServicesComponent} from './application/govi-link/add-services/add-services.component';
 export const routes: Routes = [
   {
     path: '',
@@ -418,6 +423,18 @@ export const routes: Routes = [
                     data: { permission: 'Manage Opt-Out feedback list' },
                   },
                 ],
+              },
+              {
+                path: 'add-company-details',
+                component: AddCompanyDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Create company details' },
+              },
+              {
+                path: 'view-company-list',
+                component: ViewCompanyListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View company details' },
               },
             ],
           },
@@ -1198,16 +1215,24 @@ export const routes: Routes = [
         children: [
           {
             path: 'dashboard',
-            component:GoviLinkDashbordComponent
+            component: GoviLinkDashbordComponent
           },
           {
             path: 'action',
             children: [
               {
                 path: '',
-                component: GoviLinkDashbordComponent,
-                
+                component: GovilinkComponent,
+              },
+              {
+                path: 'add-a-company',
+                component: AddacompanyComponent,
+              },
+               {
+                path: 'add-services',
+                component:AddServicesComponent,
               }
+
             ]
           }
         ]

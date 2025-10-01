@@ -6,7 +6,7 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
@@ -232,7 +232,7 @@
                 class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
                 (click)="
                   isAgroworldPresent(item) &&
-                    assignTarget(item.companies, item.id, item.regCode)
+                    assignTarget(item.companies, item.id, item.regCode, item.centerName)
                 "
               >
                 <svg

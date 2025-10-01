@@ -354,7 +354,15 @@ onSubmit() {
             this.officerId = res.officerId;
             this.errorMessage = '';
 
-            Swal.fire('Success', 'Distribution Officer Created Successfully', 'success');
+            Swal.fire({
+              title: 'Success', text: 'Distribution Officer Created Successfully', icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            
+            },
+            }
+            );
             this.navigatePath('/steckholders/action/view-distribution-officers');
           },
           (error: any) => {
@@ -388,7 +396,15 @@ onSubmit() {
           }
         );
     } else {
-      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+      Swal.fire({
+        title: 'Cancelled', text: 'Your action has been cancelled', icon: 'info', 
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      
+      },
+      }
+      );
     }
   });
 }
@@ -667,13 +683,30 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     const file: File = event.target.files[0];
     if (file) {
       if (file.size > 5000000) {
-        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+        Swal.fire({
+          title: 'Error', text: 'File size should not exceed 5MB', icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        
+        },
+        }
+
+        );
         return;
       }
 
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
-        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+        Swal.fire({
+          title: 'Error', text: 'Only JPEG, JPG and PNG files are allowed', icon: 'error', 
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        
+        },
+        }
+        );
         return;
       }
 
@@ -1029,7 +1062,15 @@ updateProvince(event: DropdownChangeEvent): void {
 
   validateFile(file: File): boolean {
     if (file.size > 5000000) {
-      Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+      Swal.fire({
+        title: 'Error', text: 'File size should not exceed 5MB', icon: 'error', 
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      
+      },
+      }
+      );
       return false;
     }
 

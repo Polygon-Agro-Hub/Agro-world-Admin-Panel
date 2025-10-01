@@ -84,4 +84,14 @@ export class GoviLinkService {
     );
   }
 
+  deleteCompany(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    console.log('DELETE ITEM', id);
+    return this.http.delete(`${this.apiUrl}/delete-company/${id}`, {
+      headers,
+    });
+  }
+
 }

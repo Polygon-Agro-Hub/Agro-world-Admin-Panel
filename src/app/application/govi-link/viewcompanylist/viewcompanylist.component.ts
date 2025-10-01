@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-viewcompanylist',
@@ -20,7 +21,7 @@ export class ViewcompanylistComponent implements OnInit {
   total: number | null = null;
   hasData = false;
 
-  constructor(private router: Router, private goviLinkService: GoviLinkService) { }
+  constructor(private router: Router, private goviLinkService: GoviLinkService, public tokenService: TokenService) { }
 
   back(): void {
     this.router.navigate(['/govi-link/action']);
@@ -101,6 +102,68 @@ export class ViewcompanylistComponent implements OnInit {
   editCompany(id: number) {
     this.router.navigate(['/govi-link/action/edit-company'], {
       queryParams: { id }
+    });
+  }
+
+  deleteCompany(id: number) {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unauthorized',
+        text: 'No valid token found. Please log in again.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+        confirmButtonColor: '#2563eb',
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this company? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonColor: '#2563eb', // Blue confirm
+      cancelButtonColor: '#dc2626',  // Red cancel
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.goviLinkService.deleteCompany(id).subscribe(
+          () => {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The company has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+            this.fetchAllCompanys();
+          },
+          () => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the company.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+          }
+        );
+      }
     });
   }
 

@@ -137,7 +137,7 @@ setupDropdownOptions() {
   ];
 
   jobRoleOptions = [
-  { label: 'Collection Centre Manager', value: 'Collection Center Manager' },
+  { label: 'Collection Centre Manager', value: 'Collection Centre Manager' },
   { label: 'Collection Officer', value: 'Collection Officer' },
   { label: 'Customer Officer', value: 'Customer Officer' }
 ];
@@ -903,8 +903,8 @@ preventInvalidEnglishCharacters(event: KeyboardEvent): void {
   let rolePrefix: string | undefined;
 
   const rolePrefixes: { [key: string]: string } = {
-    'Collection Center Head': 'CCH',
-    'Collection Center Manager': 'CCM', // Fixed the key to match the value
+    'Collection Centre Head': 'CCH',
+    'Collection Centre Manager': 'CCM', // Fixed the key to match the value
     'Customer Officer': 'CUO',
     'Collection Officer': 'COO',
   };

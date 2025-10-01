@@ -193,6 +193,7 @@ import { AddCompanyDetailsComponent } from './application/plant-care-app/add-com
 import { ViewCompanyListComponent } from './application/plant-care-app/view-company-list/view-company-list.component';
 import { AddServicesComponent } from './application/govi-link/add-services/add-services.component';
 import { ViewcompanylistComponent } from './application/govi-link/viewcompanylist/viewcompanylist.component';
+import { EditacompanyComponent } from './application/govi-link/editacompany/editacompany.component';
 export const routes: Routes = [
   {
     path: '',
@@ -1232,6 +1233,10 @@ export const routes: Routes = [
               {
                 path: 'view-company-list',
                 component: ViewcompanylistComponent
+              },
+              {
+                path: 'edit-company',
+                component: EditacompanyComponent
               },
               {
                 path: 'add-services',

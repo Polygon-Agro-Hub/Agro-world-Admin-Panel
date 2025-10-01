@@ -98,6 +98,12 @@ export class ViewcompanylistComponent implements OnInit {
     }
   }
 
+  editCompany(id: number) {
+    this.router.navigate(['/govi-link/action/edit-company'], {
+      queryParams: { id }
+    });
+  }
+
 }
 
 class CompanyDetails {

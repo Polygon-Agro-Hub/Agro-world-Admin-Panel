@@ -198,6 +198,7 @@ import { EditacompanyComponent } from './application/govi-link/editacompany/edit
 import { EditCompanyDetailsComponent } from './application/plant-care-app/edit-company-details/edit-company-details';
 import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-company-details/view-company-details';
 import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
+import { AddFiealdOfficerComponent } from './application/steckholders-section/add-fieald-officer/add-fieald-officer.component';
 
 export const routes: Routes = [
   {
@@ -556,7 +557,10 @@ export const routes: Routes = [
                   }
                 ],
               },
-
+              {
+                path: 'add-fieald-officer',
+                component: AddFiealdOfficerComponent
+              },
               {
                 path: 'add-distribution-0fficer',
                 component: AddDistributionOfficerComponent,

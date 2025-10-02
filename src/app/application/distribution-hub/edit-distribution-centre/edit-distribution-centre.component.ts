@@ -131,12 +131,12 @@ export class EditDistributionCentreComponent implements OnInit {
 
   // Add this to your ngOnInit method after form setup
   ngOnInit(): void {
-    this.fetchAllCompanies();
-    this.initializeProvinceOptions();
     const id = this.route.snapshot.params['id'];
     if (id) {
       this.fetchDistributionCenterById(id);
     }
+    this.fetchAllCompanies();
+    this.initializeProvinceOptions();
 
     this.setupFormValueChangeListeners();
 

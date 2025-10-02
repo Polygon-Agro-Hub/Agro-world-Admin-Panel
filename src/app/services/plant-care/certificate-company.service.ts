@@ -20,12 +20,27 @@ export interface CertificateCompany {
   modifiedByUser?: string | null;
 }
 
+// Payload for creating a certificate
+export interface CertificatePayload {
+  srtcomapnyId: number;
+  srtName: string;
+  srtNumber: string;
+  applicable: string;
+  accreditation: string;
+  serviceAreas: string[];
+  price: number;
+  timeLine: number;
+  commission: number;
+  tearms: string; // dummy value for now
+  scope: string;
+  cropIds: number[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class CertificateCompanyService {
   private apiUrl = `${environment.API_URL}`;
-  private token = this.tokenService.getToken();
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
@@ -93,5 +108,35 @@ export class CertificateCompanyService {
       `${this.apiUrl}certificate-company/${id}`,
       { headers }
     );
+  }
+
+  // Get only id and companyName
+  getAllCompaniesNamesOnly(): Observable<CertificateCompany[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.get<CertificateCompany[]>(
+      `${this.apiUrl}certificate-company/all/names-only`,
+      { headers }
+    );
+  }
+
+  // Create Certificate
+  createCertificate(
+    formData: FormData
+  ): Observable<{ message: string; status: boolean; certificateId?: number }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      // DO NOT set Content-Type, browser will set it automatically for FormData
+    });
+
+    return this.http.post<{
+      message: string;
+      status: boolean;
+      certificateId?: number;
+    }>(`${this.apiUrl}certificate-company/certificate/create`, formData, {
+      headers,
+    });
   }
 }

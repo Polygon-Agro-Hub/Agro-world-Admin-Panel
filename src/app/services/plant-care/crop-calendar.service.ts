@@ -40,7 +40,6 @@ export interface NewCropGroup {
   varietyList: string[];
 }
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -48,7 +47,7 @@ export class CropCalendarService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   // Create Crop Calendar
   createCropGroup(formData: FormData): Observable<any> {
@@ -128,8 +127,6 @@ export class CropCalendarService {
       { headers, params } // these are options
     );
   }
-
-
 
   // Get Crop Calendar by ID
   getCropCalendarById(id: number): Observable<any> {
@@ -450,6 +447,20 @@ export class CropCalendarService {
       {
         headers,
       }
+    );
+  }
+
+  // Get all crop group names only
+  getAllCropGroupNamesOnly(): Observable<
+    { id: number; cropNameEnglish: string }[]
+  > {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<{ id: number; cropNameEnglish: string }[]>(
+      `${this.apiUrl}crop-calendar/get-all-crop-groups-names-only`,
+      { headers }
     );
   }
 }

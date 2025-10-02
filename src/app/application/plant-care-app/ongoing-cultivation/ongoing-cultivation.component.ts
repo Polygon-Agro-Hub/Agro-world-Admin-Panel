@@ -93,6 +93,7 @@ export class OngoingCultivationComponent {
 
   searchCultivations() {
     this.page = 1;
+    this.searchNIC = this.searchNIC.trim();
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 

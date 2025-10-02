@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-add-services',
   standalone: true,
@@ -28,7 +28,7 @@ export class AddServicesComponent {
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
-  constructor(private goviLinkService: GoviLinkService) {}
+  constructor(private goviLinkService: GoviLinkService, private router: Router ) {}
 
   onSubmit(form: NgForm) {
     const missingFields: string[] = [];
@@ -98,6 +98,8 @@ export class AddServicesComponent {
           },
         }).then(() => {
           this.resetForm(form);
+          // ✅ Navigate to view services list
+          this.router.navigate(['/govi-link/action/view-services-list']);
         });
       },
       error: (error) => {
@@ -183,9 +185,13 @@ blockAfterTwoDecimals(event: any) {
         title: 'font-semibold',
       },
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.resetForm(form);
-      }
-    });
+    if (result.isConfirmed) {
+      // Reset form if needed
+      this.resetForm(form);
+      // Navigate to view services list
+      this.router.navigate(['/govi-link/action/view-services-list']);
+    }
+    // If user clicked "No", do nothing and stay on the page
+  });
   }
 }

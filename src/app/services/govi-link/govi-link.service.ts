@@ -94,24 +94,33 @@ export class GoviLinkService {
     });
   }
 
-  updateOfficerService(
+updateOfficerService(
   id: number,
   data: {
     englishName: string;
     tamilName: string;
     sinhalaName: string;
     srvFee?: number;
+    modifyBy?: string;
   }
 ): Observable<any> {
+  const token = localStorage.getItem('AdminLoginToken'); // fetch token
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${this.token}`,
+    Authorization: `Bearer ${token}`,
   });
 
-  return this.http.put(this.apiUrl + `update-officer-service/${id}`, data, {
+  const modifyBy = localStorage.getItem('AdminUserId'); // <--- correct key
+  const payload = { ...data, modifyBy };
+
+  console.log('Payload being sent:', payload); // optional: check in console
+
+  return this.http.put(this.apiUrl + `update-officer-service/${id}`, payload, {
     headers,
   });
 }
+
+
 getOfficerServiceById(id: number): Observable<any> {
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -120,7 +129,20 @@ getOfficerServiceById(id: number): Observable<any> {
 
   return this.http.get(this.apiUrl + `get-officer-service-by-id/${id}`, { headers });
 }
-
+  getAllOfficerServices(): Observable<any[]> {
+   const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${this.token}`,
+  });
+    return this.http.get<any[]>(`${this.apiUrl}get-all-officer-service`, { headers });
+  }
+deleteOfficerService(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${this.token}`,
+  });
+  return this.http.delete<any>(`${this.apiUrl}/officer-service/${id}`, { headers });
+}
 
 }
 

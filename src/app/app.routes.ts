@@ -198,7 +198,7 @@ import { EditacompanyComponent } from './application/govi-link/editacompany/edit
 import { EditCompanyDetailsComponent } from './application/plant-care-app/edit-company-details/edit-company-details';
 import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-company-details/view-company-details';
 import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
-
+import {ViewServicesListComponent} from './application/govi-link/view-services-list/view-services-list.component';
 export const routes: Routes = [
   {
     path: '',
@@ -707,7 +707,7 @@ export const routes: Routes = [
                   },
                 ],
               },
-              
+
             ],
           },
         ],
@@ -1263,9 +1263,13 @@ export const routes: Routes = [
                 component: AddServicesComponent,
               },
               {
-  path: 'edit-services/:id',
-  component: EditServicesComponent,
-}
+                path: 'edit-services/:id',
+                component: EditServicesComponent,
+              },
+                   {
+                path: 'view-services-list',
+                component:  ViewServicesListComponent,
+              }
 
 
             ]

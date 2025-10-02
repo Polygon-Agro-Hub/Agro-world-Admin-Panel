@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-edit-services',
   standalone: true,
@@ -31,7 +31,8 @@ export class EditServicesComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private goviLinkService: GoviLinkService
+    private goviLinkService: GoviLinkService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +71,37 @@ export class EditServicesComponent implements OnInit {
       }
     });
   }
+
+  goBack() {
+  this.router.navigate(['/govi-link/action/view-services-list']); // replace with your list page route
+}
+
+
+
+  back(): void {
+  // Only show confirmation when not in view mode
+  if (!this.isView) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+     this.router.navigate(['/govi-link/action/view-services-list']);
+      }
+    });
+  } else {
+    // If in view mode, just go back without confirmation
+  this.router.navigate(['/govi-link/action/view-services-list']);
+  }
+}
 
   allowOnlyLetters(event: KeyboardEvent) {
   const char = event.key;
@@ -125,38 +157,29 @@ export class EditServicesComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;
-
-    this.goviLinkService.updateOfficerService(this.serviceId, this.serviceData).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.successMessage = 'Service updated successfully!';
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Service updated successfully!',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
-            title: 'font-semibold text-lg'
-          }
-        });
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = 'Failed to update service. Please try again.';
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to update service. Please try again.',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
-            title: 'font-semibold text-lg'
-          }
-        });
-        console.error('Error:', error);
-      }
+this.goviLinkService.updateOfficerService(this.serviceId, this.serviceData).subscribe({
+  next: (response) => {
+    this.isLoading = false;
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: 'Service updated successfully!',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.router.navigate(['/govi-link/action/view-services-list']);
     });
+  },
+  error: (error) => {
+    this.isLoading = false;
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to update service. Please try again.',
+      confirmButtonText: 'OK',
+    });
+  }
+});
+
   }
 
   resetForm(form: NgForm) {
@@ -226,22 +249,27 @@ blockFirstSpace(event: KeyboardEvent) {
     }
   }
 
-  onCancel(form: NgForm) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the entered data after going back!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold'
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.resetForm(form);
-      }
-    });
-  }
+onCancel(form: NgForm) {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You may lose the entered data after going back!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold'
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Reset form if needed
+      this.resetForm(form);
+      // Navigate to view services list
+      this.router.navigate(['/govi-link/action/view-services-list']);
+    }
+    // If user clicked "No", do nothing and stay on the page
+  });
+}
+
 }

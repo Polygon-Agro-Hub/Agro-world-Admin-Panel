@@ -65,6 +65,14 @@ export class GovilinkComponent {
   addCompany(): void {
     this.router.navigate(['/govi-link/action/add-a-company']);
   }
+
+    addService(): void {
+    this.router.navigate(['/govi-link/action/add-services']);
+  }
+
+     addviewService(): void {
+    this.router.navigate(['/govi-link/action/view-services-list']);
+  }
   viewCompanyList(): void {
     this.router.navigate(['/govi-link/action/view-company-list']);
   }

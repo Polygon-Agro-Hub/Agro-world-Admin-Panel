@@ -112,6 +112,7 @@ export class GoviLinkService {
     headers,
   });
 }
+
 getOfficerServiceById(id: number): Observable<any> {
   const headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -120,7 +121,20 @@ getOfficerServiceById(id: number): Observable<any> {
 
   return this.http.get(this.apiUrl + `get-officer-service-by-id/${id}`, { headers });
 }
-
+  getAllOfficerServices(): Observable<any[]> {
+   const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${this.token}`,
+  });
+    return this.http.get<any[]>(`${this.apiUrl}get-all-officer-service`, { headers });
+  }
+deleteOfficerService(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${this.token}`,
+  });
+  return this.http.delete<any>(`${this.apiUrl}/officer-service/${id}`, { headers });
+}
 
 }
 

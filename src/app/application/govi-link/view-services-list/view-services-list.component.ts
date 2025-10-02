@@ -41,6 +41,9 @@ export class ViewServicesListComponent implements OnInit {
     );
   }
 
+  goBack() {
+    this.router.navigate(['/govi-link/action']); // Navigate back to the main Govilink page
+  }
   onEditService(service: any) {
     // Navigate to edit page with the service id
     this.router.navigate(['/govi-link/action/edit-services', service.id]);

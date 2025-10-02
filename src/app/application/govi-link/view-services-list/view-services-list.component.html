@@ -1,5 +1,5 @@
 <!-- Back button -->
-<button class="mb-5 text-textLight dark:text-textDark">
+<button class="mb-5 text-textLight dark:text-textDark " (click)="goBack()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
@@ -69,7 +69,7 @@
                         <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">{{ service.englishName }}</td>
                         <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">{{ service.srvFee || '-' }}
                         </td>
-                        <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">{{ service.lastModifiedBy ||
+                        <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">{{ service.modifiedByUser ||
                             'Admin' }}</td>
 
                         <!-- View -->

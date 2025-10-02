@@ -157,41 +157,29 @@ export class EditServicesComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;
-
- this.goviLinkService.updateOfficerService(this.serviceId, this.serviceData).subscribe({
+this.goviLinkService.updateOfficerService(this.serviceId, this.serviceData).subscribe({
   next: (response) => {
     this.isLoading = false;
-    this.successMessage = 'Service updated successfully!';
     Swal.fire({
       icon: 'success',
       title: 'Success',
       text: 'Service updated successfully!',
       confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
-        title: 'font-semibold text-lg'
-      }
     }).then(() => {
-      // Navigate to view services list
       this.router.navigate(['/govi-link/action/view-services-list']);
     });
   },
   error: (error) => {
     this.isLoading = false;
-    this.errorMessage = 'Failed to update service. Please try again.';
     Swal.fire({
       icon: 'error',
       title: 'Error',
       text: 'Failed to update service. Please try again.',
       confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
-        title: 'font-semibold text-lg'
-      }
     });
-    console.error('Error:', error);
   }
 });
+
   }
 
   resetForm(form: NgForm) {

@@ -484,182 +484,20 @@ page: number = 1;
     }
   }
 
-  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
-
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      // Capitalize first letter and make rest lowercase
-      if (value.length > 0) {
-        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      }
-
-      this.personalData[fieldName] = value;
-    }
+ formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish' | 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove leading spaces
+    value = value.replace(/^\s+/, '');
+    
+    // Replace multiple consecutive spaces with single space
+    value = value.replace(/\s{2,}/g, ' ');
+    
+    this.personalData[fieldName] = value;
   }
+}
 
-  // Updated formatSinhalaName function
-  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Allow only Sinhala unicode characters and spaces
-      value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
-
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      this.personalData[fieldName] = value;
-    }
-  }
-
-  // Updated formatTamilName function
-  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Allow only Tamil unicode characters and spaces
-      value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
-
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      this.personalData[fieldName] = value;
-    }
-  }
-
-  // Add these methods to your component class
-
-  // Prevent invalid English characters (only allow letters and spaces)
-  preventInvalidEnglishCharacters(event: KeyboardEvent): void {
-    const char = event.key;
-
-    // Allow control keys (backspace, delete, tab, escape, enter, etc.)
-    if (
-      event.ctrlKey ||
-      event.altKey ||
-      event.metaKey ||
-      char === 'Backspace' ||
-      char === 'Delete' ||
-      char === 'Tab' ||
-      char === 'Escape' ||
-      char === 'Enter' ||
-      char === 'ArrowLeft' ||
-      char === 'ArrowRight' ||
-      char === 'ArrowUp' ||
-      char === 'ArrowDown' ||
-      char === 'Home' ||
-      char === 'End'
-    ) {
-      return;
-    }
-
-    // Allow English letters (a-z, A-Z) and space
-    const englishLetterRegex = /^[a-zA-Z\s]$/;
-    if (!englishLetterRegex.test(char)) {
-      event.preventDefault();
-    }
-  }
-
-  // Prevent invalid Sinhala characters (only allow Sinhala unicode range and spaces)
-  preventInvalidSinhalaCharacters(event: KeyboardEvent): void {
-    const char = event.key;
-
-    // Allow control keys
-    if (
-      event.ctrlKey ||
-      event.altKey ||
-      event.metaKey ||
-      char === 'Backspace' ||
-      char === 'Delete' ||
-      char === 'Tab' ||
-      char === 'Escape' ||
-      char === 'Enter' ||
-      char === 'ArrowLeft' ||
-      char === 'ArrowRight' ||
-      char === 'ArrowUp' ||
-      char === 'ArrowDown' ||
-      char === 'Home' ||
-      char === 'End'
-    ) {
-      return;
-    }
-
-    // Allow Sinhala characters (U+0D80-U+0DFF) and space
-    const sinhalaRegex = /^[\u0D80-\u0DFF\s]$/;
-    if (!sinhalaRegex.test(char)) {
-      event.preventDefault();
-    }
-  }
-
-  // Prevent invalid Tamil characters (only allow Tamil unicode range and spaces)
-  preventInvalidTamilCharacters(event: KeyboardEvent): void {
-    const char = event.key;
-
-    // Allow control keys
-    if (
-      event.ctrlKey ||
-      event.altKey ||
-      event.metaKey ||
-      char === 'Backspace' ||
-      char === 'Delete' ||
-      char === 'Tab' ||
-      char === 'Escape' ||
-      char === 'Enter' ||
-      char === 'ArrowLeft' ||
-      char === 'ArrowRight' ||
-      char === 'ArrowUp' ||
-      char === 'ArrowDown' ||
-      char === 'Home' ||
-      char === 'End'
-    ) {
-      return;
-    }
-
-    // Allow Tamil characters (U+0B80-U+0BFF) and space
-    const tamilRegex = /^[\u0B80-\u0BFF\s]$/;
-    if (!tamilRegex.test(char)) {
-      event.preventDefault();
-    }
-  }
-
-  hasInvalidNameCharacters(
-    fieldName: 'firstNameEnglish' | 'lastNameEnglish'
-  ): boolean {
-    const value = this.personalData[fieldName];
-    if (!value) return false;
-    // Check if contains numbers or special characters
-    return /[^a-zA-Z\s]/.test(value);
-  }
-
-  hasInvalidSinhalaCharacters(
-    fieldName: 'firstNameSinhala' | 'lastNameSinhala'
-  ): boolean {
-    const value = this.personalData[fieldName];
-    if (!value) return false;
-    // Check if contains non-Sinhala characters
-    return /[^\u0D80-\u0DFF\s]/.test(value);
-  }
-
-  hasInvalidTamilCharacters(
-    fieldName: 'firstNameTamil' | 'lastNameTamil'
-  ): boolean {
-    const value = this.personalData[fieldName];
-    if (!value) return false;
-    // Check if contains non-Tamil characters
-    return /[^\u0B80-\u0BFF\s]/.test(value);
-  }
+ 
 
   hasInvalidAccountHolderName(): boolean {
     const value = this.personalData.accHolderName;
@@ -709,52 +547,45 @@ page: number = 1;
 
   // Update the checkFormValidity method to include password validation
   checkFormValidity(): boolean {
-    const isFirstNameValid =
-      !!this.personalData.firstNameEnglish &&
-      !!this.personalData.firstNameSinhala &&
-      !!this.personalData.firstNameTamil &&
-      !this.hasInvalidNameCharacters('firstNameEnglish') &&
-      !this.hasInvalidSinhalaCharacters('firstNameSinhala') &&
-      !this.hasInvalidTamilCharacters('firstNameTamil');
+  const isFirstNameValid =
+    !!this.personalData.firstNameEnglish &&
+    !!this.personalData.firstNameSinhala &&
+    !!this.personalData.firstNameTamil;
 
-    const isLastNameValid =
-      !!this.personalData.lastNameEnglish &&
-      !!this.personalData.lastNameSinhala &&
-      !!this.personalData.lastNameTamil &&
-      !this.hasInvalidNameCharacters('lastNameEnglish') &&
-      !this.hasInvalidSinhalaCharacters('lastNameSinhala') &&
-      !this.hasInvalidTamilCharacters('lastNameTamil');
+  const isLastNameValid =
+    !!this.personalData.lastNameEnglish &&
+    !!this.personalData.lastNameSinhala &&
+    !!this.personalData.lastNameTamil;
 
-    const isContact1Valid = this.isValidPhoneNumber(this.personalData.contact1);
-    const isEmailValid = this.isValidEmail(this.personalData.email);
-    const isEmpTypeSelected = !!this.empType;
-    const isLanguagesSelected = this.isAtLeastOneLanguageSelected();
-    const isCompanySelected = !!this.personalData.companyId;
-    const isCenterSelected = !!this.personalData.centerId;
-    const isJobRoleSelected = !!this.personalData.jobRole;
-    const isNicValid = this.isValidNIC(this.personalData.nic);
+  const isContact1Valid = this.isValidPhoneNumber(this.personalData.contact1);
+  const isEmailValid = this.isValidEmail(this.personalData.email);
+  const isEmpTypeSelected = !!this.empType;
+  const isLanguagesSelected = this.isAtLeastOneLanguageSelected();
+  const isCompanySelected = !!this.personalData.companyId;
+  const isCenterSelected = !!this.personalData.centerId;
+  const isJobRoleSelected = !!this.personalData.jobRole;
+  const isNicValid = this.isValidNIC(this.personalData.nic);
 
-    // Password validation - only validate if password is provided
-    const isPasswordValid =
-      !this.personalData.password ||
-      (this.isValidPassword(this.personalData.password) &&
-        this.doPasswordsMatch());
+  const isPasswordValid =
+    !this.personalData.password ||
+    (this.isValidPassword(this.personalData.password) &&
+      this.doPasswordsMatch());
 
-    return (
-      isFirstNameValid &&
-      isLastNameValid &&
-      isContact1Valid && // Replace isPhoneNumberValid with this
-      isEmailValid &&
-      isEmpTypeSelected &&
-      isLanguagesSelected &&
-      isCompanySelected &&
-      isCenterSelected &&
-      isJobRoleSelected &&
-      isNicValid &&
-      isPasswordValid &&
-      !this.arePhoneNumbersSame()
-    );
-  }
+  return (
+    isFirstNameValid &&
+    isLastNameValid &&
+    isContact1Valid &&
+    isEmailValid &&
+    isEmpTypeSelected &&
+    isLanguagesSelected &&
+    isCompanySelected &&
+    isCenterSelected &&
+    isJobRoleSelected &&
+    isNicValid &&
+    isPasswordValid &&
+    !this.arePhoneNumbersSame()
+  );
+}
 
   onInputChange(event: any, type: string): void {
     if (type === 'phone') {

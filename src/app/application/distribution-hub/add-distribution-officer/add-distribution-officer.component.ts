@@ -78,20 +78,20 @@ export class AddDistributionOfficerComponent implements OnInit {
   distributionHeadData: DistributionHead[] = [];
 
   invalidFields: Set<string> = new Set();
-    countries: PhoneCode[] = [
-  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
-  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
-  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
-  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
-  { code: 'IN', dialCode: '+91', name: 'India' },
-  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  // { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  // { code: 'US', dialCode: '+1', name: 'United States' }
-];
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+    // { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+    // { code: 'US', dialCode: '+1', name: 'United States' }
+  ];
 
-getFlagUrl(countryCode: string): string {
-  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
-}
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -142,80 +142,84 @@ getFlagUrl(countryCode: string): string {
 
   ngOnInit(): void {
 
-    
+
     this.route.paramMap.subscribe((params) => {
       const idParam = params.get('id');
       this.id = idParam ? +idParam : null;
-  
+
       const companyNameParam = params.get('companyName');
       this.companyName = companyNameParam ? companyNameParam : null;
-  
+
       console.log('Received ID:', this.id);
       console.log('Received Company Name:', this.companyName);
 
       this.personalData.companyId = this.id;
       console.log('personalData', this.personalData)
     });
-  
+
     this.loadBanks();
     this.loadBranches();
     this.getAllCompanies();
-  
+
     if (!this.id) {
       this.EpmloyeIdCreate();
     }
   }
 
-back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      history.back(); // ✅ go to previous page in history
-    }
-  });
-}
+  back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        history.back(); // ✅ go to previous page in history
+      }
+    });
+  }
 
 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
 
-  // Capitalize first letter and remove invalid characters for name fields
-  capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish'| 'accHolderName'|'houseNumber'|'streetName' | 'city'): void {
+  capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
     let value = this.personalData[field] || '';
 
-    // Remove non-English letters/spaces
-    value = value.replace(/[^A-Za-z ]/g, '');
+    // For houseNumber, allow letters, numbers, and spaces
+    if (field === 'houseNumber') {
+      value = value.replace(/[^A-Za-z0-9 ]/g, ''); // Allow alphanumeric
+    } else {
+      // For name fields, only allow letters and spaces
+      value = value.replace(/[^A-Za-z ]/g, '');
+    }
 
     // Remove leading spaces
     value = value.replace(/^\s+/, '');
 
-    // Capitalize first letter
-    if (value.length > 0) {
+    // Capitalize first letter (only for fields with letters)
+    if (value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
       value = value.charAt(0).toUpperCase() + value.slice(1);
     }
 
     this.personalData[field] = value;
   }
 
-blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
-  const key = event.key;
+  blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
+    const key = event.key;
 
-  // Allow only letters from any language (Unicode letters)
-  if (!/^\p{L}$/u.test(key)) {
-    event.preventDefault();
+    // Allow only letters from any language (Unicode letters)
+    if (!/^\p{L}$/u.test(key)) {
+      event.preventDefault();
+    }
   }
-}
 
 
   getAllDistributionCetnter(id: number) {
@@ -322,8 +326,8 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
     }
 
     if (fieldName === 'email' && this.personalData.email) {
-    // This will trigger the error message display in template
-    this.isValidEmail(this.personalData.email);
+      // This will trigger the error message display in template
+      this.isValidEmail(this.personalData.email);
     }
   }
 
@@ -430,70 +434,70 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
-    if (result.isConfirmed) {
-      history.back(); // ✅ go to previous page in history
-    }
+      if (result.isConfirmed) {
+        history.back(); // ✅ go to previous page in history
+      }
     });
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
-    
+
     // Validate pageOne before navigating to pageTwo
     if (page === 'pageTwo') {
       const validation = this.validatePageOne();
-      
+
       if (!validation.isValid) {
         this.showValidationErrors(validation.errors);
         return;
       }
     }
-    
+
     this.selectedPage = page;
   }
 
   // Add this method to validate all fields on pageOne
   validatePageOne(): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
-    
+
     // Employee type validation
     if (!this.isEmpTypeSelected()) {
       errors.push('Please select an employee type');
     }
-    
+
     // Languages validation
     if (!this.isAtLeastOneLanguageSelected()) {
       errors.push('Please select at least one preferred language');
     }
-    
 
 
-  
-    
+
+
+
     // Phone validation
     if (!this.personalData.phoneNumber01 || !this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
       errors.push('Mobile Number - 1 is required and must be valid');
     }
-    
-    
+
+
     // NIC validation
     if (!this.personalData.nic || !this.isValidNIC(this.personalData.nic)) {
       errors.push('NIC is required and must be valid (12 digits or 10 digits followed by V)');
     }
-    
+
     // Email validation
     if (!this.personalData.email || !this.isValidEmail(this.personalData.email)) {
       errors.push('Email is required and must be valid');
     }
-    
+
     // Duplicate phone check
     if (this.duplicatePhoneError) {
       errors.push('Mobile Number - 01 and Mobile Number - 02 cannot be the same');
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors
@@ -503,50 +507,50 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
   // Add this method to validate all fields on pageTwo
   validatePageTwo(): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
-    
+
     // Address validation
     if (!this.personalData.houseNumber) {
       errors.push('House Number is required');
     }
-    
+
     if (!this.personalData.streetName) {
       errors.push('Street Name is required');
     }
-    
+
     if (!this.personalData.city) {
       errors.push('City is required');
     }
-    
+
     if (!this.personalData.district) {
       errors.push('District is required');
     }
-    
+
     // Bank details validation
     const namePattern = /^([A-Z][a-z]*)( [A-Z][a-z]*)*$/;
     if (!this.personalData.accHolderName || !namePattern.test(this.personalData.accHolderName)) {
       errors.push('Account Holder\'s Name is required and must be valid');
     }
-    
+
     if (!this.personalData.accNumber) {
       errors.push('Account Number is required');
     }
-    
+
     if (!this.personalData.confirmAccNumber) {
       errors.push('Confirm Account Number is required');
     }
-    
+
     if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
       errors.push('Account Numbers do not match');
     }
-    
+
     if (!this.personalData.bankName) {
       errors.push('Bank Name is required');
     }
-    
+
     if (!this.personalData.branchName) {
       errors.push('Branch Name is required');
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors
@@ -560,7 +564,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
       errorMessage += `<li>• ${error}</li>`;
     });
     errorMessage += '</ul>';
-    
+
     Swal.fire({
       icon: 'error',
       title: 'Validation Error',
@@ -576,15 +580,15 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
   // Add this method to mark all fields as touched
   markAllFieldsAsTouched(): void {
     const fields: (keyof Personal)[] = [
-      'firstNameEnglish', 'lastNameEnglish', 'phoneNumber01', 'phoneNumber02', 
+      'firstNameEnglish', 'lastNameEnglish', 'phoneNumber01', 'phoneNumber02',
       'nic', 'email', 'houseNumber', 'streetName', 'city', 'district',
       'accHolderName', 'accNumber', 'confirmAccNumber'
     ];
-    
+
     fields.forEach(field => {
       this.touchedFields[field] = true;
     });
-    
+
     // Also mark checkboxes/radio as touched
     this.touchedFields['empType'] = true;
     this.touchedFields['languages'] = true;
@@ -619,7 +623,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
         this.personalData.bankName = selectedBank.name;
         this.invalidFields.delete('bankName');
       }
-      
+
       this.selectedBranchId = null;
       this.personalData.branchName = '';
     } else {
@@ -673,11 +677,11 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
 
   onSubmit() {
 
-    
+
     // Validate pageTwo before submitting
     this.markAllFieldsAsTouched();
     const validation = this.validatePageTwo();
-    
+
     if (!validation.isValid) {
       this.showValidationErrors(validation.errors);
       return;
@@ -770,16 +774,16 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
       city,
       district,
     } = this.personalData;
-  
+
     const namePattern = /^[A-Za-z ]+$/;
-  
+
     // Validate address fields
     const isAddressValid =
       !!houseNumber && !!streetName && !!city && !!district;
-  
+
     // If accHolderName exists, validate it with the pattern
     const isNameValid = accHolderName ? namePattern.test(accHolderName) : false;
-  
+
     // Validate bank details
     const isBankDetailsValid =
       !!accHolderName &&
@@ -789,7 +793,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
       !!bankName &&
       !!branchName &&
       accNumber === confirmAccNumber;
-  
+
     return isBankDetailsValid && isAddressValid;
   }
 
@@ -821,7 +825,7 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-      this.banks = data.slice().sort((a, b) => a.name.localeCompare(b.name));
+        this.banks = data.slice().sort((a, b) => a.name.localeCompare(b.name));
       },
       (error) => { }
     );
@@ -854,21 +858,21 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
   }
 
   checkDuplicatePhoneNumbers(): void {
-  const phone1 = this.personalData.phoneNumber01?.trim() || '';
-  const phone2 = this.personalData.phoneNumber02?.trim() || '';
-  const code1 = this.personalData.phoneCode01;
-  const code2 = this.personalData.phoneCode02;
-  
-  // Only show duplicate error if:
-  // 1. Both phone numbers exist and are not empty
-  // 2. Phone codes are the same
-  // 3. Phone numbers are exactly the same
-  if (phone1 && phone2 && code1 === code2 && phone1 === phone2) {
-    this.duplicatePhoneError = true;
-  } else {
-    this.duplicatePhoneError = false;
+    const phone1 = this.personalData.phoneNumber01?.trim() || '';
+    const phone2 = this.personalData.phoneNumber02?.trim() || '';
+    const code1 = this.personalData.phoneCode01;
+    const code2 = this.personalData.phoneCode02;
+
+    // Only show duplicate error if:
+    // 1. Both phone numbers exist and are not empty
+    // 2. Phone codes are the same
+    // 3. Phone numbers are exactly the same
+    if (phone1 && phone2 && code1 === code2 && phone1 === phone2) {
+      this.duplicatePhoneError = true;
+    } else {
+      this.duplicatePhoneError = false;
+    }
   }
-}
 
   blockLeadingSpace(event: KeyboardEvent, field: string) {
     const value = this.personalData[field] || '';
@@ -881,13 +885,13 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
 
 
   trimLeadingSpace(event: Event) {
-  const input = event.target as HTMLInputElement;
-  if (input.value.startsWith(' ')) {
-    const cursorPos = input.selectionStart || 0;
-    input.value = input.value.trimStart();
-    input.setSelectionRange(cursorPos - 1, cursorPos - 1); // keep cursor in place
+    const input = event.target as HTMLInputElement;
+    if (input.value.startsWith(' ')) {
+      const cursorPos = input.selectionStart || 0;
+      input.value = input.value.trimStart();
+      input.setSelectionRange(cursorPos - 1, cursorPos - 1); // keep cursor in place
+    }
   }
-}
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
     if (charCode < 48 || charCode > 57) {
@@ -916,47 +920,47 @@ blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
   }
 
   getPhoneValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | null {
-  const phoneValue = this.personalData[field];
-  const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
-  
-  // Priority 1: Check if field is required and empty (for phoneNumber01 only)
-  if (field === 'phoneNumber01') {
-    if (this.touchedFields[field] && !phoneValue) {
-      return 'Mobile Number - 1 is required.';
-    }
-  }
-  
-  // Priority 2: Check for duplicate phone numbers (only if both numbers exist)
-  if (phoneValue && this.duplicatePhoneError) {
-    return 'Mobile Number - 01 and Mobile Number - 02 cannot be the same.';
-  }
-  
-  // Priority 3: Check format validation (only if phone number exists)
-  if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
-    return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
-  }
-  
-  return null;
-}
+    const phoneValue = this.personalData[field];
+    const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
 
-getPhone1ValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | null {
-  const phoneValue = this.personalData[field];
-  const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
-  
-  // Priority 1: Check if field is required and empty (for phoneNumber01 only)
-  if (field === 'phoneNumber01') {
-    if (this.touchedFields[field] && !phoneValue) {
-      return 'Mobile Number - 1 is required.';
+    // Priority 1: Check if field is required and empty (for phoneNumber01 only)
+    if (field === 'phoneNumber01') {
+      if (this.touchedFields[field] && !phoneValue) {
+        return 'Mobile Number - 1 is required.';
+      }
     }
+
+    // Priority 2: Check for duplicate phone numbers (only if both numbers exist)
+    if (phoneValue && this.duplicatePhoneError) {
+      return 'Mobile Number - 01 and Mobile Number - 02 cannot be the same.';
+    }
+
+    // Priority 3: Check format validation (only if phone number exists)
+    if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
+      return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
+    }
+
+    return null;
   }
-  
-  // Priority 3: Check format validation (only if phone number exists)
-  if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
-    return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
+
+  getPhone1ValidationMessage(field: 'phoneNumber01' | 'phoneNumber02'): string | null {
+    const phoneValue = this.personalData[field];
+    const phoneCode = field === 'phoneNumber01' ? this.personalData.phoneCode01 : this.personalData.phoneCode02;
+
+    // Priority 1: Check if field is required and empty (for phoneNumber01 only)
+    if (field === 'phoneNumber01') {
+      if (this.touchedFields[field] && !phoneValue) {
+        return 'Mobile Number - 1 is required.';
+      }
+    }
+
+    // Priority 3: Check format validation (only if phone number exists)
+    if (phoneValue && !this.isValidPhoneNumber(phoneValue, phoneCode)) {
+      return 'Please enter a valid mobile number (format: +947XXXXXXXX).';
+    }
+
+    return null;
   }
-  
-  return null;
-}
 }
 
 class Personal {

@@ -18,7 +18,7 @@
           Crop Name By English *
         </label>
         <input type="text" id="cropName" name="cropName" [(ngModel)]="cropGroup.cropNameEnglish"
-          #cropEngNameInput="ngModel" (input)="capitalizeFirstLetter($event)" pattern="^(?!\d+$)[a-zA-Z\s]*$" required
+          #cropEngNameInput="ngModel" (input)="capitalizeFirstLetter($event)" (keydown)="preventLeadingSpace($event)" pattern="^(?!\d+$)[a-zA-Z\s]*$" required
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark" />
 
         <!-- Validation Errors -->
@@ -38,6 +38,7 @@
           Crop Name By Sinhala *
         </label>
         <input type="text" id="cropNameSin" [(ngModel)]="cropGroup.cropNameSinahala" name="cropNameSinhala"
+          (keydown)="preventLeadingSpace($event)"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
           #cropSinNameInput="ngModel" pattern="^(?!\d+$)[\u0D80-\u0DFF\s]*$" required />
 
@@ -58,6 +59,7 @@
           Crop Name By Tamil *
         </label>
         <input type="text" id="cropNameTam" [(ngModel)]="cropGroup.cropNameTamil" name="cropNameTamil"
+          (keydown)="preventLeadingSpace($event)"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
           #cropTamilNameInput="ngModel" pattern="^(?!\d+$)[\u0B80-\u0BFF\s]*$" required />
 
@@ -161,9 +163,9 @@
             Crop Name By English *
           </label>
           <input type="text" id="cropNameEnglish" name="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish"
-            #cropNameEnglishInput="ngModel"
+            #cropNameEnglishInput="ngModel" (input)="capitalizeFirstLetter($event)" (keydown)="preventLeadingSpace($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required pattern="^(?!\d+$)[a-zA-Z0-9]*$" (input)="capitalizeFirstLetter($event)" />
+            required pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
 
           <!-- Validation Errors -->
           <div *ngIf="cropNameEnglishInput.touched">
@@ -181,6 +183,7 @@
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
             Sinhala *</label>
           <input type="text" id="cropNameSinhala" [(ngModel)]="newsItems[0].cropNameSinhala" name="cropNameSinhala"
+            (keydown)="preventLeadingSpace($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required #cropNameSinhalaInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
 
@@ -200,6 +203,7 @@
           <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Crop Name By
             Tamil *</label>
           <input type="text" id="cropNameTamil" [(ngModel)]="newsItems[0].cropNameTamil" name="cropNameTamil"
+            (keydown)="preventLeadingSpace($event)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
             required #cropNameTamilInput="ngModel" pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
 

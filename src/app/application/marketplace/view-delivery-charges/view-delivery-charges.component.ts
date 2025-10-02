@@ -119,8 +119,12 @@ export class ViewDeliveryChargesComponent implements OnInit {
             text: 'Template with database data downloaded successfully',
             icon: 'success',
             confirmButtonText: 'OK',
-            confirmButtonColor: '#3980C0',
             timer: 3000,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              confirmButton: 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700',
+            },
           });
         },
         error: (error) => {
@@ -130,7 +134,11 @@ export class ViewDeliveryChargesComponent implements OnInit {
             text: 'Failed to download template with database data',
             icon: 'error',
             confirmButtonText: 'OK',
-            confirmButtonColor: '#3980C0',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+            },
           });
         },
       });
@@ -141,7 +149,11 @@ export class ViewDeliveryChargesComponent implements OnInit {
         text: 'Failed to download template with database data',
         icon: 'error',
         confirmButtonText: 'OK',
-        confirmButtonColor: '#3980C0',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+        },
       });
     }
   }
@@ -215,7 +227,11 @@ onChargeInput(event: Event) {
         text: 'Invalid data for update',
         icon: 'error',
         confirmButtonText: 'OK',
-        confirmButtonColor: '#3980C0',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+        },
       });
       return;
     }
@@ -238,8 +254,12 @@ onChargeInput(event: Event) {
             text: 'Delivery charge updated successfully',
             icon: 'success',
             confirmButtonText: 'OK',
-            confirmButtonColor: '#3980C0',
             timer: 2000,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              confirmButton: 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700',
+            },
           });
 
           // Update the local data
@@ -262,7 +282,11 @@ onChargeInput(event: Event) {
             text: err.error?.message || 'Failed to update delivery charge',
             icon: 'error',
             confirmButtonText: 'OK',
-            confirmButtonColor: '#3980C0',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+            },
           });
         },
       });

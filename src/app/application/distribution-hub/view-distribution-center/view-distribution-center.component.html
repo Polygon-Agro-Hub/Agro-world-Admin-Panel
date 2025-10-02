@@ -439,7 +439,7 @@
         <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
     </div>
-    <div class="dark:bg-[#262f45]">
+    <div class="dark:bg-[#262f45]" *ngIf="hasData">
       <pagination-controls
         (pageChange)="onPageChange($event)"
         [responsive]="true"

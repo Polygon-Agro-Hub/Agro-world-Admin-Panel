@@ -49,6 +49,8 @@ export class AddPackageComponent implements OnInit {
      customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+      cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
     },
   }).then((result) => {
     if (result.isConfirmed) {
@@ -224,6 +226,11 @@ export class AddPackageComponent implements OnInit {
       title: 'Validation Error',
       html: errorMessages.join('<br>'),
       confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+      },
     });
     return;
   }
@@ -242,6 +249,11 @@ export class AddPackageComponent implements OnInit {
         title: 'Package Name Exists',
         text: 'A package with this display name already exists. Please choose a different name.',
         confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
       });
       this.isLoading = false;
       return;
@@ -256,6 +268,11 @@ export class AddPackageComponent implements OnInit {
             title: 'Package Created',
             text: 'The package was created successfully!',
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           }).then(() => {
             this.packageObj = new Package();
             this.router.navigate(['/market/action/view-packages-list']);
@@ -266,6 +283,11 @@ export class AddPackageComponent implements OnInit {
             title: 'Package Not Created',
             text: 'The package could not be created. Please try again.',
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           });
         }
         this.isLoading = false;
@@ -276,6 +298,11 @@ export class AddPackageComponent implements OnInit {
           title: 'An Error Occurred',
           text: 'There was an error while creating the package. Please try again later.',
           confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
         });
         this.isLoading = false;
       }
@@ -286,6 +313,11 @@ export class AddPackageComponent implements OnInit {
       title: 'An Error Occurred',
       text: 'There was an error checking the package name. Please try again later.',
       confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+      },
     });
     this.isLoading = false;
   }
@@ -301,6 +333,8 @@ export class AddPackageComponent implements OnInit {
        customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+      cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
     },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -316,13 +350,31 @@ export class AddPackageComponent implements OnInit {
     const file: File = event.target.files[0];
     if (file) {
       if (file.size > 5000000) {
-        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'File size should not exceed 5MB',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
+        });
         return;
       }
 
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
-        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Only JPEG, JPG and PNG files are allowed',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
+        });
         return;
       }
 

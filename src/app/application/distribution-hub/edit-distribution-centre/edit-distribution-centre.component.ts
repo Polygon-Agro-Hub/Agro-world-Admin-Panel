@@ -305,7 +305,7 @@ export class EditDistributionCentreComponent implements OnInit {
 
       if (!pattern.test(phoneNumber)) {
         return {
-          invalidPhone: `Please enter a valid mobile number (format: +947XXXXXXXX)`,
+          invalidPhone: `Please enter a valid contact number (format: +947XXXXXXXX)`,
         };
       }
 
@@ -642,44 +642,33 @@ export class EditDistributionCentreComponent implements OnInit {
     const province = this.distributionForm.get('province')?.value;
     const district = this.distributionForm.get('district')?.value;
     const city = this.distributionForm.get('city')?.value;
-
     console.log('province', province, 'district', district, 'city', city);
 
-    if (province && district && city) {
+    if (province && district && city && city.trim().length > 0) {
       this.isLoadingregcode = true;
       this.distributionService
-        .generateRegCode(province, district, city)
+        .generateRegCode(province, district, city.trim())
         .subscribe({
           next: (response) => {
-            let regCode = response.regCode;
-
-            // Ensure the regCode starts with 'D'
-            if (!regCode.startsWith('D')) {
-              regCode = 'D' + regCode;
-            }
-
-            this.distributionForm.patchValue({ regCode });
+            this.distributionForm.patchValue({ regCode: `D-${response.regCode}` });
             this.isLoadingregcode = false;
           },
           error: (error) => {
             console.error('Error generating reg code:', error);
-            // Fallback to manual generation if API fails
-            let regCode = `${province.slice(0, 2).toUpperCase()}${district
+            const regCode = `D-${province.slice(0, 2).toUpperCase()}${district
               .slice(0, 1)
-              .toUpperCase()}${city.slice(0, 1).toUpperCase()}`;
-
-            // Ensure the regCode starts with 'D'
-            if (!regCode.startsWith('D')) {
-              regCode = 'D' + regCode;
-            }
-
+              .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
             console.log('regCode fallback', regCode);
             this.distributionForm.patchValue({ regCode });
             this.isLoadingregcode = false;
           },
         });
+    } else {
+      // Clear reg code if required fields are empty
+      this.distributionForm.patchValue({ regCode: '' });
     }
   }
+
 
   fetchDistributionCenterById(id: number) {
     console.log('Fetching distribution centre with ID:', id);
@@ -892,7 +881,7 @@ export class EditDistributionCentreComponent implements OnInit {
     if (
       this.distributionForm.get('longitude')?.value &&
       this.getFieldError('longitude') ===
-        'Longitude must be between -180 and 180'
+      'Longitude must be between -180 and 180'
     ) {
       missingFields.push('Longitude - must be between -180 and 180');
     }
@@ -1149,7 +1138,7 @@ export class EditDistributionCentreComponent implements OnInit {
         return 'Please enter a valid contact number (format: +947XXXXXXXX)';
       }
       if (field.errors['startsWithSeven']) {
-        return 'Mobile number must start with 7';
+        return 'contact number must start with 7';
       }
       if (field.errors['sameContactNumbers']) {
         return 'Contact numbers cannot be the same';

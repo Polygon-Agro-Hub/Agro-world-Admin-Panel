@@ -552,4 +552,13 @@ export class CreateCropGroupComponent {
       }
     });
   }
+
+  // Prevent leading spaces
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
+  }
+
 }

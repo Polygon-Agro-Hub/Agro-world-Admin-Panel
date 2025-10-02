@@ -50,8 +50,8 @@ export class ViewVarietyComponent {
     private router: Router,
     private route: ActivatedRoute,
     public permissionService: PermissionService,
-        public tokenService: TokenService
-  ) {}
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -87,49 +87,49 @@ export class ViewVarietyComponent {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
-         customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
-    if (result.isConfirmed) {
-  this.isLoading = true;
-  this.cropCalendarService.deleteCropVariety(id).subscribe(
-    (data: any) => {
-      if (data) {
-        Swal.fire({
-          title: 'Deleted!',
-          text: 'The crop variety item has been deleted.',
-          icon: 'success',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-            confirmButton:
-              'bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-md',
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.cropCalendarService.deleteCropVariety(id).subscribe(
+          (data: any) => {
+            if (data) {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The crop variety item has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton:
+                    'bg-[#3085d6] hover:bg-[#3085d6] text-white font-medium px-4 py-2 rounded-md',
+                },
+              });
+              this.isLoading = false;
+              this.getAllVarietiesByGroup(this.itemId);
+            }
           },
-        });
-        this.isLoading = false;
-        this.getAllVarietiesByGroup(this.itemId);
+          (error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the crop variety.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton:
+                  'bg-[#3085d6] hover:bg-[#3085d6] text-white font-medium px-4 py-2 rounded-md',
+              },
+            });
+            this.isLoading = false;
+          }
+        );
       }
-    },
-    (error) => {
-      Swal.fire({
-        title: 'Error!',
-        text: 'There was an error deleting the crop variety.',
-        icon: 'error',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-          confirmButton:
-            'bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-md',
-        },
-      });
-      this.isLoading = false;
-    }
-  );
-}
 
-      
+
     });
   }
 

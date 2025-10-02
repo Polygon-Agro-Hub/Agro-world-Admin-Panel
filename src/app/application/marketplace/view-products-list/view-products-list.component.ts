@@ -32,12 +32,12 @@ export class ViewProductsListComponent {
   itemsPerPage: number = 10;
   hasData: boolean = true;
   totalItems: number = 0;
-displayOptions = [
-  { name: '%, Actual', value: 'D&AP' },
-  { name: 'Actual, Sale', value: 'AP&SP' },
-  { name: '%, Actual, Sale', value: 'AP&SP&D' },
-  { name: 'No Discount', value: 'NoDiscount' }, // Changed from 'No' to 'NoDiscount'
-];
+  displayOptions = [
+    { name: '%, Actual', value: 'D&AP' },
+    { name: 'Actual, Sale', value: 'AP&SP' },
+    { name: '%, Actual, Sale', value: 'AP&SP&D' },
+    { name: 'No Discount', value: 'NoDiscount' }, // Changed from 'No' to 'NoDiscount'
+  ];
   selectedDisplayType: any = null;
 
   categoryOption = [
@@ -52,50 +52,50 @@ displayOptions = [
     private router: Router,
     private http: HttpClient,
     private tokenService: TokenService
-  ) {}
+  ) { }
 
-fetchAllProducts(
-  page: number = 1,
-  limit: number = this.itemsPerPage,
-  search: string = this.searchVariety,
-  displayType: string = this.selectedDisplayType?.value,
-  category: string = this.selectedCategoryOption?.value
-) {
-  this.isLoading = true;
-  const trimmedSearch = search.trim();
-  
-  // Handle "No Discount" case
-  let displayTypeValue = displayType || '';
-  let discountFilter = '';
-  
-  if (displayTypeValue === 'NoDiscount') {
-    displayTypeValue = ''; // Clear displayType filter
-    discountFilter = 'zero'; // Add special flag for discount filter
-  }
-  
-  const categoryValue = category || '';
-  
-  this.viewProductsList
-    .getProductList(page, limit, trimmedSearch, displayTypeValue, categoryValue, discountFilter)
-    .subscribe(
-      (response) => {
-        console.log('this is the response', response);
-        this.viewProductList = response.items;
-        this.hasData = this.viewProductList.length > 0;
-        this.totalItems = response.total;
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching all Products', error);
-        this.isLoading = false;
-        if (error.status === 401) {
-          Swal.fire('Unauthorized', 'Please log in again.', 'error');
-        } else {
-          Swal.fire('Error', 'Failed to fetch products.', 'error');
+  fetchAllProducts(
+    page: number = 1,
+    limit: number = this.itemsPerPage,
+    search: string = this.searchVariety,
+    displayType: string = this.selectedDisplayType?.value,
+    category: string = this.selectedCategoryOption?.value
+  ) {
+    this.isLoading = true;
+    const trimmedSearch = search.trim();
+
+    // Handle "No Discount" case
+    let displayTypeValue = displayType || '';
+    let discountFilter = '';
+
+    if (displayTypeValue === 'NoDiscount') {
+      displayTypeValue = ''; // Clear displayType filter
+      discountFilter = 'zero'; // Add special flag for discount filter
+    }
+
+    const categoryValue = category || '';
+
+    this.viewProductsList
+      .getProductList(page, limit, trimmedSearch, displayTypeValue, categoryValue, discountFilter)
+      .subscribe(
+        (response) => {
+          console.log('this is the response', response);
+          this.viewProductList = response.items;
+          this.hasData = this.viewProductList.length > 0;
+          this.totalItems = response.total;
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching all Products', error);
+          this.isLoading = false;
+          if (error.status === 401) {
+            Swal.fire('Unauthorized', 'Please log in again.', 'error');
+          } else {
+            Swal.fire('Error', 'Failed to fetch products.', 'error');
+          }
         }
-      }
-    );
-}
+      );
+  }
 
   onDisplayTypeChange() {
     this.page = 1;
@@ -111,7 +111,7 @@ fetchAllProducts(
     this.fetchAllProducts(this.page, this.itemsPerPage);
   }
 
-searchProduct() {
+  searchProduct() {
     this.searchVariety = this.searchVariety.trim(); // Trim leading/trailing spaces
     if (!this.searchVariety) {
       Swal.fire('Info', 'Please enter a valid search term.', 'info');
@@ -178,7 +178,7 @@ searchProduct() {
             },
             (error) => {
               console.error('Error deleting product:', error);
-              
+
               Swal.fire({
                 title: 'Error',
                 text: 'There was a problem deleting the product.',
@@ -190,8 +190,6 @@ searchProduct() {
               });
             }
           );
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire('Cancelled', 'Your product is safe', 'info');
       }
     });
   }

@@ -72,9 +72,9 @@ export class CreateSalesAgentsComponent implements OnInit {
   isLeadingSpaceErrorMap: { [key: string]: boolean } = {};
   isSpecialCharErrorMap: { [key: string]: boolean } = {};
 
-getFlagUrl(countryCode: string): string {
-  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
-}
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -105,15 +105,15 @@ getFlagUrl(countryCode: string): string {
   ];
 
   countries: PhoneCode[] = [
-  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
-  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
-  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
-  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
-  { code: 'IN', dialCode: '+91', name: 'India' },
-  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'US', dialCode: '+1', name: 'United States' }
-];
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+    { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+    { code: 'US', dialCode: '+1', name: 'United States' }
+  ];
 
   constructor(
     private collectionOfficerService: CollectionOfficerService,
@@ -145,44 +145,44 @@ getFlagUrl(countryCode: string): string {
 
 
 
-back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-     this.router.navigate(['/steckholders/action/sales-agents']);
-    }
-  });
-}
-onCancel() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-       this.navigatePath('/steckholders/action/sales-agents');
-    }
-  });
-}
+  back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/steckholders/action/sales-agents']);
+      }
+    });
+  }
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.navigatePath('/steckholders/action/sales-agents');
+      }
+    });
+  }
 
 
   loadBranches() {
@@ -344,11 +344,11 @@ onCancel() {
     this.touchedFields[fieldName] = true;
 
     if (fieldName === 'email') {
-    if (this.personalData.email) {
-      this.personalData.email = this.personalData.email.trim();
-      this.isValidEmail(this.personalData.email);
+      if (this.personalData.email) {
+        this.personalData.email = this.personalData.email.trim();
+        this.isValidEmail(this.personalData.email);
+      }
     }
-  }
 
     // Trim leading spaces
     if (this.personalData[fieldName]) {
@@ -380,7 +380,7 @@ onCancel() {
   }
 
   validateAccNumber(): void {
-    
+
 
     // Check if account numbers match
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
@@ -399,58 +399,58 @@ onCancel() {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
   isValidEmail(email: string): boolean {
-  if (!email) {
-    this.emailError = 'Email is required.';
-    return false;
-  }
+    if (!email) {
+      this.emailError = 'Email is required.';
+      return false;
+    }
 
-  // Check for consecutive dots
-  if (email.includes('..')) {
-    this.emailError = 'Email cannot contain consecutive dots (..)';
-    return false;
-  }
+    // Check for consecutive dots
+    if (email.includes('..')) {
+      this.emailError = 'Email cannot contain consecutive dots (..)';
+      return false;
+    }
 
-  // Check for leading dot
-  if (email.startsWith('.')) {
-    this.emailError = 'Email cannot start with a dot';
-    return false;
-  }
+    // Check for leading dot
+    if (email.startsWith('.')) {
+      this.emailError = 'Email cannot start with a dot';
+      return false;
+    }
 
-  // Check for trailing dot
-  if (email.endsWith('.')) {
-    this.emailError = 'Email cannot end with a dot';
-    return false;
-  }
+    // Check for trailing dot
+    if (email.endsWith('.')) {
+      this.emailError = 'Email cannot end with a dot';
+      return false;
+    }
 
-  // Check for dot right before @
-  if (email.includes('.@')) {
-    this.emailError = 'Email cannot have a dot right before the @ symbol';
-    return false;
-  }
+    // Check for dot right before @
+    if (email.includes('.@')) {
+      this.emailError = 'Email cannot have a dot right before the @ symbol';
+      return false;
+    }
 
-  // Check for dot right after @
-  if (email.includes('@.')) {
-    this.emailError = 'Email cannot have a dot right after the @ symbol';
-    return false;
-  }
+    // Check for dot right after @
+    if (email.includes('@.')) {
+      this.emailError = 'Email cannot have a dot right after the @ symbol';
+      return false;
+    }
 
-  // Check for invalid characters (but allow +)
-  const invalidChars = /[!#$%^&*()=<>?\/\\]/;
-  if (invalidChars.test(email)) {
-    this.emailError = 'Email contains invalid special characters (only +, -, _, and . are allowed)';
-    return false;
-  }
+    // Check for invalid characters (but allow +)
+    const invalidChars = /[!#$%^&*()=<>?\/\\]/;
+    if (invalidChars.test(email)) {
+      this.emailError = 'Email contains invalid special characters (only +, -, _, and . are allowed)';
+      return false;
+    }
 
-  // Check basic format (allowing + in the local part)
-  const emailRegex = /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!emailRegex.test(email)) {
-    this.emailError = 'Please enter a valid email in the format: example@domain.com or user+tag@domain.com';
-    return false;
-  }
+    // Check basic format (allowing + in the local part)
+    const emailRegex = /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      this.emailError = 'Please enter a valid email in the format: example@domain.com or user+tag@domain.com';
+      return false;
+    }
 
-  this.emailError = '';
-  return true;
-}
+    this.emailError = '';
+    return true;
+  }
 
   isValidNIC(nic: string): boolean {
     // 12 digits only (new format)
@@ -501,10 +501,10 @@ onCancel() {
     // Name validations
     const isFirstNameValid = !!firstName && englishNamePattern.test(firstName);
     const isLastNameValid = !!lastName && englishNamePattern.test(lastName);
-    const isAccHolderNameValid = 
-    !!this.personalData.accHolderName && 
-    this.isValidName(this.personalData.accHolderName) &&
-    !/\d/.test(this.personalData.accHolderName); // Ensure no numbers
+    const isAccHolderNameValid =
+      !!this.personalData.accHolderName &&
+      this.isValidName(this.personalData.accHolderName) &&
+      !/\d/.test(this.personalData.accHolderName); // Ensure no numbers
 
     // Contact validations
     const isPhoneNumber1Valid =
@@ -550,7 +550,7 @@ onCancel() {
       isFirstNameValid &&
       isLastNameValid &&
       isPhoneNumber1Valid &&
-      isEmailValid && 
+      isEmailValid &&
       isEmpTypeSelected &&
       isNicValid &&
       isPhoneNumber2Valid &&
@@ -559,7 +559,7 @@ onCancel() {
     );
   }
 
-onSubmit() {
+  onSubmit() {
   // Mark all fields as touched
   this.touchedFields = {
     empType: true,
@@ -642,10 +642,7 @@ onSubmit() {
   if (!this.personalData.bankName) missingFields.push('Bank Name is Required');
   if (!this.personalData.branchName) missingFields.push('Branch Name is Required');
 
- 
-
-
-  // Show errors if any
+  // Show frontend validation errors if any
   if (missingFields.length > 0) {
     let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
     missingFields.forEach(field => errorMessage += `<li>${field}</li>`);
@@ -675,10 +672,10 @@ onSubmit() {
     cancelButtonText: 'No, cancel',
     reverseButtons: true,
     customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+    },
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;
@@ -686,15 +683,50 @@ onSubmit() {
         .subscribe(
           (res: any) => {
             this.isLoading = false;
-            this.officerId = res.officerId;
-            this.errorMessage = '';
-            Swal.fire('Success', 'Sales Agent Profile Created Successfully', 'success');
-            this.navigatePath('/steckholders/action/sales-agents');
+            if (res.status) {
+              this.officerId = res.officerId;
+              Swal.fire('Success', 'Sales Agent Profile Created Successfully', 'success');
+              this.navigatePath('/steckholders/action/sales-agents');
+            } else if (res.errors && res.errors.length > 0) {
+              // Display backend validation errors
+              let errorHtml = '<div class="text-left"><ul class="list-disc pl-5">';
+              res.errors.forEach((err: string) => errorHtml += `<li>${err}</li>`);
+              errorHtml += '</ul></div>';
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Validation Errors',
+                html: errorHtml,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+            }
           },
           (error: any) => {
             this.isLoading = false;
-            this.errorMessage = error.error.error || 'An unexpected error occurred';
-            Swal.fire('Error', this.errorMessage, 'error');
+            let errorHtml = '<div class="text-left"><ul class="list-disc pl-5">';
+            if (error.error.errors && error.error.errors.length > 0) {
+              error.error.errors.forEach((err: string) => errorHtml += `<li>${err}</li>`);
+            } else {
+              errorHtml += `<li>${error.error.error || 'An unexpected error occurred'}</li>`;
+            }
+            errorHtml += '</ul></div>';
+
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              html: errorHtml,
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+              },
+            });
           }
         );
     } else {
@@ -704,8 +736,6 @@ onSubmit() {
 }
 
 
-
-  
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
@@ -713,64 +743,64 @@ onSubmit() {
     this.touchedFields[field] = true;
   }
 
-validateNameInput(event: KeyboardEvent): void {
-  // Allow navigation and control keys
-  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
-  if (allowedKeys.includes(event.key)) return;
+  validateNameInput(event: KeyboardEvent): void {
+    // Allow navigation and control keys
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
+    if (allowedKeys.includes(event.key)) return;
 
-  const target = event.target as HTMLInputElement;
-  const fieldName = target.getAttribute('name') as keyof Personal;
+    const target = event.target as HTMLInputElement;
+    const fieldName = target.getAttribute('name') as keyof Personal;
 
-  // Block leading spaces for firstName and lastName
-  if (['firstName', 'lastName'].includes(fieldName)) {
-    const currentValue = this.personalData[fieldName] as string || '';
-    if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
+    // Block leading spaces for firstName and lastName
+    if (['firstName', 'lastName'].includes(fieldName)) {
+      const currentValue = this.personalData[fieldName] as string || '';
+      if (event.key === ' ' && (!currentValue || target.selectionStart === 0)) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    // Allow only letters (English, Sinhala, Tamil), spaces, hyphens, apostrophes
+    const allowedPattern = /^[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF\s'-]$/;
+
+    // Block numbers (English, Sinhala, Tamil) and special characters
+    if (!allowedPattern.test(event.key)) {
       event.preventDefault();
-      return;
     }
   }
 
-  // Allow only letters (English, Sinhala, Tamil), spaces, hyphens, apostrophes
-  const allowedPattern = /^[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF\s'-]$/;
 
-  // Block numbers (English, Sinhala, Tamil) and special characters
-  if (!allowedPattern.test(event.key)) {
-    event.preventDefault();
+  capitalizeFirstLetter(field: 'firstName' | 'lastName' | 'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName', event?: any) {
+    let value = this.personalData[field];
+    if (!value) return;
+
+    const inputElement = event?.target as HTMLInputElement;
+    const caretPos = inputElement?.selectionStart || 0;
+
+    const firstNonSpaceIndex = value.search(/\S/);
+    if (firstNonSpaceIndex === -1) return;
+
+    const before = value.slice(0, firstNonSpaceIndex);
+    const firstChar = value.charAt(firstNonSpaceIndex);
+    const after = value.slice(firstNonSpaceIndex + 1);
+
+    this.personalData[field] = before + firstChar.toUpperCase() + after;
+
+    // Restore caret position
+    if (inputElement) {
+      setTimeout(() => {
+        inputElement.selectionStart = inputElement.selectionEnd = caretPos;
+      });
+    }
   }
-}
+  blockLeadingSpace(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
 
-
-capitalizeFirstLetter(field: 'firstName' | 'lastName' | 'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName', event?: any) {
-  let value = this.personalData[field];
-  if (!value) return;
-
-  const inputElement = event?.target as HTMLInputElement;
-  const caretPos = inputElement?.selectionStart || 0;
-
-  const firstNonSpaceIndex = value.search(/\S/);
-  if (firstNonSpaceIndex === -1) return;
-
-  const before = value.slice(0, firstNonSpaceIndex);
-  const firstChar = value.charAt(firstNonSpaceIndex);
-  const after = value.slice(firstNonSpaceIndex + 1);
-
-  this.personalData[field] = before + firstChar.toUpperCase() + after;
-
-  // Restore caret position
-  if (inputElement) {
-    setTimeout(() => {
-      inputElement.selectionStart = inputElement.selectionEnd = caretPos;
-    });
+    // If cursor is at position 0 and user typed a space, prevent it
+    if (input.selectionStart === 0 && event.key === ' ') {
+      event.preventDefault();
+    }
   }
-}
-blockLeadingSpace(event: KeyboardEvent) {
-  const input = event.target as HTMLInputElement;
-
-  // If cursor is at position 0 and user typed a space, prevent it
-  if (input.selectionStart === 0 && event.key === ' ') {
-    event.preventDefault();
-  }
-}
 
 
   onBranchTouched(field: keyof Personal) {
@@ -814,40 +844,40 @@ blockLeadingSpace(event: KeyboardEvent) {
   }
 
   capitalizeName(fieldName: keyof Personal): void {
-  if (!this.personalData[fieldName]) return;
+    if (!this.personalData[fieldName]) return;
 
-  // Convert to lowercase first
-  let name = this.personalData[fieldName].toLowerCase();
-  let result = '';
-  let capitalizeNext = true;
+    // Convert to lowercase first
+    let name = this.personalData[fieldName].toLowerCase();
+    let result = '';
+    let capitalizeNext = true;
 
-  for (let i = 0; i < name.length; i++) {
-    const char = name[i];
+    for (let i = 0; i < name.length; i++) {
+      const char = name[i];
 
-    // Skip any numbers or special characters that might have slipped through
-    if (!/[a-zA-Z\s'-]/.test(char)) continue;
+      // Skip any numbers or special characters that might have slipped through
+      if (!/[a-zA-Z\s'-]/.test(char)) continue;
 
-    if (capitalizeNext && /[a-z]/.test(char)) {
-      result += char.toUpperCase();
-      capitalizeNext = false;
-    } else {
-      result += char;
+      if (capitalizeNext && /[a-z]/.test(char)) {
+        result += char.toUpperCase();
+        capitalizeNext = false;
+      } else {
+        result += char;
+      }
+
+      // Set flag to capitalize next letter if current character is a separator
+      if ([' ', '-', "'"].includes(char)) {
+        capitalizeNext = true;
+      }
     }
 
-    // Set flag to capitalize next letter if current character is a separator
-    if ([' ', '-', "'"].includes(char)) {
-      capitalizeNext = true;
-    }
+    this.personalData[fieldName] = result;
   }
 
-  this.personalData[fieldName] = result;
-}
-
   isValidName(name: string): boolean {
-  // Allows only English letters, spaces, and apostrophes (NO HYPHENS)
-  const namePattern = /^[A-Za-z\s']+$/; // Removed hyphen from pattern
-  return namePattern.test(name) && !/\d/.test(name); // Also check for numbers
-}
+    // Allows only English letters, spaces, and apostrophes (NO HYPHENS)
+    const namePattern = /^[A-Za-z\s']+$/; // Removed hyphen from pattern
+    return namePattern.test(name) && !/\d/.test(name); // Also check for numbers
+  }
 
   allowOnlyAlphanumeric(event: KeyboardEvent): void {
     // Allow navigation keys
@@ -894,32 +924,32 @@ blockLeadingSpace(event: KeyboardEvent) {
   }
 
   validateEmailInput(event: KeyboardEvent, fieldName: string): void {
-  // Allow navigation and control keys
-  const allowedKeys = [
-    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
-    'Tab', 'Home', 'End'
-  ];
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+      'Tab', 'Home', 'End'
+    ];
 
-  if (allowedKeys.includes(event.key)) {
-    return;
-  }
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
 
-  // Allow only typical email characters
-  const allowedChars = /^[a-zA-Z0-9@._+-]$/;
-  if (!allowedChars.test(event.key)) {
-    event.preventDefault();
+    // Allow only typical email characters
+    const allowedChars = /^[a-zA-Z0-9@._+-]$/;
+    if (!allowedChars.test(event.key)) {
+      event.preventDefault();
+    }
   }
-}
 
   validateEmailOnInput(): void {
-  if (this.personalData.email) {
-    // Trim whitespace
-    this.personalData.email = this.personalData.email.trim();
-    
-    // Validate the email
-    this.isValidEmail(this.personalData.email);
+    if (this.personalData.email) {
+      // Trim whitespace
+      this.personalData.email = this.personalData.email.trim();
+
+      // Validate the email
+      this.isValidEmail(this.personalData.email);
+    }
   }
-}
 
   validateAddressInput(event: KeyboardEvent, fieldName: string): void {
     // Allow navigation and control keys
@@ -950,79 +980,79 @@ blockLeadingSpace(event: KeyboardEvent) {
   }
 
   onPaste(event: ClipboardEvent, fieldName: keyof Personal): void {
-  event.preventDefault();
-  const clipboardData = event.clipboardData || (window as any).clipboardData;
-  const pastedText = clipboardData.getData('text');
-  
-  // Clean the pasted text - remove any non-allowed characters
-  const cleanedText = pastedText.replace(/[^a-zA-Z\s'-]/g, '');
-  
-  // Update the model with cleaned text
-  this.personalData[fieldName] = cleanedText;
-  
-  // Trigger the capitalize function
-  this.capitalizeName(fieldName);
-}
+    event.preventDefault();
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
+    const pastedText = clipboardData.getData('text');
 
-formatAccountHolderName(): void {
-  if (this.personalData.accHolderName) {
-    // Remove leading spaces and any non-English characters and hyphens
-    let value = (this.personalData.accHolderName as string)
-      .replace(/^\s+/, '') // Remove leading spaces
-      .replace(/[^a-zA-Z\s']/g, '') // Remove non-English characters and hyphens
-      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-      .trim();
+    // Clean the pasted text - remove any non-allowed characters
+    const cleanedText = pastedText.replace(/[^a-zA-Z\s'-]/g, '');
 
-    // Capitalize first letter of each word
-    value = value.replace(/(^|\s|')[a-z]/g, (char) => char.toUpperCase());
+    // Update the model with cleaned text
+    this.personalData[fieldName] = cleanedText;
 
-    this.personalData.accHolderName = value;
-  }
-}
-
-validateAccountHolderNameInput(event: KeyboardEvent): void {
-  // Allow navigation and control keys
-  const allowedKeys = [
-    'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 
-    'Tab', 'Home', 'End'
-  ];
-
-  if (allowedKeys.includes(event.key)) {
-    return;
+    // Trigger the capitalize function
+    this.capitalizeName(fieldName);
   }
 
-  // Get current value and cursor position
-  const target = event.target as HTMLInputElement;
-  const currentValue = target.value || '';
-  const cursorPosition = target.selectionStart || 0;
+  formatAccountHolderName(): void {
+    if (this.personalData.accHolderName) {
+      // Remove leading spaces and any non-English characters and hyphens
+      let value = (this.personalData.accHolderName as string)
+        .replace(/^\s+/, '') // Remove leading spaces
+        .replace(/[^a-zA-Z\s']/g, '') // Remove non-English characters and hyphens
+        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+        .trim();
 
-  // Block leading space - if field is empty or cursor is at beginning
-  if (event.key === ' ') {
-    if (currentValue.length === 0 || cursorPosition === 0) {
-      event.preventDefault();
-      return;
-    }
-    
-    // Also block if current value only contains spaces
-    if (currentValue.trim().length === 0) {
-      event.preventDefault();
-      return;
+      // Capitalize first letter of each word
+      value = value.replace(/(^|\s|')[a-z]/g, (char) => char.toUpperCase());
+
+      this.personalData.accHolderName = value;
     }
   }
 
-  // Block hyphen (-) character
-  if (event.key === '-') {
-    event.preventDefault();
-    return;
-  }
+  validateAccountHolderNameInput(event: KeyboardEvent): void {
+    // Allow navigation and control keys
+    const allowedKeys = [
+      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+      'Tab', 'Home', 'End'
+    ];
 
-  // Allow only English letters, space, apostrophe (no hyphen)
-  const englishNamePattern = /^[a-zA-Z\s']$/;
-  
-  if (!englishNamePattern.test(event.key)) {
-    event.preventDefault();
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Get current value and cursor position
+    const target = event.target as HTMLInputElement;
+    const currentValue = target.value || '';
+    const cursorPosition = target.selectionStart || 0;
+
+    // Block leading space - if field is empty or cursor is at beginning
+    if (event.key === ' ') {
+      if (currentValue.length === 0 || cursorPosition === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      // Also block if current value only contains spaces
+      if (currentValue.trim().length === 0) {
+        event.preventDefault();
+        return;
+      }
+    }
+
+    // Block hyphen (-) character
+    if (event.key === '-') {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow only English letters, space, apostrophe (no hyphen)
+    const englishNamePattern = /^[a-zA-Z\s']$/;
+
+    if (!englishNamePattern.test(event.key)) {
+      event.preventDefault();
+    }
   }
-}
 }
 
 class Personal {

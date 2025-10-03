@@ -393,12 +393,23 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
       return pkg.items.some((item, itemIndex) => {
         return (
-          item.productId === null ||
-          item.productId === undefined ||
-          item.productId === null ||
-          item.qty === 0 ||
-          item.qty === null ||
-          Number.isNaN(item.productId)
+          (item.productId === null || item.productId === undefined || item.productId === null || Number.isNaN(item.productId)) && (item.qty === 0 || item.qty === null)
+        );
+      });
+    });
+
+    const hasInvalidItem = this.orderdetailsArr.some((pkg, pkgIndex) => {
+      return pkg.items.some((item, itemIndex) => {
+        return (
+          (item.productId === null || item.productId === undefined || item.productId === null || Number.isNaN(item.productId))
+        );
+      });
+    });
+
+    const hasInvalidQty = this.orderdetailsArr.some((pkg, pkgIndex) => {
+      return pkg.items.some((item, itemIndex) => {
+        return (
+          (item.qty === 0 || item.qty === null)
         );
       });
     });
@@ -413,7 +424,31 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       this.loading = false;
       // Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
       Swal.fire({
-        title: 'Missing Product',
+        title: 'Product & Quantity are missing.',
+        text: 'Please select products for all inputs before submitting.',
+        icon: 'warning',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        }
+      });
+      return;
+    } else if (hasInvalidItem) {
+      this.loading = false;
+      Swal.fire({
+        title: 'Product is missing.',
+        text: 'Please select products for all inputs before submitting.',
+        icon: 'warning',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        }
+      });
+      return;
+    } else if (hasInvalidQty) {
+      this.loading = false;
+      Swal.fire({
+        title: 'Quantity is missing.',
         text: 'Please select products for all inputs before submitting.',
         icon: 'warning',
         customClass: {

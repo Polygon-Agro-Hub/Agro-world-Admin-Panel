@@ -1,4 +1,4 @@
-<div class="p-6 max-w-3xl mx-auto bg-white dark:bg-tileBlack ">
+<div class="p-6 max-w-3xl mx-auto bg-white dark:bg-tileBlack">
   <!-- Index + Days -->
 <div class="flex items-center justify-between mb-6">
   <!-- Index + Days -->
@@ -24,7 +24,7 @@
 
   <hr class="border-2 border-gray-300 my-5" />
   <!-- Language Tabs -->
-  <ul class="flex border-b mb-6">
+  <ul class="flex border-b mb-6 dark:text-textDark">
     <li
       class="cursor-pointer py-2 px-4"
       [class.border-b-2]="selectedLanguage === 'english'"
@@ -52,79 +52,79 @@
   </ul>
 
   <!-- Language Sections -->
-  <div *ngIf="selectedLanguage === 'english'">
+  <div class="dark:text-textDark" *ngIf="selectedLanguage === 'english'">
     <div class="mb-4">
       <label class="block text-sm font-medium">Task English *</label>
-      <input type="text" [value]="cropTask.taskEnglish" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskEnglish" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Type *</label>
-      <input type="text" [value]="cropTask.taskTypeEnglish" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskTypeEnglish" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Category *</label>
-      <input type="text" [value]="cropTask.taskCategoryEnglish" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskCategoryEnglish" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Description *</label>
-      <textarea [value]="cropTask.taskDescriptionEnglish" readonly class="w-full p-2 border rounded-md"></textarea>
+      <textarea [value]="cropTask.taskDescriptionEnglish" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack"></textarea>
     </div>
   </div>
 
-  <div *ngIf="selectedLanguage === 'sinhala'">
+  <div class="dark:text-textDark" *ngIf="selectedLanguage === 'sinhala'">
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Sinhala *</label>
-      <input type="text" [value]="cropTask.taskSinhala" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskSinhala" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Type *</label>
-      <input type="text" [value]="cropTask.taskTypeSinhala" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskTypeSinhala" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Category *</label>
-      <input type="text" [value]="cropTask.taskCategorySinhala" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskCategorySinhala" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Description *</label>
-      <textarea [value]="cropTask.taskDescriptionSinhala" readonly class="w-full p-2 border rounded-md"></textarea>
+      <textarea [value]="cropTask.taskDescriptionSinhala" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack"></textarea>
     </div>
   </div>
 
-  <div *ngIf="selectedLanguage === 'tamil'">
+  <div class="dark:text-textDark" *ngIf="selectedLanguage === 'tamil'">
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Tamil *</label>
-      <input type="text" [value]="cropTask.taskTamil" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskTamil" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Type *</label>
-      <input type="text" [value]="cropTask.taskTypeTamil" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskTypeTamil" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Category *</label>
-      <input type="text" [value]="cropTask.taskCategoryTamil" readonly class="w-full p-2 border rounded-md" />
+      <input type="text" [value]="cropTask.taskCategoryTamil" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
     </div>
     <div class="mb-4">
       <label class="block text-sm font-medium">Task Description *</label>
-      <textarea [value]="cropTask.taskDescriptionTamil" readonly class="w-full p-2 border rounded-md"></textarea>
+      <textarea [value]="cropTask.taskDescriptionTamil" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack"></textarea>
     </div>
   </div>
 
   <hr class="border-2 border-gray-300 my-8" />
 
   <!-- Required Images -->
-  <div class="mb-4">
+  <div class="mb-4 dark:text-textDark">
     <label class="block text-sm font-medium">No. of Required Images</label>
-    <input type="text" [value]="cropTask.reqImages" readonly class="w-full p-2 border rounded-md" />
+    <input type="text" [value]="cropTask.reqImages" readonly class="w-full p-2 border rounded-md dark:bg-tileBlack" />
   </div>
 
 <!-- Image Link -->
-<div class="mb-4" *ngIf="cropTask.imageLink">
+<div class="mb-4 dark:text-textDark" *ngIf="cropTask.imageLink">
   <label class="block text-sm font-medium">Link for Images</label>
   <input 
     type="text" 
     [value]="cropTask.imageLink" 
     readonly 
-    class="w-full p-2 border rounded-md text-blue-600 underline cursor-pointer"
+    class="w-full p-2 border rounded-md dark:bg-tileBlack text-blue-600 underline cursor-pointer"
     (click)="openLink(cropTask.imageLink)" />
 </div>
 
@@ -135,7 +135,7 @@
     type="text" 
     [value]="cropTask.videoLinkEnglish" 
     readonly 
-    class="w-full p-2 border rounded-md text-blue-600 underline cursor-pointer"
+    class="w-full p-2 border rounded-md dark:bg-tileBlack text-blue-600 underline cursor-pointer"
     (click)="openLink(cropTask.videoLinkEnglish)" />
 </div>
 
@@ -145,7 +145,7 @@
     type="text" 
     [value]="cropTask.videoLinkSinhala" 
     readonly 
-    class="w-full p-2 border rounded-md text-blue-600 underline cursor-pointer"
+    class="w-full p-2 border rounded-md dark:bg-tileBlack text-blue-600 underline cursor-pointer"
     (click)="openLink(cropTask.videoLinkSinhala)" />
 </div>
 
@@ -155,7 +155,7 @@
     type="text" 
     [value]="cropTask.videoLinkTamil" 
     readonly 
-    class="w-full p-2 border rounded-md text-blue-600 underline cursor-pointer"
+    class="w-full p-2 border rounded-md dark:bg-tileBlack text-blue-600 underline cursor-pointer"
     (click)="openLink(cropTask.videoLinkTamil)" />
 </div>
 

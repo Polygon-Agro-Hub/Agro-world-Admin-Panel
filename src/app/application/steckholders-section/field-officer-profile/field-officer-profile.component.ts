@@ -27,11 +27,9 @@ import { TokenService } from '../../../services/token/services/token.service';
 })
 export class FieldOfficerProfileComponent {
 
-  officerObj: CollectionOfficer = new CollectionOfficer();
+  officerObj: FieldOfficer = new FieldOfficer();
   officerId!: number;
-  showDisclaimView = false;
   isLoading = false;
-  empHeader: string = '';
   isGeneratingPDF = false;
 
   constructor(
@@ -49,36 +47,6 @@ export class FieldOfficerProfileComponent {
     this.fetchOfficerById(this.officerId);
   }
 
-  getRoleHeading() {
-  // Normalize the jobRole to handle both "Center" and "Centre" spellings
-  const normalizedRole = this.officerObj.jobRole?.replace('Center', 'Centre') || '';
-  
-  switch (normalizedRole) {
-    case 'Customer Officer':
-      this.empHeader = 'CUO';
-      break;
-    case 'Collection Centre Manager':
-      this.empHeader = 'CCM';
-      break;
-    case 'Collection Centre Head':
-      this.empHeader = 'CCH';
-      break;
-    case 'Collection Officer':
-      this.empHeader = 'COO';
-      break;
-    case 'Distribution Centre Manager':
-      this.empHeader = 'DCM';
-      break;
-    case 'Distribution Officer':
-      this.empHeader = 'DIO';
-      break;
-    case 'Driver':
-      this.empHeader = 'DVR';
-      break;
-    default:
-      this.empHeader = '';
-  }
-}
 
 fetchOfficerById(id: number) {
   this.isLoading = true;
@@ -88,8 +56,7 @@ fetchOfficerById(id: number) {
       console.log("this is data", res);
       
       this.isLoading = false;
-      this.officerObj = res.officerData.collectionOfficer;
-      this.getRoleHeading();
+      this.officerObj = res.officerData.fieldOfficer;
     });
 }
 
@@ -98,50 +65,12 @@ fetchOfficerById(id: number) {
   window.history.back();
 }
 
-  viewOfficerTarget(officerId: number) {
-    this.router.navigate([
-      `/steckholders/action/collective-officer/view-officer-targets/${officerId}`,
-    ]);
-  }
+  // viewOfficerTarget(officerId: number) {
+  //   this.router.navigate([
+  //     `/steckholders/action/collective-officer/view-officer-targets/${officerId}`,
+  //   ]);
+  // }
 
-  confirmDisclaim(id: number) {
-    this.collectionOfficerService.disclaimOfficer(id).subscribe(
-      (response) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Officer ID sent successfully!',
-          confirmButtonText: 'OK',
-        });
-
-        this.showDisclaimView = false;
-        this.router.navigate(['/steckholders/action/collective-officer']);
-      },
-      (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to send Officer ID!',
-          confirmButtonText: 'Try Again',
-        });
-      }
-    );
-  }
-
-  cancelDisclaim() {
-    this.showDisclaimView = false;
-  }
-
-  toggleDisclaimView() {
-    this.showDisclaimView = !this.showDisclaimView;
-  }
-
-  isAgroworldCompany(): boolean {
-    return (
-      this.officerObj.companyName?.toLowerCase() ===
-        'polygon holdings private limited' && this.officerObj.status === 'Approved'
-    );
-  }
 
   openImage(url: string): void {
     if (url) {
@@ -220,7 +149,7 @@ fetchOfficerById(id: number) {
   }
 }
 
-class CollectionOfficer {
+class FieldOfficer {
   id!: number;
   firstName!: string;
   lastName!: string;

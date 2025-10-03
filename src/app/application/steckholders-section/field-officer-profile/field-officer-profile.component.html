@@ -34,10 +34,8 @@
             {{ officerObj.firstName }} {{ officerObj.lastName }}
           </p>
           <p class="dark:text-[#a6aebb]">
-            <span
-              >{{ officerObj.jobRole }} -
-              <span>{{ this.empHeader }}{{ officerObj.empId }}</span></span
-            >
+              {{ officerObj.jobRole }} -
+              <span>{{ officerObj.empId }}</span>
           </p>
           
           <p class="dark:text-[#a6aebb]">{{ officerObj.companyName }}</p>
@@ -47,20 +45,20 @@
       <div class="flex flex-row gap-4 justify-between">
         <div class="flex flex-row justify-center min-w-24">
           <button 
-            class="flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#bb979980] bg-[#FFDBDC80] dark:text-[#4f1616] text-[#FF0000] border-2 dark:border-[#4f1616] border-[#FF0000] text-lg rounded-xl shadow-md"
+            class="flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#6c2d3180] bg-[#FFDBDC80] dark:text-[#db4848] text-[#FF0000] border-2 dark:border-[#FF0000] border-[#FF0000] text-lg rounded-xl shadow-md"
             (click)="deleteFieldOfficer(officerObj.id)"
           >
-            <i class="fa-solid fa-trash text-base text-[#FF0000] dark:text-[#4f1616]"></i>
+            <i class="fa-solid fa-trash text-base text-[#FF0000] dark:text-[#FF0000]"></i>
             <span class="">Delete</span>
           </button>
         </div>
   
         <div class="flex flex-row justify-center ">
           <button 
-            class="min-w-24 flex items-center px-3 py-1.5 justify-center gap-2 bg-[#DBEEFF80] text-[#3980C0] border-2 border-[#3980C0] text-lg rounded-xl shadow-md"
+            class="min-w-24 flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#38608480] bg-[#DBEEFF80] dark:text-[#3980C0] text-[#3980C0] border-2 border-[#3980C0] dark:border-[#3980C0] text-lg rounded-xl shadow-md"
           >
   
-            <i class="fa-solid fa-pen-to-square text-base text-[#3980C0]"></i>
+            <i class="fa-solid fa-pen-to-square text-base text-[#3980C0] dark:text-[#3980C0]"></i>
             <span class="">Edit</span>
           </button>
         </div>
@@ -278,55 +276,6 @@
         </div>
 
         
-      </div>
-    </div>
-  </div>
-</div>
-<div
-  *ngIf="showDisclaimView"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
-  <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
-    <div>
-      <!-- Icon -->
-      <div class="mb-4 flex justify-center">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-      </div>
-
-      <div class="mb-4 text-center">
-        <p class="text-lg mb-2">
-          Are you sure you want to Discharge the officer
-        </p>
-        <p class="font-semibold text-lg">
-          "{{ officerObj.firstName }} {{ officerObj.lastName }}""
-          (EMP ID - "CCO{{ officerObj.empId }}")
-        </p>
-
-        <p class="text-red-500 mb-6 italic">
-          Please note that the officer will no longer be under your monitoring.
-        </p>
-      </div>
-
-      <!-- Buttons -->
-      <div class="flex justify-center gap-4">
-        <button
-          class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="confirmDisclaim(officerId)"
-        >
-          <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
-          <span class="text-light text-whight-700 button-text text-[#6B7D8C]"
-            >Discharge</span
-          >
-        </button>
-        <button
-          class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="cancelDisclaim()"
-        >
-          <span class="font-semibold text-white">No,</span> <br />
-          <span class="text-light text-whight-700 button-text text-white"
-            >Go Back</span
-          >
-        </button>
       </div>
     </div>
   </div>

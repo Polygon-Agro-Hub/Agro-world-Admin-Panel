@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import Swal from 'sweetalert2';
@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CalendarModule } from 'primeng/calendar';
+import { Calendar, CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-center-collection-expence',
@@ -23,6 +23,7 @@ import { CalendarModule } from 'primeng/calendar';
   styleUrl: './center-collection-expence.component.css'
 })
 export class CenterCollectionExpenceComponent implements OnInit {
+  @ViewChild('toDateCalendar') toDateCalendar!: Calendar;
   farmerPaymentsArr!: FarmerPayments[];
   centerArr: Center[] = [];
   totalPaymentsAmount: number = 0;
@@ -129,9 +130,13 @@ export class CenterCollectionExpenceComponent implements OnInit {
   }
 
   validateToDate() {
+    console.log('logged')
     if (!this.fromDate) {
-      (document.getElementById('toDate') as HTMLInputElement).value = '';
       this.toDate = null;
+      if (this.toDateCalendar) {
+        this.toDateCalendar.updateModel(null);
+        this.toDateCalendar.updateInputfield();
+      }
       Swal.fire({
         icon: 'warning',
         title: 'Warning',

@@ -93,6 +93,7 @@ export class ViewCollectiveOfficerComponent {
   ];
 
   centerId: number | null = null;
+  Cname: string = '';
 
   constructor(
     private router: Router,
@@ -104,6 +105,7 @@ export class ViewCollectiveOfficerComponent {
   ) { }
 
   fetchAllCollectionOfficer(
+    
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,
@@ -111,12 +113,18 @@ export class ViewCollectiveOfficerComponent {
     centerId: string | null = this.selectedCenterId
   ) {
     this.isLoading = true;
+    console.log('calling 3')
     this.route.queryParams.subscribe((params) => {
       this.centerId = params['id'] ? +params['id'] : null;
+      this.Cname = params['Cname'] ? params['Cname'] : null;
+    
+      console.log('centerId:', this.centerId);
+      console.log('Cname:', this.Cname);
     });
 
 
     if (this.centerId === null) {
+      console.log('calling 1')
 
       this.collectionService
         .fetchAllCollectionOfficer(
@@ -145,6 +153,7 @@ export class ViewCollectiveOfficerComponent {
         );
 
     } else {
+      console.log('calling 2')
 
       this.collectionService
         .fetchAllCollectionOfficercenter(

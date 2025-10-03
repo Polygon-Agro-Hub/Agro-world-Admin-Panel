@@ -545,7 +545,7 @@ export class AddFiealdOfficerComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
+        this.navigatePath('/steckholders/action/field-inspectors');
       }
     });
   }

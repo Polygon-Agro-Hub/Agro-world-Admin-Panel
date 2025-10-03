@@ -190,4 +190,6 @@ class CompanyDetails {
   modifyBy!: string;
   createdAt!: string;
   modifierName!: string;
+  cfoCount!: number;
+  fioCount!:number
 }

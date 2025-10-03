@@ -122,6 +122,7 @@ export class AssignCitiesComponent implements OnInit {
   }
 
   onProvinceChange(): void {
+    this.selectStatusChange();
     this.selectDistrict = null;
     if (this.selectProvince) {
       this.filteredDistricts = this.districts.filter(
@@ -250,6 +251,10 @@ export class AssignCitiesComponent implements OnInit {
         this.assignments.set(cityId, centerId);
       }
     );
+  }
+
+  selectStatusChange(){
+    this.hasData = false;
   }
 }
 

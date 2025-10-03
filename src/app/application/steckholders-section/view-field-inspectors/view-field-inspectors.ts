@@ -132,7 +132,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
   }
 
   addNew() {
-    this.router.navigate(['/plant-care/action/add-company-details']);
+    this.router.navigate(['/steckholders/action/add-fieald-officer']);
   }
 
   onBack(): void {

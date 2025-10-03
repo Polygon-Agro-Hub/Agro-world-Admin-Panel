@@ -849,4 +849,166 @@
       </button>
     </div>
   </div>
+  <div *ngIf="selectedPage === 'pageThree'">
+    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+      Required Documents
+    </h2>
+    <div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+        <div class="pb-6">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+          >
+            NIC's Front Image *
+          </label>
+          <button
+            type="button"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
+            (click)="uploadFrontImage()"
+          >
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            Upload Front Image
+          </button>
+          <div
+            *ngIf="personalData.frontNic"
+            class="mt-2 text-sm flex items-center justify-between"
+          >
+            <div>
+              <span class="text-gray-600 dark:text-textDark">Attached : </span>
+              <a href="#" class="text-blue-600 hover:underline">{{
+                personalData.frontNic
+              }}</a>
+            </div>
+            <button
+              type="button"
+              class="text-red-500 hover:text-red-700 ml-2"
+              (click)="removeUploadedFile('frontNic')"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="pb-6">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+          >
+            NIC's Back Image *
+          </label>
+          <button
+            type="button"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
+            (click)="uploadBackImage()"
+          >
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            Upload Back Image
+          </button>
+          <div
+            *ngIf="personalData.backNic"
+            class="mt-2 text-sm flex items-center justify-between"
+          >
+            <div>
+              <span class="text-gray-600 dark:text-textDark">Attached : </span>
+              <a href="#" class="text-blue-600 hover:underline">{{
+                personalData.backNic
+              }}</a>
+            </div>
+            <button
+              type="button"
+              class="text-red-500 hover:text-red-700 ml-2"
+              (click)="removeUploadedFile('backNic')"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="pb-6">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+          >
+            Bank Passbook *
+          </label>
+          <button
+            type="button"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
+            (click)="uploadPassbookImage()"
+          >
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            Upload Passbook Image
+          </button>
+          <div
+            *ngIf="personalData.backPassbook"
+            class="mt-2 text-sm flex items-center justify-between"
+          >
+            <div>
+              <span class="text-gray-600 dark:text-textDark">Attached : </span>
+              <a href="#" class="text-blue-600 hover:underline">{{
+                personalData.backPassbook
+              }}</a>
+            </div>
+            <button
+              type="button"
+              class="text-red-500 hover:text-red-700 ml-2"
+              (click)="removeUploadedFile('passbook')"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Signed Contract -->
+        <div class="pb-6">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+          >
+            Signed Contract *
+          </label>
+          <button
+            type="button"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-600 dark:text-textDark bg-gray-100 dark:bg-tileBlack hover:bg-gray-200 dark:hover:bg-gray-800 flex items-center justify-center gap-2 transition-colors"
+            (click)="uploadContractImage()"
+          >
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            Upload Contract Image
+          </button>
+          <div
+            *ngIf="personalData.contract"
+            class="mt-2 text-sm flex items-center justify-between"
+          >
+            <div>
+              <span class="text-gray-600 dark:text-textDark">Attached : </span>
+              <a href="#" class="text-blue-600 hover:underline">{{
+                personalData.contract
+              }}</a>
+            </div>
+            <button
+              type="button"
+              class="text-red-500 hover:text-red-700 ml-2"
+              (click)="removeUploadedFile('contract')"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        (click)="nextFormCreate2('pageTwo')"
+        type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+      >
+        Back
+      </button>
+      <button
+        (click)="nextFormCreate2('pageThree')"
+        type="button"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+      >
+        Next
+      </button>
+    </div>
+  </div>
 </div>

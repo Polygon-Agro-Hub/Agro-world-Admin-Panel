@@ -38,7 +38,7 @@ interface BranchesData {
 })
 export class AddFiealdOfficerComponent implements OnInit {
   isLoading = false;
-  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageTwo';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageThree';
   itemId: number | null = null;
   selectedFile: File | null = null;
   personalData: Personal = new Personal();
@@ -67,6 +67,14 @@ export class AddFiealdOfficerComponent implements OnInit {
   banks: Bank[] = [];
   invalidFields: Set<string> = new Set();
   selectedBranchId: number | null = null;
+  selectedFrontNicFile: File | null = null;
+  selectedBackNicFile: File | null = null;
+  selectedPassbookFile: File | null = null;
+  selectedContractFile: File | null = null;
+  selectedFrontNicImage: string | ArrayBuffer | null = null;
+  selectedBackNicImage: string | ArrayBuffer | null = null;
+  selectedPassbookImage: string | ArrayBuffer | null = null;
+  selectedContractImage: string | ArrayBuffer | null = null;
 
   constructor(
     private router: Router,
@@ -1051,6 +1059,159 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     pageTwoFields.forEach((field) => {
       this.touchedFields[field] = true;
+    });
+  }
+
+  uploadFrontImage() {
+    this.triggerFileInputForType('frontNic');
+  }
+
+  uploadBackImage() {
+    this.triggerFileInputForType('backNic');
+  }
+
+  uploadPassbookImage() {
+    this.triggerFileInputForType('passbook');
+  }
+
+  uploadContractImage() {
+    this.triggerFileInputForType('contract');
+  }
+
+  triggerFileInputForType(fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/jpeg,image/png,image/jpg';
+    fileInput.style.display = 'none';
+
+    fileInput.onchange = (event: any) => {
+      const file: File = event.target.files[0];
+      if (file) {
+        this.handleFileUpload(file, fileType);
+      }
+
+      // Clean up
+      document.body.removeChild(fileInput);
+    };
+
+    document.body.appendChild(fileInput);
+    fileInput.click();
+  }
+
+  handleFileUpload(file: File, fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
+    // Validate file size (5MB limit)
+    if (file.size > 5000000) {
+      Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+      return;
+    }
+
+    // Set the file and file name based on type
+    switch (fileType) {
+      case 'frontNic':
+        this.selectedFrontNicFile = file;
+        this.personalData.frontNic = file.name;
+        break;
+      case 'backNic':
+        this.selectedBackNicFile = file;
+        this.personalData.backNic = file.name;
+        break;
+      case 'passbook':
+        this.selectedPassbookFile = file;
+        this.personalData.backPassbook = file.name;
+        break;
+      case 'contract':
+        this.selectedContractFile = file;
+        this.personalData.contract = file.name;
+        break;
+    }
+
+    // Preview the image
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      switch (fileType) {
+        case 'frontNic':
+          this.selectedFrontNicImage = e.target.result;
+          break;
+        case 'backNic':
+          this.selectedBackNicImage = e.target.result;
+          break;
+        case 'passbook':
+          this.selectedPassbookImage = e.target.result;
+          break;
+        case 'contract':
+          this.selectedContractImage = e.target.result;
+          break;
+      }
+    };
+    reader.readAsDataURL(file);
+
+    // Show success message
+    Swal.fire({
+      icon: 'success',
+      title: 'File Uploaded',
+      text: `${this.getFileTypeLabel(fileType)} has been uploaded successfully`,
+      timer: 2000,
+      showConfirmButton: false,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      },
+    });
+  }
+
+  getFileTypeLabel(fileType: string): string {
+    const labels: { [key: string]: string } = {
+      'frontNic': 'NIC Front Image',
+      'backNic': 'NIC Back Image',
+      'passbook': 'Bank Passbook',
+      'contract': 'Signed Contract'
+    };
+    return labels[fileType] || 'File';
+  }
+
+  removeUploadedFile(fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You will need to upload this file again',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Remove',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        switch (fileType) {
+          case 'frontNic':
+            this.selectedFrontNicFile = null;
+            this.selectedFrontNicImage = null;
+            this.personalData.frontNic = '';
+            break;
+          case 'backNic':
+            this.selectedBackNicFile = null;
+            this.selectedBackNicImage = null;
+            this.personalData.backNic = '';
+            break;
+          case 'passbook':
+            this.selectedPassbookFile = null;
+            this.selectedPassbookImage = null;
+            this.personalData.backPassbook = '';
+            break;
+          case 'contract':
+            this.selectedContractFile = null;
+            this.selectedContractImage = null;
+            this.personalData.contract = '';
+            break;
+        }
+      }
     });
   }
 

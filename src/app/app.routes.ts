@@ -200,6 +200,7 @@ import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-c
 import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
 import {ViewServicesListComponent} from './application/govi-link/view-services-list/view-services-list.component';
 import { AddCertificateDetailsComponent } from './application/plant-care-app/add-certificate/add-certificate-details';
+import { AddFiealdOfficerComponent } from './application/steckholders-section/add-fieald-officer/add-fieald-officer.component';
 
 export const routes: Routes = [
   {
@@ -562,7 +563,10 @@ export const routes: Routes = [
                   }
                 ],
               },
-
+              {
+                path: 'add-fieald-officer',
+                component: AddFiealdOfficerComponent
+              },
               {
                 path: 'add-distribution-0fficer',
                 component: AddDistributionOfficerComponent,

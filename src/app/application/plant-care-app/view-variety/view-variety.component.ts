@@ -80,7 +80,7 @@ export class ViewVarietyComponent {
   deleteCropCalender(id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this crop variety item? This action cannot be undone.',
+      text: 'Do you really want to delete this crop variety ? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -99,7 +99,7 @@ export class ViewVarietyComponent {
             if (data) {
               Swal.fire({
                 title: 'Deleted!',
-                text: 'The crop variety item has been deleted.',
+                text: 'The crop variety has been deleted.',
                 icon: 'success',
                 customClass: {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

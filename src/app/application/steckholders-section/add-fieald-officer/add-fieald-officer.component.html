@@ -601,6 +601,7 @@
             >Street Name is a required field</span
           >
         </div>
+
         <div class="pb-6">
           <label
             for="city"
@@ -619,6 +620,7 @@
             >City is a required field</span
           >
         </div>
+
         <div class="pb-6">
           <label
             for="country"
@@ -634,6 +636,7 @@
             value="Sri Lanka"
           />
         </div>
+
         <div class="pb-6">
           <label
             for="province"
@@ -649,6 +652,7 @@
             readonly
           />
         </div>
+
         <div class="pb-6">
           <label
             for="district"
@@ -684,10 +688,43 @@
         </div>
       </div>
     </div>
+
     <div>
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>
+
+      <div class="pb-6">
+        <label
+          for="comAmount"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Commission Amount *</label
+        >
+        <input
+          id="comAmount"
+          name="comAmount"
+          type="number"
+          step="0.01"
+          min="0"
+          [(ngModel)]="personalData.comAmount"
+          (input)="onTrimInput($event, personalData, 'comAmount')"
+          (keypress)="formatAmount($event)"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        <span *ngIf="isFieldInvalid('comAmount')" class="text-red-600 text-sm"
+          >Commission Amount is a required field</span
+        >
+        <span
+          *ngIf="
+            personalData.comAmount !== null &&
+            personalData.comAmount !== undefined &&
+            personalData.comAmount <= 0
+          "
+          class="text-red-600 text-sm"
+          >Commission Amount must be greater than 0</span
+        >
+      </div>
+
       <div class="pb-6">
         <label
           for="accHolderName"
@@ -702,9 +739,7 @@
           (keypress)="preventAccountHolderSpecialCharacters($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         />
-        <span
-          *ngIf="isFieldInvalid('accName')"
-          class="text-red-600 text-sm"
+        <span *ngIf="isFieldInvalid('accName')" class="text-red-600 text-sm"
           >Account Holder's Name is a required field</span
         >
         <span
@@ -713,6 +748,105 @@
           >Account Holder's Name should only contain English letters</span
         >
       </div>
+
+      <div class="pb-6">
+        <label
+          for="accNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Account Number *
+        </label>
+        <input
+          id="accNumber"
+          name="accNumber"
+          [(ngModel)]="personalData.accNumber"
+          (keypress)="preventAccountNumberInvalidCharacters($event)"
+          (input)="formatAccountNumber('accNumber')"
+          maxlength="16"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        />
+        <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">
+          Account Number is a required field
+        </span>
+        <span
+          *ngIf="personalData.accNumber && !isValidAccountNumber()"
+          class="text-red-600 text-sm"
+        >
+          Account Number must be between 8-16 digits
+        </span>
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="bankDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Bank Name *
+        </label>
+        <p-dropdown
+          [(ngModel)]="selectedBankId"
+          [options]="bankOptions"
+          optionLabel="label"
+          optionValue="value"
+          [filter]="true"
+          filterBy="label"
+          [showClear]="false"
+          placeholder="Select a bank"
+          (onChange)="onBankChange()"
+          styleClass="w-full mt-1"
+          panelStyleClass="custom-dropdown-panel"
+          class="mt-1 block w-full p-dropdown-custom"
+        >
+        </p-dropdown>
+        <span *ngIf="isFieldInvalid('bank')" class="text-red-600 text-sm">
+          Bank Name is a required field
+        </span>
+      </div>
+
+      <div class="pb-6">
+        <label
+          for="branchDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Branch Name *
+        </label>
+        <p-dropdown
+          [(ngModel)]="selectedBranchId"
+          [options]="branchOptions"
+          optionLabel="label"
+          optionValue="value"
+          [filter]="true"
+          filterBy="label"
+          [showClear]="false"
+          [disabled]="!selectedBankId"
+          placeholder="Select a branch"
+          (onChange)="onBranchChange()"
+          styleClass="w-full mt-1"
+          panelStyleClass="custom-dropdown-panel"
+          class="mt-1 block w-full p-dropdown-custom"
+        >
+        </p-dropdown>
+        <span *ngIf="isFieldInvalid('branch')" class="text-red-600 text-sm">
+          Branch Name is a required field
+        </span>
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        (click)="nextFormCreate('pageOne')"
+        type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+      >
+        Back
+      </button>
+      <button
+        (click)="nextFormCreate2('pageThree')"
+        type="button"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
+      >
+        Next
+      </button>
     </div>
   </div>
 </div>

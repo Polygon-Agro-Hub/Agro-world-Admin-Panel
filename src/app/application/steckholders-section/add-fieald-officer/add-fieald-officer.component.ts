@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -6,11 +6,27 @@ import { Router } from '@angular/router';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { StakeholderService } from '../../../services/stakeholder/stakeholder.service';
+import { HttpClient } from '@angular/common/http';
 
 interface PhoneCode {
   code: string;
   dialCode: string;
   name: string;
+}
+
+interface Branch {
+  bankID: number;
+  ID: number;
+  name: string;
+}
+
+interface Bank {
+  ID: number;
+  name: string;
+}
+
+interface BranchesData {
+  [key: string]: Branch[];
 }
 
 @Component({
@@ -20,7 +36,7 @@ interface PhoneCode {
   templateUrl: './add-fieald-officer.component.html',
   styleUrl: './add-fieald-officer.component.css',
 })
-export class AddFiealdOfficerComponent {
+export class AddFiealdOfficerComponent implements OnInit {
   isLoading = false;
   selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageTwo';
   itemId: number | null = null;
@@ -43,11 +59,20 @@ export class AddFiealdOfficerComponent {
   languagesTouched: boolean = false;
   empTypeTouched: boolean = false;
   jobRoleTouched: boolean = false;
+  selectedBankId: number | null = null;
+  bankOptions: any[] = [];
+  allBranches: BranchesData = {};
+  branches: Branch[] = [];
+  branchOptions: any[] = [];
+  banks: Bank[] = [];
+  invalidFields: Set<string> = new Set();
+  selectedBranchId: number | null = null;
 
   constructor(
     private router: Router,
-    private stakeHolderSrv: StakeholderService
-  ) {}
+    private stakeHolderSrv: StakeholderService,
+    private http: HttpClient,
+  ) { }
 
   jobRoles = ['Field Officer', 'Chief Field Officer'];
 
@@ -262,7 +287,7 @@ export class AddFiealdOfficerComponent {
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => {});
+      .catch((error) => { });
     this.personalData.companyId = currentCompanyId;
   }
 
@@ -645,6 +670,51 @@ export class AddFiealdOfficerComponent {
     this.selectedPage = page;
   }
 
+  nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
+    console.log('personalData', this.personalData);
+
+    if (page === 'pageThree') {
+      // Mark page two fields as touched to show validation messages
+      this.markPageTwoFieldsAsTouched();
+
+      const missingFields: string[] = [];
+
+      // Validate residential details
+      const residentialErrors = this.validateResidentialDetails();
+      missingFields.push(...residentialErrors);
+
+      // Validate bank details
+      const bankErrors = this.validateBankDetails();
+      missingFields.push(...bankErrors);
+
+      // If errors exist, show popup and stop navigation
+      if (missingFields.length > 0) {
+        let errorMessage =
+          '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        missingFields.forEach((field) => {
+          errorMessage += `<li>${field}</li>`;
+        });
+        errorMessage += '</ul></div>';
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: errorMessage,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
+    }
+
+    // Navigate to the selected page if validation passes
+    this.selectedPage = page;
+  }
+
   markPageOneFieldsAsTouched(): void {
     const pageOneFields: (keyof Personal)[] = [
       'firstName',
@@ -748,12 +818,242 @@ export class AddFiealdOfficerComponent {
     }
   }
 
+  formatAmount(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    // Allow control keys
+    if ([8, 9, 46, 37, 39, 116].includes(event.which)) {
+      return;
+    }
+
+    const char = String.fromCharCode(event.which);
+
+    // Allow only numbers and decimal point
+    if (!/[0-9.]/.test(char)) {
+      event.preventDefault();
+      return;
+    }
+
+    // Prevent multiple decimal points
+    if (char === '.' && value.includes('.')) {
+      event.preventDefault();
+      return;
+    }
+
+    // If adding decimal point, automatically add .00
+    if (char === '.' && !value.includes('.')) {
+      // Let the decimal point be added naturally, then format
+      setTimeout(() => {
+        if (!value.endsWith('.00')) {
+          input.value = value + '00';
+          // Move cursor before the zeros
+          const position = value.length + 1;
+          input.setSelectionRange(position, position);
+        }
+      }, 0);
+    }
+
+    // Limit to 2 decimal places
+    if (value.includes('.')) {
+      const decimalPart = value.split('.')[1];
+      if (decimalPart && decimalPart.length >= 2) {
+        event.preventDefault();
+      }
+    }
+  }
+
   hasInvalidAccountHolderCharacters(): boolean {
     const value = this.personalData.accName;
     if (!value) return false;
     // Check if contains numbers or special characters
     return /[^a-zA-Z\s]/.test(value);
   }
+
+  preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+
+    // Block spaces entirely for account numbers
+    if (charCode === 32) {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow only numbers
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
+  formatAccountNumber(fieldName: 'accNumber'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Remove all spaces and non-numeric characters
+      value = value.replace(/[^0-9]/g, '');
+      this.personalData[fieldName] = value;
+    }
+  }
+
+  onBankChange() {
+    if (this.selectedBankId) {
+      const branchesForBank = this.allBranches[this.selectedBankId.toString()] || [];
+      // Sort branches alphabetically
+      this.branches = branchesForBank.sort((a, b) => a.name.localeCompare(b.name));
+
+      // Convert to dropdown options format
+      this.branchOptions = this.branches.map(branch => ({
+        label: branch.name,
+        value: branch.ID
+      }));
+
+      const selectedBank = this.banks.find(
+        (bank) => bank.ID === this.selectedBankId
+      );
+      if (selectedBank) {
+        this.personalData.bank = selectedBank.name;
+        this.invalidFields.delete('bank');
+      }
+      this.selectedBranchId = null;
+      this.personalData.branch = '';
+    } else {
+      this.branches = [];
+      this.branchOptions = [];
+      this.personalData.bank = '';
+    }
+  }
+
+  onBranchChange() {
+    if (this.selectedBranchId) {
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
+      if (selectedBranch) {
+        this.personalData.branch = selectedBranch.name;
+        this.invalidFields.delete('branch');
+      }
+    } else {
+      this.personalData.branch = '';
+    }
+  }
+
+  loadBanks() {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe(
+      (data) => {
+        // Sort banks alphabetically by name
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+
+        // Convert to dropdown options format
+        this.bankOptions = this.banks.map(bank => ({
+          label: bank.name,
+          value: bank.ID
+        }));
+      },
+      (error) => { }
+    );
+  }
+
+  loadBranches() {
+    this.http.get<BranchesData>('assets/json/branches.json').subscribe(
+      (data) => {
+        this.allBranches = data;
+      },
+      (error) => { }
+    );
+  }
+
+  ngOnInit(): void {
+    this.loadBanks();
+    this.loadBranches();
+    this.getAllCompanies();
+    this.EpmloyeIdCreate();
+    // Pre-fill country with Sri Lanka
+    this.personalData.country = 'Sri Lanka';
+  }
+
+  validateResidentialDetails(): string[] {
+    const errors: string[] = [];
+
+    if (!this.personalData.house) {
+      errors.push('House / Plot Number is required');
+    }
+
+    if (!this.personalData.street) {
+      errors.push('Street Name is required');
+    }
+
+    if (!this.personalData.city) {
+      errors.push('City is required');
+    }
+
+    if (!this.personalData.district) {
+      errors.push('District is required');
+    }
+
+    return errors;
+  }
+
+  validateBankDetails(): string[] {
+    const errors: string[] = [];
+
+    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
+      errors.push('Commission Amount is required and must be greater than 0');
+    }
+
+    if (!this.personalData.accName) {
+      errors.push('Account Holder\'s Name is required');
+    } else if (this.hasInvalidAccountHolderCharacters()) {
+      errors.push('Account Holder\'s Name should only contain English letters');
+    }
+
+    if (!this.personalData.accNumber) {
+      errors.push('Account Number is required');
+    } else if (this.personalData.accNumber.length < 8 || this.personalData.accNumber.length > 16) {
+      errors.push('Account Number must be between 8 and 16 digits');
+    }
+
+    if (!this.personalData.bank) {
+      errors.push('Bank Name is required');
+    }
+
+    if (!this.personalData.branch) {
+      errors.push('Branch Name is required');
+    }
+
+    return errors;
+  }
+
+  isValidAccountNumber(): boolean {
+    const accNumber = this.personalData.accNumber;
+    if (!accNumber) return false;
+
+    // Account number should be between 8-16 digits
+    const accountRegex = /^\d{8,16}$/;
+    return accountRegex.test(accNumber);
+  }
+
+  isValidCommissionAmount(): boolean {
+    const amount = this.personalData.comAmount;
+    return amount !== null && amount !== undefined && amount > 0;
+  }
+
+  markPageTwoFieldsAsTouched(): void {
+    const pageTwoFields: (keyof Personal)[] = [
+      'house',
+      'street',
+      'city',
+      'district',
+      'comAmount',
+      'accName',
+      'accNumber',
+      'bank',
+      'branch'
+    ];
+
+    pageTwoFields.forEach((field) => {
+      this.touchedFields[field] = true;
+    });
+  }
+
 }
 
 class Personal {

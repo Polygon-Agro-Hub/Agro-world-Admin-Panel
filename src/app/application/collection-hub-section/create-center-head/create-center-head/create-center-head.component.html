@@ -66,14 +66,14 @@
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
-              <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                <input class="w-5 h-5" type="radio" name="enpType" value="Permanent" [(ngModel)]="empType"
+              <label class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
+                <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Permanent" [(ngModel)]="empType"
                   (ngModelChange)="updateEmployeeType($event)" />
                 Permanent
               </label>
             </div>
             <div class="flex items-center space-x-2">
-              <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+              <label class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer">
                 <input class="w-5 h-5" type="radio" name="enpType" value="Temporary" [(ngModel)]="empType"
                   (ngModelChange)="updateEmployeeType($event)" />
                 Temporary
@@ -92,19 +92,19 @@
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5" type="checkbox" id="sinhala" name="languages" value="Sinhala"
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="sinhala" name="languages" value="Sinhala"
                 (change)="onCheckboxChange1('Sinhala', $event)" />
-              <label for="sinhala" class="text-gray-700 dark:text-textDark">Sinhala</label>
+              <label for="sinhala" class="text-gray-700 dark:text-textDark cursor-pointer">Sinhala</label>
             </div>
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5" type="checkbox" id="english" name="languages" value="English"
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="english" name="languages" value="English"
                 (change)="onCheckboxChange1('English', $event)" />
-              <label for="english" class="text-gray-700 dark:text-textDark">English</label>
+              <label for="english" class="text-gray-700 dark:text-textDark cursor-pointer">English</label>
             </div>
             <div class="flex items-center space-x-2">
-              <input class="w-5 h-5" type="checkbox" id="tamil" name="languages" value="Tamil"
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="tamil" name="languages" value="Tamil"
                 (change)="onCheckboxChange1('Tamil', $event)" />
-              <label for="tamil" class="text-gray-700 dark:text-textDark">Tamil</label>
+              <label for="tamil" class="text-gray-700 dark:text-textDark cursor-pointer">Tamil</label>
             </div>
           </div>
           <p *ngIf="!isAtLeastOneLanguageSelected()" class="text-red-600 text-sm mt-2">

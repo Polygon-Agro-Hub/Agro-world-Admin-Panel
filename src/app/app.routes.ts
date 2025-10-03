@@ -200,6 +200,7 @@ import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-c
 import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
 import {ViewServicesListComponent} from './application/govi-link/view-services-list/view-services-list.component';
 import { AddCertificateDetailsComponent } from './application/plant-care-app/add-certificate/add-certificate-details';
+import { FieldOfficerProfileComponent } from './application/steckholders-section/field-officer-profile/field-officer-profile.component';
 
 export const routes: Routes = [
   {
@@ -710,6 +711,16 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: ViewFieldInspectorsComponent,
+                  },
+                ],
+              },
+
+              {
+                path: 'field-officer-profile/:id',
+                children: [
+                  {
+                    path: '',
+                    component: FieldOfficerProfileComponent,
                   },
                 ],
               },

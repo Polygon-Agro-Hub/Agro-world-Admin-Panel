@@ -233,6 +233,27 @@ updateFarmOwner(ownerId: number, data: any): Observable<any> {
   return this.http.put(`${this.apiUrl}auth/update-farm-owner/${ownerId}`, data, { headers });
 }
 
+fetchAllfieldOfficerProfile(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let url = `${this.apiUrl}auth/get-field-officer/${id}`;
+
+  return this.http.get<any>(url, { headers });
+}
+
+deleteFieldOfficer(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let url = `${this.apiUrl}auth/delete-field-officer/${id}`;
+  return this.http.delete<any>(url, { headers });
+}
+
 
 }
 

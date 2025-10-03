@@ -1,0 +1,333 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  (click)="goBack()"
+  class="mb-5 text-textLight dark:text-textDark"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div
+  class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+>
+  <div class="flex flex-col gap-7 px-2 py-2" id="reportcontainer">
+    <div
+      class="flex flex-row justify-between items-center border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6"
+    >
+      <div class="flex flex-row items-center">
+        <div
+          class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden"
+        >
+          <ng-container *ngIf="officerObj.image; else defaultIcon">
+            <img
+              [src]="officerObj.image"
+              alt="Officer Image"
+              class="w-full h-full object-cover"
+            />
+          </ng-container>
+          <ng-template #defaultIcon>
+            <i class="fa-regular fa-user text-5xl dark:text-textDark"></i>
+          </ng-template>
+        </div>
+
+        <div class="ml-6">
+          <p class="text-lg font-bold text-textLight dark:text-textDark">
+            {{ officerObj.firstName }} {{ officerObj.lastName }}
+          </p>
+          <p class="dark:text-[#a6aebb]">
+            <span
+              >{{ officerObj.jobRole }} -
+              <span>{{ this.empHeader }}{{ officerObj.empId }}</span></span
+            >
+          </p>
+          
+          <p class="dark:text-[#a6aebb]">{{ officerObj.companyName }}</p>
+        </div>
+      </div>
+
+      <div class="flex flex-row gap-4 justify-between">
+        <div class="flex flex-row justify-center min-w-24">
+          <button 
+            class="flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#bb979980] bg-[#FFDBDC80] dark:text-[#4f1616] text-[#FF0000] border-2 dark:border-[#4f1616] border-[#FF0000] text-lg rounded-xl shadow-md"
+            (click)="deleteFieldOfficer(officerObj.id)"
+          >
+            <i class="fa-solid fa-trash text-base text-[#FF0000] dark:text-[#4f1616]"></i>
+            <span class="">Delete</span>
+          </button>
+        </div>
+  
+        <div class="flex flex-row justify-center ">
+          <button 
+            class="min-w-24 flex items-center px-3 py-1.5 justify-center gap-2 bg-[#DBEEFF80] text-[#3980C0] border-2 border-[#3980C0] text-lg rounded-xl shadow-md"
+          >
+  
+            <i class="fa-solid fa-pen-to-square text-base text-[#3980C0]"></i>
+            <span class="">Edit</span>
+          </button>
+        </div>
+      </div>
+      
+
+    </div>
+
+    <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <div class="flex flex-row justify-between">
+        <p class="text-[#030308] dark:text-[#ffffff]">Personal Information</p>
+        <button
+          class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md"
+          [disabled]="isGeneratingPDF"
+        >
+          <i
+            class="fa-solid fa-download"
+            [ngClass]="{ hidden: isGeneratingPDF }"
+          ></i>
+          <i
+            class="fa-solid fa-spinner fa-spin"
+            [ngClass]="{ hidden: !isGeneratingPDF }"
+          ></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+        <div>
+          <p class="text-[#627189]">First Name</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.firstName }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Last Name</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.lastName }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">NIC Number</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">{{ officerObj.nic }}</p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Email</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.email }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Mobile Number - 1</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.phoneCode01 }} {{ officerObj.phoneNumber01 }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Mobile Number - 2</p>
+          <p
+            *ngIf="officerObj?.phoneNumber02; else noPhone"
+            class="text-[#030308] dark:text-[#ffffff]"
+          >
+            {{ officerObj.phoneCode02 }} {{ officerObj.phoneNumber02 }}
+          </p>
+          <ng-template #noPhone>
+            <p class="font-semibold dark:text-[#a6aebb]">-</p>
+          </ng-template>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Districts</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            <span *ngFor="let district of officerObj.assignDistricts; let isLast = last">
+              {{ district }}<span *ngIf="!isLast">,</span><br />
+            </span>
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Preferred Language</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.language }}
+          </p>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Address Details</p>
+
+      <div class="grid grid-cols-2 gap-4 my-4">
+        <div>
+          <p class="text-[#627189]">House / Plot Number</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.houseNumber }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Street Name</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.streetName }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">City</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.city }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Country</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.country }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Province</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.province }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">District</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.district }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Bank Details</p>
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+        <div>
+          <p class="text-[#627189]">Account Holder’s Name</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.accHolderName }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Account Number</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.accNumber }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Bank Name</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.bankName }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Branch Name</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.branchName }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Commission Amount</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.comAmount }}
+          </p>
+        </div>
+
+        
+      </div>
+    </div>
+
+    <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Required Documents</p>
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+        <div class="flex flex-col items-left gap-2">
+          <i class="fa-solid fa-image text-blue-600 cursor-pointer"
+             (click)="openImage(officerObj.frontNic)"></i>
+
+          <p class="text-[#627189]">NIC’s Front Image</p>
+        </div>
+
+        <div class="flex flex-col items-left gap-2">
+          <i class="fa-solid fa-image text-blue-600 cursor-pointer"
+             (click)="openImage(officerObj.backNic)"></i>
+          <p class="text-[#627189]">NIC’s Back Image</p>
+      
+        </div>
+
+        <div class="flex flex-col items-left gap-2">
+          <i class="fa-solid fa-image text-blue-600 cursor-pointer"
+             (click)="openImage(officerObj.backPassbook)"></i>
+
+          <p class="text-[#627189]">Bank Passbook</p>
+        </div>
+
+        <div class="flex flex-col items-left gap-2">
+                  
+          <i class="fa-solid fa-image text-blue-600 cursor-pointer"
+             (click)="openImage(officerObj.contract)"></i>
+
+          <p class="text-[#627189]">Signed Contract</p>
+        </div>
+
+        
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  *ngIf="showDisclaimView"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
+    <div>
+      <!-- Icon -->
+      <div class="mb-4 flex justify-center">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+
+      <div class="mb-4 text-center">
+        <p class="text-lg mb-2">
+          Are you sure you want to Discharge the officer
+        </p>
+        <p class="font-semibold text-lg">
+          "{{ officerObj.firstName }} {{ officerObj.lastName }}""
+          (EMP ID - "CCO{{ officerObj.empId }}")
+        </p>
+
+        <p class="text-red-500 mb-6 italic">
+          Please note that the officer will no longer be under your monitoring.
+        </p>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-center gap-4">
+        <button
+          class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="confirmDisclaim(officerId)"
+        >
+          <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
+          <span class="text-light text-whight-700 button-text text-[#6B7D8C]"
+            >Discharge</span
+          >
+        </button>
+        <button
+          class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="cancelDisclaim()"
+        >
+          <span class="font-semibold text-white">No,</span> <br />
+          <span class="text-light text-whight-700 button-text text-white"
+            >Go Back</span
+          >
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

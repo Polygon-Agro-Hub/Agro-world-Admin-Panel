@@ -201,6 +201,7 @@ import { ViewFieldInspectorsComponent } from './application/steckholders-section
 import {ViewServicesListComponent} from './application/govi-link/view-services-list/view-services-list.component';
 import { AddCertificateDetailsComponent } from './application/plant-care-app/add-certificate/add-certificate-details';
 import { AddFiealdOfficerComponent } from './application/steckholders-section/add-fieald-officer/add-fieald-officer.component';
+import { AddQuestionnaireDetailsComponent } from './application/plant-care-app/add-questionnaire/add-questionnaire-details';
 
 export const routes: Routes = [
   {
@@ -441,6 +442,10 @@ export const routes: Routes = [
               {
                 path: 'add-certificate-details',
                 component: AddCertificateDetailsComponent,
+              },
+              {
+                path: 'add-questionnaire-details/:certificateId',
+                component: AddQuestionnaireDetailsComponent,
               },
               {
                 path: 'edit-company-details/:id',

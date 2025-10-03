@@ -20,7 +20,6 @@ export interface CertificateCompany {
   modifiedByUser?: string | null;
 }
 
-// Payload for creating a certificate
 export interface CertificatePayload {
   srtcomapnyId: number;
   srtName: string;
@@ -31,9 +30,21 @@ export interface CertificatePayload {
   price: number;
   timeLine: number;
   commission: number;
-  tearms: string; // dummy value for now
+  tearms: string;
   scope: string;
   cropIds: number[];
+}
+
+export interface Questionnaire {
+  id?: number;
+  companyId: number;
+  questionNo: number;
+  type: string;
+  questionEnglish: string;
+  questionSinhala: string;
+  questionTamil: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 @Injectable({
@@ -138,5 +149,18 @@ export class CertificateCompanyService {
     }>(`${this.apiUrl}certificate-company/certificate/create`, formData, {
       headers,
     });
+  }
+
+  // Create questionnaire
+  createQuestionnaire(payload: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(
+      `${this.apiUrl}certificate-company/questionnaire/create`,
+      payload,
+      { headers }
+    );
   }
 }

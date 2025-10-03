@@ -202,6 +202,7 @@ import {ViewServicesListComponent} from './application/govi-link/view-services-l
 import { AddCertificateDetailsComponent } from './application/plant-care-app/add-certificate/add-certificate-details';
 import { AddFiealdOfficerComponent } from './application/steckholders-section/add-fieald-officer/add-fieald-officer.component';
 import { AddQuestionnaireDetailsComponent } from './application/plant-care-app/add-questionnaire/add-questionnaire-details';
+import { FieldOfficerProfileComponent } from './application/steckholders-section/field-officer-profile/field-officer-profile.component';
 
 export const routes: Routes = [
   {
@@ -719,6 +720,16 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: ViewFieldInspectorsComponent,
+                  },
+                ],
+              },
+
+              {
+                path: 'field-officer-profile/:id',
+                children: [
+                  {
+                    path: '',
+                    component: FieldOfficerProfileComponent,
                   },
                 ],
               },

@@ -1,91 +1,111 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { StakeholderService } from '../../../services/stakeholder/stakeholder.service';
+import { DropdownModule } from 'primeng/dropdown';
+
+// Define FieldInspector interface
+interface FieldInspector {
+  id: number;
+  empId: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  district: string;
+  language: string;
+  status: string;
+  phone: string;
+  nic: string;
+  modifiedBy: string;
+}
 
 @Component({
   selector: 'app-view-field-inspectors',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule],
   templateUrl: './view-field-inspectors.component.html',
   styleUrls: ['./view-field-inspectors.component.css'],
 })
 export class ViewFieldInspectorsComponent implements OnInit {
   isLoading = false;
   hasData = true;
-  searchTerm: string = '';
+  inspectors: FieldInspector[] = [];
+  filteredInspectors: FieldInspector[] = [];
 
   // Filters
-  filterStatus: string = '';
-  filterLanguage: string = '';
-  filterDistrict: string = '';
-  filterRole: string = '';
+  searchTerm = '';
+  filterStatus = '';
+  filterLanguage = '';
+  filterDistrict = '';
+  filterRole = '';
 
-  // Dummy Data
-  inspectors = [
-    {
-      empId: 'FIO0143',
-      firstName: 'Fname',
-      lastName: 'Fname 2',
-      role: 'Field Officer',
-      district: 'Gampaha',
-      languages: 'Eng',
-      status: 'Approved',
-      phone: '077-2828600',
-      nic: '982500078V',
-      modifiedBy: 'Pathumi',
-    },
-    {
-      empId: 'FIO0201',
-      firstName: 'Test',
-      lastName: 'RejectedUser',
-      role: 'Supervisor',
-      district: 'Colombo',
-      languages: 'Sinhala',
-      status: 'Rejected',
-      phone: '077-1234567',
-      nic: '982500111V',
-      modifiedBy: 'Admin',
-    },
-    {
-      empId: 'FIO0302',
-      firstName: 'Demo',
-      lastName: 'NotApprovedUser',
-      role: 'Manager',
-      district: 'Kandy',
-      languages: 'Tamil',
-      status: 'Not Approved',
-      phone: '077-9876543',
-      nic: '972345678V',
-      modifiedBy: 'System',
-    },
+  // Dropdown options
+  roles = [
+    { label: 'Admin', value: 'Admin' },
+    { label: 'Inspector', value: 'Inspector' },
+    { label: 'Staff', value: 'Staff' },
   ];
 
-  filteredInspectors = [...this.inspectors];
+  statuses = [
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Approved', value: 'Approved' },
+    { label: 'Rejected', value: 'Rejected' },
+    { label: 'Not Approved', value: 'Not Approved' },
+  ];
 
-  constructor(private router: Router, private location: Location) {}
+  districts = [
+    { label: 'Colombo', value: 'Colombo' },
+    { label: 'Kandy', value: 'Kandy' },
+    { label: 'Galle', value: 'Galle' },
+  ];
 
-  ngOnInit() {}
+  languages = [
+    { label: 'English', value: 'English' },
+    { label: 'Sinhala', value: 'Sinhala' },
+    { label: 'Tamil', value: 'Tamil' },
+  ];
 
-  // Apply filters and search
+  constructor(
+    private router: Router,
+    private location: Location,
+    private stakeholderService: StakeholderService
+  ) {}
+
+  ngOnInit() {
+    this.loadInspectors();
+  }
+
+  loadInspectors() {
+    this.isLoading = true;
+    this.stakeholderService.getAllFieldInspectors().subscribe({
+      next: (data) => {
+        this.inspectors = data;
+        this.filteredInspectors = [...this.inspectors];
+        this.hasData = this.filteredInspectors.length > 0;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching inspectors:', err);
+        this.isLoading = false;
+        this.hasData = false;
+      },
+    });
+  }
+
   applyFilters() {
     this.filteredInspectors = this.inspectors.filter((inspector) => {
       return (
         (!this.searchTerm ||
-          inspector.empId
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase()) ||
-          inspector.nic
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase())) &&
+          inspector.empId.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+          inspector.nic.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
         (!this.filterStatus || inspector.status === this.filterStatus) &&
-        (!this.filterLanguage || inspector.languages === this.filterLanguage) &&
+        (!this.filterLanguage || inspector.language === this.filterLanguage) &&
         (!this.filterDistrict || inspector.district === this.filterDistrict) &&
         (!this.filterRole || inspector.role === this.filterRole)
       );
     });
-
     this.hasData = this.filteredInspectors.length > 0;
   }
 
@@ -112,7 +132,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
   }
 
   addNew() {
-    this.router.navigate(['/plant-care/action/add-company-details']);
+    this.router.navigate(['/steckholders/action/add-fieald-officer']);
   }
 
   onBack(): void {
@@ -122,13 +142,13 @@ export class ViewFieldInspectorsComponent implements OnInit {
   getStatusClass(status: string): string {
     switch (status) {
       case 'Approved':
-        return 'bg-green-100 text-green-800 px-2 py-1 rounded-xl';
+        return 'status-approved';
       case 'Rejected':
-        return 'bg-red-100 text-red-800 px-2 py-1 rounded-xl';
+        return 'status-rejected';
       case 'Not Approved':
-        return 'bg-yellow-100 text-yellow-800 px-2 py-1 rounded-xl';
+        return 'status-not-approved';
       default:
-        return '';
+        return 'status-pending';
     }
   }
 }

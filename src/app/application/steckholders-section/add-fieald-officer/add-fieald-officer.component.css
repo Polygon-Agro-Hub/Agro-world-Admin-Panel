@@ -1,4 +1,4 @@
-/* Add these styles to your component CSS file */
+/* Add these styles to your component CSS */
 
 ::ng-deep .p-dropdown-custom .p-dropdown {
   width: 100%;
@@ -13,8 +13,8 @@
 }
 
 ::ng-deep .dark .p-dropdown-custom .p-dropdown {
-  background-color: #061E2C;
-  border-color: #f9fafb;
+  background-color: #374151;
+  border-color: #6b7280;
   color: #f9fafb;
 }
 

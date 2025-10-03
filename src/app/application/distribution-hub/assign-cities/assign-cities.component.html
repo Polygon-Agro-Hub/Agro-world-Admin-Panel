@@ -42,6 +42,8 @@
                 [(ngModel)]="selectDistrict" 
                 optionLabel="name" 
                 placeholder="Choose a district"
+                (onChange)="selectStatusChange()"
+
                 [disabled]="!selectProvince || filteredDistricts.length === 0"
                 [filter]="false"
                 class="w-full">

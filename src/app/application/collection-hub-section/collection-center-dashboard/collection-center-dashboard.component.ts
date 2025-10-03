@@ -99,7 +99,7 @@ export class CollectionCenterDashboardComponent {
 
   viewCenterOfficers() {
     this.router.navigate(['collection-hub/view-center-officers'], {
-      queryParams: { id: this.centerId }
+      queryParams: { id: this.centerId, Cname: this.Cname }
     });
   }
 }

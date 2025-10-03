@@ -590,11 +590,11 @@ export class AddFiealdOfficerComponent implements OnInit {
       }
 
       if (!this.personalData.firstName) {
-        missingFields.push('First Name (in English) is Required');
+        missingFields.push('First Name is Required');
       }
 
       if (!this.personalData.lastName) {
-        missingFields.push('Last Name (in English) is Required');
+        missingFields.push('Last Name is Required');
       }
 
       if (!this.personalData.phoneNumber1) {

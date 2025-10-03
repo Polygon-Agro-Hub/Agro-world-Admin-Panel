@@ -92,7 +92,7 @@
         </div>
         <div>
           <label
-            for="languages"
+            for="language"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
             Preferred Languages *
@@ -103,10 +103,10 @@
                 class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="sinhala"
-                name="languages"
+                name="language"
                 value="Sinhala"
                 (change)="onCheckboxChange('Sinhala', $event)"
-                [checked]="personalData.languages.includes('Sinhala')"
+                [checked]="personalData.language.includes('Sinhala')"
               />
               <label for="sinhala" class="text-gray-700 dark:text-textDark"
                 >Sinhala</label
@@ -117,10 +117,10 @@
                 class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="english"
-                name="languages"
+                name="language"
                 value="English"
                 (change)="onCheckboxChange('English', $event)"
-                [checked]="personalData.languages.includes('English')"
+                [checked]="personalData.language.includes('English')"
               />
               <label for="english" class="text-gray-700 dark:text-textDark"
                 >English</label
@@ -131,10 +131,10 @@
                 class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="tamil"
-                name="languages"
+                name="language"
                 value="Tamil"
                 (change)="onCheckboxChange('Tamil', $event)"
-                [checked]="personalData.languages.includes('Tamil')"
+                [checked]="personalData.language.includes('Tamil')"
               />
               <label for="tamil" class="text-gray-700 dark:text-textDark"
                 >Tamil</label
@@ -182,8 +182,8 @@
             Assigned Districts *
           </label>
           <p-dropdown
-            id="district"
-            [(ngModel)]="personalData.district"
+            id="assignDistrict"
+            [(ngModel)]="personalData.assignDistrict"
             [options]="districts"
             optionLabel="name"
             optionValue="name"
@@ -192,7 +192,7 @@
             [showClear]="false"
             styleClass="w-full mt-1"
             class="mt-1 block w-full p-dropdown-custom"
-            [ngClass]="{ 'p-invalid': isFieldInvalid('district') }"
+            [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }"
           />
           <!-- <span class="text-red-600 text-sm"
             >Collection Centre Name is a required field</span
@@ -268,7 +268,7 @@
           <label
             for="firstName"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >First Name (in English) *</label
+            >First Name *</label
           >
           <input
             id="firstName"
@@ -279,7 +279,7 @@
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('firstName')" class="text-red-600 text-sm"
-            >First Name (in English) is a required field</span
+            >First Name is a required field</span
           >
           <!-- <span *ngIf="hasInvalidNameCharacters('firstNameEnglish')" class="text-red-600 text-sm">First Name should only
             contain English letters</span> -->
@@ -288,7 +288,7 @@
           <label
             for="lastNameEnglish"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name (in English) *</label
+            >Last Name *</label
           >
           <input
             id="lastName"
@@ -299,7 +299,7 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm"
-            >Last Name(in English) is a required field</span
+            >Last Name is a required field</span
           >
           <!-- <span *ngIf="hasInvalidNameCharacters('lastNameEnglish')" class="text-red-600 text-sm">Last Name should only
             contain English letters</span> -->
@@ -662,9 +662,9 @@
           </label>
 
           <p-dropdown
-            id="district"
-            name="district"
-            [(ngModel)]="personalData.district"
+            id="distrct"
+            name="distrct"
+            [(ngModel)]="personalData.distrct"
             (onChange)="updateProvince($event)"
             [options]="districts"
             optionLabel="name"
@@ -682,7 +682,7 @@
           >
           </p-dropdown>
 
-          <span *ngIf="isFieldInvalid('district')" class="text-red-600 text-sm">
+          <span *ngIf="isFieldInvalid('distrct')" class="text-red-600 text-sm">
             District is a required field
           </span>
         </div>
@@ -1003,7 +1003,7 @@
         Back
       </button>
       <button
-        (click)="nextFormCreate2('pageThree')"
+        (click)="onSubmit()"
         type="button"
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
       >

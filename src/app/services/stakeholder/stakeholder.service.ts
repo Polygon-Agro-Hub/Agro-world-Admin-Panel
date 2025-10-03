@@ -53,8 +53,42 @@ export class StakeholderService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}stakeholder/get-last-emp-id/${role}`, {
+    return this.http.get(`${this.apiUrl}auth/get-last-emp-id/${role}`, {
       headers,
     });
+  }
+
+  createFieldOfficer(person: any, profileImage?: any, nicFront?: any, nicBack?: any, passbook?: any, contract?: any): Observable<any> {
+    const formData = new FormData();
+    formData.append("officerData", JSON.stringify(person)); // Attach officer data as a string
+
+    // Attach files if they exist
+    if (profileImage) {
+      formData.append('profileImage', profileImage);
+    }
+    if (nicFront) {
+      formData.append('nicFront', nicFront);
+    }
+    if (nicBack) {
+      formData.append('nicBack', nicBack);
+    }
+    if (passbook) {
+      formData.append('passbook', passbook);
+    }
+    if (contract) {
+      formData.append('contract', contract);
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.post(
+      `${this.apiUrl}auth/create-field-officer`,
+      formData,
+      {
+        headers,
+      }
+    );
   }
 }

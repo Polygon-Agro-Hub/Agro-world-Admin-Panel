@@ -1,0 +1,37 @@
+.custom-dropdown {
+    z-index: 1000;
+    /* Adjust this value as needed */
+}
+
+::ng-deep .dark .p-dropdown-panel {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+    border-radius: 6px !important;
+    /* <-- add this for rounded corners */
+    overflow: hidden;
+    /* ensures child items don't spill over rounded corners */
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+    background-color: #3a4160 !important;
+    color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+
+/* Reduce dropdown item padding */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    padding-left: 0.1rem !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    padding-left: 0.1rem !important;
+}

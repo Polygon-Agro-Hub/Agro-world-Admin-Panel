@@ -70,17 +70,17 @@
             <div class="flex items-center space-x-2">
               <input class="w-5 h-5 cursor-pointer" type="checkbox" id="sinhala" name="languages" value="Sinhala"
                 (change)="onCheckboxChange('Sinhala', $event)" [checked]="personalData.languages.includes('Sinhala')" />
-              <label for="sinhala" class="text-gray-700">Sinhala</label>
+              <label for="sinhala" class="text-gray-700 dark:text-textDark ">Sinhala</label>
             </div>
             <div class="flex items-center space-x-2">
               <input class="w-5 h-5 cursor-pointer" type="checkbox" id="english" name="languages" value="English"
                 (change)="onCheckboxChange('English', $event)" [checked]="personalData.languages.includes('English')" />
-              <label for="english" class="text-gray-700">English</label>
+              <label for="english" class="text-gray-700 dark:text-textDark">English</label>
             </div>
             <div class="flex items-center space-x-2">
               <input class="w-5 h-5 cursor-pointer" type="checkbox" id="tamil" name="languages" value="Tamil"
                 (change)="onCheckboxChange('Tamil', $event)" [checked]="personalData.languages.includes('Tamil')" />
-              <label for="tamil" class="text-gray-700">Tamil</label>
+              <label for="tamil" class="text-gray-700 dark:text-textDark">Tamil</label>
             </div>
           </div>
           <p *ngIf="!isAtLeastOneLanguageSelected()" class="text-red-600 text-sm mt-2">

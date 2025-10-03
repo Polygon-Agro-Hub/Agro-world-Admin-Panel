@@ -155,7 +155,7 @@ deleteAdminUser(id: any) {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
                 confirmButton:
-                  'bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-md',
+                  'bg-[#3085d6] hover:bg-[#3085d6] text-white font-medium px-4 py-2 rounded-md',
               },
             });
             this.fetchAllAdmins();

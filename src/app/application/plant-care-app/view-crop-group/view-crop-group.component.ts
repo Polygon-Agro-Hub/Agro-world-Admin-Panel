@@ -95,7 +95,7 @@ export class ViewCropGroupComponent {
   hasData: boolean = true;
 
   searchTerm: string = '';
-  selectedCategory: CategoryOption | undefined = undefined;
+  selectedCategory: string = '';
   categoryOptions: CategoryOption[] = [];
 
   constructor(
@@ -155,7 +155,7 @@ export class ViewCropGroupComponent {
     page: number = 1,
     limit: number = this.itemsPerPage,
     searchTerm: string = this.searchTerm,
-    category: string = this.selectedCategory?.value || ''
+    category: string = this.selectedCategory || ''
   ) {
     this.page = page;
     this.isLoading = true;
@@ -178,12 +178,11 @@ export class ViewCropGroupComponent {
 
   onCategoryChange() {
     this.page = 1;
-    const category = this.selectedCategory?.value || '';
     this.fetchAllCropGroups(
       this.page,
       this.itemsPerPage,
       this.searchTerm,
-      category
+      this.selectedCategory
     );
   }
 
@@ -195,7 +194,7 @@ export class ViewCropGroupComponent {
 
   clearFilters() {
     this.searchTerm = '';
-    this.selectedCategory = undefined;
+    this.selectedCategory = '';
     this.page = 1;
     this.fetchAllCropGroups();
   }

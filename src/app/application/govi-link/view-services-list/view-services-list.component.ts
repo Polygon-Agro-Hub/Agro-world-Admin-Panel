@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';  // ✅ Import Router
+import { Router } from '@angular/router';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-view-services-list',
   standalone: true,
@@ -12,19 +13,21 @@ import Swal from 'sweetalert2';
   styleUrls: ['./view-services-list.component.css']
 })
 export class ViewServicesListComponent implements OnInit {
-  officerServices: any[] = [];
+  officerServices: any[] = [];      // all services
+  filteredServices: any[] = [];     // filtered services for display
   loading = true;
   searchTerm: string = '';
 
   constructor(
     private goviLinkService: GoviLinkService,
-    private router: Router   // ✅ Inject Router
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.goviLinkService.getAllOfficerServices().subscribe({
       next: (data) => {
         this.officerServices = data;
+        this.filteredServices = data;   // initially show all
         this.loading = false;
       },
       error: (err) => {
@@ -34,75 +37,95 @@ export class ViewServicesListComponent implements OnInit {
     });
   }
 
-  get filteredServices() {
-    if (!this.searchTerm) return this.officerServices;
-    return this.officerServices.filter(service =>
-      service.englishName?.toLowerCase().includes(this.searchTerm.toLowerCase())
+  // 🔍 Search by button or Enter
+  onSearch() {
+    if (!this.searchTerm.trim()) {
+      this.filteredServices = this.officerServices;
+      return;
+    }
+    const term = this.searchTerm.toLowerCase();
+    this.filteredServices = this.officerServices.filter(service =>
+      service.englishName?.toLowerCase().includes(term) ||
+      service.tamilName?.toLowerCase().includes(term) ||
+      service.sinhalaName?.toLowerCase().includes(term)
     );
   }
 
-  goBack() {
-    this.router.navigate(['/govi-link/action']); // Navigate back to the main Govilink page
+  // ❌ Clear search
+  onClearSearch() {
+    this.searchTerm = '';
+    this.filteredServices = this.officerServices;
   }
+
+  // Navigation
+  goBack() {
+    this.router.navigate(['/govi-link/action']);
+  }
+
   onEditService(service: any) {
-    // Navigate to edit page with the service id
     this.router.navigate(['/govi-link/action/edit-services', service.id]);
   }
 
   add() {
-     this.router.navigate(['/govi-link/action/add-services']); }
+    this.router.navigate(['/govi-link/action/add-services']);
+  }
 
   onViewService(service: any) {
-  this.router.navigate(['/govi-link/action/edit-services', service.id], { queryParams: { view: true } }); // View mode
-}
-onDeleteService(service: any) {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: `You are about to delete "${service.englishName}" service!`,
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Delete',
-    cancelButtonText: 'No, Cancel',
-    customClass: {
-      popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
-      title: 'font-semibold text-lg',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.goviLinkService.deleteOfficerService(service.id).subscribe({
-        next: () => {
-          // Remove the deleted service from the local list
-          this.officerServices = this.officerServices.filter(
-            (s) => s.id !== service.id
-          );
+    this.router.navigate(['/govi-link/action/edit-services', service.id], {
+      queryParams: { view: true }
+    });
+  }
 
-          Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: `"${service.englishName}" has been deleted.`,
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        },
-        error: (err) => {
-          console.error('Delete failed:', err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to delete service. Please try again.',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        },
-      });
-    }
-  });
-}
+  // 🗑 Delete with confirmation
+  onDeleteService(service: any) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: `You are about to delete "${service.englishName}" service!`,
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'No, Cancel',
+      customClass: {
+        popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.goviLinkService.deleteOfficerService(service.id).subscribe({
+          next: () => {
+            this.officerServices = this.officerServices.filter(
+              (s) => s.id !== service.id
+            );
+            this.filteredServices = this.filteredServices.filter(
+              (s) => s.id !== service.id
+            );
 
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: `"${service.englishName}" has been deleted.`,
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          },
+          error: (err) => {
+            console.error('Delete failed:', err);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to delete service. Please try again.',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          },
+        });
+      }
+    });
+  }
 }

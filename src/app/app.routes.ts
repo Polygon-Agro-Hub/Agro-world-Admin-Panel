@@ -199,6 +199,8 @@ import { EditCompanyDetailsComponent } from './application/plant-care-app/edit-c
 import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-company-details/view-company-details';
 import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
 import {ViewServicesListComponent} from './application/govi-link/view-services-list/view-services-list.component';
+import { AddCertificateDetailsComponent } from './application/plant-care-app/add-certificate/add-certificate-details';
+
 export const routes: Routes = [
   {
     path: '',
@@ -434,6 +436,10 @@ export const routes: Routes = [
               {
                 path: 'add-company-details',
                 component: AddCompanyDetailsComponent,
+              },
+              {
+                path: 'add-certificate-details',
+                component: AddCertificateDetailsComponent,
               },
               {
                 path: 'edit-company-details/:id',

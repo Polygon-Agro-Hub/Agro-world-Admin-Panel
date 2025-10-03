@@ -120,7 +120,7 @@ export class PlantcareComponent {
   }
 
   addCertificate(): void {
-    this.router.navigate(['/plant-care/action/add-certificate']);
+    this.router.navigate(['/plant-care/action/add-certificate-details']);
   }
 
   viewCertificateList(): void {

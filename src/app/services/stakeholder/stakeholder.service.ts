@@ -58,11 +58,18 @@ export class StakeholderService {
     });
   }
 
-  createFieldOfficer(person: any, profileImage?: any, nicFront?: any, nicBack?: any, passbook?: any, contract?: any): Observable<any> {
+  createFieldOfficer(
+    person: any,
+    profileImage?: File | null,
+    nicFront?: File | null,
+    nicBack?: File | null,
+    passbook?: File | null,
+    contract?: File | null
+  ): Observable<any> {
     const formData = new FormData();
-    formData.append("officerData", JSON.stringify(person)); // Attach officer data as a string
+    formData.append("officerData", JSON.stringify(person));
 
-    // Attach files if they exist
+    // Append files only if they are not null
     if (profileImage) {
       formData.append('profileImage', profileImage);
     }
@@ -86,9 +93,7 @@ export class StakeholderService {
     return this.http.post(
       `${this.apiUrl}auth/create-field-officer`,
       formData,
-      {
-        headers,
-      }
+      { headers }
     );
   }
 }

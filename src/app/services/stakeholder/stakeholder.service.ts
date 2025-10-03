@@ -11,7 +11,7 @@ export class StakeholderService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getAdminUserData(): Observable<any> {
     const headers = new HttpHeaders({
@@ -29,7 +29,7 @@ export class StakeholderService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.get(`${this.apiUrl}stakeholder/get-all-companies`, {
+    return this.http.get(`${this.apiUrl}auth/get-all-companies`, {
       headers,
     });
   }
@@ -41,7 +41,7 @@ export class StakeholderService {
     });
     console.log('This is company Id', companyId);
     return this.http.get(
-      `${this.apiUrl}stakeholder/get-all-manager-list/${companyId}`,
+      `${this.apiUrl}auth/get-all-manager-list/${companyId}`,
       {
         headers,
       }

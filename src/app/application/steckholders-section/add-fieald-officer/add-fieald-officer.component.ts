@@ -38,7 +38,7 @@ interface BranchesData {
 })
 export class AddFiealdOfficerComponent implements OnInit {
   isLoading = false;
-  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageThree';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageOne';
   itemId: number | null = null;
   selectedFile: File | null = null;
   personalData: Personal = new Personal();
@@ -229,26 +229,13 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   getAllCompanies() {
-    this.loaded = false;
-    this.personalData.companyId = '';
-    this.personalData.irmId = ''; // Clear manager selection
-    this.managerOptions = []; // Clear manager options
-
-    this.stakeHolderSrv.getAllCompanies().subscribe(
-      (res) => {
-        this.companyData = res;
-        this.companyOptions = this.companyData.map((company) => ({
-          label: company.companyName,
-          value: company.id,
-        }));
-        this.loaded = true;
-      },
-      (error) => {
-        this.companyData = [];
-        this.companyOptions = [];
-        this.loaded = true;
-      }
-    );
+    this.stakeHolderSrv.getAllCompanies().subscribe((res) => {
+      this.companyData = res;
+      this.companyOptions = this.companyData.map(company => ({
+        label: company.companyName,
+        value: company.id
+      }));
+    });
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {

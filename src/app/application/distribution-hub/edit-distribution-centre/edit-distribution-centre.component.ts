@@ -826,7 +826,7 @@ export class EditDistributionCentreComponent implements OnInit {
         missingFields.push('Contact Number -1 is Required');
       } else if (contact1Control.errors?.['pattern']) {
         missingFields.push(
-          'Contact Number -1 - Must be a valid phone number (format: +947XXXXXXXX)'
+          'Contact Number -1 - Must be a valid Contact Number (format: +947XXXXXXXX)'
         );
       }
     }
@@ -841,7 +841,7 @@ export class EditDistributionCentreComponent implements OnInit {
     if (contact2Control?.value) {
       // Check if phone number is valid
       if (!this.isValidPhoneNumber(contact2Control.value)) {
-        missingFields.push('Contact Number -2 - Must be a valid phone number');
+        missingFields.push('Contact Number -2 - Must be a valid Contact Number');
       }
 
       if (contact2Control?.value === contact1Control?.value) {

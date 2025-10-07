@@ -722,9 +722,9 @@ updateRegCode() {
       } else if (key === 'contact1' && control.errors['required']) {
         missingFields.push('Contact Number is Required');
       } else if (key === 'contact1' && this.getFieldError("contact1") === 'Please enter a valid contact number (format: +947XXXXXXXX)') {
-        missingFields.push('Contact Number -1 - Must be a valid phone number format');
+        missingFields.push('Contact Number -1 - Must be a valid Contact Number format');
       } else if (key === 'contact2' && this.getFieldError("contact2") === 'Please enter a valid contact number (format: +947XXXXXXXX)' ) {
-        missingFields.push('Contact Number -2 - Must be a valid phone number format');
+        missingFields.push('Contact Number -2 - Must be a valid Contact Number format');
     } else if (key === 'contact2' && this.getFieldError("contact2") === 'Contact Number - 1 and Contact Number - 2 cannot be the same' ) {
       missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
     } else if (key === 'latitude' && control.errors['required']) {

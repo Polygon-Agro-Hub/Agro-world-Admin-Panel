@@ -243,7 +243,7 @@ export class ViewCropGroupComponent {
           next: (data: any) => {
             Swal.fire({
               title: 'Deleted',
-              text: 'The crop group item has been deleted.',
+              text: 'Crop group has been deleted successfully.',
               icon: 'success',
               customClass: {
                 popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',

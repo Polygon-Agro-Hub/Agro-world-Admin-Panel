@@ -130,12 +130,19 @@ preventNegative(event: any): void {
         errorMessage += 'Service fee is required.<br>';
       if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Missing Required Fields',
-        html: errorMessage,
-        confirmButtonText: 'OK',
-      });
+   Swal.fire({
+  icon: 'error',
+  title: 'Missing Required Fields',
+  html: errorMessage,
+  confirmButtonText: 'OK',
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold',
+    confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+    htmlContainer: 'text-left', // keeps multiline HTML aligned nicely
+  },
+});
+
       this.isLoading = false;
       return;
     }
@@ -161,22 +168,34 @@ preventNegative(event: any): void {
         .subscribe(
           (res) => {
             if (res.status) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Package Updated',
-                text: 'The package was updated successfully!',
-                confirmButtonText: 'OK',
-              }).then(() => {
-                this.packageObj = new Package();
-                this.router.navigate(['/market/action/view-packages-list']);
-              });
+             Swal.fire({
+              icon: 'success',
+              title: 'Package Updated',
+              text: 'The package was updated successfully!',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton:
+                  'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            }).then(() => {
+              this.packageObj = new Package();
+              this.router.navigate(['/market/action/view-packages-list']);
+            });
             } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Package Not Updated',
-                text: res.message,
-                confirmButtonText: 'OK',
-              });
+       Swal.fire({
+  icon: 'error',
+  title: 'Package Name Exists',
+  text: res.message,
+  confirmButtonText: 'OK',
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold',
+    confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+  },
+});
+
             }
             this.isLoading = false;
           },

@@ -92,8 +92,9 @@
 
       <!-- Officers Card -->
       <div
-        class="flex flex-col gap-y-1 items-center justify-center p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer">
-        <div class="text-center mt-10">
+        class="flex flex-col gap-y-1 items-center justify-center p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"(click)="viewCenterOfficers()">
+      <div class="text-center mt-10" >
+
           <div class="bg-[#CCFBF1] p-2 rounded-full">
           <i class="fa-solid fa-users text-xl"></i>
         </div>
@@ -102,7 +103,7 @@
           {{centerNameObj.officerCount === 0 ? '0' : centerNameObj.officerCount < 10 ? "0" + centerNameObj.officerCount : centerNameObj.officerCount }}
         </p>
         </div>
-        <div class="flex flex-row items-center justify-end self-end mt-5" (click)="viewCenterOfficers()">
+        <div class="flex flex-row items-center justify-end self-end mt-5">
           <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] mx-1 text-sm"></i>
         </div>
       </div>

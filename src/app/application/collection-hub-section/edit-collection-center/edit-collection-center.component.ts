@@ -13,7 +13,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { Country, COUNTRIES } from '../../../../assets/country-data';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-edit-collection-center',
   standalone: true,
@@ -59,7 +59,8 @@ export class EditCollectionCenterComponent implements OnInit {
   constructor(
     private collectionCenterService: CollectionCenterService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.collectionCenterID = this.route.snapshot.params['id'];
     const defaultCountry = this.countries.find(c => c.code === 'lk') || null;
@@ -541,7 +542,7 @@ onSubmit() {
       .join(',');
   }
 
-  onCancel() {
+onCancel() {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
@@ -549,13 +550,13 @@ onSubmit() {
     showCancelButton: true,
     confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
-        customClass: {
+    customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
     },
   }).then((result) => {
     if (result.isConfirmed) {
-    this.router.navigate(['/collection-hub/agro-world-centers']);
+      this.location.back(); // 👈 this takes the user back to the previous page
     }
   });
 }

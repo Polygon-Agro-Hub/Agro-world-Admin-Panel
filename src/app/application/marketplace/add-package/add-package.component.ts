@@ -177,7 +177,8 @@ export class AddPackageComponent implements OnInit {
 
   async onSubmit() {
   this.submitAttempted = true;
-  // Mark all fields as touched when submit is attempted
+
+  // Mark all fields as touched
   Object.keys(this.fieldTouched).forEach(key => {
     this.fieldTouched[key as keyof typeof this.fieldTouched] = true;
   });
@@ -192,33 +193,24 @@ export class AddPackageComponent implements OnInit {
   if (!this.packageObj.description?.trim()) {
     errorMessages.push('Description is required');
   }
-  if (!this.packageObj.productPrice ) {
+  if (!this.packageObj.productPrice) {
     errorMessages.push('Total Package Price is required');
   }
-  if (this.packageObj.packageFee === undefined ) {
+  if (this.packageObj.packageFee === undefined) {
     errorMessages.push('Packaging Fee is required');
   }
-  if (this.packageObj.serviceFee === undefined ) {
+  if (this.packageObj.serviceFee === undefined) {
     errorMessages.push('Service Fee is required');
   }
   if (!this.selectedImage) {
     errorMessages.push('Package Image is required');
   }
-  // if (this.productTypeObj.length > 0 && !Object.values(this.packageObj.quantities).some(qty => qty > 0)) {
-  //   errorMessages.push('At least one product type with quantity greater than 0 is required');
-  // }
 
-  // // Decimal validation
-  // const decimalRegex = /^\d+(\.\d{1,2})?$/;
-  // if (!decimalRegex.test(this.packageObj.productPrice?.toString())) {
-  //   errorMessages.push('Total Package Price must have up to 2 decimal places');
-  // }
-  // if (!decimalRegex.test(this.packageObj.packageFee?.toString())) {
-  //   errorMessages.push('Packaging Fee must have up to 2 decimal places');
-  // }
-  // if (!decimalRegex.test(this.packageObj.serviceFee?.toString())) {
-  //   errorMessages.push('Service Fee must have up to 2 decimal places');
-  // }
+  // ✅ Product type validation: At least one product must be added
+  if (!this.productTypeObj || this.productTypeObj.length === 0 ||
+      !Object.values(this.packageObj.quantities || {}).some(qty => qty > 0)) {
+    errorMessages.push('At least one product type with quantity greater than 0 is required');
+  }
 
   if (errorMessages.length > 0) {
     Swal.fire({
@@ -262,6 +254,7 @@ export class AddPackageComponent implements OnInit {
     // Proceed with package creation
     this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
       (res) => {
+        this.isLoading = false;
         if (res.status) {
           Swal.fire({
             icon: 'success',
@@ -290,9 +283,9 @@ export class AddPackageComponent implements OnInit {
             },
           });
         }
-        this.isLoading = false;
       },
       (error) => {
+        this.isLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'An Error Occurred',
@@ -304,10 +297,10 @@ export class AddPackageComponent implements OnInit {
             confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
           },
         });
-        this.isLoading = false;
       }
     );
   } catch (error) {
+    this.isLoading = false;
     Swal.fire({
       icon: 'error',
       title: 'An Error Occurred',
@@ -319,9 +312,9 @@ export class AddPackageComponent implements OnInit {
         confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
     });
-    this.isLoading = false;
   }
 }
+
   onCancel() {
     Swal.fire({
       icon: 'warning',

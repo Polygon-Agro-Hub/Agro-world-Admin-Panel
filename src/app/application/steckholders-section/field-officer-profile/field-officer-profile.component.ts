@@ -47,6 +47,10 @@ export class FieldOfficerProfileComponent {
     this.fetchOfficerById(this.officerId);
   }
 
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
+
 
   fetchOfficerById(id: number) {
     this.isLoading = true;
@@ -76,6 +80,12 @@ export class FieldOfficerProfileComponent {
     if (url) {
       window.open(url, '_blank'); // Opens image in a new tab
     }
+  }
+
+  editFieldOfficer(id: number) {
+    this.navigatePath(
+      `/steckholders/action/edit-field-officer/${id}`
+    );
   }
 
   deleteFieldOfficer(id: number) {

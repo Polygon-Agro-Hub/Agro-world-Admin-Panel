@@ -415,6 +415,7 @@ onSubmit() {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
     });
     return;
@@ -429,6 +430,12 @@ onSubmit() {
     confirmButtonText: 'Yes, create it!',
     cancelButtonText: 'No, cancel',
     reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+    },
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;
@@ -440,7 +447,18 @@ onSubmit() {
             this.officerId = res.officerId;
             this.errorMessage = '';
 
-            Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Collection Officer Created Successfully',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            });
             this.navigatePath('/steckholders/action/collective-officer');
           },
           (error: any) => {
@@ -482,6 +500,7 @@ onSubmit() {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                   htmlContainer: 'text-left',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
               return;
@@ -490,11 +509,21 @@ onSubmit() {
           
         );
     } else {
-      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
+      Swal.fire({
+        icon: 'info',
+        title: 'Cancelled',
+        text: 'Your action has been cancelled',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
+      });
     }
   });
 }
-
 
 // Or combine both into a single function
 capitalizeNames() {

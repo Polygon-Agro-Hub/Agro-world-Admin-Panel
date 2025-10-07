@@ -6,7 +6,7 @@
 </button>
 <button *ngIf="
     (permissionService.hasPermission('Onboard individual collection CO / CCM / DO') ||
-    tokenService.getUserDetails().role === '1')
+    tokenService.getUserDetails().role === '1') && !Cname
   " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="navigatePath('/steckholders/action/collective-officer/personal')">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -117,10 +117,22 @@
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 px-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+
+    <div class="mb-2">
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        Centre : {{Cname}}
+      </h2>
+    </div>
     <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
+      <div *ngIf="!Cname"class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           Collection Officers ({{ this.totalItems }})
+        </h2>
+      </div>
+
+      <div *ngIf="Cname"class="flex items-center">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          All ({{ this.totalItems }})
         </h2>
       </div>
 
@@ -247,8 +259,8 @@
               NIC
             </th>
             <th *ngIf="
-                permissionService.hasPermission('View individual collection officer') ||
-                tokenService.getUserDetails().role === '1'
+               ( permissionService.hasPermission('View individual collection officer') ||
+                tokenService.getUserDetails().role === '1') && !Cname
               " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
 
             <th *ngIf="
@@ -352,8 +364,8 @@
             </td>
 
             <td *ngIf="
-                permissionService.hasPermission('View individual collection officer') ||
-                tokenService.getUserDetails().role === '1'
+                (permissionService.hasPermission('View individual collection officer') ||
+                tokenService.getUserDetails().role === '1') && !Cname
               " class="px-4 py-3 text-center">
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -362,6 +374,11 @@
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
+            </td>
+
+            <td *ngIf="(permissionService.hasPermission('View individual collection officer') ||
+            tokenService.getUserDetails().role === '1') && Cname" [class.ml-4]="Cname" class="px-4 py-3 text-center">
+              
             </td>
 
             <td *ngIf="

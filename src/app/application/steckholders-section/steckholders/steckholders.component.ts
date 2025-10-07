@@ -129,4 +129,8 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
     this.router.navigate(['/steckholders/action/field-inspectors']);
   }
 
+  navigateToViewFieldInspectorsView(id: number) {
+    this.router.navigate(['/steckholders/action/field-officer-profile', id]);
+  }
+
 }

@@ -203,6 +203,7 @@ import { AddCertificateDetailsComponent } from './application/plant-care-app/add
 import { AddFiealdOfficerComponent } from './application/steckholders-section/add-fieald-officer/add-fieald-officer.component';
 import { AddQuestionnaireDetailsComponent } from './application/plant-care-app/add-questionnaire/add-questionnaire-details';
 import { FieldOfficerProfileComponent } from './application/steckholders-section/field-officer-profile/field-officer-profile.component';
+import { ViewAllCertificatesComponent } from './application/plant-care-app/view-all-certificates/view-all-certificates.component';
 
 export const routes: Routes = [
   {
@@ -459,6 +460,10 @@ export const routes: Routes = [
               {
                 path: 'view-company-list',
                 component: ViewCompanyListComponent,
+              },
+              {
+                path: 'view-certificate-list',
+                component: ViewAllCertificatesComponent,
               },
             ],
           },

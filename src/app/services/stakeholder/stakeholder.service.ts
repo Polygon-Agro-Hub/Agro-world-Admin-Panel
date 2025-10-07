@@ -23,25 +23,25 @@ export class StakeholderService {
     });
   }
 
- getAllFieldInspectors(): Observable<any[]> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
+  getAllFieldInspectors(): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
 
-  return this.http
-    .get<any>(`${this.apiUrl}stakeholder/get-all-field-officers`, { headers })
-    .pipe(
-      map((res) =>
-        res.data.map((item: any) => ({
-          id: item.id,
-          empId: item.empId,
-          firstName: item.firstName,
-          lastName: item.lastName,
-          role: item.JobRole?.trim() || 'N/A',
-          district: item.distrct || 'N/A', // backend typo
-          language: item.language
-            ? item.language
+    return this.http
+      .get<any>(`${this.apiUrl}stakeholder/get-all-field-officers`, { headers })
+      .pipe(
+        map((res) =>
+          res.data.map((item: any) => ({
+            id: item.id,
+            empId: item.empId,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            role: item.JobRole?.trim() || 'N/A',
+            district: item.distrct || 'N/A', // backend typo
+            language: item.language
+              ? item.language
                 .split(',')
                 .map((lang: string) => {
                   switch (lang.trim()) {
@@ -52,17 +52,17 @@ export class StakeholderService {
                   }
                 })
                 .join(', ')
-            : '',
-          status: item.status || 'Pending',
-          phone: item.phoneNumber1
-            ? `${item.phoneCode1} ${item.phoneNumber1}`
-            : null,
-          nic: item.nic,
-          modifiedBy: item.modifyBy || 'System',
-        }))
-      )
-    );
-}
+              : '',
+            status: item.status || 'Pending',
+            phone: item.phoneNumber1
+              ? `${item.phoneCode1} ${item.phoneNumber1}`
+              : null,
+            nic: item.nic,
+            modifiedBy: item.modifyBy || 'System',
+          }))
+        )
+      );
+  }
 
 
 
@@ -135,6 +135,57 @@ export class StakeholderService {
 
     return this.http.post(
       `${this.apiUrl}auth/create-field-officer`,
+      formData,
+      { headers }
+    );
+  }
+
+  getFiealdOfficerById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiUrl}auth/get-field-officer/${id}`, {
+      headers,
+    });
+  }
+
+  editFieldOfficer(
+    officerData: any,
+    id: number,
+    profileImage?: File,
+    nicFront?: File,
+    nicBack?: File,
+    passbook?: File,
+    contract?: File
+  ): Observable<any> {
+    const formData = new FormData();
+
+    // Append officer data as JSON string
+    formData.append('officerData', JSON.stringify(officerData));
+
+    // Append files only if they are provided
+    if (profileImage) {
+      formData.append('profileImage', profileImage);
+    }
+    if (nicFront) {
+      formData.append('nicFront', nicFront);
+    }
+    if (nicBack) {
+      formData.append('nicBack', nicBack);
+    }
+    if (passbook) {
+      formData.append('passbook', passbook);
+    }
+    if (contract) {
+      formData.append('contract', contract);
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.put(
+      `${this.apiUrl}auth/update-field-officers/${id}`,
       formData,
       { headers }
     );

@@ -40,30 +40,34 @@ export class FieldOfficerProfileComponent {
     private router: Router,
     private location: Location,
     private tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.officerId = this.route.snapshot.params['id'];
     this.fetchOfficerById(this.officerId);
   }
 
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
 
-fetchOfficerById(id: number) {
-  this.isLoading = true;
-  this.plantcareService
-    .fetchAllfieldOfficerProfile(id)
-    .subscribe((res: any) => {
-      console.log("this is data", res);
-      
-      this.isLoading = false;
-      this.officerObj = res.officerData.fieldOfficer;
-    });
-}
+
+  fetchOfficerById(id: number) {
+    this.isLoading = true;
+    this.plantcareService
+      .fetchAllfieldOfficerProfile(id)
+      .subscribe((res: any) => {
+        console.log("this is data", res);
+
+        this.isLoading = false;
+        this.officerObj = res.officerData.fieldOfficer;
+      });
+  }
 
 
   goBack() {
-  window.history.back();
-}
+    window.history.back();
+  }
 
   // viewOfficerTarget(officerId: number) {
   //   this.router.navigate([
@@ -78,10 +82,16 @@ fetchOfficerById(id: number) {
     }
   }
 
+  editFieldOfficer(id: number) {
+    this.navigatePath(
+      `/steckholders/action/edit-field-officer/${id}`
+    );
+  }
+
   deleteFieldOfficer(id: number) {
     const token = this.tokenService.getToken();
     if (!token) return;
-  
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this Field Officer? This action cannot be undone.',

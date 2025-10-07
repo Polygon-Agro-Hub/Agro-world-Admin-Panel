@@ -204,6 +204,7 @@ import { AddFiealdOfficerComponent } from './application/steckholders-section/ad
 import { AddQuestionnaireDetailsComponent } from './application/plant-care-app/add-questionnaire/add-questionnaire-details';
 import { FieldOfficerProfileComponent } from './application/steckholders-section/field-officer-profile/field-officer-profile.component';
 import { ViewAllCertificatesComponent } from './application/plant-care-app/view-all-certificates/view-all-certificates.component';
+import { EditQuestionnaireDetailsComponent } from './application/plant-care-app/edit-questionnaire/edit-questionnaire-details';
 
 export const routes: Routes = [
   {
@@ -448,6 +449,10 @@ export const routes: Routes = [
               {
                 path: 'add-questionnaire-details/:certificateId',
                 component: AddQuestionnaireDetailsComponent,
+              },
+              {
+                path: 'edit-questionnaire-details/:certificateId',
+                component: EditQuestionnaireDetailsComponent,
               },
               {
                 path: 'edit-company-details/:id',

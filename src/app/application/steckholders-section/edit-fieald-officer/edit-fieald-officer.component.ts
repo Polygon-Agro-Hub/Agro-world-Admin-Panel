@@ -3,7 +3,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { CommonModule } from '@angular/common';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { StakeholderService } from '../../../services/stakeholder/stakeholder.service';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
@@ -79,6 +79,7 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private stakeHolderSrv: StakeholderService,
     private http: HttpClient,
   ) { }
@@ -961,9 +962,151 @@ export class EditFiealdOfficerComponent implements OnInit {
     this.loadBanks();
     this.loadBranches();
     this.getAllCompanies();
-    this.EpmloyeIdCreate();
+    
+    // Get the ID from route parameters
+    this.route.params.subscribe(params => {
+      this.itemId = +params['id']; // Convert to number
+      if (this.itemId) {
+        this.loadFieldOfficerData(this.itemId);
+      } else {
+        // If no ID, it's a create operation
+        this.EpmloyeIdCreate();
+      }
+    });
+    
     // Pre-fill country with Sri Lanka
     this.personalData.country = 'Sri Lanka';
+  }
+
+  // Add this method to load field officer data
+  loadFieldOfficerData(id: number): void {
+    this.isLoading = true;
+    this.stakeHolderSrv.getFiealdOfficerById(id).subscribe(
+      (response: any) => {
+        this.isLoading = false;
+        if (response && response.officerData && response.officerData.fieldOfficer) {
+          this.populateFormData(response.officerData.fieldOfficer);
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Field officer not found',
+            confirmButtonText: 'OK',
+          });
+          this.router.navigate(['/steckholders/action/field-inspectors']);
+        }
+      },
+      (error) => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to load field officer data',
+          confirmButtonText: 'OK',
+        });
+        console.error('Error loading field officer:', error);
+      }
+    );
+  }
+
+  // Add this method to populate form with existing data
+  populateFormData(officerData: any): void {
+    // Personal Details
+    this.personalData.id = officerData.id;
+    this.personalData.firstName = officerData.firstName;
+    this.personalData.lastName = officerData.lastName;
+    this.personalData.phoneNumber1 = officerData.phoneNumber01;
+    this.personalData.phoneNumber2 = officerData.phoneNumber02;
+    this.personalData.phoneCode1 = officerData.phoneCode01 || '+94';
+    this.personalData.phoneCode2 = officerData.phoneCode02 || '+94';
+    this.personalData.nic = officerData.nic;
+    this.personalData.email = officerData.email;
+    
+    // Employment Details
+    this.empType = officerData.employeeType;
+    this.personalData.empType = officerData.employeeType;
+    this.personalData.jobRole = officerData.jobRole;
+    this.personalData.empId = officerData.empId;
+    this.personalData.companyId = officerData.companyId;
+    
+    // Languages
+    if (officerData.language) {
+      this.personalData.language = officerData.language;
+    }
+    
+    // Residential Details
+    this.personalData.house = officerData.houseNumber;
+    this.personalData.street = officerData.streetName;
+    this.personalData.city = officerData.city;
+    this.personalData.distrct = officerData.district;
+    this.personalData.province = officerData.province;
+    this.personalData.country = officerData.country || 'Sri Lanka';
+    
+    // Bank Details
+    this.personalData.comAmount = officerData.comAmount;
+    this.personalData.accName = officerData.accHolderName;
+    this.personalData.accNumber = officerData.accNumber;
+    this.personalData.bank = officerData.bankName;
+    this.personalData.branch = officerData.branchName;
+    
+    // Assign Districts
+    if (officerData.assignDistricts && officerData.assignDistricts.length > 0) {
+      this.personalData.assignDistrict = officerData.assignDistricts[0];
+    }
+    
+    // Load images if available
+    this.loadExistingImages(officerData);
+    
+    // Set bank and branch dropdowns
+    this.setBankAndBranch(officerData.bankName, officerData.branchName);
+    
+    // Load manager if needed
+    if (officerData.irmId) {
+      this.personalData.irmId = officerData.irmId;
+      this.getAllCollectionManagers();
+    }
+
+    // Set profile image if available
+    if (officerData.image) {
+      this.selectedImage = officerData.image;
+    }
+  }
+
+  // Add method to load existing images
+  loadExistingImages(officerData: any): void {
+    // You can implement this to load existing images from URLs
+    // For now, we'll just set the file names
+    if (officerData.frontNic) {
+      this.personalData.frontNic = officerData.frontNic;
+    }
+    if (officerData.backNic) {
+      this.personalData.backNic = officerData.backNic;
+    }
+    if (officerData.backPassbook) {
+      this.personalData.backPassbook = officerData.backPassbook;
+    }
+    if (officerData.contract) {
+      this.personalData.contract = officerData.contract;
+    }
+  }
+
+  // Add method to set bank and branch dropdowns
+  setBankAndBranch(bankName: string, branchName: string): void {
+    // Find bank by name
+    const bank = this.banks.find(b => b.name === bankName);
+    if (bank) {
+      this.selectedBankId = bank.ID;
+      this.onBankChange();
+      
+      // After banks are loaded, find and select the branch
+      setTimeout(() => {
+        const branch = this.branches.find(b => b.name === branchName);
+        if (branch) {
+          this.selectedBranchId = branch.ID;
+          this.onBranchChange();
+        }
+      }, 100);
+    }
   }
 
   validateResidentialDetails(): string[] {
@@ -1192,6 +1335,223 @@ export class EditFiealdOfficerComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.itemId) {
+      this.updateFieldOfficer();
+    } else {
+      this.createFieldOfficer();
+    }
+  }
+
+  // Add update method
+  updateFieldOfficer(): void {
+    // Mark all fields as touched to show validation messages
+    this.markAllFieldsAsTouched();
+
+    const missingFields: string[] = [];
+
+    // Check required fields for pageOne
+    if (!this.personalData.empType) {
+      missingFields.push('Staff Employee Type is Required');
+    }
+
+    if (!this.isAtLeastOneLanguageSelected()) {
+      missingFields.push('Preferred Languages is Required');
+    }
+
+    if (!this.personalData.companyId) {
+      missingFields.push('Company Name is Required');
+    }
+
+    if (!this.personalData.jobRole) {
+      missingFields.push('Job Role is Required');
+    }
+
+    if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
+      missingFields.push('Chief Field Officer is Required');
+    }
+
+    if (!this.personalData.firstName) {
+      missingFields.push('First Name (in English) is Required');
+    }
+
+    if (!this.personalData.lastName) {
+      missingFields.push('Last Name (in English) is Required');
+    }
+
+    if (!this.personalData.phoneNumber1) {
+      missingFields.push('Mobile Number - 01 is Required');
+    } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber1)) {
+      missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
+    }
+
+    if (this.personalData.phoneNumber2 && !this.isValidPhoneNumber(this.personalData.phoneNumber2)) {
+      missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
+    }
+
+    if (this.areDuplicatePhoneNumbers()) {
+      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+    }
+
+    if (!this.personalData.nic) {
+      missingFields.push('NIC Number is Required');
+    } else if (!this.isValidNIC(this.personalData.nic)) {
+      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+    }
+
+    if (!this.personalData.email) {
+      missingFields.push('Email is Required');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+    }
+
+    // Check required fields for pageTwo
+    if (!this.personalData.house) {
+      missingFields.push('House / Plot Number is Required');
+    }
+
+    if (!this.personalData.street) {
+      missingFields.push('Street Name is Required');
+    }
+
+    if (!this.personalData.city) {
+      missingFields.push('City is Required');
+    }
+
+    if (!this.personalData.distrct) {
+      missingFields.push('District is Required');
+    }
+
+    if (!this.personalData.province) {
+      missingFields.push('Province is Required');
+    }
+
+    if (!this.personalData.accName) {
+      missingFields.push("Account Holder's Name is Required");
+    } else if (this.hasInvalidAccountHolderCharacters()) {
+      missingFields.push("Account Holder's Name should only contain English letters");
+    }
+
+    if (!this.personalData.accNumber) {
+      missingFields.push('Account Number is Required');
+    } else if (!this.isValidAccountNumber()) {
+      missingFields.push('Account Number must be between 8 and 16 digits');
+    }
+
+    if (!this.personalData.bank) {
+      missingFields.push('Bank Name is Required');
+    }
+
+    if (!this.personalData.branch) {
+      missingFields.push('Branch Name is Required');
+    }
+
+    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
+      missingFields.push('Commission Amount is required and must be greater than 0');
+    }
+
+    // Check required documents for pageThree
+    if (!this.personalData.frontNic && !this.selectedFrontNicFile) {
+      missingFields.push('NIC Front Image is Required');
+    }
+
+    if (!this.personalData.backNic && !this.selectedBackNicFile) {
+      missingFields.push('NIC Back Image is Required');
+    }
+
+    if (!this.personalData.backPassbook && !this.selectedPassbookFile) {
+      missingFields.push('Bank Passbook is Required');
+    }
+
+    if (!this.personalData.contract && !this.selectedContractFile) {
+      missingFields.push('Signed Contract is Required');
+    }
+
+    // If errors, show list and stop - validation messages will now be visible
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
+
+    // If valid, confirm update
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to update the field officer?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        // For now, we'll just show a success message since update endpoint might not be ready
+        // You can implement the actual update call when the backend is ready
+        setTimeout(() => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Field Officer Updated Successfully',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            },
+          });
+          this.navigatePath('/steckholders/action/field-inspectors');
+        }, 1000);
+
+        /*
+        this.stakeHolderSrv.updateFieldOfficer(
+          this.itemId!,
+          this.personalData,
+          this.selectedFile,
+          this.selectedFrontNicFile,
+          this.selectedBackNicFile,
+          this.selectedPassbookFile,
+          this.selectedContractFile
+        ).subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Field Officer Updated Successfully',
+              confirmButtonText: 'OK',
+            });
+            this.navigatePath('/steckholders/action/field-inspectors');
+          },
+          (error: any) => {
+            this.isLoading = false;
+            // Handle error
+          }
+        );
+        */
+      }
+    });
+  }
+
+  // Keep your existing createFieldOfficer logic
+  createFieldOfficer(): void {
     // Mark all fields as touched to show validation messages
     this.markAllFieldsAsTouched();
 

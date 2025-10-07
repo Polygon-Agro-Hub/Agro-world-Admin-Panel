@@ -11,7 +11,7 @@
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <div *ngIf="selectedPage === 'pageOne'">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-      Edit Personal Details
+      {{ itemId ? 'Edit' : 'Create' }} Personal Details
     </h2>
     <div>
       <div class="flex justify-center pt-3 pb-9">
@@ -63,6 +63,7 @@
                   value="Permanent"
                   [(ngModel)]="empType"
                   (ngModelChange)="updateEmployeeType($event)"
+                  [checked]="personalData.empType === 'Permanent'"
                 />
                 Permanent
               </label>
@@ -78,6 +79,7 @@
                   value="Temporary"
                   [(ngModel)]="empType"
                   (ngModelChange)="updateEmployeeType($event)"
+                  [checked]="personalData.empType === 'Temporary'"
                 />
                 Temporary
               </label>
@@ -161,7 +163,7 @@
             filterBy="label"
             [showClear]="false"
             placeholder="Select a company"
-            (onChange)="getAllCompanies()"
+            (onChange)="getAllCollectionManagers()"
             styleClass="w-full mt-1"
             panelStyleClass="custom-dropdown-panel"
             class="mt-1 block w-full p-dropdown-custom"
@@ -191,9 +193,9 @@
             class="mt-1 block w-full p-dropdown-custom"
             [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }"
           />
-          <!-- <span class="text-red-600 text-sm"
-            >Collection Centre Name is a required field</span
-          > -->
+          <span *ngIf="isFieldInvalid('assignDistrict')" class="text-red-600 text-sm"
+            >Assigned District is a required field</span
+          >
         </div>
         <div class="w-full">
           <label
@@ -258,7 +260,7 @@
           </p-dropdown>
 
           <span *ngIf="isFieldInvalid('irmId')" class="text-red-600 text-sm"
-            >Manager Name is a required field</span
+            >Chief Field Officer is a required field</span
           >
         </div>
         <div>
@@ -278,8 +280,6 @@
           <span *ngIf="isFieldInvalid('firstName')" class="text-red-600 text-sm"
             >First Name is a required field</span
           >
-          <!-- <span *ngIf="hasInvalidNameCharacters('firstNameEnglish')" class="text-red-600 text-sm">First Name should only
-            contain English letters</span> -->
         </div>
         <div>
           <label
@@ -298,8 +298,6 @@
           <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm"
             >Last Name is a required field</span
           >
-          <!-- <span *ngIf="hasInvalidNameCharacters('lastNameEnglish')" class="text-red-600 text-sm">Last Name should only
-            contain English letters</span> -->
         </div>
         <div>
           <label
@@ -323,7 +321,6 @@
                     !isValidPhoneNumber(personalData.phoneNumber1)
                 }"
               >
-                <!-- Dropdown items -->
                 <ng-template let-country pTemplate="item">
                   <div class="flex items-center gap-2">
                     <img
@@ -336,7 +333,6 @@
                   </div>
                 </ng-template>
 
-                <!-- Selected item -->
                 <ng-template let-country pTemplate="selectedItem">
                   <div class="flex items-center gap-2" *ngIf="country">
                     <img
@@ -369,7 +365,6 @@
                 "
               />
             </div>
-            <!-- Error messages outside the flex container -->
             <div class="mt-1">
               <span
                 *ngIf="
@@ -419,7 +414,6 @@
                     !isValidPhoneNumber(personalData.phoneNumber2)
                 }"
               >
-                <!-- Dropdown items -->
                 <ng-template let-country pTemplate="item">
                   <div class="flex items-center gap-2">
                     <img
@@ -432,7 +426,6 @@
                   </div>
                 </ng-template>
 
-                <!-- Selected item -->
                 <ng-template let-country pTemplate="selectedItem">
                   <div class="flex items-center gap-2" *ngIf="country">
                     <img
@@ -464,7 +457,6 @@
                 "
               />
             </div>
-            <!-- Error messages outside the flex container -->
             <div class="mt-1">
               <span
                 *ngIf="
@@ -630,7 +622,6 @@
             [(ngModel)]="personalData.country"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             readonly
-            value="Sri Lanka"
           />
         </div>
 
@@ -864,7 +855,7 @@
             (click)="uploadFrontImage()"
           >
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            Upload Front Image
+            {{ personalData.frontNic ? 'Change' : 'Upload' }} Front Image
           </button>
           <div
             *ngIf="personalData.frontNic"
@@ -898,7 +889,7 @@
             (click)="uploadBackImage()"
           >
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            Upload Back Image
+            {{ personalData.backNic ? 'Change' : 'Upload' }} Back Image
           </button>
           <div
             *ngIf="personalData.backNic"
@@ -932,7 +923,7 @@
             (click)="uploadPassbookImage()"
           >
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            Upload Passbook Image
+            {{ personalData.backPassbook ? 'Change' : 'Upload' }} Passbook Image
           </button>
           <div
             *ngIf="personalData.backPassbook"
@@ -954,7 +945,6 @@
           </div>
         </div>
 
-        <!-- Signed Contract -->
         <div class="pb-6">
           <label
             class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
@@ -967,7 +957,7 @@
             (click)="uploadContractImage()"
           >
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            Upload Contract Image
+            {{ personalData.contract ? 'Change' : 'Upload' }} Contract Image
           </button>
           <div
             *ngIf="personalData.contract"
@@ -1004,7 +994,7 @@
         type="button"
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
       >
-        Send to Approve
+        {{ itemId ? 'Update' : 'Send to Approve' }}
       </button>
     </div>
   </div>

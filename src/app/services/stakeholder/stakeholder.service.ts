@@ -139,4 +139,13 @@ export class StakeholderService {
       { headers }
     );
   }
+
+  getFiealdOfficerById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiUrl}auth/get-field-officer/${id}`, {
+      headers,
+    });
+  }
 }

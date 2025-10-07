@@ -1902,7 +1902,7 @@ export class EditFiealdOfficerComponent implements OnInit {
 
 class Personal {
   id!: number;
-  companyId!: any;
+  companyId!: number;
   irmId!: number | string;
   firstName!: string;
   lastName!: string;

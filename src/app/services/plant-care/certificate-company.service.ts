@@ -64,7 +64,7 @@ export class CertificateCompanyService {
       'Content-Type': 'application/json',
     });
     return this.http.post<{ message: string; status: boolean; id?: number }>(
-      `${this.apiUrl}certificate-company`,
+      `${this.apiUrl}certificate-company//company`,
       company,
       { headers }
     );
@@ -76,7 +76,7 @@ export class CertificateCompanyService {
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
     return this.http.get<{ company: CertificateCompany }>(
-      `${this.apiUrl}certificate-company/${id}`,
+      `${this.apiUrl}certificate-company/company/${id}`,
       { headers }
     );
   }
@@ -91,7 +91,7 @@ export class CertificateCompanyService {
       'Content-Type': 'application/json',
     });
     return this.http.put<{ message: string; status: boolean }>(
-      `${this.apiUrl}certificate-company/${id}`,
+      `${this.apiUrl}certificate-company/company/${id}`,
       company,
       { headers }
     );
@@ -105,7 +105,7 @@ export class CertificateCompanyService {
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
     return this.http.get<{ companies: CertificateCompany[]; total: number }>(
-      `${this.apiUrl}certificate-company/all?search=${search}`,
+      `${this.apiUrl}certificate-company/company/all?search=${search}`,
       { headers }
     );
   }
@@ -116,7 +116,7 @@ export class CertificateCompanyService {
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
     return this.http.delete<{ message: string; status: boolean }>(
-      `${this.apiUrl}certificate-company/${id}`,
+      `${this.apiUrl}certificate-company/company/${id}`,
       { headers }
     );
   }
@@ -128,7 +128,7 @@ export class CertificateCompanyService {
     });
 
     return this.http.get<CertificateCompany[]>(
-      `${this.apiUrl}certificate-company/all/names-only`,
+      `${this.apiUrl}certificate-company/company/all/names-only`,
       { headers }
     );
   }
@@ -160,6 +160,41 @@ export class CertificateCompanyService {
     return this.http.post(
       `${this.apiUrl}certificate-company/questionnaire/create`,
       payload,
+      { headers }
+    );
+  }
+
+  // Get questionnaires by certificate ID
+  getQuestionnaireList(certificateId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+    return this.http.get(
+      `${this.apiUrl}certificate-company/questionnaire/${certificateId}`,
+      { headers }
+    );
+  }
+
+  // Update questionnaire by ID
+  updateQuestionnaire(id: number, payload: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.put(
+      `${this.apiUrl}certificate-company/questionnaire/${id}`,
+      payload,
+      { headers }
+    );
+  }
+
+  // Delete questionnaire by ID
+  deleteQuestionnaire(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+    return this.http.delete(
+      `${this.apiUrl}certificate-company/questionnaire/${id}`,
       { headers }
     );
   }

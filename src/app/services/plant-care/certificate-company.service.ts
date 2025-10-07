@@ -53,7 +53,7 @@ export interface Questionnaire {
 export class CertificateCompanyService {
   private apiUrl = `${environment.API_URL}`;
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   // Create Certificate Company
   createCompany(
@@ -122,12 +122,12 @@ export class CertificateCompanyService {
   }
 
   // Get only id and companyName
-  getAllCompaniesNamesOnly(): Observable<CertificateCompany[]> {
+  getAllCompaniesNamesOnly(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
 
-    return this.http.get<CertificateCompany[]>(
+    return this.http.get<any>(
       `${this.apiUrl}certificate-company/all/names-only`,
       { headers }
     );
@@ -160,6 +160,33 @@ export class CertificateCompanyService {
     return this.http.post(
       `${this.apiUrl}certificate-company/questionnaire/create`,
       payload,
+      { headers }
+    );
+  }
+
+  getAllCertificates(filterQuction: string = '', selectArea: string = '', comapny: string = '', searchText: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+    let url = `${this.apiUrl}certificate-company/certificates/all-certificates?page=1`;
+
+    if (filterQuction) {
+      url += `&quaction=${filterQuction}`;
+    }
+
+    if (selectArea) {
+      url += `&area=${selectArea}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    if (comapny) {
+      url += `&company=${comapny}`;
+    }
+    return this.http.get<any>(
+      url,
       { headers }
     );
   }

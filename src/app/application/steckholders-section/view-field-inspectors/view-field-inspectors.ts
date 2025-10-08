@@ -49,7 +49,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
   ];
 
   statuses = [
-    { label: 'Pending', value: 'Pending' },
+    // { label: 'Pending', value: 'Pending' },
     { label: 'Approved', value: 'Approved' },
     { label: 'Rejected', value: 'Rejected' },
     { label: 'Not Approved', value: 'Not Approved' },
@@ -71,7 +71,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
     private router: Router,
     private location: Location,
     private stakeholderService: StakeholderService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadInspectors();
@@ -127,8 +127,8 @@ export class ViewFieldInspectorsComponent implements OnInit {
     this.applyFilters();
   }
 
-  viewInspector(empId: string) {
-    console.log('View Inspector:', empId);
+  viewInspector(id: number) {
+    this.router.navigate([`/steckholders/action/field-officer-profile/${id}`]);
   }
 
   addNew() {

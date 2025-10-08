@@ -198,11 +198,16 @@ import { EditacompanyComponent } from './application/govi-link/editacompany/edit
 import { EditCompanyDetailsComponent } from './application/plant-care-app/edit-company-details/edit-company-details';
 import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-company-details/view-company-details';
 import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
-import {ViewServicesListComponent} from './application/govi-link/view-services-list/view-services-list.component';
+import { ViewServicesListComponent } from './application/govi-link/view-services-list/view-services-list.component';
 import { AddCertificateDetailsComponent } from './application/plant-care-app/add-certificate/add-certificate-details';
 import { AddFiealdOfficerComponent } from './application/steckholders-section/add-fieald-officer/add-fieald-officer.component';
 import { AddQuestionnaireDetailsComponent } from './application/plant-care-app/add-questionnaire/add-questionnaire-details';
 import { FieldOfficerProfileComponent } from './application/steckholders-section/field-officer-profile/field-officer-profile.component';
+import { ViewAllCertificatesComponent } from './application/plant-care-app/view-all-certificates/view-all-certificates.component';
+import { EditQuestionnaireDetailsComponent } from './application/plant-care-app/edit-questionnaire/edit-questionnaire-details';
+import { EditFiealdOfficerComponent } from './application/steckholders-section/edit-fieald-officer/edit-fieald-officer.component';
+import { EditCertificateDetailsComponent } from './application/plant-care-app/edit-certificate/edit-certificate-details';
+import { ViewCertificateDetailsComponent } from './application/plant-care-app/view-certificate/view-certificate-details';
 
 export const routes: Routes = [
   {
@@ -445,8 +450,20 @@ export const routes: Routes = [
                 component: AddCertificateDetailsComponent,
               },
               {
+                path: 'view-certificate-details/:certificateId',
+                component: ViewCertificateDetailsComponent,
+              },
+              {
+                path: 'edit-certificate-details/:certificateId',
+                component: EditCertificateDetailsComponent,
+              },
+              {
                 path: 'add-questionnaire-details/:certificateId',
                 component: AddQuestionnaireDetailsComponent,
+              },
+              {
+                path: 'edit-questionnaire-details/:certificateId',
+                component: EditQuestionnaireDetailsComponent,
               },
               {
                 path: 'edit-company-details/:id',
@@ -459,6 +476,10 @@ export const routes: Routes = [
               {
                 path: 'view-company-list',
                 component: ViewCompanyListComponent,
+              },
+              {
+                path: 'view-certificate-list',
+                component: ViewAllCertificatesComponent,
               },
             ],
           },
@@ -733,6 +754,10 @@ export const routes: Routes = [
                   },
                 ],
               },
+              {
+                path: 'edit-field-officer/:id',
+                component: EditFiealdOfficerComponent,
+              }
 
             ],
           },
@@ -1292,9 +1317,9 @@ export const routes: Routes = [
                 path: 'edit-services/:id',
                 component: EditServicesComponent,
               },
-                   {
+              {
                 path: 'view-services-list',
-                component:  ViewServicesListComponent,
+                component: ViewServicesListComponent,
               }
 
 

@@ -6,7 +6,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
@@ -27,6 +27,7 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
     private fb: FormBuilder,
     private certificateCompanyService: CertificateCompanyService,
     private router: Router,
+    private location: Location,
     private route: ActivatedRoute
   ) {}
 
@@ -148,6 +149,10 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
     group.get('qTamil')?.setValue(group.get('qTamil')?.value);
   }
 
+  onBack(): void {
+    this.location.back();
+  }
+
   onSubmit(): void {
     this.form.markAllAsTouched();
 
@@ -207,7 +212,7 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
             title: 'font-semibold text-lg',
           },
         }).then(() => {
-          this.router.navigate(['/plant-care/action/view-questionnaires']);
+          this.router.navigate(['/plant-care/action/view-certificate-list']);
         });
       },
       error: (err) => {

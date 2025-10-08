@@ -9,7 +9,7 @@
 
 <div class="p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
   <h2 class="text-2xl mb-6 text-textLight dark:text-textDark font-bold">
-    Create Questionnaire
+    Edit Questionnaire
   </h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -38,9 +38,6 @@
               {{ q.value.type === "tick_off" ? "Tick Off" : "Photo Proof" }}
             </div>
           </div>
-          <h3 class="font-semibold text-textLight dark:text-textDark">
-            <ng-template #editingTemplate> </ng-template>
-          </h3>
           <div class="flex gap-2">
             <button
               *ngIf="!q.value.done && !q.value.editing"
@@ -70,6 +67,14 @@
               <i class="fa-solid fa-pen"></i>
             </button>
             <button
+              *ngIf="q.value.editing"
+              type="button"
+              class="px-3 py-2 bg-gray-400 text-white rounded-md"
+              (click)="cancelEditing(i)"
+            >
+              Cancel
+            </button>
+            <button
               type="button"
               class="text-red-500 disabled:text-red-400 disabled:bg-gray-100 disabled:cursor-not-allowed px-3 py-2 bg-red-100 rounded-md"
               (click)="deleteQuestion(i)"
@@ -95,79 +100,80 @@
               {{ q.value.qEnglish }}
             </div>
           </span>
-        </div>
-        <div
-          *ngIf="!q.value.done || q.value.editing"
-          class="grid grid-cols-1 gap-4"
-        >
-          <div>
-            <label
-              class="block text-sm font-medium text-textLight dark:text-textDark"
-              >Question ({{ q.value.qNo }}) in English *</label
-            >
-            <textarea
-              rows="2"
-              formControlName="qEnglish"
-              class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-              [class.border-red-500]="
-                q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched
-              "
-            ></textarea>
-            <small
-              *ngIf="q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched"
-              class="text-red-500"
-            >
-              English question is required
-            </small>
-          </div>
-          <div>
-            <label
-              class="block text-sm font-medium text-textLight dark:text-textDark"
-              >Question ({{ q.value.qNo }}) in Sinhala *</label
-            >
-            <textarea
-              rows="2"
-              formControlName="qSinhala"
-              class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-              [class.border-red-500]="
-                q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched
-              "
-            ></textarea>
-            <small
-              *ngIf="q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched"
-              class="text-red-500"
-            >
-              Sinhala question is required
-            </small>
-          </div>
-          <div>
-            <label
-              class="block text-sm font-medium text-textLight dark:text-textDark"
-              >Question ({{ q.value.qNo }}) in Tamil *</label
-            >
-            <textarea
-              rows="2"
-              formControlName="qTamil"
-              class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-              [class.border-red-500]="
-                q.get('qTamil')?.invalid && q.get('qTamil')?.touched
-              "
-            ></textarea>
-            <small
-              *ngIf="q.get('qTamil')?.invalid && q.get('qTamil')?.touched"
-              class="text-red-500"
-            >
-              Tamil question is required
-            </small>
-          </div>
+          <ng-template #editingTemplate>
+            <div class="w-full">
+              <div class="grid grid-cols-1 gap-4">
+                <div>
+                  <label
+                    class="block text-sm font-medium text-textLight dark:text-textDark"
+                    >Question ({{ q.value.qNo }}) in English *</label
+                  >
+                  <textarea
+                    rows="2"
+                    formControlName="qEnglish"
+                    class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                    [class.border-red-500]="
+                      q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched
+                    "
+                  ></textarea>
+                  <small
+                    *ngIf="q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched"
+                    class="text-red-500"
+                  >
+                    English question is required
+                  </small>
+                </div>
+                <div>
+                  <label
+                    class="block text-sm font-medium text-textLight dark:text-textDark"
+                    >Question ({{ q.value.qNo }}) in Sinhala *</label
+                  >
+                  <textarea
+                    rows="2"
+                    formControlName="qSinhala"
+                    class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                    [class.border-red-500]="
+                      q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched
+                    "
+                  ></textarea>
+                  <small
+                    *ngIf="q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched"
+                    class="text-red-500"
+                  >
+                    Sinhala question is required
+                  </small>
+                </div>
+                <div>
+                  <label
+                    class="block text-sm font-medium text-textLight dark:text-textDark"
+                    >Question ({{ q.value.qNo }}) in Tamil *</label
+                  >
+                  <textarea
+                    rows="2"
+                    formControlName="qTamil"
+                    class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+                    [class.border-red-500]="
+                      q.get('qTamil')?.invalid && q.get('qTamil')?.touched
+                    "
+                  ></textarea>
+                  <small
+                    *ngIf="q.get('qTamil')?.invalid && q.get('qTamil')?.touched"
+                    class="text-red-500"
+                  >
+                    Tamil question is required
+                  </small>
+                </div>
+              </div>
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>
 
     <!-- Add buttons -->
-    <div class="flex flex-col gap-4 mb-6 text-center min-h-96">
+    <div class="flex flex-col gap-4 mb-6 text-center min-h-32">
       <h2 class="text-md text-textLight dark:text-textDark italic mt-6">
-        Select Question Type
+        Add More Questions
       </h2>
       <hr />
       <div class="flex gap-2 justify-center">
@@ -197,6 +203,7 @@
       <button
         type="button"
         class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40"
+        (click)="goBack()"
       >
         Cancel
       </button>
@@ -205,7 +212,7 @@
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed w-40"
         [disabled]="isLoading || !isFormValid() || isAnyQuestionEditing()"
       >
-        Save
+        Save Changes
       </button>
     </div>
   </form>

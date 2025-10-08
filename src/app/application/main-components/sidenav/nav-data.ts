@@ -46,7 +46,7 @@ export const navbarData = [
   {
     RouterLink: 'plant-care',
     icon: 'fas fa-leaf',
-    label: 'Plant Care',
+    label: 'Govi Care',
     expanded: false,
     children: [
       {

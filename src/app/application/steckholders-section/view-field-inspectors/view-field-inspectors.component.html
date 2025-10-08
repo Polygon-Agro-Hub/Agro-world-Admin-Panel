@@ -13,105 +13,84 @@
 
 <div class="overflow-x-auto">
   <div class=" bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5">
-    <div *ngIf="!hasData" class="text-center py-8">
-      <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mx-auto" />
-    </div>
 
-    <div *ngIf="hasData">
-    <div class="flex justify-between items-center mb-8">
-  <!-- Left Title -->
-  <div class="flex items-center">
-   <h2 class="text-xl font-normal text-textLight dark:text-textDark flex items-center gap-3">
-  Field Officers 
+    <div>
+      <div class="flex justify-between items-center mb-8">
+        <!-- Left Title -->
+        <div class="flex items-center">
+          <h2 class="text-xl font-normal text-textLight dark:text-textDark flex items-center gap-3">
+            Field Officers
 
-   ({{ filteredInspectors.length < 10 ? ('0' + filteredInspectors.length) : filteredInspectors.length }})
+            ({{ filteredInspectors.length < 10 ? ('0' + filteredInspectors.length) : filteredInspectors.length }}) </h2>
 
-</h2>
+        </div>
 
-  </div>
-
-  <!-- Right Filters + Search -->
-  <div class="flex items-center ml-25 mr-5">
-    <!-- Status Dropdown -->
-    <div class="mr-5">
-      <p-dropdown
-        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]
-        text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-        [options]="statuses" [(ngModel)]="filterStatus"
-        placeholder="Status" [showClear]="true"
-        (onChange)="applyFilters()"
-        class="w-40">
-      </p-dropdown>
-    </div>
-
- 
-   <div class="mr-5">
-      <p-dropdown
-        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]
-        text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-        [options]="languages" [(ngModel)]="filterLanguage"
-        placeholder="Language" [showClear]="true"
-        (onChange)="applyFilters()"
-        class="w-40">
-      </p-dropdown>
-    </div> 
+        <!-- Right Filters + Search -->
+        <div class="flex items-center ml-25 mr-5">
+          <!-- Status Dropdown -->
+          <div class="mr-5">
+            <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]
+        text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]" [options]="statuses"
+              [(ngModel)]="filterStatus" placeholder="Status" [showClear]="!!filterStatus" (onChange)="applyFilters()"
+              class="w-40">
+            </p-dropdown>
+          </div>
 
 
-    <div class="mr-5">
-      <p-dropdown
-        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]
-        text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-        [options]="districts" [(ngModel)]="filterDistrict"
-        placeholder="District" [showClear]="true"
-        (onChange)="applyFilters()"
-        class="w-40">
-      </p-dropdown>
-    </div>
+          <div class="mr-5">
+            <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]
+        text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]" [options]="languages"
+              [(ngModel)]="filterLanguage" placeholder="Language" [showClear]="!!filterLanguage"
+              (onChange)="applyFilters()" class="w-40">
+            </p-dropdown>
+          </div>
 
-    <!-- Role Dropdown -->
-    <div class="mr-5">
-      <p-dropdown
-        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]
-        text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-        [options]="roles" [(ngModel)]="filterRole"
-        placeholder="Role" [showClear]="true"
-        (onChange)="applyFilters()"
-        class="w-40">
-      </p-dropdown>
-    </div>
 
-    <!-- Search Bar -->
-      <div class="flex items-center rounded-full px-4 py-2 w-95 bg-[#F1F1F1] dark:bg-[#272F45]">
-      <input type="text" placeholder="Search by EMP ID / NIC"
-        [(ngModel)]="searchTerm"
-        (keyup.enter)="onSearch()" (keyup.esc)="offSearch()"
-        class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+          <div class="mr-5">
+            <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]
+        text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]" [options]="districts"
+              [(ngModel)]="filterDistrict" placeholder="District" [showClear]="!!filterDistrict"
+              (onChange)="applyFilters()" class="w-40">
+            </p-dropdown>
+          </div>
 
-      <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-        (click)="onSearch()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-        </svg>
-      </button>
+          <!-- Role Dropdown -->
+          <div class="mr-5">
+            <p-dropdown styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45]
+        text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]" [options]="roles"
+              [(ngModel)]="filterRole" placeholder="Role" [showClear]="!!filterRole" (onChange)="applyFilters()"
+              class="w-40">
+            </p-dropdown>
+          </div>
 
-      <button *ngIf="searchTerm && searchTerm.trim() !== ''" type="button"
-        class="text-gray-500 hover:text-gray-700 focus:outline-none"
-        (click)="offSearch()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
-  </div>
-</div>
+          <!-- Search Bar -->
+          <div class="flex items-center rounded-full px-4 py-2 w-95 bg-[#F1F1F1] dark:bg-[#272F45]">
+            <input type="text" placeholder="Search by EMP ID / NIC" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()"
+              (keyup.esc)="offSearch()" class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="onSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+              </svg>
+            </button>
+
+            <button *ngIf="searchTerm && searchTerm.trim() !== ''" type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Table -->
-      <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4">
+      <table *ngIf="hasData"
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4">
         <thead>
           <tr>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -135,7 +114,7 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Pref. Languages
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Status
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -176,7 +155,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ inspector.language }}
             </td>
-            <td class="px-4 py-3">
+            <td class="px-4 py-3 text-center">
               <span [ngClass]="getStatusClass(inspector.status)">
                 {{ inspector.status }}
               </span>
@@ -191,7 +170,7 @@
               {{ inspector.modifiedBy }}
             </td>
             <td class="text-center flex justify-center mt-3 space-x-3">
-              <button class="w-6 h-6 text-blue-500 hover:text-blue-700" (click)="viewInspector(inspector.empId)"
+              <button class="w-6 h-6 text-blue-500 hover:text-blue-700" (click)="viewInspector(inspector.id)"
                 title="View Company">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -203,6 +182,11 @@
           </tr>
         </tbody>
       </table>
+
+      <div *ngIf="!hasData" class="text-center py-8">
+        <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mx-auto" />
+      </div>
     </div>
   </div>
 </div>

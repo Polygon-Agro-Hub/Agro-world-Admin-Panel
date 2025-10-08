@@ -648,4 +648,5 @@ class CollectionOfficer {
   vehBackImg?: string;
   vehSideImgA?: string;
   vehSideImgB?: string;
+  distributedCenterName!: string;
 }

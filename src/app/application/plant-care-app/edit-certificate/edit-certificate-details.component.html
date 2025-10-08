@@ -11,7 +11,7 @@
   <h2
     class="text-2xl text-left mb-6 text-textLight dark:text-textDark font-bold"
   >
-    ADD CERTIFICATE DETAILS
+    Edit Certificate Details
   </h2>
 
   <form [formGroup]="certificateForm" (ngSubmit)="onSubmit()">
@@ -164,7 +164,6 @@
         <p-multiSelect
           formControlName="serviceAreas"
           [options]="serviceAreasOptions"
-          optionLabel="name"
           placeholder="Select Service Areas"
           styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         ></p-multiSelect>
@@ -296,7 +295,10 @@
           for="tearmsFile"
           class="block text-sm font-medium text-textLight dark:text-textDark"
         >
-          Payment Terms File *
+          Payment Terms File
+          <span class="text-gray-500 text-sm"
+            >(Leave empty to keep current file)</span
+          >
         </label>
 
         <!-- Hidden file input -->
@@ -313,23 +315,24 @@
           for="tearmsFile"
           class="mt-2 block w-full cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 text-center py-2 rounded-md"
         >
-          <i class="fa-solid fa-upload mr-2"></i> Upload PDF
+          <i class="fa-solid fa-upload mr-2"></i> Upload New PDF
         </label>
 
-        <!-- Show attached file -->
+        <!-- Show existing file -->
+        <div
+          *ngIf="existingFileName && !uploadedFile"
+          class="mt-2 text-textLight dark:text-textDark"
+        >
+          Attached:
+          <span class="text-[#415CFF]">{{ existingFileName }}</span>
+        </div>
+
+        <!-- Show new attached file -->
         <div
           *ngIf="uploadedFile"
           class="mt-2 text-textLight dark:text-textDark"
         >
-          Attached: <span class="text-[#415CFF]">{{ uploadedFile.name }} </span>
-        </div>
-
-        <!-- Validation error -->
-        <div
-          *ngIf="!uploadedFile && certificateForm.get('tearmsFile')?.touched"
-          class="text-red-500 text-sm mt-1"
-        >
-          Payment Terms File is required
+          New File: <span class="text-[#415CFF]">{{ uploadedFile.name }}</span>
         </div>
       </div>
 
@@ -450,7 +453,7 @@
         class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-40"
         [disabled]="isLoading"
       >
-        Save
+        Update
       </button>
     </div>
   </form>

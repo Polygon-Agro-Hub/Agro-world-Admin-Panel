@@ -132,13 +132,13 @@ export class EditDistributionCentreComponent implements OnInit {
   // Add this to your ngOnInit method after form setup
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
+    this.fetchAllCompanies();
+    this.initializeProvinceOptions();
+    this.setupFormValueChangeListeners()
     if (id) {
       this.fetchDistributionCenterById(id);
     }
-    this.fetchAllCompanies();
-    this.initializeProvinceOptions();
-
-    this.setupFormValueChangeListeners();
+    ;
 
     // Add this for debugging - remove after fixing
     this.distributionForm.statusChanges.subscribe((status) => {
@@ -994,7 +994,12 @@ export class EditDistributionCentreComponent implements OnInit {
                       'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   },
                 }).then(() => {
-                  this.location.back();
+                  if (updateData.company === 2) {
+                    this.navigatePath('/distribution-hub/action/view-polygon-centers');
+                  } else {
+                    this.navigatePath('/distribution-hub/action/view-destribition-center');
+                  }
+                  // this.location.back();
                 });
               } else {
                 this.showErrorAlert(response.error || 'Update failed');
@@ -1463,6 +1468,10 @@ export class EditDistributionCentreComponent implements OnInit {
       this.distributionForm.get('contact1')?.updateValueAndValidity();
       this.distributionForm.get('contact2')?.updateValueAndValidity();
     }
+  }
+
+  navigatePath(path: string) {
+    this.router.navigate([path]);
   }
 }
 

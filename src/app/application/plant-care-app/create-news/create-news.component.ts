@@ -10,8 +10,9 @@ import {
   Validators,
   ReactiveFormsModule,
   FormsModule,
+  
 } from '@angular/forms';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, DatePipe, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -51,6 +52,7 @@ interface NewsItem {
   ],
   templateUrl: './create-news.component.html',
   styleUrls: ['./create-news.component.css'],
+  providers: [DatePipe]
 })
 export class CreateNewsComponent {
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
@@ -117,7 +119,8 @@ export class CreateNewsComponent {
     private newsService: NewsService,
     private router: Router,
     private tokenService: TokenService,
-    private location: Location
+    private location: Location,
+    private datePipe: DatePipe
   ) {}
 
   validateTitleEnglish(value: string): void {
@@ -276,6 +279,9 @@ createNews() {
     return;
   }
 
+  this.createNewsObj.publishDate = this.formatDates(this.originalPublishDate)
+  this.createNewsObj.expireDate = this.formatDates(this.originalExpireDate)
+
   // Append validated data to FormData
   formData.append('titleEnglish', titleEnglish);
   formData.append('descriptionEnglish', descriptionEnglish);
@@ -366,6 +372,10 @@ createNews() {
       });
     }
   });
+}
+
+formatDates(date: Date | null): string {
+  return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
 }
 
 back(): void {

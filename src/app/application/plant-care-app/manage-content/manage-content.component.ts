@@ -87,7 +87,7 @@ export class ManageContentComponent implements OnInit {
     private sanitizer: DomSanitizer,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllNews(this.page, this.itemsPerPage);
@@ -99,18 +99,18 @@ export class ManageContentComponent implements OnInit {
 
   fetchAllNews(page: number = 1, limit: number = this.itemsPerPage) {
     this.page = page;
-    
+
     // First convert the string to a Date object if it exists
     let dateObj = this.createdDateFilter ? new Date(this.createdDateFilter) : undefined;
-    
+
     // Then format it (using Solution 1 approach - date only)
-    let formattedDate = dateObj 
-        ? this.formatLocalDate(dateObj) 
-        : undefined;
+    let formattedDate = dateObj
+      ? this.formatLocalDate(dateObj)
+      : undefined;
 
     console.log("createdDateFilter", this.createdDateFilter);
     console.log('Formatted Date:', formattedDate);
-    
+
     this.newsService
       .fetchAllNews(
         page,
@@ -129,15 +129,15 @@ export class ManageContentComponent implements OnInit {
           this.isLoading = false;
         }
       );
-}
+  }
 
-// Helper function to format date as YYYY-MM-DD
-private formatLocalDate(date: Date): string {
+  // Helper function to format date as YYYY-MM-DD
+  private formatLocalDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-}
+  }
 
   deleteNews(id: any) {
     const token = this.tokenService.getToken();
@@ -162,7 +162,15 @@ private formatLocalDate(date: Date): string {
         this.isLoading = true;
         this.newsService.deleteNews(id).subscribe(
           (data: any) => {
-            Swal.fire('Deleted!', 'The news item has been deleted.', 'success');
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The news item has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              }
+            });
             this.fetchAllNews();
             this.isLoading = false;
           },
@@ -193,110 +201,118 @@ private formatLocalDate(date: Date): string {
   }
 
   // Update the openPopup method with proper typing
-openPopup(id: any) {
-  this.isPopupVisible = true;
-  this.isLoading = true;
-  this.newsService.getNewsById(id).subscribe(
-    (data: NewsItem[]) => {
-      // Store the single news item in selectedNewsItem
-      this.selectedNewsItem = data[0];
-      
-      // Add null checks before accessing properties
-      if (this.selectedNewsItem) {
-        this.safeHtmlDescriptionEnglish =
-          this.sanitizer.bypassSecurityTrustHtml(
-            this.selectedNewsItem.descriptionEnglish
+  openPopup(id: any) {
+    this.isPopupVisible = true;
+    this.isLoading = true;
+    this.newsService.getNewsById(id).subscribe(
+      (data: NewsItem[]) => {
+        // Store the single news item in selectedNewsItem
+        this.selectedNewsItem = data[0];
+
+        // Add null checks before accessing properties
+        if (this.selectedNewsItem) {
+          this.safeHtmlDescriptionEnglish =
+            this.sanitizer.bypassSecurityTrustHtml(
+              this.selectedNewsItem.descriptionEnglish
+            );
+          this.safeHtmlDescriptionSinhala =
+            this.sanitizer.bypassSecurityTrustHtml(
+              this.selectedNewsItem.descriptionSinhala
+            );
+          this.safeHtmlDescriptionTamil = this.sanitizer.bypassSecurityTrustHtml(
+            this.selectedNewsItem.descriptionTamil
           );
-        this.safeHtmlDescriptionSinhala =
-          this.sanitizer.bypassSecurityTrustHtml(
-            this.selectedNewsItem.descriptionSinhala
-          );
-        this.safeHtmlDescriptionTamil = this.sanitizer.bypassSecurityTrustHtml(
-          this.selectedNewsItem.descriptionTamil
-        );
+        }
+
+        this.isLoading = false;
+      },
+      (error) => {
+        this.isLoading = false;
       }
-      
-      this.isLoading = false;
-    },
-    (error) => {
-      this.isLoading = false;
-    }
-  );
-}
+    );
+  }
 
   closePopup() {
-  this.isPopupVisible = false;
-  this.selectedNewsItem = null; // Clear the selected item
-}
+    this.isPopupVisible = false;
+    this.selectedNewsItem = null; // Clear the selected item
+  }
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.router.navigate(['/plant-care/action']);
-    }
-  });
-}
+      }
+    });
+  }
 
 
   updateStatus(id: any, currentStatus: string) {
-  // Determine the message and button text based on current status
-  const isDraft = currentStatus === 'Draft';
-  const message = isDraft 
-    ? 'Do you want to publish?' 
-    : 'Do you want to move back to draft?';
-  const confirmButtonText = isDraft ? 'Publish' : 'Draft';
+    // Determine the message and button text based on current status
+    const isDraft = currentStatus === 'Draft';
+    const message = isDraft
+      ? 'Do you want to publish?'
+      : 'Do you want to move back to draft?';
+    const confirmButtonText = isDraft ? 'Publish' : 'Draft';
 
-  // Show confirmation dialog
-  Swal.fire({
-    title: 'Confirm Status Change',
-    text: message,
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: confirmButtonText,
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // User confirmed, proceed with status update
-      this.isLoading = true;
-      this.newsService.updateNewsStatus(id).subscribe(
-        (data: any) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Status updated successfully!',
-          });
-          this.fetchAllNews();
-          this.isLoading = false;
-        },
-        (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error updating status',
-          });
-          this.isLoading = false;
-        }
-      );
-    }
-  });
-}
+    // Show confirmation dialog
+    Swal.fire({
+      title: 'Confirm Status Change',
+      text: message,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: confirmButtonText,
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User confirmed, proceed with status update
+        this.isLoading = true;
+        this.newsService.updateNewsStatus(id).subscribe(
+          (data: any) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Status updated successfully!',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              }
+            });
+            this.fetchAllNews();
+            this.isLoading = false;
+          },
+          (error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error updating status',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              }
+            });
+            this.isLoading = false;
+          }
+        );
+      }
+    });
+  }
 
   onPageChange(event: number) {
     this.page = event;
@@ -311,7 +327,7 @@ openPopup(id: any) {
 
 
 
-  onDateClear(){
+  onDateClear() {
     this.createdDateFilter = '';
     this.fetchAllNews(1, this.itemsPerPage);
 

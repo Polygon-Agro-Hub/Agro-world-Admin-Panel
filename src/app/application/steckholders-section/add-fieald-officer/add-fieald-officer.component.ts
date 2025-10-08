@@ -573,7 +573,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       if (
         !this.personalData.irmId &&
-        this.personalData.jobRole === 'Collection Officer'
+        this.personalData.jobRole === 'Field Officer '
       ) {
         missingFields.push('Collection Centre Manager is Required');
       }
@@ -583,7 +583,7 @@ export class AddFiealdOfficerComponent implements OnInit {
       }
 
       if (
-        this.personalData.jobRole === 'Collection Officer' &&
+        this.personalData.jobRole === 'Field Officer ' &&
         !this.personalData.irmId
       ) {
         missingFields.push('Manager Name is Required');

@@ -212,7 +212,7 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
             title: 'font-semibold text-lg',
           },
         }).then(() => {
-          this.router.navigate(['/plant-care/action/view-questionnaires']);
+          this.router.navigate(['/plant-care/action/view-certificate-list']);
         });
       },
       error: (err) => {

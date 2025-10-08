@@ -206,6 +206,8 @@ import { FieldOfficerProfileComponent } from './application/steckholders-section
 import { ViewAllCertificatesComponent } from './application/plant-care-app/view-all-certificates/view-all-certificates.component';
 import { EditQuestionnaireDetailsComponent } from './application/plant-care-app/edit-questionnaire/edit-questionnaire-details';
 import { EditFiealdOfficerComponent } from './application/steckholders-section/edit-fieald-officer/edit-fieald-officer.component';
+import { EditCertificateDetailsComponent } from './application/plant-care-app/edit-certificate/edit-certificate-details';
+import { ViewCertificateDetailsComponent } from './application/plant-care-app/view-certificate/view-certificate-details';
 
 export const routes: Routes = [
   {
@@ -446,6 +448,14 @@ export const routes: Routes = [
               {
                 path: 'add-certificate-details',
                 component: AddCertificateDetailsComponent,
+              },
+              {
+                path: 'view-certificate-details/:certificateId',
+                component: ViewCertificateDetailsComponent,
+              },
+              {
+                path: 'edit-certificate-details/:certificateId',
+                component: EditCertificateDetailsComponent,
               },
               {
                 path: 'add-questionnaire-details/:certificateId',

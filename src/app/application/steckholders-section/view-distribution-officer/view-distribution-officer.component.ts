@@ -74,7 +74,11 @@ export class ViewDistributionOfficerComponent {
   selectedIrmId: string | null = null;
   selectCenterStatus: string = '';
   selectStatus: string = '';
+ irmValidationError: boolean = false;
 
+
+  // Add this line
+  centerValidationError: boolean = false;
   hasData: boolean = false;
 
   centerStatusOptions = [
@@ -535,8 +539,14 @@ export class ViewDistributionOfficerComponent {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'User disclaimed successfully!',
+            text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
+                customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
+
           }).then((result) => {
             if (result.isConfirmed) {
               window.location.reload();
@@ -555,52 +565,67 @@ export class ViewDistributionOfficerComponent {
       );
   }
 
+
+
   claimOfficer() {
+    // Reset validation flags
+    this.centerValidationError = false;
+    this.irmValidationError = false;
+
+    // Validate center
     if (!this.selectedCenterId) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please select a center.',
-        confirmButtonText: 'OK',
-      });
+      this.centerValidationError = true;
+    }
+
+    // Validate manager
+    if (!this.selectedIrmId) {
+      this.irmValidationError = true;
+    }
+
+    // Stop if any validation failed
+    if (this.centerValidationError || this.irmValidationError) {
       return;
     }
 
-    // Prepare payload - include manager ID if selected
+    // Payload
     const data = {
       centerId: this.selectedCenterId,
       irmId: this.selectedIrmId,
-      id:this.selectOfficerId
-    }
+      id: this.selectOfficerId
+    };
 
-    this.distributionService
-      .claimDistributedOfficer(data)
-      .subscribe(
-        () => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Officer claimed successfully!',
-            confirmButtonText: 'OK',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.iseditModalOpen = false;
-              this.selectedCenterId = null;
-              this.selectedIrmId = null;
-              this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
-            }
-          });
-        },
-        () => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to claim officer!',
-            confirmButtonText: 'Try Again',
-          });
-        }
-      );
+    this.distributionService.claimDistributedOfficer(data).subscribe(
+      () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Officer claimed successfully!',
+          confirmButtonText: 'OK',
+           customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.iseditModalOpen = false;
+            this.selectedCenterId = null;
+            this.selectedIrmId = null;
+            this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
+          }
+        });
+      },
+      () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to claim officer!',
+          confirmButtonText: 'Try Again',
+        });
+      }
+    );
   }
+
 
   applyStatusFilters() {
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);

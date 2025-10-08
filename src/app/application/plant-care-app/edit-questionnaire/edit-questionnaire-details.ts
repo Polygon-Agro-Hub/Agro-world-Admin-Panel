@@ -52,7 +52,7 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
             title: 'font-semibold text-lg',
           },
         });
-        this.router.navigate(['/plant-care/action/view-questionnaires']);
+        this.router.navigate(['/plant-care/action/view-certificate-list']);
         return;
       }
 
@@ -85,7 +85,9 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
                 title: 'font-semibold text-lg',
               },
             }).then(() => {
-              this.router.navigate(['/plant-care/action/view-questionnaires']);
+              this.router.navigate([
+                '/plant-care/action/view-certificate-list',
+              ]);
             });
             return;
           }
@@ -396,7 +398,7 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
             title: 'font-semibold text-lg',
           },
         }).then(() => {
-          this.router.navigate(['/plant-care/action/view-questionnaires']);
+          this.router.navigate(['/plant-care/action/view-certificate-list']);
         });
       })
       .catch((err) => {

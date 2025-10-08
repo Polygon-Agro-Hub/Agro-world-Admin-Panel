@@ -154,12 +154,11 @@
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
             (in English) *</label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
-            (blur)="onBlur('firstNameEnglish')" (input)="formatName('firstNameEnglish')"
+            (blur)="onBlur('firstNameEnglish')" 
             (keypress)="preventSpecialCharacters($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">First Name (in English) is required</span>
-          <span *ngIf="hasInvalidNameCharacters('firstNameEnglish')" class="text-red-600 text-sm">First Name should only
-            contain English letters</span>
+         
         </div>
 
         <!-- Updated Last Name (English) input -->
@@ -167,12 +166,11 @@
           <label for="lastNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             English) *</label>
           <input id="lastNameEnglish" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
-            (blur)="onBlur('lastNameEnglish')" (input)="formatName('lastNameEnglish')"
+            (blur)="onBlur('lastNameEnglish')" 
             (keypress)="preventSpecialCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">Last Name (in English) is required</span>
-          <span *ngIf="hasInvalidNameCharacters('lastNameEnglish')" class="text-red-600 text-sm">Last Name should only
-            contain English letters</span>
+       
         </div>
 
         <!-- Updated First Name (Sinhala) input -->
@@ -180,12 +178,11 @@
           <label for="firstNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
             (in Sinhala) *</label>
           <input id="firstNameSinhala" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
-            (blur)="onBlur('firstNameSinhala')" (input)="formatSinhalaName('firstNameSinhala')"
+            (blur)="onBlur('firstNameSinhala')" 
             
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameSinhala')" class="text-red-600 text-sm">First Name (in Sinhala) is required</span>
-          <span *ngIf="hasInvalidSinhalaCharacters('firstNameSinhala')" class="text-red-600 text-sm">First Name should
-            only contain Sinhala letters</span>
+       
         </div>
 
         <!-- Updated Last Name (Sinhala) input -->
@@ -193,11 +190,10 @@
           <label for="lastNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Sinhala) *</label>
           <input id="lastNameSinhala" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
-            (blur)="onBlur('lastNameSinhala')" (input)="formatSinhalaName('lastNameSinhala')"
+            (blur)="onBlur('lastNameSinhala')" 
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameSinhala')" class="text-red-600 text-sm">Last Name (in Sinhala) is required</span>
-          <span *ngIf="hasInvalidSinhalaCharacters('lastNameSinhala')" class="text-red-600 text-sm">Last Name should
-            only contain Sinhala letters</span>
+         
         </div>
 
         <!-- Updated First Name (Tamil) input -->
@@ -205,11 +201,10 @@
           <label for="firstNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Tamil) *</label>
           <input id="firstNameTamil" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
-            (blur)="onBlur('firstNameTamil')" (input)="formatTamilName('firstNameTamil')"
+            (blur)="onBlur('firstNameTamil')" 
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('firstNameTamil')" class="text-red-600 text-sm">First Name (in Tamil) is required</span>
-          <span *ngIf="hasInvalidTamilCharacters('firstNameTamil')" class="text-red-600 text-sm">First Name should only
-            contain Tamil letters</span>
+         
         </div>
 
         <!-- Updated Last Name (Tamil) input -->
@@ -217,11 +212,10 @@
           <label for="lastNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Tamil) *</label>
           <input id="lastNameTamil" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
-            (blur)="onBlur('lastNameTamil')" (input)="formatTamilName('lastNameTamil')"
+            (blur)="onBlur('lastNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('lastNameTamil')" class="text-red-600 text-sm">Last Name (in Tamil) is required</span>
-          <span *ngIf="hasInvalidTamilCharacters('lastNameTamil')" class="text-red-600 text-sm">Last Name should only
-            contain Tamil letters</span>
+         
         </div>
 
 

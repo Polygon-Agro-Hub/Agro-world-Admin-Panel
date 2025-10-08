@@ -25,6 +25,9 @@ export class ViewAllCertificatesComponent implements OnInit {
   selectArea: string = '';
   selectCompany: any = '';
 
+  isServicePopUp: boolean = false;
+  serviceAreaArray: any = [];
+
   QuactionFilter: any = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
@@ -61,7 +64,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   constructor(
     private certificateSrv: CertificateCompanyService,
     private router: Router // private location: Location,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchCompany();
@@ -103,7 +106,7 @@ export class ViewAllCertificatesComponent implements OnInit {
     this.fetchData();
   }
 
-  applyFilters() {}
+  applyFilters() { }
 
   editCertificate(item: CertificateData) {
     this.router.navigate([
@@ -196,6 +199,16 @@ export class ViewAllCertificatesComponent implements OnInit {
         : `/plant-care/action/edit-questionnaire-details/${item.id}`;
 
     this.router.navigate([path]);
+  }
+
+  servicePopUpOpen(areas: string) {
+    this.serviceAreaArray = areas.split(',').map(area => area.trim());
+    this.isServicePopUp = true;
+  }
+
+  servicePopUpClose() {
+    this.serviceAreaArray = [];
+    this.isServicePopUp = false;
   }
 }
 

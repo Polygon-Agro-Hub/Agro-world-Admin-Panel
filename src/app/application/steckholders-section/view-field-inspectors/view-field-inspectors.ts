@@ -49,7 +49,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
   ];
 
   statuses = [
-    { label: 'Pending', value: 'Pending' },
+    // { label: 'Pending', value: 'Pending' },
     { label: 'Approved', value: 'Approved' },
     { label: 'Rejected', value: 'Rejected' },
     { label: 'Not Approved', value: 'Not Approved' },

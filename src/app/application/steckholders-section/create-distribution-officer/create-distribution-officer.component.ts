@@ -395,16 +395,6 @@ onSubmit() {
             Swal.fire('Error', this.errorMessage, 'error');
           }
         );
-    } else {
-      Swal.fire({
-        title: 'Cancelled', text: 'Your action has been cancelled', icon: 'info', 
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      
-      },
-      }
-      );
     }
   });
 }

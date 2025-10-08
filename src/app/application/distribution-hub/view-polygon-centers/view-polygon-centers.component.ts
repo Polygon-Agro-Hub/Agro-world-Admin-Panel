@@ -315,7 +315,7 @@ export class ViewPolygonCentersComponent implements OnInit {
  deleteCenter(id: number) {
   Swal.fire({
     title: 'Are you sure?',
-    text: 'You will not be able to recover this center!',
+    text: 'You will not be able to recover this centre!',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes, delete it!',

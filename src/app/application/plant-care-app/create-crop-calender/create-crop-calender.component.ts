@@ -817,79 +817,108 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
-  async updateCropCalendar(): Promise<void> {
-    this.cropForm.markAllAsTouched();
+ async updateCropCalendar(): Promise<void> {
+  this.cropForm.markAllAsTouched();
 
-    // Create a custom validation that excludes groupId and varietyId for edit mode
-    if (this.cropId !== null) {
-      // Check if other required fields are valid (excluding groupId and varietyId)
-      const otherFieldsValid =
-        this.cropForm.get('cultivationMethod')?.valid &&
-        this.cropForm.get('natureOfCultivation')?.valid &&
-        this.cropForm.get('cropDuration')?.valid &&
-        this.cropForm.get('suitableAreas')?.valid;
+  // Create a custom validation that excludes groupId and varietyId for edit mode
+  if (this.cropId !== null) {
+    // Check if other required fields are valid (excluding groupId and varietyId)
+    const otherFieldsValid =
+      this.cropForm.get('cultivationMethod')?.valid &&
+      this.cropForm.get('natureOfCultivation')?.valid &&
+      this.cropForm.get('cropDuration')?.valid &&
+      this.cropForm.get('suitableAreas')?.valid;
 
-      if (!otherFieldsValid) {
-        this.showMissingFieldsAlert();
-        return;
-      }
-    } else {
-      // For create mode, validate all fields
-      if (this.cropForm.invalid) {
-        this.showMissingFieldsAlert();
-        return;
-      }
+    if (!otherFieldsValid) {
+      this.showMissingFieldsAlert();
+      return;
     }
-
-    const formValue = this.cropForm.value;
-    try {
-      const isDuplicate = await this.checkDuplicateCropCalendar(formValue, this.cropId!);
-      if (isDuplicate) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Already Exists',
-          text: 'A crop calendar with the same variety, cultivation method, and nature of cultivation already exists.',
-          confirmButtonText: 'OK',
-          allowOutsideClick: false,
-        });
-        return;
-      }
-
-      if (formValue.suitableAreas && Array.isArray(formValue.suitableAreas)) {
-        formValue.suitableAreas = formValue.suitableAreas.join(', ');
-      }
-
-      const formData = new FormData();
-      formData.append('method', formValue.cultivationMethod);
-      formData.append('natOfCul', formValue.natureOfCultivation);
-      formData.append('cropDuration', formValue.cropDuration);
-      formData.append('suitableAreas', formValue.suitableAreas);
-
-      // Only append groupId and varietyId if they have values (for edit mode)
-      if (formValue.groupId) formData.append('groupId', formValue.groupId);
-      if (formValue.varietyId) formData.append('varietyId', formValue.varietyId);
-
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
-      }
-
-      this.isLoading = true;
-      this.cropCalendarService.updateCropCalendar(this.cropId!, formData).subscribe({
-        next: () => {
-          this.isLoading = false;
-          Swal.fire('Success', 'Crop Calendar updated successfully!', 'success');
-          this.router.navigate(['/plant-care/action/view-crop-calender']);
-        },
-        error: () => {
-          this.isLoading = false;
-          Swal.fire('Error', 'Failed to update crop calendar.', 'error');
-        },
-      });
-    } catch (err) {
-      this.isLoading = false;
-      Swal.fire('Error', 'Failed to perform duplicate check.', 'error');
+  } else {
+    // For create mode, validate all fields
+    if (this.cropForm.invalid) {
+      this.showMissingFieldsAlert();
+      return;
     }
   }
+
+  const formValue = this.cropForm.value;
+
+  try {
+    const isDuplicate = await this.checkDuplicateCropCalendar(formValue, this.cropId!);
+    if (isDuplicate) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Already Exists',
+        text: 'A crop calendar with the same variety, cultivation method, and nature of cultivation already exists.',
+        confirmButtonText: 'OK',
+        allowOutsideClick: false,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+
+    if (formValue.suitableAreas && Array.isArray(formValue.suitableAreas)) {
+      formValue.suitableAreas = formValue.suitableAreas.join(', ');
+    }
+
+    const formData = new FormData();
+    formData.append('method', formValue.cultivationMethod);
+    formData.append('natOfCul', formValue.natureOfCultivation);
+    formData.append('cropDuration', formValue.cropDuration);
+    formData.append('suitableAreas', formValue.suitableAreas);
+
+    // Only append groupId and varietyId if they have values (for edit mode)
+    if (formValue.groupId) formData.append('groupId', formValue.groupId);
+    if (formValue.varietyId) formData.append('varietyId', formValue.varietyId);
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+
+    this.isLoading = true;
+    this.cropCalendarService.updateCropCalendar(this.cropId!, formData).subscribe({
+      next: () => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Crop calendar has been updated successfully.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+        this.router.navigate(['/plant-care/action/view-crop-calender']);
+      },
+      error: () => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update crop calendar.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+      },
+    });
+  } catch (err) {
+    this.isLoading = false;
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to perform duplicate check.',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+  }
+}
 
   private showMissingFieldsAlert(): void {
     const missingFields = this.getMissingFields();
@@ -1020,7 +1049,7 @@ export class CreateCropCalenderComponent implements OnInit {
         this.isLoading = false;
         Swal.fire({
           title: 'Success',
-          text: 'XLSX file uploaded and data inserted successfully',
+          text: 'Crop calendar has been added successfully.',
           icon: 'success',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

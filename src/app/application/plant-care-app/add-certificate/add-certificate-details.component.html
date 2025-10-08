@@ -255,14 +255,38 @@
               certificateForm.get('commission')?.touched
           }"
         />
+
+        <!-- Negative value error -->
         <div
           *ngIf="
-            certificateForm.get('commission')?.invalid &&
-            certificateForm.get('commission')?.touched
-          "
+      certificateForm.get('commission')?.errors?.['min'] &&
+      certificateForm.get('commission')?.touched
+    "
+          class="text-red-500 text-sm mt-1"
+        >
+          Negative values are not allowed
+        </div>
+
+        <!-- Above 100 error -->
+        <div
+          *ngIf="
+      certificateForm.get('commission')?.errors?.['max'] &&
+      certificateForm.get('commission')?.touched
+    "
           class="text-red-500 text-sm mt-1"
         >
           Enter a valid commission between 0 and 100
+        </div>
+
+        <!-- Required error -->
+        <div
+          *ngIf="
+      certificateForm.get('commission')?.errors?.['required'] &&
+      certificateForm.get('commission')?.touched
+    "
+          class="text-red-500 text-sm mt-1"
+        >
+          Commission is required
         </div>
       </div>
 
@@ -353,6 +377,7 @@
             [ngModelOptions]="{ standalone: true }"
             placeholder="-- Select Crop --"
             styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            class="w-full"
           ></p-dropdown>
 
           <button

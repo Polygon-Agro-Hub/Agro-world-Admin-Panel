@@ -56,7 +56,8 @@
         <div class="flex flex-row justify-center ">
           <button 
             class="min-w-24 flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#38608480] bg-[#DBEEFF80] dark:text-[#3980C0] text-[#3980C0] border-2 border-[#3980C0] dark:border-[#3980C0] text-lg rounded-xl shadow-md"
-          >
+            (click)="editFieldOfficer(officerObj.id)"
+            >
   
             <i class="fa-solid fa-pen-to-square text-base text-[#3980C0] dark:text-[#3980C0]"></i>
             <span class="">Edit</span>
@@ -72,7 +73,7 @@
         <p class="text-[#030308] dark:text-[#ffffff]">Personal Information</p>
         <button
           class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md"
-          [disabled]="isGeneratingPDF"
+          [disabled]="isGeneratingPDF" (click)="generatePDF()"
         >
           <i
             class="fa-solid fa-download"

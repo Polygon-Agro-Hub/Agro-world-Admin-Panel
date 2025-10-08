@@ -876,19 +876,6 @@ export class CreateCenterHeadComponent implements OnInit {
               });
             },
           });
-      } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Cancelled',
-          text: 'Your action has been cancelled',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-            htmlContainer: 'text-left',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-          },
-        });
       }
     });
   }

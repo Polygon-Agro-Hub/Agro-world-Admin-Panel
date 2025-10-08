@@ -824,18 +824,6 @@ onSubmit() {
             });
           }
         );
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Cancelled',
-        text: 'Your action has been cancelled',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      }).then(() => {
-        this.location.back();
-      });
     }
   });
 }

@@ -1209,9 +1209,6 @@ page: number = 1;
               Swal.fire('Error', this.errorMessage, 'error');
             }
           );
-      } else {
-        this.isLoading = false;
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
   }

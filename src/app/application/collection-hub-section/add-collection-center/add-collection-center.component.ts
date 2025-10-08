@@ -494,17 +494,6 @@ isFieldInvalid(field: string): boolean {
           });
         },
       });
-    } else {
-      Swal.fire({
-        icon: 'info',
-        title: 'Cancelled',
-        text: 'Collection Centre creation has been cancelled',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
     }
   });
 }

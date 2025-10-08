@@ -1,0 +1,248 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <h2
+    class="text-2xl text-left mb-6 text-textLight dark:text-textDark font-bold"
+  >
+    View Certificate Details
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Certificate Name -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Certificate Name *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.srtName || "--" }}
+      </div>
+    </div>
+
+    <!-- Certificate Number -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Certificate Number *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.srtNumber || "--" }}
+      </div>
+    </div>
+
+    <!-- Company -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Company *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ getCompanyName(certificateData?.srtcomapnyId) || "--" }}
+      </div>
+    </div>
+
+    <!-- Applicable For -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Applicable For *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.applicable || "--" }}
+      </div>
+    </div>
+
+    <!-- Accreditation Body -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Accreditation Body *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.accreditation || "--" }}
+      </div>
+    </div>
+
+    <!-- Service Areas Button -->
+    <div class="my-3">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark mb-1"
+        >Service Areas *</label
+      >
+      <button
+        (click)="showServiceAreasModal()"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 w-full justify-center"
+      >
+        <i class="fa-solid fa-eye mr-1"></i> View Service Areas
+      </button>
+    </div>
+
+    <!-- Price -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Price (Rs.) *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.price ? (certificateData.price | number) : "--" }}
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Timeline (Mention in months) *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.timeLine || "--" }}
+      </div>
+    </div>
+
+    <!-- Commission -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Agreed Commission (%) *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.commission || "--" }}
+      </div>
+    </div>
+
+    <!-- Payment Terms -->
+    <div class="my-3">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+      >
+        Payment Terms *
+      </label>
+      <div class="mt-2">
+        <div *ngIf="certificateData?.tearms" class="flex items-center gap-2">
+          <button
+            (click)="viewPdf()"
+            class="px-4 py-2 bg-[#3980C0] text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 w-full justify-center"
+          >
+            <i class="fa-solid fa-eye mr-2"></i> View PDF
+          </button>
+        </div>
+        <div *ngIf="!certificateData?.tearms" class="text-gray-500">
+          No file uploaded
+        </div>
+      </div>
+    </div>
+
+    <!-- Scope -->
+    <div class="my-3 md:col-span-2">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Scope *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[80px]"
+      >
+        {{ certificateData?.scope || "--" }}
+      </div>
+    </div>
+
+    <!-- Target Crops Section -->
+    <div class="my-3 w-full md:col-span-2" *ngIf="showTargetCropsSection">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Target Crops *</label
+      >
+      <div class="mt-3 border rounded-md p-3 min-h-[50px] flex flex-wrap gap-2">
+        <ng-container *ngIf="isForSelectedCrops">
+          <ng-container *ngIf="selectedCrops.length > 0; else noCrops">
+            <div
+              *ngFor="let crop of selectedCrops"
+              class="bg-[#F2F2F2] px-3 py-1 rounded-md"
+            >
+              {{ crop.cropNameEnglish }}
+            </div>
+          </ng-container>
+          <ng-template #noCrops>
+            <span
+              class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]"
+              >-- No crops selected --</span
+            >
+          </ng-template>
+        </ng-container>
+
+        <!-- Show this message if not "For Selected Crops" -->
+        <ng-container *ngIf="!isForSelectedCrops">
+          <span
+            class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]"
+            >-- All crops has been selected --</span
+          >
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service Areas Modal -->
+<div
+  *ngIf="showServiceAreasPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  (click)="closeServiceAreasModal()"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex justify-center items-center p-6">
+      <h3 class="text-lg font-semibold text-textLight dark:text-textDark">
+        Service Areas
+      </h3>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6">
+      <div class="space-y-2 max-h-96 overflow-y-auto">
+        <div
+          *ngFor="let area of getServiceAreasArray(); let i = index"
+          class="flex items-center gap-3 p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+        >
+          <span
+            class="text-sm font-medium text-textLight dark:text-textDark min-w-6"
+          >
+            {{ i + 1 }}.
+          </span>
+          <span class="text-textLight dark:text-textDark">{{ area }}</span>
+        </div>
+
+        <div
+          *ngIf="getServiceAreasArray().length === 0"
+          class="text-center text-gray-500 dark:text-gray-400 py-4"
+        >
+          No service areas selected
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex justify-center p-6">
+      <button
+        (click)="closeServiceAreasModal()"
+        class="px-4 py-2 bg-[#74788D] text-white rounded-md hover:bg-gray-600 transition-colors w-32"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

@@ -22,7 +22,7 @@ interface CultivationItems {
 }
 
 interface NewsItem {
-  ongoingcultivationscropsid:number;
+  ongoingcultivationscropsid: number;
   ongoingCultivationId: any;
   cropName: string;
   cropCalendar: number;
@@ -32,9 +32,9 @@ interface NewsItem {
   cropDuration: string;
   longitude: any;
   latitude: any;
-  modifyBy: string;
-  userLastName: string;
+  modifyBy: string | null;
   userFirstName: string;
+  userLastName: string;
   totalTasks: number;
   completedTasks: number;
   extentac: number;
@@ -57,7 +57,7 @@ interface NewsItem {
 })
 export class SlaveCropCalendarComponent implements OnInit {
   itemId: number | null = null;
-  cultivationItems: CultivationItems[] = []; // Fixed typo
+  cultivationItems: CultivationItems[] = [];
   cultivationId: any | null = null;
   name: string = '';
   category: string = '';
@@ -78,7 +78,7 @@ export class SlaveCropCalendarComponent implements OnInit {
     private location: Location,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -91,13 +91,7 @@ export class SlaveCropCalendarComponent implements OnInit {
 
       if (this.cultivationId && this.userId) {
         this.fetchAllNews(this.cultivationId, this.userId);
-        // TODO: Fetch userName (e.g., via userService.getUserById(this.userId))
-        // Example:
-        // this.userService.getUserById(this.userId).subscribe(user => {
-        //   this.userName = user.name || 'Unknown User';
-        // });
       } else {
-        // Fallback for invalid params
         this.newsItems = [];
         this.hasData = false;
         this.isLoading = false;
@@ -114,7 +108,7 @@ export class SlaveCropCalendarComponent implements OnInit {
     this.isLoading = true;
     this.ongoingCultivationService.getOngoingCultivationById(cultivationId, userId).subscribe(
       (data) => {
-        this.cultivationItems = data || []; // Fixed typo and added default
+        this.cultivationItems = data || [];
         this.hasData = this.cultivationItems.length > 0;
         this.isLoading = false;
       },
@@ -129,24 +123,16 @@ export class SlaveCropCalendarComponent implements OnInit {
   fetchAllNews(cultivationId: number, userId: number) {
     this.isLoading = true;
     this.ongoingCultivationService.getOngoingCultivationById(cultivationId, userId).subscribe(
-      (data) => {
+      (data: { userFirstName: string; userLastName: string; cultivations: NewsItem[] }) => {
         console.log('Fetched data:', data);
-        this.newsItems = data || [];
-        this.hasData = this.newsItems.length > 0; // Update hasData
-
-        // Set userName from first item (all items have same user)
-        if (this.newsItems.length > 0) {
-          const user = this.newsItems[0];
-          this.userName = `${user.userFirstName || ''} ${user.userLastName || ''}`.trim();
-        } else {
-          this.userName = 'Unknown User';
-        }
-
+        this.newsItems = data.cultivations || [];
+        this.hasData = this.newsItems.length > 0;
+        this.userName = `${data.userFirstName || ''} ${data.userLastName || ''}`.trim() || 'Unknown User';
         this.isLoading = false;
       },
       (error) => {
         this.isLoading = false;
-        this.hasData = false; // Show no-data on error
+        this.hasData = false;
         this.newsItems = [];
         this.userName = 'Unknown User';
         console.error('Error fetching data:', error);
@@ -172,7 +158,7 @@ export class SlaveCropCalendarComponent implements OnInit {
             onCulscropID,
             cultivationId,
             cropName,
-            ongCultivationId
+            ongCultivationId,
           },
         }
       );
@@ -193,41 +179,41 @@ export class SlaveCropCalendarComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     });
 
     if (result.isConfirmed) {
       this.isLoading = true;
       this.ongoingCultivationService.deleteOngoingCultivation(id).subscribe({
         next: () => {
-  this.newsItems.splice(index, 1);
-  this.hasData = this.newsItems.length > 0; // Update hasData after deletion
-  this.isLoading = false;
-  Swal.fire({
-    title: 'Deleted!',
-    text: 'Cultivation has been deleted.',
-    icon: 'success',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  });
-},
-error: (err) => {
-  this.isLoading = false;
-  console.error('Error deleting cultivation:', err);
-  Swal.fire({
-    title: 'Error!',
-    text: 'Failed to delete cultivation',
-    icon: 'error',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  });
-},
+          this.newsItems.splice(index, 1);
+          this.hasData = this.newsItems.length > 0;
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Cultivation has been deleted.',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
+        },
+        error: (err) => {
+          this.isLoading = false;
+          console.error('Error deleting cultivation:', err);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to delete cultivation',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
+        },
       });
     }
   }
@@ -244,24 +230,15 @@ error: (err) => {
     if (days >= 365) {
       const years = Math.floor(days / 365);
       const remainingDays = days % 365;
-      return `${years} year${years > 1 ? 's' : ''}${remainingDays > 0
-        ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
-        : ''
-        }`;
+      return `${years} year${years > 1 ? 's' : ''}${remainingDays > 0 ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}` : ''}`;
     } else if (days >= 30) {
       const months = Math.floor(days / 30);
       const remainingDays = days % 30;
-      return `${months} month${months > 1 ? 's' : ''}${remainingDays > 0
-        ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
-        : ''
-        }`;
+      return `${months} month${months > 1 ? 's' : ''}${remainingDays > 0 ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}` : ''}`;
     } else if (days >= 7) {
       const weeks = Math.floor(days / 7);
       const remainingDays = days % 7;
-      return `${weeks} week${weeks > 1 ? 's' : ''}${remainingDays > 0
-        ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}`
-        : ''
-        }`;
+      return `${weeks} week${weeks > 1 ? 's' : ''}${remainingDays > 0 ? ` ${remainingDays} day${remainingDays > 1 ? 's' : ''}` : ''}`;
     } else {
       return `${days} day${days !== 1 ? 's' : ''}`;
     }

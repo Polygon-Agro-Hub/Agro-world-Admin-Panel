@@ -1391,9 +1391,6 @@ onSubmit() {
           }
           
         );
-    } else {
-      this.isLoading = false;
-      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
     }
   });
 }

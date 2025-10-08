@@ -293,7 +293,7 @@ export class AddFiealdOfficerComponent implements OnInit {
         this.fiealdManagerData = res;
         // Convert to dropdown options format
         this.managerOptions = this.fiealdManagerData.map((manager) => ({
-          label: manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
+          label: manager.firstName + ' ' + manager.lastName,
           value: manager.id,
         }));
       });
@@ -573,7 +573,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       if (
         !this.personalData.irmId &&
-        this.personalData.jobRole === 'Collection Officer'
+        this.personalData.jobRole === 'Field Officer '
       ) {
         missingFields.push('Collection Centre Manager is Required');
       }
@@ -583,7 +583,7 @@ export class AddFiealdOfficerComponent implements OnInit {
       }
 
       if (
-        this.personalData.jobRole === 'Collection Officer' &&
+        this.personalData.jobRole === 'Field Officer ' &&
         !this.personalData.irmId
       ) {
         missingFields.push('Manager Name is Required');
@@ -1518,6 +1518,6 @@ class Company {
 
 class fiealdManager {
   id!: number;
-  firstNameEnglish!: string;
-  lastNameEnglish!: string;
+  firstName!: string;
+  lastName!: string;
 }

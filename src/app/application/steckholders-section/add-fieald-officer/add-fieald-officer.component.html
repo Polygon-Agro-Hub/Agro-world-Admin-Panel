@@ -56,32 +56,32 @@
           >
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5 cursor-pointer"
+                type="radio"
+                name="enpType"
+                value="Permanent"
+                [(ngModel)]="empType"
+                (ngModelChange)="updateEmployeeType($event)"
+              />
               <label
                 class="block text-sm font-medium text-gray-700 dark:text-textDark"
               >
-                <input
-                  class="w-5 h-5 cursor-pointer"
-                  type="radio"
-                  name="enpType"
-                  value="Permanent"
-                  [(ngModel)]="empType"
-                  (ngModelChange)="updateEmployeeType($event)"
-                />
                 Permanent
               </label>
             </div>
             <div class="flex items-center space-x-2">
+              <input
+                class="w-5 h-5 cursor-pointer"
+                type="radio"
+                name="enpType"
+                value="Temporary"
+                [(ngModel)]="empType"
+                (ngModelChange)="updateEmployeeType($event)"
+              />
               <label
                 class="block text-sm font-medium text-gray-700 dark:text-textDark"
               >
-                <input
-                  class="w-5 h-5 cursor-pointer"
-                  type="radio"
-                  name="enpType"
-                  value="Temporary"
-                  [(ngModel)]="empType"
-                  (ngModelChange)="updateEmployeeType($event)"
-                />
                 Temporary
               </label>
             </div>

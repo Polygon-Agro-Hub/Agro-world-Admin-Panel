@@ -1298,6 +1298,7 @@ onSubmit() {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
     });
     this.isLoading = false;
@@ -1313,6 +1314,12 @@ onSubmit() {
     confirmButtonText: 'Yes, Save it!',
     cancelButtonText: 'No, cancel',
     reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+      cancelButton: 'bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700',
+    },
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;
@@ -1338,11 +1345,17 @@ onSubmit() {
         .subscribe(
           (res: any) => {
             this.isLoading = false;
-            Swal.fire(
-              'Success',
-              'Collection Officer Updated Successfully',
-              'success'
-            );
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Collection Officer Updated Successfully',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            });
             this.navigatePath('/steckholders/action/collective-officer');
           },
           (error: any) => {
@@ -1384,6 +1397,7 @@ onSubmit() {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                   htmlContainer: 'text-left',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
               return;
@@ -1391,10 +1405,7 @@ onSubmit() {
           }
           
         );
-    } else {
-      this.isLoading = false;
-      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-    }
+    } 
   });
 }
 

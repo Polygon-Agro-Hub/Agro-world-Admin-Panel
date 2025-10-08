@@ -194,7 +194,7 @@
 </div>
 
 <div *ngIf="itemId != null">
-  <button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+  <button onclick="history.back()" class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -208,7 +208,7 @@
       <div>
         <label for="sinhalaCropName" class="text-sm font-medium text-textLight dark:text-textDark">Publish Date <span
             class="text-[#2E2E2E]">*</span></label>
-        <input [(ngModel)]="newsItems[0].expireDate" id="createdDateFilter" type="date"
+        <input [(ngModel)]="newsItems[0].publishDate" id="createdDateFilter" type="date"
           class="ml-2 border-solid border-2 text-textLight dark:text-textDark focus:ring-4 focus:outline-non font-normal rounded-xl text-sm px-2 py-1 text-center inline-flex items-center bg-[#F1F1F1] dark:bg-[#272F45] cursor-pointer"
           [min]="(newsItems[0] && newsItems[0].publishDate) || today" (change)="checkExpireDateEditNews()" />
         <div *ngIf="!isPublishAfterExpireValidEditNews" class="text-red-500">

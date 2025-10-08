@@ -61,7 +61,7 @@ interface DistributionOfficers {
 })
 export class UpdateDistributionOfficerComponent {
   userForm: FormGroup = new FormGroup({});
-page: number = 1;
+  page: number = 1;
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   selectedFile: File | null = null;
@@ -174,7 +174,7 @@ page: number = 1;
     private router: Router,
     private distributionOfficerServ: DistributionHubService,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadBanks();
@@ -484,20 +484,20 @@ page: number = 1;
     }
   }
 
- formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish' | 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
-  let value = this.personalData[fieldName];
-  if (value) {
-    // Remove leading spaces
-    value = value.replace(/^\s+/, '');
-    
-    // Replace multiple consecutive spaces with single space
-    value = value.replace(/\s{2,}/g, ' ');
-    
-    this.personalData[fieldName] = value;
-  }
-}
+  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish' | 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
+    let value = this.personalData[fieldName];
+    if (value) {
+      // Remove leading spaces
+      value = value.replace(/^\s+/, '');
 
- 
+      // Replace multiple consecutive spaces with single space
+      value = value.replace(/\s{2,}/g, ' ');
+
+      this.personalData[fieldName] = value;
+    }
+  }
+
+
 
   hasInvalidAccountHolderName(): boolean {
     const value = this.personalData.accHolderName;
@@ -547,45 +547,45 @@ page: number = 1;
 
   // Update the checkFormValidity method to include password validation
   checkFormValidity(): boolean {
-  const isFirstNameValid =
-    !!this.personalData.firstNameEnglish &&
-    !!this.personalData.firstNameSinhala &&
-    !!this.personalData.firstNameTamil;
+    const isFirstNameValid =
+      !!this.personalData.firstNameEnglish &&
+      !!this.personalData.firstNameSinhala &&
+      !!this.personalData.firstNameTamil;
 
-  const isLastNameValid =
-    !!this.personalData.lastNameEnglish &&
-    !!this.personalData.lastNameSinhala &&
-    !!this.personalData.lastNameTamil;
+    const isLastNameValid =
+      !!this.personalData.lastNameEnglish &&
+      !!this.personalData.lastNameSinhala &&
+      !!this.personalData.lastNameTamil;
 
-  const isContact1Valid = this.isValidPhoneNumber(this.personalData.contact1);
-  const isEmailValid = this.isValidEmail(this.personalData.email);
-  const isEmpTypeSelected = !!this.empType;
-  const isLanguagesSelected = this.isAtLeastOneLanguageSelected();
-  const isCompanySelected = !!this.personalData.companyId;
-  const isCenterSelected = !!this.personalData.centerId;
-  const isJobRoleSelected = !!this.personalData.jobRole;
-  const isNicValid = this.isValidNIC(this.personalData.nic);
+    const isContact1Valid = this.isValidPhoneNumber(this.personalData.contact1);
+    const isEmailValid = this.isValidEmail(this.personalData.email);
+    const isEmpTypeSelected = !!this.empType;
+    const isLanguagesSelected = this.isAtLeastOneLanguageSelected();
+    const isCompanySelected = !!this.personalData.companyId;
+    const isCenterSelected = !!this.personalData.centerId;
+    const isJobRoleSelected = !!this.personalData.jobRole;
+    const isNicValid = this.isValidNIC(this.personalData.nic);
 
-  const isPasswordValid =
-    !this.personalData.password ||
-    (this.isValidPassword(this.personalData.password) &&
-      this.doPasswordsMatch());
+    const isPasswordValid =
+      !this.personalData.password ||
+      (this.isValidPassword(this.personalData.password) &&
+        this.doPasswordsMatch());
 
-  return (
-    isFirstNameValid &&
-    isLastNameValid &&
-    isContact1Valid &&
-    isEmailValid &&
-    isEmpTypeSelected &&
-    isLanguagesSelected &&
-    isCompanySelected &&
-    isCenterSelected &&
-    isJobRoleSelected &&
-    isNicValid &&
-    isPasswordValid &&
-    !this.arePhoneNumbersSame()
-  );
-}
+    return (
+      isFirstNameValid &&
+      isLastNameValid &&
+      isContact1Valid &&
+      isEmailValid &&
+      isEmpTypeSelected &&
+      isLanguagesSelected &&
+      isCompanySelected &&
+      isCenterSelected &&
+      isJobRoleSelected &&
+      isNicValid &&
+      isPasswordValid &&
+      !this.arePhoneNumbersSame()
+    );
+  }
 
   onInputChange(event: any, type: string): void {
     if (type === 'phone') {
@@ -1122,6 +1122,7 @@ page: number = 1;
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       this.isLoading = false;
@@ -1137,6 +1138,12 @@ page: number = 1;
       confirmButtonText: 'Yes, Save it!',
       cancelButtonText: 'No, cancel',
       reverseButtons: true,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton: 'bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -1165,11 +1172,17 @@ page: number = 1;
           .subscribe(
             (res: any) => {
               this.isLoading = false;
-              Swal.fire(
-                'Success',
-                'Distribution Officer Updated Successfully',
-                'success'
-              );
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Distribution Officer Updated Successfully',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              });
               // this.navigatePath(
               //   '/steckholders/action/view-distribution-officers'
               // );
@@ -1206,12 +1219,19 @@ page: number = 1;
               }
 
               this.errorMessage = errorMessage;
-              Swal.fire('Error', this.errorMessage, 'error');
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: this.errorMessage,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              });
             }
           );
-      } else {
-        this.isLoading = false;
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
   }
@@ -1276,17 +1296,17 @@ page: number = 1;
   }
 
   openPopup(item: any) {
-  const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
+    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
 
-  // Dynamic message based on status
-  let message = '';
-  if (item.status === 'Rejected') {
-    message = 'Are you sure you want to approve this distribution officer?';
-  } else if (item.status === 'Not Approved') {
-    message = 'Are you sure you want to approve this distribution officer?';
-  }
+    // Dynamic message based on status
+    let message = '';
+    if (item.status === 'Rejected') {
+      message = 'Are you sure you want to approve this distribution officer?';
+    } else if (item.status === 'Not Approved') {
+      message = 'Are you sure you want to approve this distribution officer?';
+    }
 
-  const tableHtml = `
+    const tableHtml = `
     <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
       <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
       <div>
@@ -1298,63 +1318,63 @@ page: number = 1;
     </div>
   `;
 
-  Swal.fire({
-    html: tableHtml,
-    showConfirmButton: false,
-    width: 'auto',
-    background: 'transparent',
-    backdrop: 'rgba(0, 0, 0, 0.5)',
-    grow: 'row',
-    showClass: { popup: 'animate__animated animate__fadeIn' },
-    hideClass: { popup: 'animate__animated animate__fadeOut' },
-    didOpen: () => {
-      if (showApproveButton) {
-        document
-          .getElementById('approveButton')
-          ?.addEventListener('click', () => {
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            this.distributionOfficerServ.ChangeStatus(item.id, 'Approved').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The Collection Officer was approved successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                  this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
-                } else {
+    Swal.fire({
+      html: tableHtml,
+      showConfirmButton: false,
+      width: 'auto',
+      background: 'transparent',
+      backdrop: 'rgba(0, 0, 0, 0.5)',
+      grow: 'row',
+      showClass: { popup: 'animate__animated animate__fadeIn' },
+      hideClass: { popup: 'animate__animated animate__fadeOut' },
+      didOpen: () => {
+        if (showApproveButton) {
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.distributionOfficerServ.ChangeStatus(item.id, 'Approved').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Collection Officer was approved successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                () => {
+                  this.isLoading = false;
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
                 }
-              },
-              () => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while approving. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              }
-            );
-          });
-      }
-    },
-  });
-}
+              );
+            });
+        }
+      },
+    });
+  }
 
-fetchAllDistributionOfficer(
+  fetchAllDistributionOfficer(
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,

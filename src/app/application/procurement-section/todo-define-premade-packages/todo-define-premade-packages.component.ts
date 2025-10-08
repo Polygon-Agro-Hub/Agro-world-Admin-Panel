@@ -424,8 +424,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       this.loading = false;
       // Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
       Swal.fire({
-        title: 'Product & Quantity are missing.',
-        text: 'Please select products for all inputs before submitting.',
+        title: 'Missing or Invalid Information',
+        text: 'Product & Quantity are missing.',
         icon: 'warning',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -436,8 +436,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     } else if (hasInvalidItem) {
       this.loading = false;
       Swal.fire({
-        title: 'Product is missing.',
-        text: 'Please select products for all inputs before submitting.',
+        title: 'Missing or Invalid Information',
+        text: 'Product is missing.',
         icon: 'warning',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -448,8 +448,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     } else if (hasInvalidQty) {
       this.loading = false;
       Swal.fire({
-        title: 'Quantity is missing.',
-        text: 'Please select products for all inputs before submitting.',
+        title: 'Missing or Invalid Information',
+        text: 'Quantity is missing.',
         icon: 'warning',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

@@ -15,15 +15,40 @@ export class GoviLinkService {
     private tokenService: TokenService,
   ) { }
 
-  createCompany(companyData: any): Observable<any> {
+  createCompany(companyData: any, logoFile?: File): Observable<any> {
+    const formData = new FormData();
+
+    // Append each field individually
+    formData.append('regNumber', companyData.regNumber);
+    formData.append('companyName', companyData.companyName);
+    formData.append('email', companyData.email);
+    formData.append('financeOfficerName', companyData.financeOfficerName);
+    formData.append('accName', companyData.accName);
+    formData.append('accNumber', companyData.accNumber);
+    formData.append('bank', companyData.bank);
+    formData.append('branch', companyData.branch);
+    formData.append('phoneCode1', companyData.phoneCode1);
+    formData.append('phoneNumber1', companyData.phoneNumber1);
+    formData.append('phoneCode2', companyData.phoneCode2);
+    formData.append('phoneNumber2', companyData.phoneNumber2);
+    formData.append('modifyBy', companyData.modifyBy);
+
+    // Append logo file if provided
+    if (logoFile) {
+      console.log('Appending logo file:', logoFile.name, logoFile.size); // Debug log
+      formData.append('logo', logoFile, logoFile.name);
+    } else {
+      console.log('No logo file to append'); // Debug log
+    }
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
+      // Remove Content-Type - let browser set it with boundary for multipart
     });
 
     const url = `${this.apiUrl}create-company`;
 
-    return this.http.post(url, companyData, {
+    return this.http.post(url, formData, {
       headers,
     });
   }
@@ -94,55 +119,55 @@ export class GoviLinkService {
     });
   }
 
-updateOfficerService(
-  id: number,
-  data: {
-    englishName: string;
-    tamilName: string;
-    sinhalaName: string;
-    srvFee?: number;
-    modifyBy?: string;
+  updateOfficerService(
+    id: number,
+    data: {
+      englishName: string;
+      tamilName: string;
+      sinhalaName: string;
+      srvFee?: number;
+      modifyBy?: string;
+    }
+  ): Observable<any> {
+    const token = localStorage.getItem('AdminLoginToken'); // fetch token
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    const modifyBy = localStorage.getItem('AdminUserId'); // <--- correct key
+    const payload = { ...data, modifyBy };
+
+    console.log('Payload being sent:', payload); // optional: check in console
+
+    return this.http.put(this.apiUrl + `update-officer-service/${id}`, payload, {
+      headers,
+    });
   }
-): Observable<any> {
-  const token = localStorage.getItem('AdminLoginToken'); // fetch token
-  const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  });
-
-  const modifyBy = localStorage.getItem('AdminUserId'); // <--- correct key
-  const payload = { ...data, modifyBy };
-
-  console.log('Payload being sent:', payload); // optional: check in console
-
-  return this.http.put(this.apiUrl + `update-officer-service/${id}`, payload, {
-    headers,
-  });
-}
 
 
-getOfficerServiceById(id: number): Observable<any> {
-  const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${this.token}`,
-  });
+  getOfficerServiceById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
 
-  return this.http.get(this.apiUrl + `get-officer-service-by-id/${id}`, { headers });
-}
+    return this.http.get(this.apiUrl + `get-officer-service-by-id/${id}`, { headers });
+  }
   getAllOfficerServices(): Observable<any[]> {
-   const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${this.token}`,
-  });
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
     return this.http.get<any[]>(`${this.apiUrl}get-all-officer-service`, { headers });
   }
-deleteOfficerService(id: number): Observable<any> {
-  const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${this.token}`,
-  });
-  return this.http.delete<any>(`${this.apiUrl}/officer-service/${id}`, { headers });
-}
+  deleteOfficerService(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.delete<any>(`${this.apiUrl}/officer-service/${id}`, { headers });
+  }
 
 }
 

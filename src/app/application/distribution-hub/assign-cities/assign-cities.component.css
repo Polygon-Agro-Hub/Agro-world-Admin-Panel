@@ -1,146 +1,147 @@
-/* Hides clear icon when dropdown has no selected value */
-::ng-deep .p-dropdown .p-dropdown-clear {
-    display: none;
+:host ::ng-deep .p-dropdown {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    /* gray-300 */
+    border-radius: 0.375rem;
+    /* p-2 */
+    color: var(--text-textLight);
+    background-color: var(--tile-tileLight);
 }
 
-/* Show the clear button only when a value is selected */
-::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
-    display: inline-flex !important;
+:host ::ng-deep .dark .p-dropdown {
+    color: var(--text-textDark);
+    background-color: var(--tile-tileBlack);
+    border-color: #4b5563;
+    /* dark border color */
+}
+
+:host ::ng-deep .p-dropdown.p-invalid {
+    border-color: #dc2626;
+    /* red-600 */
+}
+
+::ng-deep .p-dropdown-filter-container {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+::ng-deep .dark .p-dropdown-item.p-highlight {
+    background-color: #1e40af;
+    color: white;
+}
+
+::ng-deep .dark .p-dropdown-item {
+    color: #f9fafb;
+}
+
+::ng-deep .p-dropdown-item:hover {
+    background-color: #f3f4f6;
+}
+
+::ng-deep .dark .p-dropdown-item:hover {
+    background-color: #4b5563;
+}
+
+::ng-deep .p-dropdown-item.p-highlight {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+::ng-deep .p-dropdown-item {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    color: #374151;
+    background-color: transparent;
+    transition: background-color 0.15s ease-in-out;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 ::ng-deep .dark .p-dropdown-panel {
-    background-color: #2d354d !important;
-    color: #B1B1B1 !important;
-    border-radius: 6px !important;
-    /* <-- add this for rounded corners */
-    overflow: hidden;
-    /* ensures child items don't spill over rounded corners */
+    background-color: #374151;
+    border-color: #6b7280;
 }
 
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
-    background-color: #2d354d !important;
-    color: #B1B1B1 !important;
+::ng-deep .p-dropdown-panel {
+    z-index: 1000 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: white;
+    margin-top: 2px;
 }
 
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
-    background-color: #3a4160 !important;
-    color: #fff !important;
+::ng-deep .dark .p-dropdown-custom .p-dropdown {
+    background-color: #374151;
+    border-color: #6b7280;
+    color: #f9fafb;
 }
 
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
-    background-color: #2d354d !important;
-    color: #B1B1B1 !important;
+::ng-deep .p-dropdown-custom .p-dropdown {
+    width: 100%;
+    height: 42px;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: #f9fafb;
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
-
-/* Dark mode styles for PrimeNG Calendar */
-.dark .custom-calendar .p-datepicker {
-    background: #272F45;
-    color: white;
-    border: 1px solid #4a5568;
+::ng-deep .dark .p-dropdown-filter {
+    border-color: #6b7280;
+    background-color: #4b5563;
+    color: #f9fafb;
 }
 
-.dark .custom-calendar .p-datepicker .p-datepicker-header {
-    background: #1a202c;
-    border-bottom: 1px solid #4a5568;
+::ng-deep .p-dropdown-filter {
+    padding: 0.375rem 0.75rem;
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
 }
 
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-title {
-    color: white;
+::ng-deep .dark .p-dropdown-filter-container {
+    border-bottom-color: #6b7280;
 }
 
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-prev,
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-next {
-    color: white;
+::ng-deep .dark .p-dropdown-header {
+    background-color: #4b5563;
 }
 
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-prev:hover,
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-next:hover {
-    background: #4a5568;
-    color: white;
+::ng-deep .p-dropdown-filter-container {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar td {
-    border: 1px solid #4a5568;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar td span {
-    color: white;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar td span:hover {
-    background: #4a5568;
+::ng-deep .dark .p-dropdown-item.p-highlight {
+    background-color: #1e40af;
     color: white;
 }
 
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar td.p-datepicker-today span {
-    background: #3182ce;
+::ng-deep .p-dropdown-item.p-highlight {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+
+::ng-deep .dark .p-dropdown .p-dropdown-trigger-icon {
     color: white;
 }
 
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar .p-datepicker-other-month span {
-    color: #a0aec0;
-}
 
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar .p-highlight {
-    background: #3182ce;
+::ng-deep .dark .p-dropdown .p-dropdown-label {
     color: white;
 }
 
-/* Clear button dark mode */
-.dark .custom-calendar .p-calendar-clear-icon {
+
+::ng-deep .dark .p-dropdown .p-dropdown-label.p-placeholder {
     color: white;
 }
 
-.dark .custom-calendar .p-calendar-clear-icon:hover {
-    color: #cbd5e0;
-}
 
-:host ::ng-deep .p-calendar .p-button {
-    color: black;
-}
-
-:host-context(.dark) ::ng-deep .p-calendar .p-button {
+::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;
-}
-
-::ng-deep .p-calendar .p-inputtext {
-    padding-right: 3rem !important;
-    /* Make room for both icons */
-}
-
-::ng-deep .p-calendar .p-calendar-clear-icon {
-    right: 1.2rem !important;
-    /* Position clear button to the left of calendar icon */
-    top: 8.2px !important;
-    /* Move clear button slightly down */
-    order: 1;
-}
-
-
-::ng-deep .p-calendar .p-datepicker-trigger {
-    right: 0.5rem !important;
-    /* Position calendar icon on the far right */
-    order: 2;
-}
-
-/* For light mode placeholder */
-:host ::ng-deep .p-calendar .p-inputtext::placeholder {
-    color: #6c6c6c;
-    /* gray-400 */
-}
-
-/* For dark mode placeholder */
-:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
-    color: #8B8B8B;
-    /* gray-300 */
-}
-
-/* Reduce dropdown item padding */
-::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
 }

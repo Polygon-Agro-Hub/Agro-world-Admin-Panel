@@ -395,16 +395,6 @@ onSubmit() {
             Swal.fire('Error', this.errorMessage, 'error');
           }
         );
-    } else {
-      Swal.fire({
-        title: 'Cancelled', text: 'Your action has been cancelled', icon: 'info', 
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      
-      },
-      }
-      );
     }
   });
 }
@@ -1044,9 +1034,12 @@ updateProvince(event: DropdownChangeEvent): void {
       this.confirmAccountNumberError = false;
     }
   }
-  isFieldInvalid(fieldName: keyof Personal): boolean {
-    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
-  }
+ isFieldInvalid(fieldName: keyof Personal): boolean {
+  const value = this.personalData[fieldName];
+  // Show error only if touched AND completely blank
+  return !!this.touchedFields[fieldName] && (value === null || value === undefined || value.trim() === '');
+}
+
 
   onLanguagesBlur(): void {
     this.languagesTouched = true;

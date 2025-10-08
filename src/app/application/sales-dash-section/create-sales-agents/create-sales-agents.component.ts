@@ -717,17 +717,6 @@ export class CreateSalesAgentsComponent implements OnInit {
               });
             }
           );
-      } else {
-        Swal.fire({
-          title: 'Cancelled',
-          text: 'Your action has been cancelled',
-          icon: 'info',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-            confirmButton: 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700',
-          },
-        });
       }
     });
   }

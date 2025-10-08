@@ -752,12 +752,6 @@ export class AddDistributionOfficerComponent implements OnInit {
               })
             }
           );
-      } else {
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info').then(
-          () => {
-            this.location.back();
-          }
-        );
       }
     });
   }

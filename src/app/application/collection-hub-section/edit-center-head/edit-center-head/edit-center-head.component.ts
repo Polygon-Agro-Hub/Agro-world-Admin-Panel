@@ -871,20 +871,7 @@ onSubmit() {
             });
           },
         });
-    } else {
-      this.isLoading = false;
-      Swal.fire({
-        icon: 'info',
-        title: 'Cancelled',
-        text: 'Your action has been cancelled',
-        confirmButtonText: 'OK',
-        customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-      });
-    }
+    } 
   });
 }
   navigatePath(path: string) {

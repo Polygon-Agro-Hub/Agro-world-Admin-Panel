@@ -40,7 +40,7 @@ export class AddacompanyComponent {
   isLoading = false;
   isView: boolean = false;
   logoSizeError: boolean = false;
-  selectedLogoFile: File | null = null;
+  selectedLogoFile: File | undefined;
   companyData: Company = new Company();
   touchedFields: { [key in keyof Company]?: boolean } = {};
   englishInputError: boolean = false;
@@ -411,7 +411,7 @@ export class AddacompanyComponent {
   removeLogo(event: Event): void {
     event.stopPropagation();
     this.companyData.logo = '';
-    this.selectedLogoFile = null;
+    this.selectedLogoFile = undefined;
     this.companyData.logoFile = undefined;
     const logoInput = document.getElementById('logoUploadEdit') as HTMLInputElement;
     if (logoInput) logoInput.value = '';
@@ -784,15 +784,6 @@ export class AddacompanyComponent {
     return '';
   }
 
-  fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
-    });
-  }
-
   isFormValid(): boolean {
     const requiredFields: (keyof Company)[] = [
       'RegNumber',
@@ -928,6 +919,7 @@ export class AddacompanyComponent {
     try {
       this.isLoading = true;
 
+      // Prepare company data without logo base64
       const companyDataToSend = {
         regNumber: this.companyData.RegNumber,
         companyName: this.companyData.companyName,
@@ -941,11 +933,10 @@ export class AddacompanyComponent {
         phoneNumber1: this.companyData.phoneNumber1,
         phoneCode2: this.companyData.phoneCode2,
         phoneNumber2: this.companyData.phoneNumber2,
-        logo: this.companyData.logoFile ? await this.fileToBase64(this.companyData.logoFile) : this.companyData.logo,
         modifyBy: this.companyData.modifyBy || 'system'
       };
 
-      this.goviLinkSrv.createCompany(companyDataToSend).subscribe(
+      this.goviLinkSrv.createCompany(companyDataToSend, this.selectedLogoFile).subscribe(
         (response: any) => {
           this.isLoading = false;
           if (response.status) {

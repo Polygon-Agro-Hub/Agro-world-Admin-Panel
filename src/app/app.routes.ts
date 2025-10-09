@@ -344,7 +344,7 @@ export const routes: Routes = [
                 component: FarmerListFarmersFarmsComponent,
               },
               {
-                path: 'report-farmer-current-assert/:userId/:name',
+                path: 'report-farmer-current-assert/:userId/:name/:farmId',
                 component: ReportCurrentAssertsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'View users current assets by category' },

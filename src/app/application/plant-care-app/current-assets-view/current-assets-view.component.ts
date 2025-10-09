@@ -38,6 +38,7 @@ export class CurrentAssetsViewComponent {
   name: string = '';
   category: string = '';
   hasData: boolean = true;
+  farmId: any | null = null;
 
   constructor(
     private assetService: AssetsService,
@@ -50,15 +51,16 @@ export class CurrentAssetsViewComponent {
     this.route.queryParams.subscribe((params) => {
       this.userId = params['id'] ? +params['id'] : null;
       this.name = params['fullName'] ? params['fullName'] : null;
+      this.farmId = params['farmId'] ? params['farmId'] : null;
       this.category = params['category'] ? params['category'] : null;
     });
 
-    this.loadAssets(this.userId, this.category);
+    this.loadAssets(this.userId, this.category ,this.farmId);
   }
 
-  loadAssets(userId: number, category: any) {
+  loadAssets(userId: number, category: any ,farmId:number) {
     this.isLoading = true;
-    this.assetService.getAllCurrentAsset(userId, category).subscribe(
+    this.assetService.getAllCurrentAsset(userId, category,farmId).subscribe(
       (data) => {
         this.isLoading = false;
         console.log('Received items:', data);

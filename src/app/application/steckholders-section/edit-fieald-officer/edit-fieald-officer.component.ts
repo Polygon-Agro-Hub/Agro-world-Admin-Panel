@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StakeholderService } from '../../../services/stakeholder/stakeholder.service';
@@ -32,7 +33,7 @@ interface BranchesData {
 @Component({
   selector: 'app-edit-fieald-officer',
   standalone: true,
-  imports: [LoadingSpinnerComponent, CommonModule, DropdownModule, FormsModule],
+  imports: [LoadingSpinnerComponent, CommonModule, DropdownModule, MultiSelectModule, FormsModule],
   templateUrl: './edit-fieald-officer.component.html',
   styleUrl: './edit-fieald-officer.component.css'
 })
@@ -241,7 +242,14 @@ export class EditFiealdOfficerComponent implements OnInit {
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
-    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
+    const value = this.personalData[fieldName];
+    
+    if (fieldName === 'assignDistrict') {
+      // For arrays, check if it's empty or null/undefined
+      return !!this.touchedFields[fieldName] && (!value || (Array.isArray(value) && value.length === 0));
+    }
+    
+    return !!this.touchedFields[fieldName] && !value;
   }
 
   toggleDropdown() {
@@ -638,6 +646,11 @@ export class EditFiealdOfficerComponent implements OnInit {
         );
       }
 
+      // Validate assigned districts
+      if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+        missingFields.push('At least one Assigned District is required');
+      }
+
       // If errors exist, the validation messages will now be visible due to touched fields
       // Show popup and stop navigation
       if (missingFields.length > 0) {
@@ -725,6 +738,7 @@ export class EditFiealdOfficerComponent implements OnInit {
       'companyId',
       'jobRole',
       'irmId',
+      'assignDistrict'
     ];
 
     pageOneFields.forEach((field) => {
@@ -1049,9 +1063,30 @@ export class EditFiealdOfficerComponent implements OnInit {
     this.personalData.bank = officerData.bankName;
     this.personalData.branch = officerData.branchName;
     
-    // Assign Districts
-    if (officerData.assignDistricts && officerData.assignDistricts.length > 0) {
-      this.personalData.assignDistrict = officerData.assignDistricts[0];
+    // Assign Districts - FIXED: Convert district names to district objects
+    if (officerData.assignDistricts) {
+      if (Array.isArray(officerData.assignDistricts)) {
+        // If it's already an array of district names, map to district objects
+        this.personalData.assignDistrict = officerData.assignDistricts
+          .map((districtName: string) => 
+            this.districts.find(d => d.name === districtName)
+          )
+          .filter((d: any) => d !== undefined); // Remove undefined values
+      } else if (typeof officerData.assignDistricts === 'string') {
+        // If it's a comma-separated string, split and map to district objects
+        this.personalData.assignDistrict = officerData.assignDistricts
+          .split(',')
+          .map((districtName: string) => districtName.trim())
+          .filter((districtName: string) => districtName.length > 0)
+          .map((districtName: string) => 
+            this.districts.find(d => d.name === districtName)
+          )
+          .filter((d: any) => d !== undefined); // Remove undefined values
+      } else {
+        this.personalData.assignDistrict = [];
+      }
+    } else {
+      this.personalData.assignDistrict = [];
     }
     
     // Load images if available
@@ -1070,6 +1105,11 @@ export class EditFiealdOfficerComponent implements OnInit {
     if (officerData.image) {
       this.selectedImage = officerData.image;
     }
+
+    // Mark fields as touched if needed (optional)
+    setTimeout(() => {
+      this.touchedFields['assignDistrict'] = true;
+    }, 0);
   }
 
   // Add method to load existing images
@@ -1449,6 +1489,11 @@ export class EditFiealdOfficerComponent implements OnInit {
     missingFields.push('Commission Amount is required and must be greater than 0');
   }
 
+  // Check assigned districts
+  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+    missingFields.push('At least one Assigned District is required');
+  }
+
   // If errors, show list and stop - validation messages will now be visible
   if (missingFields.length > 0) {
     let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
@@ -1524,8 +1569,8 @@ export class EditFiealdOfficerComponent implements OnInit {
         bank: this.personalData.bank,
         branch: this.personalData.branch,
         
-        // Assign Districts
-        assignDistrict: this.personalData.assignDistrict,
+        // Assign Districts - FIXED: Convert district objects to comma-separated names
+        assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
         
         // Status
         status: "Not Aproved"
@@ -1723,6 +1768,11 @@ export class EditFiealdOfficerComponent implements OnInit {
       missingFields.push('Commission Amount is required and must be greater than 0');
     }
 
+    // Check assigned districts
+    if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+      missingFields.push('At least one Assigned District is required');
+    }
+
     // Check required documents for pageThree
     if (!this.selectedFrontNicFile) {
       missingFields.push('NIC Front Image is Required');
@@ -1778,9 +1828,53 @@ export class EditFiealdOfficerComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
 
+        // Prepare officer data for creation
+        const officerData = {
+          // Personal Details
+          firstName: this.personalData.firstName,
+          lastName: this.personalData.lastName,
+          phoneNumber1: this.personalData.phoneNumber1,
+          phoneNumber2: this.personalData.phoneNumber2,
+          phoneCode1: this.personalData.phoneCode1,
+          phoneCode2: this.personalData.phoneCode2,
+          nic: this.personalData.nic,
+          email: this.personalData.email,
+          
+          // Employment Details
+          empType: this.personalData.empType,
+          jobRole: this.personalData.jobRole,
+          empId: this.personalData.empId,
+          companyId: this.personalData.companyId,
+          irmId: this.personalData.irmId,
+          
+          // Languages
+          language: this.personalData.language,
+          
+          // Residential Details
+          house: this.personalData.house,
+          street: this.personalData.street,
+          city: this.personalData.city,
+          distrct: this.personalData.distrct,
+          province: this.personalData.province,
+          country: this.personalData.country,
+          
+          // Bank Details
+          comAmount: this.personalData.comAmount,
+          accName: this.personalData.accName,
+          accNumber: this.personalData.accNumber,
+          bank: this.personalData.bank,
+          branch: this.personalData.branch,
+          
+          // Assign Districts - FIXED: Convert district objects to comma-separated names
+          assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
+          
+          // Status
+          status: "Not Aproved"
+        };
+
         // Call the service method with all the files
         this.stakeHolderSrv.createFieldOfficer(
-          this.personalData,
+          officerData,
           this.selectedFile, // profile image
           this.selectedFrontNicFile,
           this.selectedBackNicFile,
@@ -1875,7 +1969,7 @@ export class EditFiealdOfficerComponent implements OnInit {
     const pageOneFields: (keyof Personal)[] = [
       'empType', 'language', 'companyId', 'jobRole', 'irmId',
       'firstName', 'lastName', 'phoneNumber1', 'phoneNumber2',
-      'nic', 'email', 'distrct'
+      'nic', 'email', 'distrct', 'assignDistrict'
     ];
 
     pageOneFields.forEach((field) => {
@@ -1930,7 +2024,7 @@ class Personal {
   backNic!: string;
   backPassbook!: string;
   contract!: string;
-  assignDistrict!: string;
+  assignDistrict!: any[]; // Changed to store district objects
   status!: string;
   modifyBy!: string;
   createdAt!: Date;

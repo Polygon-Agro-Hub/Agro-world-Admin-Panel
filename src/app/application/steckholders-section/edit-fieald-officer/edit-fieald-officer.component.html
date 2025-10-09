@@ -11,7 +11,7 @@
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <div *ngIf="selectedPage === 'pageOne'">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
-      {{ itemId ? 'Edit' : 'Create' }} Personal Details
+      {{ itemId ? "Edit" : "Create" }} Personal Details
     </h2>
     <div>
       <div class="flex justify-center pt-3 pb-9">
@@ -181,20 +181,21 @@
           >
             Assigned Districts *
           </label>
-          <p-dropdown
+          <p-multiSelect
             id="assignDistrict"
             [(ngModel)]="personalData.assignDistrict"
             [options]="districts"
             optionLabel="name"
-            optionValue="name"
-            placeholder="Select a district"
+            placeholder="Select districts"
             [filter]="true"
-            [showClear]="false"
-            styleClass="w-full mt-1"
-            class="mt-1 block w-full p-dropdown-custom"
+            [showClear]="true"
+            [styleClass]="'mt-1 w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
+            
             [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }"
           />
-          <span *ngIf="isFieldInvalid('assignDistrict')" class="text-red-600 text-sm"
+          <span
+            *ngIf="isFieldInvalid('assignDistrict')"
+            class="text-red-600 text-sm"
             >Assigned District is a required field</span
           >
         </div>
@@ -209,7 +210,7 @@
           <div class="relative mt-1" tabindex="0" (blur)="closeDropdown()">
             <!-- Selected option -->
             <div
-              class="cursor-pointer flex justify-between items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              class="cursor-pointer flex justify-between items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-[#061E2C] text-gray-700 dark:text-gray-300"
               (click)="toggleDropdown()"
             >
               {{ personalData.jobRole || "Select a Job Role" }}
@@ -662,7 +663,6 @@
             filterBy="name"
             placeholder="Select a district"
             class="mt-1 block w-full"
-            [showClear]="true"
             [autoDisplayFirst]="false"
             required
             styleClass="w-full mt-1"
@@ -856,7 +856,7 @@
             (click)="uploadFrontImage()"
           >
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            {{ personalData.frontNic ? 'Change' : 'Upload' }} Front Image
+            {{ personalData.frontNic ? "Change" : "Upload" }} Front Image
           </button>
           <div
             *ngIf="personalData.frontNic"
@@ -890,7 +890,7 @@
             (click)="uploadBackImage()"
           >
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            {{ personalData.backNic ? 'Change' : 'Upload' }} Back Image
+            {{ personalData.backNic ? "Change" : "Upload" }} Back Image
           </button>
           <div
             *ngIf="personalData.backNic"
@@ -924,7 +924,7 @@
             (click)="uploadPassbookImage()"
           >
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            {{ personalData.backPassbook ? 'Change' : 'Upload' }} Passbook Image
+            {{ personalData.backPassbook ? "Change" : "Upload" }} Passbook Image
           </button>
           <div
             *ngIf="personalData.backPassbook"
@@ -958,7 +958,7 @@
             (click)="uploadContractImage()"
           >
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
-            {{ personalData.contract ? 'Change' : 'Upload' }} Contract Image
+            {{ personalData.contract ? "Change" : "Upload" }} Contract Image
           </button>
           <div
             *ngIf="personalData.contract"

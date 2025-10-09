@@ -79,6 +79,8 @@ export class CreateNewsComponent {
 
   originalPublishDate: Date | null = null;
   originalExpireDate: Date | null = null;
+  originalPublishDateEdit: Date | null = null;
+  originalExpireDateEdit: Date | null = null;
 
   todayDate: Date = new Date();
 
@@ -439,10 +441,11 @@ back(): void {
         data.forEach((newsItem: any) => {
           if (newsItem.publishDate) {
             newsItem.publishDate = this.formatDate(newsItem.publishDate);
-            this.currentPublishDate;
+            this.originalPublishDateEdit = new Date(newsItem.publishDate);
           }
           if (newsItem.expireDate) {
             newsItem.expireDate = this.formatDate(newsItem.expireDate);
+            this.originalExpireDateEdit = new Date(newsItem.expireDate);
           }
         });
         this.newsItems = data;
@@ -505,15 +508,15 @@ updateNews() {
     missingFields.push('Description (Tamil) is Required');
   }
 
-  if (!this.newsItems[0].publishDate || this.newsItems[0].publishDate.trim() === '') {
+  if (!this.originalPublishDateEdit || this.formatDateForBackend(this.originalPublishDateEdit).trim() === '') {
     missingFields.push('Publish Date is Required');
   }
 
-  if (!this.newsItems[0].expireDate || this.newsItems[0].expireDate.trim() === '') {
+  if (!this.originalExpireDateEdit || this.formatDateForBackend(this.originalExpireDateEdit).trim() === '') {
     missingFields.push('Expire Date is Required');
   }
 
-  if (!this.isPublishAfterExpireValid) {
+  if (!this.isPublishAfterExpireValidEditNews) {
     missingFields.push('Publish and Expire Dates - Publish date must be before expire date');
   }
 
@@ -567,6 +570,14 @@ updateNews() {
       },
     });
     return;
+  }
+
+  // Update the news items with the selected dates
+  if (this.originalPublishDateEdit) {
+    this.newsItems[0].publishDate = this.formatDates(this.originalPublishDateEdit);
+  }
+  if (this.originalExpireDateEdit) {
+    this.newsItems[0].expireDate = this.formatDates(this.originalExpireDateEdit);
   }
 
   // Append validated data to FormData
@@ -719,6 +730,19 @@ onExpireDateChange(date: Date | null) {
   this.checkExpireDate();
 }
 
+onDateChangeEdit(date: Date | null) {
+  this.originalPublishDateEdit = date;
+  console.log('publishDateEdit', this.originalPublishDateEdit)
+  this.checkPublishDateEdit();
+  this.checkPublishExpireDateEdit();
+}
+
+onExpireDateChangeEdit(date: Date | null) {
+  this.originalExpireDateEdit = date
+  console.log('expireDateEdit', this.originalExpireDateEdit)
+  this.checkExpireDateEdit();
+}
+
 formatDateForBackend(date: Date | null): string {
   if (!date) return '';
 
@@ -759,6 +783,31 @@ formatDateForBackend(date: Date | null): string {
             },
           });
       console.log('ordginal publish date', this.originalPublishDate)
+    }
+  }
+}
+
+checkPublishDateEdit() {
+  console.log('checkPublishDateEdit called')
+  console.log('today', this.todayDate)
+  if (this.originalPublishDateEdit) {
+    this.todayDate.setHours(0, 0, 0, 0);
+    if (this.originalPublishDateEdit < this.todayDate) {
+      setTimeout(() => {
+        this.originalPublishDateEdit = null;
+      });
+      Swal.fire({
+            icon: 'error',
+            title: 'Missing or Invalid Information',
+            html: 'Publish date should be later than Today',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+      console.log('original publish date edit', this.originalPublishDateEdit)
     }
   }
 }
@@ -820,6 +869,56 @@ formatDateForBackend(date: Date | null): string {
     }
 }
 
+checkExpireDateEdit() {
+  console.log('checkExpireDateEdit called')
+
+  if (this.originalExpireDateEdit) {
+    console.log('expireDateEdit', this.originalExpireDateEdit)
+    if (this.originalPublishDateEdit) {
+      if (this.originalExpireDateEdit <= this.originalPublishDateEdit) {
+        setTimeout(() => {
+          this.originalExpireDateEdit = null;
+        });
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: 'Expire date should be later than Publish date',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
+    }
+    this.todayDate.setHours(0, 0, 0, 0);
+
+    if (this.originalExpireDateEdit < this.todayDate) {
+      setTimeout(() => {
+        this.originalExpireDateEdit = null;
+      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: 'Expire date should be later than Today',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
+  }
+
+  // If both dates are valid, do further checks
+  if (this.originalPublishDateEdit && this.originalExpireDateEdit) {
+    this.checkPublishExpireDateEdit();
+  }
+}
 
   checkExpireDateEditNews() {
   // Remove the Swal.fire popup and just update the validation flag
@@ -831,11 +930,18 @@ formatDateForBackend(date: Date | null): string {
   checkPublishExpireDate() {
     console.log('checkPublishexpireDate called')
   if (this.originalPublishDate && this.originalExpireDate) {
-    // const publishDate = new Date(this.createNewsObj.publishDate);
-    // const expireDate = new Date(this.createNewsObj.expireDate);
     this.isPublishAfterExpireValid = this.originalPublishDate <= this.originalExpireDate;
   } else {
     this.isPublishAfterExpireValid = true;
+  }
+}
+
+checkPublishExpireDateEdit() {
+  console.log('checkPublishexpireDateEdit called')
+  if (this.originalPublishDateEdit && this.originalExpireDateEdit) {
+    this.isPublishAfterExpireValidEditNews = this.originalPublishDateEdit <= this.originalExpireDateEdit;
+  } else {
+    this.isPublishAfterExpireValidEditNews = true;
   }
 }
 
@@ -848,11 +954,6 @@ formatDateForBackend(date: Date | null): string {
     this.isPublishAfterExpireValidEditNews = true;
   }
 }
-
-
-
-
-
 
   backEdit(): void {
     this.router.navigate(['/plant-care/action/manage-content']);

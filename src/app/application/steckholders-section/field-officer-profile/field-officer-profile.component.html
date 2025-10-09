@@ -30,15 +30,15 @@
         </div>
 
         <div class="ml-6">
-          <p class="text-lg font-bold text-textLight dark:text-textDark">
+          <p class="text-lg font-semibold text-[#030308] dark:text-textDark">
             {{ officerObj.firstName }} {{ officerObj.lastName }}
           </p>
-          <p class="dark:text-[#a6aebb]">
+          <p class="dark:text-[#a6aebb] font-semibold text-[#627189]">
               {{ officerObj.jobRole }} -
-              <span>{{ officerObj.empId }}</span>
+              <span class="font-semibold text-[#030308] dark:text-textDark">{{ officerObj.empId }}</span>
           </p>
           
-          <p class="dark:text-[#a6aebb]">{{ officerObj.companyName }}</p>
+          <p class="dark:text-[#a6aebb] text-[#627189]">{{ officerObj.companyName }}</p>
         </div>
       </div>
 
@@ -70,9 +70,9 @@
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <div class="flex flex-row justify-between">
-        <p class="text-[#030308] dark:text-[#ffffff]">Personal Information</p>
+        <p class="text-[#030308] text-lg dark:text-[#ffffff]">Personal Information</p>
         <button
-          class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md"
+          class="bg-[#3980C0] text-white px-6 py-1 text-xl rounded-lg shadow-lg"
           [disabled]="isGeneratingPDF" (click)="generatePDF()"
         >
           <i
@@ -88,54 +88,54 @@
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div>
-          <p class="text-[#627189]">First Name</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">First Name</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.firstName }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">Last Name</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Last Name</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.lastName }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">NIC Number</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">{{ officerObj.nic }}</p>
+          <p class="text-[#627189] text-lg">NIC Number</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">{{ officerObj.nic }}</p>
         </div>
 
         <div>
-          <p class="text-[#627189]">Email</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Email</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.email }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">Mobile Number - 1</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Mobile Number - 1</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.phoneCode01 }} {{ officerObj.phoneNumber01 }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">Mobile Number - 2</p>
+          <p class="text-[#627189] text-lg">Mobile Number - 2</p>
           <p
             *ngIf="officerObj?.phoneNumber02; else noPhone"
-            class="text-[#030308] dark:text-[#ffffff]"
+            class="text-[#030308] text-lg dark:text-[#ffffff]"
           >
             {{ officerObj.phoneCode02 }} {{ officerObj.phoneNumber02 }}
           </p>
           <ng-template #noPhone>
-            <p class="font-semibold dark:text-[#a6aebb]">-</p>
+            <p class="font-semibold text-lg dark:text-[#a6aebb]">-</p>
           </ng-template>
         </div>
 
         <div>
-          <p class="text-[#627189]">Districts</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Districts</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             <span *ngFor="let district of officerObj.assignDistricts; let isLast = last">
               {{ district }}<span *ngIf="!isLast">,</span><br />
             </span>
@@ -143,8 +143,8 @@
         </div>
 
         <div>
-          <p class="text-[#627189]">Preferred Language</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Preferred Language</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.language }}
           </p>
         </div>
@@ -153,26 +153,26 @@
     </div>
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
-      <p class="text-[#030308] dark:text-[#ffffff]">Address Details</p>
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg">Address Details</p>
 
       <div class="grid grid-cols-2 gap-4 my-4">
         <div>
-          <p class="text-[#627189]">House / Plot Number</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">House / Plot Number</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.houseNumber }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">Street Name</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Street Name</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.streetName }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">City</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">City</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.city }}
           </p>
         </div>
@@ -185,15 +185,15 @@
         </div>
 
         <div>
-          <p class="text-[#627189]">Province</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Province</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.province }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">District</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">District</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.district }}
           </p>
         </div>
@@ -201,26 +201,26 @@
     </div>
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
-      <p class="text-[#030308] dark:text-[#ffffff]">Bank Details</p>
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg">Bank Details</p>
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div>
-          <p class="text-[#627189]">Account Holder’s Name</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Account Holder’s Name</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.accHolderName }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">Account Number</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Account Number</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.accNumber }}
           </p>
         </div>
 
         <div>
-          <p class="text-[#627189]">Bank Name</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Bank Name</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.bankName }}
           </p>
         </div>
@@ -233,8 +233,8 @@
         </div>
 
         <div>
-          <p class="text-[#627189]">Commission Amount</p>
-          <p class="text-[#030308] dark:text-[#ffffff]">
+          <p class="text-[#627189] text-lg">Commission Amount</p>
+          <p class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.comAmount }}
           </p>
         </div>
@@ -244,36 +244,36 @@
     </div>
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
-      <p class="text-[#030308] dark:text-[#ffffff]">Required Documents</p>
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg">Required Documents</p>
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div class="flex flex-col items-left gap-2">
-          <i class="fa-solid fa-image text-blue-600 cursor-pointer"
+          <i class="fa-solid fa-image text-lg text-black cursor-pointer"
              (click)="openImage(officerObj.frontNic)"></i>
 
-          <p class="text-[#627189]">NIC’s Front Image</p>
+          <p class="text-[#627189] text-lg">NIC’s Front Image</p>
         </div>
 
         <div class="flex flex-col items-left gap-2">
-          <i class="fa-solid fa-image text-blue-600 cursor-pointer"
+          <i class="fa-solid fa-image text-lg text-black cursor-pointer"
              (click)="openImage(officerObj.backNic)"></i>
-          <p class="text-[#627189]">NIC’s Back Image</p>
+          <p class="text-[#627189] text-lg">NIC’s Back Image</p>
       
         </div>
 
         <div class="flex flex-col items-left gap-2">
-          <i class="fa-solid fa-image text-blue-600 cursor-pointer"
+          <i class="fa-solid fa-image text-lg text-black  cursor-pointer"
              (click)="openImage(officerObj.backPassbook)"></i>
 
-          <p class="text-[#627189]">Bank Passbook</p>
+          <p class="text-[#627189] text-lg">Bank Passbook</p>
         </div>
 
         <div class="flex flex-col items-left gap-2">
                   
-          <i class="fa-solid fa-image text-blue-600 cursor-pointer"
+          <i class="fa-solid fa-image text-lg text-black  cursor-pointer"
              (click)="openImage(officerObj.contract)"></i>
 
-          <p class="text-[#627189]">Signed Contract</p>
+          <p class="text-[#627189] text-lg">Signed Contract</p>
         </div>
 
         

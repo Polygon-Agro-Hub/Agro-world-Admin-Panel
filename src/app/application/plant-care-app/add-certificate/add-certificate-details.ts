@@ -114,11 +114,9 @@ export class AddCertificateDetailsComponent implements OnInit {
     this.loadCompanies();
 
     // Watch for applicable changes
-    this.certificateForm
-      .get('applicable')
-      ?.valueChanges.subscribe((value) => {
-        this.onApplicableChange();
-      });
+    this.certificateForm.get('applicable')?.valueChanges.subscribe((value) => {
+      this.onApplicableChange();
+    });
   }
 
   loadCropGroups(): void {
@@ -158,10 +156,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     if (this.isForSelectedCrops) {
       // For Selected Crops - user selects manually
       this.selectedCrops = [];
-    } else if (
-      applicable === 'For Farm' ||
-      applicable === 'For Farm Cluster'
-    ) {
+    } else if (applicable === 'For Farm' || applicable === 'For Farm Cluster') {
       // For Farm or Farm Cluster - do not send crop IDs, just show "All crops are selected"
       this.selectedCrops = [];
     }
@@ -198,11 +193,22 @@ export class AddCertificateDetailsComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.certificateForm.reset();
-    this.selectedCrops = [];
-    this.uploadedFile = null;
-    this.showTargetCropsSection = false;
-    this.isForSelectedCrops = false;
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   onSubmit(): void {
@@ -258,20 +264,22 @@ export class AddCertificateDetailsComponent implements OnInit {
     const formValue = this.certificateForm.value;
 
     const formData = new FormData();
-    
+
     // Use exact database field names
     formData.append('srtcomapnyId', formValue.srtcomapnyId.toString());
     formData.append('srtName', formValue.srtName);
     formData.append('srtNumber', formValue.srtNumber);
     formData.append('applicable', formValue.applicable);
     formData.append('accreditation', formValue.accreditation);
-    
+
     // Service areas as JSON string (since it's stored as TEXT in DB)
-    const serviceAreas = Array.isArray(formValue.serviceAreas) 
-      ? formValue.serviceAreas.map((area: any) => typeof area === 'object' ? area.value : area)
+    const serviceAreas = Array.isArray(formValue.serviceAreas)
+      ? formValue.serviceAreas.map((area: any) =>
+          typeof area === 'object' ? area.value : area
+        )
       : [];
     formData.append('serviceAreas', JSON.stringify(serviceAreas));
-    
+
     formData.append('price', formValue.price.toString());
     formData.append('timeLine', formValue.timeLine.toString());
     formData.append('commission', formValue.commission.toString());
@@ -310,7 +318,8 @@ export class AddCertificateDetailsComponent implements OnInit {
             icon: 'error',
             title: 'Error',
             text:
-              res.message || 'Failed to add certificate details. Please try again.',
+              res.message ||
+              'Failed to add certificate details. Please try again.',
             customClass: {
               popup:
                 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

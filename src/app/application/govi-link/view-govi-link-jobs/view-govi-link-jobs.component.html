@@ -1,0 +1,349 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="mb-5 flex justify-between">
+  <button
+    (click)="addNew()"
+    class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center"
+  >
+    <i class="fa-solid fa-plus mr-2"></i>
+    Add New Job
+  </button>
+</div>
+
+<div class="overflow-x-auto">
+  <div
+    class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
+  >
+    <!-- Always show filters section -->
+    <div class="flex items-center justify-between">
+      <h2
+        class="text-xl text-left text-textLight dark:text-textDark font-bold mb-2"
+      >
+        GoVi Link Jobs {{ hasData ? '(' + (jobs.length | number : "2.0") + ')' : '' }}
+      </h2>
+
+      <div class="flex flex-row gap-x-3 items-center justify-center">
+        <!-- District Filter -->
+        <p-dropdown
+          styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+          [options]="districtOptions"
+          [(ngModel)]="districtFilter"
+          optionLabel="name"
+          optionValue="value"
+          [showClear]="!!districtFilter"
+          placeholder="District"
+          (onChange)="fetchJobs()"
+        >
+        </p-dropdown>
+
+        <!-- Status Filter -->
+        <p-dropdown
+          styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+          [options]="statusOptions"
+          [(ngModel)]="statusFilter"
+          optionLabel="label"
+          optionValue="value"
+          [showClear]="!!statusFilter"
+          placeholder="Status"
+          (onChange)="fetchJobs()"
+        >
+        </p-dropdown>
+
+        <!-- Assign Status Filter -->
+        <p-dropdown
+          styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+          [options]="assignStatusOptions"
+          [(ngModel)]="assignStatusFilter"
+          optionLabel="label"
+          optionValue="value"
+          [showClear]="!!assignStatusFilter"
+          placeholder="Assign Status"
+          (onChange)="fetchJobs()"
+        >
+        </p-dropdown>
+
+        <!-- Date Filter -->
+        <input
+          type="date"
+          [(ngModel)]="dateFilter"
+          (change)="fetchJobs()"
+          class="mb-5 border border-2 rounded-xl h-8 px-3 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+          placeholder="Select Date"
+        />
+
+        <!-- Search bar -->
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5"
+        >
+          <input
+            type="text"
+            placeholder="Search by Farmer NIC / Name / Service"
+            [(ngModel)]="searchText"
+            (keyup.enter)="onSearch()"
+            (keyup.esc)="offSearch()"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          />
+
+          <!-- Search button -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Clear button -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="offSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Show different messages based on state -->
+    <div *ngIf="!hasData && !isLoading" class="text-center py-8">
+      <div *ngIf="hasActiveFilters" class="space-y-4">
+        <p class="text-[#494949] dark:text-textDark text-lg font-medium">
+          No jobs found matching your search criteria
+        </p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">
+          Try adjusting your filters or search terms
+        </p>
+        <button
+          (click)="clearAllFilters()"
+          class="bg-[#3980C0] text-white font-medium py-2 px-4 rounded text-sm hover:bg-[#2c6da3] transition-colors"
+        >
+          Clear All Filters
+        </button>
+      </div>
+      <div *ngIf="!hasActiveFilters" class="space-y-4">
+        <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 mx-auto"
+        />
+      </div>
+    </div>
+
+    <div *ngIf="hasData">
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Farmer Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Farmer NIC
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Service
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              District
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Status
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Assign Status
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Scheduled Date
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Created At
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Assigned By
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            ></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let job of jobs; let i = index"
+            class="border-b border-gray-200 dark:border-[#4B555A]"
+          >
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ i + 1 | number : "2.0" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.farmerName }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.farmerNIC }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.service }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.district }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <span
+                class="px-2 py-1 rounded-full text-xs font-medium"
+                [ngClass]="{
+                  'text-red-500': job.status === 'Pending',
+                  'text-green-500': job.status === 'Completed',
+                  'bg-gray-200 text-gray-800': !job.status
+                }"
+              >
+                {{ job.status || "N/A" }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <span
+                class="px-2 py-2 rounded-lg text-xs font-medium"
+                [ngClass]="{
+                  'bg-green-100 text-green-800':
+                    job.assignStatus === 'Assigned',
+                  'bg-yellow-100 text-yellow-800':
+                    job.assignStatus === 'Not Assigned'
+                }"
+              >
+                {{ job.assignStatus }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.scheduledDate | date : "dd/MM/yyyy" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.createdAt | date : "dd/MM/yyyy HH:mm" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.assignedBy }}
+            </td>
+            <td class="text-center flex justify-center mt-3 space-x-3">
+              <!-- VIEW -->
+              <button
+                class="w-6 h-6 text-blue-500 hover:text-blue-700"
+                title="View Job"
+                [disabled]="isLoading"
+                (click)="viewJob(job)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Assigned Officer Popup -->
+<div
+  *ngIf="isOfficerPopUp"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="officerPopUpClose()"
+>
+  <div
+    class="flex flex-col justify-center items-center gap-y-6 bg-[#FFFFFF] dark:bg-tileBlack px-12 py-4 rounded-lg shadow-md"
+    (click)="$event.stopPropagation()"
+  >
+    <p class="text-lg font-semibold dark:text-white">Assigned Officer</p>
+
+    <!-- Show message if no officer -->
+    <div *ngIf="!assignedOfficerArray?.length" class="text-gray-500">
+      No officer assigned
+    </div>
+
+    <div
+      *ngIf="assignedOfficerArray?.length"
+      class="flex flex-col max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    >
+      <div
+        *ngFor="let officer of assignedOfficerArray; let i = index"
+        class="py-1 px-2"
+      >
+        <span class="text-gray-700 dark:text-gray-300">{{ officer }}</span>
+      </div>
+    </div>
+
+    <button
+      class="text-white bg-[#74788D] px-4 py-1 rounded-lg"
+      (click)="officerPopUpClose()"
+    >
+      Close
+    </button>
+  </div>
+</div>

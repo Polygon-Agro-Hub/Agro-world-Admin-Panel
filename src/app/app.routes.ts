@@ -208,6 +208,7 @@ import { EditQuestionnaireDetailsComponent } from './application/plant-care-app/
 import { EditFiealdOfficerComponent } from './application/steckholders-section/edit-fieald-officer/edit-fieald-officer.component';
 import { EditCertificateDetailsComponent } from './application/plant-care-app/edit-certificate/edit-certificate-details';
 import { ViewCertificateDetailsComponent } from './application/plant-care-app/view-certificate/view-certificate-details';
+import { ViewGoviLinkJobsComponent } from './application/govi-link/view-govi-link-jobs/view-govi-link-jobs';
 
 export const routes: Routes = [
   {
@@ -343,7 +344,7 @@ export const routes: Routes = [
                 component: FarmerListFarmersFarmsComponent,
               },
               {
-                path: 'report-farmer-current-assert/:userId/:name',
+                path: 'report-farmer-current-assert/:userId/:name/:farmId',
                 component: ReportCurrentAssertsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'View users current assets by category' },
@@ -1320,9 +1321,11 @@ export const routes: Routes = [
               {
                 path: 'view-services-list',
                 component: ViewServicesListComponent,
+              },
+              {
+                path: 'view-govi-link-jobs',
+                component: ViewGoviLinkJobsComponent,
               }
-
-
             ]
           }
         ]

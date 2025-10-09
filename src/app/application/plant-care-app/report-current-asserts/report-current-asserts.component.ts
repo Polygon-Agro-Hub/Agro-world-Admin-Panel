@@ -30,6 +30,7 @@ export class ReportCurrentAssertsComponent implements OnInit {
   userId!: string;
   name!: string;
   assertReport!: AssertReport[];
+  farmId!: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,12 +43,16 @@ export class ReportCurrentAssertsComponent implements OnInit {
   ngOnInit(): void {
     this.userId = this.route.snapshot.params['userId'];
     this.name = this.route.snapshot.params['name'];
-    this.fetchCurrentAssert(this.userId);
+    this.farmId = this.route.snapshot.params['farmId'];
+    console.log("userId", this.userId);
+    console.log("name", this.name);
+    console.log("farmId", this.farmId);
+    this.fetchCurrentAssert(this.userId,this.farmId);
   }
 
-  fetchCurrentAssert(id: string): void {
+  fetchCurrentAssert(id: string , farmId:number): void {
     this.isLoading = true;
-    this.assertService.getCurrentAssertById(id).subscribe((responce) => {
+    this.assertService.getCurrentAssertById(id,farmId).subscribe((responce) => {
       this.isLoading = false;
       this.assertReport = responce;
     });
@@ -55,7 +60,7 @@ export class ReportCurrentAssertsComponent implements OnInit {
 
   viewList(id: any, category: any) {
     this.router.navigate(['/plant-care/action/current-assets-view'], {
-      queryParams: { id, category, fullName: this.name },
+      queryParams: { id, category, fullName: this.name , farmId:this.farmId },
     });
   }
 

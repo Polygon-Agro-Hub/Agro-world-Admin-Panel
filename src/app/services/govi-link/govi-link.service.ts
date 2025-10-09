@@ -1,19 +1,16 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment.development';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { TokenService } from '../token/services/token.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GoviLinkService {
   private apiUrl = `${environment.API_URL}govi-link/`;
   private token = this.tokenService.getToken();
-  constructor(
-    private http: HttpClient,
-    private tokenService: TokenService,
-  ) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   createCompany(companyData: any, logoFile?: File): Observable<any> {
     const formData = new FormData();
@@ -63,8 +60,6 @@ export class GoviLinkService {
     });
   }
 
-
-
   saveOfficerService(data: {
     englishName: string;
     tamilName: string;
@@ -73,10 +68,12 @@ export class GoviLinkService {
   }): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(this.apiUrl + 'save-officer-service', data, { headers });
+    return this.http.post(this.apiUrl + 'save-officer-service', data, {
+      headers,
+    });
   }
 
   getAllCompanyDetails(search: string = ''): Observable<any> {
@@ -100,13 +97,9 @@ export class GoviLinkService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.patch(
-      `${this.apiUrl}update-company/${id}`,
-      companyData,
-      {
-        headers,
-      }
-    );
+    return this.http.patch(`${this.apiUrl}update-company/${id}`, companyData, {
+      headers,
+    });
   }
 
   deleteCompany(id: number): Observable<any> {
@@ -140,11 +133,14 @@ export class GoviLinkService {
 
     console.log('Payload being sent:', payload); // optional: check in console
 
-    return this.http.put(this.apiUrl + `update-officer-service/${id}`, payload, {
-      headers,
-    });
+    return this.http.put(
+      this.apiUrl + `update-officer-service/${id}`,
+      payload,
+      {
+        headers,
+      }
+    );
   }
-
 
   getOfficerServiceById(id: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -152,23 +148,58 @@ export class GoviLinkService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.get(this.apiUrl + `get-officer-service-by-id/${id}`, { headers });
+    return this.http.get(this.apiUrl + `get-officer-service-by-id/${id}`, {
+      headers,
+    });
   }
   getAllOfficerServices(): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<any[]>(`${this.apiUrl}get-all-officer-service`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}get-all-officer-service`, {
+      headers,
+    });
   }
   deleteOfficerService(id: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.delete<any>(`${this.apiUrl}/officer-service/${id}`, { headers });
+    return this.http.delete<any>(`${this.apiUrl}/officer-service/${id}`, {
+      headers,
+    });
   }
 
+  getAllGoviLinkJobs(filters: any = {}) {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    // Create params object from filters
+    let params = new HttpParams();
+
+    if (filters.searchTerm) {
+      params = params.set('search', filters.searchTerm);
+    }
+    if (filters.district) {
+      params = params.set('district', filters.district);
+    }
+    if (filters.status) {
+      params = params.set('status', filters.status);
+    }
+    if (filters.assignStatus) {
+      params = params.set('assignStatus', filters.assignStatus);
+    }
+    if (filters.date) {
+      params = params.set('date', filters.date);
+    }
+
+    return this.http.get<any>(`${this.apiUrl}get-all-govi-link-jobs`, {
+      headers,
+      params,
+    });
+  }
 }
-
-

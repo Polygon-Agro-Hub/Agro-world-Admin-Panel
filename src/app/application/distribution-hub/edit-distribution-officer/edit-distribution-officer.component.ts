@@ -384,15 +384,28 @@ export class EditDistributionOfficerComponent implements OnInit {
     this.personalData[field] = value;
   }
 
-  capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
-    let value = this.personalData[field] || '';
+capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
+  let value = this.personalData[field] || '';
+
+  if (field === 'houseNumber') {
+    // Allow letters, numbers, spaces, and special characters like /, -, #
+    value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
+  } else {
+    // For name-related fields, only allow letters and spaces
     value = value.replace(/[^A-Za-z ]/g, '');
-    value = value.replace(/^\s+/, '');
-    if (value.length > 0) {
-      value = value.charAt(0).toUpperCase() + value.slice(1);
-    }
-    this.personalData[field] = value;
   }
+
+  // Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
+  // Capitalize first letter if applicable (skip for house number)
+  if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  this.personalData[field] = value;
+}
+
 
   blockPhoneLength(event: KeyboardEvent, value: string) {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];

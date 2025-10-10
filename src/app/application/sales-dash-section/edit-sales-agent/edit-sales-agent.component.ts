@@ -611,16 +611,12 @@ export class EditSalesAgentComponent implements OnInit {
     // First Name
     if (!this.personalData.firstName) {
       missingFields.push('First Name is Required');
-    } else if (!englishNamePattern.test(this.personalData.firstName)) {
-      missingFields.push('First Name - Must start with a capital letter and contain only English letters');
     }
 
     // Last Name
     if (!this.personalData.lastName) {
       missingFields.push('Last Name is Required');
-    } else if (!englishNamePattern.test(this.personalData.lastName)) {
-      missingFields.push('Last Name - Must start with a capital letter and contain only English letters');
-    }
+    } 
 
     // Phone Number 1
     if (!this.personalData.phoneNumber1) {

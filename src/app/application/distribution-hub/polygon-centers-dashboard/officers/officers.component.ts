@@ -47,8 +47,8 @@ export class OfficersComponent implements OnChanges {
   roleOptions = [
     { label: 'Distribution Officer', value: 'Distribution Officer' },
     {
-      label: 'Distribution Center Manager',
-      value: 'Distribution Center Manager',
+      label: 'Distribution Centre Manager',
+      value: 'Distribution Centre Manager',
     },
   ];
 

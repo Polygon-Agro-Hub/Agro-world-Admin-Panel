@@ -400,7 +400,7 @@ export class CreateVarietyComponent implements OnInit {
         this.isLoading = false;
         Swal.fire({
           title: 'Success',
-          text: response.message || 'Crop variety created successfully!',
+          text: response.message || 'Crop Variety created successfully!',
           icon: 'success',
           confirmButtonText: 'OK',
           customClass: {

@@ -8,9 +8,9 @@
   <div class="h-[20px]"></div>
 
   <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <div
-      class="pt-5 pr-12 pl-12 pb-5 min-w-[1900px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+      class="pt-5 pr-12 pl-12 pb-5 min-w-[1900px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <h2 class="text-2xl font-bold mb-6 text-left text-textLight dark:text-textDark">
         {{ this.userName }} 
       </h2>
@@ -118,20 +118,7 @@
                       )
                     " color="primary"></mat-progress-bar>
 
-                  <!-- <div
-                    class="w-[100%] bg-gray-200 rounded-full h-2.5 flex-grow"
-                  >
-                    <div
-                      class="w-[100%] bg-blue-500 h-[100%] rounded-full flex-grow"
-                      [style.width.%]="
-                        calculateProgressPercentage(
-                          item.totalTasks,
-                          item.completedTasks
-                        )
-                      "
-                    ></div>
-                  </div> -->
-                  <!-- Percentage text -->
+                 
                   <span class="text-sm">
                     {{
                     (item.completedTasks / item.totalTasks) * 100
@@ -177,7 +164,7 @@
                 </button>
             
              <td class="px-4 py-3 dark:text-textDark text-center">
-  {{ item.modifyBy || 'null' }}
+  {{ item.modifyBy || '--' }}
 </td>
 
               <td>
@@ -185,7 +172,7 @@
                     permissionService.hasPermission('Delete crop group') ||
                     tokenService.getUserDetails().role === '1'
                   " class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
-                  (click)="deleteCultivation(item.ongoingCultivationId, i)">
+                  (click)="deleteCultivation(item.ongoingcultivationscropsid, i)">
                   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                     viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

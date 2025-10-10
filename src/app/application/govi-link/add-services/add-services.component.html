@@ -1,0 +1,102 @@
+<button class="text-textLight dark:text-textDark" (click)="onCancel(serviceForm)">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="h-[20px]"></div>
+<div class="mx-auto p-12 bg-white dark:bg-tileBlack  shadow-mg rounded-lg shadow-md">
+  <h2 class="text-2xl mb-6 dark:text-textDark">Add Service</h2>
+
+  <form #serviceForm="ngForm" (ngSubmit)="onSubmit(serviceForm)">
+    <!-- Service Name in English -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">Service Name in English *</label>
+      <input
+        type="text"
+        class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [(ngModel)]="serviceData.englishName"
+        (ngModelChange)="formatEnglishName()"
+         (keydown)="blockFirstSpace($event)"
+        name="englishName"
+        #englishName="ngModel"
+        required
+      />
+      <div *ngIf="englishName.invalid && englishName.touched" class="text-red-600 text-sm mt-1">
+        <div *ngIf="englishName.errors?.['required']">English name is required.</div>
+      </div>
+    </div>
+
+    <!-- Service Name in Sinhala -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">Service Name in Sinhala *</label>
+      <input
+        type="text"
+        class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [(ngModel)]="serviceData.sinhalaName"
+                (ngModelChange)="formatEnglishName()"
+         (keydown)="blockFirstSpace($event)"
+        name="sinhalaName"
+        #sinhalaName="ngModel"
+        required
+      />
+      <div *ngIf="sinhalaName.invalid && sinhalaName.touched" class="text-red-600 text-sm mt-1">
+        <div *ngIf="sinhalaName.errors?.['required']">Sinhala name is required.</div>
+      </div>
+    </div>
+
+    <!-- Service Name in Tamil -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">Service Name in Tamil *</label>
+      <input
+        type="text"
+        class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [(ngModel)]="serviceData.tamilName"
+                (ngModelChange)="formatEnglishName()"
+         (keydown)="blockFirstSpace($event)"
+        name="tamilName"
+        #tamilName="ngModel"
+        required
+      />
+      <div *ngIf="tamilName.invalid && tamilName.touched" class="text-red-600 text-sm mt-1">
+        <div *ngIf="tamilName.errors?.['required']">Tamil name is required.</div>
+      </div>
+    </div>
+
+    <!-- Service Fee -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">Service Fee (Rs.) *</label>
+<input
+  type="number"
+  class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  [(ngModel)]="serviceData.srvFee"
+  name="srvFee"
+  #srvFee="ngModel"
+  required
+  min="0"
+ (input)="formatSrvFee()"
+  (input)="blockAfterTwoDecimals($event)"
+   
+/>
+
+      <div *ngIf="srvFee.invalid && srvFee.touched" class="text-red-600 text-sm mt-1">
+        <div *ngIf="srvFee.errors?.['required']">Service fee is required.</div>
+        <div *ngIf="srvFee.errors?.['min']">Service fee cannot be negative.</div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="mb-6">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end mt-6">
+      <button type="button" (click)="onCancel(serviceForm)" class="px-4 py-2 bg-gray-300 text-[#939393] rounded-md mr-2">
+        Cancel
+      </button>
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+        Save
+      </button>
+    </div>
+  </form>
+</div>

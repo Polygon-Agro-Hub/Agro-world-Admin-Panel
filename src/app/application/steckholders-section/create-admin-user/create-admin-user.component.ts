@@ -19,6 +19,9 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { TokenService } from '../../../services/token/services/token.service';
 
+// Import PrimeNG modules
+import { DropdownModule } from 'primeng/dropdown';
+
 interface Admin {
   id: number;
   mail: string;
@@ -33,10 +36,21 @@ interface Roles {
   role: string;
 }
 
+interface Position {
+  id: number;
+  positions: string;
+}
+
 @Component({
   selector: 'app-create-admin-user',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HttpClientModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    FormsModule, 
+    HttpClientModule,
+    DropdownModule
+  ],
   templateUrl: './create-admin-user.component.html',
   styleUrls: ['./create-admin-user.component.css'],
 })
@@ -47,8 +61,8 @@ export class CreateAdminUserComponent implements OnInit {
 
   isPopupVisible = false;
   showPassword: boolean = false;
-  rolesList: any[] = [];
-  positionList: any[] = [];
+  rolesList: Roles[] = [];
+  positionList: Position[] = [];
 
   userForm: FormGroup;
 
@@ -93,6 +107,7 @@ export class CreateAdminUserComponent implements OnInit {
       }
     });
   }
+
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -113,8 +128,6 @@ export class CreateAdminUserComponent implements OnInit {
       }
     });
   }
-
-
 
   setPasswordValidation(isRequired: boolean) {
     const passwordControl = this.userForm.get('password');
@@ -140,7 +153,9 @@ export class CreateAdminUserComponent implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http.get<any>(`${environment.API_URL}auth/get-all-roles`, { headers }).subscribe(
-      (response) => (this.rolesList = response.roles),
+      (response) => {
+        this.rolesList = response.roles || [];
+      },
       (error) => console.error('Error fetching roles:', error)
     );
   }
@@ -152,10 +167,13 @@ export class CreateAdminUserComponent implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
 
     this.http.get<any>(`${environment.API_URL}auth/get-all-position`, { headers }).subscribe(
-      (response) => (this.positionList = response.positions),
+      (response) => {
+        this.positionList = response.positions || [];
+      },
       (error) => console.error('Error fetching positions:', error)
     );
   }
+
   emailValidator(): (control: AbstractControl) => ValidationErrors | null {
     return (control: AbstractControl): ValidationErrors | null => {
       const value: string = control.value;
@@ -213,7 +231,6 @@ export class CreateAdminUserComponent implements OnInit {
     }
   }
 
-
   formatTextInput(fieldName: string): void {
     const control = this.userForm.get(fieldName);
     if (control && control.value) {
@@ -221,9 +238,6 @@ export class CreateAdminUserComponent implements OnInit {
       control.setValue(cleanedValue);
     }
   }
-
-
-
 
   getErrorMessage(controlName: string): string {
     const control = this.userForm.get(controlName);
@@ -264,7 +278,6 @@ export class CreateAdminUserComponent implements OnInit {
 
     return ''; // Default return to satisfy the string return type
   }
-
 
   getAdminById(id: number): void {
     const token = this.tokenService.getToken();
@@ -436,6 +449,10 @@ export class CreateAdminUserComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, update it!',
       cancelButtonText: 'Cancel',
+                  customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    }
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -444,13 +461,17 @@ export class CreateAdminUserComponent implements OnInit {
         });
 
         this.http
-          .put(`${environment.API_URL}auth/update-admin/${itemId}`, this.userForm.value, { headers })
+          .post(`${environment.API_URL}auth/update-admin/${itemId}`, this.userForm.value, { headers })
           .subscribe(
             () => {
               Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: 'Admin updated successfully!',
+                              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
               }).then(() => {
                 this.navigatePath('/steckholders/action/admin');
               });
@@ -466,6 +487,7 @@ export class CreateAdminUserComponent implements OnInit {
       }
     });
   }
+
   // Updated createAdmin method
   createAdmin() {
     // Log form values to verify
@@ -555,6 +577,10 @@ export class CreateAdminUserComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, create it!',
       cancelButtonText: 'Cancel',
+                    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     }).then((result) => {
       if (result.isConfirmed) {
         const headers = new HttpHeaders({
@@ -570,6 +596,10 @@ export class CreateAdminUserComponent implements OnInit {
                 icon: 'success',
                 title: 'Success',
                 text: 'Admin created successfully!',
+                                              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
               }).then(() => {
                 this.userForm.reset();
                 this.navigatePath('/steckholders/action/admin');
@@ -587,11 +617,10 @@ export class CreateAdminUserComponent implements OnInit {
     });
   }
 
-
-
   openPopup() {
     this.isPopupVisible = true;
   }
+
   onCancel() {
     Swal.fire({
       icon: 'warning',
@@ -611,8 +640,6 @@ export class CreateAdminUserComponent implements OnInit {
       }
     });
   }
-
-
 
   onCancel2() {
     this.userForm.reset();

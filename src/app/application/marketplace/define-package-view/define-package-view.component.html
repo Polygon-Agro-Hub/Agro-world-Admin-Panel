@@ -10,16 +10,10 @@
     Define Package
   </p>
   <div class="flex space-x-2 mb-4">
-    <button
-      class="px-4 py-2 bg-[#74788D] text-white rounded"
-   (click)="onCancel()"
-    >
+    <button class="px-4 py-2 bg-[#74788D] text-white rounded" (click)="onCancel()">
       Cancel
     </button>
-    <button
-      class="px-6 py-2 bg-[#3980C0] text-white rounded"
-      (click)="onSave()"
-    >
+    <button class="px-6 py-2 bg-[#3980C0] text-white rounded" (click)="onSave()">
       Save
     </button>
   </div>
@@ -29,12 +23,10 @@
   <span *ngFor="let item of orderDetails">
     <div class="p-10 space-y-4">
       <div>
-        <div
-          class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-4 rounded-xl"
-        >
+        <div class="bg-[#F1F4F5] dark:bg-gray-700 flex items-center justify-between mb-3 p-4 rounded-xl">
           <span class="font-medium text-[#000000] dark:text-[#F1F4F5]">
             Package : {{ item.displayName }} (Rs.{{
-              item.productPrice | number : "1.2-2"
+            item.productPrice | number : "1.2-2"
             }})
           </span>
         </div>
@@ -42,38 +34,22 @@
         <div class="space-y-3">
           <form>
             <span *ngFor="let typeItems of item.productTypes">
-              <div class="flex items-center space-x-3 border-b-2 py-4 px-5">
+              <div class="flex items-center  space-x-3 border-b-2 py-4 px-5">
                 <div class="w-8 text-[#000000] dark:text-[#F1F4F5] font-medium">
                   {{ typeItems.shortCode }}
                 </div>
-                <select
-                  class="rounded-xl flex-1 px-4 py-4 border border-[#666666] dark:border-gray-600 bg-[#F9F9F9] dark:bg-gray-800 text-[#4B5563] dark:text-gray-400 italic"
-                  (change)="onProductSelected(typeItems, $event)"
-                >
-                  <option>--Select Product--</option>
-                  <option
-                    style="font-style: normal"
-                    *ngFor="let product of marketplaceItems"
-                    [value]="product.id"
-                  >
-                    {{ product.displayName }}
-                  </option>
-                </select>
-<input
-  type="number"
-  step="0.001"
-  min="0"
-  placeholder="--Quantity in kg--"
-  class="rounded-xl text-sm w-40 px-4 py-4 border border-[#666666] dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic"
-  (input)="onQuantityChanged(typeItems, $event)"
-  (keydown)="validateQuantityInput($event)"
-  [value]="typeItems.quantity || ''"
-  pattern="^\d*(\.\d{0,3})?$"
-  inputmode="decimal"
-/>
+                <p-dropdown [options]="marketplaceItems" [(ngModel)]="typeItems.productId" optionLabel="displayName"
+                  optionValue="id" placeholder="--Select Product--" [showClear]="false"
+                  (onChange)="onProductSelected(typeItems, $event)" [style]="{'width': '100%'}"
+                  styleClass="custom-dropdown" class="flex-1" filter="true">
+                </p-dropdown>
+                <input type="number" step="0.001" min="0" placeholder="--Quantity in kg--"
+                  class="rounded-xl text-sm w-40 px-4 py-4 border border-[#666666] dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 placeholder-gray-500 dark:placeholder-gray-400 placeholder:italic"
+                  (input)="onQuantityChanged(typeItems, $event)" (keydown)="validateQuantityInput($event)"
+                  [value]="typeItems.quantity || ''" pattern="^\d*(\.\d{0,3})?$" inputmode="decimal" />
                 <div class="w-16 text-right text-[#4B5563] dark:text-gray-100">
                   Rs.{{
-                    typeItems.calculatedPrice || "0.00" | number : "1.2-2"
+                  typeItems.calculatedPrice || "0.00" | number : "1.2-2"
                   }}
                 </div>
               </div>
@@ -97,25 +73,20 @@
       <div class="text-right">
         <div class="text-[#4B5563] dark:text-gray-100 mb-1">
           Grand Total :
-          <span class="ml-2 font-semibold"
-            >Rs.{{ getCombinedCalculatedTotal() | number : "1.2-2" }}</span
-          >
+          <span class="ml-2 font-semibold">Rs.{{ getCombinedCalculatedTotal() | number : "1.2-2" }}</span>
         </div>
         <div *ngIf="isWithinLimit" class="text-[#006C5A] dark:text-blue-400 italic">
-  Allowed limit : {{ getCombinedProductPrice() | number:'1.2-2' }} + 
-  {{ getCombinedProductPrice() | number:'1.2-2' }} x 8% = Rs.{{
-    getCombinedProductPrice() * 1.08 | number:'1.2-2'
-  }}
-</div>
-        <div
-          *ngIf="!isWithinLimit"
-          class="text-[#E11E21] dark:text-red-400 mt-1 italic"
-        >
+          Allowed limit : {{ getCombinedProductPrice() | number:'1.2-2' }} +
+          {{ getCombinedProductPrice() | number:'1.2-2' }} x 8% = Rs.{{
+          getCombinedProductPrice() * 1.08 | number:'1.2-2'
+          }}
+        </div>
+        <div *ngIf="!isWithinLimit" class="text-[#E11E21] dark:text-red-400 mt-1 italic">
           Calculated price exceeds the allowed limit ({{
-            packagePrice | number : "1.2-2"
+          packagePrice | number : "1.2-2"
           }}
           + {{ packagePrice | number : "1.2-2" }} * 8% = Rs.{{
-            packagePrice * 1.08 | number : "1.2-2"
+          packagePrice * 1.08 | number : "1.2-2"
           }}). To save the order, it must be within 8% of the target price.
         </div>
       </div>

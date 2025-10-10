@@ -185,4 +185,6 @@ interface PremadePackages {
   orderAdditionalCount: number;
   additionalPrice: string;
   additionalItemsStatus: string;
+  userName: string;
+  packOfficer: string;
 }

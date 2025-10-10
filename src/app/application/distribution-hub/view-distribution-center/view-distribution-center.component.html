@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="backnavigation()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -26,7 +26,7 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
@@ -43,7 +43,26 @@
       <div class="flex items-center">
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            styleClass="
+              border border-2 rounded-xl h-8 items-center 
+              bg-[#F1F1F1] dark:bg-[#272F45] 
+              text-textLight dark:text-textDark 
+              border-[#yourLightColor] dark:border-[#AFAFAF]
+              [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+              [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+              [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+            "
+            panelStyleClass="
+              bg-white dark:bg-[#272F45] 
+              border border-gray-200 dark:border-[#AFAFAF]
+              [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+              [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+              [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+              [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+              [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+              [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+              [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+            "
             [options]="companyOptions"
             [checkmark]="true"
             optionLabel="label"
@@ -57,7 +76,26 @@
 
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            styleClass="
+              border border-2 rounded-xl h-8 items-center 
+              bg-[#F1F1F1] dark:bg-[#272F45] 
+              text-textLight dark:text-textDark 
+              border-[#yourLightColor] dark:border-[#AFAFAF]
+              [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+              [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+              [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+            "
+            panelStyleClass="
+              bg-white dark:bg-[#272F45] 
+              border border-gray-200 dark:border-[#AFAFAF]
+              [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+              [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+              [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+              [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+              [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+              [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+              [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+            "
             [options]="provinceOptions"
             [checkmark]="true"
             optionLabel="label"
@@ -71,7 +109,26 @@
 
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            styleClass="
+              border border-2 rounded-xl h-8 items-center 
+              bg-[#F1F1F1] dark:bg-[#272F45] 
+              text-textLight dark:text-textDark 
+              border-[#yourLightColor] dark:border-[#AFAFAF]
+              [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+              [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+              [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+            "
+            panelStyleClass="
+              bg-white dark:bg-[#272F45] 
+              border border-gray-200 dark:border-[#AFAFAF]
+              [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+              [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+              [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+              [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+              [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+              [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+              [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+            "
             [options]="districtOptions"
             [checkmark]="true"
             optionLabel="label"
@@ -382,7 +439,7 @@
         <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
     </div>
-    <div class="dark:bg-[#262f45]">
+    <div class="dark:bg-[#262f45]" *ngIf="hasData">
       <pagination-controls
         (pageChange)="onPageChange($event)"
         [responsive]="true"

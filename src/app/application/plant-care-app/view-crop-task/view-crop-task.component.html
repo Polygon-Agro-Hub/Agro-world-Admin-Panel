@@ -7,7 +7,7 @@
 </button>
 
 <div *ngIf="isLoading === false"
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1500px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -183,7 +183,7 @@
   <app-edit-task
     [cropId]="selectCropId"
      (close)="ispopup=false"
-    class="bg-white dark:bg-tileBlack rounded-lg shadow-lg w-3/4 max-w-2xl p-6 max-h-[90vh] overflow-y-auto"
+    class="bg-white dark:bg-tileBlack rounded-lg shadow-lg w-3/4 max-w-2xl p-6 max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
   ></app-edit-task>
 </div>
 

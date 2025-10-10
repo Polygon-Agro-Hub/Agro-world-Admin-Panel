@@ -6,32 +6,32 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1300px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
-     <h1 class="text-[22px] font-bold my-8 text-textLight dark:text-white">
-  {{ farmerName }} - Farms
-</h1>
+      <h1 class="text-[22px] font-bold my-8 text-textLight dark:text-white">
+        {{ farmerName }} - Farms
+      </h1>
 
     </div>
     <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 ">
-        <p class="text-[#494949] dark:text-textDark  mb-4">
-      -- No Data Available --
-    </p>
-    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
-    
-  </div>
+      <p class="text-[#494949] dark:text-textDark  mb-4">
+        -- No Data Available --
+      </p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+
+    </div>
 
     <div *ngIf="hasData" class="overflow-x-auto">
       <table class="w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
-           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">No ({{ totalItems }})</th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">No ({{ totalItems }})</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Farm Name</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">District</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Current</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Fixed</th>
-                        <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Created Date</th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Created Date</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"></th>
           </tr>
         </thead>
@@ -54,49 +54,33 @@
               {{ farm.district }}
             </td>
             <td class="px-4 py-3 text-center">
-              <svg
-                class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </td>
-            <td class="px-4 py-3 text-center">
-              <button
-                class="text-blue-500 hover:text-blue-700"
-                (click)="viewFixedAsset(userId, userFirstName, userLastName, farm.farmName, farm.id)"
-              >
-                <svg
-                  class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+              <button class="text-blue-500 hover:text-blue-700"
+                (click)="viewCurrentAsset(userId, userFirstName, userLastName, farm.farmName, farm.id)">
+                <svg class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                </button>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <button class="text-blue-500 hover:text-blue-700"
+                (click)="viewFixedAsset(userId, userFirstName, userLastName, farm.farmName, farm.id)">
+                <svg class="w-5 h-5 mx-auto text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
             </td>
-      <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-  {{ farm.createdAt | date:'yyyy/MM/dd'  }}
-</td>
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+              {{ farm.createdAt | date:'yyyy/MM/dd' }}
+            </td>
 
             <td class="px-4 py-3 text-center">
-              <button class="text-red-500 hover:text-red-700"
-                 (click)="deleteFarm(farm.id)">
+              <button class="text-red-500 hover:text-red-700" (click)="deleteFarm(farm.id)">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </td>
@@ -105,13 +89,8 @@
         </tbody>
       </table>
       <div class="dark:bg-[#262f45] mt-4">
-        <pagination-controls 
-          (pageChange)="onPageChange($event)" 
-          [responsive]="true" 
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" 
-          [screenReaderPaginationLabel]="'Pagination'" 
-          [screenReaderPageLabel]="'page'"
+        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
           [screenReaderCurrentLabel]="'Youre on page'">
         </pagination-controls>
       </div>

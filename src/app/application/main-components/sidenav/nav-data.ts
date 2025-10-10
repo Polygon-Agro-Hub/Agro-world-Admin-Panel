@@ -46,7 +46,7 @@ export const navbarData = [
   {
     RouterLink: 'plant-care',
     icon: 'fas fa-leaf',
-    label: 'Plant Care',
+    label: 'Govi Care',
     expanded: false,
     children: [
       {
@@ -56,6 +56,24 @@ export const navbarData = [
       },
       {
         RouterLink: '/plant-care/action',
+        childIcon: 'fa-brands fa-creative-commons-nd',
+        label: 'Action',
+      },
+    ],
+  },
+  {
+    RouterLink: 'govi-link',
+    icon: 'fa-solid fa-magnifying-glass',
+    label: 'GoVi Link',
+    expanded: false,
+    children: [
+      {
+        RouterLink: '/govi-link/dashboard',
+        childIcon: 'fa-solid fa-gauge',
+        label: 'Dashboard',
+      },
+      {
+        RouterLink: '/govi-link/action',
         childIcon: 'fa-brands fa-creative-commons-nd',
         label: 'Action',
       },

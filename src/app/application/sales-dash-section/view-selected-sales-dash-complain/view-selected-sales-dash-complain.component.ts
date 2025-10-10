@@ -97,14 +97,14 @@ submitComplaint() {
   console.log(this.complainId);
   console.log(this.messageContent);
   if (this.complain.reply === null || this.complain.reply === undefined) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Warning',
-      text: 'Please write a reply before sending',
+  Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Reply field is required!',
       customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
     });
     this.isLoading = false;
     return;
@@ -126,6 +126,7 @@ submitComplaint() {
           icon: "success",
           title: "Success",
           text: "Reply was sent successfully!",
+         
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',

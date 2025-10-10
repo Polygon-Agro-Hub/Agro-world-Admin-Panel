@@ -14,6 +14,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { Country, COUNTRIES } from '../../../../assets/country-data';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-add-collection-center',
   standalone: true,
@@ -66,7 +67,8 @@ export class AddCollectionCenterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private collectionCenterService: CollectionCenterService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.collectionCenterForm = this.fb.group({
       regCode: ['', [Validators.required, Validators.pattern(/^[^\d]*$/)]],
@@ -84,6 +86,7 @@ export class AddCollectionCenterComponent implements OnInit {
       province: ['', Validators.required],
       country: ['Sri Lanka', Validators.required],
       city: ['', Validators.required],
+      companies: [[], Validators.required],
       searchQuery: [''],
     });
     const defaultCountry = this.countries.find((c) => c.code === 'lk') || null;
@@ -99,6 +102,13 @@ export class AddCollectionCenterComponent implements OnInit {
       company.companyNameEnglish.toLowerCase().includes(input)
     );
   }
+
+  onCompanyChange(event: any): void {
+    this.selectedCompaniesIds = event.value;
+    this.collectionCenterForm.get('companies')?.setValue(this.selectedCompaniesIds);
+    this.collectionCenterForm.get('companies')?.markAsTouched();
+  }
+
 
   onCompanyInputClick(): void {
     this.dropdownOpen = !this.dropdownOpen;
@@ -484,36 +494,25 @@ isFieldInvalid(field: string): boolean {
           });
         },
       });
-    } else {
-      Swal.fire({
-        icon: 'info',
-        title: 'Cancelled',
-        text: 'Collection Centre creation has been cancelled',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
     }
   });
 }
 
-  onCancel() {
+onCancel() {
   Swal.fire({
     icon: 'warning',
     title: 'Are you sure?',
-    text: 'All entered data will be lost!',
+    text: 'You may lose the added data after canceling!',
     showCancelButton: true,
-    confirmButtonText: 'Yes, Reset',
+    confirmButtonText: 'Yes, Cancel',
     cancelButtonText: 'No, Keep Editing',
-        customClass: {
+    customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/collection-hub/view-collection-centers']);
+      this.location.back(); // 👈 this takes the user back to the previous page
     }
   });
 }

@@ -105,40 +105,53 @@ export class ViewCropCalanderComponent implements OnInit {
         }
       );
   }
-  deleteCropCalender(id: any) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this crop calendar item? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.cropCalendarService.deleteCropCalender(id).subscribe(
-          (data: any) => {
-            if (data) {
-              Swal.fire(
-                'Deleted!',
-                'The crop calendar item has been deleted.',
-                'success'
-              );
-              this.fetchAllCropCalenders();
-            }
-          },
-          (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the crop calendar.',
-              'error'
-            );
+deleteCropCalender(id: any) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this crop calendar item? This action cannot be undone.',
+    icon: 'warning',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+    },
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.cropCalendarService.deleteCropCalender(id).subscribe(
+        (data: any) => {
+          if (data) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Crop calendar has been deleted successfully.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+            this.fetchAllCropCalenders();
           }
-        );
-      }
-    });
-  }
+        },
+        (error) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'There was an error deleting the crop calendar.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      );
+    }
+  });
+}
 
   editCropCalender(id: number) {
     this.router.navigate(['/plant-care/action/edit-crop-calender'], {

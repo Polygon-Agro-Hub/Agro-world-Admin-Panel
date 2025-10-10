@@ -116,84 +116,127 @@ onSubmit() {
   this.clearValidationMessages();
 
   // Collect missing required fields
-  const missingFields = [];
+  const missingFields: string[] = [];
 
-  if (!this.coupenObj.code) missingFields.push('Code *');
-  if (!this.coupenObj.startDate) missingFields.push('Start Date *');
-  if (!this.coupenObj.endDate) missingFields.push('Expire Date *');
-  if (!this.coupenObj.type) missingFields.push('Type *');
-  if (!this.coupenObj.type) missingFields.push('Type *');
+  if (!this.coupenObj.code) missingFields.push('Code is Required');
+  if (!this.coupenObj.startDate) missingFields.push('Start Date is Required');
+  if (!this.coupenObj.endDate) missingFields.push('Expire Date is Required');
+  if (!this.coupenObj.type) missingFields.push('Type is Required');
 
   // Type-specific validations
   if (this.coupenObj.type === 'Percentage') {
     if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
-      missingFields.push('Discount Percentage *');
+      missingFields.push('Discount Percentage is Required');
       this.checkPrecentageValueMessage = 'Discount Percentage is required';
     }
   } else if (this.coupenObj.type === 'Fixed Amount') {
     if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
-      missingFields.push('Discount Amount *');
+      missingFields.push('Discount Amount is Required');
       this.checkfixAmountValueMessage = 'Discount Amount is required';
     }
   }
 
   if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-    missingFields.push('Price Limit *');
+    missingFields.push('Price Limit is Required');
   }
 
+  // If there are validation errors, show them and stop the submission
   if (missingFields.length > 0) {
-  // Format missing fields as left-aligned bullet points
-  const bulletPoints = missingFields
-    .map(field => `<div style="text-align: left; margin: 5px 0;">• ${field}</div>`)
-    .join('');
-  
-  Swal.fire({
-    title: 'Validation Error',
-    html: `
-      <div style="text-align: left;">
-        <p>Please fill in the following required field(s):</p>
-        ${bulletPoints}
-      </div>
-    `,
-    icon: 'error',
-    confirmButtonText: 'OK',
-    customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-  });
-  return;
-}
+    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+    missingFields.forEach((field) => {
+      errorMessage += `<li>${field}</li>`;
+    });
+    errorMessage += '</ul></div>';
 
-  // Save the coupon
-  this.marketSrv.createCoupen(this.coupenObj).subscribe({
-    next: (res) => {
-      if (res.status) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Coupon Created',
-          text: 'The coupon was created successfully!',
-          confirmButtonText: 'OK',
-          customClass: {
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
       },
-        }).then(() => {
-          this.coupenObj = new Coupen();
-          this.router.navigate(['market/action/view-coupen']);
-        });
-      }
+    });
+    return;
+  }
+
+  // If validation passes, proceed with confirmation
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to create this coupon?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Create it!',
+    cancelButtonText: 'No, Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
     },
-    error: (err) => {
-      if (err.error && err.error.error === 'Coupon with this code already exists') {
-        this.checkPrecentageValueMessage = '';
-        this.checkfixAmountValueMessage = '';
-        Swal.fire('Error', 'Coupon with this code already exists', 'error');
-      } else {
-        Swal.fire('Error', err.error?.error || 'Coupon with this code already exists', 'error');
-      }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Save the coupon
+      this.marketSrv.createCoupen(this.coupenObj).subscribe({
+        next: (res) => {
+          if (res.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'The coupon was created successfully!',
+              timer: 2000,
+              showConfirmButton: false,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            }).then(() => {
+              this.coupenObj = new Coupen();
+              this.router.navigate(['market/action/view-coupen']);
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Submission Failed',
+              text: res.error || 'Failed to create coupon',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        },
+        error: (err) => {
+          let errorMessage = 'An unexpected error occurred.';
+
+          if (err.error && err.error.error) {
+            // Use the specific error message from the backend
+            errorMessage = err.error.error;
+          } else if (err.status === 400) {
+            errorMessage = 'Invalid data. Please check your inputs.';
+          } else if (err.status === 401) {
+            errorMessage = 'Unauthorized. Please log in again.';
+          } else if (err.status === 409) {
+            errorMessage = 'A coupon with this code already exists.';
+          } else if (err.status === 500) {
+            errorMessage = 'Server error. Please try again later.';
+          }
+
+          // Clear validation messages
+          this.checkPrecentageValueMessage = '';
+          this.checkfixAmountValueMessage = '';
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Submission Failed',
+            text: errorMessage,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      });
     }
   });
 }

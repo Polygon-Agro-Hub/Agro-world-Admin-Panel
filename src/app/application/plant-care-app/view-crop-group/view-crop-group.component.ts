@@ -95,7 +95,7 @@ export class ViewCropGroupComponent {
   hasData: boolean = true;
 
   searchTerm: string = '';
-  selectedCategory: CategoryOption | undefined = undefined;
+  selectedCategory: string = '';
   categoryOptions: CategoryOption[] = [];
 
   constructor(
@@ -155,7 +155,7 @@ export class ViewCropGroupComponent {
     page: number = 1,
     limit: number = this.itemsPerPage,
     searchTerm: string = this.searchTerm,
-    category: string = this.selectedCategory?.value || ''
+    category: string = this.selectedCategory || ''
   ) {
     this.page = page;
     this.isLoading = true;
@@ -178,12 +178,11 @@ export class ViewCropGroupComponent {
 
   onCategoryChange() {
     this.page = 1;
-    const category = this.selectedCategory?.value || '';
     this.fetchAllCropGroups(
       this.page,
       this.itemsPerPage,
       this.searchTerm,
-      category
+      this.selectedCategory
     );
   }
 
@@ -195,7 +194,7 @@ export class ViewCropGroupComponent {
 
   clearFilters() {
     this.searchTerm = '';
-    this.selectedCategory = undefined;
+    this.selectedCategory = '';
     this.page = 1;
     this.fetchAllCropGroups();
   }
@@ -244,7 +243,7 @@ export class ViewCropGroupComponent {
           next: (data: any) => {
             Swal.fire({
               title: 'Deleted',
-              text: 'The product has been deleted.',
+              text: 'Crop group has been deleted successfully.',
               icon: 'success',
               customClass: {
                 popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
@@ -257,7 +256,7 @@ export class ViewCropGroupComponent {
           error: (error) => {
             Swal.fire({
               title: 'Error',
-              text: 'There was a problem deleting the product.',
+              text: 'There was a problem deleting the crop group item.',
               icon: 'error',
               customClass: {
                 popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',

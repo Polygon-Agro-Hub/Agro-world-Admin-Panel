@@ -206,268 +206,263 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   onSubmit() {
-    this.formSubmitted = true;
-    this.tagsTouched = true;
+  this.formSubmitted = true;
+  this.tagsTouched = true;
 
-    // Mark all form controls as touched to show validation messages
-    if (this.productForm) {
-      Object.keys(this.productForm.controls).forEach(key => {
-        const control = this.productForm.controls[key];
-        control.markAsTouched();
-      });
-    }
+  // Mark all form controls as touched to show validation messages
+  if (this.productForm) {
+    Object.keys(this.productForm.controls).forEach(key => {
+      const control = this.productForm.controls[key];
+      control.markAsTouched();
+    });
+  }
 
-    // First, validate quantity range for wholesale
-    if (this.productObj.category === 'WholeSale' &&
-      !this.validateQuantityRange()) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Quantity Range',
-        html: 'Minimum quantity cannot be greater than maximum quantity',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    // Round all decimal values to 2 places
-    this.productObj.normalPrice = parseFloat(this.productObj.normalPrice.toFixed(2));
-    if (this.productObj.promo) {
-      this.productObj.discountedPrice = parseFloat(this.productObj.discountedPrice.toFixed(2));
-      this.productObj.salePrice = parseFloat(this.productObj.salePrice.toFixed(2));
-    }
-    this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(2));
-    this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(2));
-
-    if (this.productObj.category === 'WholeSale') {
-      this.productObj.maxQuantity = parseFloat(this.productObj.maxQuantity.toFixed(2));
-    }
-
-    this.updateTags();
-
-    // Check for empty required fields
-    const emptyFields = [];
-    console.log(this.productObj);
-
-
-    if (!this.productObj.category) emptyFields.push('Category');
-    if (!this.productObj.cropName) emptyFields.push('Display Name');
-    if (!this.productObj.selectId) emptyFields.push('Crop');
-    if (!this.productObj.varietyId) emptyFields.push('Variety');
-    if (!this.productObj.normalPrice && this.productObj.normalPrice === 0) emptyFields.push('Price Per kg');
-    if (!this.productObj.unitType) emptyFields.push('Unit Type');
-    if (!this.productObj.startValue && this.productObj.startValue === 0) emptyFields.push('Starting Value');
-    if (!this.productObj.changeby && this.productObj.changeby === 0) emptyFields.push('Increase/Decrease by');
-    if (this.templateKeywords().length === 0) emptyFields.push('Tags');
-
-    if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity && this.productObj.maxQuantity === 0)) {
-      emptyFields.push('Maximum Quantity');
-    }
-
-    if (this.productObj.promo) {
-      if (!this.productObj.displaytype) {
-        emptyFields.push('Display Type');
-      } else {
-        if (this.productObj.displaytype === 'D&AP') {
-          if (this.productObj.discountedPrice === 0) emptyFields.push('Discount Percentage');
-        } else if (this.productObj.displaytype === 'AP&SP') {
-          if (this.productObj.salePrice === 0) emptyFields.push('Sale Price');
-        } else if (this.productObj.displaytype === 'AP&SP&D') {
-          if (this.productObj.discountedPrice === 0) emptyFields.push('Discount Percentage');
-          if (this.productObj.salePrice === 0) emptyFields.push('Sale Price');
-        }
-      }
-
-    }
-
-    if (emptyFields.length > 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Required Fields',
-        html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    if (this.templateKeywords().length === 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Missing Required Fields',
-        html: 'Please add at least one keyword',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    // Validate decimal places for all numeric fields
-    const decimalIssues = [];
-
-    if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.normalPrice.toString())) {
-      decimalIssues.push('Price Per kg must have max 2 decimal places');
-    }
-
-    if (this.productObj.promo && this.productObj.discountedPrice &&
-      !/^\d+(\.\d{1,2})?$/.test(this.productObj.discountedPrice.toString())) {
-      decimalIssues.push('Discount Percentage must have max 2 decimal places');
-    }
-
-    if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.startValue.toString())) {
-      decimalIssues.push('Starting Value must have max 2 decimal places');
-    }
-
-    if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.changeby.toString())) {
-      decimalIssues.push('Increase/Decrease by must have max 2 decimal places');
-    }
-
-    if (this.productObj.category === 'WholeSale' &&
-      !/^\d+(\.\d{1,2})?$/.test(this.productObj.maxQuantity.toString())) {
-      decimalIssues.push('Maximum Quantity must have max 2 decimal places');
-    }
-
-    if (decimalIssues.length > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Decimal Values',
-        html: decimalIssues.join('<br>'),
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    // Validate price relationships
-    if (this.productObj.promo) {
-      if (this.productObj.salePrice <= 0) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Value',
-          text: 'Sale Price must be greater than 0, check the discount you applied',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        return;
-      }
-
-      if (this.productObj.displaytype === 'AP&SP' &&
-        this.productObj.salePrice >= this.productObj.normalPrice) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Invalid Value',
-          text: 'Sale Price must be less than Actual Price',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        return;
-      }
-    }
-
-    // Additional validations
-    if (this.productObj.startValue <= 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Value',
-        text: 'Starting Value must be greater than 0',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    if (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Value',
-        text: 'Maximum Quantity must be greater than 0',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    if (this.productObj.changeby <= 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Value',
-        text: 'Increase/Decrease by must be greater than 0',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    // Convert grams to kg if needed
-    if (this.productObj.unitType == 'g') {
-      this.productObj.startValue = this.productObj.startValue / 1000;
-      this.productObj.changeby = this.productObj.changeby / 1000;
-      if (this.productObj.category === 'WholeSale') {
-        this.productObj.maxQuantity = this.productObj.maxQuantity / 1000;
-      }
-    }
-
-    // Submit the form
-    this.marketSrv.createProduct(this.productObj).subscribe(
-      (res) => {
-        if (res.status === true) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Product Created Successfully',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-          });
-          this.router.navigate(['/market/action/view-products-list']);
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: res.message,
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-          });
-        }
+  // First, validate quantity range for wholesale
+  if (this.productObj.category === 'WholeSale' &&
+    !this.validateQuantityRange()) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Quantity Range',
+      html: 'Minimum quantity cannot be greater than maximum quantity',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
       },
-      (error) => {
-        console.error('Product creation error:', error);
+    });
+    return;
+  }
+
+  // Round all decimal values to 2 places
+  this.productObj.normalPrice = parseFloat(this.productObj.normalPrice.toFixed(2));
+  if (this.productObj.promo) {
+    this.productObj.discountedPrice = parseFloat(this.productObj.discountedPrice.toFixed(2));
+    this.productObj.salePrice = parseFloat(this.productObj.salePrice.toFixed(2));
+  }
+  this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(2));
+  this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(2));
+
+  if (this.productObj.category === 'WholeSale') {
+    this.productObj.maxQuantity = parseFloat(this.productObj.maxQuantity.toFixed(2));
+  }
+
+  this.updateTags();
+
+  // Check for empty required fields - INCLUDING ALL QUANTITY SECTION FIELDS
+  const emptyFields = [];
+  console.log(this.productObj);
+
+  // Basic product information fields
+  if (!this.productObj.category) emptyFields.push('Category');
+  if (!this.productObj.cropName) emptyFields.push('Display Name');
+  if (!this.productObj.selectId) emptyFields.push('Crop');
+  if (!this.productObj.varietyId) emptyFields.push('Variety');
+  if (!this.productObj.normalPrice && this.productObj.normalPrice === 0) emptyFields.push('Price Per kg');
+  
+  // QUANTITY SECTION FIELDS - All required fields
+  if (!this.productObj.unitType) emptyFields.push('Default Unit Type');
+  if (!this.productObj.startValue && this.productObj.startValue === 0) emptyFields.push('Minimum Quantity');
+  if (!this.productObj.changeby && this.productObj.changeby === 0) emptyFields.push('Increase/Decrease by');
+  
+  // Wholesale specific quantity field
+  if (this.productObj.category === 'WholeSale' && (!this.productObj.maxQuantity && this.productObj.maxQuantity === 0)) {
+    emptyFields.push('Maximum Quantity');
+  }
+
+  // Tags field
+  if (this.templateKeywords().length === 0) emptyFields.push('Tags');
+
+  // Discount-related fields
+  if (this.productObj.promo) {
+    if (!this.productObj.displaytype) {
+      emptyFields.push('Display Type');
+    } else {
+      if (this.productObj.displaytype === 'D&AP') {
+        if (this.productObj.discountedPrice === 0) emptyFields.push('Discount Percentage');
+      } else if (this.productObj.displaytype === 'AP&SP') {
+        if (this.productObj.salePrice === 0) emptyFields.push('Sale Price');
+      } else if (this.productObj.displaytype === 'AP&SP&D') {
+        if (this.productObj.discountedPrice === 0) emptyFields.push('Discount Percentage');
+        if (this.productObj.salePrice === 0) emptyFields.push('Sale Price');
+      }
+    }
+  }
+
+  if (emptyFields.length > 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Required Fields',
+      html: `Please fill in the following fields:<br><br>${emptyFields.join('<br>')}`,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  if (this.templateKeywords().length === 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Missing Required Fields',
+      html: 'Please add at least one keyword',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  // Validate decimal places for all numeric fields
+  const decimalIssues = [];
+
+  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.normalPrice.toString())) {
+    decimalIssues.push('Price Per kg must have max 2 decimal places');
+  }
+
+  if (this.productObj.promo && this.productObj.discountedPrice &&
+    !/^\d+(\.\d{1,2})?$/.test(this.productObj.discountedPrice.toString())) {
+    decimalIssues.push('Discount Percentage must have max 2 decimal places');
+  }
+
+  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.startValue.toString())) {
+    decimalIssues.push('Minimum Quantity must have max 2 decimal places');
+  }
+
+  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.changeby.toString())) {
+    decimalIssues.push('Increase/Decrease by must have max 2 decimal places');
+  }
+
+  if (this.productObj.category === 'WholeSale' &&
+    !/^\d+(\.\d{1,2})?$/.test(this.productObj.maxQuantity.toString())) {
+    decimalIssues.push('Maximum Quantity must have max 2 decimal places');
+  }
+
+  if (decimalIssues.length > 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid Decimal Values',
+      html: decimalIssues.join('<br>'),
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  // Validate price relationships
+  if (this.productObj.promo) {
+    if (this.productObj.salePrice <= 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Value',
+        text: 'Sale Price must be greater than 0, check the discount you applied',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+
+    if (this.productObj.displaytype === 'AP&SP' &&
+      this.productObj.salePrice >= this.productObj.normalPrice) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Value',
+        text: 'Sale Price must be less than Actual Price',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+  }
+
+  // Additional validations
+  if (this.productObj.startValue <= 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Invalid Value',
+      text: 'Minimum Quantity must be greater than 0',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  if (this.productObj.category === 'WholeSale' && this.productObj.maxQuantity <= 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Invalid Value',
+      text: 'Maximum Quantity must be greater than 0',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  if (this.productObj.changeby <= 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Invalid Value',
+      text: 'Increase/Decrease by must be greater than 0',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  // Convert grams to kg if needed
+  if (this.productObj.unitType == 'g') {
+    this.productObj.startValue = this.productObj.startValue / 1000;
+    this.productObj.changeby = this.productObj.changeby / 1000;
+    if (this.productObj.category === 'WholeSale') {
+      this.productObj.maxQuantity = this.productObj.maxQuantity / 1000;
+    }
+  }
+
+  if(this.productObj.promo === false){
+    this.productObj.salePrice = this.productObj.normalPrice
+  }
+
+  // Submit the form
+  this.marketSrv.createProduct(this.productObj).subscribe(
+    (res) => {
+      if (res.status === true) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Product Created Successfully',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+        this.router.navigate(['/market/action/view-products-list']);
+      } else {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: error.message,
+          text: res.message,
           confirmButtonText: 'OK',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -475,8 +470,22 @@ export class MarketAddProductComponent implements OnInit {
           },
         });
       }
-    );
-  }
+    },
+    (error) => {
+      console.error('Product creation error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.message,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+    }
+  );
+}
 
   addTemplateKeyword(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();

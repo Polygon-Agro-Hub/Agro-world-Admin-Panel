@@ -114,45 +114,70 @@ export class AdminUsersComponent implements OnInit {
     this.fetchAllAdmins(this.page, this.itemsPerPage);
   }
 
-  deleteAdminUser(id: any) {
-    const token = this.tokenService.getToken();
-    if (!token) return;
+deleteAdminUser(id: any) {
+  const token = this.tokenService.getToken();
+  if (!token) return;
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to delete this Admin? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you really want to delete this Admin? This action cannot be undone.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+      confirmButton:
+        'bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-md',
+      cancelButton:
+        'bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-md ml-2',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`,
+      });
 
-        this.http
-          .delete(`${environment.API_URL}auth/delete-admin-user/${id}`, {
-            headers,
-          })
-          .subscribe(
-            () => {
-              Swal.fire('Deleted!', 'The Admin has been deleted.', 'success');
-              this.fetchAllAdmins();
-            },
-            () => {
-              Swal.fire(
-                'Error!',
-                'There was an error deleting the admin.',
-                'error'
-              );
-            }
-          );
-      }
-    });
-  }
+      this.http
+        .delete(`${environment.API_URL}auth/delete-admin-user/${id}`, {
+          headers,
+        })
+        .subscribe(
+          () => {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The Admin has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton:
+                  'bg-[#3085d6] hover:bg-[#3085d6] text-white font-medium px-4 py-2 rounded-md',
+              },
+            });
+            this.fetchAllAdmins();
+          },
+          () => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the admin.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton:
+                  'bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-md',
+              },
+            });
+          }
+        );
+    }
+  });
+}
+
 
   editAdminUser(id: number) {
     this.router.navigate(['/steckholders/action/admin/create-admin-user'], {

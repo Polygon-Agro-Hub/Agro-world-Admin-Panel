@@ -14,7 +14,6 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <!-- Registration Code -->
 
-      <!-- Collection Center Name -->
       <div>
         <label
           for="centerName"
@@ -39,7 +38,7 @@
           Only English letters are allowed (no numbers or special characters)
         </div> -->
         <div
-          *ngIf="(centerNameInput.touched && centerNameInput.errors?.['required']) || leadingSpaceError || specialCharOrNumberError"
+          *ngIf="(centerNameInput.touched && centerNameInput.errors?.['required']) "
           class="text-red-500 text-sm mt-1"
         >
           Centres Name is required
@@ -490,7 +489,7 @@ Contact Number - 1 and Contact Number - 2 cannot be the same          </div>
         <label
           for="regCode"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Collection Centres Reg Code</label
+          >Collection Centre Reg Code</label
         >
         <input
           id="regCode"
@@ -506,7 +505,7 @@ Contact Number - 1 and Contact Number - 2 cannot be the same          </div>
     <div class="flex justify-end m-10">
       <div
         type="submit"
-        class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md"
+        class="px-6 py-2 mx-5 bg-[#74788D] text-white rounded-md cursor-pointer"
         (click)="onCancel()"
       >
         Cancel

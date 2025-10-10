@@ -47,6 +47,7 @@
 
         <div class="relative w-56 mr-6">
           <p-calendar
+            #toDateCalendar
             [(ngModel)]="toDate"
             name="toDate"
             [minDate]="fromDate"
@@ -106,7 +107,7 @@
         >
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search By GRN No / NIC.."
             [(ngModel)]="searchText"
             (keyup.enter)="onSearch()"
             (keyup.esc)="offSearch()"

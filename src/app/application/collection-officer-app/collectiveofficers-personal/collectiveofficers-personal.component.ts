@@ -203,7 +203,7 @@ closeDropdown() {
 selectjobRole(role: string) {
 
   if (role === "Collection Centre Manager") {
-    this.personalData.jobRole = "Collection Center Manager";
+    this.personalData.jobRole = "Collection Centre Manager";
     this.toggleDropdown()
     console.log('dropdownOpen', this.dropdownOpen)
   } else {
@@ -211,6 +211,7 @@ selectjobRole(role: string) {
     this.toggleDropdown()
     console.log('dropdownOpen', this.dropdownOpen)
   }
+  console.log('personalData', this.personalData)
 
   this.EpmloyeIdCreate(); // call your method
 }
@@ -269,6 +270,7 @@ isJobRoleSelected(): boolean {
 
 
 onSubmit() {
+
   // Mark all fields as touched to show validation messages
   this.markAllFieldsAsTouched();
 
@@ -375,7 +377,7 @@ onSubmit() {
   }
 
   if (!this.personalData.accHolderName) {
-    missingFields.push('Account Holder Name is Required');
+    missingFields.push("Account Holder's Name is required.");
   }
 
   if (!this.personalData.accNumber) {
@@ -413,6 +415,7 @@ onSubmit() {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
     });
     return;
@@ -427,6 +430,12 @@ onSubmit() {
     confirmButtonText: 'Yes, create it!',
     cancelButtonText: 'No, cancel',
     reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+    },
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;
@@ -438,7 +447,18 @@ onSubmit() {
             this.officerId = res.officerId;
             this.errorMessage = '';
 
-            Swal.fire('Success', 'Collection Officer Created Successfully', 'success');
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Collection Officer Created Successfully',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            });
             this.navigatePath('/steckholders/action/collective-officer');
           },
           (error: any) => {
@@ -480,6 +500,7 @@ onSubmit() {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                   htmlContainer: 'text-left',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
               return;
@@ -487,12 +508,9 @@ onSubmit() {
           }
           
         );
-    } else {
-      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
-    }
+    } 
   });
 }
-
 
 // Or combine both into a single function
 capitalizeNames() {
@@ -534,7 +552,9 @@ onCancel() {
 }
 
 nextFormCreate(page: 'pageOne' | 'pageTwo') {
+  console.log('personalData', this.personalData)
   if (page === 'pageTwo') {
+  
     // Mark page one fields as touched to show validation messages
     this.markPageOneFieldsAsTouched();
 
@@ -724,25 +744,27 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   }
 
   getAllCollectionCetnter(id: number) {
-    this.loaded = false;
-    this.personalData.centerId = '';
-    this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
-      (res) => {
-        this.collectionCenterData = res;
-        // Convert to dropdown options format
-        this.centerOptions = this.collectionCenterData.map(center => ({
-          label: center.centerName,
-          value: center.id
-        }));
-        this.loaded = true;
-      },
-      (error) => {
-        this.collectionCenterData = [];
-        this.centerOptions = [];
-        this.loaded = true;
-      }
-    );
-  }
+  this.loaded = false;
+  this.personalData.centerId = '';
+  this.personalData.irmId = ''; // Clear manager selection
+  this.managerOptions = []; // Clear manager options
+  
+  this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
+    (res) => {
+      this.collectionCenterData = res;
+      this.centerOptions = this.collectionCenterData.map(center => ({
+        label: center.centerName,
+        value: center.id
+      }));
+      this.loaded = true;
+    },
+    (error) => {
+      this.collectionCenterData = [];
+      this.centerOptions = [];
+      this.loaded = true;
+    }
+  );
+}
 
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
@@ -811,7 +833,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Collection Center Head': 'CCH',
+      'Collection Centre Head': 'CCH',
       'Collection Centre Manager': 'CCM',
       'Customer Officer': 'CUO',
       'Collection Officer': 'COO',
@@ -898,10 +920,10 @@ onLetterKeyPress(event: KeyboardEvent) {
   }
   
   // Allow all letters (\p{L}) and space (but not at the beginning), block numbers and special characters
-  const regex = /^[\p{L} ]$/u;
-  if (!regex.test(char)) {
-    event.preventDefault(); // block the key
-  }
+  // const regex = /^[\p{L} ]$/u;
+  // if (!regex.test(char)) {
+  //   event.preventDefault(); // block the key
+  // }
 }
 
 // Add this method to handle input events and remove leading spaces
@@ -1462,9 +1484,9 @@ preventSpecialCharacters(event: KeyboardEvent): void {
   }
 
   // Allow only letters (a-z, A-Z) and spaces elsewhere
-  if (!/[a-zA-Z\s]/.test(char)) {
-    event.preventDefault();
-  }
+  // if (!/[a-zA-Z\s]/.test(char)) {
+  //   event.preventDefault();
+  // }
 }
 
 

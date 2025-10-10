@@ -470,7 +470,7 @@ export class CreateCropGroupComponent {
             Swal.fire({
               icon: 'success',
               title: 'Success',
-              text: 'Crop Group Updated Successful!',
+              text: 'Crop group has been updated successfully',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
@@ -552,4 +552,13 @@ export class CreateCropGroupComponent {
       }
     });
   }
+
+  // Prevent leading spaces
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
+  }
+
 }

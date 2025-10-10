@@ -10,8 +10,9 @@ import {
   Validators,
   ReactiveFormsModule,
   FormsModule,
+  
 } from '@angular/forms';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule, DatePipe, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -20,6 +21,7 @@ import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { TokenService } from '../../../services/token/services/token.service';
 import { QuillModule } from 'ngx-quill';
+import { Calendar, CalendarModule } from 'primeng/calendar';
 
 interface NewsItem {
   id: number;
@@ -46,9 +48,11 @@ interface NewsItem {
     HttpClientModule,
     QuillModule,
     LoadingSpinnerComponent,
+    CalendarModule,
   ],
   templateUrl: './create-news.component.html',
   styleUrls: ['./create-news.component.css'],
+  providers: [DatePipe]
 })
 export class CreateNewsComponent {
   selectedLanguage: 'english' | 'sinhala' | 'tamil' = 'english';
@@ -72,6 +76,13 @@ export class CreateNewsComponent {
   isPublishAfterExpireValidEditNews: boolean = true;
   currentPublishDate: string = '';
   currentExpireDate: string = '';
+
+  originalPublishDate: Date | null = null;
+  originalExpireDate: Date | null = null;
+  originalPublishDateEdit: Date | null = null;
+  originalExpireDateEdit: Date | null = null;
+
+  todayDate: Date = new Date();
 
   quillConfig = {
     toolbar: [
@@ -110,7 +121,8 @@ export class CreateNewsComponent {
     private newsService: NewsService,
     private router: Router,
     private tokenService: TokenService,
-    private location: Location
+    private location: Location,
+    private datePipe: DatePipe
   ) {}
 
   validateTitleEnglish(value: string): void {
@@ -184,11 +196,11 @@ createNews() {
     missingFields.push('Description (Tamil) is Required');
   }
 
-  if (!this.createNewsObj.publishDate || this.createNewsObj.publishDate.trim() === '') {
+  if (!this.originalPublishDate || this.formatDateForBackend(this.originalPublishDate).trim() === '') {
     missingFields.push('Publish Date is Required');
   }
 
-  if (!this.createNewsObj.expireDate || this.createNewsObj.expireDate.trim() === '') {
+  if (!this.originalExpireDate || this.formatDateForBackend(this.originalExpireDate).trim() === '') {
     missingFields.push('Expire Date is Required');
   }
 
@@ -268,6 +280,9 @@ createNews() {
     });
     return;
   }
+
+  this.createNewsObj.publishDate = this.formatDates(this.originalPublishDate)
+  this.createNewsObj.expireDate = this.formatDates(this.originalExpireDate)
 
   // Append validated data to FormData
   formData.append('titleEnglish', titleEnglish);
@@ -361,6 +376,10 @@ createNews() {
   });
 }
 
+formatDates(date: Date | null): string {
+  return this.datePipe.transform(date, 'yyyy-MM-dd') || '';
+}
+
 back(): void {
   Swal.fire({
     icon: 'warning',
@@ -422,10 +441,11 @@ back(): void {
         data.forEach((newsItem: any) => {
           if (newsItem.publishDate) {
             newsItem.publishDate = this.formatDate(newsItem.publishDate);
-            this.currentPublishDate;
+            this.originalPublishDateEdit = new Date(newsItem.publishDate);
           }
           if (newsItem.expireDate) {
             newsItem.expireDate = this.formatDate(newsItem.expireDate);
+            this.originalExpireDateEdit = new Date(newsItem.expireDate);
           }
         });
         this.newsItems = data;
@@ -488,15 +508,15 @@ updateNews() {
     missingFields.push('Description (Tamil) is Required');
   }
 
-  if (!this.newsItems[0].publishDate || this.newsItems[0].publishDate.trim() === '') {
+  if (!this.originalPublishDateEdit || this.formatDateForBackend(this.originalPublishDateEdit).trim() === '') {
     missingFields.push('Publish Date is Required');
   }
 
-  if (!this.newsItems[0].expireDate || this.newsItems[0].expireDate.trim() === '') {
+  if (!this.originalExpireDateEdit || this.formatDateForBackend(this.originalExpireDateEdit).trim() === '') {
     missingFields.push('Expire Date is Required');
   }
 
-  if (!this.isPublishAfterExpireValid) {
+  if (!this.isPublishAfterExpireValidEditNews) {
     missingFields.push('Publish and Expire Dates - Publish date must be before expire date');
   }
 
@@ -550,6 +570,14 @@ updateNews() {
       },
     });
     return;
+  }
+
+  // Update the news items with the selected dates
+  if (this.originalPublishDateEdit) {
+    this.newsItems[0].publishDate = this.formatDates(this.originalPublishDateEdit);
+  }
+  if (this.originalExpireDateEdit) {
+    this.newsItems[0].expireDate = this.formatDates(this.originalExpireDateEdit);
   }
 
   // Append validated data to FormData
@@ -689,6 +717,42 @@ updateNews() {
   });
 }
 
+onDateChange(date: Date | null) {
+  this.originalPublishDate = date;
+  console.log('publishDate', this.originalPublishDate)
+  this.checkPublishDate();
+  this.checkPublishExpireDate();
+}
+
+onExpireDateChange(date: Date | null) {
+  this.originalExpireDate = date
+  console.log('expireDate', this.originalExpireDate)
+  this.checkExpireDate();
+}
+
+onDateChangeEdit(date: Date | null) {
+  this.originalPublishDateEdit = date;
+  console.log('publishDateEdit', this.originalPublishDateEdit)
+  this.checkPublishDateEdit();
+  this.checkPublishExpireDateEdit();
+}
+
+onExpireDateChangeEdit(date: Date | null) {
+  this.originalExpireDateEdit = date
+  console.log('expireDateEdit', this.originalExpireDateEdit)
+  this.checkExpireDateEdit();
+}
+
+formatDateForBackend(date: Date | null): string {
+  if (!date) return '';
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
 
   getTodayDate(): string {
     const today = new Date();
@@ -699,8 +763,52 @@ updateNews() {
   }
 
   checkPublishDate() {
-  if (this.createNewsObj.publishDate < this.today) {
-    this.createNewsObj.publishDate = '';
+    console.log('checkPublishDate called')
+    console.log('today', this.todayDate)
+  if (this.originalPublishDate) {
+    this.todayDate.setHours(0, 0, 0, 0);
+    if (this.originalPublishDate < this.todayDate) {
+      setTimeout(() => {
+        this.originalPublishDate = null;
+      });
+      Swal.fire({
+            icon: 'error',
+            title: 'Missing or Invalid Information',
+            html: 'Publish date should be later than Today',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+      console.log('ordginal publish date', this.originalPublishDate)
+    }
+  }
+}
+
+checkPublishDateEdit() {
+  console.log('checkPublishDateEdit called')
+  console.log('today', this.todayDate)
+  if (this.originalPublishDateEdit) {
+    this.todayDate.setHours(0, 0, 0, 0);
+    if (this.originalPublishDateEdit < this.todayDate) {
+      setTimeout(() => {
+        this.originalPublishDateEdit = null;
+      });
+      Swal.fire({
+            icon: 'error',
+            title: 'Missing or Invalid Information',
+            html: 'Publish date should be later than Today',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+      console.log('original publish date edit', this.originalPublishDateEdit)
+    }
   }
 }
 
@@ -711,12 +819,106 @@ updateNews() {
 }
 
   checkExpireDate() {
-  // Remove the Swal.fire popup and just update the validation flag
-  if (this.createNewsObj.publishDate && this.createNewsObj.expireDate) {
-    this.checkPublishExpireDate();
-  }
+    console.log('called')
+
+    if (this.originalExpireDate) {
+      console.log('expireDate', this.originalExpireDate)
+      if (this.originalPublishDate) {
+        if (this.originalExpireDate <= this.originalPublishDate) {
+          setTimeout(() => {
+            this.originalExpireDate = null;
+          });
+          Swal.fire({
+            icon: 'error',
+            title: 'Missing or Invalid Information',
+            html: 'Expire date should be later than Publish date',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+          return;
+        }
+      }
+      this.todayDate.setHours(0, 0, 0, 0);
+  
+      if (this.originalExpireDate < this.todayDate) {
+        setTimeout(() => {
+          this.originalExpireDate = null;
+        });
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: 'Expire date should be later than Today',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
+    }
+  
+    // If both dates are valid, do further checks
+    if (this.originalPublishDate && this.originalExpireDate) {
+      this.checkPublishExpireDate();
+    }
 }
 
+checkExpireDateEdit() {
+  console.log('checkExpireDateEdit called')
+
+  if (this.originalExpireDateEdit) {
+    console.log('expireDateEdit', this.originalExpireDateEdit)
+    if (this.originalPublishDateEdit) {
+      if (this.originalExpireDateEdit <= this.originalPublishDateEdit) {
+        setTimeout(() => {
+          this.originalExpireDateEdit = null;
+        });
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: 'Expire date should be later than Publish date',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
+    }
+    this.todayDate.setHours(0, 0, 0, 0);
+
+    if (this.originalExpireDateEdit < this.todayDate) {
+      setTimeout(() => {
+        this.originalExpireDateEdit = null;
+      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: 'Expire date should be later than Today',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
+  }
+
+  // If both dates are valid, do further checks
+  if (this.originalPublishDateEdit && this.originalExpireDateEdit) {
+    this.checkPublishExpireDateEdit();
+  }
+}
 
   checkExpireDateEditNews() {
   // Remove the Swal.fire popup and just update the validation flag
@@ -726,12 +928,20 @@ updateNews() {
 }
 
   checkPublishExpireDate() {
-  if (this.createNewsObj.publishDate && this.createNewsObj.expireDate) {
-    const publishDate = new Date(this.createNewsObj.publishDate);
-    const expireDate = new Date(this.createNewsObj.expireDate);
-    this.isPublishAfterExpireValid = publishDate <= expireDate;
+    console.log('checkPublishexpireDate called')
+  if (this.originalPublishDate && this.originalExpireDate) {
+    this.isPublishAfterExpireValid = this.originalPublishDate <= this.originalExpireDate;
   } else {
     this.isPublishAfterExpireValid = true;
+  }
+}
+
+checkPublishExpireDateEdit() {
+  console.log('checkPublishexpireDateEdit called')
+  if (this.originalPublishDateEdit && this.originalExpireDateEdit) {
+    this.isPublishAfterExpireValidEditNews = this.originalPublishDateEdit <= this.originalExpireDateEdit;
+  } else {
+    this.isPublishAfterExpireValidEditNews = true;
   }
 }
 
@@ -744,11 +954,6 @@ updateNews() {
     this.isPublishAfterExpireValidEditNews = true;
   }
 }
-
-
-
-
-
 
   backEdit(): void {
     this.router.navigate(['/plant-care/action/manage-content']);

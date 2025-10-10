@@ -144,6 +144,8 @@
           </label>
           <input id="companyNameSinhala" name="companyNameSinhala" 
   [(ngModel)]="companyData.companyNameSinhala" #companyNameSinhala="ngModel" required
+  (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
+  (input)="capitalizeFirstLetter('companyNameEnglish')" 
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
           <div *ngIf="isFieldInvalid('companyNameSinhala')" class="text-red-500 text-sm mt-1">
@@ -161,6 +163,8 @@
           </label>
           <input id="companyNameTamil" name="companyNameTamil" 
   [(ngModel)]="companyData.companyNameTamil" #companyNameTamil="ngModel" required
+  (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
+  (input)="capitalizeFirstLetter('companyNameEnglish')" 
   (blur)="onBlur('companyNameTamil')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- Required message -->
@@ -225,7 +229,7 @@
 
         <div class="pb-6">
           <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Account Number <span class="text-[#2E2E2E]">*</span>
+            Account Number * <span class="text-[#2E2E2E]">*</span>
           </label>
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
             (ngModelChange)="validateAccNumber()" (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
@@ -246,7 +250,7 @@
 
         <div class="pb-6">
           <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+            Confirm Account Number * <span class="text-[#2E2E2E]">*</span>
           </label>
           <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
             (blur)="onBlur('confirmAccNumber')" (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
@@ -548,6 +552,7 @@
           </label>
           <input id="companyNameEnglish" name="companyNameEnglish" 
   [(ngModel)]="companyData.companyNameEnglish" #companyNameEnglish="ngModel" required
+  (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
   (input)="capitalizeFirstLetter('companyNameEnglish')" (blur)="onBlur('companyNameEnglish')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
@@ -568,6 +573,8 @@
           </label>
           <input id="companyNameSinhala" name="companyNameSinhala" 
   [(ngModel)]="companyData.companyNameSinhala" #companyNameSinhala="ngModel" required
+  (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
+  (input)="capitalizeFirstLetter('companyNameEnglish')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
             *ngIf="companyNameSinhala.invalid && (companyNameSinhala.dirty || companyNameSinhala.touched) && !sinhalaInputError"
@@ -587,6 +594,8 @@
           </label>
           <input id="companyNameTamil" name="companyNameTamil" 
   [(ngModel)]="companyData.companyNameTamil" #companyNameTamil="ngModel" required
+  (keydown)="handleInputWithSpaceTrimming($event, 'companyNameEnglish')"
+  (input)="capitalizeFirstLetter('companyNameEnglish')"
   (blur)="onBlur('companyNameTamil')"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div
@@ -687,7 +696,7 @@
 
 
         <div class="pb-6">
-          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
+          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number * <span
               class="text-[#2E2E2E]">*</span></label>
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -704,7 +713,7 @@
 
         <div class="pb-6">
           <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+            Confirm Account Number * <span class="text-[#2E2E2E]">*</span>
           </label>
           <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"
             [(ngModel)]="companyData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
@@ -757,7 +766,7 @@
         </div>
         <div class="pb-6">
           <label for="foName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance Officer’s
-            Name <span style="color: #2E2E2E">*</span></label>
+            Name * <span style="color: #2E2E2E">*</span></label>
           <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
             (keydown)="handleInputWithSpaceTrimming($event, 'foName')" (input)="capitalizeFirstLetter('foName')"
             (blur)="onBlur('foName')"
@@ -872,7 +881,7 @@
       <div class="pb-6">
         <label for="companyNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">Company Name
           (in English)</label>
-        <input id="companyNameEnglish" name="companyNameEnglish" [(ngModel)]="companyData.companyNameEnglish"
+        <input id="companyNameEnglish" name="companyNameEnglish" [disabled]="true" [(ngModel)]="companyData.companyNameEnglish"
           (blur)="onBlur('companyNameEnglish')"
           (input)="onTrimInput($event, companyData, 'companyNameEnglish')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -948,7 +957,7 @@
       <div class="pb-6">
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s Name *</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="companyData.accHolderName"
-          (keydown)="allowOnlyValidNameCharacters($event)"
+          (keydown)="allowOnlyValidNameCharacters($event)" [disabled]="true"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="invalidCharError" class="text-red-500 text-sm mt-1">
           Only English letters, spaces, apostrophes (') and hyphens (-) are allowed.
@@ -971,7 +980,7 @@
     type="text"
     id="bankName"
     name="bankName"
-    [(ngModel)]="companyData.bankName"
+    [(ngModel)]="companyData.bankName" [disabled]="true"
     class="mt-1 block w-full p-2 border rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack
            border-gray-300 focus:ring-[#8AC440] focus:border-[#8AC440]"
     [ngClass]="{ 'border-red-500': isFieldInvalid('bankName') }"
@@ -990,7 +999,7 @@
     type="text"
     id="branchName"
     name="branchName"
-    [(ngModel)]="companyData.branchName"
+    [(ngModel)]="companyData.branchName" readonly
     class="mt-1 block w-full p-2 border rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack
            border-gray-300 focus:ring-[#8AC440] focus:border-[#8AC440]"
     [ngClass]="{ 'border-red-500': isFieldInvalid('branchName') }"

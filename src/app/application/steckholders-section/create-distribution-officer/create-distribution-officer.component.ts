@@ -83,6 +83,11 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
   languagesRequired: boolean = false;
 
+  jobRoleOptions: any[] = [
+    { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
+    { label: 'Distribution Officer', value: 'Distribution Officer' }
+  ];
+
   countries: PhoneCode[] = [
   { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
   { code: 'VN', dialCode: '+84', name: 'Vietnam' },
@@ -281,7 +286,7 @@ onSubmit() {
   }
 
   if (!this.personalData.accHolderName) {
-    missingFields.push('Account Holder Name is Required');
+    missingFields.push(`Account Holder's Name is Required`);
   }
 
   if (!this.personalData.accNumber) {
@@ -349,7 +354,15 @@ onSubmit() {
             this.officerId = res.officerId;
             this.errorMessage = '';
 
-            Swal.fire('Success', 'Distribution Officer Created Successfully', 'success');
+            Swal.fire({
+              title: 'Success', text: 'Distribution Officer Created Successfully', icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            
+            },
+            }
+            );
             this.navigatePath('/steckholders/action/view-distribution-officers');
           },
           (error: any) => {
@@ -382,8 +395,6 @@ onSubmit() {
             Swal.fire('Error', this.errorMessage, 'error');
           }
         );
-    } else {
-      Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
     }
   });
 }
@@ -662,13 +673,30 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     const file: File = event.target.files[0];
     if (file) {
       if (file.size > 5000000) {
-        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+        Swal.fire({
+          title: 'Error', text: 'File size should not exceed 5MB', icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        
+        },
+        }
+
+        );
         return;
       }
 
       const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
-        Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+        Swal.fire({
+          title: 'Error', text: 'Only JPEG, JPG and PNG files are allowed', icon: 'error', 
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        
+        },
+        }
+        );
         return;
       }
 
@@ -1006,9 +1034,12 @@ updateProvince(event: DropdownChangeEvent): void {
       this.confirmAccountNumberError = false;
     }
   }
-  isFieldInvalid(fieldName: keyof Personal): boolean {
-    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
-  }
+ isFieldInvalid(fieldName: keyof Personal): boolean {
+  const value = this.personalData[fieldName];
+  // Show error only if touched AND completely blank
+  return !!this.touchedFields[fieldName] && (value === null || value === undefined || value.trim() === '');
+}
+
 
   onLanguagesBlur(): void {
     this.languagesTouched = true;
@@ -1024,7 +1055,15 @@ updateProvince(event: DropdownChangeEvent): void {
 
   validateFile(file: File): boolean {
     if (file.size > 5000000) {
-      Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+      Swal.fire({
+        title: 'Error', text: 'File size should not exceed 5MB', icon: 'error', 
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      
+      },
+      }
+      );
       return false;
     }
 

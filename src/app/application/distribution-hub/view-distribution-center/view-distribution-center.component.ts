@@ -332,6 +332,10 @@ export class ViewDistributionCenterComponent implements OnInit {
   navigateDashboard(id: number) {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
+  
+  backnavigation(){
+    this.router.navigate([`/distribution-hub/action`]);
+  }
 
 deleteDistributionCenter(id: number): void {
   Swal.fire({
@@ -354,7 +358,7 @@ deleteDistributionCenter(id: number): void {
         next: () => {
           Swal.fire({
             title: 'Deleted!',
-            text: 'Distribution center has been deleted.',
+            text: 'Distribution centre has been deleted.',
             icon: 'success',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -367,11 +371,11 @@ deleteDistributionCenter(id: number): void {
         },
         error: (error) => {
           this.isLoading = false;
-          console.error('Error deleting distribution center:', error);
+          console.error('Error deleting distribution centre:', error);
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Failed to delete distribution center',
+            text: 'Failed to delete distribution centre',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',

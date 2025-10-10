@@ -136,7 +136,7 @@ export class AgroWorldCentersComponent {
     private collectionService: CollectionCenterService,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -167,7 +167,7 @@ export class AgroWorldCentersComponent {
       .getAllCollectionCenterPageAW(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
-          console.log("Data",response);
+          console.log("Data", response);
 
           this.isLoading = false;
           this.collectionObj = response.items;
@@ -182,53 +182,53 @@ export class AgroWorldCentersComponent {
   }
 
   deleteCollectionCenter(id: number) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this Collection Centre? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    confirmButtonColor: '#2563eb', // Blue confirm
-    cancelButtonColor: '#dc2626',  // Red cancel
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.collectionService.deleteCollectionCenter(id).subscribe(
-        (res) => {
-          if (res) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Collection Centre? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonColor: '#2563eb', // Blue confirm
+      cancelButtonColor: '#dc2626',  // Red cancel
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.collectionService.deleteCollectionCenter(id).subscribe(
+          (res) => {
+            if (res) {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The Collection Centre has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+                confirmButtonColor: '#2563eb',
+              });
+              this.fetchAllCollectionCenter();
+            }
+          },
+          (error) => {
             Swal.fire({
-              title: 'Deleted!',
-              text: 'The Collection Center has been deleted.',
-              icon: 'success',
+              title: 'Error!',
+              text: 'There was an error deleting the Collection Centres',
+              icon: 'error',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold',
               },
               confirmButtonColor: '#2563eb',
             });
-            this.fetchAllCollectionCenter();
           }
-        },
-        (error) => {
-          Swal.fire({
-            title: 'Error!',
-            text: 'There was an error deleting the Collection Centers',
-            icon: 'error',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-        }
-      );
-    }
-  });
-}
+        );
+      }
+    });
+  }
 
   onPageChange(event: number) {
     this.page = event;
@@ -328,16 +328,15 @@ export class AgroWorldCentersComponent {
     this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
 
-  assignTarget(items: any, centerId: number, centerName: string) {
+  assignTarget(items: any, centerId: number, regCode: string, Cname: string) {
     let comId;
     items?.some((company: Company) =>
       company.companyNameEnglish === 'Polygon Holdings Private Limited'
         ? (comId = company.id)
         : 0
     );
-    this.router.navigate([
-      `/collection-hub/collection-center-dashboard/${centerId}/${comId}/${centerName}`,
-    ]);
+    this.router.navigate([`/collection-hub/collection-center-dashboard/${centerId}/${comId}/${regCode}`,],
+      { queryParams: { Cname } });
   }
 
   isAgroworldPresent(item: any): boolean {
@@ -346,6 +345,10 @@ export class AgroWorldCentersComponent {
         (company: any) => company.companyNameEnglish === 'Polygon Holdings Private Limited'
       ) ?? false
     );
+  }
+  navigate() {
+    this.router.navigate([`/collection-hub`]);
+
   }
 
   navigateAddTarget(item: CollectionCenter) {

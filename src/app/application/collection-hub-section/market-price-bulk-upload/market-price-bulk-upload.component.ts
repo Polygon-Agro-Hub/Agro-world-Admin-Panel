@@ -37,7 +37,7 @@ export class MarketPriceBulkUploadComponent {
     private http: HttpClient,
     private marketPriceService: MarketPriceService,
     private router: Router
-  ) {}
+  ) { }
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -100,6 +100,10 @@ export class MarketPriceBulkUploadComponent {
             title: 'Success',
             text: 'File uploaded successfully!',
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           }).then((result) => {
             if (result.isConfirmed) {
               this.router.navigate(['/market-place/view-current-price']);
@@ -118,6 +122,10 @@ export class MarketPriceBulkUploadComponent {
             title: 'Error',
             text: this.errorMessage,
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
           });
         },
       });
@@ -132,6 +140,10 @@ export class MarketPriceBulkUploadComponent {
         title: 'Warning',
         text: this.errorMessage,
         confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
       });
     }
   }
@@ -139,44 +151,44 @@ export class MarketPriceBulkUploadComponent {
 
 
   onCancel() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'All entered data will be lost!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-     this.router.navigate(['/collection-hub']);
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'All entered data will be lost!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/collection-hub']);
 
-    }
-  });
-}
+      }
+    });
+  }
 
 
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-    this.router.navigate(['/collection-hub']);
-    }
-  });
-}
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/collection-hub']);
+      }
+    });
+  }
 
 
 

@@ -50,8 +50,8 @@ export class ViewVarietyComponent {
     private router: Router,
     private route: ActivatedRoute,
     public permissionService: PermissionService,
-        public tokenService: TokenService
-  ) {}
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -80,38 +80,56 @@ export class ViewVarietyComponent {
   deleteCropCalender(id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this crop variety item? This action cannot be undone.',
+      text: 'Do you really want to delete this crop variety ? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
         this.cropCalendarService.deleteCropVariety(id).subscribe(
           (data: any) => {
             if (data) {
-              Swal.fire(
-                'Deleted!',
-                'The crop variety item has been deleted.',
-                'success'
-              );
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The crop variety has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton:
+                    'bg-[#3085d6] hover:bg-[#3085d6] text-white font-medium px-4 py-2 rounded-md',
+                },
+              });
               this.isLoading = false;
               this.getAllVarietiesByGroup(this.itemId);
             }
           },
           (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the crop variety.',
-              'error'
-            );
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the crop variety.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton:
+                  'bg-[#3085d6] hover:bg-[#3085d6] text-white font-medium px-4 py-2 rounded-md',
+              },
+            });
             this.isLoading = false;
           }
         );
       }
+
+
     });
   }
 

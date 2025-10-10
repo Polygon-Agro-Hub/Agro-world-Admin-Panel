@@ -1,8 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full"
-  style="min-width: 1200px">
+<div class="fixed-width-container" style="min-width: 1200px">
   <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()"
     class="mb-5 text-textLight dark:text-textDark">
     <i class="fa-solid fa-arrow-left"></i>
@@ -17,7 +15,7 @@
     </svg>
     Add New
   </button>
-  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg  ">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -32,40 +30,41 @@
             [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Category"></p-dropdown>
         </div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="displayOptions" [(ngModel)]="selectedDisplayType" (onChange)="onDisplayTypeChange()"
-            [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Display"></p-dropdown>
+            <div>
+              <p-dropdown
+                styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
+                [options]="displayOptions" [(ngModel)]="selectedDisplayType" (onChange)="onDisplayTypeChange()"
+                [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Display"></p-dropdown>
+            </div>
+            
+            <div class="flex items-center rounded-full px-4 py-2 w-full sm:w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+              <input type="text" placeholder="Search by Display Name, Crop / Variety"
+                class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchVariety"
+                (keydown.enter)="searchProduct()" />
+              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                (click)="searchProduct()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                </svg>
+              </button>
+              <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search by Display Name, Crop / Variety"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchVariety"
-            (keydown.enter)="searchProduct()" />
-          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="searchProduct()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-            </svg>
-          </button>
-          <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
+          <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+          <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>
-      </div>
-    </div>
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
-      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-    </div>
-
-    <div *ngIf="hasData" class="overflow-x-auto">
+    <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>

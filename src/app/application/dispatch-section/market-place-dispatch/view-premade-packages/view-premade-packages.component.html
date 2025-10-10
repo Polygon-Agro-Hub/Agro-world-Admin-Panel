@@ -24,6 +24,9 @@
                         <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
                             Packages
                         </th>
+                        <th class="py-3 px-4 font-normal text-[#4B5563] dark:text-textDark text-center">
+                            Count
+                        </th>
                         <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">
                             Price of Products (Rs.)
                         </th>
@@ -39,6 +42,10 @@
                             {{item.name}}
                         </td>
 
+                        <td class="py-3 px-4 text-[#000000] dark:text-textDark text-center">
+                            {{item.packageQty}}
+                        </td>
+
                         <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
                             {{item.price | number : '1.2-2'}}
                         </td>
@@ -48,7 +55,7 @@
                             <!-- (click)="navigateDispatchItems(item.packageId)" -->
                             <!-- (click)="checkLastOrderStatus(true,false,i)" -->
 
-                            <button class="w-6 h-6 mr-3" (click)="checkPackageLastOrderStatus(item.packageId,i, item.price, item.name)"
+                            <button class="w-6 h-6 mr-3" (click)="checkPackageLastOrderStatus(item.packageId,i, item.price, item.name, item.packageQty)"
                                 [disabled]="item.packStatus === 'Unknown'" [ngClass]="{
                               'text-gray-300 cursor-not-allowed': item.packStatus === 'Unknown',
                               'text-yellow-500 hover:text-yellow-700': item.packStatus === 'Opened',
@@ -70,6 +77,9 @@
                     <tr *ngIf="packageObj.additionalData !== null">
                         <td class="py-3 text-[#000000] dark:text-textDark text-left">
                             Additional
+                        </td>
+                         <td class="py-3 text-[#000000] dark:text-textDark text-left">
+                            <!-- empty column for package count -->
                         </td>
 
                         <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">

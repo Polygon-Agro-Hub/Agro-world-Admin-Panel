@@ -71,13 +71,13 @@ export class BarChartComponent implements OnChanges {
             grid: {
               display: false,
               lineWidth: 1,
-              color: '#000',
+              color: '#7b7e7e',
             },
             ticks: {
               display: false,
             },
             border: {
-              color: '#000',
+              color: '#7b7e7e',
               width: 1,
             },
           },
@@ -85,17 +85,17 @@ export class BarChartComponent implements OnChanges {
             grid: {
               display: false,
               lineWidth: 1,
-              color: '#000',
+              color: '#7b7e7e',
             },
             ticks: {
-              color: '#000',
+              color: '#7b7e7e',
               font: {
                 weight: 'normal',
                 size: 10,
               },
             },
             border: {
-              color: '#000',
+              color: '#7b7e7e',
               width: 1,
             },
           },
@@ -105,7 +105,7 @@ export class BarChartComponent implements OnChanges {
             anchor: 'end',
             align: 'top',
             formatter: (value) => value + '%',
-            color: '#000',
+            color: '#7b7e7e',
             font: {
               weight: 'normal',
               size: 10,

@@ -204,6 +204,7 @@ export class ViewPolygonCentersComponent implements OnInit {
         this.distributionCentreObj = response.items;
         this.hasData = this.distributionCentreObj.length > 0;
         this.totalItems = response.total;
+        console.log('distributionCentreObj', this.distributionCentreObj)
       },
       (error) => {
         if (error.status === 401) {
@@ -314,7 +315,7 @@ export class ViewPolygonCentersComponent implements OnInit {
  deleteCenter(id: number) {
   Swal.fire({
     title: 'Are you sure?',
-    text: 'You will not be able to recover this center!',
+    text: 'You will not be able to recover this centre!',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes, delete it!',
@@ -332,7 +333,7 @@ export class ViewPolygonCentersComponent implements OnInit {
           if (res.success) {
             Swal.fire({
               title: 'Deleted!',
-              text: 'The center has been deleted.',
+              text: 'The centre has been deleted.',
               icon: 'success',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

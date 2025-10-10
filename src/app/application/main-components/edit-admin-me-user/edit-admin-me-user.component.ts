@@ -213,10 +213,25 @@ blockLeadingSpace(event: KeyboardEvent, controlName: string) {
   if (!control) return;
 
   const value = control.value || '';
+  const input = event.target as HTMLInputElement;
+  const cursorPos = input.selectionStart ?? 0;
 
-  // If the first character is empty and user presses space, prevent it
-  if (value.length === 0 && event.key === ' ') {
+  // 1️⃣ Prevent space as first character (even if cursor is at start)
+  if (cursorPos === 0 && event.key === ' ') {
     event.preventDefault();
+    return;
+  }
+
+  // 2️⃣ Prevent consecutive spaces (e.g., "Hello  World")
+  if (value[cursorPos - 1] === ' ' && event.key === ' ') {
+    event.preventDefault();
+  }
+}
+
+onBlurTrim(controlName: string) {
+  const control = this.userForm.get(controlName);
+  if (control) {
+    control.setValue(control.value.trim());
   }
 }
 
@@ -302,6 +317,10 @@ blockLeadingSpace(event: KeyboardEvent, controlName: string) {
             icon: "success",
             title: "Success",
             text: "Admin updated successfully!",
+              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
           }).then((result) => {
             if (result.isConfirmed) {
               // Redirect to the desired route
@@ -349,6 +368,10 @@ blockLeadingSpace(event: KeyboardEvent, controlName: string) {
             icon: "success",
             title: "Success",
             text: "Admin created successfully!",
+                              customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
           });
         },
         (error) => {

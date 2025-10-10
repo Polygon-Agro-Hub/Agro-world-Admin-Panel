@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth-guard.service';
 import { LoginComponent } from './application/main-components/login/login.component';
 import { SignupComponent } from './application/main-components/signup/signup.component';
-import { ForgoPasswordComponent } from './application/main-components/forgo-password/forgo-password.component';
+import { ForgotPasswordComponent } from './application/main-components/forgot-password/forgot-password.component';
 import { PlantcareComponent } from './application/plant-care-app/plantcare/plantcare.component';
 import { SteckholdersComponent } from './application/steckholders-section/steckholders/steckholders.component';
 import { ReportComponent } from './application/report-section/report/report.component';
@@ -185,6 +185,31 @@ import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/fa
 import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-app/farmers-farms-fixed-assets-lands/farmers-farms-fixed-assets-lands.component';
 import { FinanceDashboardComponent } from './application/finance/finance-dashboard/finance-dashboard.component';
 import path from 'path';
+import { ResetPasswordComponent } from './application/main-components/reset-password/reset-password.component';
+import { GoviLinkDashbordComponent } from './application/govi-link/govi-link-dashbord/govi-link-dashbord.component';
+import { GovilinkComponent } from './application/govi-link/govilink/govilink.component';
+import { AddacompanyComponent } from './application/govi-link/addacompany/addacompany.component';
+import { AddCompanyDetailsComponent } from './application/plant-care-app/add-company-details/add-company-details';
+import { ViewCompanyListComponent } from './application/plant-care-app/view-company-list/view-company-list.component';
+import { AddServicesComponent } from './application/govi-link/add-services/add-services.component';
+import { EditServicesComponent } from './application/govi-link/edit-services/edit-services.component';
+import { ViewcompanylistComponent } from './application/govi-link/viewcompanylist/viewcompanylist.component';
+import { EditacompanyComponent } from './application/govi-link/editacompany/editacompany.component';
+import { EditCompanyDetailsComponent } from './application/plant-care-app/edit-company-details/edit-company-details';
+import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-company-details/view-company-details';
+import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
+import { ViewServicesListComponent } from './application/govi-link/view-services-list/view-services-list.component';
+import { AddCertificateDetailsComponent } from './application/plant-care-app/add-certificate/add-certificate-details';
+import { AddFiealdOfficerComponent } from './application/steckholders-section/add-fieald-officer/add-fieald-officer.component';
+import { AddQuestionnaireDetailsComponent } from './application/plant-care-app/add-questionnaire/add-questionnaire-details';
+import { FieldOfficerProfileComponent } from './application/steckholders-section/field-officer-profile/field-officer-profile.component';
+import { ViewAllCertificatesComponent } from './application/plant-care-app/view-all-certificates/view-all-certificates.component';
+import { EditQuestionnaireDetailsComponent } from './application/plant-care-app/edit-questionnaire/edit-questionnaire-details';
+import { EditFiealdOfficerComponent } from './application/steckholders-section/edit-fieald-officer/edit-fieald-officer.component';
+import { EditCertificateDetailsComponent } from './application/plant-care-app/edit-certificate/edit-certificate-details';
+import { ViewCertificateDetailsComponent } from './application/plant-care-app/view-certificate/view-certificate-details';
+import { ViewGoviLinkJobsComponent } from './application/govi-link/view-govi-link-jobs/view-govi-link-jobs';
+
 export const routes: Routes = [
   {
     path: '',
@@ -195,6 +220,8 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   { path: 'status-451', component: Status451Component },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password/:token', component: ResetPasswordComponent },
 
   {
     path: '',
@@ -315,9 +342,9 @@ export const routes: Routes = [
               {
                 path: 'Farmers-farms-list',
                 component: FarmerListFarmersFarmsComponent,
-              }, 
+              },
               {
-                path: 'report-farmer-current-assert/:userId/:name',
+                path: 'report-farmer-current-assert/:userId/:name/:farmId',
                 component: ReportCurrentAssertsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'View users current assets by category' },
@@ -352,7 +379,7 @@ export const routes: Routes = [
                 path: 'assets/fixed-asset-category/building-fixed-asset/details',
                 component: FarmersFarmsFixedAssetsBuildingComponent,
               },
-                           {
+              {
                 path: 'assets/fixed-asset-category/land-fixed-asset/details',
                 component: FarmersFarmsFixedAssetsLandComponent,
               },
@@ -415,15 +442,55 @@ export const routes: Routes = [
                   },
                 ],
               },
+              {
+                path: 'add-company-details',
+                component: AddCompanyDetailsComponent,
+              },
+              {
+                path: 'add-certificate-details',
+                component: AddCertificateDetailsComponent,
+              },
+              {
+                path: 'view-certificate-details/:certificateId',
+                component: ViewCertificateDetailsComponent,
+              },
+              {
+                path: 'edit-certificate-details/:certificateId',
+                component: EditCertificateDetailsComponent,
+              },
+              {
+                path: 'add-questionnaire-details/:certificateId',
+                component: AddQuestionnaireDetailsComponent,
+              },
+              {
+                path: 'edit-questionnaire-details/:certificateId',
+                component: EditQuestionnaireDetailsComponent,
+              },
+              {
+                path: 'edit-company-details/:id',
+                component: EditCompanyDetailsComponent,
+              },
+              {
+                path: 'view-company-details/:id',
+                component: ViewCompanyDetailsComponent,
+              },
+              {
+                path: 'view-company-list',
+                component: ViewCompanyListComponent,
+              },
+              {
+                path: 'view-certificate-list',
+                component: ViewAllCertificatesComponent,
+              },
             ],
           },
         ],
       },
 
       {
-        path:'finance',
-        children:[
-          {path:'dashboard',component:FinanceDashboardComponent}
+        path: 'finance',
+        children: [
+          { path: 'dashboard', component: FinanceDashboardComponent }
         ]
       },
 
@@ -524,7 +591,10 @@ export const routes: Routes = [
                   }
                 ],
               },
-
+              {
+                path: 'add-fieald-officer',
+                component: AddFiealdOfficerComponent
+              },
               {
                 path: 'add-distribution-0fficer',
                 component: AddDistributionOfficerComponent,
@@ -665,6 +735,31 @@ export const routes: Routes = [
                   },
                 ],
               },
+
+              {
+                path: 'field-inspectors',
+                children: [
+                  {
+                    path: '',
+                    component: ViewFieldInspectorsComponent,
+                  },
+                ],
+              },
+
+              {
+                path: 'field-officer-profile/:id',
+                children: [
+                  {
+                    path: '',
+                    component: FieldOfficerProfileComponent,
+                  },
+                ],
+              },
+              {
+                path: 'edit-field-officer/:id',
+                component: EditFiealdOfficerComponent,
+              }
+
             ],
           },
         ],
@@ -1189,6 +1284,52 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'govi-link',
+        children: [
+          {
+            path: 'dashboard',
+            component: GoviLinkDashbordComponent
+          },
+          {
+            path: 'action',
+            children: [
+              {
+                path: '',
+                component: GovilinkComponent,
+              },
+              {
+                path: 'add-a-company',
+                component: AddacompanyComponent,
+              },
+              {
+                path: 'view-company-list',
+                component: ViewcompanylistComponent
+              },
+              {
+                path: 'edit-company',
+                component: EditacompanyComponent
+              },
+              {
+                path: 'add-services',
+                component: AddServicesComponent,
+              },
+              {
+                path: 'edit-services/:id',
+                component: EditServicesComponent,
+              },
+              {
+                path: 'view-services-list',
+                component: ViewServicesListComponent,
+              },
+              {
+                path: 'view-govi-link-jobs',
+                component: ViewGoviLinkJobsComponent,
+              }
+            ]
+          }
+        ]
+      }
     ],
   },
   { path: '**', component: NotFoundComponent },

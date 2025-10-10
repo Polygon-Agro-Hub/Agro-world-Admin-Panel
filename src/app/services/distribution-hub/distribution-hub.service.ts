@@ -16,7 +16,7 @@ export class DistributionHubService {
   }
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getAllCompanyDetails(search: string = ''): Observable<any> {
     const headers = new HttpHeaders({
@@ -250,13 +250,13 @@ export class DistributionHubService {
     return this.http.get<any>(url, { headers });
   }
 
-  getDistributionCenterManagerNames(): Observable<any> {
+  getDistributionCenterManagerNames(id: string | null): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    let url = `${this.apiUrl}distribution/get-all-distribution-manager-names`;
+    let url = `${this.apiUrl}distribution/get-all-distribution-manager-names/${id}`;
     return this.http.get<any>(url, { headers });
   }
 
@@ -337,7 +337,7 @@ export class DistributionHubService {
     });
   }
 
-    getAssignForCityes(province:string, district:string): Observable<any> {
+  getAssignForCityes(province: string, district: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -347,7 +347,7 @@ export class DistributionHubService {
     });
   }
 
-  AssigCityToDistributedCenter(data:any): Observable<any> {
+  AssigCityToDistributedCenter(data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -357,7 +357,7 @@ export class DistributionHubService {
     });
   }
 
-  removeAssigCityToDistributedCenter(data:any): Observable<any> {
+  removeAssigCityToDistributedCenter(data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -397,6 +397,15 @@ export class DistributionHubService {
         headers,
       }
     );
+  }
+
+   claimDistributedOfficer(data:any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.patch(`${this.apiUrl}distribution/claim-distributed-Officer`, data, {
+      headers,
+    });
   }
 
 }

@@ -1,0 +1,463 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  *ngIf="!isView"
+  (click)="back()"
+  class="text-textLight dark:text-textDark"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="h-[20px]"></div>
+
+<div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+  <h2 class="text-2xl font-bold mb-6 text-textLight dark:text-textDark ml-20">
+    Add Company Details
+  </h2>
+  <div class="flex justify-between items-center mb-8">
+    <div class="flex items-center my-7 ml-20">
+      <label
+        class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+      >
+        Add Logo *
+      </label>
+      <div class="relative ml-5">
+        <input
+          type="file"
+          id="logoUpload"
+          name="logoUpload"
+          accept="image/*"
+          (change)="onLogoChange($event)"
+          (blur)="markFieldAsTouched('logo')"
+          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+        <div
+          class="w-20 h-20 border-2 border-[#3980C0] dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-tileBlack hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+          [ngClass]="{
+            'border-red-500': isFieldInvalid('logo') || logoSizeError
+          }"
+        >
+          <div *ngIf="!companyData.logo" class="text-center">
+            <svg
+              class="w-8 h-8 text-gray-400 dark:text-gray-500 mx-auto mb-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              ></path>
+            </svg>
+          </div>
+          <img
+            *ngIf="companyData.logo"
+            [src]="companyData.logo"
+            alt="Logo preview"
+            class="w-full h-full object-cover rounded-lg"
+          />
+          <button
+            *ngIf="companyData.logo"
+            (click)="removeLogo($event)"
+            type="button"
+            class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+          >
+            ×
+          </button>
+        </div>
+        <span *ngIf="logoSizeError" class="text-red-600 text-sm block mt-1">
+          Logo must be less than 1MB.
+        </span>
+        <span
+          *ngIf="getFieldErrorMessage('logo')"
+          class="text-red-600 text-sm block mt-1"
+        >
+          {{ getFieldErrorMessage("logo") }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <hr class="my-5" />
+  <div>
+    <h2 class="text-2xl font-bold my-8 text-textLight dark:text-textDark ml-11">
+      Basic Information
+    </h2>
+    <div class="pb-6 mx-20">
+      <label
+        for="regNumber"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >Registration Number of the Company *</label
+      >
+      <input
+        id="regNumber"
+        name="regNumber"
+        [(ngModel)]="companyData.RegNumber"
+        (blur)="markFieldAsTouched('RegNumber')"
+        (keydown)="handleInputWithSpaceTrimming($event, 'RegNumber')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('RegNumber') }"
+      />
+      <span
+        *ngIf="getFieldErrorMessage('RegNumber')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("RegNumber") }}
+      </span>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="companyName"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+      >
+        Company Name *
+      </label>
+
+      <input
+        id="companyName"
+        name="companyName"
+        [(ngModel)]="companyData.companyName"
+        (blur)="markFieldAsTouched('companyName')"
+        (keydown)="handleInputWithSpaceTrimming($event, 'companyName')"
+        (input)="capitalizeFirstLetter('companyName')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('companyName') }"
+      />
+      <span
+        *ngIf="getFieldErrorMessage('companyName')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("companyName") }}
+      </span>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="email"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >Company Email Address *</label
+      >
+      <input
+        id="email"
+        name="email"
+        [(ngModel)]="companyData.email"
+        type="email"
+        (blur)="markFieldAsTouched('email')"
+        (keydown)="handleInputWithSpaceTrimming($event, 'email')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('email') }"
+      />
+      <span
+        *ngIf="getFieldErrorMessage('email')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("email") }}
+      </span>
+    </div>
+  </div>
+  <div>
+    <h2 class="text-2xl font-bold my-8 text-textLight dark:text-textDark ml-11">
+      Billing Information
+    </h2>
+    <div class="pb-6 mx-20">
+      <label
+        for="accHolderName"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >Account Holder's Name *</label
+      >
+      <input
+        id="accHolderName"
+        name="accHolderName"
+        [(ngModel)]="companyData.accHolderName"
+        (blur)="markFieldAsTouched('accHolderName')"
+        (keydown)="allowOnlyEnglishLettersForAccountHolder($event)"
+        (input)="capitalizeFirstLetter('accHolderName')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('accHolderName') }"
+      />
+      <span
+        *ngIf="getFieldErrorMessage('accHolderName')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("accHolderName") }}
+      </span>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="accNumber"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+      >
+        Account Number *
+      </label>
+      <input
+        id="accNumber"
+        name="accNumber"
+        [(ngModel)]="companyData.accNumber"
+        (blur)="markFieldAsTouched('accNumber')"
+        (ngModelChange)="validateAccNumber()"
+        (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('accNumber') }"
+      />
+      <span
+        *ngIf="getFieldErrorMessage('accNumber')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("accNumber") }}
+      </span>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="confirmAccNumber"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+      >
+        Confirm Account Number *
+      </label>
+      <input
+        id="confirmAccNumber"
+        name="confirmAccNumber"
+        [(ngModel)]="companyData.confirmAccNumber"
+        (blur)="markFieldAsTouched('confirmAccNumber')"
+        (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
+        (ngModelChange)="validateConfirmAccNumber()"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('confirmAccNumber') }"
+      />
+      <span
+        *ngIf="getFieldErrorMessage('confirmAccNumber')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("confirmAccNumber") }}
+      </span>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="bankDropdown"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1"
+      >
+        Bank Name *
+      </label>
+      <p-dropdown
+        id="bankDropdown"
+        name="bankDropdown"
+        [(ngModel)]="selectedBankId"
+        (onBlur)="markFieldAsTouched('bank')"
+        [options]="banks"
+        optionLabel="name"
+        optionValue="ID"
+        [filter]="true"
+        filterBy="name"
+        placeholder="Select a bank"
+        [showClear]="false"
+        class="w-full"
+        (onChange)="onBankChange()"
+        [ngClass]="{
+          'p-invalid border-red-500': isFieldInvalid('bank')
+        }"
+      >
+      </p-dropdown>
+      <span
+        *ngIf="getFieldErrorMessage('bank')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("bank") }}
+      </span>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="branchDropdown"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark mb-1"
+      >
+        Branch Name *
+      </label>
+      <p-dropdown
+        [(ngModel)]="selectedBranchId"
+        name="branchDropdown"
+        (onBlur)="markFieldAsTouched('branch')"
+        (onChange)="onBranchChange()"
+        [options]="branches"
+        optionLabel="name"
+        optionValue="ID"
+        [filter]="true"
+        filterBy="name"
+        placeholder="Select a branch"
+        [showClear]="false"
+        [disabled]="!selectedBankId"
+        class="w-full"
+        [ngClass]="{
+          'p-invalid border-red-500': isFieldInvalid('branch')
+        }"
+      >
+      </p-dropdown>
+      <span
+        *ngIf="getFieldErrorMessage('branch')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("branch") }}
+      </span>
+    </div>
+    <div class="pb-6 mx-20">
+      <label
+        for="financeOfficerName"
+        class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >Finance Officer's Name *</label
+      >
+      <input
+        id="financeOfficerName"
+        name="financeOfficerName"
+        [(ngModel)]="companyData.financeOfficerName"
+        (blur)="markFieldAsTouched('financeOfficerName')"
+        (keydown)="allowOnlyEnglishLetterss($event)"
+        (keydown)="handleInputWithSpaceTrimming($event, 'financeOfficerName')"
+        (input)="capitalizeFirstLetter('financeOfficerName')"
+        class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+        [ngClass]="{ 'border-red-500': isFieldInvalid('financeOfficerName') }"
+      />
+      <span
+        *ngIf="getFieldErrorMessage('financeOfficerName')"
+        class="text-red-600 text-sm block mt-1"
+      >
+        {{ getFieldErrorMessage("financeOfficerName") }}
+      </span>
+    </div>
+    <div class="flex gap-6">
+      <div class="flex-1 mx-20">
+        <label
+          for="phoneNumber1"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Company Contact Number - 1 *
+        </label>
+        <div class="mt-1 flex">
+          <p-dropdown
+            [(ngModel)]="companyData.phoneCode1"
+            [options]="countries"
+            optionLabel="dialCode"
+            optionValue="dialCode"
+            (onBlur)="markFieldAsTouched('phoneCode1')"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+            [style]="{ width: '140px' }"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('phoneCode1') }"
+          >
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="24"
+                  height="18"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="24"
+                  height="18"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+
+          <input
+            id="phoneNumber1"
+            name="phoneNumber1"
+            [(ngModel)]="companyData.phoneNumber1"
+            type="tel"
+            (blur)="
+              markFieldAsTouched('phoneNumber1'); validateContactNumbers()
+            "
+            (keydown)="allowOnlyDigitsForAccountNumber($event, 'phoneNumber1')"
+            maxlength="9"
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [ngClass]="{ 'border-red-500': isFieldInvalid('phoneNumber1') }"
+          />
+        </div>
+        <span
+          *ngIf="getFieldErrorMessage('phoneNumber1')"
+          class="text-red-600 text-sm block mt-1"
+        >
+          {{ getFieldErrorMessage("phoneNumber1") }}
+        </span>
+      </div>
+      <div class="flex-1 mx-20">
+        <label
+          for="oicConNum2"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Company Contact Number - 2
+        </label>
+        <div class="mt-1 flex">
+          <p-dropdown
+            [(ngModel)]="companyData.phoneCode2"
+            [options]="countries"
+            optionLabel="dialCode"
+            optionValue="dialCode"
+            styleClass="border border-gray-300 rounded-l-md bg-gray-50 mr-2 text-textLight dark:text-textDark dark:bg-tileBlack custom-dropdown flex-shrink-0"
+            [style]="{ width: '140px' }"
+          >
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="24"
+                  height="18"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="24"
+                  height="18"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+          <input
+            id="phoneNumber2"
+            name="phoneNumber2"
+            [(ngModel)]="companyData.phoneNumber2"
+            type="tel"
+            (blur)="
+              markFieldAsTouched('phoneNumber2'); validateContactNumbers()
+            "
+            (keydown)="allowOnlyDigitsForAccountNumber($event, 'phoneNumber2')"
+            maxlength="9"
+            class="flex-1 p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+        </div>
+        <span
+          *ngIf="getFieldErrorMessage('phoneNumber2')"
+          class="text-red-600 text-sm block mt-1"
+        >
+          {{ getFieldErrorMessage("phoneNumber2") }}
+        </span>
+      </div>
+    </div>
+    <div class="flex justify-end my-10 mr-20">
+      <button
+        type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2 w-36"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md w-36"
+        (click)="saveCompany()"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>

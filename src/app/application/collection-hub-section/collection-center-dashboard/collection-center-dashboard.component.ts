@@ -25,6 +25,7 @@ export class CollectionCenterDashboardComponent {
   totExpences: number = 0.0;
   expencePrecentage: number = 0.0;
   isLoading = false;
+  Cname: string = '';
 
   constructor(
     private router: Router,
@@ -36,6 +37,7 @@ export class CollectionCenterDashboardComponent {
     this.centerId = this.route.snapshot.params['id'];
     this.companyId = this.route.snapshot.params['comid'];
     this.centerName = this.route.snapshot.params['centerName'];
+    this.Cname = this.route.snapshot.queryParams['Cname'];
     this.fetchCenterDashbordDetails();
   }
 
@@ -72,9 +74,14 @@ export class CollectionCenterDashboardComponent {
 
   navigateAddTarget() {
     this.router.navigate([
-      `/collection-hub/add-daily-target/${this.centerId}/${this.centerNameObj.centerName}/${this.centerNameObj.regCode}`,
+      `/collection-hub/add-daily-target/${this.centerId}/${this.Cname}/${this.centerName}`,
     ]);
   }
+
+  navigateToCollectionHub() {
+    this.router.navigate([`/collection-hub/agro-world-centers`]);
+  }
+
 
   navigateToMarketPrice() {
     this.router.navigate([
@@ -92,7 +99,7 @@ export class CollectionCenterDashboardComponent {
 
   viewCenterOfficers() {
     this.router.navigate(['collection-hub/view-center-officers'], {
-      queryParams: { id: this.centerId }
+      queryParams: { id: this.centerId, Cname: this.Cname }
     });
   }
 }

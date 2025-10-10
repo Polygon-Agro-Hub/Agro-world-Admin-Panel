@@ -1,4 +1,4 @@
-<button (click)="back()" class="ml-5 text-textLight dark:text-textDark">
+<button (click)="back()" class="text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
 
@@ -13,7 +13,6 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <!-- Registration Code -->
 
-      <!-- Collection Center Name -->
       <div>
     <label for="centerName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Collection Centre Name *</label>
   <input
@@ -94,15 +93,15 @@
 <p-multiSelect
   [options]="filteredCompanies"
   [(ngModel)]="selectedCompaniesIds"
+  (onChange)="onCompanyChange($event)"
   optionLabel="companyNameEnglish"
   optionValue="id"
   [filter]="true"
   filterPlaceholder="Search company..."
   [showClear]="true"
   placeholder="Select companies"
-  
   [styleClass]="'w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
->
+  [ngModelOptions]="{standalone: true}">
 </p-multiSelect>
 
 

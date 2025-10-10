@@ -634,34 +634,34 @@ export class CreateCropCalenderComponent implements OnInit {
     private cropCalendarService: CropCalendarService
   ) {
     this.cropForm = this.fb.group({
-  groupId: ['', Validators.required], // Add Validators.required
-  varietyId: ['', Validators.required], // Add Validators.required
-  cultivationMethod: ['', Validators.required],
-  natureOfCultivation: ['', Validators.required],
-  cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.min(1)]],
-  suitableAreas: ['', Validators.required],
-});
+      groupId: ['', Validators.required], // Add Validators.required
+      varietyId: ['', Validators.required], // Add Validators.required
+      cultivationMethod: ['', Validators.required],
+      natureOfCultivation: ['', Validators.required],
+      cropDuration: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.min(1)]],
+      suitableAreas: ['', Validators.required],
+    });
   }
 
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/plant-care/action']);
-    }
-  });
-}
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/plant-care/action']);
+      }
+    });
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -710,16 +710,16 @@ export class CreateCropCalenderComponent implements OnInit {
   }
 
   cultivationMethodOptions = [
-  { label: 'Open Field', value: 'Open Field' },
-  { label: 'Protected Field', value: 'Protected Field' }
-];
+    { label: 'Open Field', value: 'Open Field' },
+    { label: 'Protected Field', value: 'Protected Field' }
+  ];
 
 
   natureOptions = [
-  { label: 'Conventional Farming', value: 'Conventional Farming' },
-  { label: 'GAP Farming', value: 'GAP Farming' },
-  { label: 'Organic Farming', value: 'Organic Farming' }
-];
+    { label: 'Conventional Farming', value: 'Conventional Farming' },
+    { label: 'GAP Farming', value: 'GAP Farming' },
+    { label: 'Organic Farming', value: 'Organic Farming' }
+  ];
 
   isFieldInvalid(field: string): boolean {
     const control = this.cropForm.get(field);
@@ -817,18 +817,18 @@ export class CreateCropCalenderComponent implements OnInit {
     }
   }
 
-  async updateCropCalendar(): Promise<void> {
+ async updateCropCalendar(): Promise<void> {
   this.cropForm.markAllAsTouched();
-  
+
   // Create a custom validation that excludes groupId and varietyId for edit mode
   if (this.cropId !== null) {
     // Check if other required fields are valid (excluding groupId and varietyId)
-    const otherFieldsValid = 
+    const otherFieldsValid =
       this.cropForm.get('cultivationMethod')?.valid &&
       this.cropForm.get('natureOfCultivation')?.valid &&
       this.cropForm.get('cropDuration')?.valid &&
       this.cropForm.get('suitableAreas')?.valid;
-    
+
     if (!otherFieldsValid) {
       this.showMissingFieldsAlert();
       return;
@@ -842,6 +842,7 @@ export class CreateCropCalenderComponent implements OnInit {
   }
 
   const formValue = this.cropForm.value;
+
   try {
     const isDuplicate = await this.checkDuplicateCropCalendar(formValue, this.cropId!);
     if (isDuplicate) {
@@ -851,6 +852,10 @@ export class CreateCropCalenderComponent implements OnInit {
         text: 'A crop calendar with the same variety, cultivation method, and nature of cultivation already exists.',
         confirmButtonText: 'OK',
         allowOutsideClick: false,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
       });
       return;
     }
@@ -864,7 +869,7 @@ export class CreateCropCalenderComponent implements OnInit {
     formData.append('natOfCul', formValue.natureOfCultivation);
     formData.append('cropDuration', formValue.cropDuration);
     formData.append('suitableAreas', formValue.suitableAreas);
-    
+
     // Only append groupId and varietyId if they have values (for edit mode)
     if (formValue.groupId) formData.append('groupId', formValue.groupId);
     if (formValue.varietyId) formData.append('varietyId', formValue.varietyId);
@@ -877,17 +882,41 @@ export class CreateCropCalenderComponent implements OnInit {
     this.cropCalendarService.updateCropCalendar(this.cropId!, formData).subscribe({
       next: () => {
         this.isLoading = false;
-        Swal.fire('Success', 'Crop Calendar updated successfully!', 'success');
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Crop calendar has been updated successfully.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
         this.router.navigate(['/plant-care/action/view-crop-calender']);
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to update crop calendar.', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update crop calendar.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
       },
     });
   } catch (err) {
     this.isLoading = false;
-    Swal.fire('Error', 'Failed to perform duplicate check.', 'error');
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Failed to perform duplicate check.',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
   }
 }
 
@@ -914,29 +943,29 @@ export class CreateCropCalenderComponent implements OnInit {
   }
 
   private getMissingFields(): string[] {
-  const missingFields: string[] = [];
-  const controls = this.cropForm.controls;
-  const fieldLabels: { [key: string]: string } = {
-    groupId: 'Crop Name',
-    varietyId: 'Variety Name',
-    cultivationMethod: 'Cultivation Method',
-    natureOfCultivation: 'Nature of Cultivation',
-    cropDuration: 'Crop Duration',
-    suitableAreas: 'Suitable Areas',
-  };
+    const missingFields: string[] = [];
+    const controls = this.cropForm.controls;
+    const fieldLabels: { [key: string]: string } = {
+      groupId: 'Crop Name',
+      varietyId: 'Variety Name',
+      cultivationMethod: 'Cultivation Method',
+      natureOfCultivation: 'Nature of Cultivation',
+      cropDuration: 'Crop Duration',
+      suitableAreas: 'Suitable Areas',
+    };
 
-  for (const controlName in controls) {
-    // Skip groupId and varietyId validation in edit mode
-    if (this.cropId !== null && (controlName === 'groupId' || controlName === 'varietyId')) {
-      continue;
+    for (const controlName in controls) {
+      // Skip groupId and varietyId validation in edit mode
+      if (this.cropId !== null && (controlName === 'groupId' || controlName === 'varietyId')) {
+        continue;
+      }
+
+      if (controls[controlName].invalid && fieldLabels[controlName]) {
+        missingFields.push(fieldLabels[controlName]);
+      }
     }
-    
-    if (controls[controlName].invalid && fieldLabels[controlName]) {
-      missingFields.push(fieldLabels[controlName]);
-    }
+    return missingFields;
   }
-  return missingFields;
-}
 
   private getFirstInvalidField(): string | null {
     const controls = this.cropForm.controls;
@@ -960,23 +989,29 @@ export class CreateCropCalenderComponent implements OnInit {
     Swal.fire({
       title: 'Upload XLSX File',
       html: `
-        <div class="upload-container">
-          <input type="file" id="xlsx-file-input" accept=".xlsx, .xls" style="display: none;">
-          <label for="xlsx-file-input" class="upload-box">
-            <div class="upload-box-content" style="cursor: pointer;">
-              <svg xmlns="http://www.w3.org/2000/svg" class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v8m0 0l-4-4m4 4l4-4M4 20h16" />
-              </svg>
-            </div>
-            <p class="upload-text">Select a XLSX file to upload</p>
-            <p id="selected-file-name" class="file-name">No file selected</p>
-          </label>
-        </div>
-      `,
+      <div class="upload-container">
+        <input type="file" id="xlsx-file-input" accept=".xlsx, .xls" style="display: none;">
+        <label for="xlsx-file-input" class="upload-box">
+          <div class="upload-box-content" style="cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v8m0 0l-4-4m4 4l4-4M4 20h16" />
+            </svg>
+          </div>
+          <p class="upload-text">Select a XLSX file to upload</p>
+          <p id="selected-file-name" class="file-name">No file selected</p>
+        </label>
+      </div>
+    `,
       showCancelButton: true,
       confirmButtonText: 'Upload',
       cancelButtonText: 'Cancel',
       allowOutsideClick: false,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+      },
       didOpen: () => {
         const fileInput = document.getElementById('xlsx-file-input') as HTMLInputElement;
         const fileNameDisplay = document.getElementById('selected-file-name');
@@ -1012,12 +1047,30 @@ export class CreateCropCalenderComponent implements OnInit {
     this.cropCalendarService.uploadXlsxFile(cropId, file).subscribe({
       next: () => {
         this.isLoading = false;
-        Swal.fire('Success', 'XLSX file uploaded and data inserted successfully', 'success');
+        Swal.fire({
+          title: 'Success',
+          text: 'Crop calendar has been added successfully.',
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
+        });
         this.router.navigate(['/plant-care/action/view-crop-calender']);
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to upload XLSX file.', 'error');
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to upload XLSX file.',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
+        });
       },
     });
   }
@@ -1054,54 +1107,72 @@ export class CreateCropCalenderComponent implements OnInit {
 
 
   onCancel() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-     this.router.navigate(['/plant-care/action']);
-    }
-  });
-}
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/plant-care/action']);
+      }
+    });
+  }
 
-    onCancelEdit() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-     this.router.navigate(['/plant-care/action/view-crop-calender']);
-    }
-  });
-}
+  onCancelEdit() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/plant-care/action/view-crop-calender']);
+      }
+    });
+  }
   deleteCropCalender(id: number) {
     this.isLoading = true;
     this.cropCalendarService.deleteCropCalender(id).subscribe({
       next: () => {
         this.isLoading = false;
-        Swal.fire('Success', 'Crop calendar deleted successfully.', 'success');
+        Swal.fire({
+          title: 'Success',
+          text: 'Crop calendar deleted successfully.',
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
+        });
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to delete crop calendar.', 'error');
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to delete crop calendar.',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
+        });
       },
     });
   }
@@ -1129,25 +1200,25 @@ export class CreateCropCalenderComponent implements OnInit {
       event.preventDefault();
     }
   }
- backEdit(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/plant-care/action']);
-    }
-  });
-}
+  backEdit(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/plant-care/action']);
+      }
+    });
+  }
 
 
 

@@ -175,6 +175,10 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
             icon: 'success',
             title: 'Success',
             text: 'Reply was sent successfully!',
+                                      customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
           });
           this.fetchComplain();
           this.hideDialog();
@@ -185,6 +189,10 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
             icon: 'error',
             title: 'Unsuccessful',
             text: response.message || 'Failed to send reply.',
+             customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
           });
         }
         this.isLoading = false;
@@ -207,6 +215,10 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
           icon: 'error',
           title: 'Unsuccessful',
           text: errorMessage,
+           customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
         });
         this.isLoading = false;
       },

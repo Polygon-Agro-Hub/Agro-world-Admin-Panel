@@ -85,13 +85,6 @@ fetchOfficerById(id: number) {
       this.isLoading = false;
       this.officerObj = res.officerData.collectionOfficer;
 
-      // Normalize both "Collection Center Manager" and "Distribution Center Manager"
-      if (this.officerObj.jobRole) {
-        this.officerObj.jobRole = this.officerObj.jobRole
-          .replace('Collection Center Manager', 'Collection Centre Manager')
-          .replace('Distribution Center Manager', 'Distribution Centre Manager');
-      }
-
       this.officerObj.claimStatus = this.officerObj.claimStatus;
       this.getRoleHeading();
     });
@@ -655,4 +648,5 @@ class CollectionOfficer {
   vehBackImg?: string;
   vehSideImgA?: string;
   vehSideImgB?: string;
+  distributedCenterName!: string;
 }

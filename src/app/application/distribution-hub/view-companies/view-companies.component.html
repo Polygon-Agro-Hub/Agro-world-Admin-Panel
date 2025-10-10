@@ -15,7 +15,7 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1850px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -29,14 +29,13 @@
           <!-- Popover -->
           <div
             class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-           Search by Company Name or Email
+            Search by Company Name or Email
           </div>
 
           <!-- Input field -->
           <input type="text" placeholder="Search by Company Name or Email"
-  class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" 
-  [(ngModel)]="search"
-  (keydown.enter)="searchPlantCareUsers()" />
+            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" [(ngModel)]="search"
+            (keydown.enter)="searchPlantCareUsers()" />
 
           <!-- Search button -->
           <button type="button" class="voorbeeld text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -59,11 +58,11 @@
       </div>
     </div>
     <div>
-   <div *ngIf="!hasData"
-      class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
-      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Availabale--</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
-    </div>
+      <div *ngIf="!hasData"
+        class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Availabale--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
+      </div>
       <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
         <thead>
           <tr>
@@ -117,7 +116,16 @@
               {{ item.companyNameEnglish }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.companyEmail }}
+              <ng-container *ngIf="item.id === 2; else normalEmail">
+                <span class="px-2 py-3 text-center text-textLight dark:text-textDark font-bold italic">
+                  Email added by default
+                </span>
+              </ng-container>
+              <ng-template #normalEmail>
+                <span>
+                  {{ item.companyEmail }}
+                </span>
+              </ng-template>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div *ngIf="item.status === 1">
@@ -183,7 +191,8 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 *ngIf="permissionService.hasPermission('Add And Edit Company') || tokenService.getUserDetails().role === '1'"
-                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="editCompany(item.id)">
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="editCompany(item.id)"
+                [disabled]="item.id === 2">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>pen-to-square</title>
                   <path
@@ -195,7 +204,8 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 *ngIf="permissionService.hasPermission('Delete Company') || tokenService.getUserDetails().role === '1'"
-                class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteCompany(item.id)">
+                class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteCompany(item.id)"
+                [disabled]="item.id === 2">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                   viewBox="0 0 24 24">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

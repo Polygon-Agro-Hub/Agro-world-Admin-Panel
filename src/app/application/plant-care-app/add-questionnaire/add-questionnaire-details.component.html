@@ -1,0 +1,212 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <h2 class="text-2xl mb-6 text-textLight dark:text-textDark font-bold">
+    Create Questionnaire
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Question List -->
+    <div
+      formArrayName="questions"
+      *ngFor="let q of questions.controls; let i = index"
+    >
+      <div
+        [formGroupName]="i"
+        class="mb-6 p-4 border rounded-lg bg-white dark:bg-gray-800"
+        [class.border-gray-300]="q.value.done && !q.value.editing"
+        [class.border-blue-500]="q.value.editing"
+        [class.border-gray-300]="!q.value.done && !q.value.editing"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex gap-2">
+            <div
+              class="flex bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark border px-3 py-2 rounded-md font-semibold"
+            >
+              {{ ("0" + q.value.qNo).slice(-2) }}
+            </div>
+            <div
+              class="flex bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark border py-2 px-10 rounded-md"
+            >
+              {{ q.value.type === "tick_off" ? "Tick Off" : "Photo Proof" }}
+            </div>
+          </div>
+          <h3 class="font-semibold text-textLight dark:text-textDark">
+            <ng-template #editingTemplate> </ng-template>
+          </h3>
+          <div class="flex gap-2">
+            <button
+              *ngIf="!q.value.done && !q.value.editing"
+              type="button"
+              class="px-3 py-2 bg-[#3980C0] text-white rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
+              [disabled]="!isQuestionValid(i)"
+              (click)="markDone(i)"
+            >
+              Done
+            </button>
+            <button
+              *ngIf="q.value.editing"
+              type="button"
+              class="px-3 py-2 bg-[#3980C0] text-white rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
+              [disabled]="!isQuestionValid(i)"
+              (click)="updateQuestion(i)"
+            >
+              Update
+            </button>
+            <button
+              *ngIf="q.value.done && !q.value.editing"
+              type="button"
+              class="text-blue-500 bg-blue-100 rounded-md disabled:bg-gray-100 disabled:text-blue-500 disabled:cursor-not-allowed px-3 py-2"
+              (click)="markEditing(i)"
+              [disabled]="isAnyQuestionEditing()"
+            >
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button
+              type="button"
+              class="text-red-500 disabled:text-red-400 disabled:bg-gray-100 disabled:cursor-not-allowed px-3 py-2 bg-red-100 rounded-md"
+              (click)="deleteQuestion(i)"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <hr />
+        <div class="flex mt-2 w-full">
+          <span
+            *ngIf="q.value.done && !q.value.editing; else editingTemplate"
+            class="w-full"
+          >
+            <label
+              class="block text-sm font-medium text-textLight dark:text-textDark"
+              >Question ({{ q.value.qNo }}) in English *</label
+            >
+            <div
+              class="bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark border px-3 py-2 rounded-md mt-1 w-full"
+            >
+              {{ q.value.qEnglish }}
+            </div>
+          </span>
+        </div>
+        <div
+          *ngIf="!q.value.done || q.value.editing"
+          class="grid grid-cols-1 gap-4"
+        >
+          <div>
+            <label
+              class="block text-sm font-medium text-textLight dark:text-textDark"
+              >Question ({{ q.value.qNo }}) in English *</label
+            >
+            <textarea
+              rows="2"
+              formControlName="qEnglish"
+              class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+              [class.border-red-500]="
+                q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched
+              "
+            ></textarea>
+            <small
+              *ngIf="q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched"
+              class="text-red-500"
+            >
+              English question is required
+            </small>
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-textLight dark:text-textDark"
+              >Question ({{ q.value.qNo }}) in Sinhala *</label
+            >
+            <textarea
+              rows="2"
+              formControlName="qSinhala"
+              class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+              [class.border-red-500]="
+                q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched
+              "
+            ></textarea>
+            <small
+              *ngIf="q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched"
+              class="text-red-500"
+            >
+              Sinhala question is required
+            </small>
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-textLight dark:text-textDark"
+              >Question ({{ q.value.qNo }}) in Tamil *</label
+            >
+            <textarea
+              rows="2"
+              formControlName="qTamil"
+              class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+              [class.border-red-500]="
+                q.get('qTamil')?.invalid && q.get('qTamil')?.touched
+              "
+            ></textarea>
+            <small
+              *ngIf="q.get('qTamil')?.invalid && q.get('qTamil')?.touched"
+              class="text-red-500"
+            >
+              Tamil question is required
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add buttons -->
+    <div class="flex flex-col gap-4 mb-6 text-center min-h-96">
+      <h2 class="text-md text-textLight dark:text-textDark italic mt-6">
+        Select Question Type
+      </h2>
+      <hr />
+      <div class="flex gap-2 justify-center">
+        <button
+          type="button"
+          class="px-4 py-3 bg-[#3980C0] text-white rounded-md w-56 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          (click)="addQuestion('tick_off')"
+          [disabled]="hasIncompleteQuestion() || isAnyQuestionEditing()"
+        >
+          <i class="fa-solid fa-plus mr-2"></i> Tick Off Question
+        </button>
+        <button
+          type="button"
+          class="px-4 py-3 bg-[#3980C0] text-white rounded-md w-56 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          (click)="addQuestion('photo_proof')"
+          [disabled]="hasIncompleteQuestion() || isAnyQuestionEditing()"
+        >
+          <i class="fa-solid fa-plus mr-2"></i> Photo Proof Question
+        </button>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- Save -->
+    <div class="flex justify-end mt-4 gap-2">
+      <button
+        type="button"
+        class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="px-4 py-2 bg-[#3980C0] text-white rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed w-40"
+        [disabled]="isLoading || !isFormValid() || isAnyQuestionEditing()"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,296 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <h2
+    class="text-2xl text-left mb-6 text-textLight dark:text-textDark font-bold"
+  >
+    Add Company Details
+  </h2>
+
+  <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Registration Number -->
+      <div class="my-3">
+        <label
+          for="registrationNumber"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
+          Registration Number *
+        </label>
+        <input
+          id="registrationNumber"
+          type="text"
+          formControlName="registrationNumber"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              companyForm.get('registrationNumber')?.invalid &&
+              companyForm.get('registrationNumber')?.touched
+          }"
+        />
+        <div
+          *ngIf="
+            companyForm.get('registrationNumber')?.invalid &&
+            companyForm.get('registrationNumber')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Registration number is required
+        </div>
+      </div>
+
+      <!-- Tax ID -->
+      <div class="my-3">
+        <label
+          for="taxId"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
+          TAX ID *
+        </label>
+        <input
+          id="taxId"
+          type="text"
+          formControlName="taxId"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              companyForm.get('taxId')?.invalid &&
+              companyForm.get('taxId')?.touched
+          }"
+        />
+        <div
+          *ngIf="
+            companyForm.get('taxId')?.invalid &&
+            companyForm.get('taxId')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Tax ID is required
+        </div>
+      </div>
+
+      <!-- Company Name -->
+      <div class="my-3 md:col-span-2">
+        <label
+          for="companyName"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
+          Company Name *
+        </label>
+        <input
+          id="companyName"
+          type="text"
+          formControlName="companyName"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              companyForm.get('companyName')?.invalid &&
+              companyForm.get('companyName')?.touched
+          }"
+        />
+        <div
+          *ngIf="
+            companyForm.get('companyName')?.invalid &&
+            companyForm.get('companyName')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Company name is required
+        </div>
+      </div>
+
+      <!-- Phone Number 1 -->
+      <div class="my-3">
+        <label
+          for="phone1"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
+          Phone Number - 1 *
+        </label>
+        <div class="flex">
+          <p-dropdown
+            formControlName="phoneCode1"
+            [options]="countries"
+            optionLabel="dialCode"
+            optionValue="dialCode"
+            styleClass="custom-dropdown 
+             bg-tileLight dark:bg-tileBlack 
+             text-textLight dark:text-textDark 
+             border-gray-300 dark:border-gray-600
+             rounded-l-md mr-2 flex-shrink-0"
+            [style]="{ width: '140px' }"
+            (onChange)="validateContactNumbers()"
+          >
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="20"
+                  height="14"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="20"
+                  height="14"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+          <input
+            id="phone1"
+            type="tel"
+            formControlName="phone1"
+            (keypress)="allowOnlyNumbers($event)"
+            (blur)="validateContactNumbers()"
+            placeholder="Enter phone number"
+            class="block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          />
+        </div>
+
+        <!-- Errors -->
+        <div class="mt-1 text-red-500 text-sm">
+          <div
+            *ngIf="companyForm.get('phone1')?.errors?.['required'] && companyForm.get('phone1')?.touched"
+          >
+            Contact Number 1 is required.
+          </div>
+          <div *ngIf="contactNumberError1">
+            <span *ngIf="companyForm.get('phoneCode1')?.value === '+94'">
+              Contact number must be exactly 9 digits for Sri Lanka (+94).
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone Number 2 -->
+      <div class="my-3">
+        <label
+          for="phone2"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
+          Phone Number - 2
+        </label>
+        <div class="flex">
+          <p-dropdown
+            formControlName="phoneCode2"
+            [options]="countries"
+            optionLabel="dialCode"
+            optionValue="dialCode"
+            styleClass="custom-dropdown 
+             bg-tileLight dark:bg-tileBlack 
+             text-textLight dark:text-textDark 
+             border-gray-300 dark:border-gray-600
+             rounded-l-md mr-2 flex-shrink-0"
+            [style]="{ width: '140px' }"
+            (onChange)="validateContactNumbers()"
+          >
+            <ng-template let-country pTemplate="item">
+              <div class="flex items-center gap-2">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="20"
+                  height="14"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-country pTemplate="selectedItem">
+              <div class="flex items-center gap-2" *ngIf="country">
+                <img
+                  [src]="getFlagUrl(country.code)"
+                  width="20"
+                  height="14"
+                  [alt]="country.name"
+                />
+                <span>{{ country.dialCode }}</span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+          <input
+            id="phone2"
+            type="tel"
+            formControlName="phone2"
+            (keypress)="allowOnlyNumbers($event)"
+            (blur)="validateContactNumbers()"
+            placeholder="Enter phone number"
+            class="block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          />
+        </div>
+
+        <!-- Errors -->
+        <div class="mt-1 text-red-500 text-sm">
+          <div *ngIf="contactNumberError2">
+            <span *ngIf="companyForm.get('phoneCode2')?.value === '+94'">
+              Contact number must be exactly 9 digits for Sri Lanka (+94).
+            </span>
+          </div>
+          <div *ngIf="sameNumberError">
+            Contact Number - 1 and Contact Number - 2 cannot be the same.
+          </div>
+        </div>
+      </div>
+      <!-- Address -->
+      <div class="my-3 md:col-span-2">
+        <label
+          for="address"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
+          Address *
+        </label>
+        <textarea
+          id="address"
+          formControlName="address"
+          rows="3"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              companyForm.get('address')?.invalid &&
+              companyForm.get('address')?.touched
+          }"
+        ></textarea>
+        <div
+          *ngIf="
+            companyForm.get('address')?.invalid &&
+            companyForm.get('address')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Address is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end mt-6 gap-2">
+      <div
+        class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer"
+        (click)="onCancel()"
+      >
+        Cancel
+      </div>
+      <button
+        type="submit"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
+        [disabled]="isLoading"
+        (click)="onSubmit()"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</div>

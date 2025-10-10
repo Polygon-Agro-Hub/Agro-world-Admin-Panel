@@ -5,6 +5,8 @@
     <p class="text-xl font-bold dark:text-white text-[#030308]">
       {{ centerDetails.regCode }} {{ centerDetails.centerName }}
     </p>
+
+    
     <div class="flex flex-row items-center gap-5">
       <i class="fa-solid fa-list text-2xl dark:text-white ml-8"></i>
 
@@ -48,7 +50,7 @@
   ></p-calendar>
 
   <!-- Validation message -->
-  <p *ngIf="dateError" class="text-red-500 mt-1">Please select the date to display target.</p>
+  <!-- <p *ngIf="dateError" class="text-red-500 mt-1">Please select the date to display target.</p> -->
 </div>
 
 
@@ -107,14 +109,23 @@
     </div>
   </div>
 
-  <div *ngIf="!hasData" class="flex flex-col justify-start items-center pt-32 h-screen">
-    <p class="text-[#494949] dark:text-textDark mb-4">
+  <p *ngIf="officerName !== null" class="text-xl text-[#898989] dark:text-[#898989]">
+      Centre Target Last Modified By : <span class="text-xl font-bold dark:text-white text-[#030308]"> {{officerName}}</span>
+    </p>
+
+  <div *ngIf="!hasData " class="flex flex-col justify-start items-center pt-32 h-screen">
+    <p *ngIf="isDateSelected" class="text-[#494949] dark:text-textDark mb-4">
       -- No Data Available --
+    </p>
+    <p *ngIf="!isDateSelected" class="text-[#494949] dark:text-textDark mb-4">
+      -- Please select the date to display target --
     </p>
     <div class="items-center">
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
     </div>
   </div>
+
+  
 
   <div
     *ngIf="hasData"
@@ -157,7 +168,7 @@
                 min="0"
                 class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-20 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingA"
-                (change)="validateForm()" 
+                (input)="validateForm()"
                 (keypress)="allowOnlyDigits($event)"
   (input)="removeLeadingZeros(item)"
               />
@@ -178,12 +189,12 @@
               <button *ngIf="!isNew && item.editingA && isDateValid"
                                 class="px-3 py-2 text-white rounded-lg" [ngClass]="{
                                     'bg-[#415CFF]': item.preValueA !== item.targetA,
-                                    'bg-[#6B7D8C]': item.preValueA === item.targetA || item.targetA < 0 || item.targetA < item.preValueA
+                                    'bg-[#6B7D8C]': item.preValueA === item.targetA || item.targetA <= 0 || item.targetA < item.preValueA
                                   }"
                                 (click)="item.preValueA !== item.targetA && item.targetA >= 0 && saveGrade('A', item, item.targetA, item.idA)">
                                 Save
                             </button>
-            </td>
+              </td>
 
             <!-- Grade B Column -->
             <td class="px-6 py-4 text-gray-900 dark:text-gray-300">
@@ -195,7 +206,7 @@
   [disabled]="!isNew && !item.editingB"
   (keypress)="allowOnlyDigits($event)"
   (input)="removeLeadingZeros(item)"
-  (change)="validateForm()"
+  (input)="validateForm()"
 />
               <button
                 *ngIf="!isNew && !item.editingB && isDateValid"
@@ -206,7 +217,7 @@
 
               <button *ngIf="!isNew && item.editingB && isDateValid" [ngClass]="{
                 'bg-[#415CFF]': item.preValueB !== item.targetB,
-                'bg-[#6B7D8C]': item.preValueB === item.targetB || item.targetB < 0 || item.targetB < item.preValueB
+                'bg-[#6B7D8C]': item.preValueB === item.targetB || item.targetB <= 0 || item.targetB < item.preValueB
               }" class="px-3 py-2 text-white rounded-lg"
                 (click)="item.preValueB !== item.targetB && item.targetB >= 0 && saveGrade('B', item, item.targetB, item.idB)">
                 Save
@@ -229,7 +240,7 @@
                 min="0"
                 class="border-[#3980C0] dark:bg-[#272F45] border-[2px] border-dotted rounded-lg w-16 px-2 py-1 mr-4"
                 [disabled]="!isNew && !item.editingC"
-                (change)="validateForm()"
+                (input)="validateForm()"
                 (keypress)="allowOnlyDigits($event)"
                 (input)="removeLeadingZeros(item)"
               />
@@ -242,7 +253,7 @@
 
               <button *ngIf="!isNew && item.editingC && isDateValid" [ngClass]="{
                 'bg-[#415CFF]': item.preValueC !== item.targetC,
-                'bg-[#6B7D8C]': (item.preValueC === item.targetC) || item.targetC < 0 || item.targetC < item.preValueC
+                'bg-[#6B7D8C]': (item.preValueC === item.targetC) || item.targetC <= 0 || item.targetC < item.preValueC
               }" class="px-3 py-2 text-white rounded-lg"
                 (click)="item.preValueC !== item.targetC && item.targetC >= 0 && saveGrade('C', item, item.targetC, item.idC)">
                 Save

@@ -1,0 +1,207 @@
+/* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+    display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+    display: inline-flex !important;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+    border-radius: 6px !important;
+    /* <-- add this for rounded corners */
+    overflow: hidden;
+    /* ensures child items don't spill over rounded corners */
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+    background-color: #3a4160 !important;
+    color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+
+
+/* Dark mode styles for PrimeNG Calendar */
+.dark .custom-calendar .p-datepicker {
+    background: #272F45;
+    color: white;
+    border: 1px solid #4a5568;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-header {
+    background: #1a202c;
+    border-bottom: 1px solid #4a5568;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-title {
+    color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-prev,
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-next {
+    color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-prev:hover,
+.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-next:hover {
+    background: #4a5568;
+    color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar td {
+    border: 1px solid #4a5568;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar td span {
+    color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar td span:hover {
+    background: #4a5568;
+    color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar td.p-datepicker-today span {
+    background: #3182ce;
+    color: white;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar .p-datepicker-other-month span {
+    color: #a0aec0;
+}
+
+.dark .custom-calendar .p-datepicker .p-datepicker-calendar .p-highlight {
+    background: #3182ce;
+    color: white;
+}
+
+/* Clear button dark mode */
+.dark .custom-calendar .p-calendar-clear-icon {
+    color: white;
+}
+
+.dark .custom-calendar .p-calendar-clear-icon:hover {
+    color: #cbd5e0;
+}
+
+:host ::ng-deep .p-calendar .p-button {
+    color: black;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-button {
+    color: white;
+}
+
+::ng-deep .p-calendar .p-inputtext {
+    padding-right: 3rem !important;
+    /* Make room for both icons */
+}
+
+::ng-deep .p-calendar .p-calendar-clear-icon {
+    right: 1.2rem !important;
+    /* Position clear button to the left of calendar icon */
+    top: 8.2px !important;
+    /* Move clear button slightly down */
+    order: 1;
+}
+
+
+::ng-deep .p-calendar .p-datepicker-trigger {
+    right: 0.5rem !important;
+    /* Position calendar icon on the far right */
+    order: 2;
+}
+
+/* For light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+    color: #6c6c6c;
+    /* gray-400 */
+}
+
+/* For dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+    color: #8B8B8B;
+    /* gray-300 */
+}
+
+/* Reduce dropdown item padding */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
+}
+
+.dark .p-dropdown .p-dropdown-label {
+    color: #ffffff !important;
+  }
+/* ::ng-deep .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important;
+  }
+
+::ng-deep .dark .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important; 
+} */
+
+
+/* Change the color of the selected value inside the dropdown button */
+
+  
+  /* Change the text color of the active/selected option inside the panel */
+  ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    color: #16a34a !important; /* Tailwind's green-600 equivalent */
+    background-color: #f0fdf4; /* optional, like Tailwind bg-green-50 */
+  }
+
+  ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+    color: white;
+  }
+
+  .status-approved {
+  background-color: #d1fae5; /* light green */
+  color: #065f46; /* dark green text */
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.status-rejected {
+  background-color: #fee2e2; /* light red */
+  color: #b91c1c; /* dark red text */
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.status-not-approved {
+  background-color: #fef9c3; /* light yellow */
+  color: #713f12; /* dark yellow/brown text */
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.status-pending {
+  background-color: #e0e7ff; /* light blue */
+  color: #3730a3; /* dark blue text */
+    padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}

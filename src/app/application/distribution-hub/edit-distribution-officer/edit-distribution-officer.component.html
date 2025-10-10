@@ -2,7 +2,7 @@
 <button
 (click)="back()"
   *ngIf="selectedPage === 'pageOne'"
-  class="ml-5 text-textLight dark:text-textDark"
+  class="text-textLight dark:text-textDark"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -136,7 +136,7 @@
             <span
               class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
             >
-              <p *ngIf="personalData.jobRole === 'Distribution Center Head'">
+              <p *ngIf="personalData.jobRole === 'Distribution Centre Head'">
                 DCH
               </p>
             </span>
@@ -154,14 +154,14 @@
             for="centerId"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
-            Company Name*
+            Company Name *
           </label>
           <div class="relative">
           <select
   disabled
   (blur)="onBlur('companyId')"
   id="centerId"
-  [(ngModel)]="personalData.companyId"
+[(ngModel)]="personalData.companyId"
   name="centerId"
   class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
 >
@@ -185,7 +185,7 @@
             for="enpType"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
-            Staff Employee Type*
+            Staff Employee Type *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -194,7 +194,7 @@
                 class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
               >
                 <input
-                  class="w-5 h-5"
+                  class="w-5 h-5 cursor-pointer"
                   type="radio"
                   name="enpType"
                   value="Permanent"
@@ -209,7 +209,7 @@
                 class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
               >
                 <input
-                  class="w-5 h-5"
+                  class="w-5 h-5 cursor-pointer"
                   type="radio"
                   name="enpType"
                   value="Temporary"
@@ -230,13 +230,13 @@
             for="languages"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
-            Preferred Languages*
+            Preferred Languages *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
               <input
-                class="w-5 h-5"
+                class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="sinhala"
                 name="languages"
@@ -250,7 +250,7 @@
             </div>
             <div class="flex items-center space-x-2">
               <input
-                class="w-5 h-5"
+                class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="english"
                 name="languages"
@@ -264,7 +264,7 @@
             </div>
             <div class="flex items-center space-x-2">
               <input
-                class="w-5 h-5"
+                class="w-5 h-5 cursor-pointer"
                 type="checkbox"
                 id="tamil"
                 name="languages"
@@ -318,7 +318,7 @@
     for="firstNameEnglish"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    First Name*
+    First Name *
   </label>
   <input
     id="firstNameEnglish"
@@ -353,7 +353,7 @@
     for="lastNameEnglish"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    Last Name*
+    Last Name *
   </label>
   <input
     id="lastNameEnglish"
@@ -386,7 +386,7 @@
 <!-- Mobile Number - 1 -->
 <div>
   <label for="phoneNumber01" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-   Mobile Number - 1*
+   Mobile Number - 1 *
   </label>
 
   <div class="mt-1 flex">
@@ -429,7 +429,7 @@
       maxlength="9"
       type="number"
       placeholder="Enter your phone number"
-      class="block w-full p-2 border rounded-r-md"
+      class="block w-full p-2 border  border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     />
   </div>
 
@@ -502,7 +502,7 @@
       [(ngModel)]="personalData.phoneNumber02"
       (input)="checkDuplicatePhoneNumbers()"
       maxlength="9"
-      class="block w-full p-2 border rounded-r-md"
+      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
       [ngClass]="{ 
         'border-red-500': getPhoneNumber02ErrorType() !== null,
         'border-gray-300': getPhoneNumber02ErrorType() === null
@@ -531,7 +531,7 @@
     for="nic"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    NIC Number*
+    NIC Number *
   </label>
   <input
     id="nic"
@@ -559,7 +559,7 @@
     for="email"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    Email*
+    Email *
   </label>
   <input
     type="email"
@@ -617,28 +617,35 @@
     </h2>
     <div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div class="pb-6">
-          <label
-            for="house"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >House / Plot Number*</label
-          >
-          <input
-            (blur)="onBlur('houseNumber')"
-            id="houseNumber"
-            name="houseNumber"
-            [(ngModel)]="personalData.houseNumber"
-             (input)="capitalizeWhileTyping('houseNumber')"
-                  (input)="trimLeadingSpace($event)"
-             (keydown)="blockLeadingSpace($event, 'houseNumber')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('houseNumber')"
-            class="text-red-600 text-sm"
-            >House Number is required.</span
-          >
-        </div>
+      <div class="mb-6">
+  <label
+    for="houseNumber"
+    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
+  >
+    House Number *
+  </label>
+<input
+  id="houseNumber"
+  name="houseNumber"
+  type="text"
+  [(ngModel)]="personalData.houseNumber"
+  (blur)="onBlur('houseNumber')"
+  (input)="capitalizeWhileTyping('houseNumber'); trimLeadingSpace($event)"
+  (keydown)="blockLeadingSpace($event, 'houseNumber')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md 
+         text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  required
+  #houseNumberField="ngModel"
+/>
+
+  <span
+    *ngIf="houseNumberField.invalid && (houseNumberField.dirty || houseNumberField.touched)"
+    class="text-red-600 text-sm"
+  >
+    House Number is required.
+  </span>
+</div>
+   
 
         <div class="pb-6">
           <label
@@ -667,7 +674,7 @@
           <label
             for="city"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >City*</label
+            >City *</label
           >
           <input
             (blur)="onBlur('city')"
@@ -689,7 +696,7 @@
     for="districtDropdown"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    District*
+    District *
   </label>
   <p-dropdown
     id="districtDropdown"
@@ -718,7 +725,7 @@
             for="province"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
           >
-            Province*
+            Province *
           </label>
           <input
             id="province"
@@ -734,7 +741,7 @@
           <label
             for="country"
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >Country*</label
+            >Country *</label
           >
           <input
             id="country"
@@ -754,7 +761,7 @@
     for="accHolderName"
     class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
   >
-    Account Holder's Name*
+    Account Holder's Name *
   </label>
 
   <input
@@ -789,8 +796,7 @@
 
 
        <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
-            class="text-[#2E2E2E]">*</span></label>
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
         <input id="accNumber" name="accNumber"    type="number" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required pattern="^[0-9]+$"  (keypress)="allowOnlyNumbers($event)" (keydown)="blockLeadingSpace($event, 'accNumber')"   (blur)="onBlur('accNumber')"
@@ -837,7 +843,7 @@
 
         <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Confirm Account Number <span class="text-[#2E2E2E]">*</span>
+          Confirm Account Number *
         </label>
         <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"   type="number"
           [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
@@ -863,7 +869,7 @@
 
 <div class="pb-6">
   <label for="bankDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-    Bank Name*
+    Bank Name *
   </label>
   <p-dropdown
     id="bankDropdown"
@@ -877,7 +883,7 @@
     placeholder="Select a bank"
     (onChange)="onBankChange()"
     
-    [showClear]="true"
+    [showClear]="false"
     [disabled]="!banks || banks.length === 0"
     class="w-full"
     inputId="bankDropdown"
@@ -891,7 +897,7 @@
 
 <div class="pb-6">
   <label for="branchDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-    Branch Name*
+    Branch Name *
   </label>
   <p-dropdown
     id="branchDropdown"
@@ -903,7 +909,7 @@
     [filter]="true"
     filterPlaceholder="Search Branch"
     placeholder="Select a branch"
-    [showClear]="true"
+    [showClear]="false"
     [disabled]="!selectedBankId"
     (onChange)="onBranchChange()"
     required

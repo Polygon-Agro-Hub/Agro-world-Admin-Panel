@@ -14,7 +14,7 @@
 
 <!-- Main Container -->
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1000px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
     <!-- Header Section -->
@@ -109,7 +109,7 @@
             <span class="text-black dark:text-gray-300 font-medium min-w-28">Annual Amount</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-semibold flex-1">
-              Rs. {{ ownershipDetails?.leastAmountAnnually | number:'1.0-0' }} /year
+              Rs. {{ ownershipDetails?.leastAmountAnnually | number:'1.0-0' }} 
             </span>
           </div>
 
@@ -128,7 +128,7 @@
             <span class="text-black dark:text-gray-300 font-medium min-w-28">Permit Fee</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-semibold flex-1">
-              Rs. {{ ownershipDetails?.permitFeeAnnually | number:'1.0-0' }} /year
+              Rs. {{ ownershipDetails?.permitFeeAnnually | number:'1.0-0' }} 
             </span>
           </div>
 

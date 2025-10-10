@@ -61,7 +61,7 @@ interface DistributionOfficers {
 })
 export class UpdateDistributionOfficerComponent {
   userForm: FormGroup = new FormGroup({});
-page: number = 1;
+  page: number = 1;
   itemId!: number;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   selectedFile: File | null = null;
@@ -142,6 +142,11 @@ page: number = 1;
     { name: 'Vavuniya', province: 'Northern' },
   ];
 
+  jobRoleOptions: any[] = [
+    { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
+    { label: 'Distribution Officer', value: 'Distribution Officer' }
+  ];
+
   // Update the setupDropdownOptions method to use `districts`
   setupDropdownOptions() {
     this.districts = this.districts.sort((a, b) =>
@@ -169,7 +174,7 @@ page: number = 1;
     private router: Router,
     private distributionOfficerServ: DistributionHubService,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadBanks();
@@ -479,34 +484,9 @@ page: number = 1;
     }
   }
 
-  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
+  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish' | 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
-
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      // Capitalize first letter and make rest lowercase
-      if (value.length > 0) {
-        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      }
-
-      this.personalData[fieldName] = value;
-    }
-  }
-
-  // Updated formatSinhalaName function
-  formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Allow only Sinhala unicode characters and spaces
-      value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
-
       // Remove leading spaces
       value = value.replace(/^\s+/, '');
 
@@ -517,144 +497,7 @@ page: number = 1;
     }
   }
 
-  // Updated formatTamilName function
-  formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Allow only Tamil unicode characters and spaces
-      value = value.replace(/[^\u0B80-\u0BFF\s]/g, '');
 
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      this.personalData[fieldName] = value;
-    }
-  }
-
-  // Add these methods to your component class
-
-  // Prevent invalid English characters (only allow letters and spaces)
-  preventInvalidEnglishCharacters(event: KeyboardEvent): void {
-    const char = event.key;
-
-    // Allow control keys (backspace, delete, tab, escape, enter, etc.)
-    if (
-      event.ctrlKey ||
-      event.altKey ||
-      event.metaKey ||
-      char === 'Backspace' ||
-      char === 'Delete' ||
-      char === 'Tab' ||
-      char === 'Escape' ||
-      char === 'Enter' ||
-      char === 'ArrowLeft' ||
-      char === 'ArrowRight' ||
-      char === 'ArrowUp' ||
-      char === 'ArrowDown' ||
-      char === 'Home' ||
-      char === 'End'
-    ) {
-      return;
-    }
-
-    // Allow English letters (a-z, A-Z) and space
-    const englishLetterRegex = /^[a-zA-Z\s]$/;
-    if (!englishLetterRegex.test(char)) {
-      event.preventDefault();
-    }
-  }
-
-  // Prevent invalid Sinhala characters (only allow Sinhala unicode range and spaces)
-  preventInvalidSinhalaCharacters(event: KeyboardEvent): void {
-    const char = event.key;
-
-    // Allow control keys
-    if (
-      event.ctrlKey ||
-      event.altKey ||
-      event.metaKey ||
-      char === 'Backspace' ||
-      char === 'Delete' ||
-      char === 'Tab' ||
-      char === 'Escape' ||
-      char === 'Enter' ||
-      char === 'ArrowLeft' ||
-      char === 'ArrowRight' ||
-      char === 'ArrowUp' ||
-      char === 'ArrowDown' ||
-      char === 'Home' ||
-      char === 'End'
-    ) {
-      return;
-    }
-
-    // Allow Sinhala characters (U+0D80-U+0DFF) and space
-    const sinhalaRegex = /^[\u0D80-\u0DFF\s]$/;
-    if (!sinhalaRegex.test(char)) {
-      event.preventDefault();
-    }
-  }
-
-  // Prevent invalid Tamil characters (only allow Tamil unicode range and spaces)
-  preventInvalidTamilCharacters(event: KeyboardEvent): void {
-    const char = event.key;
-
-    // Allow control keys
-    if (
-      event.ctrlKey ||
-      event.altKey ||
-      event.metaKey ||
-      char === 'Backspace' ||
-      char === 'Delete' ||
-      char === 'Tab' ||
-      char === 'Escape' ||
-      char === 'Enter' ||
-      char === 'ArrowLeft' ||
-      char === 'ArrowRight' ||
-      char === 'ArrowUp' ||
-      char === 'ArrowDown' ||
-      char === 'Home' ||
-      char === 'End'
-    ) {
-      return;
-    }
-
-    // Allow Tamil characters (U+0B80-U+0BFF) and space
-    const tamilRegex = /^[\u0B80-\u0BFF\s]$/;
-    if (!tamilRegex.test(char)) {
-      event.preventDefault();
-    }
-  }
-
-  hasInvalidNameCharacters(
-    fieldName: 'firstNameEnglish' | 'lastNameEnglish'
-  ): boolean {
-    const value = this.personalData[fieldName];
-    if (!value) return false;
-    // Check if contains numbers or special characters
-    return /[^a-zA-Z\s]/.test(value);
-  }
-
-  hasInvalidSinhalaCharacters(
-    fieldName: 'firstNameSinhala' | 'lastNameSinhala'
-  ): boolean {
-    const value = this.personalData[fieldName];
-    if (!value) return false;
-    // Check if contains non-Sinhala characters
-    return /[^\u0D80-\u0DFF\s]/.test(value);
-  }
-
-  hasInvalidTamilCharacters(
-    fieldName: 'firstNameTamil' | 'lastNameTamil'
-  ): boolean {
-    const value = this.personalData[fieldName];
-    if (!value) return false;
-    // Check if contains non-Tamil characters
-    return /[^\u0B80-\u0BFF\s]/.test(value);
-  }
 
   hasInvalidAccountHolderName(): boolean {
     const value = this.personalData.accHolderName;
@@ -707,18 +550,12 @@ page: number = 1;
     const isFirstNameValid =
       !!this.personalData.firstNameEnglish &&
       !!this.personalData.firstNameSinhala &&
-      !!this.personalData.firstNameTamil &&
-      !this.hasInvalidNameCharacters('firstNameEnglish') &&
-      !this.hasInvalidSinhalaCharacters('firstNameSinhala') &&
-      !this.hasInvalidTamilCharacters('firstNameTamil');
+      !!this.personalData.firstNameTamil;
 
     const isLastNameValid =
       !!this.personalData.lastNameEnglish &&
       !!this.personalData.lastNameSinhala &&
-      !!this.personalData.lastNameTamil &&
-      !this.hasInvalidNameCharacters('lastNameEnglish') &&
-      !this.hasInvalidSinhalaCharacters('lastNameSinhala') &&
-      !this.hasInvalidTamilCharacters('lastNameTamil');
+      !!this.personalData.lastNameTamil;
 
     const isContact1Valid = this.isValidPhoneNumber(this.personalData.contact1);
     const isEmailValid = this.isValidEmail(this.personalData.email);
@@ -729,7 +566,6 @@ page: number = 1;
     const isJobRoleSelected = !!this.personalData.jobRole;
     const isNicValid = this.isValidNIC(this.personalData.nic);
 
-    // Password validation - only validate if password is provided
     const isPasswordValid =
       !this.personalData.password ||
       (this.isValidPassword(this.personalData.password) &&
@@ -738,7 +574,7 @@ page: number = 1;
     return (
       isFirstNameValid &&
       isLastNameValid &&
-      isContact1Valid && // Replace isPhoneNumberValid with this
+      isContact1Valid &&
       isEmailValid &&
       isEmpTypeSelected &&
       isLanguagesSelected &&
@@ -864,7 +700,7 @@ page: number = 1;
     let rolePrefix: string | undefined;
 
     const rolePrefixes: { [key: string]: string } = {
-      'Distribution Center Manager': 'DBM',
+      'Distribution Centre Manager': 'DBM',
       'Distribution Officer': 'DIO',
     };
 
@@ -1245,7 +1081,7 @@ page: number = 1;
     }
 
     if (!this.personalData.accHolderName) {
-      missingFields.push('Account Holder Name is Required');
+      missingFields.push(`Account Holder's Name is Required`);
     }
 
     if (!this.personalData.accNumber) {
@@ -1286,6 +1122,7 @@ page: number = 1;
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       this.isLoading = false;
@@ -1301,6 +1138,12 @@ page: number = 1;
       confirmButtonText: 'Yes, Save it!',
       cancelButtonText: 'No, cancel',
       reverseButtons: true,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton: 'bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -1329,11 +1172,17 @@ page: number = 1;
           .subscribe(
             (res: any) => {
               this.isLoading = false;
-              Swal.fire(
-                'Success',
-                'Distribution Officer Updated Successfully',
-                'success'
-              );
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Distribution Officer Updated Successfully',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              });
               // this.navigatePath(
               //   '/steckholders/action/view-distribution-officers'
               // );
@@ -1370,12 +1219,19 @@ page: number = 1;
               }
 
               this.errorMessage = errorMessage;
-              Swal.fire('Error', this.errorMessage, 'error');
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: this.errorMessage,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              });
             }
           );
-      } else {
-        this.isLoading = false;
-        Swal.fire('Cancelled', 'Your action has been cancelled', 'info');
       }
     });
   }
@@ -1440,17 +1296,17 @@ page: number = 1;
   }
 
   openPopup(item: any) {
-  const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
+    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
 
-  // Dynamic message based on status
-  let message = '';
-  if (item.status === 'Rejected') {
-    message = 'Are you sure you want to approve this distribution officer?';
-  } else if (item.status === 'Not Approved') {
-    message = 'Are you sure you want to approve this distribution officer?';
-  }
+    // Dynamic message based on status
+    let message = '';
+    if (item.status === 'Rejected') {
+      message = 'Are you sure you want to approve this distribution officer?';
+    } else if (item.status === 'Not Approved') {
+      message = 'Are you sure you want to approve this distribution officer?';
+    }
 
-  const tableHtml = `
+    const tableHtml = `
     <div class=" px-10 py-8 rounded-md bg-white dark:bg-gray-800">
       <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
       <div>
@@ -1462,63 +1318,63 @@ page: number = 1;
     </div>
   `;
 
-  Swal.fire({
-    html: tableHtml,
-    showConfirmButton: false,
-    width: 'auto',
-    background: 'transparent',
-    backdrop: 'rgba(0, 0, 0, 0.5)',
-    grow: 'row',
-    showClass: { popup: 'animate__animated animate__fadeIn' },
-    hideClass: { popup: 'animate__animated animate__fadeOut' },
-    didOpen: () => {
-      if (showApproveButton) {
-        document
-          .getElementById('approveButton')
-          ?.addEventListener('click', () => {
-            Swal.close();
-            this.isPopupVisible = false;
-            this.isLoading = true;
-            this.distributionOfficerServ.ChangeStatus(item.id, 'Approved').subscribe(
-              (res) => {
-                this.isLoading = false;
-                if (res.status) {
-                  Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'The Collection Officer was approved successfully.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                  this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
-                } else {
+    Swal.fire({
+      html: tableHtml,
+      showConfirmButton: false,
+      width: 'auto',
+      background: 'transparent',
+      backdrop: 'rgba(0, 0, 0, 0.5)',
+      grow: 'row',
+      showClass: { popup: 'animate__animated animate__fadeIn' },
+      hideClass: { popup: 'animate__animated animate__fadeOut' },
+      didOpen: () => {
+        if (showApproveButton) {
+          document
+            .getElementById('approveButton')
+            ?.addEventListener('click', () => {
+              Swal.close();
+              this.isPopupVisible = false;
+              this.isLoading = true;
+              this.distributionOfficerServ.ChangeStatus(item.id, 'Approved').subscribe(
+                (res) => {
+                  this.isLoading = false;
+                  if (res.status) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: 'The Collection Officer was approved successfully.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                    this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
+                  } else {
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Something went wrong. Please try again.',
+                      showConfirmButton: false,
+                      timer: 3000,
+                    });
+                  }
+                },
+                () => {
+                  this.isLoading = false;
                   Swal.fire({
                     icon: 'error',
                     title: 'Error!',
-                    text: 'Something went wrong. Please try again.',
+                    text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
                   });
                 }
-              },
-              () => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error!',
-                  text: 'An error occurred while approving. Please try again.',
-                  showConfirmButton: false,
-                  timer: 3000,
-                });
-              }
-            );
-          });
-      }
-    },
-  });
-}
+              );
+            });
+        }
+      },
+    });
+  }
 
-fetchAllDistributionOfficer(
+  fetchAllDistributionOfficer(
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,

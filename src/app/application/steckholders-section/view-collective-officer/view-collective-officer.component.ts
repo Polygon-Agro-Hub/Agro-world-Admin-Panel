@@ -93,6 +93,7 @@ export class ViewCollectiveOfficerComponent {
   ];
 
   centerId: number | null = null;
+  Cname: string = '';
 
   constructor(
     private router: Router,
@@ -104,6 +105,7 @@ export class ViewCollectiveOfficerComponent {
   ) { }
 
   fetchAllCollectionOfficer(
+    
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,
@@ -111,12 +113,18 @@ export class ViewCollectiveOfficerComponent {
     centerId: string | null = this.selectedCenterId
   ) {
     this.isLoading = true;
+    console.log('calling 3')
     this.route.queryParams.subscribe((params) => {
       this.centerId = params['id'] ? +params['id'] : null;
+      this.Cname = params['Cname'] ? params['Cname'] : null;
+    
+      console.log('centerId:', this.centerId);
+      console.log('Cname:', this.Cname);
     });
 
 
     if (this.centerId === null) {
+      console.log('calling 1')
 
       this.collectionService
         .fetchAllCollectionOfficer(
@@ -145,6 +153,7 @@ export class ViewCollectiveOfficerComponent {
         );
 
     } else {
+      console.log('calling 2')
 
       this.collectionService
         .fetchAllCollectionOfficercenter(
@@ -229,6 +238,7 @@ export class ViewCollectiveOfficerComponent {
     if (this.centerId !== null) {
       this.fetchManagerNames(this.centerId);
     }
+    console.log('role', this.tokenService.getUserDetails().role);
     // this.route.queryParams.subscribe((params) => {
     //   this.centerId = params['id'] ? +params['id'] : null;
     // });
@@ -368,6 +378,10 @@ export class ViewCollectiveOfficerComponent {
       grow: 'row',
       showClass: { popup: 'animate__animated animate__fadeIn' },
       hideClass: { popup: 'animate__animated animate__fadeOut' },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
       didOpen: () => {
         if (showApproveButton) {
           document
@@ -386,6 +400,10 @@ export class ViewCollectiveOfficerComponent {
                       text: 'The Collection Officer was approved successfully.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
                     });
                     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                   } else {
@@ -395,6 +413,10 @@ export class ViewCollectiveOfficerComponent {
                       text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
                     });
                   }
                 },
@@ -406,6 +428,10 @@ export class ViewCollectiveOfficerComponent {
                     text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold',
+                    },
                   });
                 }
               );
@@ -429,6 +455,10 @@ export class ViewCollectiveOfficerComponent {
                       text: 'The Collection Officer was rejected successfully.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
                     });
                     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
                   } else {
@@ -438,6 +468,10 @@ export class ViewCollectiveOfficerComponent {
                       text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold',
+                      },
                     });
                   }
                 },
@@ -449,6 +483,10 @@ export class ViewCollectiveOfficerComponent {
                     text: 'An error occurred while rejecting. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold',
+                    },
                   });
                 }
               );
@@ -461,9 +499,13 @@ export class ViewCollectiveOfficerComponent {
   updateStatus(item: CollectionOfficers, newStatus: string) {
     item.status = newStatus;
     Swal.fire(
-      'Updated!',
-      `The Collection Officer status has been updated to ${newStatus}.`,
-      'success'
+     { title: 'Updated!',
+     text: `The Collection Officer status has been updated to ${newStatus}.`,
+     icon: 'success',
+     customClass: {
+       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+       title: 'font-semibold',
+     }}
     );
     this.isPopupVisible = false;
   }
@@ -523,8 +565,10 @@ export class ViewCollectiveOfficerComponent {
       this.selectedCenterId = null; // Reset selection
       this.selectedIrmId = null; // Reset selection
       this.iseditModalOpen = true;
+      this.collectionCenterManagerNames = [];
     } else if (item.claimStatus === 1) {
       this.showDisclaimView = true;
+      
     }
   }
 
@@ -538,6 +582,12 @@ export class ViewCollectiveOfficerComponent {
             title: 'Success',
             text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
+            
           }).then((result) => {
             if (result.isConfirmed) {
               window.location.reload();
@@ -551,6 +601,11 @@ export class ViewCollectiveOfficerComponent {
             title: 'Error',
             text: 'Failed to disclaim User successfully!',
             confirmButtonText: 'Try Again',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
           });
         }
       );
@@ -594,6 +649,11 @@ export class ViewCollectiveOfficerComponent {
             title: 'Success',
             text: 'Officer claimed successfully!',
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
           }).then((result) => {
             if (result.isConfirmed) {
               this.iseditModalOpen = false;
@@ -609,6 +669,11 @@ export class ViewCollectiveOfficerComponent {
             title: 'Error',
             text: 'Failed to claim officer!',
             confirmButtonText: 'Try Again',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+            },
           });
         }
       );

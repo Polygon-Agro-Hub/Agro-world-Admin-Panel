@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild  } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import Swal from 'sweetalert2';
@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CalendarModule } from 'primeng/calendar';
+import { Calendar, CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-center-collection-expence',
@@ -23,6 +23,7 @@ import { CalendarModule } from 'primeng/calendar';
   styleUrl: './center-collection-expence.component.css'
 })
 export class CenterCollectionExpenceComponent implements OnInit {
+  @ViewChild('toDateCalendar') toDateCalendar!: Calendar;
   farmerPaymentsArr!: FarmerPayments[];
   centerArr: Center[] = [];
   totalPaymentsAmount: number = 0;
@@ -112,6 +113,9 @@ export class CenterCollectionExpenceComponent implements OnInit {
   }
 
   onSearch() {
+    if (this.searchText) {
+      this.searchText = this.searchText.trimStart();
+    }
     this.fetchFilteredPayments();
   }
 
@@ -126,8 +130,13 @@ export class CenterCollectionExpenceComponent implements OnInit {
   }
 
   validateToDate() {
+    console.log('logged')
     if (!this.fromDate) {
       this.toDate = null;
+      if (this.toDateCalendar) {
+        this.toDateCalendar.updateModel(null);
+        this.toDateCalendar.updateInputfield();
+      }
       Swal.fire({
         icon: 'warning',
         title: 'Warning',
@@ -137,27 +146,29 @@ export class CenterCollectionExpenceComponent implements OnInit {
           title: 'dark:text-white',
         }
       });
-      return;
+      // return;
     }
-
-    if (this.toDate) {
-      const from = new Date(this.fromDate);
-      const to = new Date(this.toDate);
-
-      if (to <= from) {
-        this.toDate = null;
-        Swal.fire({
-          icon: 'warning',
-          title: 'Warning',
-          text: "The 'To' date cannot be earlier than or same to the 'From' date",
-          customClass: {
-            popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-            title: 'dark:text-white',
-          }
-        });
-      }
-    }
+  
+    // if (this.toDate) {
+    //   const from = new Date(this.fromDate);
+    //   const to = new Date(this.toDate);
+  
+    //   if (to <= from) {
+    //     this.toDate = null;
+    //     (document.getElementById('toDate') as HTMLInputElement).value = '';
+    //     Swal.fire({
+    //       icon: 'warning',
+    //       title: 'Warning',
+    //       text: "The 'To' date cannot be earlier than or same to the 'From' date",
+    //       customClass: {
+    //         popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+    //         title: 'dark:text-white',
+    //       }
+    //     });
+    //   }
+    // }
   }
+  
 
   validateFromDate() {
     if (!this.toDate) {
@@ -169,7 +180,8 @@ export class CenterCollectionExpenceComponent implements OnInit {
       const to = new Date(this.toDate);
 
       if (to <= from) {
-        this.fromDate = null;
+        this.fromDate = null;  
+        setTimeout(() => this.fromDate = null); // forces re-render
         Swal.fire({
           icon: 'warning',
           title: 'Warning',

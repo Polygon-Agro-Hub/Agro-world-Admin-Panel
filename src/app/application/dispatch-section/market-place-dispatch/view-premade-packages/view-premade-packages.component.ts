@@ -46,33 +46,33 @@ export class ViewPremadePackagesComponent implements OnInit {
     )
   }
 
-  navigateDispatchItems(id: number, status: boolean = false, price: number, packageName: string) {
+  navigateDispatchItems(id: number, status: boolean = false, price: number, packageName: string, packgeQty: number) {
     this.router.navigate([`/dispatch/dispatch-package/${id}/${this.orderId}`], {
-    queryParams: { status: status, price: price , invNo: this.invNo, packageName: packageName }
-  })
+      queryParams: { status: status, price: price, invNo: this.invNo, packageName: packageName, packgeQty }
+    })
   }
 
-  navigateDispatchAdditionalItems(id: number, status:boolean) {
-  this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
-    queryParams: { status: status }
-  })
-}
+  navigateDispatchAdditionalItems(id: number, status: boolean) {
+    this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
+      queryParams: { status: status }
+    })
+  }
 
-  checkPackageLastOrderStatus(id:number, arrayIndex: number = 0, price: number, packageName: string = '') {
+  checkPackageLastOrderStatus(id: number, arrayIndex: number = 0, price: number, packageName: string = '', packgeQty: number = 1) {
     let allPackagesCompleted = true;
     let additionalItemsCompleted = true;
 
-      // Filter out the package at arrayIndex and check all others
-      allPackagesCompleted = this.packageObj.packageData
-        .filter((pkg, index) => index !== arrayIndex) 
-        .every(pkg => pkg.packStatus === 'Completed');
-    
+    // Filter out the package at arrayIndex and check all others
+    allPackagesCompleted = this.packageObj.packageData
+      .filter((pkg, index) => index !== arrayIndex)
+      .every(pkg => pkg.packStatus === 'Completed');
+
 
     if (this.packageObj.additionalData &&
-      this.packageObj.additionalData.packStatus !== null ) {
+      this.packageObj.additionalData.packStatus !== null) {
       additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
-      console.log("additional hit->",additionalItemsCompleted);
-      
+      console.log("additional hit->", additionalItemsCompleted);
+
     }
 
     const finalStatus = allPackagesCompleted && additionalItemsCompleted;
@@ -81,22 +81,22 @@ export class ViewPremadePackagesComponent implements OnInit {
     console.log('Additional items completed:', additionalItemsCompleted);
     console.log('Composite status:', finalStatus);
 
-    this.navigateDispatchItems(id,finalStatus, price, packageName)
+    this.navigateDispatchItems(id, finalStatus, price, packageName, packgeQty)
   }
 
-  checkAdditionalLastOrderStatus(id:number) {
+  checkAdditionalLastOrderStatus(id: number) {
     let allPackagesCompleted = true;
     let additionalItemsCompleted = true;
 
-      // Filter out the package at arrayIndex and check all others
-      allPackagesCompleted = this.packageObj.packageData
-        .every(pkg => pkg.packStatus === 'Completed');
-    
+    // Filter out the package at arrayIndex and check all others
+    allPackagesCompleted = this.packageObj.packageData
+      .every(pkg => pkg.packStatus === 'Completed');
+
     if (this.packageObj.additionalData &&
-      this.packageObj.additionalData.packStatus !== null ) {
+      this.packageObj.additionalData.packStatus !== null) {
       additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
-      console.log("additional hit->",additionalItemsCompleted);
-      
+      console.log("additional hit->", additionalItemsCompleted);
+
     }
 
     const finalStatus = allPackagesCompleted && additionalItemsCompleted;
@@ -105,7 +105,7 @@ export class ViewPremadePackagesComponent implements OnInit {
     console.log('Additional items completed:', additionalItemsCompleted);
     console.log('Composite status:', finalStatus);
 
-    this.navigateDispatchAdditionalItems(id,finalStatus)
+    this.navigateDispatchAdditionalItems(id, finalStatus)
   }
 
 }
@@ -116,6 +116,7 @@ interface Items {
   price: number;
   packStatus: string;
   packageId: number;
+  packageQty: number;
 }
 
 interface Package {

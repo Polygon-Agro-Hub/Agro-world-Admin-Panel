@@ -1,12 +1,12 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#8AC440] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -207,24 +207,18 @@
       </table>
       <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 shadow-lg">
         <p class="text-[#494949] dark:text-textDark  mb-4">
-      -- No Data Available --
-    </p>
-    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
-    
-  </div>
+          -- No Data Available --
+        </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+
+      </div>
     </div>
-  <!-- Show paginator only if data exists -->
-<div class="dark:bg-[#262f45]" *ngIf="hasData">
-  <pagination-controls
-    (pageChange)="onPageChange($event)"
-    [responsive]="true"
-    [previousLabel]="'Previous'"
-    [nextLabel]="'Next'"
-    [screenReaderPaginationLabel]="'Pagination'"
-    [screenReaderPageLabel]="'page'"
-    [screenReaderCurrentLabel]="'You’re on page'"
-  >
-  </pagination-controls>
-</div>
+    <!-- Show paginator only if data exists -->
+    <div class="dark:bg-[#262f45]" *ngIf="hasData">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'You’re on page'">
+      </pagination-controls>
+    </div>
   </div>
 </div>

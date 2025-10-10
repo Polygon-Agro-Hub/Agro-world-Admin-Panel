@@ -372,11 +372,29 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
               next: (res) => {
                 this.isLoading = false;
                 if (res) {
-                  Swal.fire('Success', 'New Crop Calendar Task Added!', 'success').then(() => {
+                  Swal.fire({
+                    title: 'Success',
+                    text: 'New Crop Calendar Task Added!',
+                    icon: 'success',
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                      htmlContainer: 'text-left',
+                    }
+                  }).then(() => {
                     this.location.back();
                   });
                 } else {
-                  Swal.fire('Error', 'Error occurred in adding task!', 'error');
+                  Swal.fire({
+                    title: 'Error',
+                    text: 'Error occurred in adding task!',
+                    icon: 'error',
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                      htmlContainer: 'text-left',
+                    }
+                  });
                 }
               },
               error: (error) => {
@@ -389,7 +407,16 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
                 } else if (error.status === 400) {
                   errorMessage = 'Invalid data sent to server. Please check your inputs.';
                 }
-                Swal.fire('Error', errorMessage, 'error');
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: errorMessage,
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
               },
             });
         } else {
@@ -399,11 +426,29 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
               next: (res) => {
                 this.isLoading = false;
                 if (res) {
-                  Swal.fire('Success', 'New Crop Calendar Task Added!', 'success').then(() => {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'New Crop Calendar Task Added!',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                    },
+                  }).then(() => {
                     this.location.back();
                   });
                 } else {
-                  Swal.fire('Error', 'Error occurred in adding task!', 'error');
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error occurred in adding task!',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                    },
+                  });
                 }
               },
               error: (error) => {
@@ -416,7 +461,16 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
                 } else if (error.status === 400) {
                   errorMessage = 'Invalid data sent to server. Please check your inputs.';
                 }
-                Swal.fire('Error', errorMessage, 'error');
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: errorMessage,
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
               },
             });
         }

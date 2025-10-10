@@ -6,7 +6,7 @@
 </button>
 <button *ngIf="
     (permissionService.hasPermission('Onboard individual collection CO / CCM / DO') ||
-    tokenService.getUserDetails().role === '1')
+    tokenService.getUserDetails().role === '1') && !Cname
   " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="navigatePath('/steckholders/action/collective-officer/personal')">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,47 +25,33 @@
       <div class="flex align-middle justify-start items-center gap-x-12">
         <label class="block text-gray-700 pl-20 dark:text-gray-200 mb-2 ">Select Centre</label>
         <div class="flex flex-col">
-          <p-dropdown 
-  [options]="centerNames" 
-  optionLabel="centerName" 
-  optionValue="id" 
-  placeholder="Select a centre"
-  [(ngModel)]="selectedCenterId" 
-  #selectedCenterIdInput="ngModel" 
-  (onChange)="onCenterChange()" 
-  name="selectedCenterId" 
-  required
-  [styleClass]="'border min-w-52 ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'"
-  panelStyleClass="custom-dropdown-panel">
-</p-dropdown>
-        <div *ngIf="selectedCenterIdInput.touched && !selectedCenterId"
-                        class="text-red-500 ml-2 text-sm mt-1">
-                        <div>Centre Name is required</div>
-                    </div>
+          <p-dropdown [options]="centerNames" optionLabel="centerName" optionValue="id" placeholder="Select a centre"
+            [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
+            name="selectedCenterId" required
+            [styleClass]="'border min-w-52 ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'"
+            panelStyleClass="custom-dropdown-panel">
+          </p-dropdown>
+          <div *ngIf="selectedCenterIdInput.touched && !selectedCenterId" class="text-red-500 ml-2 text-sm mt-1">
+            <div>Centre Name is required</div>
+          </div>
         </div>
       </div>
 
       <!-- Conditionally show/hide the Select Manager section -->
-      <div *ngIf="selectedOfficer?.jobRole === 'Collection Officer'" class="flex mt-4 align-middle justify-start items-center gap-x-12">
+      <div *ngIf="selectedOfficer?.jobRole === 'Collection Officer'"
+        class="flex mt-4 align-middle justify-start items-center gap-x-12">
         <label class="block text-gray-700 pl-16 dark:text-gray-200 mb-2">Select Manager</label>
-       <div class="flex flex-col">
-        <p-dropdown 
-          [options]="collectionCenterManagerNames" 
-          optionLabel="displayLabel" 
-          placeholder="Select a manager"
-          [(ngModel)]="selectedIrmId"  
-          #selectedIrmIdInput="ngModel" 
-          name="selectedIrmId" 
-          required
-          panelStyleClass="custom-dropdown-panel"
-          [styleClass]="'min-w-52 border ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'">
-        </p-dropdown>
+        <div class="flex flex-col">
+          <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" placeholder="Select a manager"
+            [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel" name="selectedIrmId" required
+            panelStyleClass="custom-dropdown-panel"
+            [styleClass]="'min-w-52 border ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'">
+          </p-dropdown>
 
-      <div *ngIf="selectedIrmIdInput.touched && !selectedIrmId"
-                      class="text-red-500 ml-2 text-sm mt-1">
-                      <div>Manager Name is required</div>
-                  </div>
-       </div>
+          <div *ngIf="selectedIrmIdInput.touched && !selectedIrmId" class="text-red-500 ml-2 text-sm mt-1">
+            <div>Manager Name is required</div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -131,10 +117,17 @@
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 px-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+
     <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
+      <div *ngIf="!Cname"class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           Collection Officers ({{ this.totalItems }})
+        </h2>
+      </div>
+
+      <div *ngIf="Cname"class="flex items-center">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          All ({{ this.totalItems }})
         </h2>
       </div>
 
@@ -187,7 +180,7 @@
   </div> -->
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search by EMP ID, Centre, NIC" [(ngModel)]="searchNIC"
+          <input type="text" placeholder="Search by EMP ID, NIC" [(ngModel)]="searchNIC"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keyup.enter)="onSearch()"
             (keyup.esc)="offSearch()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
@@ -261,8 +254,8 @@
               NIC
             </th>
             <th *ngIf="
-                permissionService.hasPermission('View individual collection officer') ||
-                tokenService.getUserDetails().role === '1'
+               ( permissionService.hasPermission('View individual collection officer') ||
+                tokenService.getUserDetails().role === '1') && !Cname
               " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
 
             <th *ngIf="
@@ -366,8 +359,8 @@
             </td>
 
             <td *ngIf="
-                permissionService.hasPermission('View individual collection officer') ||
-                tokenService.getUserDetails().role === '1'
+                (permissionService.hasPermission('View individual collection officer') ||
+                tokenService.getUserDetails().role === '1') && !Cname
               " class="px-4 py-3 text-center">
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -376,6 +369,11 @@
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
+            </td>
+
+            <td *ngIf="(permissionService.hasPermission('View individual collection officer') ||
+            tokenService.getUserDetails().role === '1') && Cname" [class.ml-4]="Cname" class="px-4 py-3 text-center">
+              
             </td>
 
             <td *ngIf="

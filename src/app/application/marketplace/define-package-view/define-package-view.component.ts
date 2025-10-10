@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface OrderDetailItem {
   packageId: number;
@@ -37,7 +38,7 @@ interface MarketplaceItem {
 @Component({
   selector: 'app-define-package-view',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule],
   templateUrl: './define-package-view.component.html',
   styleUrl: './define-package-view.component.css',
 })
@@ -57,7 +58,7 @@ export class DefinePackageViewComponent implements OnInit {
     private marketplaceService: MarketPlaceService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     console.log('Component initialized');
@@ -80,46 +81,47 @@ export class DefinePackageViewComponent implements OnInit {
       });
     });
   }
-goBack(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.history.back();
-    }
-  });
-}
+  goBack(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.history.back();
+      }
+    });
+  }
 
-onCancel() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.history.back();
-    }
-  });
-
-}
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.history.back();
+      }
+    });
+  }
 
   fetchOrderDetails(id: string) {
     console.log('Fetching order details for ID:', id);
@@ -183,14 +185,14 @@ onCancel() {
     });
   }
 
-  onProductSelected(productType: ProductTypes, event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedProductId = Number(selectElement.value);
-  
+  onProductSelected(productType: ProductTypes, event: any) {
+    // For PrimeNG dropdown, the selected value is in event.value
+    const selectedProductId = event.value;
+
     const selectedProduct = this.marketplaceItems.find(
       (item) => item.id === selectedProductId
     );
-  
+
     if (selectedProduct) {
       productType.productId = selectedProduct.id;
       productType.selectedProductPrice = selectedProduct.discountedPrice;
@@ -201,7 +203,7 @@ onCancel() {
       productType.productId = null;
       productType.selectedProductPrice = undefined;
     }
-  
+
     // Recalculate price if quantity already exists
     if (productType.quantity !== undefined) {
       productType.calculatedPrice = (productType.quantity || 0) * (productType.selectedProductPrice || 0);
@@ -210,7 +212,7 @@ onCancel() {
     }
     this.calculateTotalPrice();
   }
-  
+
 
   preventNegative(event: KeyboardEvent) {
     if (event.key === '-' || event.key === 'Subtract') {
@@ -218,45 +220,54 @@ onCancel() {
     }
   }
 
-onQuantityChanged(productType: ProductTypes, event: Event) {
-  const inputElement = event.target as HTMLInputElement;
-  let value = inputElement.value;
+  onQuantityChanged(productType: ProductTypes, event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    let value = inputElement.value;
 
-  // Remove any extra decimal points
-  if ((value.match(/\./g) || []).length > 1) {
-    value = value.substring(0, value.lastIndexOf('.'));
-    inputElement.value = value;
-  }
-
-  // Enforce max 3 decimal places
-  if (value.includes('.')) {
-    const parts = value.split('.');
-    if (parts[1].length > 3) {
-      value = parts[0] + '.' + parts[1].substring(0, 3);
+    // Remove any extra decimal points
+    if ((value.match(/\./g) || []).length > 1) {
+      value = value.substring(0, value.lastIndexOf('.'));
       inputElement.value = value;
     }
-  }
 
-  const quantity = parseFloat(value);
+    // Enforce max 3 decimal places
+    if (value.includes('.')) {
+      const parts = value.split('.');
+      if (parts[1].length > 3) {
+        value = parts[0] + '.' + parts[1].substring(0, 3);
+        inputElement.value = value;
+      }
+    }
 
-  if (isNaN(quantity)) {
-    productType.quantity = undefined;
-    productType.calculatedPrice = undefined;
-    inputElement.value = '';
-    return;
-  } else {
-    if (quantity <= 0) {
+    const quantity = parseFloat(value);
+
+    if (isNaN(quantity)) {
       productType.quantity = undefined;
       productType.calculatedPrice = undefined;
       inputElement.value = '';
-      Swal.fire('Warning', 'Quantity must be greater than 0!', 'warning');
       return;
+    } else {
+      if (quantity <= 0) {
+        productType.quantity = undefined;
+        productType.calculatedPrice = undefined;
+        inputElement.value = '';
+        Swal.fire({
+          icon: 'warning',
+          title: 'Warning',
+          text: 'Quantity must be greater than 0!',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
+        });
+        return;
+      }
+      productType.quantity = quantity;
+      productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
     }
-    productType.quantity = quantity;
-    productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
+    this.calculateTotalPrice();
   }
-  this.calculateTotalPrice();
-}
 
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
@@ -314,14 +325,18 @@ onQuantityChanged(productType: ProductTypes, event: Event) {
   }
 
   async onSave() {
-    this.formSubmitted = true; // Mark form as submitted to show validation errors
+    this.formSubmitted = true;
 
     if (!this.isFormValid()) {
       Swal.fire({
         icon: 'warning',
         title: 'Incomplete Form',
         text: 'Please select a product and enter a valid quantity greater than 0 for all items.',
-        confirmButtonColor: '#3085d6',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
       });
       return;
     }
@@ -331,7 +346,11 @@ onQuantityChanged(productType: ProductTypes, event: Event) {
         icon: 'error',
         title: 'Cannot Complete Package',
         text: 'Calculated price exceeds the allowed limit!',
-        confirmButtonColor: '#3085d6',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
       });
       return;
     }
@@ -341,7 +360,11 @@ onQuantityChanged(productType: ProductTypes, event: Event) {
         icon: 'warning',
         title: 'No Package Details',
         text: 'No package details available',
-        confirmButtonColor: '#3085d6',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
       });
       return;
     }
@@ -374,7 +397,11 @@ onQuantityChanged(productType: ProductTypes, event: Event) {
         icon: 'warning',
         title: 'No Valid Items',
         text: 'No valid package items to save. Please ensure all items have a product selected, quantity, and price.',
-        confirmButtonColor: '#3085d6',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
       });
       return;
     }
@@ -389,14 +416,16 @@ onQuantityChanged(productType: ProductTypes, event: Event) {
         icon: 'success',
         title: 'Success!',
         text: 'Package defined successfully!',
-        confirmButtonColor: '#3085d6',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
       }).then((result) => {
         this.isLoading = false;
-       this.isLoading = false;
-if (result.isConfirmed) {
-  this.router.navigate(['/market/action/view-packages-list']);
-}
-
+        if (result.isConfirmed) {
+          this.router.navigate(['/market/action/view-packages-list']);
+        }
       });
     } catch (error) {
       this.isLoading = false;
@@ -405,7 +434,11 @@ if (result.isConfirmed) {
         icon: 'error',
         title: 'Error',
         text: this.getErrorMessage(error) || 'Failed to create package',
-        confirmButtonColor: '#3085d6',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
       });
     }
   }
@@ -421,42 +454,42 @@ if (result.isConfirmed) {
   }
 
   validateQuantityInput(event: KeyboardEvent) {
-  const input = event.target as HTMLInputElement;
-  const key = event.key;
+    const input = event.target as HTMLInputElement;
+    const key = event.key;
 
-  // Allow: backspace, delete, tab, escape, enter, arrows (up/down/left/right)
-  if (
-    ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key) ||
-    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-    (event.ctrlKey === true && ['a', 'c', 'v', 'x'].includes(key.toLowerCase()))
-  ) {
-    return; // let it happen, don't do anything
+    // Allow: backspace, delete, tab, escape, enter, arrows (up/down/left/right)
+    if (
+      ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(key) ||
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (event.ctrlKey === true && ['a', 'c', 'v', 'x'].includes(key.toLowerCase()))
+    ) {
+      return; // let it happen, don't do anything
+    }
+
+    // Ensure that it is a number and stop the keypress if not
+    if (event.key === ' ' || isNaN(Number(key))) {
+      event.preventDefault();
+      return;
+    }
+
+    // Get the current value and proposed new value
+    const currentValue = input.value;
+    const selectionStart = input.selectionStart || 0;
+    const selectionEnd = input.selectionEnd || 0;
+    const proposedValue =
+      currentValue.substring(0, selectionStart) +
+      key +
+      currentValue.substring(selectionEnd);
+
+    // Check if the proposed value matches our pattern
+    const pattern = /^\d*\.?\d{0,3}$/;
+    if (!pattern.test(proposedValue)) {
+      event.preventDefault();
+    }
+
+    // Only allow one decimal point
+    if (key === '.' && currentValue.includes('.')) {
+      event.preventDefault();
+    }
   }
-
-  // Ensure that it is a number and stop the keypress if not
-  if (event.key === ' ' || isNaN(Number(key))) {
-    event.preventDefault();
-    return;
-  }
-
-  // Get the current value and proposed new value
-  const currentValue = input.value;
-  const selectionStart = input.selectionStart || 0;
-  const selectionEnd = input.selectionEnd || 0;
-  const proposedValue =
-    currentValue.substring(0, selectionStart) +
-    key +
-    currentValue.substring(selectionEnd);
-
-  // Check if the proposed value matches our pattern
-  const pattern = /^\d*\.?\d{0,3}$/;
-  if (!pattern.test(proposedValue)) {
-    event.preventDefault();
-  }
-
-  // Only allow one decimal point
-  if (key === '.' && currentValue.includes('.')) {
-    event.preventDefault();
-  }
-}
 }

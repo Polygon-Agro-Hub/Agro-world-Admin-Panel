@@ -1,56 +1,54 @@
-
 <div class="w-full p-4">
   <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-      <!-- Left Column -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-[#DA6200] text-white p-4 rounded-lg shadow-lg flex flex-col items-center justify-center text-center h-full">
-              <i class="fa-regular fa-newspaper text-4xl mb-4"></i>
-              <h2 class="text-md font-semibold dark:text-white">PlantCare Users</h2>
-              <h2 class="text-sm font-semibold dark:text-white">Total</h2>
-              <p class="text-xl font-bold dark:text-white">{{allPlantCareUsers}}</p>
-          </div>
-
-          <div class="flex flex-col dark:bg-tileBlack items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg h-full">
-              <p class="text-md font-thin text-gray-600 dark:text-white">Active Users</p>
-              <p class="text-sm font-thin text-gray-600 dark:text-white">Just Now</p>
-              <p class="text-2xl font-bold text-gray-900 dark:text-white">{{activePlantCareUsers}}</p>
-          </div>
-
-          <div class="flex flex-col dark:bg-tileBlack items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg h-full">
-              <p class="text-md font-thin text-gray-600 dark:text-white">New Users</p>
-              <p class="text-sm font-thin text-gray-600 dark:text-white">Today</p>
-              <p class="text-2xl font-bold text-gray-900 dark:text-white">{{newPlantCareUsers}}</p>
-          </div>
+    <!-- Left Column -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div
+        class="bg-[#DA6200] text-white p-4 rounded-lg shadow-lg flex flex-col items-center justify-center text-center h-full">
+        <i class="fa-regular fa-newspaper text-4xl mb-4"></i>
+        <h2 class="text-md font-semibold dark:text-white">PlantCare Users</h2>
+        <h2 class="text-sm font-semibold dark:text-white">Total</h2>
+        <p class="text-xl font-bold dark:text-white">{{allPlantCareUsers}}</p>
       </div>
 
-      <!-- Right Column -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Stats Cards -->
-        <div class="space-y-4 flex flex-col h-full">
-          <!-- QR Registered Users Card -->
-          <div class="bg-white dark:bg-tileBlack p-6 rounded-lg shadow-lg flex justify-between items-center flex-grow">
-            <p class="text-lg font-thin text-gray-600 dark:text-white">QR Registered Users</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{plantCareUsersWithQr}}</p>
-          </div>
-      
-          <!-- Unregistered Users Card -->
-          <div class="bg-white dark:bg-tileBlack p-6 rounded-lg shadow-lg flex justify-between items-center flex-grow">
-            <p class="text-lg font-thin text-gray-600 dark:text-white">Unregistered Users</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{plantCareUsersWithOutQr}}</p>
-          </div>
+      <div
+        class="flex flex-col dark:bg-tileBlack items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg h-full">
+        <p class="text-md font-thin text-gray-600 dark:text-white">Active Users</p>
+        <p class="text-sm font-thin text-gray-600 dark:text-white">Just Now</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{activePlantCareUsers}}</p>
+      </div>
+
+      <div
+        class="flex flex-col dark:bg-tileBlack items-center justify-center text-center bg-white p-4 rounded-lg shadow-lg h-full">
+        <p class="text-md font-thin text-gray-600 dark:text-white">New Users</p>
+        <p class="text-sm font-thin text-gray-600 dark:text-white">Today</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{newPlantCareUsers}}</p>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Stats Cards -->
+      <div class="space-y-4 flex flex-col h-full">
+        <!-- QR Registered Users Card -->
+        <div class="bg-white dark:bg-tileBlack p-6 rounded-lg shadow-lg flex justify-between items-center flex-grow">
+          <p class="text-lg font-thin text-gray-600 dark:text-white">QR Registered Users</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{plantCareUsersWithQr}}</p>
         </div>
-      
-        <!-- Chart Container -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-grow">
-          <app-bar-chart *ngIf="secondRow?.QRfarmers"
-               
-               [plantCareUsersWithOutQr]="plantCareUsersWithOutQr"
-               [plantCareUsersWithQr]="plantCareUsersWithQr">
-</app-bar-chart>
 
-
+        <!-- Unregistered Users Card -->
+        <div class="bg-white dark:bg-tileBlack p-6 rounded-lg shadow-lg flex justify-between items-center flex-grow">
+          <p class="text-lg font-thin text-gray-600 dark:text-white">Unregistered Users</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{plantCareUsersWithOutQr}}</p>
         </div>
       </div>
-      
+
+      <!-- Chart Container -->
+      <div class="bg-white dark:bg-tileBlack dark:text-white rounded-lg shadow-lg overflow-hidden flex-grow">
+        <app-bar-chart *ngIf="secondRow?.QRfarmers" [plantCareUsersWithOutQr]="plantCareUsersWithOutQr"
+          [plantCareUsersWithQr]="plantCareUsersWithQr" class="dark:text-white">
+        </app-bar-chart>
+      </div>
+    </div>
+
   </div>
 </div>

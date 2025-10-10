@@ -18,6 +18,7 @@ export interface CertificateCompany {
   createdAt?: string;
   modifyDate?: string | null;
   modifiedByUser?: string | null;
+  logo?: string;
 }
 
 export interface CertificatePayload {
@@ -57,12 +58,12 @@ export class CertificateCompanyService {
 
   // Create Certificate Company
   createCompany(
-    company: CertificateCompany
+    company: FormData
   ): Observable<{ message: string; status: boolean; id?: number }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
-      'Content-Type': 'application/json',
     });
+
     return this.http.post<{ message: string; status: boolean; id?: number }>(
       `${this.apiUrl}certificate-company/create-certificate-company`,
       company,
@@ -84,11 +85,10 @@ export class CertificateCompanyService {
   // Update company
   updateCompany(
     id: number,
-    company: CertificateCompany
+    company: FormData
   ): Observable<{ message: string; status: boolean }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
-      'Content-Type': 'application/json',
     });
     return this.http.put<{ message: string; status: boolean }>(
       `${this.apiUrl}certificate-company/update-certificate-company/${id}`,

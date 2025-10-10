@@ -6,11 +6,10 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { CommonModule, Location } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
-import { Location } from '@angular/common';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import {
   CertificateCompanyService,
   CertificateCompany,
@@ -32,7 +31,10 @@ export class EditCompanyDetailsComponent implements OnInit {
   companyForm!: FormGroup;
   isLoading = false;
   companyId!: number;
+  isEditMode = false;
 
+  logoPreview: string | ArrayBuffer | null = null;
+  logoFile: File | null = null;
   sameNumberError = false;
   contactNumberError1 = false;
   contactNumberError2 = false;
@@ -49,17 +51,12 @@ export class EditCompanyDetailsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private companyService: CertificateCompanyService,
-    private location: Location,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
-  onBack(): void {
-    this.location.back();
-  }
-
   ngOnInit(): void {
-    // Initialize form
     this.companyForm = this.fb.group({
       registrationNumber: ['', Validators.required],
       taxId: ['', Validators.required],
@@ -71,22 +68,24 @@ export class EditCompanyDetailsComponent implements OnInit {
       address: ['', Validators.required],
     });
 
-    // Read companyId from route params
-    this.route.params.subscribe((params) => {
-      this.companyId = +params['id'];
-      this.loadCompanyDetails();
-    });
-
-    // Dynamic validation
+    // Dynamic phone validation for phone1
     this.companyForm.get('phoneCode1')?.valueChanges.subscribe((code) => {
       this.setPhoneValidators('phone1', code, true);
     });
+    // Dynamic phone validation for phone2
     this.companyForm.get('phoneCode2')?.valueChanges.subscribe((code) => {
       this.setPhoneValidators('phone2', code, false);
     });
+
+    this.route.params.subscribe((params) => {
+      if (params['id']) {
+        this.isEditMode = true;
+        this.companyId = +params['id'];
+        this.loadCompanyDetails();
+      }
+    });
   }
 
-  // Load existing company details
   private loadCompanyDetails(): void {
     this.isLoading = true;
     this.companyService.getCompanyById(this.companyId).subscribe({
@@ -94,74 +93,81 @@ export class EditCompanyDetailsComponent implements OnInit {
         this.isLoading = false;
         const company = res.company;
 
+        // Handle null phoneNumber2 - convert to empty string
+        const phoneNumber2 =
+          company.phoneNumber2 === 'null' || company.phoneNumber2 === null
+            ? ''
+            : company.phoneNumber2;
+        const phoneCode2 =
+          company.phoneCode2 === 'null' || company.phoneCode2 === null
+            ? '+94'
+            : company.phoneCode2;
+
         this.companyForm.patchValue({
           registrationNumber: company.regNumber,
           taxId: company.taxId,
           companyName: company.companyName,
-          phoneCode1: company.phoneCode1 || '+94',
+          phoneCode1: company.phoneCode1,
           phone1: company.phoneNumber1,
-          phoneCode2: company.phoneCode2 || '+94',
-          phone2: company.phoneNumber2,
+          phoneCode2: phoneCode2,
+          phone2: phoneNumber2,
           address: company.address,
         });
+        this.logoPreview = company.logo ?? null;
+
+        // Initialize validators after loading data
+        this.setPhoneValidators(
+          'phone1',
+          this.companyForm.get('phoneCode1')?.value,
+          true
+        );
+        this.setPhoneValidators(
+          'phone2',
+          this.companyForm.get('phoneCode2')?.value,
+          false
+        );
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to load company details.',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        }).then(() => {
-          this.router.navigate(['/plant-care/action/view-company-list']);
-        });
+        Swal.fire('Error', 'Failed to load company details', 'error');
+        this.router.navigate(['/plant-care/action/view-company-list']);
       },
     });
   }
 
-  // Apply validators dynamically
-  private setPhoneValidators(
-    field: 'phone1' | 'phone2',
-    dialCode: string,
-    required: boolean
-  ): void {
-    const control = this.companyForm.get(field);
-    if (!control) return;
-
-    const validators = [];
-    if (required) validators.push(Validators.required);
-
-    if (dialCode === '+94') {
-      validators.push(Validators.pattern(/^[0-9]{9}$/));
-    } else {
-      validators.push(Validators.pattern(/^[0-9]*$/));
-    }
-
-    control.setValidators(validators);
-    control.updateValueAndValidity();
-  }
-
-  allowOnlyNumbers(event: KeyboardEvent): void {
-    if (!/[0-9]/.test(event.key)) {
-      event.preventDefault();
+  // Add this method to your component class
+  openFilePicker(): void {
+    const fileInput = document.getElementById('logo') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
     }
   }
 
-  getFlagUrl(code: string): string {
-    return `https://flagcdn.com/w20/${code.toLowerCase()}.png`;
-  }
+  // Your existing onLogoChange method remains the same
+  onLogoChange(event: any): void {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-  validateContactNumbers(): void {
-    const phone1 = this.companyForm.get('phone1')?.value;
-    const phone2 = this.companyForm.get('phone2')?.value;
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File',
+        text: 'Please select a valid image file.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
 
-    this.sameNumberError = phone1 && phone2 && phone1 === phone2;
-    this.contactNumberError1 = phone1 && phone1.length !== 9;
-    this.contactNumberError2 =
-      phone2 && phone2.length > 0 && phone2.length !== 9;
+    this.logoFile = file;
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      this.logoPreview = e.target?.result ?? null;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSubmit(): void {
@@ -182,22 +188,29 @@ export class EditCompanyDetailsComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const formValue = this.companyForm.value;
+    const formData = new FormData();
+    const val = this.companyForm.value;
 
-    const company: CertificateCompany = {
-      id: this.companyId,
-      companyName: formValue.companyName,
-      regNumber: formValue.registrationNumber,
-      taxId: formValue.taxId,
-      phoneCode1: formValue.phoneCode1,
-      phoneNumber1: formValue.phone1,
-      phoneCode2: formValue.phoneCode2,
-      phoneNumber2: formValue.phone2,
-      address: formValue.address,
-    };
+    formData.append('companyName', val.companyName);
+    formData.append('regNumber', val.registrationNumber);
+    formData.append('taxId', val.taxId);
+    formData.append('phoneCode1', val.phoneCode1);
+    formData.append('phoneNumber1', val.phone1);
+    formData.append('phoneCode2', val.phoneCode2);
 
-    this.companyService.updateCompany(this.companyId, company).subscribe({
-      next: (res: { message: string; status: boolean }) => {
+    // Only append phoneNumber2 if it has a value and is not empty/null
+    if (val.phone2 && val.phone2.trim() !== '' && val.phone2 !== 'null') {
+      formData.append('phoneNumber2', val.phone2);
+    }
+
+    formData.append('address', val.address);
+
+    if (this.logoFile) {
+      formData.append('logo', this.logoFile);
+    }
+
+    this.companyService.updateCompany(this.companyId, formData).subscribe({
+      next: (res) => {
         this.isLoading = false;
         Swal.fire({
           icon: 'success',
@@ -218,9 +231,7 @@ export class EditCompanyDetailsComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text:
-            err.error?.message ||
-            'Failed to update company details. Please try again.',
+          text: err.error?.message || 'Failed to update company details.',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',
@@ -230,7 +241,78 @@ export class EditCompanyDetailsComponent implements OnInit {
     });
   }
 
+  // Apply validators dynamically
+  private setPhoneValidators(
+    field: 'phone1' | 'phone2',
+    dialCode: string,
+    required: boolean
+  ): void {
+    const control = this.companyForm.get(field);
+    if (!control) return;
+
+    const validators = [];
+    if (required) {
+      validators.push(Validators.required);
+    }
+
+    if (dialCode === '+94') {
+      validators.push(Validators.pattern(/^[0-9]{9}$/)); // exactly 9 digits
+    } else {
+      validators.push(Validators.pattern(/^[0-9]*$/)); // only numbers, any length
+    }
+
+    control.setValidators(validators);
+    control.updateValueAndValidity();
+  }
+
+  // Prevent non-numeric input
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    if (!/[0-9]/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  getFlagUrl(code: string): string {
+    return `https://flagcdn.com/w20/${code.toLowerCase()}.png`;
+  }
+
+  validateContactNumbers(): void {
+    const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
+    const phone1 = this.companyForm.get('phone1')?.value;
+    const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
+    const phone2 = this.companyForm.get('phone2')?.value;
+
+    // Check if numbers are the same
+    this.sameNumberError = phone1 && phone2 && phone1 === phone2;
+
+    // Check Sri Lanka number validation
+    this.contactNumberError1 =
+      phoneCode1 === '+94' && phone1 && phone1.length !== 9;
+    this.contactNumberError2 =
+      phoneCode2 === '+94' &&
+      phone2 &&
+      phone2.length > 0 &&
+      phone2.length !== 9;
+  }
+
+  isInvalidMobileNumber(field: 'phone1' | 'phone2'): boolean {
+    const control = this.companyForm.get(field);
+    const dialCode =
+      field === 'phone1'
+        ? this.companyForm.get('phoneCode1')?.value
+        : this.companyForm.get('phoneCode2')?.value;
+
+    if (dialCode === '+94') {
+      return !!(control?.value && !/^[0-9]{9}$/.test(control.value));
+    }
+    return !!(control?.value && !/^[0-9]*$/.test(control.value));
+  }
+
   onCancel(): void {
+    this.location.back();
+  }
+
+  onBack(): void {
     this.location.back();
   }
 }

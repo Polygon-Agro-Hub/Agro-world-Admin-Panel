@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -34,6 +34,13 @@ export class AddCompanyDetailsComponent implements OnInit {
   sameNumberError = false;
   contactNumberError1 = false;
   contactNumberError2 = false;
+
+  // Logo related
+  @ViewChild('logoInput', { static: false })
+  logoInput!: ElementRef<HTMLInputElement>;
+  logoFile: File | null = null;
+  logoPreview: string | ArrayBuffer | null = null;
+  logoError = false;
 
   countries = [
     { name: 'Sri Lanka', code: 'LK', dialCode: '+94' },
@@ -139,15 +146,105 @@ export class AddCompanyDetailsComponent implements OnInit {
       phone2 && phone2.length > 0 && phone2.length !== 9;
   }
 
+  // Logo helpers
+  openFilePicker(): void {
+    // prefer ViewChild if available
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.click();
+    } else {
+      const el = document.getElementById('logo') as HTMLInputElement | null;
+      if (el) el.click();
+    }
+  }
+
+  onLogoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input || !input.files || input.files.length === 0) {
+      this.logoError = true;
+      this.logoFile = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    const file = input.files[0];
+
+    // Validate file type (image only)
+    if (!file.type.startsWith('image/')) {
+      this.logoError = true;
+      this.logoFile = null;
+      this.logoPreview = null;
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File',
+        text: 'Please select an image file (png, jpg, jpeg, webp, etc.).',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      input.value = ''; // clear the value
+      return;
+    }
+
+    // check file size (example: < 5MB)
+    const maxSizeBytes = 5 * 1024 * 1024; // 2 MB
+    if (file.size > maxSizeBytes) {
+      this.logoError = true;
+      this.logoFile = null;
+      this.logoPreview = null;
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'Logo must be smaller than 5 MB.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      input.value = '';
+      return;
+    }
+
+    // All good
+    this.logoError = false;
+    this.logoFile = file;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.logoPreview = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeLogo(): void {
+    this.logoFile = null;
+    this.logoPreview = null;
+    this.logoError = false;
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.value = '';
+    } else {
+      const el = document.getElementById('logo') as HTMLInputElement | null;
+      if (el) el.value = '';
+    }
+  }
+
+  // Submit
   onSubmit(): void {
     this.companyForm.markAllAsTouched();
     this.validateContactNumbers();
 
-    if (this.companyForm.invalid || this.sameNumberError) {
+    // enforce logo required
+    if (!this.logoFile) {
+      this.logoError = true;
+    }
+
+    if (this.companyForm.invalid || this.sameNumberError || this.logoError) {
       Swal.fire({
         icon: 'error',
         title: 'Invalid Input',
-        text: 'Please fix the errors before submitting.',
+        text: this.logoError
+          ? 'Please upload a valid company logo.'
+          : 'Please fix the errors before submitting.',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
@@ -159,18 +256,21 @@ export class AddCompanyDetailsComponent implements OnInit {
     this.isLoading = true;
     const formValue = this.companyForm.value;
 
-    const company: CertificateCompany = {
-      companyName: formValue.companyName,
-      regNumber: formValue.registrationNumber,
-      taxId: formValue.taxId,
-      phoneCode1: formValue.phoneCode1,
-      phoneNumber1: formValue.phone1,
-      phoneCode2: formValue.phoneCode2,
-      phoneNumber2: formValue.phone2,
-      address: formValue.address,
-    };
+    // Build FormData for multipart/form-data
+    const formData = new FormData();
+    formData.append('companyName', formValue.companyName);
+    formData.append('regNumber', formValue.registrationNumber);
+    formData.append('taxId', formValue.taxId);
+    formData.append('phoneCode1', formValue.phoneCode1);
+    formData.append('phoneNumber1', formValue.phone1);
+    formData.append('phoneCode2', formValue.phoneCode2 || '');
+    formData.append('phoneNumber2', formValue.phone2 || '');
+    formData.append('address', formValue.address);
+    if (this.logoFile) {
+      formData.append('logo', this.logoFile, this.logoFile.name);
+    }
 
-    this.companyService.createCompany(company).subscribe({
+    this.companyService.createCompany(formData).subscribe({
       next: (res: { message: string; status: boolean; id?: number }) => {
         this.isLoading = false;
         Swal.fire({
@@ -187,6 +287,7 @@ export class AddCompanyDetailsComponent implements OnInit {
           this.router.navigate(['/plant-care/action/view-company-list']);
         });
         this.companyForm.reset({ phoneCode1: '+94', phoneCode2: '+94' });
+        this.removeLogo();
       },
       error: (err: any) => {
         this.isLoading = false;
@@ -207,5 +308,6 @@ export class AddCompanyDetailsComponent implements OnInit {
 
   onCancel(): void {
     this.companyForm.reset({ phoneCode1: '+94', phoneCode2: '+94' });
+    this.removeLogo();
   }
 }

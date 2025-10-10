@@ -27,7 +27,8 @@
       <h2
         class="text-xl text-left text-textLight dark:text-textDark font-bold mb-2"
       >
-        GoVi Link Jobs {{ hasData ? '(' + (jobs.length | number : "2.0") + ')' : '' }}
+        GoVi Link Jobs
+        {{ hasData ? "(" + (jobs.length | number : "2.0") + ")" : "" }}
       </h2>
 
       <div class="flex flex-row gap-x-3 items-center justify-center">
@@ -260,13 +261,15 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <span
-                class="px-2 py-2 rounded-lg text-xs font-medium"
+                class="px-2 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
                 [ngClass]="{
-                  'bg-green-100 text-green-800':
+                  'bg-green-100 text-green-800 cursor-pointer hover:bg-green-200':
                     job.assignStatus === 'Assigned',
-                  'bg-yellow-100 text-yellow-800':
+                  'bg-yellow-100 text-yellow-800 cursor-pointer hover:bg-yellow-200':
                     job.assignStatus === 'Not Assigned'
                 }"
+                (click)="onAssignStatusClick(job)"
+                title="Click to assign or view officer"
               >
                 {{ job.assignStatus }}
               </span>
@@ -345,5 +348,226 @@
     >
       Close
     </button>
+  </div>
+</div>
+
+<!-- Assign Inspector Popup -->
+<div
+  *ngIf="isAssignPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="assignPopupClose()"
+>
+  <div
+    class="bg-[#FFFFFF] dark:bg-tileBlack p-6 rounded-lg shadow-md w-96 max-h-[90vh] overflow-y-auto flex flex-col justify-center items-center"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Popup Header -->
+    <div class="flex justify-center items-center mb-4 px-10">
+      <h3 class="text-lg font-semibold dark:text-white">
+        {{
+          currentAssignedOfficer
+            ? "Change Assigned Inspector"
+            : "Assign Inspector"
+        }}
+      </h3>
+    </div>
+
+    <!-- Officer Role Selection -->
+    <div class="mb-4 w-80">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+      >
+        Officer Role *
+      </label>
+      <p-dropdown
+        [options]="officerRoleOptions"
+        [(ngModel)]="selectedOfficerRole"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="-- Select Officer Role --"
+        [showClear]="false"
+        (onChange)="onOfficerRoleChange()"
+        styleClass="w-full border border-2 rounded-lg h-10 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] h-12"
+      >
+      </p-dropdown>
+    </div>
+
+    <!-- Officer Selection -->
+    <div class="mb-4 w-80">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+      >
+        Officer *
+      </label>
+      <p-dropdown
+        [options]="availableOfficers"
+        [(ngModel)]="selectedOfficerId"
+        optionLabel="displayName"
+        optionValue="empId"
+        placeholder="{{
+          currentAssignedOfficer
+            ? '--Select new officer--'
+            : '--Select officer--'
+        }}"
+        [showClear]="true"
+        [disabled]="!selectedOfficerRole || isLoadingOfficers"
+        (onChange)="onOfficerSelected()"
+        styleClass="w-full border border-2 rounded-lg h-10 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] h-12"
+      >
+        <ng-template pTemplate="empty">
+          <div class="p-2 text-center text-gray-500">
+            {{
+              selectedOfficerRole
+                ? "No officers available"
+                : "Please select a role first"
+            }}
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <div *ngIf="isLoadingOfficers" class="text-sm text-gray-500 mt-1">
+        Loading officers...
+      </div>
+    </div>
+
+    <!-- Selected Officer Info -->
+    <div
+      *ngIf="selectedOfficerInfo"
+      class="mb-4 p-5 text-center rounded-lg border border-blue-500 w-80"
+    >
+      <p class="text-sm text-textLight dark:text-textDark">
+        {{ selectedOfficerInfo.empId }} - {{ selectedOfficerInfo.firstName }}
+        {{ selectedOfficerInfo.lastName }}
+      </p>
+      <p class="text-sm text-textLight dark:text-textDark">
+        Distrct: {{ selectedOfficerInfo.distrct }}
+      </p>
+      <p class="text-sm text-textLight dark:text-textDark">Count:</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-center gap-3 mt-4">
+      <div class="flex gap-3 ml-auto">
+        <button
+          (click)="assignPopupClose()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          (click)="assignOfficer()"
+          [disabled]="!selectedOfficerId || isAssigning"
+          class="px-4 py-2 text-sm font-medium text-white bg-[#3980C0] rounded-lg hover:bg-[#2c6da3] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+        >
+          <i *ngIf="isAssigning" class="fa-solid fa-spinner fa-spin"></i>
+          {{
+            currentAssignedOfficer &&
+            selectedOfficerId === currentAssignedOfficer.empId
+              ? "Keep"
+              : currentAssignedOfficer
+              ? "Change"
+              : "Assign"
+          }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div
+      *ngIf="assignError"
+      class="mt-3 p-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded text-sm"
+    >
+      {{ assignError }}
+    </div>
+  </div>
+</div>
+
+<!-- Completed Job Warning Popup -->
+<div
+  *ngIf="isCompletedJobPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="completedJobPopupClose()"
+>
+  <div
+    class="bg-[#FFFFFF] dark:bg-tileBlack px-20 py-10 rounded-lg shadow-md w-96 max-h-[90vh] overflow-y-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Warning Message -->
+    <div class="mb-6">
+      <p class="text-center text-textLight dark:text-textDark">
+        You can’t assign an officer to the task because the task has already
+        been completed.
+      </p>
+    </div>
+
+    <!-- Action Button -->
+    <div class="flex justify-center gap-3 mt-6">
+      <button
+        (click)="completedJobPopupClose()"
+        class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-[#2c6da3] hover:text-white transition-colors"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- View Job Details Popup -->
+<div
+  *ngIf="isViewJobPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  (click)="closeViewJobPopup()"
+>
+  <div
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md w-full max-w-md"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Popup Header -->
+    <div class="flex justify-center items-center p-6 mt-6">
+      <h3 class="text-xl font-semibold dark:text-white">Request</h3>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoadingJobDetails" class="p-8 flex justify-center">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+
+    <!-- Job Details Content -->
+    <div *ngIf="jobDetails && !isLoadingJobDetails" class="p-6">
+      <div class="space-y-4">
+        <!-- Farmer Name -->
+        <div
+          class="flex flex-col justify-center text-center items-start text-textLight dark:text-textDark px-10"
+        >
+          <span class=""
+            >Farmer Name : {{ jobDetails.farmerName || "N/A" }}</span
+          ><br />
+
+          <span class="">Farmer NIC : {{ jobDetails.farmerNIC || "N/A" }}</span
+          ><br />
+
+          <span class="">Service : {{ jobDetails.serviceName || "N/A" }}</span
+          ><br />
+
+          <span class="">Farm : {{ jobDetails.farmName || "N/A" }}</span
+          ><br />
+          <span class=""
+            >Crop : {{ jobDetails.crops || "No crops assigned" }}</span
+          ><br />
+          <span class=""
+            >Schedule Date : {{ jobDetails.scheduledDate || "N/A" }}</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-center gap-3 p-6">
+      <button
+        (click)="closeViewJobPopup()"
+        class="px-6 py-2 text-sm font-medium text-gray-500 bg-gray-200 rounded-lg hover:bg-[#2c6da3] hover:text-white transition-colors"
+      >
+        Cancel
+      </button>
+    </div>
   </div>
 </div>

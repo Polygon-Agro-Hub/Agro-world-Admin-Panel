@@ -11,16 +11,16 @@ export class AssetsService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  getAllBuildingFixedAsset(itemId: number, category: any ,farmId:number): Observable<any> {
+  getAllBuildingFixedAsset(itemId: number, category: any, farmId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    
+
     console.log("itemId", itemId);
     console.log("category", category);
     console.log("farmId", farmId);
@@ -34,42 +34,42 @@ export class AssetsService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    
+
     console.log("buildingAssetId", buildingAssetId);
 
     let url = `${this.apiUrl}auth/get-fixed-assets/building-ownership/${buildingAssetId}`;
 
     return this.http.get<any>(url, { headers });
   }
-  
+
   getLandOwnershipDetails(landAssetId: number): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
-  
-  console.log("landAssetId", landAssetId);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-  let url = `${this.apiUrl}auth/get-fixed-assets/land-ownership/${landAssetId}`;
+    console.log("landAssetId", landAssetId);
 
-  return this.http.get<any>(url, { headers });
-}
+    let url = `${this.apiUrl}auth/get-fixed-assets/land-ownership/${landAssetId}`;
 
-  getCurrentAssertById(userId: string): Observable<any> {
+    return this.http.get<any>(url, { headers });
+  }
+
+  getCurrentAssertById(userId: string, farmId: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
     return this.http.get<any>(
-      `${this.apiUrl}auth/get-current-assert/${userId}`,
+      `${this.apiUrl}auth/get-current-assert/${userId}/${farmId}`,
       { headers },
     );
   }
 
-  getAllCurrentAsset(userId: number, category: string): Observable<any> {
+  getAllCurrentAsset(userId: number, category: string ,farmId:number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    let url = `${this.apiUrl}auth/get-current-assets-view/${userId}/${category}`;
+    let url = `${this.apiUrl}auth/get-current-assets-view/${userId}/${category}/${farmId}`;
     let res = this.http.get<any>(url, { headers });
     console.log(res);
 

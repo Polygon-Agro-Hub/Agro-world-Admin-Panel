@@ -145,7 +145,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
         return 'status-approved';
       case 'Rejected':
         return 'status-rejected';
-      case 'Not Approved':
+      case 'Not Aproved'://spelling mistake is in the database also
         return 'status-not-approved';
       default:
         return 'status-pending';

@@ -181,18 +181,18 @@
           >
             Assigned Districts *
           </label>
-          <p-dropdown
+          <p-multiSelect
             id="assignDistrict"
             [(ngModel)]="personalData.assignDistrict"
             [options]="districts"
             optionLabel="name"
             optionValue="name"
-            placeholder="Select a district"
+            placeholder="Select districts"
             [filter]="true"
-            [showClear]="false"
-            styleClass="w-full mt-1"
-            class="mt-1 block w-full p-dropdown-custom"
+            [showClear]="true"
+            [styleClass]="'mt-1 w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
             [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }"
+            selectedItemsLabel="{0} districts selected"
           />
           <!-- <span class="text-red-600 text-sm"
             >Collection Centre Name is a required field</span
@@ -209,7 +209,7 @@
           <div class="relative mt-1" tabindex="0" (blur)="closeDropdown()">
             <!-- Selected option -->
             <div
-              class="cursor-pointer flex justify-between items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              class="cursor-pointer flex justify-between items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-[#061E2C] text-gray-700 dark:text-gray-300"
               (click)="toggleDropdown()"
             >
               {{ personalData.jobRole || "Select a Job Role" }}
@@ -673,7 +673,6 @@
             filterBy="name"
             placeholder="Select a district"
             class="mt-1 block w-full"
-            [showClear]="true"
             [autoDisplayFirst]="false"
             required
             styleClass="w-full mt-1"

@@ -1,0 +1,53 @@
+/* Add any custom styles if needed */
+.view-field {
+  background-color: inherit;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+}
+
+.dark .view-field {
+  border-color: #4b5563;
+}
+
+/* Modal animations */
+.modal-enter {
+  animation: modalEnter 0.3s ease-out;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scrollbar styling for modal */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.dark .modal-content::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.dark .modal-content::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}

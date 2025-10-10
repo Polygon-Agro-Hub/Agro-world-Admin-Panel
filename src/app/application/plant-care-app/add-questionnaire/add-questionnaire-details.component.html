@@ -73,7 +73,6 @@
               type="button"
               class="text-red-500 disabled:text-red-400 disabled:bg-gray-100 disabled:cursor-not-allowed px-3 py-2 bg-red-100 rounded-md"
               (click)="deleteQuestion(i)"
-              [disabled]="isAnyQuestionEditing() && !q.value.editing"
             >
               <i class="fa-solid fa-trash"></i>
             </button>
@@ -197,6 +196,7 @@
       <button
         type="button"
         class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40"
+        (click)="onCancel()"
       >
         Cancel
       </button>

@@ -11,14 +11,13 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
   styleUrl: './govilink.component.css',
 })
 export class GovilinkComponent {
-
   popupVisibleCollectionCenter = false;
   popupVisibleComplains = false;
   popupVisibleMarketPrice = false;
   popupVisibleCompanys = false;
   popupVisibleAG = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
@@ -66,14 +65,18 @@ export class GovilinkComponent {
     this.router.navigate(['/govi-link/action/add-a-company']);
   }
 
-    addService(): void {
+  addService(): void {
     this.router.navigate(['/govi-link/action/add-services']);
   }
 
-     addviewService(): void {
+  addviewService(): void {
     this.router.navigate(['/govi-link/action/view-services-list']);
   }
   viewCompanyList(): void {
     this.router.navigate(['/govi-link/action/view-company-list']);
+  }
+
+  assignGoViLinkJobs(): void {
+    this.router.navigate(['/govi-link/action/view-govi-link-jobs']);
   }
 }

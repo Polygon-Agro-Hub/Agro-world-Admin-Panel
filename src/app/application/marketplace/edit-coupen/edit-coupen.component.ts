@@ -198,9 +198,10 @@ export class EditCoupenComponent {
       `,
       confirmButtonText: 'OK',
       customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      }
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
     });
     return;
   }

@@ -15,6 +15,58 @@
 
   <form [formGroup]="companyForm" (ngSubmit)="onSubmit()">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Logo Upload -->
+      <div class="my-3 md:col-span-2">
+        <div class="flex items-center gap-4">
+          <label
+            for="logo"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
+            Add Logo *
+          </label>
+
+          <!-- Upload Button -->
+          <button
+            type="button"
+            class="flex items-center gap-2 bg-gray-100 hover:bg-gray-600 text-white px-3 py-3 rounded-md border-2 border-[#3980C0]"
+            (click)="openFilePicker()"
+          >
+            <i class="fa-solid fa-plus text-gray-500 hover:text-gray-100"></i>
+          </button>
+          <!-- Logo Preview -->
+          <div
+            class="w-11 h-11 border border-gray-300 rounded-md flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800"
+          >
+            <img
+              *ngIf="logoPreview"
+              [src]="logoPreview"
+              alt="Company Logo"
+              class="object-cover w-full h-full"
+            />
+            <i
+              *ngIf="!logoPreview"
+              class="fa-solid fa-image text-gray-400 text-3xl"
+            ></i>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <!-- Hidden File Input -->
+          <input
+            type="file"
+            #logoInput
+            id="logo"
+            accept="image/*"
+            (change)="onLogoSelected($event)"
+            hidden
+          />
+        </div>
+
+        <!-- Validation error -->
+        <div *ngIf="logoError" class="text-red-500 text-sm mt-2">
+          Please upload a valid image file.
+        </div>
+      </div>
+
       <!-- Registration Number -->
       <div class="my-3">
         <label

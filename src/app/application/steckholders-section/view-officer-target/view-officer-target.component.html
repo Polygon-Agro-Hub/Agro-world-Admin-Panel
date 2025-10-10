@@ -26,9 +26,11 @@
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
             [options]="statusOptions"
             [checkmark]="true"
-            optionLabel="role"
-            [showClear]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="!!selectStatus"
             [(ngModel)]="selectStatus"
+            name="selectStatus"
             placeholder="Status"
             (onChange)="filterStatus()"
           />

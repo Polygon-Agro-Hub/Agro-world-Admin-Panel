@@ -1,0 +1,14 @@
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+    background-color: #3a4160 !important;
+    color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}

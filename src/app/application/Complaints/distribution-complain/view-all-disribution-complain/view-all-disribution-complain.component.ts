@@ -1,27 +1,25 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Dropdown, DropdownModule } from 'primeng/dropdown';
-import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
-import { TokenService } from '../../../services/token/services/token.service';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
 import { Router } from '@angular/router';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { environment } from '../../../../environment/environment.development';
 import Swal from 'sweetalert2';
-import { environment } from '../../../environment/environment';
+import { ComplaintsService } from '../../../../services/complaints/complaints.service';
 
 @Component({
-  selector: 'app-collection-center-view-complain',
+  selector: 'app-view-all-disribution-complain',
   standalone: true,
   imports: [CommonModule, DropdownModule, NgxPaginationModule, FormsModule, LoadingSpinnerComponent],
-  providers: [DatePipe],
-  templateUrl: './collection-center-view-complain.component.html',
-  styleUrl: './collection-center-view-complain.component.css',
+  templateUrl: './view-all-disribution-complain.component.html',
+  styleUrl: './view-all-disribution-complain.component.css'
 })
-export class CollectionCenterViewComplainComponent implements OnInit {
-
+export class ViewAllDisributionComplainComponent {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
@@ -59,11 +57,12 @@ export class CollectionCenterViewComplainComponent implements OnInit {
 
   constructor(
     private complainSrv: CollectionCenterService,
-    private datePipe: DatePipe,
+    // private datePipe: DatePipe,
     private router: Router,
     // private tokenService: TokenService,
     private http: HttpClient,
     public tokenService: TokenService,
+    private distributedComplainSrv: ComplaintsService
   ) { }
 
 
@@ -72,28 +71,28 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   ngOnInit(): void {
 
 
-    this.status = [
-      { id: 1, type: "Assigned" },
-      { id: 2, type: "Pending" },
-      { id: 3, type: "Closed" },
-    ];
+    // this.status = [
+    //   { id: 1, type: "Assigned" },
+    //   { id: 2, type: "Pending" },
+    //   { id: 3, type: "Closed" },
+    // ];
 
-    this.category = [
-      { id: 1, type: "Agriculture" },
-      { id: 2, type: "Finance" },
-      { id: 3, type: "Call Center" },
-      { id: 4, type: "Procuiment" },
-    ];
+    // this.category = [
+    //   { id: 1, type: "Agriculture" },
+    //   { id: 2, type: "Finance" },
+    //   { id: 3, type: "Call Center" },
+    //   { id: 4, type: "Procuiment" },
+    // ];
 
-    if (this.tokenService.getUserDetails().role === "2") {
-      this.filterCategory.type = "Agriculture";
-    } else if (this.tokenService.getUserDetails().role === "3") {
-      this.filterCategory.type = "Finance";
-    } else if (this.tokenService.getUserDetails().role === "4") {
-      this.filterCategory.type = "Call Center";
-    } else if (this.tokenService.getUserDetails().role === "5") {
-      this.filterCategory.type = "Procuiment";
-    }
+    // if (this.tokenService.getUserDetails().role === "2") {
+    //   this.filterCategory.type = "Agriculture";
+    // } else if (this.tokenService.getUserDetails().role === "3") {
+    //   this.filterCategory.type = "Finance";
+    // } else if (this.tokenService.getUserDetails().role === "4") {
+    //   this.filterCategory.type = "Call Center";
+    // } else if (this.tokenService.getUserDetails().role === "5") {
+    //   this.filterCategory.type = "Procuiment";
+    // }
 
     console.log(this.filterCategory);
     this.fetchAllComplain(this.page, this.itemsPerPage);
@@ -103,7 +102,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    this.complainSrv
+    this.distributedComplainSrv
       .getAllCenterComplain(
         page,
         limit,
@@ -167,9 +166,9 @@ export class CollectionCenterViewComplainComponent implements OnInit {
 
   fetchComplain(id: any, farmerName: string, language: string) {
     this.isLoading = true;
-    this.complainSrv.getCenterComplainById(id).subscribe((res) => {
-      res.createdAt =
-        this.datePipe.transform(res.createdAt, "yyyy-MM-dd hh:mm:ss a");
+    this.distributedComplainSrv.getDistributionComplainById(id).subscribe((res) => {
+      // res.createdAt =
+      //   this.datePipe.transform(res.createdAt, "yyyy-MM-dd hh:mm:ss a");
       this.complain = res;
       console.log(res);
       this.isLoading = false;
@@ -186,51 +185,51 @@ export class CollectionCenterViewComplainComponent implements OnInit {
 
 
 
-  submitComplaint(id: any) {
-    const token = this.tokenService.getToken();
-    if (!token) {
-      console.error("No token found");
-      return;
-    }
+  // submitComplaint(id: any) {
+  //   const token = this.tokenService.getToken();
+  //   if (!token) {
+  //     console.error("No token found");
+  //     return;
+  //   }
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`,
+  //   });
 
-    console.log(id);
-    console.log(this.messageContent);
+  //   console.log(id);
+  //   console.log(this.messageContent);
 
-    const body = { reply: this.messageContent };
+  //   const body = { reply: this.messageContent };
 
-    this.http
-      .put(`${environment.API_URL}auth/reply-center-complain/${id}`, body, { headers })
-      .subscribe(
-        (res: any) => {
-          console.log("Reply sent successfully", res);
+  //   this.http
+  //     .put(`${environment.API_URL}auth/reply-center-complain/${id}`, body, { headers })
+  //     .subscribe(
+  //       (res: any) => {
+  //         console.log("Reply sent successfully", res);
 
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: "Reply sent successfully!",
-              customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-          });
-          this.fetchAllComplain(this.page, this.itemsPerPage);
-        },
-        (error) => {
-          console.error("Error updating news", error);
+  //         Swal.fire({
+  //           icon: "success",
+  //           title: "Success",
+  //           text: "Reply sent successfully!",
+  //           customClass: {
+  //             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+  //             title: 'font-semibold',
+  //           },
+  //         });
+  //         this.fetchAllComplain(this.page, this.itemsPerPage);
+  //       },
+  //       (error) => {
+  //         console.error("Error updating news", error);
 
-          Swal.fire({
-            icon: "error",
-            title: "Unsuccessful",
-            text: "Error updating news",
-          });
-          this.fetchAllComplain(this.page, this.itemsPerPage);
-        },
-      );
-  }
+  //         Swal.fire({
+  //           icon: "error",
+  //           title: "Unsuccessful",
+  //           text: "Error updating news",
+  //         });
+  //         this.fetchAllComplain(this.page, this.itemsPerPage);
+  //       },
+  //     );
+  // }
 
 
 

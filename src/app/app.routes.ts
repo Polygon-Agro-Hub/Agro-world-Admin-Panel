@@ -209,6 +209,7 @@ import { EditFiealdOfficerComponent } from './application/steckholders-section/e
 import { EditCertificateDetailsComponent } from './application/plant-care-app/edit-certificate/edit-certificate-details';
 import { ViewCertificateDetailsComponent } from './application/plant-care-app/view-certificate/view-certificate-details';
 import { ViewGoviLinkJobsComponent } from './application/govi-link/view-govi-link-jobs/view-govi-link-jobs';
+import { ViewAllDisributionComplainComponent } from './application/Complaints/distribution-complain/view-all-disribution-complain/view-all-disribution-complain.component';
 
 export const routes: Routes = [
   {
@@ -1191,6 +1192,15 @@ export const routes: Routes = [
             path: 'selected-wholesale-complaints/:id',
             component: SelectedwholesaleComplaintsComponent,
           },
+          {
+            path:'distributed-center-complains',
+            children:[
+              {
+                path:'',
+                component:ViewAllDisributionComplainComponent
+              }
+            ]
+          }
         ],
       },
       {

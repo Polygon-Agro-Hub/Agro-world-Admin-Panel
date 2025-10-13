@@ -758,6 +758,14 @@ export const routes: Routes = [
               {
                 path: 'edit-field-officer/:id',
                 component: EditFiealdOfficerComponent,
+              },
+              {
+                path: 'stakholder-collection-centers',
+                component: CollectionAllViewComponent,
+              },
+              {
+                path: 'stakholder-distributed-centers',
+                component: ViewPolygonCentersComponent,
               }
 
             ],

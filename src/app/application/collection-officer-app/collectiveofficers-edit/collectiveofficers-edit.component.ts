@@ -8,6 +8,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { CollectionService } from '../../../services/collection.service';
 
 interface Bank {
   ID: number;
@@ -138,7 +139,9 @@ export class CollectiveofficersEditComponent {
     private route: ActivatedRoute,
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
-    private collectionOfficerService: CollectionOfficerService
+    private collectionOfficerService: CollectionOfficerService,
+    private collectionService: CollectionService,
+
   ) { }
 
   ngOnInit() {
@@ -148,65 +151,7 @@ export class CollectiveofficersEditComponent {
     this.itemId = this.route.snapshot.params['id'];
 
     if (this.itemId) {
-      this.isLoading = true;
-      this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
-        next: (response: any) => {
-          console.log('Officer Data Response:', response);
-          const officerData = response.officerData[0];
-
-          this.personalData.empId = officerData.empId || '';
-          this.personalData.jobRole = officerData.jobRole || '';
-          this.personalData.firstNameEnglish = officerData.firstNameEnglish || '';
-          this.personalData.firstNameSinhala = officerData.firstNameSinhala || '';
-          this.personalData.firstNameTamil = officerData.firstNameTamil || '';
-          this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
-          this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
-          this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-          this.personalData.contact1Code = officerData.phoneCode01 || '+94';
-          this.personalData.contact1 = officerData.phoneNumber01 || '';
-          this.personalData.contact2Code = officerData.phoneCode02 || '+94';
-          this.personalData.contact2 = officerData.phoneNumber02 || '';
-          this.personalData.nic = officerData.nic || '';
-          this.personalData.email = officerData.email || '';
-          this.personalData.houseNumber = officerData.houseNumber || '';
-          this.personalData.streetName = officerData.streetName || '';
-          this.personalData.city = officerData.city || '';
-          this.personalData.district = officerData.district || '';
-          this.personalData.province = officerData.province || '';
-          this.personalData.languages = officerData.languages || '';
-          
-          // Handle null values for IDs
-          this.personalData.companyId = officerData.companyId || null;
-          this.personalData.centerId = officerData.centerId || null;
-          this.personalData.irmId = officerData.irmId || null;
-          
-          this.personalData.bankName = officerData.bankName || '';
-          this.personalData.branchName = officerData.branchName || '';
-          this.personalData.accHolderName = officerData.accHolderName || '';
-          this.personalData.accNumber = officerData.accNumber || '';
-          this.personalData.confirmAccNumber = officerData.accNumber || '';
-          this.personalData.empType = officerData.empType || '';
-          this.personalData.image = officerData.image || '';
-
-          this.selectedLanguages = this.personalData.languages
-            ? this.personalData.languages.split(',')
-            : [];
-          this.empType = this.personalData.empType;
-          this.lastID = this.personalData.empId.slice(-5);
-          this.cenId = this.personalData.centerId || 0;
-          this.comId = this.personalData.companyId || 0;
-          this.initiateJobRole = officerData.jobRole || '';
-          this.initiateId = officerData.empId.slice(-5);
-
-          this.matchExistingBankToDropdown();
-          this.getAllCollectionManagers();
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching officer data:', error);
-          this.isLoading = false;
-        },
-      });
+      this.fetchData();
     }
 
     this.getAllCollectionCetnter();
@@ -214,13 +159,75 @@ export class CollectiveofficersEditComponent {
     this.EpmloyeIdCreate();
   }
 
+  fetchData() {
+    this.isLoading = true;
+    this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
+      next: (response: any) => {
+        console.log('Officer Data Response:', response);
+        const officerData = response.officerData[0];
+
+        this.personalData.empId = officerData.empId || '';
+        this.personalData.jobRole = officerData.jobRole || '';
+        this.personalData.firstNameEnglish = officerData.firstNameEnglish || '';
+        this.personalData.firstNameSinhala = officerData.firstNameSinhala || '';
+        this.personalData.firstNameTamil = officerData.firstNameTamil || '';
+        this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
+        this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
+        this.personalData.lastNameTamil = officerData.lastNameTamil || '';
+        this.personalData.contact1Code = officerData.phoneCode01 || '+94';
+        this.personalData.contact1 = officerData.phoneNumber01 || '';
+        this.personalData.contact2Code = officerData.phoneCode02 || '+94';
+        this.personalData.contact2 = officerData.phoneNumber02 || '';
+        this.personalData.nic = officerData.nic || '';
+        this.personalData.email = officerData.email || '';
+        this.personalData.houseNumber = officerData.houseNumber || '';
+        this.personalData.streetName = officerData.streetName || '';
+        this.personalData.city = officerData.city || '';
+        this.personalData.district = officerData.district || '';
+        this.personalData.province = officerData.province || '';
+        this.personalData.languages = officerData.languages || '';
+
+        // Handle null values for IDs
+        this.personalData.companyId = officerData.companyId || null;
+        this.personalData.centerId = officerData.centerId || null;
+        this.personalData.irmId = officerData.irmId || null;
+
+        this.personalData.bankName = officerData.bankName || '';
+        this.personalData.branchName = officerData.branchName || '';
+        this.personalData.accHolderName = officerData.accHolderName || '';
+        this.personalData.accNumber = officerData.accNumber || '';
+        this.personalData.confirmAccNumber = officerData.accNumber || '';
+        this.personalData.empType = officerData.empType || '';
+        this.personalData.image = officerData.image || '';
+
+        this.selectedLanguages = this.personalData.languages
+          ? this.personalData.languages.split(',')
+          : [];
+        this.empType = this.personalData.empType;
+        this.lastID = this.personalData.empId.slice(-5);
+        this.cenId = this.personalData.centerId || 0;
+        this.comId = this.personalData.companyId || 0;
+        this.initiateJobRole = officerData.jobRole || '';
+        this.initiateId = officerData.empId.slice(-5);
+
+        this.matchExistingBankToDropdown();
+        this.getAllCollectionManagers();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching officer data:', error);
+        this.isLoading = false;
+      },
+    });
+  }
+
   onCompanyChange(event: any): void {
     console.log('Company changed:', this.personalData.companyId);
-    
+
     // Reset collection center and manager
     this.personalData.centerId = null;
     this.personalData.irmId = null;
-    
+
     // Clear manager options
     this.managerOptions = [];
   }
@@ -241,17 +248,17 @@ export class CollectiveofficersEditComponent {
     const char = String.fromCharCode(event.which);
     const currentValue = input.value;
     const cursorPosition = input.selectionStart || 0;
-    
+
     if (!/[0-9]/.test(char)) {
       event.preventDefault();
       return;
     }
-    
+
     if (cursorPosition === 0 && currentValue.length === 0 && char !== '7') {
       event.preventDefault();
       return;
     }
-    
+
     if (cursorPosition === 0 && char !== '7') {
       event.preventDefault();
     }
@@ -261,15 +268,15 @@ export class CollectiveofficersEditComponent {
     let value = this.personalData[fieldName];
     if (value) {
       value = value.replace(/[^0-9]/g, '');
-      
+
       if (value.length > 0 && value.charAt(0) !== '7') {
         value = value.replace(/^[^7]*/, '');
       }
-      
+
       if (value.length > 9) {
         value = value.substring(0, 9);
       }
-      
+
       this.personalData[fieldName] = value;
     }
   }
@@ -278,7 +285,7 @@ export class CollectiveofficersEditComponent {
     const char = event.key;
 
     if (event.ctrlKey || event.altKey || event.metaKey ||
-        ['Backspace','Delete','Tab','Escape','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(char)) {
+      ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(char)) {
       return;
     }
 
@@ -451,9 +458,9 @@ export class CollectiveofficersEditComponent {
 
   isValidEmail(email: string): boolean {
     if (!email) return false;
-    
+
     const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
-    
+
     if (email.includes('..')) {
       return false;
     }
@@ -463,7 +470,7 @@ export class CollectiveofficersEditComponent {
     if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
       return false;
     }
-    
+
     return emailRegex.test(email);
   }
 
@@ -520,7 +527,7 @@ export class CollectiveofficersEditComponent {
     if (value) {
       value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
       value = value.replace(/\s{2,}/g, ' ');
-      value = value.replace(/\w\S*/g, (txt: string) => 
+      value = value.replace(/\w\S*/g, (txt: string) =>
         txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
       );
       this.personalData.accHolderName = value;
@@ -564,7 +571,7 @@ export class CollectiveofficersEditComponent {
     const char = event.key;
 
     if (event.ctrlKey || event.altKey || event.metaKey ||
-        ['Backspace','Delete','Tab','Escape','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(char)) {
+      ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(char)) {
       return;
     }
 
@@ -1262,7 +1269,7 @@ export class CollectiveofficersEditComponent {
               this.isLoading = false;
               let errorMessage = 'An unexpected error occurred';
               let messages: string[] = [];
-            
+
               if (error.error && Array.isArray(error.error.errors)) {
                 messages = error.error.errors.map((err: string) => {
                   switch (err) {
@@ -1279,14 +1286,14 @@ export class CollectiveofficersEditComponent {
                   }
                 });
               }
-            
+
               if (messages.length > 0) {
                 errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
                 messages.forEach(m => {
                   errorMessage += `<li>${m}</li>`;
                 });
                 errorMessage += '</ul></div>';
-            
+
                 Swal.fire({
                   icon: 'error',
                   title: 'Duplicate Information',
@@ -1303,7 +1310,7 @@ export class CollectiveofficersEditComponent {
               }
             }
           );
-      } 
+      }
     });
   }
 
@@ -1337,7 +1344,7 @@ export class CollectiveofficersEditComponent {
 
   getEmailErrorMessage(email: string): string {
     if (!email) return 'Email is required';
-    
+
     if (email.includes('..')) {
       return 'Email cannot contain consecutive dots';
     }
@@ -1350,7 +1357,7 @@ export class CollectiveofficersEditComponent {
     if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
       return 'Email contains invalid special characters';
     }
-    
+
     return 'Please enter a valid email in the format: example@domain.com';
   }
 
@@ -1362,6 +1369,75 @@ export class CollectiveofficersEditComponent {
       label: district.name,
       value: district.name
     }));
+  }
+
+  resetPassword() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to reset the Collection Officer password. This action cannot be undone.',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, reset password!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        this.collectionService.ChangeStatus(this.itemId, 'Approved').subscribe(
+          (res) => {
+            this.isLoading = false;
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'The Collection Officer password reset successfully.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+              this.fetchData();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Something went wrong. Please try again.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'An error occurred while resetting password. Please try again.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        );
+      }
+    });
   }
 }
 

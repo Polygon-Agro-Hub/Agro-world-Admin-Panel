@@ -254,6 +254,16 @@ deleteFieldOfficer(id: number): Observable<any> {
   return this.http.delete<any>(url, { headers });
 }
 
+deleteFarmStaff(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let url = `${this.apiUrl}auth/delete-farm-staff/${id}`;
+  return this.http.delete<any>(url, { headers });
+}
+
 
 }
 

@@ -630,7 +630,7 @@
             <p-dropdown formControlName="branchName" [options]="branchOptions" optionLabel="label" optionValue="value"
               [filter]="true" filterBy="label" [showClear]="false" [disabled]="!userForm.get('bankName')?.value"
               placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-              class="mt-1 block w-full p-dropdown-custom">
+              class="mt-1 block w-full p-dropdown-custom" readonly>
             </p-dropdown>
             <div *ngIf="
       userForm.get('branchName')?.invalid &&

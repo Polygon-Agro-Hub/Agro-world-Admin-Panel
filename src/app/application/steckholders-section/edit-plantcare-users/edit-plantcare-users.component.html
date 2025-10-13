@@ -48,8 +48,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark">First Name <span
-                class="text-red-500">*</span></label>
+            <label for="firstName" class="block text-sm font-medium text-textLight dark:text-textDark">First Name *</label>
             <input formControlName="firstName" id="firstName" (input)="onNameInput($event, 'firstName')"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             <div *ngIf="
@@ -67,8 +66,7 @@
           </div>
 
           <div>
-            <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark">Last Name <span
-                class="text-red-500">*</span></label>
+            <label for="lastName" class="block text-sm font-medium text-textLight dark:text-textDark">Last Name *</label>
             <input formControlName="lastName" id="lastName" (input)="onNameInput($event, 'lastName')"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
             <div *ngIf="
@@ -86,8 +84,7 @@
           </div>
 
           <div>
-            <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Mobile Number
-              <span class="text-red-500">*</span></label>
+            <label for="phoneNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Mobile Number *</label>
             <input formControlName="phoneNumber" id="phoneNumber" (input)="onPhoneNumberInput($event)"
               (keypress)="onPhoneNumberKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -107,8 +104,7 @@
           </div>
 
           <div>
-            <label for="NICnumber" class="block text-sm font-medium text-textLight dark:text-textDark">NIC Number <span
-                class="text-red-500">*</span></label>
+            <label for="NICnumber" class="block text-sm font-medium text-textLight dark:text-textDark">NIC Number *</label>
             <input formControlName="NICnumber" id="NICnumber" (input)="onNICInput($event)"
               (keypress)="onNICKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -129,8 +125,7 @@
           </div>
 
           <div>
-            <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District <span
-                class="text-red-500">*</span></label>
+            <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">District *</label>
             <p-dropdown formControlName="district" [options]="districtOptions" optionLabel="label" optionValue="value"
               [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a district" styleClass="w-full"
               panelStyleClass="custom-dropdown-panel" class="p-dropdown-custom">
@@ -145,8 +140,7 @@
           </div>
 
           <div>
-            <label for="membership" class="block text-sm font-medium text-gray-700 dark:text-textDark">Membership <span
-                class="text-red-500">*</span></label>
+            <label for="membership" class="block text-sm font-medium text-gray-700 dark:text-textDark">Membership *</label>
             <p-dropdown formControlName="membership" id="membership" name="membership" [options]="membership"
               optionLabel="membershipName" optionValue="membershipName" [filter]="true" filterBy="membershipName"
               [showClear]="false" placeholder="-- select --" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
@@ -162,8 +156,7 @@
           </div>
 
           <div>
-            <label for="language" class="block text-sm font-medium text-gray-700 dark:text-textDark">Language <span
-                class="text-red-500">*</span></label>
+            <label for="language" class="block text-sm font-medium text-gray-700 dark:text-textDark">Language *</label>
             <p-dropdown formControlName="language" id="language" name="language" [options]="language"
               optionLabel="languageName" optionValue="languageName" [filter]="true" filterBy="languageName"
               [showClear]="false" placeholder="-- select --" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
@@ -183,8 +176,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
-              Holder's Name <span class="text-red-500">*</span></label>
+            <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account *</label>
             <input formControlName="accHolderName" id="accHolderName" (input)="onAccountHolderNameInput($event)"
               (keypress)="onAccountHolderNameKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -198,8 +190,7 @@
           </div>
 
           <div>
-            <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number
-              <span class="text-red-500">*</span></label>
+            <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
             <input formControlName="accNumber" id="accNumber" (input)="onAccountNumberInput($event)"
               (keypress)="onAccountNumberKeyPress($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
@@ -215,8 +206,7 @@
           </div>
 
           <div>
-            <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name <span
-                class="text-red-500">*</span></label>
+            <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Bank Name *</label>
             <p-dropdown formControlName="bankName" [options]="bankOptions" optionLabel="label" optionValue="value"
               [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank"
               (onChange)="onBankChange()" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
@@ -232,8 +222,7 @@
           </div>
 
           <div>
-            <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch Name
-              <span class="text-red-500">*</span></label>
+            <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">Branch Name *</label>
             <p-dropdown formControlName="branchName" [options]="branchOptions" optionLabel="label" optionValue="value"
               [filter]="true" filterBy="label" [showClear]="false" [disabled]="!userForm.get('bankName')?.value"
               placeholder="Select a branch" (onChange)="onBranchChange()" styleClass="w-full"

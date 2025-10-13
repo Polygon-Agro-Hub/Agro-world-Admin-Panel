@@ -190,27 +190,27 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
-    let value = this.personalData[field] || '';
+capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
+  let value = this.personalData[field] || '';
 
-    // For houseNumber, allow letters, numbers, and spaces
-    if (field === 'houseNumber') {
-      value = value.replace(/[^A-Za-z0-9 ]/g, ''); // Allow alphanumeric
-    } else {
-      // For name fields, only allow letters and spaces
-      value = value.replace(/[^A-Za-z ]/g, '');
-    }
-
-    // Remove leading spaces
-    value = value.replace(/^\s+/, '');
-
-    // Capitalize first letter (only for fields with letters)
-    if (value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
-      value = value.charAt(0).toUpperCase() + value.slice(1);
-    }
-
-    this.personalData[field] = value;
+  if (field === 'houseNumber') {
+    // Allow letters, numbers, spaces, and special characters like /, -, #
+    value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
+  } else {
+    // For name-related fields, only allow letters and spaces
+    value = value.replace(/[^A-Za-z ]/g, '');
   }
+
+  // Remove leading spaces
+  value = value.replace(/^\s+/, '');
+
+  // Capitalize first letter if applicable (skip for house number)
+  if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  this.personalData[field] = value;
+}
 
   blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
     const key = event.key;

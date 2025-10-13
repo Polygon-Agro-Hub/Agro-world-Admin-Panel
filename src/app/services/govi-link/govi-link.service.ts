@@ -202,4 +202,50 @@ export class GoviLinkService {
       params,
     });
   }
+
+  // Get officers by job role
+  getOfficersByJobRole(jobRole: string) {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    let params = new HttpParams().set('jobRole', jobRole);
+
+    return this.http.get<any>(`${this.apiUrl}get-officers-by-jobrole`, {
+      headers,
+      params,
+    });
+  }
+
+  // Assign officer to job
+  assignOfficerToJob(assignmentData: { jobId: number; officerId: number }) {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}assign-officer-to-job`,
+      assignmentData,
+      {
+        headers,
+      }
+    );
+  }
+
+  // Get basic job details by ID
+  getJobBasicDetailsById(jobId: number) {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<any>(`${this.apiUrl}get-job-basic-details/${jobId}`, {
+      headers,
+    });
+  }
 }

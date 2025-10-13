@@ -26,9 +26,11 @@
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
             [options]="statusOptions"
             [checkmark]="true"
-            optionLabel="role"
-            [showClear]="true"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="!!selectStatus"
             [(ngModel)]="selectStatus"
+            name="selectStatus"
             placeholder="Status"
             (onChange)="filterStatus()"
           />
@@ -130,9 +132,9 @@
             <th class="px-6 py-3 text-center text-black dark:text-gray-300">
               End Time
             </th>
-            <th class="px-6 py-3 text-center text-black dark:text-gray-300">
+            <!-- <th class="px-6 py-3 text-center text-black dark:text-gray-300">
               Validity
-            </th>
+            </th> -->
           </tr>
         </thead>
         <tbody class="dark:border-[#ffffff]">
@@ -188,7 +190,7 @@
                 {{ item.toDate | date : "hh:mm a" }}
               </p>
             </td>
-            <td class="px-6 py-4 text-gray-900 dark:text-gray-300 text-center">
+            <!-- <td class="px-6 py-4 text-gray-900 dark:text-gray-300 text-center">
               <i
                 *ngIf="item.status === 'Pending'"
                 class="fa-solid fa-pen-to-square text-blue-600 cursor-pointer"
@@ -199,7 +201,7 @@
                 class="fa-solid fa-pen-to-square text-gray-400"
               >
               </i>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>

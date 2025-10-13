@@ -34,9 +34,33 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     { label: 'Not Assigned', value: 'Not Assigned' },
   ];
 
+  // Officer Role Options
+  officerRoleOptions = [
+    { label: 'Field Officer', value: 'Field Officer' },
+    { label: 'Chief Field Officer', value: 'Chief Field Officer' },
+  ];
+
   // Popup state
   isOfficerPopUp = false;
+  isAssignPopup = false;
+  isCompletedJobPopup = false;
+  isViewJobPopup = false;
   assignedOfficerArray: string[] = [];
+
+  // Assign popup state
+  selectedOfficerRole: string = '';
+  selectedOfficerId: string = '';
+  availableOfficers: any[] = [];
+  selectedOfficerInfo: any = null;
+  isLoadingOfficers = false;
+  isAssigning = false;
+  assignError = '';
+  selectedJob: any = null;
+  currentAssignedOfficer: any = null;
+
+  // View job popup state
+  jobDetails: any = null;
+  isLoadingJobDetails = false;
 
   constructor(private goviLinkService: GoviLinkService) {}
 
@@ -99,6 +123,202 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     ];
   }
 
+  // Handle assign status click
+  onAssignStatusClick(job: any): void {
+    // Special condition: If job is completed and assigned, show warning popup
+    if (job.status === 'Completed' && job.assignStatus === 'Assigned') {
+      this.selectedJob = job;
+      this.isCompletedJobPopup = true;
+      return;
+    }
+
+    if (job.assignStatus === 'Assigned') {
+      // If already assigned, open assign popup in edit mode
+      this.openAssignPopup(job);
+    } else {
+      // If not assigned, open the assign popup in create mode
+      this.openAssignPopup(job);
+    }
+  }
+
+  // Open assign popup
+  openAssignPopup(job: any): void {
+    this.selectedJob = job;
+    this.selectedOfficerRole = '';
+    this.selectedOfficerId = '';
+    this.availableOfficers = [];
+    this.selectedOfficerInfo = null;
+    this.currentAssignedOfficer = null;
+    this.assignError = '';
+
+    // If job is already assigned, pre-fill the current officer info
+    if (job.assignStatus === 'Assigned' && job.assignedOfficerName) {
+      this.currentAssignedOfficer = {
+        name: job.assignedOfficerName,
+        empId: job.officerEmpId,
+        role: job.assignedOfficerRole, // You might need to add this field to your backend query
+      };
+
+      this.selectedOfficerRole = 'Field Officer'; // Default, adjust based on your data
+    }
+
+    this.isAssignPopup = true;
+  }
+
+  // Close assign popup
+  assignPopupClose(): void {
+    this.isAssignPopup = false;
+    this.selectedJob = null;
+    this.selectedOfficerRole = '';
+    this.selectedOfficerId = '';
+    this.availableOfficers = [];
+    this.selectedOfficerInfo = null;
+    this.currentAssignedOfficer = null;
+    this.assignError = '';
+  }
+
+  // Close completed job popup
+  completedJobPopupClose(): void {
+    this.isCompletedJobPopup = false;
+    this.selectedJob = null;
+  }
+
+  // When officer role changes
+  onOfficerRoleChange(): void {
+    this.selectedOfficerId = '';
+    this.selectedOfficerInfo = null;
+    this.availableOfficers = [];
+
+    if (this.selectedOfficerRole) {
+      this.loadOfficersByRole(this.selectedOfficerRole);
+    }
+  }
+
+  // Load officers by role
+  loadOfficersByRole(role: string): void {
+    this.isLoadingOfficers = true;
+    this.goviLinkService.getOfficersByJobRole(role).subscribe({
+      next: (response) => {
+        this.isLoadingOfficers = false;
+        if (response.success && response.data) {
+          this.availableOfficers = response.data.map((officer: any) => ({
+            ...officer,
+            displayName: `${officer.firstName} ${officer.lastName} (${officer.empId})`,
+          }));
+
+          // If there's a currently assigned officer, try to pre-select them
+          if (
+            this.currentAssignedOfficer &&
+            this.availableOfficers.length > 0
+          ) {
+            const currentOfficer = this.availableOfficers.find(
+              (officer) => officer.empId === this.currentAssignedOfficer.empId
+            );
+            if (currentOfficer) {
+              this.selectedOfficerId = currentOfficer.empId;
+              this.selectedOfficerInfo = currentOfficer;
+            }
+          }
+        } else {
+          this.availableOfficers = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error loading officers:', err);
+        this.isLoadingOfficers = false;
+        this.availableOfficers = [];
+        this.assignError = 'Failed to load officers';
+      },
+    });
+  }
+
+  // When officer is selected
+  onOfficerSelected(): void {
+    if (this.selectedOfficerId) {
+      this.selectedOfficerInfo = this.availableOfficers.find(
+        (officer) => officer.empId === this.selectedOfficerId
+      );
+    } else {
+      this.selectedOfficerInfo = null;
+    }
+  }
+
+  // Assign officer to job
+  assignOfficer(): void {
+    if (!this.selectedJob || !this.selectedOfficerId) {
+      this.assignError = 'Please select an officer';
+      return;
+    }
+
+    this.isAssigning = true;
+    this.assignError = '';
+
+    // First, get the officer ID from empId
+    const selectedOfficer = this.availableOfficers.find(
+      (officer) => officer.empId === this.selectedOfficerId
+    );
+
+    if (!selectedOfficer) {
+      this.assignError = 'Selected officer not found';
+      this.isAssigning = false;
+      return;
+    }
+
+    const assignmentData = {
+      jobId: this.selectedJob.jobId,
+      officerId: selectedOfficer.id,
+    };
+
+    this.goviLinkService.assignOfficerToJob(assignmentData).subscribe({
+      next: (response) => {
+        this.isAssigning = false;
+        if (response.success) {
+          this.assignPopupClose();
+          this.fetchJobs(); // Refresh the job list
+          // You can show a success toast/message here
+          console.log('Officer assigned successfully');
+        } else {
+          this.assignError = response.message || 'Failed to assign officer';
+        }
+      },
+      error: (err) => {
+        console.error('Error assigning officer:', err);
+        this.isAssigning = false;
+        this.assignError = 'An error occurred while assigning officer';
+      },
+    });
+  }
+
+  // View job details using existing service
+  viewJob(job: any): void {
+    this.isLoadingJobDetails = true;
+    this.jobDetails = null;
+    this.selectedJob = job;
+
+    this.goviLinkService.getJobBasicDetailsById(job.jobId).subscribe({
+      next: (response) => {
+        this.isLoadingJobDetails = false;
+        if (response.success) {
+          this.jobDetails = response.data;
+          this.isViewJobPopup = true;
+        } else {
+          console.error('Error fetching job details:', response.error);
+        }
+      },
+      error: (err) => {
+        this.isLoadingJobDetails = false;
+        console.error('Error fetching job details:', err);
+      },
+    });
+  }
+
+  // Close view job popup
+  closeViewJobPopup(): void {
+    this.isViewJobPopup = false;
+    this.jobDetails = null;
+    this.selectedJob = null;
+  }
+
   onSearch(): void {
     this.fetchJobs();
   }
@@ -117,7 +337,6 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     console.log('Add new job');
   }
 
-  // Clear all filters
   clearAllFilters(): void {
     this.searchText = '';
     this.districtFilter = '';
@@ -127,7 +346,6 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     this.fetchJobs();
   }
 
-  // Check if any filters are active
   get hasActiveFilters(): boolean {
     return !!(
       this.searchText ||
@@ -158,12 +376,14 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     this.assignedOfficerArray = [];
   }
 
-  // Action methods
-  viewJob(job: any): void {
-    console.log('View job:', job);
-  }
-
   get hasData(): boolean {
     return this.jobs.length > 0;
+  }
+
+  // Helper method to format date
+  formatDate(dateString: string): string {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB'); // DD/MM/YYYY format
   }
 }

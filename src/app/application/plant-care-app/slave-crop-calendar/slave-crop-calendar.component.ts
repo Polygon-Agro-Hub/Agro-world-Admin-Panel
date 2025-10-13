@@ -145,9 +145,10 @@ export class SlaveCropCalendarComponent implements OnInit {
     userId: any,
     onCulscropID: any,
     cultivationId: any,
-    cropName: any
+    cropName: any,
+    ongCultivationId:number
   ) {
-    let ongCultivationId = this.ongCultivationId;
+    // let ongCultivationId = this.ongCultivationId;
     if (cropCalendarId) {
       this.router.navigate(
         ['/plant-care/action/view-crop-task-by-user/user-task-list'],

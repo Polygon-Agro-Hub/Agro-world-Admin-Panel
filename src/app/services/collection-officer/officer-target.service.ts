@@ -49,6 +49,7 @@ export class OfficerTargetService {
 
   getSelectedOfficerTargetData(
     officerId: number,
+    selectStatus:string='',
     searchQuery: string = ''
   ): Observable<any> {
     console.log('Officer ID:', officerId);
@@ -62,8 +63,12 @@ export class OfficerTargetService {
     // Construct the URL with officerId and optional searchQuery
     let url = `${this.apiUrl}target/get-selected-officer-target-data?officerId=${officerId}`;
 
+    if(selectStatus){
+      url+=`&status=${selectStatus}`
+    }
+
     if (searchQuery) {
-      url += `&searchQuery=${encodeURIComponent(searchQuery)}`;
+      url += `&search=${encodeURIComponent(searchQuery)}`;
     }
 
     return this.http.get(url, { headers });

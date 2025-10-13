@@ -74,6 +74,7 @@ export class ViewOfficerTargetComponent {
     this.isLoading = true;
     this.TargetSrv.getSelectedOfficerTargetData(
       officerId,
+      this.selectStatus,
       searchQuery
     ).subscribe(
       (res) => {

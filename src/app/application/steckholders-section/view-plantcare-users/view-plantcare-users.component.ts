@@ -157,9 +157,25 @@ export class ViewPlantcareUsersComponent implements OnInit {
         (error) => {
           this.isLoading = false;
           if (error.status === 401) {
-            Swal.fire('Unauthorized', 'Please log in again.', 'error');
+            Swal.fire({
+              title: 'Unauthorized',
+              text: 'Please log in again.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
           } else {
-            Swal.fire('Error', 'Failed to fetch plant care users.', 'error');
+            Swal.fire({
+              title: 'Error',
+              text: 'Failed to fetch plant care users.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
           }
         }
       );
@@ -177,7 +193,15 @@ export class ViewPlantcareUsersComponent implements OnInit {
   searchPlantCareUsers() {
     this.searchNIC = this.searchNIC.trim(); // Trim leading/trailing spaces
     if (!this.searchNIC) {
-      Swal.fire('Info', 'Please enter a valid NIC number.', 'info');
+      Swal.fire({
+        title: 'Info',
+        text: 'Please enter a valid NIC number.',
+        icon: 'info',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
       return;
     }
     this.page = 1;
@@ -209,9 +233,9 @@ export class ViewPlantcareUsersComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.http
@@ -222,23 +246,27 @@ export class ViewPlantcareUsersComponent implements OnInit {
             (data: any) => {
               if (data) {
                 Swal.fire({
-  title: 'Deleted!',
-  text: 'The plant care user has been deleted.',
-  icon: 'success',
-  customClass: {
-    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    title: 'font-semibold',
-  }
-});
+                  title: 'Deleted!',
+                  text: 'The plant care user has been deleted.',
+                  icon: 'success',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold',
+                  }
+                });
                 this.fetchAllPlantCareUsers();
               }
             },
             (error) => {
-              Swal.fire(
-                'Error',
-                'There was a problem deleting the plant care user.',
-                'error'
-              );
+              Swal.fire({
+                title: 'Error',
+                text: 'There was a problem deleting the plant care user.',
+                icon: 'error',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+              });
             }
           );
       }
@@ -341,6 +369,10 @@ export class ViewPlantcareUsersComponent implements OnInit {
         icon: 'success',
         title: 'Downloaded',
         text: 'Please check your downloads folder',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
       });
 
       // this.isDownloading = false;
@@ -350,6 +382,10 @@ export class ViewPlantcareUsersComponent implements OnInit {
         icon: 'error',
         title: 'Download Failed',
         text: error.message,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
       });
       // this.isDownloading = false;
     }

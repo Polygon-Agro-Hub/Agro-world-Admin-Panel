@@ -184,7 +184,7 @@ export class PlantcareUsersService {
   }
 
 
-  getAllFarmerStaff(id: number, role: string = ''): Observable<any> {
+  getAllFarmerStaff(id: number, role: string = '', searchText:string = ''): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -192,6 +192,10 @@ export class PlantcareUsersService {
     let url = `${this.apiUrl}auth/get-all-farmer-staff?id=${id}`
     if (role) {
       url += `&role=${role}`
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`
     }
 
     return this.http.get(url, {

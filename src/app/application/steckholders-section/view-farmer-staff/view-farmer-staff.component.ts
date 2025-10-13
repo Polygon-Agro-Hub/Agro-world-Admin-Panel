@@ -30,11 +30,12 @@ export class ViewFarmerStaffComponent implements OnInit {
   farmerName: string = '';
   farmerNumber: string = '';
   selectedRole: string = '';
+  searchText: string = '';
 
   roleArr = [
     { label: 'Supervisor', value: 'Supervisor' },
     { label: 'Manager', value: 'Manager' },
-    { label: 'Laber', value: 'Laber' },
+    { label: 'Laborer', value: 'Laborer' },
   ];
 
   constructor(
@@ -54,7 +55,8 @@ export class ViewFarmerStaffComponent implements OnInit {
 
   fetchData() {
     this.isLoading = true;
-    this.plantcareService.getAllFarmerStaff(this.farmerId, this.selectedRole).subscribe(
+    this.searchText = this.searchText.trim()
+    this.plantcareService.getAllFarmerStaff(this.farmerId, this.selectedRole, this.searchText).subscribe(
       (res) => {
         console.log(res);
         // Map API response to Staff objects
@@ -91,49 +93,64 @@ export class ViewFarmerStaffComponent implements OnInit {
   }
 
   deleteFarmStaff(id: number) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'You are about to delete this farm staff member. This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-      confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg',
-      cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
-    }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.executeDeleteFarmStaff(id);
-    }
-  });
-}
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to delete this farm staff member. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.executeDeleteFarmStaff(id);
+      }
+    });
+  }
 
-private executeDeleteFarmStaff(id: number) {
-  this.isLoading = true;
-  this.plantcareService.deleteFarmStaff(id).subscribe(
-    (res) => {
-      if (res.status) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: res.message,
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-        this.fetchData();
-      } else {
+  private executeDeleteFarmStaff(id: number) {
+    this.isLoading = true;
+    this.plantcareService.deleteFarmStaff(id).subscribe(
+      (res) => {
+        if (res.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: res.message,
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+          this.fetchData();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: res.message,
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+        this.isLoading = false;
+      },
+      (error) => {
+        this.isLoading = false;
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: res.message,
+          text: 'An error occurred while deleting. Please try again.',
           confirmButtonText: 'OK',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -141,23 +158,13 @@ private executeDeleteFarmStaff(id: number) {
           },
         });
       }
-      this.isLoading = false;
-    },
-    (error) => {
-      this.isLoading = false;
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while deleting. Please try again.',
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
-    }
-  );
-}
+    );
+  }
+
+  offSearch() {
+    this.searchText = '';
+    this.fetchData();
+  }
 
 }
 

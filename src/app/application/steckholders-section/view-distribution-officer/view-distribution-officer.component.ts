@@ -260,7 +260,7 @@ export class ViewDistributionOfficerComponent {
             if (data.status) {
               Swal.fire({
                 title: 'Deleted!',
-                text: 'Successfully deleted distribution officer',
+                text: 'Successfully deleted Distribution officer',
                 icon: 'success',
                 customClass: {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

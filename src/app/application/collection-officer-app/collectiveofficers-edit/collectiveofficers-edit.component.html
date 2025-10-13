@@ -10,7 +10,6 @@
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
 
   <div *ngIf="selectedPage === 'pageOne'">
-    <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Edit Personal Details
     </h2>
@@ -19,7 +18,6 @@
         <div class="relative">
           <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
-          <!-- Display default image if no file is selected -->
           <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-60 h-60 object-cover"
             [src]="personalData.image" alt="Profile Picture" />
 
@@ -27,14 +25,7 @@
             [src]="'https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg?w=360'"
             alt="Profile Picture" />
 
-          <!-- Display the selected image if available -->
           <img *ngIf="selectedImage" class="rounded-full w-60 h-60" [src]="selectedImage" alt="Profile Picture" />
-
-
-          <!-- <span (click)="triggerFileInput($event)"
-            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer">
-            <img src="../../../../assets/images/editIcon.png" alt="Edit Icon" class="w-16 h-16" />
-          </span> -->
 
           <span (click)="triggerFileInput($event)"
             class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
@@ -68,13 +59,11 @@
             </div>
           </div>
 
-          <!-- Validation Message -->
           <div *ngIf="empTypeInput.touched && !empType" class="text-red-500 text-sm mt-1">
             <div>Employee Type is required</div>
           </div>
 
         </div>
-
 
         <div>
           <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -102,9 +91,6 @@
           </p>
         </div>
 
-
-
-
         <div>
           <label for="companyId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Company Name *
@@ -112,13 +98,13 @@
           <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
             styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
+            class="mt-1 block w-full p-dropdown-custom"
+            (onChange)="onCompanyChange($event)">
           </p-dropdown>
           <div *ngIf="!personalData.companyId" class="text-red-500 text-sm mt-1">
             <div>Company Name is required</div>
           </div>
         </div>
-
 
         <div>
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -142,9 +128,7 @@
           </p-dropdown>
         </div>
 
-
         <div>
-
           <div *ngIf="personalData.jobRole === 'Collection Officer'">
             <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Manager Name *
@@ -155,20 +139,12 @@
               class="mt-1 block w-full p-dropdown-custom" (onChange)="onManagerChange()">
             </p-dropdown>
 
-            <!-- Add this error message div -->
             <div *ngIf="managerRequiredError" class="text-red-500 text-xs mt-1 ml-1">
               Manager Name is Required
             </div>
           </div>
-
-
-          <div *ngIf="personalData.jobRole === 'Collection Officer'"></div>
-
         </div>
 
-
-        <!-- First Name (in English) - Updated with validation call -->
-        <!-- First Name (in English) - Updated with validation call -->
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             First Name (in English) *
@@ -181,13 +157,8 @@
           <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">
             First Name is a required field
           </span>
-          <!-- <span *ngIf="personalData.firstNameEnglish && hasInvalidNameCharacters('firstNameEnglish')"
-            class="text-red-600 text-sm">
-            First Name should only contain English letters
-          </span> -->
         </div>
 
-        <!-- Last Name (in English) - Updated with validation call -->
         <div>
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Last Name (in English) *
@@ -197,17 +168,11 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #lastNameEnglishInput="ngModel" />
 
-
           <div *ngIf="lastNameEnglishInput.touched && !personalData.lastNameEnglish" class="text-red-500 text-sm mt-1">
             First Name is a required field
           </div>
-          <!-- <span *ngIf="personalData.lastNameEnglish && hasInvalidNameCharacters('lastNameEnglish')"
-            class="text-red-600 text-sm">
-            Last Name should only contain English letters
-          </span> -->
         </div>
 
-        <!-- First Name (in Sinhala) - Updated with validation call -->
         <div>
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Sinhala) *</label>
@@ -219,13 +184,8 @@
             class="text-red-500 text-sm mt-1">
             <div>First Name (in Sinhala) is required</div>
           </div>
-          <!-- <span *ngIf="personalData.firstNameSinhala && hasInvalidSinhalaCharacters('firstNameSinhala')"
-            class="text-red-600 text-sm">
-            First Name should only contain Sinhala letters
-          </span> -->
         </div>
 
-        <!-- Last Name (in Sinhala) - Updated with validation call -->
         <div>
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Sinhala) *</label>
@@ -236,13 +196,8 @@
           <div *ngIf="lastNameSinhalaInput.touched && !personalData.lastNameSinhala" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Sinhala) is required</div>
           </div>
-          <!-- <span *ngIf="personalData.lastNameSinhala && hasInvalidSinhalaCharacters('lastNameSinhala')"
-            class="text-red-600 text-sm">
-            Last Name should only contain Sinhala letters
-          </span> -->
         </div>
 
-        <!-- First Name (in Tamil) - Updated with validation call -->
         <div>
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Tamil) *</label>
@@ -253,13 +208,8 @@
           <div *ngIf="firstNameTamilInput.touched && !personalData.firstNameTamil" class="text-red-500 text-sm mt-1">
             <div>First Name (in Tamil) is required</div>
           </div>
-          <!-- <span *ngIf="personalData.firstNameTamil && hasInvalidTamilCharacters('firstNameTamil')"
-            class="text-red-600 text-sm">
-            First Name should only contain Tamil letters
-          </span> -->
         </div>
 
-        <!-- Last Name (in Tamil) - Updated with validation call -->
         <div>
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Tamil) *</label>
@@ -270,14 +220,8 @@
           <div *ngIf="lastNameTamilInput.touched && !personalData.lastNameTamil" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Tamil) is required</div>
           </div>
-          <!-- <span *ngIf="personalData.lastNameTamil && hasInvalidTamilCharacters('lastNameTamil')"
-            class="text-red-600 text-sm">
-            Last Name should only contain Tamil letters
-          </span> -->
         </div>
 
-
-        <!-- Fixed Mobile Number - 01 input -->
         <div>
           <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 01 *
@@ -292,7 +236,6 @@
             touchedFields.contact1 && 
             !isValidPhoneNumber(personalData.contact1)
         }">
-                <!-- Dropdown items -->
                 <ng-template let-country pTemplate="item">
                   <div class="flex items-center gap-2">
                     <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -300,7 +243,6 @@
                   </div>
                 </ng-template>
 
-                <!-- Selected item -->
                 <ng-template let-country pTemplate="selectedItem">
                   <div class="flex items-center gap-2" *ngIf="country">
                     <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -318,7 +260,6 @@
             : 'border-gray-300')
         " />
             </div>
-            <!-- Error messages outside the flex container -->
             <div class="mt-1">
               <span
                 *ngIf="touchedFields.contact1 && !isValidPhoneNumber(personalData.contact1) && personalData.contact1"
@@ -329,13 +270,10 @@
               <span *ngIf="!personalData.contact1 && phone01Input.touched" class="text-red-500 text-sm mt-1">
                 Mobile Number - 01 is Required.
               </span>
-              <!-- <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
-        Contact Number 1 and Contact Number 2 cannot be the same
-      </span> -->
             </div>
           </div>
         </div>
-        <!-- Fixed Mobile Number - 02 input -->
+
         <div>
           <label for="phoneNumber02" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Mobile Number - 02
@@ -350,7 +288,6 @@
             personalData.contact2 && 
             !isValidPhoneNumber(personalData.contact2)
         }">
-                <!-- Dropdown items -->
                 <ng-template let-country pTemplate="item">
                   <div class="flex items-center gap-2">
                     <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -358,7 +295,6 @@
                   </div>
                 </ng-template>
 
-                <!-- Selected item -->
                 <ng-template let-country pTemplate="selectedItem">
                   <div class="flex items-center gap-2" *ngIf="country">
                     <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
@@ -376,7 +312,6 @@
             : 'border-gray-300')
         " />
             </div>
-            <!-- Error messages outside the flex container -->
             <div class="mt-1">
               <span *ngIf="personalData.contact2 && !isValidPhoneNumber(personalData.contact2)"
                 class="text-red-600 text-sm block">
@@ -388,7 +323,6 @@
             </div>
           </div>
         </div>
-
 
         <div>
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
@@ -406,7 +340,6 @@
           </span>
         </div>
 
-
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
@@ -418,48 +351,6 @@
           </span>
         </div>
       </div>
-
-      <!-- Add this after the email field in the first page
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          New Password (Leave blank to keep current password)
-        </label>
-        <div class="relative mt-1">
-          <input [type]="showPassword ? 'text' : 'password'" id="password" name="password"
-            [(ngModel)]="personalData.password"
-            class="block w-full p-2 pr-10 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            placeholder="Enter new password (optional)" (blur)="onBlur('password')" />
-          <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"
-            (click)="togglePasswordVisibility()">
-            <i [class]="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
-              class="text-gray-400 hover:text-gray-600"></i>
-          </button>
-        </div>
-        <span *ngIf="personalData.password && !isValidPassword(personalData.password)" class="text-red-600 text-sm">
-          Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter,
-          one number, and one special character
-        </span>
-      </div>
-
-      <div *ngIf="personalData.password">
-        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Confirm New Password
-        </label>
-        <div class="relative mt-1">
-          <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword" name="confirmPassword"
-            [(ngModel)]="personalData.confirmPassword"
-            class="block w-full p-2 pr-10 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            placeholder="Confirm new password" (blur)="onBlur('confirmPassword')" />
-          <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"
-            (click)="toggleConfirmPasswordVisibility()">
-            <i [class]="showConfirmPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
-              class="text-gray-400 hover:text-gray-600"></i>
-          </button>
-        </div>
-        <span *ngIf="personalData.confirmPassword && !doPasswordsMatch()" class="text-red-600 text-sm">
-          Passwords do not match
-        </span>
-      </div> -->
 
       <div class="flex justify-end mt-10">
         <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
@@ -473,7 +364,6 @@
   </div>
 
   <div *ngIf="selectedPage === 'pageTwo'">
-    <!-- <div> -->
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Residential Details
     </h2>
@@ -503,8 +393,6 @@
           </div>
         </div>
 
-
-
         <div class="pb-6">
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
           <input id="city" name="city" [(ngModel)]="personalData.city" (keydown)="preventLeadingSpace($event, 'city')"
@@ -527,7 +415,6 @@
             styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
             class="mt-1 block w-full p-dropdown-custom"></p-dropdown>
 
-
           <div *ngIf="districtInput.touched && !personalData.district" class="text-red-500 text-sm mt-1">
             District is required
           </div>
@@ -549,11 +436,6 @@
             readonly />
         </div>
       </div>
-
-
-
-
-
     </div>
     <div *ngIf="personalData.companyId == 1">
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
@@ -575,35 +457,6 @@
           Account Holder's name should only contain English letters
         </span>
       </div>
-      <!-- <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account
-          Number*</label>
-        <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
-          (keydown)="preventLeadingSpace($event, 'accNumber')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #accNumberInput="ngModel" required />
-        <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
-          <div>Account Number is required</div>
-        </div>
-      </div>
-
-      <div class="pb-6">
-        <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Confirm Account
-          Number</label>
-        <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="personalData.confirmAccNumber"
-          (keydown)="preventLeadingSpace($event, 'confirmAccNumber')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #confirmAccNumberInput="ngModel" required />
-        <div *ngIf="confirmAccNumberInput.touched && !personalData.confirmAccNumber" class="text-red-500 text-sm mt-1">
-          <div>Confirm Account Number is required</div>
-        </div>
-
-        <div
-          *ngIf="confirmAccNumberInput.touched && personalData.confirmAccNumber && (personalData.accNumber !== personalData.confirmAccNumber)"
-          class="text-red-500 text-sm mt-1">
-          <div>Account Numbers do not match</div>
-        </div>
-      </div> -->
 
       <div class="pb-6">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number
@@ -645,21 +498,6 @@
         </span>
       </div>
 
-      <!-- <div class="pb-6">
-          <label
-            for="bankName"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Bank Name</label
-          >
-          <input
-            id="bankName"
-            name="bankName"
-           
-            [(ngModel)]="personalData.bankName"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-        </div> -->
-
       <div class="pb-6">
         <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Bank Name *
@@ -688,7 +526,7 @@
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
         </button>
-
       </div>
     </div>
   </div>
+</div>

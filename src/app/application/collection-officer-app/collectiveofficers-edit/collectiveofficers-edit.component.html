@@ -7,6 +7,7 @@
   Back
 </button>
 <div class="h-[20px]"></div>
+
 <div class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
 
   <div *ngIf="selectedPage === 'pageOne'">
@@ -35,6 +36,10 @@
       </div>
 
       <div class="h-[20px]"></div>
+      <!-- reset button -->
+      <button (click)="resetPassword()"
+        class="bg-[#FF0000] text-white font-semibold px-4 py-2 my-3 rounded-lg shadow-md">Reset Password</button>
+
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
@@ -97,8 +102,7 @@
           </label>
           <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
             optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
-            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom"
+            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
             (onChange)="onCompanyChange($event)">
           </p-dropdown>
           <div *ngIf="!personalData.companyId" class="text-red-500 text-sm mt-1">

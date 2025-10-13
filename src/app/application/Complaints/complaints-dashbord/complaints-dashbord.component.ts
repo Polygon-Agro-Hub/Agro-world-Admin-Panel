@@ -17,9 +17,10 @@ export class ComplaintsDashbordComponent {
   popupVisibleCategories = false;
   popupVisibleSalesAgents = false;
   popupVisibleMPRetail = false;
-   popupVisibleMPWholesale = false;
+  popupVisibleMPWholesale = false;
+  popupVisibleDistributedcenter = false
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   closeAllPopups() {
     this.popupVisibleCategories = false;
@@ -27,7 +28,9 @@ export class ComplaintsDashbordComponent {
     this.popupVisibleCollectionCenters = false;
     this.popupVisibleSalesAgents = false;
     this.popupVisibleMPRetail = false;
-     this.popupVisibleMPWholesale = false;
+    this.popupVisibleMPWholesale = false;
+    this.popupVisibleDistributedcenter = false
+
 
   }
 
@@ -59,6 +62,11 @@ export class ComplaintsDashbordComponent {
   togglepopupVisibleMPWholesale(): void {
     this.closeAllPopups();
     this.popupVisibleMPWholesale = !this.popupVisibleMPWholesale;
+  }
+
+  togglePopupDistributedCenters(){
+    this.closeAllPopups();
+    this.popupVisibleDistributedcenter = !this.popupVisibleDistributedcenter;
   }
 
 

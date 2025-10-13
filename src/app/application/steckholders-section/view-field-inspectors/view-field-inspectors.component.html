@@ -5,8 +5,13 @@
   Back
 </button>
 
-<div class="mb-5 flex justify-between">
-  <button (click)="addNew()" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center">
+<div class="mb-4 flex justify-between">
+  <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-1 items-center"
+    (click)="addNew()">
+    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </svg>
     Add New
   </button>
 </div>

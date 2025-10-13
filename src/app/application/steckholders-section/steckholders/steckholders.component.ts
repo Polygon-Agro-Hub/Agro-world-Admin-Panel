@@ -106,7 +106,7 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   }
 
   navigateToViewCollectionCenter(): void {
-    this.router.navigate(['/collection-hub/view-collection-centers']);
+    this.router.navigate(['/steckholders/action/stakholder-collection-centers']);
   }
 
   navigateToViewSalesAgents(): void {
@@ -122,7 +122,7 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   }
 
   navigateToViewDistributionCenter(): void {
-    this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+    this.router.navigate(['/steckholders/action/stakholder-distributed-centers']);
   }
 
   navigateToViewFieldInspectors(): void {

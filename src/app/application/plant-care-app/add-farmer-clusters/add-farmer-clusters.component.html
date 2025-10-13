@@ -1,0 +1,125 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <h2
+    class="text-2xl text-left mb-6 text-textLight dark:text-textDark font-bold"
+  >
+    Add Farmer Cluster
+  </h2>
+
+  <form (ngSubmit)="onUpload()">
+    <!-- Cluster Name Input -->
+    <div class="mb-6">
+      <label
+        for="clusterName"
+        class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+      >
+        Cluster Name *
+      </label>
+      <input
+        type="text"
+        id="clusterName"
+        [(ngModel)]="clusterName"
+        name="clusterName"
+        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        placeholder="Enter cluster name"
+        required
+      />
+      <div
+        *ngIf="!clusterName && formSubmitted"
+        class="text-red-500 text-sm mt-1"
+      >
+        Cluster name is required
+      </div>
+    </div>
+
+    <!-- File Upload Section -->
+    <div class="mb-6">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+      >
+        Farm Members *
+      </label>
+
+      <div
+        class="bg-[#EBF5FF] flex flex-col justify-center items-center py-10 px-8 border-[2px] border-[#0090FF] rounded-lg border-dashed cursor-pointer"
+        (click)="fileInput.click()"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+      >
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          accept=".csv, .xlsx"
+          class="hidden"
+          #fileInput
+        />
+
+        <div
+          *ngIf="!selectedFile"
+          class="flex flex-col justify-center items-center text-center"
+        >
+          <i
+            class="fa-solid fa-cloud-arrow-up text-[60px] text-gray-400 mb-4"
+          ></i>
+          <p class="text-xl text-[#0090FF] font-semibold mb-2">
+            Select a CSV or XLSX file to upload
+          </p>
+          <p class="text-md text-[#0090FF]">or drag and drop it here</p>
+        </div>
+
+        <div
+          *ngIf="selectedFile"
+          class="flex flex-col justify-center items-center text-center"
+        >
+          <i class="fa-solid fa-file-excel text-[60px] text-green-500 mb-4"></i>
+          <p class="text-lg text-gray-700 dark:text-gray-300 font-medium">
+            {{ selectedFile.name }}
+          </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            File selected successfully
+          </p>
+        </div>
+
+        <div *ngIf="isLoading" class="mt-4">
+          <app-loading-spinner></app-loading-spinner>
+        </div>
+      </div>
+
+      <div
+        *ngIf="!selectedFile && formSubmitted"
+        class="text-red-500 text-sm mt-1"
+      >
+        Please select a file to upload
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-end gap-3">
+      <button
+        type="button"
+        class="px-6 py-2 bg-[#74788D] text-white rounded-md hover:bg-[#63667a] transition-colors"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-[#2d6ca3] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">Save</span>
+        <span *ngIf="isLoading">Processing...</span>
+      </button>
+    </div>
+  </form>
+</div>

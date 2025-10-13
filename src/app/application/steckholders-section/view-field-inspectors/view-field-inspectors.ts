@@ -136,7 +136,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    this.router.navigate(['/steckholders/action']);
   }
 
   getStatusClass(status: string): string {

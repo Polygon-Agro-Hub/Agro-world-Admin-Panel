@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-plantcare',
@@ -18,12 +19,15 @@ export class PlantcareComponent {
   popupVisibleMarketPrice = false;
   popupVisibleCropCalender = false;
   popupVisibleCertification = false;
+  popupVisibleFarmerClusters = false;
+
   constructor(
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
   ) {}
 
+  // Update existing toggle methods to include farmer clusters
   togglePopupNews() {
     this.popupVisibleNews = !this.popupVisibleNews;
     if ((this.popupVisibleMarketPrice = true)) {
@@ -59,6 +63,15 @@ export class PlantcareComponent {
     if (this.popupVisibleNews) this.popupVisibleNews = false;
     if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
     if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+  }
+
+  // Add the new toggle method for Farmer Clusters
+  togglePopupFarmerClusters() {
+    this.popupVisibleFarmerClusters = !this.popupVisibleFarmerClusters;
+    if (this.popupVisibleNews) this.popupVisibleNews = false;
+    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
+    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
   }
 
   navigateToCreateNews(): void {
@@ -125,5 +138,62 @@ export class PlantcareComponent {
 
   viewCertificateList(): void {
     this.router.navigate(['/plant-care/action/view-certificate-list']);
+  }
+
+  // Add new methods for Farmer Clusters
+  addFarmerCluster(): void {
+    this.router.navigate(['/plant-care/action/add-farmer-clusters']);
+  }
+
+  manageFarmerClusters(): void {
+    this.router.navigate(['/plant-care/action/manage-farmer-clusters']);
+  }
+
+  downloadFarmerClusterTemplate(): void {
+    this.isLoading = true;
+
+    // 1. Define the header row first
+    const header = ['NIC'];
+
+    // 2. Define sample empty data rows (e.g., 100 rows)
+    const numberOfRowsToGenerate = 10000;
+    // Creates an array like [[''], [''], ... 100 times]
+    const emptyRows = Array.from({ length: numberOfRowsToGenerate }, () => [
+      '',
+    ]);
+
+    // Combine header and data rows
+    const worksheetData = [header, ...emptyRows];
+
+    // Create a worksheet
+    const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // 3. Force the NIC column (Column A, index 0) to be treated as TEXT
+    const range = XLSX.utils.decode_range(ws['!ref']!);
+
+    // Iterate over all cells in column A from the second row onwards (data rows)
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      const cellAddress = XLSX.utils.encode_cell({ r: R, c: 0 });
+
+      // Ensure the cell exists before modifying
+      if (!ws[cellAddress]) {
+        ws[cellAddress] = { v: '', t: 's' };
+      } else {
+        ws[cellAddress].t = 's';
+      }
+
+      ws[cellAddress].z = '@';
+    }
+
+    ws['!cols'] = [{ wch: 20 }];
+
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'FarmerClusterTemplate');
+
+    // Write to XLSX file
+    XLSX.writeFile(wb, 'farmer_cluster_template.xlsx');
+
+    this.isLoading = false;
   }
 }

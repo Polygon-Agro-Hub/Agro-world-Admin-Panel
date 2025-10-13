@@ -56,7 +56,6 @@ export class ViewAllDisributionComplainComponent {
 
 
   constructor(
-    private complainSrv: CollectionCenterService,
     // private datePipe: DatePipe,
     private router: Router,
     // private tokenService: TokenService,
@@ -159,7 +158,7 @@ export class ViewAllDisributionComplainComponent {
 
   navigateSelectComplain(id: string) {
     this.router.navigate([
-      `/complaints/view-center-complain/${id}`,
+      `/complaints/distributed-center-complains/view-complain/${id}`,
     ]);
   }
 

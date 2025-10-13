@@ -209,6 +209,7 @@ import { EditFiealdOfficerComponent } from './application/steckholders-section/e
 import { EditCertificateDetailsComponent } from './application/plant-care-app/edit-certificate/edit-certificate-details';
 import { ViewCertificateDetailsComponent } from './application/plant-care-app/view-certificate/view-certificate-details';
 import { ViewGoviLinkJobsComponent } from './application/govi-link/view-govi-link-jobs/view-govi-link-jobs';
+import { AddFarmerClustersComponent } from './application/plant-care-app/add-farmer-clusters/add-farmer-clusters.component';
 
 export const routes: Routes = [
   {
@@ -481,6 +482,10 @@ export const routes: Routes = [
               {
                 path: 'view-certificate-list',
                 component: ViewAllCertificatesComponent,
+              },
+              {
+                path: 'add-farmer-clusters',
+                component: AddFarmerClustersComponent,
               },
             ],
           },

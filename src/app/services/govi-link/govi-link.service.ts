@@ -204,14 +204,16 @@ export class GoviLinkService {
   }
 
   // Get officers by job role
-  getOfficersByJobRole(jobRole: string) {
+  getOfficersByJobRole(jobRole: string, scheduleDate: string) {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
 
-    let params = new HttpParams().set('jobRole', jobRole);
+    let params = new HttpParams()
+      .set('jobRole', jobRole)
+      .set('scheduleDate', scheduleDate);
 
     return this.http.get<any>(`${this.apiUrl}get-officers-by-jobrole`, {
       headers,

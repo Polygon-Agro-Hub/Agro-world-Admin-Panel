@@ -48,6 +48,30 @@ export interface Questionnaire {
   updatedAt?: string;
 }
 
+export interface CreateFarmerClusterPayload {
+  clusterName: string;
+  farmerNICs: string[];
+}
+
+export interface CreateFarmerClusterResponse {
+  message: string;
+  status: boolean;
+  data: {
+    clusterId: number;
+    clusterName: string;
+    farmersAdded: number;
+    totalFarmers: number;
+  };
+}
+
+export interface FarmerClusterErrorResponse {
+  message: string;
+  status: boolean;
+  missingNICs?: string[];
+  existingNICs?: string[];
+  details?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -266,6 +290,22 @@ export class CertificateCompanyService {
     });
     return this.http.delete(
       `${this.apiUrl}certificate-company/delete-questionnaire/${id}`,
+      { headers }
+    );
+  }
+
+  // Create farmer cluster with bulk farmers
+  createFarmerCluster(
+    payload: CreateFarmerClusterPayload
+  ): Observable<CreateFarmerClusterResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post<CreateFarmerClusterResponse>(
+      `${this.apiUrl}certificate-company/create-farmer-cluster`,
+      payload,
       { headers }
     );
   }

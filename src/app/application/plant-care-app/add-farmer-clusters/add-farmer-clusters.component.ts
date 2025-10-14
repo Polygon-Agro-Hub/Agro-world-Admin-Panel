@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import {
   CertificateCompanyService,
-  CreateFarmerClusterPayload,
+  FarmerCluster,
 } from '../../../services/plant-care/certificate-company.service';
 
 interface DuplicateEntry {
@@ -44,6 +44,14 @@ export class AddFarmerClustersComponent {
     private location: Location,
     private farmerClusterService: CertificateCompanyService
   ) {}
+
+  private resetFileState(): void {
+    this.selectedFile = null;
+    this.duplicateEntries = [];
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.fileInput.nativeElement.value = '';
+  }
 
   onBack(): void {
     this.location.back();
@@ -212,7 +220,7 @@ export class AddFarmerClustersComponent {
         }
 
         // If no duplicates, proceed with API call
-        const payload: CreateFarmerClusterPayload = {
+        const payload: FarmerCluster = {
           clusterName: this.clusterName.trim(),
           farmerNICs: uniqueNICs,
         };
@@ -339,23 +347,20 @@ export class AddFarmerClustersComponent {
         container: '!flex !items-center !justify-center',
       },
       didOpen: () => {
-        // Add event listener for the close button
         const closeButton = document.getElementById('closeDuplicatePopup');
         if (closeButton) {
           closeButton.addEventListener('click', () => {
-            this.selectedFile = null;
-            this.fileInput.nativeElement.value = '';
+            this.resetFileState();
             Swal.close();
           });
         }
 
-        // Add event listener for the download button
         const downloadButton = document.getElementById(
           'downloadDuplicateCSVBtn'
         );
         if (downloadButton) {
           downloadButton.addEventListener('click', () => {
-            this.downloadDuplicateCSV(duplicates);
+            this.downloadDuplicateCSV(this.duplicateEntries);
           });
         }
       },
@@ -450,17 +455,14 @@ export class AddFarmerClustersComponent {
         container: '!flex !items-center !justify-center',
       },
       didOpen: () => {
-        // Close button event listener
         const closeButton = document.getElementById('closeMissingNicsPopup');
         if (closeButton) {
           closeButton.addEventListener('click', () => {
-            this.selectedFile = null;
-            this.fileInput.nativeElement.value = '';
+            this.resetFileState();
             Swal.close();
           });
         }
 
-        // Download button event listener
         const downloadButton = document.getElementById(
           'downloadMissingNicsCSVBtn'
         );
@@ -560,6 +562,8 @@ export class AddFarmerClustersComponent {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
       },
+    }).then(() => {
+      this.resetFileState();
     });
   }
 
@@ -574,7 +578,7 @@ export class AddFarmerClustersComponent {
         title: 'font-semibold text-lg',
       },
     }).then(() => {
-      this.router.navigate(['/plant-care/action/manage-farmer-clusters']);
+      this.router.navigate(['/plant-care/action/view-farmer-clusters']);
     });
   }
 

@@ -158,7 +158,7 @@ export class EditDistributionOfficerComponent implements OnInit {
     private location: Location,
     private cdr: ChangeDetectorRef,
     public emailValidationService: EmailvalidationsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadBanksAndBranches().then(() => {
@@ -187,7 +187,7 @@ export class EditDistributionOfficerComponent implements OnInit {
       (data) => {
         this.banks = data.slice().sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -196,11 +196,11 @@ export class EditDistributionOfficerComponent implements OnInit {
       (data) => {
         this.allBranches = data;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
-  loadDistributionHeadData(id: number): void {
+  loadDistributionHeadData(id: number | null): void {
     this.isLoading = true;
     this.distributionHubSrv.getDistributionHeadDetailsById(id).subscribe(
       (res: any) => {
@@ -384,27 +384,27 @@ export class EditDistributionOfficerComponent implements OnInit {
     this.personalData[field] = value;
   }
 
-capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
-  let value = this.personalData[field] || '';
+  capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
+    let value = this.personalData[field] || '';
 
-  if (field === 'houseNumber') {
-    // Allow letters, numbers, spaces, and special characters like /, -, #
-    value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
-  } else {
-    // For name-related fields, only allow letters and spaces
-    value = value.replace(/[^A-Za-z ]/g, '');
+    if (field === 'houseNumber') {
+      // Allow letters, numbers, spaces, and special characters like /, -, #
+      value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
+    } else {
+      // For name-related fields, only allow letters and spaces
+      value = value.replace(/[^A-Za-z ]/g, '');
+    }
+
+    // Remove leading spaces
+    value = value.replace(/^\s+/, '');
+
+    // Capitalize first letter if applicable (skip for house number)
+    if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    this.personalData[field] = value;
   }
-
-  // Remove leading spaces
-  value = value.replace(/^\s+/, '');
-
-  // Capitalize first letter if applicable (skip for house number)
-  if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
-    value = value.charAt(0).toUpperCase() + value.slice(1);
-  }
-
-  this.personalData[field] = value;
-}
 
 
   blockPhoneLength(event: KeyboardEvent, value: string) {
@@ -527,11 +527,11 @@ capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolder
     }
   }
 
-isFieldInvalid(fieldName: keyof Personal): boolean {
-  const value = this.personalData[fieldName];
-  // Show error only if field is touched and empty (ignores numbers or non-empty values)
-  return !!this.touchedFields[fieldName] && (!value || value.toString().trim() === '');
-}
+  isFieldInvalid(fieldName: keyof Personal): boolean {
+    const value = this.personalData[fieldName];
+    // Show error only if field is touched and empty (ignores numbers or non-empty values)
+    return !!this.touchedFields[fieldName] && (!value || value.toString().trim() === '');
+  }
 
 
   EpmloyeIdCreate() {
@@ -549,7 +549,7 @@ isFieldInvalid(fieldName: keyof Personal): boolean {
       .then((lastID) => {
         this.personalData.empId = rolePrefix + lastID;
       })
-      .catch((error) => {});
+      .catch((error) => { });
     this.personalData.companyId = currentCompanyId;
     this.personalData.centerId = currentCenterId;
   }
@@ -751,95 +751,95 @@ isFieldInvalid(fieldName: keyof Personal): boolean {
     }
   }
 
-onSubmit() {
-  this.checkDuplicatePhoneNumbers();
-  if (this.duplicatePhoneError) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: "Company Phone Number - 1 and 2 can't be the same",
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    });
-    return;
-  }
-
-  if (!this.checkSubmitValidity()) {
-    const errors = this.getSubmitValidationErrors();
-    this.showValidationErrors(errors);
-    return;
-  }
-
-  if (!this.personalData.confirmAccNumber || this.personalData.confirmAccNumber.toString().trim() === '') {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Please fill the confirm account number',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    });
-    return;
-  }
-
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to update the Distribution Centre Head?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, update it!',
-    cancelButtonText: 'No, cancel',
-    reverseButtons: true,
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      const updateData = {
-        ...this.personalData,
-        empId: 'DCH' + this.personalData.empId,
-        image: this.selectedImage,
-      };
-
-      this.distributionHubSrv.updateDistributionHeadDetails(this.itemId!, updateData)
-        .subscribe(
-          (res: any) => {
-            this.isLoading = false;
-            this.errorMessage = '';
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Updated Distribution Centre Head Successfully',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-              },
-            }).then(() => {
-              this.location.back();
-            });
-          },
-          (error: any) => {
-            this.isLoading = false;
-            this.errorMessage = error.error.error || 'An unexpected error occurred';
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: this.errorMessage,
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-              },
-            });
-          }
-        );
+  onSubmit() {
+    this.checkDuplicatePhoneNumbers();
+    if (this.duplicatePhoneError) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: "Company Phone Number - 1 and 2 can't be the same",
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
     }
-  });
-}
+
+    if (!this.checkSubmitValidity()) {
+      const errors = this.getSubmitValidationErrors();
+      this.showValidationErrors(errors);
+      return;
+    }
+
+    if (!this.personalData.confirmAccNumber || this.personalData.confirmAccNumber.toString().trim() === '') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please fill the confirm account number',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to update the Distribution Centre Head?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        const updateData = {
+          ...this.personalData,
+          empId: 'DCH' + this.personalData.empId,
+          image: this.selectedImage,
+        };
+
+        this.distributionHubSrv.updateDistributionHeadDetails(this.itemId!, updateData)
+          .subscribe(
+            (res: any) => {
+              this.isLoading = false;
+              this.errorMessage = '';
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Updated Distribution Centre Head Successfully',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+              }).then(() => {
+                this.location.back();
+              });
+            },
+            (error: any) => {
+              this.isLoading = false;
+              this.errorMessage = error.error.error || 'An unexpected error occurred';
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: this.errorMessage,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+              });
+            }
+          );
+      }
+    });
+  }
 
 
   getSubmitValidationErrors(): string[] {
@@ -972,9 +972,75 @@ onSubmit() {
     throw new Error('Method not implemented.');
   }
 
+
+
   resetPassword() {
-    // Implement password reset logic
-    throw new Error('Method not implemented.');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to reset the Distribution Centre Head password. This action cannot be undone.',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, reset password!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        this.distributionHubSrv.ChangeStatus(this.itemId, 'Approved').subscribe(
+          (res) => {
+            this.isLoading = false;
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'The Distribution Centre Head password reset successfully.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+              this.loadDistributionHeadData(this.itemId);
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Something went wrong. Please try again.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'An error occurred while resetting password. Please try again.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        );
+      }
+    });
   }
 }
 

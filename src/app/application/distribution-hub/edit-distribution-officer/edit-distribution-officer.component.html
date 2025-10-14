@@ -1,9 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button
-(click)="back()"
-  *ngIf="selectedPage === 'pageOne'"
-  class="text-textLight dark:text-textDark"
->
+<button (click)="back()" *ngIf="selectedPage === 'pageOne'" class="text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -16,47 +12,30 @@
     <div>
       <div class="flex justify-center pt-3 pb-9">
         <div class="relative">
-          <input
-            type="file"
-            id="imageUpload"
-            accept="image/*"
-            class="hidden"
-            (change)="onFileSelected($event)"
-          />
+          <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
           <!-- Display default image if no file is selected -->
-          <div
-            *ngIf="!selectedImage"
-            class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60"
-          >
+          <div *ngIf="!selectedImage"
+            class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60">
             <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
           </div>
 
           <!-- Display the selected image if available -->
-          <img
-            *ngIf="selectedImage"
-            class="rounded-full w-60 h-60 object-cover"
-            [src]="selectedImage"
-            alt="Profile Picture"
-          />
-          <span
-            (click)="triggerFileInput($event)"
-            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
-          >
+          <img *ngIf="selectedImage" class="rounded-full w-60 h-60 object-cover" [src]="selectedImage"
+            alt="Profile Picture" />
+          <span (click)="triggerFileInput($event)"
+            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
             <i class="fa-solid fa-pen text-lg text-white"></i>
           </span>
         </div>
       </div>
 
       <div class="h-[20px]"></div>
-   <button
-  class="px-4 py-2 bg-red-600 w-[200px] text-white rounded-md mb-3"
- (click)="openResetPasswordModal()"
->
-  Reset Password
-</button>
+      <button class="px-4 py-2 bg-red-600 w-[200px] text-white rounded-md mb-3" (click)="resetPassword()">
+        Reset Password
+      </button>
 
-<!-- <div
+      <!-- <div
         *ngIf="isResetPasswordModalOpen"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         (click)="toggleResetPasswordModal()"
@@ -126,7 +105,7 @@
         </div>
       </div> -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-     
+
         <!-- <div>
           <label
             class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
@@ -150,72 +129,40 @@
           </div>
         </div> -->
         <div>
-          <label
-            for="centerId"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-          >
+          <label for="centerId" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             Company Name *
           </label>
           <div class="relative">
-          <select
-  disabled
-  (blur)="onBlur('companyId')"
-  id="centerId"
-[(ngModel)]="personalData.companyId"
-  name="centerId"
-  class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
->
-  <option
-    *ngFor="let company of CompanyData"
-    [value]="company.id"
-    class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-  >
-    {{ company.companyNameEnglish }}
-  </option>
-</select>
+            <select disabled (blur)="onBlur('companyId')" id="centerId" [(ngModel)]="personalData.companyId"
+              name="centerId"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10">
+              <option *ngFor="let company of CompanyData" [value]="company.id"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
+                {{ company.companyNameEnglish }}
+              </option>
+            </select>
 
           </div>
-          <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm"
-            >Company Name is required.</span
-          >
+          <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm">Company Name is required.</span>
         </div>
 
         <div>
-          <label
-            for="enpType"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-          >
+          <label for="enpType" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             Staff Employee Type *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
-              <label
-                class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-              >
-                <input
-                  class="w-5 h-5 cursor-pointer"
-                  type="radio"
-                  name="enpType"
-                  value="Permanent"
-                  [(ngModel)]="empType"
-                  (ngModelChange)="updateEmployeeType($event)"
-                />
+              <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+                <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Permanent"
+                  [(ngModel)]="empType" (ngModelChange)="updateEmployeeType($event)" />
                 Permanent
               </label>
             </div>
             <div class="flex items-center space-x-2">
-              <label
-                class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-              >
-                <input
-                  class="w-5 h-5 cursor-pointer"
-                  type="radio"
-                  name="enpType"
-                  value="Temporary"
-                  [(ngModel)]="empType"
-                  (ngModelChange)="updateEmployeeType($event)"
-                />
+              <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+                <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary"
+                  [(ngModel)]="empType" (ngModelChange)="updateEmployeeType($event)" />
                 Temporary
               </label>
             </div>
@@ -226,192 +173,119 @@
         </div>
 
         <div>
-          <label
-            for="languages"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-          >
+          <label for="languages" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             Preferred Languages *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
-              <input
-                class="w-5 h-5 cursor-pointer"
-                type="checkbox"
-                id="sinhala"
-                name="languages"
-                value="Sinhala"
-                (change)="onCheckboxChange('Sinhala', $event)"
-                [checked]="personalData.languages.includes('Sinhala')"
-              />
-              <label for="sinhala" class="text-[#534E4E] dark:text-textDark"
-                >Sinhala</label
-              >
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="sinhala" name="languages" value="Sinhala"
+                (change)="onCheckboxChange('Sinhala', $event)" [checked]="personalData.languages.includes('Sinhala')" />
+              <label for="sinhala" class="text-[#534E4E] dark:text-textDark">Sinhala</label>
             </div>
             <div class="flex items-center space-x-2">
-              <input
-                class="w-5 h-5 cursor-pointer"
-                type="checkbox"
-                id="english"
-                name="languages"
-                value="English"
-                (change)="onCheckboxChange('English', $event)"
-                [checked]="personalData.languages.includes('English')"
-              />
-              <label for="english" class="text-[#534E4E] dark:text-textDark"
-                >English</label
-              >
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="english" name="languages" value="English"
+                (change)="onCheckboxChange('English', $event)" [checked]="personalData.languages.includes('English')" />
+              <label for="english" class="text-[#534E4E] dark:text-textDark">English</label>
             </div>
             <div class="flex items-center space-x-2">
-              <input
-                class="w-5 h-5 cursor-pointer"
-                type="checkbox"
-                id="tamil"
-                name="languages"
-                value="Tamil"
-                (change)="onCheckboxChange('Tamil', $event)"
-                [checked]="personalData.languages.includes('Tamil')"
-              />
-              <label for="tamil" class="text-[#534E4E] dark:text-textDark"
-                >Tamil</label
-              >
+              <input class="w-5 h-5 cursor-pointer" type="checkbox" id="tamil" name="languages" value="Tamil"
+                (change)="onCheckboxChange('Tamil', $event)" [checked]="personalData.languages.includes('Tamil')" />
+              <label for="tamil" class="text-[#534E4E] dark:text-textDark">Tamil</label>
             </div>
           </div>
-          <p
-            *ngIf="!isAtLeastOneLanguageSelected()"
-            class="text-red-600 text-sm mt-2"
-          >
+          <p *ngIf="!isAtLeastOneLanguageSelected()" class="text-red-600 text-sm mt-2">
             Please select at least one preferred language.
           </p>
         </div>
 
         <div *ngIf="personalData.jobRole === 'Collection Officer'">
-          <label
-            for="centerId"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
+          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Manager Name*
           </label>
           <div class="relative">
-            <select
-              id="centerId"
-              [(ngModel)]="personalData.irmId"
-              name="centerId"
-              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
-            >
-              <option
-                *ngFor="let center of distributionHeadData"
-                [value]="center.id"
-                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-              >
+            <select id="centerId" [(ngModel)]="personalData.irmId" name="centerId"
+              class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10">
+              <option *ngFor="let center of distributionHeadData" [value]="center.id"
+                class="p-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
                 {{ center.firstNameEnglish + " " + center.lastNameEnglish }}
               </option>
             </select>
             <i
-              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"
-            ></i>
+              class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 pointer-events-none"></i>
           </div>
         </div>
 
         <div>
-  <label
-    for="firstNameEnglish"
-    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-  >
-    First Name *
-  </label>
-  <input
-    id="firstNameEnglish"
-    name="firstNameEnglish"
-    required
-    [(ngModel)]="personalData.firstNameEnglish"
-    #firstNameEnglishRef="ngModel"
-    pattern="^[A-Z][a-zA-Z ]*$"
-    (input)="capitalizeWhileTyping('firstNameEnglish')"
-    (keypress)="blockInvalidNameInput($event, personalData.firstNameEnglish)"
-      (input)="trimLeadingSpace($event)"
-    (blur)="onBlur('firstNameEnglish')"
-    class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  />
-  <span
-    *ngIf="
+          <label for="firstNameEnglish" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+            First Name *
+          </label>
+          <input id="firstNameEnglish" name="firstNameEnglish" required [(ngModel)]="personalData.firstNameEnglish"
+            #firstNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"
+            (input)="capitalizeWhileTyping('firstNameEnglish')"
+            (keypress)="blockInvalidNameInput($event, personalData.firstNameEnglish)" (input)="trimLeadingSpace($event)"
+            (blur)="onBlur('firstNameEnglish')"
+            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="
       firstNameEnglishRef.invalid &&
       (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)
-    "
-    class="text-red-600 text-sm"
-  >
-    <ng-container *ngIf="firstNameEnglishRef.errors?.['required']"
-      >First Name is required.</ng-container
-    >
- 
-  </span>
-</div>
+    " class="text-red-600 text-sm">
+            <ng-container *ngIf="firstNameEnglishRef.errors?.['required']">First Name is required.</ng-container>
+
+          </span>
+        </div>
 
 
-       <div>
-  <label
-    for="lastNameEnglish"
-    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-  >
-    Last Name *
-  </label>
-  <input
-    id="lastNameEnglish"
-    name="lastNameEnglish"
-    required
-    [(ngModel)]="personalData.lastNameEnglish"
-    #lastNameEnglishRef="ngModel"
-    pattern="^[A-Z][a-zA-Z ]*$"
-    (input)="capitalizeWhileTyping('lastNameEnglish')"
-    (keypress)="blockInvalidNameInput($event, personalData.lastNameEnglish)"
-         (input)="trimLeadingSpace($event)"
-    (blur)="onBlur('lastNameEnglish')"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  />
-  <span
-    *ngIf="
+        <div>
+          <label for="lastNameEnglish" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+            Last Name *
+          </label>
+          <input id="lastNameEnglish" name="lastNameEnglish" required [(ngModel)]="personalData.lastNameEnglish"
+            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$" (input)="capitalizeWhileTyping('lastNameEnglish')"
+            (keypress)="blockInvalidNameInput($event, personalData.lastNameEnglish)" (input)="trimLeadingSpace($event)"
+            (blur)="onBlur('lastNameEnglish')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="
       lastNameEnglishRef.invalid &&
       (lastNameEnglishRef.dirty || lastNameEnglishRef.touched)
-    "
-    class="text-red-600 text-sm"
-  >
-    <ng-container *ngIf="lastNameEnglishRef.errors?.['required']">
-      Last Name is required.
-    </ng-container>
-  
-  </span>
-</div>
+    " class="text-red-600 text-sm">
+            <ng-container *ngIf="lastNameEnglishRef.errors?.['required']">
+              Last Name is required.
+            </ng-container>
+
+          </span>
+        </div>
 
 
-<!-- Mobile Number - 1 -->
-<div>
-  <label for="phoneNumber01" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-   Mobile Number - 1 *
-  </label>
+        <!-- Mobile Number - 1 -->
+        <div>
+          <label for="phoneNumber01" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+            Mobile Number - 1 *
+          </label>
 
-  <div class="mt-1 flex">
-    <p-dropdown [(ngModel)]="personalData.phoneCode01" [options]="countries" optionLabel="dialCode"
-                optionValue="dialCode"
-                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-                [style]="{ width: '120px' }"
-                [ngClass]="{ 'border-red-500': touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) }">
-                <!-- Dropdown items -->
-                <ng-template let-country pTemplate="item">
-                  <div class="flex items-center gap-2">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
+          <div class="mt-1 flex">
+            <p-dropdown [(ngModel)]="personalData.phoneCode01" [options]="countries" optionLabel="dialCode"
+              optionValue="dialCode"
+              styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+              [style]="{ width: '120px' }"
+              [ngClass]="{ 'border-red-500': touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) }">
+              <!-- Dropdown items -->
+              <ng-template let-country pTemplate="item">
+                <div class="flex items-center gap-2">
+                  <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                  <span>{{ country.dialCode }}</span>
+                </div>
+              </ng-template>
 
-                <!-- Selected item -->
-                <ng-template let-country pTemplate="selectedItem">
-                  <div class="flex items-center gap-2" *ngIf="country">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-              </p-dropdown>
-    <!-- <select
+              <!-- Selected item -->
+              <ng-template let-country pTemplate="selectedItem">
+                <div class="flex items-center gap-2" *ngIf="country">
+                  <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                  <span>{{ country.dialCode }}</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <!-- <select
       [(ngModel)]="personalData.phoneCode01"
       (change)="checkDuplicatePhoneNumbers()"
       class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5"
@@ -422,67 +296,63 @@
       <option value="+91">+91 (India)</option>
     </select> -->
 
-    <input
-      [(ngModel)]="personalData.phoneNumber01"
-      (blur)="onBlur('phoneNumber01')"
-      (input)="checkDuplicatePhoneNumbers()"
-      maxlength="9"
-      type="number"
-      placeholder="Enter your phone number"
-      class="block w-full p-2 border  border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    />
-  </div>
+            <input [(ngModel)]="personalData.phoneNumber01" (blur)="onBlur('phoneNumber01')"
+              (input)="checkDuplicatePhoneNumbers()" maxlength="9" type="number" placeholder="Enter your phone number"
+              class="block w-full p-2 border  border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          </div>
 
-  <!-- Single error message container with priority logic -->
-  <div class="flex flex-col mt-1">
-    <!-- Priority 1: Required field error -->
-    <span *ngIf="touchedFields.phoneNumber01 && !personalData.phoneNumber01" class="text-red-600 text-sm">
-      Mobile Number - 1 is a required field.
-    </span>
-    
-    <!-- Priority 2: Invalid format error (only if field has value and is not required error) -->
-    <span *ngIf="personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01, personalData.phoneCode01) && !duplicatePhoneError" class="text-red-600 text-sm">
-      Please enter a valid mobile number (format: +947XXXXXXXX)
-    </span>
+          <!-- Single error message container with priority logic -->
+          <div class="flex flex-col mt-1">
+            <!-- Priority 1: Required field error -->
+            <span *ngIf="touchedFields.phoneNumber01 && !personalData.phoneNumber01" class="text-red-600 text-sm">
+              Mobile Number - 1 is a required field.
+            </span>
 
-    <!-- Priority 3: Duplicate phone error (only if both numbers are valid format) -->
-    <!-- <span *ngIf="duplicatePhoneError && personalData.phoneNumber01 && personalData.phoneNumber02" class="text-red-600 text-sm">
+            <!-- Priority 2: Invalid format error (only if field has value and is not required error) -->
+            <span
+              *ngIf="personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01, personalData.phoneCode01) && !duplicatePhoneError"
+              class="text-red-600 text-sm">
+              Please enter a valid mobile number (format: +947XXXXXXXX)
+            </span>
+
+            <!-- Priority 3: Duplicate phone error (only if both numbers are valid format) -->
+            <!-- <span *ngIf="duplicatePhoneError && personalData.phoneNumber01 && personalData.phoneNumber02" class="text-red-600 text-sm">
       Mobile Number - 01 and Mobile Number - 02 cannot be the same
     </span> -->
-  </div>
-</div>
+          </div>
+        </div>
 
-<!-- Mobile Number - 2 -->
-<div>
-  <label for="phoneNumber02" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-    Mobile Number - 2
-  </label>
+        <!-- Mobile Number - 2 -->
+        <div>
+          <label for="phoneNumber02" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+            Mobile Number - 2
+          </label>
 
-  <div class="mt-1 flex">
+          <div class="mt-1 flex">
 
-    <p-dropdown [(ngModel)]="personalData.phoneCode02" [options]="countries" optionLabel="dialCode"
-                optionValue="dialCode"
-                styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
-                [style]="{ width: '120px' }"
-                [ngClass]="{ 'border-red-500': touchedFields.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) }">
-                <!-- Dropdown items -->
-                <ng-template let-country pTemplate="item">
-                  <div class="flex items-center gap-2">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
+            <p-dropdown [(ngModel)]="personalData.phoneCode02" [options]="countries" optionLabel="dialCode"
+              optionValue="dialCode"
+              styleClass="border border-gray-300 mr-2 rounded-l-md bg-white dark:bg-tileBlack text-gray-800 dark:text-textDark custom-dropdown"
+              [style]="{ width: '120px' }"
+              [ngClass]="{ 'border-red-500': touchedFields.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) }">
+              <!-- Dropdown items -->
+              <ng-template let-country pTemplate="item">
+                <div class="flex items-center gap-2">
+                  <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                  <span>{{ country.dialCode }}</span>
+                </div>
+              </ng-template>
 
-                <!-- Selected item -->
-                <ng-template let-country pTemplate="selectedItem">
-                  <div class="flex items-center gap-2" *ngIf="country">
-                    <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
-                    <span>{{ country.dialCode }}</span>
-                  </div>
-                </ng-template>
-              </p-dropdown>
+              <!-- Selected item -->
+              <ng-template let-country pTemplate="selectedItem">
+                <div class="flex items-center gap-2" *ngIf="country">
+                  <img [src]="getFlagUrl(country.code)" width="24" height="18" [alt]="country.name" />
+                  <span>{{ country.dialCode }}</span>
+                </div>
+              </ng-template>
+            </p-dropdown>
 
-    <!-- <select
+            <!-- <select
       id="phoneNumber02Code"
       name="phoneNumber02Code"
       [(ngModel)]="personalData.phoneCode02"
@@ -495,118 +365,83 @@
       <option value="+91">+91 (India)</option>
     </select> -->
 
-    <input
-      id="phoneNumber02"
-      name="phoneNumber02"
-      type="number"
-      [(ngModel)]="personalData.phoneNumber02"
-      (input)="checkDuplicatePhoneNumbers()"
-      maxlength="9"
-      class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-      [ngClass]="{ 
+            <input id="phoneNumber02" name="phoneNumber02" type="number" [(ngModel)]="personalData.phoneNumber02"
+              (input)="checkDuplicatePhoneNumbers()" maxlength="9"
+              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+              [ngClass]="{ 
         'border-red-500': getPhoneNumber02ErrorType() !== null,
         'border-gray-300': getPhoneNumber02ErrorType() === null
-      }"
-      placeholder="Enter your phone number"
-    />
-  </div>
+      }" placeholder="Enter your phone number" />
+          </div>
 
-  <!-- Single error message container with priority logic -->
-  <div class="flex flex-col mt-1">
-    <!-- Priority 1: Invalid format error (only if field has value and not duplicate error) -->
-    <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02, personalData.phoneCode02) && !duplicatePhoneError" class="text-red-600 text-sm">
-      Please enter a valid mobile number (format: +947XXXXXXXX)
-    </span>
-    
-    <!-- Priority 2: Duplicate phone error (only show on phone 2 if both numbers exist) -->
-    <span *ngIf="duplicatePhoneError && personalData.phoneNumber01 && personalData.phoneNumber02" class="text-red-600 text-sm">
-      Mobile Number - 01 and Mobile Number - 02 cannot be the same
-    </span>
-  </div>
-</div>
+          <!-- Single error message container with priority logic -->
+          <div class="flex flex-col mt-1">
+            <!-- Priority 1: Invalid format error (only if field has value and not duplicate error) -->
+            <span
+              *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02, personalData.phoneCode02) && !duplicatePhoneError"
+              class="text-red-600 text-sm">
+              Please enter a valid mobile number (format: +947XXXXXXXX)
+            </span>
 
-
-  <div>
-  <label
-    for="nic"
-    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-  >
-    NIC Number *
-  </label>
-  <input
-    id="nic"
-    name="nic"
-    [(ngModel)]="personalData.nic"
-    (blur)="onBlur('nic')"
-    (input)="capitalizeV(); enforceNicLength($event)"
-    (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
-         (input)="trimLeadingSpace($event)"
-    maxlength="12"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  />
-
-  <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
-    Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
-  </span>
-  <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm">
-    NIC is a required field.
-  </span>
-</div>
+            <!-- Priority 2: Duplicate phone error (only show on phone 2 if both numbers exist) -->
+            <span *ngIf="duplicatePhoneError && personalData.phoneNumber01 && personalData.phoneNumber02"
+              class="text-red-600 text-sm">
+              Mobile Number - 01 and Mobile Number - 02 cannot be the same
+            </span>
+          </div>
+        </div>
 
 
-      <div>
-  <label
-    for="email"
-    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-  >
-    Email *
-  </label>
-  <input
-    type="email"
-    id="email"
-    name="email"
-    [(ngModel)]="personalData.email"
-    (blur)="onBlur('email')"
-    (keydown)="blockLeadingSpace($event, 'email')"
-    (input)="trimLeadingSpace($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  />
+        <div>
+          <label for="nic" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+            NIC Number *
+          </label>
+          <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
+            (input)="capitalizeV(); enforceNicLength($event)"
+            (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)" (input)="trimLeadingSpace($event)"
+            maxlength="12"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+          <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
+            class="text-red-600 text-sm">
+            Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
+          </span>
+          <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm">
+            NIC is a required field.
+          </span>
+        </div>
+
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+            Email *
+          </label>
+          <input type="email" id="email" name="email" [(ngModel)]="personalData.email" (blur)="onBlur('email')"
+            (keydown)="blockLeadingSpace($event, 'email')" (input)="trimLeadingSpace($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
 
 
-  <!-- Show specific error message from service -->
-  <span 
-    *ngIf="touchedFields.email && personalData.email && !isValidEmail(personalData.email)" 
-    class="text-red-600 text-sm"
-  >
-    {{ getEmailErrorMessage(personalData.email) }}
-  </span>
-  
-  <!-- Required field error -->
-  <span 
-    *ngIf="isFieldInvalid('email') && !personalData.email" 
-    class="text-red-600 text-sm"
-  >
-    {{ emailValidationService.validationMessages.required }}
-  </span>
-</div>
+          <!-- Show specific error message from service -->
+          <span *ngIf="touchedFields.email && personalData.email && !isValidEmail(personalData.email)"
+            class="text-red-600 text-sm">
+            {{ getEmailErrorMessage(personalData.email) }}
+          </span>
+
+          <!-- Required field error -->
+          <span *ngIf="isFieldInvalid('email') && !personalData.email" class="text-red-600 text-sm">
+            {{ emailValidationService.validationMessages.required }}
+          </span>
+        </div>
       </div>
 
       <div class="flex justify-end m-10">
-        <button
-          (click)="onCancel()"
-          type="button"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
-        >
+        <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
-        <button
-  (click)="nextFormCreate('pageTwo')"
-  type="button"
-  class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
->
-  Next
-</button>
+        <button (click)="nextFormCreate('pageTwo')" type="button" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+          Next
+        </button>
       </div>
     </div>
   </div>
@@ -617,138 +452,69 @@
     </h2>
     <div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-      <div class="mb-6">
-  <label
-    for="houseNumber"
-    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-  >
-    House Number *
-  </label>
-<input
-  id="houseNumber"
-  name="houseNumber"
-  type="text"
-  [(ngModel)]="personalData.houseNumber"
-  (blur)="onBlur('houseNumber')"
-  (input)="capitalizeWhileTyping('houseNumber'); trimLeadingSpace($event)"
-  (keydown)="blockLeadingSpace($event, 'houseNumber')"
-  class="mt-1 block w-full p-2 border border-gray-300 rounded-md 
-         text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  required
-  #houseNumberField="ngModel"
-/>
+        <div class="mb-6">
+          <label for="houseNumber" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+            House Number *
+          </label>
+          <input id="houseNumber" name="houseNumber" type="text" [(ngModel)]="personalData.houseNumber"
+            (blur)="onBlur('houseNumber')" (input)="capitalizeWhileTyping('houseNumber'); trimLeadingSpace($event)"
+            (keydown)="blockLeadingSpace($event, 'houseNumber')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md 
+         text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" required #houseNumberField="ngModel" />
 
-  <span
-    *ngIf="houseNumberField.invalid && (houseNumberField.dirty || houseNumberField.touched)"
-    class="text-red-600 text-sm"
-  >
-    House Number is required.
-  </span>
-</div>
-   
+          <span *ngIf="houseNumberField.invalid && (houseNumberField.dirty || houseNumberField.touched)"
+            class="text-red-600 text-sm">
+            House Number is required.
+          </span>
+        </div>
+
 
         <div class="pb-6">
-          <label
-            for="street"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >Street Name *</label
-          >
-          <input
-            (blur)="onBlur('streetName')"
-            id="streetName"
-            name="streetName"
-            [(ngModel)]="personalData.streetName"
-            (keydown)="blockLeadingSpace($event, 'streetName')"
-                 (input)="trimLeadingSpace($event)"
-              (input)="capitalizeWhileTyping('streetName')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span
-            *ngIf="isFieldInvalid('streetName')"
-            class="text-red-600 text-sm"
-            >Street Name is required.</span
-          >
+          <label for="street" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">Street Name *</label>
+          <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
+            (keydown)="blockLeadingSpace($event, 'streetName')" (input)="trimLeadingSpace($event)"
+            (input)="capitalizeWhileTyping('streetName')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="isFieldInvalid('streetName')" class="text-red-600 text-sm">Street Name is required.</span>
         </div>
 
         <div class="pb-6">
-          <label
-            for="city"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >City *</label
-          >
-          <input
-            (blur)="onBlur('city')"
-            id="city"
-            name="city"
-            [(ngModel)]="personalData.city"
-            (keydown)="blockLeadingSpace($event, 'city')"
-                 (input)="trimLeadingSpace($event)"
+          <label for="city" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">City *</label>
+          <input (blur)="onBlur('city')" id="city" name="city" [(ngModel)]="personalData.city"
+            (keydown)="blockLeadingSpace($event, 'city')" (input)="trimLeadingSpace($event)"
             (input)="capitalizeWhileTyping('city')"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
-          <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm"
-            >City is required.</span
-          >
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm">City is required.</span>
         </div>
 
-<div class="pb-6">
-  <label
-    for="districtDropdown"
-    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-  >
-    District *
-  </label>
-  <p-dropdown
-    id="districtDropdown"
-    name="districtDropdown"
-    [options]="districts"
-    [(ngModel)]="personalData.district"
-    optionLabel="name"
-    optionValue="name"
-    [filter]="true"
-    filterPlaceholder="Search district"
-    placeholder="Select a district"
-    (onChange)="updateProvince($event)"
-    (onBlur)="onBlur('district')"
-    [showClear]="true"
-    class="w-full"
-  ></p-dropdown>
+        <div class="pb-6">
+          <label for="districtDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+            District *
+          </label>
+          <p-dropdown id="districtDropdown" name="districtDropdown" [options]="districts"
+            [(ngModel)]="personalData.district" optionLabel="name" optionValue="name" [filter]="true"
+            filterPlaceholder="Search district" placeholder="Select a district" (onChange)="updateProvince($event)"
+            (onBlur)="onBlur('district')" [showClear]="true" class="w-full"></p-dropdown>
 
-  <span *ngIf="isFieldInvalid('district')" class="text-red-600 text-sm">
-    District is required.
-  </span>
-</div>
+          <span *ngIf="isFieldInvalid('district')" class="text-red-600 text-sm">
+            District is required.
+          </span>
+        </div>
 
 
         <div class="pb-6">
-          <label
-            for="province"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-          >
+          <label for="province" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             Province *
           </label>
-          <input
-            id="province"
-            name="province"
-            [(ngModel)]="personalData.province"
+          <input id="province" name="province" [(ngModel)]="personalData.province"
             (keydown)="blockLeadingSpace($event, 'province')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            readonly
-          />
+            readonly />
         </div>
 
         <div class="pb-6">
-          <label
-            for="country"
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >Country *</label
-          >
-          <input
-            id="country"
-            name="country"
-            [(ngModel)]="personalData.country"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          />
+          <label for="country" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">Country *</label>
+          <input id="country" name="country" [(ngModel)]="personalData.country"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         </div>
       </div>
     </div>
@@ -756,51 +522,39 @@
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>
-  <div class="pb-6">
-  <label
-    for="accHolderName"
-    class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-  >
-    Account Holder's Name *
-  </label>
+      <div class="pb-6">
+        <label for="accHolderName" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+          Account Holder's Name *
+        </label>
 
-  <input
-    id="accHolderName"
-    name="accHolderName"
-    [(ngModel)]="personalData.accHolderName"
-    
-    #accHolderNameRef="ngModel"
-    required
-    pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$"
-    (input)="capitalizeWhileTyping('accHolderName')"
-    (keypress)="blockInvalidNameInput($event, personalData.accHolderName)"
-     (input)="trimLeadingSpace($event)"
-    (blur)="onBlur('accHolderName')"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  />
-  
-  <span
-    *ngIf="
+        <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
+          #accHolderNameRef="ngModel" required pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$"
+          (input)="capitalizeWhileTyping('accHolderName')"
+          (keypress)="blockInvalidNameInput($event, personalData.accHolderName)" (input)="trimLeadingSpace($event)"
+          (blur)="onBlur('accHolderName')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+        <span *ngIf="
       accHolderNameRef.invalid &&
       (accHolderNameRef.dirty || accHolderNameRef.touched)
-    "
-    class="text-red-600 text-sm"
-  >
-    <ng-container *ngIf="accHolderNameRef.errors?.['required']">
-      Account Holder's Name is required.
-    </ng-container>
-  
-  </span>
-</div>
+    " class="text-red-600 text-sm">
+          <ng-container *ngIf="accHolderNameRef.errors?.['required']">
+            Account Holder's Name is required.
+          </ng-container>
+
+        </span>
+      </div>
 
 
 
-       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
-        <input id="accNumber" name="accNumber"    type="number" [(ngModel)]="personalData.accNumber"
+      <div class="pb-6">
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number
+          *</label>
+        <input id="accNumber" name="accNumber" type="number" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-          #accNumberInput="ngModel" required pattern="^[0-9]+$"  (keypress)="allowOnlyNumbers($event)" (keydown)="blockLeadingSpace($event, 'accNumber')"   (blur)="onBlur('accNumber')"
-        (ngModelChange)="validateAccNumber()" />
+          #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)"
+          (keydown)="blockLeadingSpace($event, 'accNumber')" (blur)="onBlur('accNumber')"
+          (ngModelChange)="validateAccNumber()" />
         <div *ngIf="accNumberInput.touched && !personalData.accNumber" class="text-red-500 text-sm mt-1">
           <div>Account Number is required</div>
         </div>
@@ -809,7 +563,7 @@
           <div>Account Number cannot contain special characters</div>
         </div>
       </div>
-<!-- 
+      <!-- 
       <div class="pb-6">
         <label
           for="confirmAccNumber"
@@ -841,14 +595,13 @@
       </div> -->
 
 
-        <div class="pb-6">
+      <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Confirm Account Number *
         </label>
-        <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"   type="number"
+        <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber" type="number"
           [(ngModel)]="personalData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
-         (keydown)="blockLeadingSpace($event, 'confirmAccNumber')"
-         (keypress)="allowOnlyNumbers($event)"
+          (keydown)="blockLeadingSpace($event, 'confirmAccNumber')" (keypress)="allowOnlyNumbers($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
         <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
@@ -867,79 +620,46 @@
       </div>
 
 
-<div class="pb-6">
-  <label for="bankDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-    Bank Name *
-  </label>
-  <p-dropdown
-    id="bankDropdown"
-    name="bankDropdown"
-    [options]="banks"
-    [(ngModel)]="selectedBankId"
-    optionLabel="name"
-    optionValue="ID"
-    [filter]="true"
-    filterPlaceholder="Search Bank"
-    placeholder="Select a bank"
-    (onChange)="onBankChange()"
-    
-    [showClear]="false"
-    [disabled]="!banks || banks.length === 0"
-    class="w-full"
-    inputId="bankDropdown"
-  ></p-dropdown>
-  <span *ngIf="!selectedBankId && bankTouched" class="text-red-600 text-sm">
-    Bank is a required field.
-  </span>
-</div>
+      <div class="pb-6">
+        <label for="bankDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+          Bank Name *
+        </label>
+        <p-dropdown id="bankDropdown" name="bankDropdown" [options]="banks" [(ngModel)]="selectedBankId"
+          optionLabel="name" optionValue="ID" [filter]="true" filterPlaceholder="Search Bank"
+          placeholder="Select a bank" (onChange)="onBankChange()" [showClear]="false"
+          [disabled]="!banks || banks.length === 0" class="w-full" inputId="bankDropdown"></p-dropdown>
+        <span *ngIf="!selectedBankId && bankTouched" class="text-red-600 text-sm">
+          Bank is a required field.
+        </span>
+      </div>
 
 
 
-<div class="pb-6">
-  <label for="branchDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
-    Branch Name *
-  </label>
-  <p-dropdown
-    id="branchDropdown"
-    name="branchName"
-    [options]="branches"
-    [(ngModel)]="selectedBranchId"
-    optionLabel="name"
-    optionValue="ID"
-    [filter]="true"
-    filterPlaceholder="Search Branch"
-    placeholder="Select a branch"
-    [showClear]="false"
-    [disabled]="!selectedBankId"
-    (onChange)="onBranchChange()"
-    required
-    #branchRef="ngModel"
-    class="w-full"
-  ></p-dropdown>
-  <span *ngIf="branchRef.invalid && branchRef.touched" class="text-red-600 text-sm">
-    Branch Name is required.
-  </span>
-</div>
+      <div class="pb-6">
+        <label for="branchDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
+          Branch Name *
+        </label>
+        <p-dropdown id="branchDropdown" name="branchName" [options]="branches" [(ngModel)]="selectedBranchId"
+          optionLabel="name" optionValue="ID" [filter]="true" filterPlaceholder="Search Branch"
+          placeholder="Select a branch" [showClear]="false" [disabled]="!selectedBankId" (onChange)="onBranchChange()"
+          required #branchRef="ngModel" class="w-full"></p-dropdown>
+        <span *ngIf="branchRef.invalid && branchRef.touched" class="text-red-600 text-sm">
+          Branch Name is required.
+        </span>
+      </div>
 
 
 
     </div>
 
     <div class="flex justify-end m-10">
-      <button
-        (click)="nextFormCreate('pageOne')"
-        type="button"
-        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
-      >
+      <button (click)="nextFormCreate('pageOne')" type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
         Back
       </button>
-      <button
-  type="submit"
-  class="px-4 py-2 bg-[#3980C0] text-white rounded-md"
-  (click)="onSubmit()"
->
-  Update
-</button>
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
+        Update
+      </button>
     </div>
   </div>
 </div>

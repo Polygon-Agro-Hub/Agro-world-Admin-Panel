@@ -74,7 +74,7 @@ export class ViewDistributionOfficerComponent {
   selectedIrmId: string | null = null;
   selectCenterStatus: string = '';
   selectStatus: string = '';
- irmValidationError: boolean = false;
+  irmValidationError: boolean = false;
 
 
   // Add this line
@@ -541,7 +541,7 @@ export class ViewDistributionOfficerComponent {
             title: 'Success',
             text: 'Officer disclaimed successfully!',
             confirmButtonText: 'OK',
-                customClass: {
+            customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
               confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
@@ -578,7 +578,7 @@ export class ViewDistributionOfficerComponent {
     }
 
     // Validate manager
-    if (!this.selectedIrmId) {
+    if (!this.selectedIrmId && this.selectedOfficer?.jobRole !== 'Distribution Centre Manager') {
       this.irmValidationError = true;
     }
 
@@ -590,7 +590,7 @@ export class ViewDistributionOfficerComponent {
     // Payload
     const data = {
       centerId: this.selectedCenterId,
-      irmId: this.selectedIrmId,
+      irmId: this.selectedOfficer?.jobRole === 'Distribution Centre Manager' ? null : this.selectedIrmId,
       id: this.selectOfficerId
     };
 
@@ -601,11 +601,11 @@ export class ViewDistributionOfficerComponent {
           title: 'Success',
           text: 'Officer claimed successfully!',
           confirmButtonText: 'OK',
-           customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-            },
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+          },
         }).then((result) => {
           if (result.isConfirmed) {
             this.iseditModalOpen = false;
@@ -658,4 +658,6 @@ class ManagerNames {
   id!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
+  empId!: string;
+  labelName!:string
 }

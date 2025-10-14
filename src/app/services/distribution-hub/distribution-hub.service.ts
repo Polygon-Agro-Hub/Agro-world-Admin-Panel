@@ -117,7 +117,7 @@ export class DistributionHubService {
     return this.http.delete<any>(url, { headers });
   }
 
-  getDistributionHeadDetailsById(id: number): Observable<any> {
+  getDistributionHeadDetailsById(id: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -270,7 +270,7 @@ export class DistributionHubService {
     return this.http.delete<any>(url, { headers });
   }
 
-  ChangeStatus(id: number, status: string): Observable<any> {
+  ChangeStatus(id: number | null, status: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -314,6 +314,7 @@ export class DistributionHubService {
   }
 
   getAllManagerList(companyId: any, centerId: any): Observable<any> {
+    console.log('companyId', companyId, 'centerId', centerId)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -406,6 +407,29 @@ export class DistributionHubService {
     return this.http.patch(`${this.apiUrl}distribution/claim-distributed-Officer`, data, {
       headers,
     });
+  }
+
+  getOfficerById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiUrl}distribution/get-officer-details/${id}`, {
+      headers,
+    });
+  }
+
+  getDistributionCentreList(companyId: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log('This is company Id', companyId);
+    return this.http.get(
+      `${this.apiUrl}distribution/get-all-distribution-center-list/${companyId}`,
+      {
+        headers,
+      }
+    );
   }
 
 }

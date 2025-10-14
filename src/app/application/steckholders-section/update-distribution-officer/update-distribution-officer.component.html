@@ -50,8 +50,11 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
-          <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Staff Employee Type
+          <label
+            for="enpType"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Staff Employee Type *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -78,8 +81,11 @@
         </div>
 
         <div>
-          <label for="languages" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Preferred Languages
+          <label
+            for="languages"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Preferred Languages *
           </label>
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
@@ -104,13 +110,26 @@
         </div>
 
         <div>
-          <label for="companyId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name*
+          <label
+            for="companyId"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Company Name *
           </label>
-          <p-dropdown [(ngModel)]="personalData.companyId" [options]="companyOptions" optionLabel="label"
-            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a company"
-            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
+          <p-dropdown
+            [(ngModel)]="personalData.companyId"
+            [options]="companyOptions"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            filterBy="label"
+            [showClear]="false"
+            placeholder="Select a company"
+            styleClass="w-full mt-1"
+            panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom"
+            (onChange)="getAllCollectionCenters()"
+          >
           </p-dropdown>
           <div *ngIf="!personalData.companyId" class="text-red-500 text-sm mt-1">
             <div>Company Name is required</div>
@@ -119,21 +138,36 @@
 
         <!-- Replace Collection Centre Name dropdown -->
         <div>
-          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Distribution Centre Name*
+          <label
+            for="centerId"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Distribution Centre Name *
           </label>
-          <p-dropdown [(ngModel)]="personalData.centerId" [options]="centerOptions" optionLabel="label"
-            optionValue="value" [filter]="true" filterBy="label" [showClear]="false" 
-            placeholder="Select a collection centre" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
+          <p-dropdown
+            [(ngModel)]="personalData.centerId"
+            [options]="centerOptions"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="true"
+            filterBy="label"
+            [showClear]="false"
+            placeholder="Select a collection centre"
+            styleClass="w-full mt-1"
+            panelStyleClass="custom-dropdown-panel"
+            class="mt-1 block w-full p-dropdown-custom"
+            (onChange)="getAllCollectionManagers()">
           </p-dropdown>
         </div>
 
 
 
         <div>
-          <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Job Role
+          <label
+            for="jobRole"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Job Role *
           </label>
           <div class="relative">
             <p-dropdown id="jobRole" [(ngModel)]="personalData.jobRole" (onChange)="EpmloyeIdCreate()"
@@ -173,8 +207,11 @@
 
         <div>
           <div *ngIf="personalData.jobRole === 'Distribution Officer'">
-            <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-              Manager Name*
+            <label
+              for="managerId"
+              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >
+              Manager Name *
             </label>
             <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
               optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
@@ -189,8 +226,11 @@
         <!-- First Name (in English) - Updated with validation call -->
         <!-- First Name (in English) - Updated with validation call -->
         <div>
-          <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            First Name (in English)*
+          <label
+            for="firstNameEnglish"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            First Name (in English) *
           </label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             (keydown)="preventLeadingSpace($event, 'firstNameEnglish')"
@@ -203,8 +243,11 @@
 
         <!-- Last Name (in English) - Updated with validation call -->
         <div>
-          <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Last Name (in English)
+          <label
+            for="variety"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Last Name (in English) *
           </label>
           <input id="lastName" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
             (keydown)="preventLeadingSpace($event, 'lastNameEnglish')"
@@ -217,9 +260,15 @@
 
         <!-- First Name (in Sinhala) - Updated with validation call -->
         <div>
-          <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
-            Sinhala)*</label>
-          <input id="firstName" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
+          <label
+            for="crop"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >First Name (in Sinhala) *</label
+          >
+          <input
+            id="firstName"
+            name="firstNameSinhala"
+            [(ngModel)]="personalData.firstNameSinhala"
             (keydown)="preventLeadingSpace($event, 'firstNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameSinhalaInput="ngModel" (input)="formatName('firstNameSinhala')" required />
@@ -232,9 +281,15 @@
 
         <!-- Last Name (in Sinhala) - Updated with validation call -->
         <div>
-          <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-            Sinhala)</label>
-          <input id="lastName" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
+          <label
+            for="variety"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Last Name (in Sinhala) *</label
+          >
+          <input
+            id="lastName"
+            name="lastNameSinhala"
+            [(ngModel)]="personalData.lastNameSinhala"
             (keydown)="preventLeadingSpace($event, 'lastNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #lastNameSinhalaInput="ngModel" (input)="formatName('lastNameSinhala')" required />
@@ -247,9 +302,15 @@
 
         <!-- First Name (in Tamil) - Updated with validation call -->
         <div>
-          <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
-            Tamil)*</label>
-          <input id="firstName" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
+          <label
+            for="crop"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >First Name (in Tamil) *</label
+          >
+          <input
+            id="firstName"
+            name="firstNameTamil"
+            [(ngModel)]="personalData.firstNameTamil"
             (keydown)="preventLeadingSpace($event, 'firstNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameTamilInput="ngModel" (input)="formatName('firstNameTamil')" required />
@@ -260,9 +321,15 @@
 
         <!-- Last Name (in Tamil) - Updated with validation call -->
         <div>
-          <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
-            Tamil)</label>
-          <input id="lastName" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
+          <label
+            for="variety"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Last Name (in Tamil) *</label
+          >
+          <input
+            id="lastName"
+            name="lastNameTamil"
+            [(ngModel)]="personalData.lastNameTamil"
             (keydown)="preventLeadingSpace($event, 'lastNameTamil')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #lastNameTamilInput="ngModel" (input)="formatName('lastNameTamil')" required />
@@ -273,8 +340,11 @@
 
         <!-- Fixed Mobile Number - 01 input -->
         <div>
-          <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Mobile Number - 01*
+          <label
+            for="phoneNumber01"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Mobile Number - 01 *
           </label>
           <div class="mt-1">
             <div class="flex">
@@ -367,8 +437,16 @@
         </div>
 
         <div>
-          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number*</label>
-          <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keydown)="preventLeadingSpace($event, 'nic')"
+          <label
+            for="nic"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >NIC Number *</label
+          >
+          <input
+            id="nic"
+            name="nic"
+            [(ngModel)]="personalData.nic"
+            (keydown)="preventLeadingSpace($event, 'nic')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('nic')" />
           <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
@@ -378,8 +456,16 @@
         </div>
 
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email*</label>
-          <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
+          <label
+            for="email"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Email *</label
+          >
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="personalData.email"
             (keydown)="preventLeadingSpace($event, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('email')" />
@@ -450,10 +536,17 @@
     <div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div class="pb-6">
-          <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
-            Number*</label>
-          <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber"
-            (keydown)="preventLeadingSpace($event, 'houseNumber')" (input)="formatHouseNumber()"
+          <label
+            for="house"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >House / Plot Number *</label
+          >
+          <input
+            id="houseNumber"
+            name="houseNumber"
+            [(ngModel)]="personalData.houseNumber"
+            (keydown)="preventLeadingSpace($event, 'houseNumber')"
+            (input)="formatHouseNumber()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #houseNumberInput="ngModel" required />
           <div *ngIf="houseNumberInput.touched && !personalData.houseNumber" class="text-red-500 text-sm mt-1">
@@ -462,9 +555,17 @@
         </div>
 
         <div class="pb-6">
-          <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name*</label>
-          <input id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
-            (keydown)="preventLeadingSpace($event, 'streetName')" (input)="formatStreetName()"
+          <label
+            for="street"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Street Name *</label
+          >
+          <input
+            id="streetName"
+            name="streetName"
+            [(ngModel)]="personalData.streetName"
+            (keydown)="preventLeadingSpace($event, 'streetName')"
+            (input)="formatStreetName()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #streetNameInput="ngModel" required />
           <div *ngIf="streetNameInput.touched && !personalData.streetName" class="text-red-500 text-sm mt-1">
@@ -473,8 +574,16 @@
         </div>
 
         <div class="pb-6">
-          <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City*</label>
-          <input id="city" name="city" [(ngModel)]="personalData.city" (keydown)="preventLeadingSpace($event, 'city')"
+          <label
+            for="city"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >City *</label
+          >
+          <input
+            id="city"
+            name="city"
+            [(ngModel)]="personalData.city"
+            (keydown)="preventLeadingSpace($event, 'city')"
             (input)="formatCity()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #cityInput="ngModel" required />
@@ -484,8 +593,11 @@
         </div>
 
         <div class="pb-6">
-          <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            District*
+          <label
+            for="district"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            District *
           </label>
 
           <p-dropdown [options]="districts" [(ngModel)]="personalData.district" optionLabel="name" optionValue="name"
@@ -500,8 +612,11 @@
         </div>
 
         <div class="pb-6">
-          <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Province*
+          <label
+            for="province"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >
+            Province *
           </label>
           <input id="province" name="province" [(ngModel)]="personalData.province"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -509,8 +624,15 @@
         </div>
 
         <div class="pb-6">
-          <label for="country" class="block text-sm font-medium text-gray-700 dark:text-textDark">Country*</label>
-          <input id="country" name="country" [(ngModel)]="personalData.country"
+          <label
+            for="country"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Country *</label
+          >
+          <input
+            id="country"
+            name="country"
+            [(ngModel)]="personalData.country"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             readonly />
         </div>
@@ -521,9 +643,15 @@
         Add Bank Details
       </h2>
       <div class="pb-6">
-        <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
-          Name*</label>
-        <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
+        <label
+          for="accHolderName"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Account Holder's Name *</label
+        >
+        <input
+          id="accHolderName"
+          name="accHolderName"
+          [(ngModel)]="personalData.accHolderName"
           (keydown)="preventLeadingSpace($event, 'accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accHolderNameInput="ngModel" (input)="formatAccountHolderName()" required />
@@ -565,9 +693,15 @@
       </div> -->
 
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number <span
-            class="text-[#2E2E2E]">*</span></label>
-        <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
+        <label
+          for="accNumber"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+          >Account Number *</label
+        >
+        <input
+          id="accNumber"
+          name="accNumber"
+          [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required pattern="^[0-9]+$" (keypress)="allowOnlyNumbers($event)"
           (ngModelChange)="validateAccNumber()" />
@@ -620,8 +754,11 @@
         </div> -->
 
       <div class="pb-6">
-        <label for="bankDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Bank Name*
+        <label
+          for="bankDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Bank Name *
         </label>
         <p-dropdown [(ngModel)]="personalData.bankName" [options]="bankOptions" optionLabel="label" optionValue="value"
           [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a bank" (onChange)="onBankChange()"
@@ -630,8 +767,11 @@
       </div>
 
       <div class="pb-6">
-        <label for="branchDropdown" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Branch Name*
+        <label
+          for="branchDropdown"
+          class="block text-sm font-medium text-gray-700 dark:text-textDark"
+        >
+          Branch Name *
         </label>
         <p-dropdown [(ngModel)]="personalData.branchName" [options]="branchOptions" optionLabel="label"
           optionValue="value" [filter]="true" filterBy="label" [showClear]="true" [disabled]="!branchOptions.length"

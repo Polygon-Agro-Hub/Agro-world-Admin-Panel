@@ -4,13 +4,9 @@
   Back
 </button>
 
-<div
-  class="px-12 py-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
->
+<div class="px-12 py-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex justify-start items-center mb-8">
-    <h2
-      class="text-2xl font-normal text-center text-textLight dark:text-textDark"
-    >
+    <h2 class="text-2xl font-normal text-center text-textLight dark:text-textDark">
       Upload Delivery Charges Excel File
     </h2>
   </div>
@@ -21,23 +17,11 @@
   <div class="flex justify-center items-center mt-6">
     <div
       class="bg-[#EBF5FF] flex flex-col justify-center items-center py-10 px-72 border-[2px] border-[#0090FF] rounded-lg border-dashed"
-      (click)="fileInput.click()"
-      (dragover)="onDragOver($event)"
-      (dragleave)="onDragLeave($event)"
-      (drop)="onDrop($event)"
-    >
-      <input
-        (change)="onFileSelected($event)"
-        type="file"
-        accept=".csv, .xlsx"
-        class="hidden"
-        #fileInput
-      />
+      (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)">
+      <input (change)="onFileSelected($event)" type="file" accept=".csv, .xlsx" class="hidden" #fileInput />
 
-      <div
-        *ngIf="!selectedFile"
-        class="flex flex-col justify-center items-center"
-      >
+      <div *ngIf="!selectedFile" class="flex flex-col justify-center items-center">
         <i class="fa-solid fa-cloud-arrow-up text-[100px] text-gray-400"></i>
         <p class="text-2xl text-[#0090FF] font-semibold mt-5">
           Select a CSV or XLSX file to upload
@@ -58,16 +42,10 @@
   </div>
 
   <div class="flex justify-end mt-12">
-    <button
-      class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md"
-      (click)="onCancel()"
-    >
+    <button class="px-4 py-2 mx-4 bg-[#74788D] text-white rounded-md" onclick="history.back()">
       Cancel
     </button>
-    <button
-      class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md"
-      (click)="onSave()"
-    >
+    <button class="px-6 py-2 mx-4 bg-[#3980C0] text-white rounded-md" (click)="onSave()">
       Save
     </button>
   </div>

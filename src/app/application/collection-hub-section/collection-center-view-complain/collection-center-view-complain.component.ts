@@ -54,9 +54,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
 
   @ViewChild("dropdown") dropdown!: Dropdown;
 
-
-
-
   constructor(
     private complainSrv: CollectionCenterService,
     private datePipe: DatePipe,

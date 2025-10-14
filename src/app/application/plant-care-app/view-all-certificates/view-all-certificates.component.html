@@ -1,114 +1,203 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 <div class="mb-5 flex justify-between">
-  <button (click)="addNew()" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center">
+  <button
+    (click)="addNew()"
+    class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center"
+  >
     <i class="fa-solid fa-plus mr-2"></i>
     Add New
   </button>
 </div>
 
 <div class="overflow-x-auto">
-  <div class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5">
+  <div
+    class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
+  >
     <div *ngIf="!hasData" class="text-center py-8">
       <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mx-auto" />
+      <img
+        src="assets/images/NoData.png"
+        alt="No Data"
+        class="w-20 h-20 mx-auto"
+      />
     </div>
     <div *ngIf="hasData">
       <div class="flex items-center justify-between">
-        <h2 class="text-xl text-left text-textLight dark:text-textDark font-bold mb-2">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-2">
           View Certificates
         </h2>
 
         <div class="flex flex-row gap-x-3 items-center justify-center">
           <p-dropdown
             styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-            [options]="QuactionFilter" [(ngModel)]="selectQaction" optionLabel="label" optionValue="value"
-            [showClear]="!!selectQaction" placeholder="Quactions" (onChange)="fetchData()">
+            [options]="QuactionFilter"
+            [(ngModel)]="selectQaction"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="!!selectQaction"
+            placeholder="Quactions"
+            (onChange)="fetchData()"
+          >
           </p-dropdown>
 
           <p-dropdown
             styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-            [options]="serviceAreasOptions" [(ngModel)]="selectArea" optionLabel="name" optionValue="value"
-            [showClear]="!!selectArea" placeholder="Area" (onChange)="fetchData()">
+            [options]="serviceAreasOptions"
+            [(ngModel)]="selectArea"
+            optionLabel="name"
+            optionValue="value"
+            [showClear]="!!selectArea"
+            placeholder="Area"
+            (onChange)="fetchData()"
+          >
           </p-dropdown>
 
           <p-dropdown
             styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-            [options]="companyArr" [(ngModel)]="selectCompany" optionLabel="companyName" optionValue="id"
-            [showClear]="!!selectCompany" placeholder="Company" (onChange)="fetchData()">
+            [options]="companyArr"
+            [(ngModel)]="selectCompany"
+            optionLabel="companyName"
+            optionValue="id"
+            [showClear]="!!selectCompany"
+            placeholder="Company"
+            (onChange)="fetchData()"
+          >
           </p-dropdown>
 
           <!-- Search bar -->
           <div
-            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5">
-            <input type="text" placeholder="Search by Certificate Number / Name" [(ngModel)]="searchText"
-              (keyup.enter)="onSearch()" (keyup.esc)="offSearch()"
-              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5"
+          >
+            <input
+              type="text"
+              placeholder="Search by Certificate Number / Name"
+              [(ngModel)]="searchText"
+              (keyup.enter)="onSearch()"
+              (keyup.esc)="offSearch()"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            />
 
             <!-- Search button -->
-            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-              (click)="onSearch()">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="onSearch()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+                />
               </svg>
             </button>
 
             <!-- Clear button -->
-            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none"
+              (click)="offSearch()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
         </div>
       </div>
 
-      <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4">
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4"
+      >
         <thead>
           <tr>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              No({{ certificateArr.length | number : "2.0" }})
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              No ({{ certificateArr.length | number : "2.0" }})
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               Certificate Number
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               Certificate Name
             </th>
 
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               Company
             </th>
 
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
               Commission
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
               Service Areas
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
               Questions
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
               Questionaire
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               Last Modified By
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               Last Modified On
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"></th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            ></th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of certificateArr; let i = index" class="border-b border-gray-200 dark:border-[#4B555A]">
+          <tr
+            *ngFor="let item of certificateArr; let i = index"
+            class="border-b border-gray-200 dark:border-[#4B555A]"
+          >
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ i + 1 | number : "2.0" }}
             </td>
@@ -126,32 +215,58 @@
               {{ item.commission }}%
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button class="w-6 h-6 text-blue-500 hover:text-blue-700" title="View Company"
-                (click)="servicePopUpOpen(item.serviceAreas)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <button
+                class="w-6 h-6 text-blue-500 hover:text-blue-700"
+                title="View Company"
+                (click)="servicePopUpOpen(item.serviceAreas)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </button>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <p [ngClass]="
+              <p
+                [ngClass]="
                   item.qCount === 0 ? 'text-[#FF0000]' : 'text-[#000000]'
-                ">
+                "
+              >
                 {{ item.qCount === 0 ? "No" : "Yes" }}
               </p>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button [ngClass]="
+              <button
+                [ngClass]="
                   item.qCount === 0
                     ? 'text-[#FF0000]'
                     : 'text-blue-500 hover:text-blue-700'
-                " class="w-6 h-6" title="Questionnaire" (click)="navigateToQuestionnaire(item)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                "
+                class="w-6 h-6"
+                title="Questionnaire"
+                (click)="navigateToQuestionnaire(item)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </button>
             </td>
@@ -164,34 +279,71 @@
             </td>
             <td class="text-center flex justify-center mt-3 space-x-3">
               <!-- VIEW -->
-              <button class="w-6 h-6 text-blue-500 hover:text-blue-700" title="View Company" [disabled]="isLoading"
-                (click)="viewCertificate(item)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <button
+                class="w-6 h-6 text-blue-500 hover:text-blue-700"
+                title="View Company"
+                [disabled]="isLoading"
+                (click)="viewCertificate(item)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </button>
 
               <!-- EDIT -->
-              <button class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6"
-                [disabled]="isLoading" title="Edit Certificate" (click)="editCertificate(item)">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <button
+                class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6"
+                [disabled]="isLoading"
+                title="Edit Certificate"
+                (click)="editCertificate(item)"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                  viewBox="0 0 32 32"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <title>Edit</title>
                   <path
-                    d="M7.263 19.051l-1.656 5.797c-0.03 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                  </path>
+                    d="M7.263 19.051l-1.656 5.797c-0.03 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
+                  ></path>
                 </svg>
               </button>
 
               <!-- DELETE -->
-              <button class="text-red-500 hover:text-red-700 flex items-center justify-center w-6 h-6"
-                [disabled]="isLoading" title="Delete Certificate" (click)="deleteCertificate(item)">
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                  viewBox="0 0 24 24">
+              <button
+                class="text-red-500 hover:text-red-700 flex items-center justify-center w-6 h-6"
+                [disabled]="isLoading"
+                title="Delete Certificate"
+                (click)="deleteCertificate(item)"
+              >
+                <svg
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
                   <title>Delete</title>
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z"
+                  />
                 </svg>
               </button>
             </td>
@@ -202,11 +354,15 @@
   </div>
 </div>
 
-
-<div *ngIf="isServicePopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  (click)="servicePopUpClose()">
-  <div class="flex flex-col justify-center items-center gap-y-6 bg-[#FFFFFF] dark:bg-tileBlack px-12 py-4 rounded-lg shadow-md"
-    (click)="$event.stopPropagation()">
+<div
+  *ngIf="isServicePopUp"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="servicePopUpClose()"
+>
+  <div
+    class="flex flex-col justify-center items-center gap-y-6 bg-[#FFFFFF] dark:bg-tileBlack px-12 py-4 rounded-lg shadow-md"
+    (click)="$event.stopPropagation()"
+  >
     <p class="text-lg font-semibold dark:text-white">Service Areas</p>
 
     <!-- Show message if no areas -->
@@ -214,12 +370,25 @@
       No service areas available
     </div>
 
-    <div *ngIf="serviceAreaArray?.length" class="flex flex-col max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <div *ngFor="let area of serviceAreaArray; let i=index" class="py-1 px-2">
-        <span class="text-gray-700 dark:text-gray-300">{{(i+1)}}. {{ area }}</span>
+    <div
+      *ngIf="serviceAreaArray?.length"
+      class="flex flex-col max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    >
+      <div
+        *ngFor="let area of serviceAreaArray; let i = index"
+        class="py-1 px-2"
+      >
+        <span class="text-gray-700 dark:text-gray-300"
+          >{{ i + 1 }}. {{ area }}</span
+        >
       </div>
     </div>
 
-    <button class="text-white bg-[#74788D] px-4 py-1 rounded-lg" (click)="servicePopUpClose()">Close</button>
+    <button
+      class="text-white bg-[#74788D] px-4 py-1 rounded-lg"
+      (click)="servicePopUpClose()"
+    >
+      Close
+    </button>
   </div>
 </div>

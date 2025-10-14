@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 import { environment } from '../../environment/environment.development';
@@ -48,28 +48,32 @@ export interface Questionnaire {
   updatedAt?: string;
 }
 
-export interface CreateFarmerClusterPayload {
+export interface FarmerCluster {
   clusterName: string;
   farmerNICs: string[];
-}
-
-export interface CreateFarmerClusterResponse {
-  message: string;
-  status: boolean;
-  data: {
-    clusterId: number;
-    clusterName: string;
-    farmersAdded: number;
-    totalFarmers: number;
-  };
-}
-
-export interface FarmerClusterErrorResponse {
-  message: string;
-  status: boolean;
+  clusterId?: number;
+  memberCount?: number;
+  lastModifiedBy?: string;
+  lastModifiedDate?: string;
+  farmersAdded?: number;
+  totalFarmers?: number;
   missingNICs?: string[];
   existingNICs?: string[];
   details?: string;
+  message?: string;
+  status?: boolean;
+  members?: ClusterMember[];
+}
+
+export interface ClusterMember {
+  no: string;
+  id: number;
+  farmerId: number;
+  firstName: string;
+  lastName: string;
+  nic: string;
+  phoneNumber: string;
+  addedDate?: string;
 }
 
 @Injectable({
@@ -295,17 +299,92 @@ export class CertificateCompanyService {
   }
 
   // Create farmer cluster with bulk farmers
-  createFarmerCluster(
-    payload: CreateFarmerClusterPayload
-  ): Observable<CreateFarmerClusterResponse> {
+  createFarmerCluster(payload: FarmerCluster): Observable<FarmerCluster> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
       'Content-Type': 'application/json',
     });
 
-    return this.http.post<CreateFarmerClusterResponse>(
+    return this.http.post<FarmerCluster>(
       `${this.apiUrl}certificate-company/create-farmer-cluster`,
       payload,
+      { headers }
+    );
+  }
+
+  // Add single farmer to existing cluster
+  addFarmerToCluster(clusterId: number, nic: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+
+    const payload = { nic };
+
+    return this.http.post<any>(
+      `${this.apiUrl}certificate-company/add-single-farmer-to-cluster/${clusterId}`,
+      payload,
+      { headers }
+    );
+  }
+
+  // Get all farmer clusters
+  getAllFarmerClusters(searchTerm?: string): Observable<{
+    status: boolean;
+    message: string;
+    data: FarmerCluster[];
+  }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    let params = new HttpParams();
+    if (searchTerm) {
+      params = params.set('search', searchTerm);
+    }
+
+    return this.http.get<{
+      status: boolean;
+      message: string;
+      data: FarmerCluster[];
+    }>(`${this.apiUrl}certificate-company/get-farmer-clusters`, {
+      headers,
+      params,
+    });
+  }
+
+  // Remove user from cluster
+  removeUserFromCluster(clusterId: number, userId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.delete(
+      `${this.apiUrl}certificate-company/delete-farmer-clusters/${clusterId}/users/${userId}`,
+      { headers }
+    );
+  }
+
+  // Get cluster members by clusterId
+  getClusterMembers(clusterId: number): Observable<FarmerCluster> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.get<FarmerCluster>(
+      `${this.apiUrl}certificate-company/get-cluster-users/${clusterId}`,
+      { headers }
+    );
+  }
+
+  // Delete farmer cluster
+  deleteFarmerCluster(clusterId: number): Observable<FarmerCluster> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.delete<FarmerCluster>(
+      `${this.apiUrl}certificate-company/delete-farmer-cluster/${clusterId}`,
       { headers }
     );
   }

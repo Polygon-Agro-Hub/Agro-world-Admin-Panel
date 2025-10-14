@@ -247,22 +247,22 @@ export class DefinePackageViewComponent implements OnInit {
       inputElement.value = '';
       return;
     } else {
-      if (quantity <= 0) {
-        productType.quantity = undefined;
-        productType.calculatedPrice = undefined;
-        inputElement.value = '';
-        Swal.fire({
-          icon: 'warning',
-          title: 'Warning',
-          text: 'Quantity must be greater than 0!',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-          },
-        });
-        return;
-      }
+      // if (quantity < 0) {
+      //   productType.quantity = undefined;
+      //   productType.calculatedPrice = undefined;
+      //   inputElement.value = '';
+      //   Swal.fire({
+      //     icon: 'warning',
+      //     title: 'Warning',
+      //     text: 'Quantity must be greater than 0!',
+      //     customClass: {
+      //       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      //       title: 'font-semibold',
+      //       confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+      //     },
+      //   });
+      //   return;
+      // }
       productType.quantity = quantity;
       productType.calculatedPrice = quantity * (productType.selectedProductPrice || 0);
     }

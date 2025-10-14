@@ -130,47 +130,49 @@ export class EditSalesAgentComponent implements OnInit {
     this.loadBanks();
     this.loadBranches();
     this.itemId = this.route.snapshot.params['id'];
+    this.fetchData();
+  }
 
-    if (this.itemId) {
-      this.isLoading = true;
+  fetchData() {
+    this.isLoading = true;
 
-      this.salesAgentService.getSalesAgentReportById(this.itemId).subscribe({
-        next: (response: any) => {
-          const officerData = response.officerData[0];
+    this.salesAgentService.getSalesAgentReportById(this.itemId).subscribe({
+      next: (response: any) => {
+        const officerData = response.officerData[0];
 
-          this.personalData.empId = officerData.empId;
-          this.personalData.firstName = officerData.firstName || '';
-          this.personalData.lastName = officerData.lastName || '';
-          this.personalData.phoneCode1 = officerData.phoneCode1 || '+94';
-          this.personalData.phoneNumber1 = officerData.phoneNumber1 || '';
-          this.personalData.phoneCode2 = officerData.phoneCode2 || '+94';
-          this.personalData.phoneNumber2 = officerData.phoneNumber2 || '';
-          this.personalData.nic = officerData.nic || '';
-          this.personalData.email = officerData.email || '';
-          this.personalData.houseNumber = officerData.houseNumber || '';
-          this.personalData.streetName = officerData.streetName || '';
-          this.personalData.city = officerData.city || '';
-          this.personalData.district = officerData.district || '';
-          this.personalData.province = officerData.province || '';
-          this.personalData.bankName = officerData.bankName || '';
-          this.personalData.branchName = officerData.branchName || '';
-          this.personalData.accHolderName = officerData.accHolderName || '';
-          this.personalData.accNumber = officerData.accNumber || '';
-          this.personalData.empType = officerData.empType || '';
-          this.personalData.image = officerData.image || '';
+        this.personalData.empId = officerData.empId;
+        this.personalData.firstName = officerData.firstName || '';
+        this.personalData.lastName = officerData.lastName || '';
+        this.personalData.phoneCode1 = officerData.phoneCode1 || '+94';
+        this.personalData.phoneNumber1 = officerData.phoneNumber1 || '';
+        this.personalData.phoneCode2 = officerData.phoneCode2 || '+94';
+        this.personalData.phoneNumber2 = officerData.phoneNumber2 || '';
+        this.personalData.nic = officerData.nic || '';
+        this.personalData.email = officerData.email || '';
+        this.personalData.houseNumber = officerData.houseNumber || '';
+        this.personalData.streetName = officerData.streetName || '';
+        this.personalData.city = officerData.city || '';
+        this.personalData.district = officerData.district || '';
+        this.personalData.province = officerData.province || '';
+        this.personalData.bankName = officerData.bankName || '';
+        this.personalData.branchName = officerData.branchName || '';
+        this.personalData.accHolderName = officerData.accHolderName || '';
+        this.personalData.accNumber = officerData.accNumber || '';
+        this.personalData.empType = officerData.empType || '';
+        this.personalData.image = officerData.image || '';
 
-          this.empType = this.personalData.empType;
-          this.lastID = this.personalData.empId.slice(-5);
-          this.confirmAccNumber = this.personalData.accNumber;
+        this.empType = this.personalData.empType;
+        this.lastID = this.personalData.empId.slice(-5);
+        this.confirmAccNumber = this.personalData.accNumber;
 
-          this.matchExistingBankToDropdown();
-          this.isLoading = false;
-        },
-        error: () => {
-          this.isLoading = false;
-        },
-      });
-    }
+        this.matchExistingBankToDropdown();
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
+
   }
 
   getFlagUrl(countryCode: string): string {
@@ -616,7 +618,7 @@ export class EditSalesAgentComponent implements OnInit {
     // Last Name
     if (!this.personalData.lastName) {
       missingFields.push('Last Name is Required');
-    } 
+    }
 
     // Phone Number 1
     if (!this.personalData.phoneNumber1) {
@@ -1104,6 +1106,75 @@ export class EditSalesAgentComponent implements OnInit {
   validatePhoneNumber(phoneNumber: string): boolean {
     const phonePattern = /^7\d{8}$/;
     return phonePattern.test(phoneNumber);
+  }
+
+  resetPassword() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to reset the Sales Agent password. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, reset password!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        this.salesAgentService.ChangeStatus(this.itemId, 'Approved').subscribe(
+          (res) => {
+            this.isLoading = false;
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'The Sales Agent password reset successfully.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+              this.fetchData();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Something went wrong. Please try again.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'An error occurred while resetting password. Please try again.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        );
+      }
+    });
   }
 
 }

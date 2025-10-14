@@ -125,7 +125,7 @@ export class CollectionOfficerService {
     );
   }
 
-  claimOfficer(id: number, payload: { centerId: string; irmId?: string }): Observable<any> {
+  claimOfficer(id: number, payload: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

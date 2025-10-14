@@ -24,9 +24,9 @@ export class ComplaintsService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
- private getHeaders(): HttpHeaders | null {
+  private getHeaders(): HttpHeaders | null {
     const token = this.tokenService.getToken();
     if (!token) {
       console.error('No token found');
@@ -42,7 +42,7 @@ export class ComplaintsService {
     });
   }
 
-   fetchWholesaleComplaints(): Observable<ApiResponse> {
+  fetchWholesaleComplaints(): Observable<ApiResponse> {
     const headers = this.getHeaders();
     if (!headers) {
       return throwError(() => new Error('No authentication token found'));
@@ -59,8 +59,8 @@ export class ComplaintsService {
         })
       );
   }
-  
-   fetchComplain(complainId: string): Observable<any> {
+
+  fetchComplain(complainId: string): Observable<any> {
     const headers = this.getHeaders();
     if (!headers) {
       return throwError(() => new Error('No authentication token found'));
@@ -69,7 +69,7 @@ export class ComplaintsService {
     const url = `${this.apiUrl}complain/get-marketplace-complaint/${complainId}`;
     console.log('Fetching complaint from:', url);
     return this.http.get(url, { headers });
-}
+  }
 
   submitComplaint(complainId: string, reply: string): Observable<any> {
     const headers = this.getHeaders();
@@ -85,7 +85,7 @@ export class ComplaintsService {
     );
   }
 
-    fetchComplaints(): Observable<ApiResponse> {
+  fetchComplaints(): Observable<ApiResponse> {
     const headers = this.getHeaders();
     if (!headers) {
       return throwError(() => new Error('No authentication token found'));
@@ -102,9 +102,9 @@ export class ComplaintsService {
         })
       );
 
-      
-}
-fetchComplaintCategories(): Observable<any> {
+
+  }
+  fetchComplaintCategories(): Observable<any> {
     const headers = this.getHeaders();
     if (!headers) {
       return throwError(() => new Error('No authentication token found'));
@@ -121,7 +121,7 @@ fetchComplaintCategories(): Observable<any> {
           return throwError(() => err);
         })
       );
-}
+  }
 
   getAllSystemApplications(): Observable<any> {
     const headers = new HttpHeaders({
@@ -170,47 +170,47 @@ fetchComplaintCategories(): Observable<any> {
     );
   }
 
-addNewApplication(applicationName: string): Observable<any> {
-  const headers = this.getHeaders();
-  if (!headers) {
-    return throwError(() => new Error('No authentication token found'));
+  addNewApplication(applicationName: string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return throwError(() => new Error('No authentication token found'));
+    }
+    return this.http.post(
+      `${this.apiUrl}complain/add-new-application/${applicationName}`,
+      {},       // Empty body, or add body if needed
+      { headers }  // Pass headers here properly
+    );
   }
-  return this.http.post(
-    `${this.apiUrl}complain/add-new-application/${applicationName}`,
-    {},       // Empty body, or add body if needed
-    { headers }  // Pass headers here properly
-  );
-}
-getApplicationNameById(appId: number) {
-  const headers = this.getHeaders(); // Your method to get auth token headers
-  if (!headers) {
-    return throwError(() => new Error('No authentication token found'));
-  }
-  return this.http.get<{ appName: string }>(
-    `${this.apiUrl}complain/get-application-name/${appId}`,
-    { headers }
-  );
-}
-
-
-
-
-editApplication(systemAppId: number, applicationName: string): Observable<any> {
-  const headers = this.getHeaders();
-  if (!headers) {
-    return throwError(() => new Error('No authentication token found'));
+  getApplicationNameById(appId: number) {
+    const headers = this.getHeaders(); // Your method to get auth token headers
+    if (!headers) {
+      return throwError(() => new Error('No authentication token found'));
+    }
+    return this.http.get<{ appName: string }>(
+      `${this.apiUrl}complain/get-application-name/${appId}`,
+      { headers }
+    );
   }
 
-  const params = new HttpParams()
-    .set('systemAppId', systemAppId.toString())
-    .set('applicationName', applicationName);
 
-  return this.http.post(
-    `${this.apiUrl}complain/edit-application/`,
-    {}, // If your backend uses POST, keep empty body
-    { headers, params }
-  );
-}
+
+
+  editApplication(systemAppId: number, applicationName: string): Observable<any> {
+    const headers = this.getHeaders();
+    if (!headers) {
+      return throwError(() => new Error('No authentication token found'));
+    }
+
+    const params = new HttpParams()
+      .set('systemAppId', systemAppId.toString())
+      .set('applicationName', applicationName);
+
+    return this.http.post(
+      `${this.apiUrl}complain/edit-application/`,
+      {}, // If your backend uses POST, keep empty body
+      { headers, params }
+    );
+  }
 
 
   deleteApplicationById(systemAppId: number): Observable<any> {
@@ -258,7 +258,7 @@ editApplication(systemAppId: number, applicationName: string): Observable<any> {
     limit: number,
     status: String,
     category: String,
-    replyStatus:string='',
+    replyStatus: string = '',
     comCategory: String,
     searchText: string,
   ): Observable<any> {
@@ -304,7 +304,63 @@ editApplication(systemAppId: number, applicationName: string): Observable<any> {
     });
   }
 
-  
+  getAllCenterComplain(
+    page: number,
+    limit: number,
+    status: String,
+    category: String,
+    comCategory: String,
+    filterCompany: String,
+    searchText: string,
+    rpstatus: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    console.log('searchText', searchText);
+
+    let url = `${this.apiUrl}complain/get-all-distributed-complains?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (category) {
+      url += `&category=${category}`;
+    }
+
+    if (comCategory) {
+      url += `&comCategory=${comCategory}`;
+    }
+
+    if (filterCompany) {
+      url += `&filterCompany=${filterCompany}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    if (rpstatus) {
+      url += `&rpstatus=${rpstatus}`;
+    }
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
+
+  getDistributionComplainById(id: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}complain/get-distributed-complain-by-id/${id}`, {
+      headers,
+    });
+  }
 
 }
 

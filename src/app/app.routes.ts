@@ -179,7 +179,7 @@ import { ViewFarmerStaffComponent } from './application/steckholders-section/vie
 import { ViewExpencesFarmerReportComponent } from './application/collection-hub-section/view-expences-farmer-report/view-expences-farmer-report.component';
 import { ViewFarmOwnerComponent } from './application/steckholders-section/view-farm-owner/view-farm-owner.component';
 import { EditUserStaffComponent } from './application/steckholders-section/edit-user-staff/edit-user-staff.component';
-import { FarmerFarmsComponent } from './application/plant-care-app/farmer-farms/farmer-farms.component'
+import { FarmerFarmsComponent } from './application/plant-care-app/farmer-farms/farmer-farms.component';
 import { FarmersFarmsFixedAssetsBuildingComponent } from './application/plant-care-app/farmers-farms-fixed-assets-building/farmers-farms-fixed-assets-building.component';
 import { FarmerListFarmersFarmsComponent } from './application/plant-care-app/farmer-list-farmers-farms/farmer-list-farmers-farms.component';
 import { FarmersFarmsFixedAssetsLandComponent } from './application/plant-care-app/farmers-farms-fixed-assets-lands/farmers-farms-fixed-assets-lands.component';
@@ -209,6 +209,11 @@ import { EditFiealdOfficerComponent } from './application/steckholders-section/e
 import { EditCertificateDetailsComponent } from './application/plant-care-app/edit-certificate/edit-certificate-details';
 import { ViewCertificateDetailsComponent } from './application/plant-care-app/view-certificate/view-certificate-details';
 import { ViewGoviLinkJobsComponent } from './application/govi-link/view-govi-link-jobs/view-govi-link-jobs';
+import { AddFarmerClustersComponent } from './application/plant-care-app/add-farmer-clusters/add-farmer-clusters.component';
+import { ViewAllDisributionComplainComponent } from './application/Complaints/distribution-complain/view-all-disribution-complain/view-all-disribution-complain.component';
+import { ViewEachDistributedComplainComponent } from './application/Complaints/distribution-complain/view-each-distributed-complain/view-each-distributed-complain.component';
+import { FinanceActionComponent } from './application/finance/finance-action/finance-action.component';
+import { GovicarePackagesMainComponent } from './application/finance/govicare-packages/govicare-packages-main/govicare-packages-main.component';
 
 export const routes: Routes = [
   {
@@ -288,7 +293,6 @@ export const routes: Routes = [
                 data: { permission: 'View crop calendar task' },
               },
 
-
               {
                 path: 'edit-crop-task/:id',
                 component: EditTaskComponent,
@@ -312,7 +316,6 @@ export const routes: Routes = [
               {
                 path: 'farmers-farm',
                 component: FarmerFarmsComponent,
-
               },
               {
                 path: 'view-crop-task-by-user',
@@ -482,6 +485,10 @@ export const routes: Routes = [
                 path: 'view-certificate-list',
                 component: ViewAllCertificatesComponent,
               },
+              {
+                path: 'add-farmer-clusters',
+                component: AddFarmerClustersComponent,
+              },
             ],
           },
         ],
@@ -490,8 +497,18 @@ export const routes: Routes = [
       {
         path: 'finance',
         children: [
-          { path: 'dashboard', component: FinanceDashboardComponent }
-        ]
+          { path: 'dashboard', component: FinanceDashboardComponent },
+          {
+            path: 'action',
+            children: [
+              { path: '', component: FinanceActionComponent },
+              {
+                path: 'govicare-packages',
+                component: GovicarePackagesMainComponent,
+              },
+            ],
+          },
+        ],
       },
 
       {
@@ -588,12 +605,12 @@ export const routes: Routes = [
                   {
                     path: 'update-distribution-officer/:id',
                     component: UpdateDistributionOfficerComponent,
-                  }
+                  },
                 ],
               },
               {
                 path: 'add-fieald-officer',
-                component: AddFiealdOfficerComponent
+                component: AddFiealdOfficerComponent,
               },
               {
                 path: 'add-distribution-0fficer',
@@ -644,8 +661,7 @@ export const routes: Routes = [
                   {
                     path: 'edit-user-staff/:id',
                     component: EditUserStaffComponent,
-                  }
-
+                  },
                 ],
               },
 
@@ -758,8 +774,15 @@ export const routes: Routes = [
               {
                 path: 'edit-field-officer/:id',
                 component: EditFiealdOfficerComponent,
-              }
-
+              },
+              {
+                path: 'stakholder-collection-centers',
+                component: CollectionAllViewComponent,
+              },
+              {
+                path: 'stakholder-distributed-centers',
+                component: ViewPolygonCentersComponent,
+              },
             ],
           },
         ],
@@ -1183,6 +1206,19 @@ export const routes: Routes = [
             path: 'selected-wholesale-complaints/:id',
             component: SelectedwholesaleComplaintsComponent,
           },
+          {
+            path: 'distributed-center-complains',
+            children: [
+              {
+                path: '',
+                component: ViewAllDisributionComplainComponent,
+              },
+              {
+                path: 'view-complain/:id',
+                component: ViewEachDistributedComplainComponent,
+              },
+            ],
+          },
         ],
       },
       {
@@ -1250,19 +1286,18 @@ export const routes: Routes = [
                   },
                   {
                     path: 'distribution-center-dashboard/:id',
-                    component: MainDashboardLayoutComponent
+                    component: MainDashboardLayoutComponent,
                   },
                   {
                     path: 'edit-distribution-officer/:id',
-                    component: UpdateDistributionOfficerComponent
+                    component: UpdateDistributionOfficerComponent,
                   },
 
                   {
                     path: 'selected-officer-target',
-                    component: SelectedOfficerTargetComponent
+                    component: SelectedOfficerTargetComponent,
                   },
-
-                ]
+                ],
               },
               {
                 path: 'view-distribution-centre/:id',
@@ -1289,7 +1324,7 @@ export const routes: Routes = [
         children: [
           {
             path: 'dashboard',
-            component: GoviLinkDashbordComponent
+            component: GoviLinkDashbordComponent,
           },
           {
             path: 'action',
@@ -1304,11 +1339,11 @@ export const routes: Routes = [
               },
               {
                 path: 'view-company-list',
-                component: ViewcompanylistComponent
+                component: ViewcompanylistComponent,
               },
               {
                 path: 'edit-company',
-                component: EditacompanyComponent
+                component: EditacompanyComponent,
               },
               {
                 path: 'add-services',
@@ -1325,11 +1360,11 @@ export const routes: Routes = [
               {
                 path: 'view-govi-link-jobs',
                 component: ViewGoviLinkJobsComponent,
-              }
-            ]
-          }
-        ]
-      }
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   { path: '**', component: NotFoundComponent },
@@ -1339,4 +1374,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

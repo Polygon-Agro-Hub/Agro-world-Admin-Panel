@@ -197,13 +197,17 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   // Load officers by role
   loadOfficersByRole(role: string): void {
     this.isLoadingOfficers = true;
-    this.goviLinkService.getOfficersByJobRole(role).subscribe({
+
+    // Use the job’s scheduled date when fetching available officers
+    const scheduleDate = this.selectedJob?.scheduledDate;
+
+    this.goviLinkService.getOfficersByJobRole(role, scheduleDate).subscribe({
       next: (response) => {
         this.isLoadingOfficers = false;
         if (response.success && response.data) {
           this.availableOfficers = response.data.map((officer: any) => ({
             ...officer,
-            displayName: `${officer.firstName} ${officer.lastName} (${officer.empId})`,
+            displayName: `${officer.firstName} ${officer.lastName} (${officer.empId}) - Jobs: ${officer.activeJobCount}`,
           }));
 
           // If there's a currently assigned officer, try to pre-select them

@@ -434,14 +434,16 @@
       *ngIf="selectedOfficerInfo"
       class="mb-4 p-5 text-center rounded-lg border border-blue-500 w-80"
     >
-      <p class="text-sm text-textLight dark:text-textDark">
+      <p class="text-md font-semibold text-textLight dark:text-textDark">
         {{ selectedOfficerInfo.empId }} - {{ selectedOfficerInfo.firstName }}
         {{ selectedOfficerInfo.lastName }}
       </p>
       <p class="text-sm text-textLight dark:text-textDark">
         Distrct: {{ selectedOfficerInfo.distrct }}
       </p>
-      <p class="text-sm text-textLight dark:text-textDark">Count:</p>
+      <p class="text-sm text-textLight dark:text-textDark">
+        Count: <span class="text-blue-500">{{ selectedOfficerInfo.activeJobCount }}</span>
+      </p>
     </div>
 
     <!-- Action Buttons -->

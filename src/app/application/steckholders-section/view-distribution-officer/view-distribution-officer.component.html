@@ -20,69 +20,51 @@
     <h2 class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4">
       Claim to a Centre
     </h2>
-<div class="flex align-middle justify-center items-center">
-  <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Centre</label>
-  
-  <div class="flex flex-col w-full ml-5">
-  <p-dropdown 
-    name="selectedCenterId" 
-    [(ngModel)]="selectedCenterId" 
-    [options]="centerNames"
-    (onChange)="centerValidationError = false; fetchDistributionManagerNames()" 
-    optionLabel="centerName" 
-    optionValue="id"
-    placeholder="Select a centre" 
-    [showClear]="false" 
-    [required]="true" 
-    [filter]="true" 
-    filterBy="centerName"
-    [ngClass]="{'border-red-500': centerValidationError, 'border-gray-300': !centerValidationError}">
-  </p-dropdown>
+    <div class="flex align-middle justify-center items-center">
+      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Centre</label>
 
-  <div *ngIf="centerValidationError" class="text-red-500 text-sm mt-1">
-    Center selection is required.
-  </div>
+      <div class="flex flex-col w-full ml-5">
+        <p-dropdown name="selectedCenterId" [(ngModel)]="selectedCenterId" [options]="centerNames"
+          (onChange)="centerValidationError = false; fetchDistributionManagerNames()" optionLabel="centerName"
+          optionValue="id" placeholder="Select a centre" [showClear]="false" [required]="true" [filter]="true"
+          filterBy="centerName"
+          [ngClass]="{'border-red-500': centerValidationError, 'border-gray-300': !centerValidationError}">
+        </p-dropdown>
 
-  </div>
-</div>
+        <div *ngIf="centerValidationError" class="text-red-500 text-sm mt-1">
+          Center selection is required.
+        </div>
 
-
-<!-- Manager Dropdown -->
-<div class="flex mt-4 align-middle justify-center items-center">
-  <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Manager</label>
-  
-  <div class="flex flex-col w-full ml-4">
-    <p-dropdown 
-      name="selectedIrmId" 
-      [(ngModel)]="selectedIrmId" 
-      [options]="collectionCenterManagerNames"
-      optionLabel="firstNameEnglish" 
-      optionValue="id" 
-      placeholder="Select a manager" 
-      [showClear]="false"
-      [required]="true" 
-      [filter]="true" 
-      filterBy="firstNameEnglish,lastNameEnglish"
-      filterPlaceholder="Search managers..." 
-      class="w-full"
-      (onChange)="irmValidationError = false"
-      [ngClass]="{'border-red-500': irmValidationError, 'border-gray-300': !irmValidationError}">
-    </p-dropdown>
-
-    <div class="mt-1">
-      <!-- Required validation message -->
-      <span *ngIf="irmValidationError" class="text-red-500 text-sm">
-        Manager selection is required.
-      </span>
-
-      <!-- No managers available message -->
-      <span *ngIf="selectedCenterId !== null && collectionCenterManagerNames.length === 0" 
-            class="text-red-500 text-sm">
-        No managers available for the selected centre.
-      </span>
+      </div>
     </div>
-  </div>
-</div>
+
+
+    <!-- Manager Dropdown -->
+    <div class="flex mt-4 align-middle justify-center items-center" *ngIf="selectedOfficer?.jobRole !== 'Distribution Centre Manager'">
+      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Manager</label>
+
+      <div class="flex flex-col w-full ml-4">
+        <p-dropdown name="selectedIrmId" [(ngModel)]="selectedIrmId" [options]="collectionCenterManagerNames"
+          optionLabel="labelName" optionValue="id" placeholder="Select a manager" [showClear]="false"
+          [required]="true" [filter]="true" filterBy="firstNameEnglish,lastNameEnglish"
+          filterPlaceholder="Search managers..." class="w-full" (onChange)="irmValidationError = false"
+          [ngClass]="{'border-red-500': irmValidationError, 'border-gray-300': !irmValidationError}">
+        </p-dropdown>
+
+        <div class="mt-1">
+          <!-- Required validation message -->
+          <span *ngIf="irmValidationError" class="text-red-500 text-sm">
+            Manager selection is required.
+          </span>
+
+          <!-- No managers available message -->
+          <span *ngIf="selectedCenterId !== null && collectionCenterManagerNames.length === 0"
+            class="text-red-500 text-sm">
+            No managers available for the selected centre.
+          </span>
+        </div>
+      </div>
+    </div>
 
     <div class="flex justify-center mt-4">
       <button (click)="editCloseModel()"

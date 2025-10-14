@@ -183,78 +183,84 @@ export class UpdateDistributionOfficerComponent {
     this.itemId = this.route.snapshot.params['id'];
 
     if (this.itemId) {
-      this.isLoading = true;
-      this.distributionOfficerServ.getOfficerReportById(this.itemId).subscribe({
-        next: (response: any) => {
-          console.log('Officer Data Response:', response); // Debug API response
-          const officerData = response.officerData[0];
-          console.log('Officer data structure:', response.officerData[0]);
-
-          // Populate personalData with API response or fallback to defaults
-          this.personalData.id = officerData.id || this.itemId;
-          this.personalData.empId = officerData.empId || '';
-          this.personalData.jobRole = officerData.jobRole || '';
-          this.personalData.firstNameEnglish =
-            officerData.firstNameEnglish || '';
-          this.personalData.firstNameSinhala =
-            officerData.firstNameSinhala || '';
-          this.personalData.firstNameTamil = officerData.firstNameTamil || '';
-          this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
-          this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
-          this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-          this.personalData.contact1Code = officerData.phoneCode01 || '+94';
-          this.personalData.contact1 = officerData.phoneNumber01 || '';
-          this.personalData.contact2Code = officerData.phoneCode02 || '+94';
-          this.personalData.contact2 = officerData.phoneNumber02 || '';
-          this.personalData.nic = officerData.nic || '';
-          this.personalData.email = officerData.email || '';
-          this.personalData.houseNumber = officerData.houseNumber || '';
-          this.personalData.streetName = officerData.streetName || '';
-          this.personalData.city = officerData.city || '';
-          this.personalData.district = officerData.district || '';
-          this.personalData.province = officerData.province || '';
-          this.personalData.languages = officerData.languages || '';
-          this.personalData.companyId = officerData.companyId || '';
-          this.personalData.centerId = officerData.centerId || '';
-          this.personalData.bankName = officerData.bankName || '';
-          this.personalData.branchName = officerData.branchName || '';
-          this.personalData.accHolderName = officerData.accHolderName || '';
-          this.personalData.accNumber = officerData.accNumber || '';
-          this.personalData.confirmAccNumber = officerData.accNumber || '';
-          this.personalData.empType = officerData.empType || '';
-          this.personalData.irmId = officerData.irmId || '';
-          this.personalData.image = officerData.image || '';
-          this.personalData.status = officerData.status || '';
-
-          this.selectedLanguages = this.personalData.languages
-            ? this.personalData.languages.split(',')
-            : [];
-          this.empType = this.personalData.empType;
-          this.lastID = this.personalData.empId.slice(-5);
-          this.cenId = this.personalData.centerId;
-          this.comId = this.personalData.companyId;
-          this.initiateJobRole = officerData.jobRole || '';
-          this.initiateId = officerData.empId.slice(-5);
-
-          console.log('Assigned Contact1Code:', this.personalData.contact1Code); // Debug
-          console.log('Assigned Contact1:', this.personalData.contact1); // Debug
-          console.log('Assigned Contact2Code:', this.personalData.contact2Code); // Debug
-          console.log('Assigned Contact2:', this.personalData.contact2); // Debug
-          this.matchExistingBankToDropdown();
-          this.getAllCollectionManagers();
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching officer data:', error);
-          this.isLoading = false;
-        },
-      });
+      this.fetchData();
     }
 
     this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
+
+  fetchData() {
+    this.isLoading = true;
+    this.distributionOfficerServ.getOfficerReportById(this.itemId).subscribe({
+      next: (response: any) => {
+        console.log('Officer Data Response:', response); // Debug API response
+        const officerData = response.officerData[0];
+        console.log('Officer data structure:', response.officerData[0]);
+
+        // Populate personalData with API response or fallback to defaults
+        this.personalData.id = officerData.id || this.itemId;
+        this.personalData.empId = officerData.empId || '';
+        this.personalData.jobRole = officerData.jobRole || '';
+        this.personalData.firstNameEnglish =
+          officerData.firstNameEnglish || '';
+        this.personalData.firstNameSinhala =
+          officerData.firstNameSinhala || '';
+        this.personalData.firstNameTamil = officerData.firstNameTamil || '';
+        this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
+        this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
+        this.personalData.lastNameTamil = officerData.lastNameTamil || '';
+        this.personalData.contact1Code = officerData.phoneCode01 || '+94';
+        this.personalData.contact1 = officerData.phoneNumber01 || '';
+        this.personalData.contact2Code = officerData.phoneCode02 || '+94';
+        this.personalData.contact2 = officerData.phoneNumber02 || '';
+        this.personalData.nic = officerData.nic || '';
+        this.personalData.email = officerData.email || '';
+        this.personalData.houseNumber = officerData.houseNumber || '';
+        this.personalData.streetName = officerData.streetName || '';
+        this.personalData.city = officerData.city || '';
+        this.personalData.district = officerData.district || '';
+        this.personalData.province = officerData.province || '';
+        this.personalData.languages = officerData.languages || '';
+        this.personalData.companyId = officerData.companyId || '';
+        this.personalData.centerId = officerData.centerId || '';
+        this.personalData.bankName = officerData.bankName || '';
+        this.personalData.branchName = officerData.branchName || '';
+        this.personalData.accHolderName = officerData.accHolderName || '';
+        this.personalData.accNumber = officerData.accNumber || '';
+        this.personalData.confirmAccNumber = officerData.accNumber || '';
+        this.personalData.empType = officerData.empType || '';
+        this.personalData.irmId = officerData.irmId || '';
+        this.personalData.image = officerData.image || '';
+        this.personalData.status = officerData.status || '';
+
+        this.selectedLanguages = this.personalData.languages
+          ? this.personalData.languages.split(',')
+          : [];
+        this.empType = this.personalData.empType;
+        this.lastID = this.personalData.empId.slice(-5);
+        this.cenId = this.personalData.centerId;
+        this.comId = this.personalData.companyId;
+        this.initiateJobRole = officerData.jobRole || '';
+        this.initiateId = officerData.empId.slice(-5);
+
+        console.log('Assigned Contact1Code:', this.personalData.contact1Code); // Debug
+        console.log('Assigned Contact1:', this.personalData.contact1); // Debug
+        console.log('Assigned Contact2Code:', this.personalData.contact2Code); // Debug
+        console.log('Assigned Contact2:', this.personalData.contact2); // Debug
+        this.matchExistingBankToDropdown();
+        this.getAllCollectionManagers();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching officer data:', error);
+        this.isLoading = false;
+      },
+    });
+  }
+
+
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
@@ -916,6 +922,25 @@ export class UpdateDistributionOfficerComponent {
       });
   }
 
+  getAllCollectionCenters() {
+    //miss func
+    this.managerOptions = [];
+    this.distributionOfficerServ
+      .getDistributionCentreList(
+        this.personalData.companyId,
+
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+
+        // Convert to dropdown options format
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.centerName,
+          value: center.id,
+        }));
+      });
+  }
+
   // Update getAllCollectionManagers method
   getAllCollectionManagers() {
     this.distributionOfficerServ
@@ -1435,6 +1460,75 @@ export class UpdateDistributionOfficerComponent {
           }
         );
     }
+  }
+
+  resetPassword() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to reset the Collection Officer password. This action cannot be undone.',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, reset password!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        this.distributionOfficerServ.ChangeStatus(this.itemId, 'Approved').subscribe(
+          (res) => {
+            this.isLoading = false;
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'The Collection Officer password reset successfully.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+              this.fetchData();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Something went wrong. Please try again.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'An error occurred while resetting password. Please try again.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        );
+      }
+    });
   }
 }
 

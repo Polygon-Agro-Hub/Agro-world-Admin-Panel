@@ -181,59 +181,51 @@ export class UpdateDistributionOfficerComponent {
     this.loadBranches();
     this.setupDropdownOptions(); // Ensure district dropdown is set up
     this.itemId = this.route.snapshot.params['id'];
+    console.log('itemId', this.itemId)
 
     if (this.itemId) {
-      this.fetchData();
-    }
+      this.isLoading = true;
+      this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
+        next: (response: any) => {
+          console.log('Officer Data Response:', response); // Debug API response
+          const officerData = response.officerData[0];
+          console.log('Officer data structure:', response.officerData[0]);
 
-    this.getAllCollectionCetnter();
-    this.getAllCompanies();
-    this.EpmloyeIdCreate();
-  }
-
-  fetchData() {
-    this.isLoading = true;
-    this.distributionOfficerServ.getOfficerReportById(this.itemId).subscribe({
-      next: (response: any) => {
-        console.log('Officer Data Response:', response); // Debug API response
-        const officerData = response.officerData[0];
-        console.log('Officer data structure:', response.officerData[0]);
-
-        // Populate personalData with API response or fallback to defaults
-        this.personalData.id = officerData.id || this.itemId;
-        this.personalData.empId = officerData.empId || '';
-        this.personalData.jobRole = officerData.jobRole || '';
-        this.personalData.firstNameEnglish =
-          officerData.firstNameEnglish || '';
-        this.personalData.firstNameSinhala =
-          officerData.firstNameSinhala || '';
-        this.personalData.firstNameTamil = officerData.firstNameTamil || '';
-        this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
-        this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
-        this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-        this.personalData.contact1Code = officerData.phoneCode01 || '+94';
-        this.personalData.contact1 = officerData.phoneNumber01 || '';
-        this.personalData.contact2Code = officerData.phoneCode02 || '+94';
-        this.personalData.contact2 = officerData.phoneNumber02 || '';
-        this.personalData.nic = officerData.nic || '';
-        this.personalData.email = officerData.email || '';
-        this.personalData.houseNumber = officerData.houseNumber || '';
-        this.personalData.streetName = officerData.streetName || '';
-        this.personalData.city = officerData.city || '';
-        this.personalData.district = officerData.district || '';
-        this.personalData.province = officerData.province || '';
-        this.personalData.languages = officerData.languages || '';
-        this.personalData.companyId = officerData.companyId || '';
-        this.personalData.centerId = officerData.centerId || '';
-        this.personalData.bankName = officerData.bankName || '';
-        this.personalData.branchName = officerData.branchName || '';
-        this.personalData.accHolderName = officerData.accHolderName || '';
-        this.personalData.accNumber = officerData.accNumber || '';
-        this.personalData.confirmAccNumber = officerData.accNumber || '';
-        this.personalData.empType = officerData.empType || '';
-        this.personalData.irmId = officerData.irmId || '';
-        this.personalData.image = officerData.image || '';
-        this.personalData.status = officerData.status || '';
+          // Populate personalData with API response or fallback to defaults
+          this.personalData.id = officerData.id || this.itemId;
+          this.personalData.empId = officerData.empId || '';
+          this.personalData.jobRole = officerData.jobRole || '';
+          this.personalData.firstNameEnglish =
+            officerData.firstNameEnglish || '';
+          this.personalData.firstNameSinhala =
+            officerData.firstNameSinhala || '';
+          this.personalData.firstNameTamil = officerData.firstNameTamil || '';
+          this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
+          this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
+          this.personalData.lastNameTamil = officerData.lastNameTamil || '';
+          this.personalData.contact1Code = officerData.phoneCode01 || '+94';
+          this.personalData.contact1 = officerData.phoneNumber01 || '';
+          this.personalData.contact2Code = officerData.phoneCode02 || '+94';
+          this.personalData.contact2 = officerData.phoneNumber02 || '';
+          this.personalData.nic = officerData.nic || '';
+          this.personalData.email = officerData.email || '';
+          this.personalData.houseNumber = officerData.houseNumber || '';
+          this.personalData.streetName = officerData.streetName || '';
+          this.personalData.city = officerData.city || '';
+          this.personalData.district = officerData.district || '';
+          this.personalData.province = officerData.province || '';
+          this.personalData.languages = officerData.languages || '';
+          this.personalData.companyId = officerData.companyId || '';
+          this.personalData.centerId = officerData.distributedCenterId || '';
+          this.personalData.bankName = officerData.bankName || '';
+          this.personalData.branchName = officerData.branchName || '';
+          this.personalData.accHolderName = officerData.accHolderName || '';
+          this.personalData.accNumber = officerData.accNumber || '';
+          this.personalData.confirmAccNumber = officerData.accNumber || '';
+          this.personalData.empType = officerData.empType || '';
+          this.personalData.irmId = officerData.irmId || '';
+          this.personalData.image = officerData.image || '';
+          this.personalData.status = officerData.status || '';
 
         this.selectedLanguages = this.personalData.languages
           ? this.personalData.languages.split(',')
@@ -909,6 +901,7 @@ export class UpdateDistributionOfficerComponent {
 
   // Update getAllCollectionCetnter method
   getAllCollectionCetnter() {
+    console.log('calling')
     this.distributionOfficerServ
       .getDistributionCenterNames()
       .subscribe((res) => {
@@ -922,8 +915,27 @@ export class UpdateDistributionOfficerComponent {
       });
   }
 
+  getAllCollectionCenters() {
+    this.managerOptions = [];
+    this.distributionOfficerServ
+      .getDistributionCentreList(
+        this.personalData.companyId,
+
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+
+        // Convert to dropdown options format
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.centerName,
+          value: center.id,
+        }));
+      });
+  }
+
   // Update getAllCollectionManagers method
   getAllCollectionManagers() {
+    console.log('calling')
     this.distributionOfficerServ
       .getAllManagerList(
         this.personalData.companyId,
@@ -931,6 +943,8 @@ export class UpdateDistributionOfficerComponent {
       )
       .subscribe((res) => {
         this.collectionManagerData = res;
+
+        console.log('collectionManagerData', this.collectionManagerData)
 
         // Convert to dropdown options format
         this.managerOptions = this.collectionManagerData.map((manager) => ({

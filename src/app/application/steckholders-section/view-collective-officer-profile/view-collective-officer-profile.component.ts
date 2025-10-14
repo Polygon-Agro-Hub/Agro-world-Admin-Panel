@@ -42,6 +42,7 @@ export class ViewCollectiveOfficerProfileComponent {
   ngOnInit(): void {
     this.officerId = this.route.snapshot.params['id'];
     this.fetchOfficerById(this.officerId);
+    
   }
 
   getRoleHeading() {
@@ -88,6 +89,7 @@ fetchOfficerById(id: number) {
       this.officerObj.claimStatus = this.officerObj.claimStatus;
       this.getRoleHeading();
     });
+    
 }
 
 
@@ -574,18 +576,18 @@ fetchOfficerById(id: number) {
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          text: 'Officer ID sent successfully!',
+          text: 'Officer Disclaimed successfully!',
           confirmButtonText: 'OK',
         });
 
         this.showDisclaimView = false;
-        this.router.navigate(['/steckholders/action/collective-officer']);
+        this.location.back();
       },
       (error) => {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Failed to send Officer ID!',
+          text: 'Failed to Disclaim the Officer!',
           confirmButtonText: 'Try Again',
         });
       }
@@ -649,4 +651,5 @@ class CollectionOfficer {
   vehSideImgA?: string;
   vehSideImgB?: string;
   distributedCenterName!: string;
+  fullEmpId!: string;
 }

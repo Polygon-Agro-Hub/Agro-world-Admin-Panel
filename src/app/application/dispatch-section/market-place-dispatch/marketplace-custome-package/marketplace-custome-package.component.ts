@@ -83,10 +83,14 @@ export class MarketplaceCustomePackageComponent {
 
   private formatDateForAPI(date: Date | null): string {
     if (!date) return '';
-    // Format as YYYY-MM-DD (ISO date string format)
-    return date.toISOString().split('T')[0];
+  
+    // Convert using local time instead of UTC
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+  
+    return `${year}-${month}-${day}`; // Local YYYY-MM-DD
   }
-
   applysearch() {
     this.getPreMadePackages();
 

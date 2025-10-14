@@ -919,6 +919,7 @@ export class UpdateDistributionOfficerComponent {
   }
 
   getAllCollectionCenters() {
+    //miss func
     this.managerOptions = [];
     this.distributionOfficerServ
       .getDistributionCentreList(

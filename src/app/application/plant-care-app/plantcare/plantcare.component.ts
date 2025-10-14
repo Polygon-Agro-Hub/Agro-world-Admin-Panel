@@ -146,7 +146,7 @@ export class PlantcareComponent {
   }
 
   manageFarmerClusters(): void {
-    this.router.navigate(['/plant-care/action/manage-farmer-clusters']);
+    this.router.navigate(['/plant-care/action/view-farmer-clusters']);
   }
 
   downloadFarmerClusterTemplate(): void {
@@ -155,9 +155,9 @@ export class PlantcareComponent {
     // 1. Define the header row first
     const header = ['NIC'];
 
-    // 2. Define sample empty data rows (e.g., 100 rows)
+    // 2. Define sample empty data rows
     const numberOfRowsToGenerate = 10000;
-    // Creates an array like [[''], [''], ... 100 times]
+
     const emptyRows = Array.from({ length: numberOfRowsToGenerate }, () => [
       '',
     ]);
@@ -165,7 +165,6 @@ export class PlantcareComponent {
     // Combine header and data rows
     const worksheetData = [header, ...emptyRows];
 
-    // Create a worksheet
     const ws = XLSX.utils.aoa_to_sheet(worksheetData);
 
     // 3. Force the NIC column (Column A, index 0) to be treated as TEXT

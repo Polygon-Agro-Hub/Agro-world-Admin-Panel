@@ -212,6 +212,8 @@ import { ViewGoviLinkJobsComponent } from './application/govi-link/view-govi-lin
 import { AddFarmerClustersComponent } from './application/plant-care-app/add-farmer-clusters/add-farmer-clusters.component';
 import { ViewAllDisributionComplainComponent } from './application/Complaints/distribution-complain/view-all-disribution-complain/view-all-disribution-complain.component';
 import { ViewEachDistributedComplainComponent } from './application/Complaints/distribution-complain/view-each-distributed-complain/view-each-distributed-complain.component';
+import { ViewFarmerClustersComponent } from './application/plant-care-app/view-farmer-clusters/view-farmer-clusters.component';
+import { ViewClusterUsersComponent } from './application/plant-care-app/view-cluster-users/view-cluster-users.component';
 
 export const routes: Routes = [
   {
@@ -489,6 +491,14 @@ export const routes: Routes = [
                 path: 'add-farmer-clusters',
                 component: AddFarmerClustersComponent,
               },
+              {
+                path: 'view-farmer-clusters',
+                component: ViewFarmerClustersComponent,
+              },
+              {
+                path: 'view-cluster-users/:clusterId',
+                component: ViewClusterUsersComponent
+              }
             ],
           },
         ],

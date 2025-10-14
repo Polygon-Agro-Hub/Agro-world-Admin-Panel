@@ -1,0 +1,230 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-2 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div class="mb-5 flex justify-between">
+  <button
+    (click)="addNew()"
+    class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center"
+  >
+    <i class="fa-solid fa-plus mr-2"></i>
+    Add New Cluster
+  </button>
+</div>
+
+<div class="overflow-x-auto">
+  <div
+    class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
+  >
+    <div *ngIf="!hasData" class="text-center py-8">
+      <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
+      <img
+        src="assets/images/NoData.png"
+        alt="No Data"
+        class="w-20 h-20 mx-auto"
+      />
+    </div>
+    <div *ngIf="hasData">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          View Farmer Clusters
+          <span *ngIf="clusters.length"
+            >({{ clusters.length | number : "2.0" }})</span
+          >
+        </h2>
+
+        <!-- Search bar -->
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5"
+        >
+          <input
+            type="text"
+            placeholder="Search by Cluster Name"
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+            (keyup.esc)="offSearch()"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          />
+
+          <!-- Search button -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Clear button -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="offSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <table
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Cluster Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Member Count
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              View Members
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Last Modified By
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Last Modified On
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let cluster of clusters; let i = index"
+            class="border-b border-gray-200 dark:border-[#4B555A] hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ ("0" + (i + 1)).slice(-2) }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ cluster.clusterName }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{
+                cluster.memberCount
+                  ? (cluster.memberCount | number : "2.0-0")
+                  : "00"
+              }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                (click)="viewMembers(cluster.clusterId!)"
+                class="text-blue-500"
+                title="View Cluster Members"
+              >
+                <i class="fa-solid fa-users text-2xl"></i>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ cluster.lastModifiedBy || "--" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{
+                cluster.lastModifiedDate
+                  ? (cluster.lastModifiedDate | date : "yyyy-MM-dd hh:mm:ss a")
+                  : "--"
+              }}
+            </td>
+            <td class="px-4 py-3 text-left">
+              <div class="flex space-x-3">
+                <!-- EDIT -->
+                <button
+                  *ngIf="tokenService.getUserDetails().role === '1'"
+                  class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6"
+                  (click)="editCluster(cluster.clusterId!)"
+                  [disabled]="isLoading"
+                  title="Edit Cluster"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    viewBox="0 0 32 32"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <title>Edit</title>
+                    <path
+                      d="M7.263 19.051l-1.656 5.797c-0.03 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z"
+                    ></path>
+                  </svg>
+                </button>
+
+                <!-- DELETE -->
+                <button
+                  *ngIf="tokenService.getUserDetails().role === '1'"
+                  class="text-red-500 hover:text-red-700"
+                  (click)="deleteCluster(cluster.clusterId!)"
+                  title="Delete Cluster"
+                >
+                  <svg
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <title>Delete</title>
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -9,9 +9,7 @@
 </button>
 
 <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-  <h2
-    class="text-2xl text-left mb-6 text-textLight dark:text-textDark font-bold"
-  >
+  <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-2">
     Add Farmer Cluster
   </h2>
 
@@ -101,21 +99,28 @@
       >
         Please select a file to upload
       </div>
+      <!-- Simple file name display -->
+      <div *ngIf="selectedFile" class="mt-2 text-left">
+        <p class="text-sm text-black dark:text-gray-400">
+          Uploaded :
+          <span class="font-medium text-blue-500">{{ selectedFile.name }}</span>
+        </p>
+      </div>
     </div>
 
     <!-- Buttons -->
     <div class="flex justify-end gap-3">
       <button
         type="button"
-        class="px-6 py-2 bg-[#74788D] text-white rounded-md hover:bg-[#63667a] transition-colors"
+        class="px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 transition-colors"
         (click)="onCancel()"
       >
         Cancel
       </button>
       <button
         type="submit"
-        class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-[#2d6ca3] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        [disabled]="isLoading"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-[#2d6ca3] transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
+        [disabled]="isLoading || !selectedFile || !clusterName.trim()"
       >
         <span *ngIf="!isLoading">Save</span>
         <span *ngIf="isLoading">Processing...</span>

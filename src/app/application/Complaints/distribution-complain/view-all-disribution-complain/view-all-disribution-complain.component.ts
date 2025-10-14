@@ -182,59 +182,6 @@ export class ViewAllDisributionComplainComponent {
     this.isPopUpVisible = true;
   }
 
-
-
-  // submitComplaint(id: any) {
-  //   const token = this.tokenService.getToken();
-  //   if (!token) {
-  //     console.error("No token found");
-  //     return;
-  //   }
-
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${token}`,
-  //   });
-
-  //   console.log(id);
-  //   console.log(this.messageContent);
-
-  //   const body = { reply: this.messageContent };
-
-  //   this.http
-  //     .put(`${environment.API_URL}auth/reply-center-complain/${id}`, body, { headers })
-  //     .subscribe(
-  //       (res: any) => {
-  //         console.log("Reply sent successfully", res);
-
-  //         Swal.fire({
-  //           icon: "success",
-  //           title: "Success",
-  //           text: "Reply sent successfully!",
-  //           customClass: {
-  //             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-  //             title: 'font-semibold',
-  //           },
-  //         });
-  //         this.fetchAllComplain(this.page, this.itemsPerPage);
-  //       },
-  //       (error) => {
-  //         console.error("Error updating news", error);
-
-  //         Swal.fire({
-  //           icon: "error",
-  //           title: "Unsuccessful",
-  //           text: "Error updating news",
-  //         });
-  //         this.fetchAllComplain(this.page, this.itemsPerPage);
-  //       },
-  //     );
-  // }
-
-
-
-
-
-
   getAllComplainCategories() {
 
     if (this.tokenService.getUserDetails().role === "1") {
@@ -327,11 +274,6 @@ export class ViewAllDisributionComplainComponent {
     this.selectedLanguage = '';
 
   }
-
-
-
-
-
 }
 
 

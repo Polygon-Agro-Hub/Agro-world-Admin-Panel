@@ -922,6 +922,25 @@ export class UpdateDistributionOfficerComponent {
       });
   }
 
+  getAllCollectionCenters() {
+    //miss func
+    this.managerOptions = [];
+    this.distributionOfficerServ
+      .getDistributionCentreList(
+        this.personalData.companyId,
+
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+
+        // Convert to dropdown options format
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.centerName,
+          value: center.id,
+        }));
+      });
+  }
+
   // Update getAllCollectionManagers method
   getAllCollectionManagers() {
     this.distributionOfficerServ

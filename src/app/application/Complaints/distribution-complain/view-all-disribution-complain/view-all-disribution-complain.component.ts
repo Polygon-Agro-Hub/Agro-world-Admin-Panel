@@ -249,7 +249,7 @@ export class ViewAllDisributionComplainComponent {
     });
 
     this.http
-      .get<any>(`${environment.API_URL}auth/get-all-comppany-for-officer-complain`, {
+      .get<any>(`${environment.API_URL}complain/get-distribution-comppany-for-officer-complain`, {
         headers,
       })
       .subscribe(

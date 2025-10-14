@@ -49,6 +49,13 @@ export class ViewAllDisributionComplainComponent {
     { status: 'Yes', value: 'Yes' },
     { status: 'No', value: 'No' },
   ];
+  
+  statusfilterArr = [
+    {label:'Assigned', value:'Assigned'},
+    {label:'Closed', value:'Closed'},
+    {label:'Pending', value:'Pending'},
+
+  ]
 
   @ViewChild("dropdown") dropdown!: Dropdown;
 
@@ -105,7 +112,7 @@ export class ViewAllDisributionComplainComponent {
       .getAllCenterComplain(
         page,
         limit,
-        this.filterStatus?.type,
+        this.filterStatus,
         this.filterCategory?.type,
         this.filterComCategory?.id,
         this.filterCompany?.id,

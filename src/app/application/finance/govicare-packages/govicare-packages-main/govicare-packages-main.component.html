@@ -1,0 +1,17 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<div>
+  <div class="w-[100]">
+    <app-govicare-packages-first-row />
+  </div>
+  <div class="flex flex-row justify-between items-center my-10">
+    <div lass="h-auto w-[70%]">
+      <app-govicare-area-chart />
+    </div>
+    <div class="h-auto w-[40%]">
+      <app-govicare-pichart />
+    </div>
+  </div>
+  <div class="my-10">
+    <app-govicare-thurd-row />
+  </div>
+</div>

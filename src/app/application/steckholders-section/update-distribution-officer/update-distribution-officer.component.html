@@ -78,7 +78,7 @@
             for="enpType"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Staff Employee Type
+            Staff Employee Type *
           </label>
 
           <div class="flex items-center space-x-4 mt-3">
@@ -135,7 +135,7 @@
             for="languages"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Preferred Languages
+            Preferred Languages *
           </label>
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2">
@@ -194,7 +194,7 @@
             for="companyId"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Company Name*
+            Company Name *
           </label>
           <p-dropdown
             [(ngModel)]="personalData.companyId"
@@ -208,6 +208,7 @@
             styleClass="w-full mt-1"
             panelStyleClass="custom-dropdown-panel"
             class="mt-1 block w-full p-dropdown-custom"
+            (onChange)="getAllCollectionCenters()"
           >
           </p-dropdown>
           <div
@@ -224,7 +225,7 @@
             for="centerId"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Distribution Centre Name*
+            Distribution Centre Name *
           </label>
           <p-dropdown
             [(ngModel)]="personalData.centerId"
@@ -238,7 +239,7 @@
             styleClass="w-full mt-1"
             panelStyleClass="custom-dropdown-panel"
             class="mt-1 block w-full p-dropdown-custom"
-          >
+            (onChange)="getAllCollectionManagers()">
           </p-dropdown>
         </div>
 
@@ -249,7 +250,7 @@
             for="jobRole"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Job Role
+            Job Role *
           </label>
           <div class="relative">
             <p-dropdown 
@@ -302,7 +303,7 @@
               for="managerId"
               class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >
-              Manager Name*
+              Manager Name *
             </label>
             <p-dropdown
               [(ngModel)]="personalData.irmId"
@@ -330,7 +331,7 @@
             for="firstNameEnglish"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            First Name (in English)*
+            First Name (in English) *
           </label>
           <input
             id="firstNameEnglish"
@@ -355,7 +356,7 @@
             for="variety"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Last Name (in English)
+            Last Name (in English) *
           </label>
           <input
             id="lastName"
@@ -379,7 +380,7 @@
           <label
             for="crop"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >First Name (in Sinhala)*</label
+            >First Name (in Sinhala) *</label
           >
           <input
             id="firstName"
@@ -407,7 +408,7 @@
           <label
             for="variety"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name (in Sinhala)</label
+            >Last Name (in Sinhala) *</label
           >
           <input
             id="lastName"
@@ -434,7 +435,7 @@
           <label
             for="crop"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >First Name (in Tamil)*</label
+            >First Name (in Tamil) *</label
           >
           <input
             id="firstName"
@@ -459,7 +460,7 @@
           <label
             for="variety"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name (in Tamil)</label
+            >Last Name (in Tamil) *</label
           >
           <input
             id="lastName"
@@ -485,7 +486,7 @@
             for="phoneNumber01"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Mobile Number - 01*
+            Mobile Number - 01 *
           </label>
           <div class="mt-1">
             <div class="flex">
@@ -638,7 +639,7 @@
           <label
             for="nic"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >NIC Number*</label
+            >NIC Number *</label
           >
           <input
             id="nic"
@@ -661,7 +662,7 @@
           <label
             for="email"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Email*</label
+            >Email *</label
           >
           <input
             type="email"
@@ -753,7 +754,7 @@
           <label
             for="house"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >House / Plot Number*</label
+            >House / Plot Number *</label
           >
           <input
             id="houseNumber"
@@ -777,7 +778,7 @@
           <label
             for="street"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Street Name*</label
+            >Street Name *</label
           >
           <input
             id="streetName"
@@ -801,7 +802,7 @@
           <label
             for="city"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >City*</label
+            >City *</label
           >
           <input
             id="city"
@@ -826,7 +827,7 @@
             for="district"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            District*
+            District *
           </label>
 
           <p-dropdown
@@ -861,7 +862,7 @@
             for="province"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
           >
-            Province*
+            Province *
           </label>
           <input
             id="province"
@@ -876,7 +877,7 @@
           <label
             for="country"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Country*</label
+            >Country *</label
           >
           <input
             id="country"
@@ -896,7 +897,7 @@
         <label
           for="accHolderName"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Account Holder's Name*</label
+          >Account Holder's Name *</label
         >
         <input
           id="accHolderName"
@@ -955,7 +956,7 @@
         <label
           for="accNumber"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >Account Number <span class="text-[#2E2E2E]">*</span></label
+          >Account Number *</label
         >
         <input
           id="accNumber"
@@ -1039,7 +1040,7 @@
           for="bankDropdown"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Bank Name*
+          Bank Name *
         </label>
         <p-dropdown
           [(ngModel)]="personalData.bankName"
@@ -1063,7 +1064,7 @@
           for="branchDropdown"
           class="block text-sm font-medium text-gray-700 dark:text-textDark"
         >
-          Branch Name*
+          Branch Name *
         </label>
         <p-dropdown
           [(ngModel)]="personalData.branchName"

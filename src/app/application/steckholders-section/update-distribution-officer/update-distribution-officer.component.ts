@@ -181,10 +181,11 @@ export class UpdateDistributionOfficerComponent {
     this.loadBranches();
     this.setupDropdownOptions(); // Ensure district dropdown is set up
     this.itemId = this.route.snapshot.params['id'];
+    console.log('itemId', this.itemId)
 
     if (this.itemId) {
       this.isLoading = true;
-      this.distributionOfficerServ.getOfficerReportById(this.itemId).subscribe({
+      this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
         next: (response: any) => {
           console.log('Officer Data Response:', response); // Debug API response
           const officerData = response.officerData[0];
@@ -215,7 +216,7 @@ export class UpdateDistributionOfficerComponent {
           this.personalData.province = officerData.province || '';
           this.personalData.languages = officerData.languages || '';
           this.personalData.companyId = officerData.companyId || '';
-          this.personalData.centerId = officerData.centerId || '';
+          this.personalData.centerId = officerData.distributedCenterId || '';
           this.personalData.bankName = officerData.bankName || '';
           this.personalData.branchName = officerData.branchName || '';
           this.personalData.accHolderName = officerData.accHolderName || '';
@@ -903,6 +904,7 @@ export class UpdateDistributionOfficerComponent {
 
   // Update getAllCollectionCetnter method
   getAllCollectionCetnter() {
+    console.log('calling')
     this.distributionOfficerServ
       .getDistributionCenterNames()
       .subscribe((res) => {
@@ -916,8 +918,27 @@ export class UpdateDistributionOfficerComponent {
       });
   }
 
+  getAllCollectionCenters() {
+    this.managerOptions = [];
+    this.distributionOfficerServ
+      .getDistributionCentreList(
+        this.personalData.companyId,
+
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+
+        // Convert to dropdown options format
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.centerName,
+          value: center.id,
+        }));
+      });
+  }
+
   // Update getAllCollectionManagers method
   getAllCollectionManagers() {
+    console.log('calling')
     this.distributionOfficerServ
       .getAllManagerList(
         this.personalData.companyId,
@@ -925,6 +946,8 @@ export class UpdateDistributionOfficerComponent {
       )
       .subscribe((res) => {
         this.collectionManagerData = res;
+
+        console.log('collectionManagerData', this.collectionManagerData)
 
         // Convert to dropdown options format
         this.managerOptions = this.collectionManagerData.map((manager) => ({

@@ -183,7 +183,7 @@
           </span>
           <!-- <span *ngIf="personalData.firstNameEnglish && hasInvalidNameCharacters('firstNameEnglish')"
             class="text-red-600 text-sm">
-            First Name should only contain English letters
+            First Name should only contain English lettersmr-3
           </span> -->
         </div>
 
@@ -461,7 +461,7 @@
         </span>
       </div> -->
 
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end ">
         <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
@@ -680,13 +680,15 @@
           class="mt-1 block w-full p-dropdown-custom" (onChange)="onBranchChange($event)">
         </p-dropdown>
       </div>
-      <div class="flex justify-end m-10">
-        <button type="submit" (click)="onSubmit()" class="px-4 py-2 bg-[#3980C0] mr-3 text-white rounded-md">
-          Submit
-        </button>
+      <div class="flex justify-end my-10 ml-10">
+        
         <button (click)="nextFormCreate('pageOne')" type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
+        </button>
+
+        <button type="submit" (click)="onSubmit()" class="px-4 py-2 bg-[#3980C0]  text-white rounded-md">
+          Submit
         </button>
 
       </div>

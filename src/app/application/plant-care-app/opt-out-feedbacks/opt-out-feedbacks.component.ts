@@ -43,7 +43,12 @@ export class OptOutFeedbacksComponent {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
+
+  ngOnInit() {
+    this.fetchAllFeedbacks();
+    this.loadFeedbackData();
+  }
 
   fetchAllFeedbacks(page: number = 1, limit: number = this.itemsPerPage) {
     this.page = page;
@@ -75,10 +80,7 @@ export class OptOutFeedbacksComponent {
     }
   }
 
-  ngOnInit() {
-    this.fetchAllFeedbacks();
-    this.loadFeedbackData();
-  }
+
 
   getColor(orderNumber: number): string {
     const colors = [
@@ -108,7 +110,7 @@ export class OptOutFeedbacksComponent {
           this.updateChartData();
         }
       },
-      error: () => {},
+      error: () => { },
     });
   }
 
@@ -158,8 +160,8 @@ export class OptOutFeedbacksComponent {
   chartOptions: any = {
     license: false,
     animationEnabled: true,
-    theme: 'light1',
-    backgroundColor: '#transparent',
+    // theme: 'light1',
+    backgroundColor: 'transparent',
     axisY: {
       includeZero: true,
       labelFontColor: '#666666',

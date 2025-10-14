@@ -117,7 +117,7 @@ export class DistributionHubService {
     return this.http.delete<any>(url, { headers });
   }
 
-  getDistributionHeadDetailsById(id: number): Observable<any> {
+  getDistributionHeadDetailsById(id: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -270,7 +270,7 @@ export class DistributionHubService {
     return this.http.delete<any>(url, { headers });
   }
 
-  ChangeStatus(id: number, status: string): Observable<any> {
+  ChangeStatus(id: number | null, status: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',

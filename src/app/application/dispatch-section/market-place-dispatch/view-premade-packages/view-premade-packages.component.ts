@@ -92,12 +92,11 @@ export class ViewPremadePackagesComponent implements OnInit {
     allPackagesCompleted = this.packageObj.packageData
       .every(pkg => pkg.packStatus === 'Completed');
 
-    if (this.packageObj.additionalData &&
-      this.packageObj.additionalData.packStatus !== null) {
-      additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
-      console.log("additional hit->", additionalItemsCompleted);
-
-    }
+    // if (this.packageObj.additionalData &&
+    //   this.packageObj.additionalData.packStatus !== null) {
+    //   additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
+    //   console.log("additional hit->", additionalItemsCompleted);
+    // }
 
     const finalStatus = allPackagesCompleted && additionalItemsCompleted;
 

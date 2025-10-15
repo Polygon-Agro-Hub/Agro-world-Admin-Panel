@@ -24,6 +24,7 @@ import { FloatLabelModule } from "primeng/floatlabel";
 import Swal from "sweetalert2";
 import { environment } from "../../../environment/environment";
 import { TokenService } from "../../../services/token/services/token.service";
+import { ThemeService } from "../../../services/theme.service";
 
 declare var html2pdf: any;
 
@@ -70,6 +71,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private tokenService: TokenService,
     private router: Router,
+    private themeService: ThemeService
   ) { }
 
   ngOnInit(): void {
@@ -133,15 +135,20 @@ export class CollectionOfficerReportViewComponent implements OnInit {
 
     console.log("Processed chartData:", chartData);
 
+    const isDarkMode = this.themeService.isDarkTheme();
+
     this.chartOptions = {
       animationEnabled: true,
       exportEnabled: true,
+      backgroundColor: "transparent",
       title: {
         text: `Crop Report by Grade ${this.formatDateForDisplay(this.createdDate)}`,
+        fontColor: isDarkMode ? '#ffffff' : '#000000',
       },
       axisY: {
         title: "Weight (Kg)",
-        includeZero: true,
+        fontColor: isDarkMode ? '#ffffff' : '#000000',
+        includeZero: true
       },
       // toolTip: {
       //   shared: true,

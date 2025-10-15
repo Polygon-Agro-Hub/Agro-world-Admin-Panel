@@ -192,6 +192,21 @@ getFlagUrl(countryCode: string): string {
   return this.companyList?.find(company => company.id === id)?.companyNameEnglish;
 }
 
+getCompanyName(): string {
+    if (!this.distributionCenterDetails || !this.distributionCenterDetails.company) {
+      return 'Loading...';
+    }
+
+    // If company is already a string (company name), return it directly
+    if (typeof this.distributionCenterDetails.company === 'string') {
+      return this.distributionCenterDetails.company;
+    }
+
+    // If company is an ID, find the company name from companyList
+    const companyId = this.distributionCenterDetails.company;
+    const company = this.companyList.find(c => c.id === companyId);
+    return company ? company.companyNameEnglish : 'Company not found';
+  }
 
   populateForm(data: DistributionCenter): void {
     // Find the company ID that matches the company name from the response

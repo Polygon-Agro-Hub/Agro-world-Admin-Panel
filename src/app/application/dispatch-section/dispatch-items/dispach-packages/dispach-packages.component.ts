@@ -39,6 +39,8 @@ export class DispachPackagesComponent implements OnInit {
   isLastOrder: boolean = false;
   isAllPacked: boolean = false;
 
+  isInvalidPriceRange: boolean = false;
+
 
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id']
@@ -249,6 +251,7 @@ export class DispachPackagesComponent implements OnInit {
   cangeReplacePrice() {
     if (this.newProductObj) {
       this.newProductObj.price = this.newProductObj.discountedPrice * (this.newProductObj.qty);
+      this.isInvalidPriceRange = this.selectProduct.price < this.newProductObj.price
     }
   }
 

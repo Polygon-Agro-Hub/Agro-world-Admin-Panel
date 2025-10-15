@@ -76,7 +76,7 @@ export class UpdateDistributionOfficerComponent {
   collectionManagerData: CollectionManager[] = [];
   lastID!: string;
   empType!: string;
-  cenId!: number;
+  cenId!: number | null;
   comId!: number;
   initiateJobRole!: string;
   initiateId!: string;
@@ -909,6 +909,8 @@ export class UpdateDistributionOfficerComponent {
 
   // Update getAllCollectionCetnter method
   getAllCollectionCetnter() {
+    this.collectionCenterData = []
+    console.log('calling centers')
     this.distributionOfficerServ
       .getDistributionCenterNames()
       .subscribe((res) => {
@@ -924,7 +926,10 @@ export class UpdateDistributionOfficerComponent {
 
   getAllCollectionCenters() {
     //miss func
+    this.collectionCenterData = []
+    this.personalData.centerId = null;
     this.managerOptions = [];
+    this.personalData.irmId = null;
     this.distributionOfficerServ
       .getDistributionCentreList(
         this.personalData.companyId,
@@ -1536,8 +1541,8 @@ class Personal {
   id!: number;
   jobRole!: string;
   empId!: any;
-  centerId!: number;
-  irmId!: number;
+  centerId!: number | null;
+  irmId!: number | null;
   empType!: string;
   firstNameEnglish!: string;
   firstNameSinhala!: string;

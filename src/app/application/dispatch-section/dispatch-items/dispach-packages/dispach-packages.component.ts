@@ -194,6 +194,8 @@ export class DispachPackagesComponent implements OnInit {
   }
   onCancelPopup() {
     this.isPopupOpen = false;
+    // this.selectProduct = 
+    this.newProductObj = null;
   }
 
   // In your component class

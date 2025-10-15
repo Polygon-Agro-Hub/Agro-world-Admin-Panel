@@ -154,7 +154,7 @@ export class CollectiveofficersEditComponent {
       this.fetchData();
     }
 
-    this.getAllCollectionCetnter();
+    // this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
@@ -211,6 +211,7 @@ export class CollectiveofficersEditComponent {
         this.initiateId = officerData.empId.slice(-5);
 
         this.matchExistingBankToDropdown();
+        this.getAllCollectionCetnter();
         this.getAllCollectionManagers();
         this.isLoading = false;
       },
@@ -230,6 +231,7 @@ export class CollectiveofficersEditComponent {
 
     // Clear manager options
     this.managerOptions = [];
+    this.getAllCollectionCenters();
   }
 
   changeCenter(event: any): void {
@@ -985,6 +987,7 @@ export class CollectiveofficersEditComponent {
     }
 
     this.selectedPage = page;
+    console.log('perdsonal', this.personalData)
   }
 
   updateProvince(event: DropdownChangeEvent): void {
@@ -1018,14 +1021,44 @@ export class CollectiveofficersEditComponent {
   }
 
   getAllCollectionCetnter() {
-    this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {
-      this.collectionCenterData = res;
-      this.centerOptions = this.collectionCenterData.map(center => ({
-        label: center.centerName,
-        value: center.id
-      }));
-    });
+    this.collectionCenterSrv
+      .getAllCentreList(
+        this.personalData.companyId,
+
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+
+        // Convert to dropdown options format
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.centerName,
+          value: center.id,
+        }));
+      });
   }
+
+  getAllCollectionCenters() {
+    //miss func
+    this.collectionCenterData = []
+    this.personalData.centerId = null;
+    this.managerOptions = [];
+    this.personalData.irmId = null;
+    this.collectionCenterSrv
+      .getAllCentreList(
+        this.personalData.companyId,
+
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+
+        // Convert to dropdown options format
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.centerName,
+          value: center.id,
+        }));
+      });
+  }
+
 
   getAllCollectionManagers() {
     // Only call the API if both companyId and centerId are available
@@ -1169,25 +1202,25 @@ export class CollectiveofficersEditComponent {
       missingFields.push('Province is Required');
     }
 
-    if (!this.personalData.accHolderName) {
+    if (!this.personalData.accHolderName && this.personalData.companyId === 1) {
       missingFields.push("Account Holder's Name is Required");
     }
 
-    if (!this.personalData.accNumber) {
+    if (!this.personalData.accNumber && this.personalData.companyId === 1) {
       missingFields.push('Account Number is Required');
     }
 
-    if (!this.personalData.confirmAccNumber) {
+    if (!this.personalData.confirmAccNumber && this.personalData.companyId === 1) {
       missingFields.push('Confirm Account Number is Required');
     } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
       missingFields.push('Confirm Account Number - Must match Account Number');
     }
 
-    if (!this.selectedBankId) {
+    if (!this.selectedBankId && this.personalData.companyId === 1) {
       missingFields.push('Bank Name is Required');
     }
 
-    if (!this.selectedBranchId) {
+    if (!this.selectedBranchId && this.personalData.companyId === 1) {
       missingFields.push('Branch Name is Required');
     }
 

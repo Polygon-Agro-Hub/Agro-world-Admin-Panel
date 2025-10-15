@@ -186,7 +186,7 @@ export class UpdateDistributionOfficerComponent {
       this.fetchData();
     }
 
-    this.getAllCollectionCetnter();
+    // this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
@@ -250,6 +250,7 @@ export class UpdateDistributionOfficerComponent {
         console.log('Assigned Contact2Code:', this.personalData.contact2Code); // Debug
         console.log('Assigned Contact2:', this.personalData.contact2); // Debug
         this.matchExistingBankToDropdown();
+        this.getAllCollectionCetnter()
         this.getAllCollectionManagers();
         this.isLoading = false;
       },
@@ -909,10 +910,11 @@ export class UpdateDistributionOfficerComponent {
 
   // Update getAllCollectionCetnter method
   getAllCollectionCetnter() {
-    this.collectionCenterData = []
-    console.log('calling centers')
     this.distributionOfficerServ
-      .getDistributionCenterNames()
+      .getDistributionCentreList(
+        this.personalData.companyId,
+
+      )
       .subscribe((res) => {
         this.collectionCenterData = res;
 

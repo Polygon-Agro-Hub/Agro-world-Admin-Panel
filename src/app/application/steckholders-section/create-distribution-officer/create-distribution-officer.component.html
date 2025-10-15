@@ -147,6 +147,12 @@
             styleClass="w-full h-full mt-1" panelStyleClass="custom-dropdown-panel"
             class="mt-1 block w-full p-dropdown-custom" [autoDisplayFirst]="false">
           </p-dropdown>
+
+          <span
+            *ngIf="!personalData.irmId && personalData.centerId"
+            class="text-red-600 text-sm"
+            >Manager Name is a required field</span
+          >
         </div>
 
 <br *ngIf="personalData.jobRole !== 'Distribution Officer'">

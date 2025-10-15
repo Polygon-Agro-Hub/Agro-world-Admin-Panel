@@ -445,7 +445,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="personalData.companyId == 1">
+    <div >
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>
@@ -526,17 +526,18 @@
           class="mt-1 block w-full p-dropdown-custom" (onChange)="onBranchChange($event)">
         </p-dropdown>
       </div>
-      <div class="flex justify-end my-10 ml-10">
+      
+    </div>
+    <div class="flex justify-end my-10 ml-10">
         
-        <button (click)="nextFormCreate('pageOne')" type="button"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
-          Back
-        </button>
+      <button (click)="nextFormCreate('pageOne')" type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+        Back
+      </button>
 
-        <button type="submit" (click)="onSubmit()" class="px-4 py-2 bg-[#3980C0]  text-white rounded-md">
-          Submit
-        </button>
+      <button type="submit" (click)="onSubmit()" class="px-4 py-2 bg-[#3980C0]  text-white rounded-md">
+        Submit
+      </button>
 
-      </div>
     </div>
   </div>

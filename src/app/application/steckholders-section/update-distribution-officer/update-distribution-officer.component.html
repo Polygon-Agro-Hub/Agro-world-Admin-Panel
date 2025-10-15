@@ -145,7 +145,7 @@
             Distribution Centre Name *
           </label>
           <p-dropdown
-            [(ngModel)]="personalData.centerId"
+            [(ngModel)]="personalData.centerId" #centerNameInput="ngModel"
             [options]="centerOptions"
             optionLabel="label"
             optionValue="value"
@@ -158,6 +158,10 @@
             class="mt-1 block w-full p-dropdown-custom"
             (onChange)="getAllCollectionManagers()">
           </p-dropdown>
+
+          <div *ngIf="centerNameInput.touched && !personalData.centerId" class="text-red-500 text-sm mt-1">
+              <div>Manager Name is required</div>
+            </div>
         </div>
 
 
@@ -175,6 +179,7 @@
               [filter]="false" [showClear]="false" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
               class="mt-1 block w-full p-dropdown-custom">
             </p-dropdown>
+            
           </div>
           <!-- <select
             id="jobRole"
@@ -213,11 +218,14 @@
             >
               Manager Name *
             </label>
-            <p-dropdown [(ngModel)]="personalData.irmId" [options]="managerOptions" optionLabel="label"
+            <p-dropdown [(ngModel)]="personalData.irmId" #managerNameInput="ngModel" [options]="managerOptions" optionLabel="label"
               optionValue="value" [filter]="true" filterBy="label" [showClear]="false" placeholder="Select a manager"
               styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
               class="mt-1 block w-full p-dropdown-custom">
             </p-dropdown>
+            <div *ngIf="managerNameInput.touched && !personalData.irmId" class="text-red-500 text-sm mt-1">
+              <div>Manager Name is required</div>
+            </div>
           </div>
 
           <div *ngIf="personalData.jobRole === 'Distribution Officer'"></div>

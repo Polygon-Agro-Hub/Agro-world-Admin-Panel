@@ -193,7 +193,7 @@ export class UpdateDistributionOfficerComponent {
 
   fetchData() {
     this.isLoading = true;
-    this.distributionOfficerServ.getOfficerReportById(this.itemId).subscribe({
+    this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
       next: (response: any) => {
         console.log('Officer Data Response:', response); // Debug API response
         const officerData = response.officerData[0];
@@ -224,7 +224,7 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.province = officerData.province || '';
         this.personalData.languages = officerData.languages || '';
         this.personalData.companyId = officerData.companyId || '';
-        this.personalData.centerId = officerData.centerId || '';
+        this.personalData.centerId = officerData.distributedCenterId || '';
         this.personalData.bankName = officerData.bankName || '';
         this.personalData.branchName = officerData.branchName || '';
         this.personalData.accHolderName = officerData.accHolderName || '';

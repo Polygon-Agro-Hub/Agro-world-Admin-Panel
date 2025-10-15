@@ -34,12 +34,12 @@
         Delivered
       </button>
       <button [ngClass]="
-          activeButton === 'On the way'
+          activeButton === 'Out For Delivery'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2" (click)="onStatusChange('ontheway')">
-        <i *ngIf="activeButton === 'On the way'" class="fa fa-check"></i>
-        On the way
+        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2" (click)="onStatusChange('Out For Delivery')">
+        <i *ngIf="activeButton === 'Out For Delivery'" class="fa fa-check"></i>
+        Out For Delivery
       </button>
       <button [ngClass]="
           activeButton === 'cancelled'
@@ -124,8 +124,7 @@
                   class="bg-[#CFE1FF] text-[#3B82F6] rounded-xl px-5 py-2">Processing</span>
                 <span *ngIf="activeButton === 'delivered'"
                   class="bg-[#BBFFC6] text-[#308233] rounded-xl px-5 py-2">Delivered</span>
-                <span *ngIf="activeButton === 'On the way'" class="bg-[#af7ce3] text-[#481c56] rounded-xl px-5 py-2">On
-                  the way</span>
+                <span *ngIf="activeButton === 'Out For Delivery'" class="bg-[#af7ce3] text-[#481c56] rounded-xl px-5 py-2">Out For Delivery</span>
                 <span *ngIf="activeButton === 'cancelled'"
                   class="bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-5 py-2">Cancelled</span>
                 <span *ngIf="activeButton === 'failed'"

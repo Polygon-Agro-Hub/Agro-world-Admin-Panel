@@ -91,7 +91,7 @@
 
           <div
             class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
-            <input type="text" placeholder="Search..." [(ngModel)]="searchText" (keydown.enter)="onSearch()"
+            <input type="text" placeholder="Search By Invoice No, CUS ID, Agent Id" [(ngModel)]="searchText" (keydown.enter)="onSearch()"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
               (click)="onSearch()">
@@ -251,7 +251,7 @@
               <div>
                 <span [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-[#FFEDCF] text-[#D17A00] rounded-3xl':
-                      item.orderStatus === 'On the way',
+                      item.orderStatus === 'Out For Delivery',
                     'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
                       item.orderStatus === 'Delivered',
                     'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':

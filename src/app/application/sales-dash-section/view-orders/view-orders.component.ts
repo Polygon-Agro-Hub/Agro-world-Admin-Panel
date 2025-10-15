@@ -57,7 +57,7 @@ export class ViewOrdersComponent implements OnInit {
   orderStatusArr = [
     { orderStatus: 'Assigned', value: 'Ordered' },
     { orderStatus: 'Processing', value: 'Processing' },
-    { orderStatus: 'On the way', value: 'On the way' },
+    { orderStatus: 'Out For Delivery', value: 'Out For Delivery' },
     { orderStatus: 'Delivered', value: 'Delivered' },
     { orderStatus: 'Cancelled', value: 'Cancelled' },
   ];

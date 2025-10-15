@@ -242,6 +242,10 @@ openPopup(item: any) {
                   text: 'The Sales Agent was approved successfully.',
                   showConfirmButton: false,
                   timer: 3000,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold',
+                  },
                 });
                 this.fetchAllSalesAgents();
               } else {
@@ -251,6 +255,10 @@ openPopup(item: any) {
                   text: 'Something went wrong. Please try again.',
                   showConfirmButton: false,
                   timer: 3000,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold',
+                  },
                 });
               }
             },
@@ -262,6 +270,10 @@ openPopup(item: any) {
                 text: 'An error occurred while approving. Please try again.',
                 showConfirmButton: false,
                 timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
               });
             }
           );
@@ -283,6 +295,10 @@ openPopup(item: any) {
                   text: 'The Sales Agent was rejected successfully.',
                   showConfirmButton: false,
                   timer: 3000,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold',
+                  },
                 });
                 this.fetchAllSalesAgents();
               } else {
@@ -292,6 +308,10 @@ openPopup(item: any) {
                   text: 'Something went wrong. Please try again.',
                   showConfirmButton: false,
                   timer: 3000,
+                  customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
                 });
               }
             },
@@ -303,6 +323,10 @@ openPopup(item: any) {
                 text: 'An error occurred while rejecting. Please try again.',
                 showConfirmButton: false,
                 timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
               });
             }
           );

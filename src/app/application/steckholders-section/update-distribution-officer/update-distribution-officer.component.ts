@@ -76,7 +76,7 @@ export class UpdateDistributionOfficerComponent {
   collectionManagerData: CollectionManager[] = [];
   lastID!: string;
   empType!: string;
-  cenId!: number;
+  cenId!: number | null;
   comId!: number;
   initiateJobRole!: string;
   initiateId!: string;
@@ -186,14 +186,14 @@ export class UpdateDistributionOfficerComponent {
       this.fetchData();
     }
 
-    this.getAllCollectionCetnter();
+    // this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
 
   fetchData() {
     this.isLoading = true;
-    this.distributionOfficerServ.getOfficerReportById(this.itemId).subscribe({
+    this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
       next: (response: any) => {
         console.log('Officer Data Response:', response); // Debug API response
         const officerData = response.officerData[0];
@@ -224,7 +224,7 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.province = officerData.province || '';
         this.personalData.languages = officerData.languages || '';
         this.personalData.companyId = officerData.companyId || '';
-        this.personalData.centerId = officerData.centerId || '';
+        this.personalData.centerId = officerData.distributedCenterId || '';
         this.personalData.bankName = officerData.bankName || '';
         this.personalData.branchName = officerData.branchName || '';
         this.personalData.accHolderName = officerData.accHolderName || '';
@@ -250,6 +250,7 @@ export class UpdateDistributionOfficerComponent {
         console.log('Assigned Contact2Code:', this.personalData.contact2Code); // Debug
         console.log('Assigned Contact2:', this.personalData.contact2); // Debug
         this.matchExistingBankToDropdown();
+        this.getAllCollectionCetnter()
         this.getAllCollectionManagers();
         this.isLoading = false;
       },
@@ -910,7 +911,10 @@ export class UpdateDistributionOfficerComponent {
   // Update getAllCollectionCetnter method
   getAllCollectionCetnter() {
     this.distributionOfficerServ
-      .getDistributionCenterNames()
+      .getDistributionCentreList(
+        this.personalData.companyId,
+
+      )
       .subscribe((res) => {
         this.collectionCenterData = res;
 
@@ -924,7 +928,10 @@ export class UpdateDistributionOfficerComponent {
 
   getAllCollectionCenters() {
     //miss func
+    this.collectionCenterData = []
+    this.personalData.centerId = null;
     this.managerOptions = [];
+    this.personalData.irmId = null;
     this.distributionOfficerServ
       .getDistributionCentreList(
         this.personalData.companyId,
@@ -1536,8 +1543,8 @@ class Personal {
   id!: number;
   jobRole!: string;
   empId!: any;
-  centerId!: number;
-  irmId!: number;
+  centerId!: number | null;
+  irmId!: number | null;
   empType!: string;
   firstNameEnglish!: string;
   firstNameSinhala!: string;

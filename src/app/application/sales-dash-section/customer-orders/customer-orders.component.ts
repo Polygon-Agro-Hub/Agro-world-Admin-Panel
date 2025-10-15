@@ -51,9 +51,10 @@ export class CustomerOrdersComponent implements OnInit {
     assigned: 'Assinged',
     processing: 'Processing',
     delivered: 'Delivered',
-    ontheway: 'On the way',
+    ontheway: 'Out For Delivery',
     cancelled: 'Cancelled',
     failed: 'Faild',
+    "Out For Delivery" : "Out For Delivery"
   };
 
   constructor(
@@ -63,7 +64,7 @@ export class CustomerOrdersComponent implements OnInit {
     private invoiceSrv: InvoiceService,
     private http: HttpClient,
     private finalInvoiceService: FinalinvoiceService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -98,6 +99,8 @@ export class CustomerOrdersComponent implements OnInit {
     this.hasData = false;
 
     const apiStatus = this.statusMap[this.activeButton] || 'Ordered';
+    console.log(this.activeButton, apiStatus);
+
 
     this.dasService
       .fetchUserOrders(this.userId, apiStatus)

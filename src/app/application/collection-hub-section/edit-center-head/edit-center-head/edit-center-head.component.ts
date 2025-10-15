@@ -148,7 +148,7 @@ export class EditCenterHeadComponent {
           this.personalData.phoneCode01 = officerData.phoneCode01 || '+94';
           this.personalData.phoneNumber01 = officerData.phoneNumber01 || '';
           this.personalData.phoneCode02 = officerData.phoneCode02 || '+94';
-          this.personalData.phoneNumber02 = officerData.phoneNumber02 || '';
+          this.personalData.phoneNumber02 = officerData.phoneNumber02;
           this.personalData.nic = officerData.nic || '';
           this.personalData.email = officerData.email || '';
           this.personalData.houseNumber = officerData.houseNumber || '';

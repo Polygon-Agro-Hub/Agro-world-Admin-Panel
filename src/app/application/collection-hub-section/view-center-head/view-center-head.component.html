@@ -48,7 +48,7 @@
           <div class="flex items-center space-x-4 mt-3">
   <div class="flex items-center space-x-2">
     <input [disabled]="true" 
-           class="w-5 h-5 appearance-none rounded-full border-2 border-gray-300 checked:border-black checked:bg-black dark:border-gray-600 dark:checked:border-black dark:checked:bg-black" 
+           class="w-5 h-5 appearance-none rounded-full border-2 border-gray-300 checked:border-black checked:bg-blue-600 dark:border-gray-600 dark:checked:border-black dark:checked:bg-blue-600" 
            type="radio" id="permanent" name="empType" [value]="'Permanent'"
            [(ngModel)]="empType" #empTypeInput="ngModel" (ngModelChange)="updateEmployeeType($event)" required />
     <label for="permanent" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -57,7 +57,7 @@
   </div>
   <div class="flex items-center space-x-2">
     <input [disabled]="true" 
-           class="w-5 h-5 appearance-none rounded-full border-2 border-gray-300 checked:border-black checked:bg-black dark:border-gray-600 dark:checked:border-black dark:checked:bg-black" 
+           class="w-5 h-5 appearance-none rounded-full border-2 border-gray-300 checked:border-black checked:bg-blue-600 dark:border-gray-600 dark:checked:border-black dark:checked:bg-blue-600" 
            type="radio" id="temporary" name="empType" [value]="'Temporary'"
            [(ngModel)]="empType" (ngModelChange)="updateEmployeeType($event)" required />
     <label for="temporary" class="block text-sm font-medium text-gray-700 dark:text-textDark">

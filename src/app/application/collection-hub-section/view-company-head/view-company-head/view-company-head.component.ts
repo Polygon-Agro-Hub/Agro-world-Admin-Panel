@@ -158,25 +158,37 @@ export class ViewCompanyHeadComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+        title: 'font-semibold text-lg',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.companyService.deleteCompanyHead(id).subscribe(
           (data: any) => {
             if (data) {
-              Swal.fire(
-                'Deleted!',
-                'The Center Head has been deleted.',
-                'success'
-              );
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The Center Head has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                  title: 'font-semibold text-lg',
+                },
+              });
               this.fetchAllCompanyHeads();
             }
           },
           (error) => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the Center Head.',
-              'error'
-            );
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the Center Head.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                title: 'font-semibold text-lg',
+              },
+            });
           }
         );
       }
@@ -209,6 +221,10 @@ export class ViewCompanyHeadComponent implements OnInit {
       grow: 'row',
       showClass: { popup: 'animate__animated animate__fadeIn' },
       hideClass: { popup: 'animate__animated animate__fadeOut' },
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+        title: 'font-semibold text-lg',
+      },
       didOpen: () => {
         if (showApproveButton) {
           document
@@ -241,6 +257,10 @@ export class ViewCompanyHeadComponent implements OnInit {
                       text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                        title: 'font-semibold text-lg',
+                      },
                     });
                   }
                 },
@@ -252,6 +272,10 @@ export class ViewCompanyHeadComponent implements OnInit {
                     text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
+                    customClass: {
+                      popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                      title: 'font-semibold text-lg',
+                    },
                   });
                 }
               );
@@ -289,6 +313,10 @@ export class ViewCompanyHeadComponent implements OnInit {
                       text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                        title: 'font-semibold text-lg',
+                      },
                     });
                   }
                 },
@@ -300,6 +328,10 @@ export class ViewCompanyHeadComponent implements OnInit {
                     text: 'An error occurred while rejecting. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
+                    customClass: {
+                      popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                      title: 'font-semibold text-lg',
+                    },
                   });
                 }
               );

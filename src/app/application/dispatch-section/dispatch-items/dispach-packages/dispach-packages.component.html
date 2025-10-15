@@ -132,8 +132,8 @@
                 <p class="text-sm text-[#8492A3] dark:text-gray-200">Selected product</p>
                 <p class="font-normal text-[#000000] dark:text-white mt-1">
                     {{selectProduct.displayName}} -
-                    {{'1.0'}}kg - Rs.
-                    {{ selectProduct.qty | number:'1.2-2' }}
+                    {{selectProduct.qty | number:'1.0'}}kg - Rs.
+                    {{ selectProduct.price | number:'1.2-2' }}
                 </p>
 
                 <p class="text-sm text-[#8492A3] dark:text-gray-200 mt-2">Relevant Product Type :</p>
@@ -202,6 +202,7 @@
 
 
         </div>
+        <p *ngIf="isInvalidPriceRange" class="text-[#FA0000] text-end italic">The replacing product has exceeded the amount allocated for this item.</p>
 
         <div class="border-b border-gray-300 dark:border-gray-600 w-full mt-4"></div>
 
@@ -211,9 +212,9 @@
                 class="px-5 py-2  bg-[#74788D] text-[#D3D3D3] rounded-md hover:bg-gray-500">
                 Cancel
             </button>
-            <button (click)="replaceProduct()" [disabled]="newProductObj === null "
-                class="px-5 py-2 bg-[#C1C1C1] rounded-md text-[#FFFFFF]" [class.bg-[#C1C1C1]]="newProductObj === null"
-                [class.cursor-not-allowed]="newProductObj === null" [class.bg-[#3980C0]]="newProductObj !== null"
+            <button (click)="replaceProduct()" [disabled]="newProductObj === null || isInvalidPriceRange"
+                class="px-5 py-2 bg-[#C1C1C1] rounded-md text-[#FFFFFF]" [class.bg-[#C1C1C1]]="newProductObj === null || isInvalidPriceRange"
+                [class.cursor-not-allowed]="newProductObj === null || isInvalidPriceRange" [class.bg-[#3980C0]]="newProductObj !== null"
                 [class.hover:bg-[#3980C0]]="newProductObj !== null" [class.text-white]="true">
                 Update
             </button>

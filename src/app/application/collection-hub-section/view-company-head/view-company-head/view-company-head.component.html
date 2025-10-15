@@ -23,7 +23,7 @@
       <div
         class="flex items-center rounded-full mr-56 px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
 
-        <input type="text" placeholder="Search by EMP ID, First / Last Name" [(ngModel)]="searchText"
+        <input type="text" placeholder="Search..." title="Search By EMP ID, First Name / Last Name & Email" [(ngModel)]="searchText"
           (keydown)="handleSearchKeydown($event)"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
 
@@ -107,7 +107,7 @@
               {{ item.email }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <div>
+              <div class="cursor-pointer">
                 <span [ngClass]="{
     'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
                       item.status === 'Not Approved',

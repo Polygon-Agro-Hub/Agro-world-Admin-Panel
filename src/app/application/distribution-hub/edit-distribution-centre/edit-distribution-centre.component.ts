@@ -315,29 +315,36 @@ export class EditDistributionCentreComponent implements OnInit {
 
   // Update fetchAllCompanies method
   fetchAllCompanies() {
-    this.isLoading = true;
-    this.distributionService.getAllCompanies().subscribe(
-      (res) => {
-        this.companyList = res.data.map((company: any) => ({
-          id: company.id,
-          companyNameEnglish: company.companyNameEnglish,
-        }));
+  this.isLoading = true;
+  this.distributionService.getAllCompanies().subscribe(
+    (res) => {
+      this.companyList = res.data.map((company: any) => ({
+        id: company.id,
+        companyNameEnglish: company.companyNameEnglish,
+      }));
 
-        // Convert to dropdown options format
-        this.companyOptions = this.companyList.map((company) => ({
-          label: company.companyNameEnglish,
-          value: company.id,
-        }));
+      // Convert to dropdown options format
+      this.companyOptions = this.companyList.map((company) => ({
+        label: company.companyNameEnglish,
+        value: company.id,
+      }));
 
-        console.log('Company list loaded:', this.companyList);
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching companies:', error);
-        this.showErrorAlert('Failed to load companies');
+      console.log('Company list loaded:', this.companyList);
+      
+      // If distribution center details are already loaded, set the company value
+      if (this.distributionCenterDetails) {
+        this.setCompanyValue(this.distributionCenterDetails);
       }
-    );
-  }
+      
+      this.isLoading = false;
+    },
+    (error) => {
+      console.error('Error fetching companies:', error);
+      this.showErrorAlert('Failed to load companies');
+      this.isLoading = false;
+    }
+  );
+}
 
   // Update initializeForm with enhanced validations
   // In your component class, update the initializeForm method:
@@ -671,70 +678,95 @@ export class EditDistributionCentreComponent implements OnInit {
 
 
   fetchDistributionCenterById(id: number) {
-    console.log('Fetching distribution centre with ID:', id);
-    this.isLoading = true;
+  console.log('Fetching distribution centre with ID:', id);
+  this.isLoading = true;
 
-    this.distributionService.getDistributionCentreById(id).subscribe(
-      (response: DistributionCenter) => {
-        console.log('Distribution centre details:', response);
-        this.isLoading = false;
-        this.distributionCenterDetails = response;
-        this.hasData = !!response;
-        this.populateForm(response);
-      },
-      (error) => {
-        console.error('API Error:', error);
-        this.isLoading = false;
+  this.distributionService.getDistributionCentreById(id).subscribe(
+    (response: DistributionCenter) => {
+      console.log('Distribution centre details:', response);
+      this.distributionCenterDetails = response;
+      this.hasData = !!response;
+      
+      // Populate form with the data
+      this.populateForm(response);
+      
+      this.isLoading = false;
+    },
+    (error) => {
+      console.error('API Error:', error);
+      this.isLoading = false;
 
-        if (error.status === 401) {
-          this.showErrorAlert('Unauthorized access');
-        } else if (error.status === 404) {
-          this.showErrorAlert('Distribution centre not found');
-          this.router.navigate([
-            '/distribution-hub/action/view-destribition-center',
-          ]);
-        } else {
-          this.showErrorAlert('Failed to load distribution centre details');
-        }
+      if (error.status === 401) {
+        this.showErrorAlert('Unauthorized access');
+      } else if (error.status === 404) {
+        this.showErrorAlert('Distribution centre not found');
+        this.router.navigate([
+          '/distribution-hub/action/view-destribition-center',
+        ]);
+      } else {
+        this.showErrorAlert('Failed to load distribution centre details');
       }
-    );
-  }
+    }
+  );
+}
 
   populateForm(data: DistributionCenter): void {
-    this.originalCenterName = data.centerName; // Store original name
+  this.originalCenterName = data.centerName;
 
-    const matchingCompany = this.companyList.find(
-      (company) => company.companyNameEnglish === data.company
-    );
-
-    // Update district options based on province
-    if (data.province) {
-      const districts = this.districtsMap[data.province] || [];
-      this.districtOptions = districts.sort().map((district) => ({
-        label: district,
-        value: district,
-      }));
-    }
-
-    this.distributionForm.patchValue({
-      name: data.centerName,
-      company: matchingCompany ? matchingCompany.id : null,
-      contact1Code: data.code1,
-      contact1: data.contact01,
-      contact2Code: data.code2,
-      contact2: data.contact02,
-      latitude: data.latitude,
-      longitude: data.longitude,
-      email: data.email,
-      country: data.country,
-      province: data.province,
-      district: data.district,
-      city: data.city,
-      regCode: data.regCode,
-    });
-
-    console.log('distributionForm', this.distributionForm);
+  // Wait for company list to be loaded before setting the value
+  if (this.companyList.length > 0) {
+    this.setCompanyValue(data);
+  } else {
+    // If company list isn't loaded yet, wait a bit and try again
+    setTimeout(() => {
+      if (this.companyList.length > 0) {
+        this.setCompanyValue(data);
+      }
+    }, 500);
   }
+
+  // Update district options based on province
+  if (data.province) {
+    const districts = this.districtsMap[data.province] || [];
+    this.districtOptions = districts.sort().map((district) => ({
+      label: district,
+      value: district,
+    }));
+  }
+
+  this.distributionForm.patchValue({
+    name: data.centerName,
+    contact1Code: data.code1,
+    contact1: data.contact01,
+    contact2Code: data.code2,
+    contact2: data.contact02,
+    latitude: data.latitude,
+    longitude: data.longitude,
+    email: data.email,
+    country: data.country,
+    province: data.province,
+    district: data.district,
+    city: data.city,
+    regCode: data.regCode,
+  });
+
+  console.log('distributionForm', this.distributionForm);
+}
+
+private setCompanyValue(data: DistributionCenter): void {
+  const matchingCompany = this.companyList.find(
+    (company) => company.companyNameEnglish === data.company
+  );
+
+  if (matchingCompany) {
+    this.distributionForm.patchValue({
+      company: matchingCompany.id
+    });
+    console.log('Company set to:', matchingCompany.id, matchingCompany.companyNameEnglish);
+  } else {
+    console.warn('No matching company found for:', data.company);
+  }
+}
 
   getDistricts(): string[] {
     const selectedProvince = this.distributionForm.get('province')?.value;

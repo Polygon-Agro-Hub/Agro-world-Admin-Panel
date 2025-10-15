@@ -15,3 +15,16 @@
 ::ng-deep .p-dropdown .p-dropdown-trigger {
   display: none !important;  /* hides the arrow */
 }
+
+.no-focus:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: inherit;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}

@@ -8,7 +8,10 @@ import { Location } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '../../../services/token/services/token.service';
-import { CertificateCompanyService, FarmerCluster } from '../../../services/plant-care/certificate-company.service';
+import {
+  CertificateCompanyService,
+  FarmerCluster,
+} from '../../../services/plant-care/certificate-company.service';
 
 @Component({
   selector: 'app-view-farmer-clusters',
@@ -106,7 +109,8 @@ export class ViewFarmerClustersComponent implements OnInit {
               text: response.message || 'Cluster deleted successfully',
               icon: 'success',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
@@ -119,7 +123,8 @@ export class ViewFarmerClustersComponent implements OnInit {
               text: error.message || 'Failed to delete cluster.',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });

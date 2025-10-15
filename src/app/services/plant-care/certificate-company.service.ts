@@ -388,4 +388,18 @@ export class CertificateCompanyService {
       { headers }
     );
   }
+
+  // Update cluster name only
+  updateClusterName(clusterId: number, clusterName: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put<any>(
+      `${this.apiUrl}certificate-company/update-farmer-cluster/${clusterId}`,
+      { clusterName },
+      { headers }
+    );
+  }
 }

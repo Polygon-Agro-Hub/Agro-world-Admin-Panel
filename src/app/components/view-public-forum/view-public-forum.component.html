@@ -27,6 +27,7 @@
             >
               <i class="fa-regular fa-user text-xl"></i>
             </div>
+            <!-- Icon Container -->
           
             <!-- Heading -->
             <h3 class="text-lg font-medium dark:text-textDark break-words">
@@ -35,10 +36,13 @@
           
           </div>
 
+          
           <div class="flex items-end space-x-3 mx-5 w-28">
+            <!-- time -->
             <p class="text-sm whitespace-nowrap text-gray-600 w-full dark:text-textDark">
               {{ postRcord.timeAgo }}
             </p>
+            <!-- time -->
             <div
               *ngIf="
                 permissionService.hasPermission('Delete post') ||

@@ -134,8 +134,10 @@ export class UserCropCalendarComponent {
       cancelButtonColor: '#3b82f6', // blue-500
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
-      background: '#1e293b', // dark background
-      color: '#e2e8f0', // light text
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.ongoingCultivationService
@@ -152,8 +154,10 @@ export class UserCropCalendarComponent {
                   icon: 'success',
                   timer: 2000,
                   showConfirmButton: false,
-                  background: '#1e293b',
-                  color: '#e2e8f0',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
                 });
               }
             },
@@ -162,8 +166,10 @@ export class UserCropCalendarComponent {
                 title: 'Error!',
                 text: 'There was an error deleting the crop calendar.',
                 icon: 'error',
-                background: '#1e293b',
-                color: '#e2e8f0',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
               });
             }
           );
@@ -178,6 +184,10 @@ export class UserCropCalendarComponent {
           icon: 'success',
           title: 'Success',
           text: 'Status updated successfully!',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
         });
         this.getchUserTaskList(this.cropCalendarId, this.userId);
       },
@@ -186,6 +196,10 @@ export class UserCropCalendarComponent {
           icon: 'error',
           title: 'Unsuccess',
           text: 'Error updating status',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
         });
       }
     );
@@ -215,12 +229,8 @@ export class UserCropCalendarComponent {
       confirmButtonText: ' Yes ',
       cancelButtonText: 'Cancel',
       customClass: {
-        popup: 'dark:bg-tileBlack dark:text-textDark',
-        cancelButton:
-          'bg-[#ECECEC] text-[gray] dark:bg-[#74788D] dark:text-white dark:hover:bg-slate-600 dark:hover:text-white',
-        actions: 'dark:bg-tileBlack',
-        confirmButton:
-          'dark:focus:ring-offset-tileBlack dark:bg-[#3980C0] bg-[#3980C0]',
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
       },
     }).then((result) => {
       console.log('this.onCulscropID', this.onCulscropID);

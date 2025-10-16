@@ -159,3 +159,8 @@
   height: 1.0rem !important;
   line-height: 1.0rem !important;
 }
+
+::ng-deep .p-dropdown-panel .p-dropdown-item,
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  padding-left: 0.2rem !important;
+}

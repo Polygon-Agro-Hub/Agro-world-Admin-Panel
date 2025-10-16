@@ -26,20 +26,21 @@
                 Processing
             </button>
             <button [ngClass]="
+          activeButton === 'On the way'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+                (click)="onStatusChange('Out For Delivery')">
+                <i *ngIf="activeButton === 'Out For Delivery'" class="fa fa-check"></i>
+                Out For Delivery
+            </button>
+            <button [ngClass]="
           activeButton === 'delivered'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
         " class="h-10 px-5 flex items-center justify-center rounded-full gap-2" (click)="onStatusChange('delivered')">
                 <i *ngIf="activeButton === 'delivered'" class="fa fa-check"></i>
                 Delivered
-            </button>
-            <button [ngClass]="
-          activeButton === 'On the way'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2" (click)="onStatusChange('Out For Delivery')">
-                <i *ngIf="activeButton === 'Out For Delivery'" class="fa fa-check"></i>
-                Out For Delivery
             </button>
             <button [ngClass]="
           activeButton === 'cancelled'

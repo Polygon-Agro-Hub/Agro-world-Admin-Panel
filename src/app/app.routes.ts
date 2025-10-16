@@ -499,7 +499,7 @@ export const routes: Routes = [
               {
                 path: 'view-cluster-users/:clusterId',
                 component: ViewClusterUsersComponent
-              },              
+              },
               {
                 path: 'edit-farmer-cluster/:clusterId',
                 component: EditFarmerClusterComponent
@@ -605,6 +605,10 @@ export const routes: Routes = [
               {
                 path: '',
                 component: SteckholdersComponent,
+              },
+              {
+                path: 'manage-company',
+                component: ManageCompanyComponent
               },
               {
                 path: 'view-distribution-officers',
@@ -1389,4 +1393,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

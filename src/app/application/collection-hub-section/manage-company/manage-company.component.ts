@@ -263,8 +263,8 @@ export class ManageCompanyComponent {
 
   
   back(): void {
-    this.router.navigate(['/collection-hub']);
-  }
+  window.history.back();
+}
 
   add(): void {
     this.router.navigate(['/collection-hub/create-company']);

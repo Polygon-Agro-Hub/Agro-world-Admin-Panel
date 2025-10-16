@@ -1,120 +1,62 @@
-<div class="flex justify-between">
-  <p class="text-[#4B5563] text-xl font-semibold my-5 dark:text-white">
-    Recent Package Payments
-  </p>
-  <button
-    class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
-  >
-    View All
-    <i class="fa-solid fa-arrow-up-right-from-square text-[#415cff]"></i>
-  </button>
-</div>
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-  <table class="w-full rtl:text-right text-gray-500 dark:text-gray-400">
-    <thead
-      class="uppercase bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2"
+<div>
+  <div class="flex justify-between">
+    <p class="text-[#4B5563] text-xl font-semibold my-5 dark:text-white">
+      Recent Package Payments
+    </p>
+    <button
+      class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
     >
-      <tr>
-        <th scope="col" class="px-6 py-3 text-left dark:text-white">
-          Transaction ID
-        </th>
-        <th scope="col" class="px-6 py-3 text-left dark:text-white">
-          Farmer Name
-        </th>
-        <th scope="col" class="px-6 py-3 text-left dark:text-white">
-          Package Period
-        </th>
-        <th scope="col" class="px-6 py-3 text-left dark:text-white">
-          Amount (Rs.)
-        </th>
-        <th scope="col" class="px-6 py-3 text-left dark:text-white">
-          Date & Time
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+      View All
+      <i class="fa-solid fa-arrow-up-right-from-square text-[#415cff]"></i>
+    </button>
+  </div>
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead
+        class="uppercase bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2"
       >
-        <th
-          scope="row"
-          class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Transaction ID
+          </th>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Farmer Name
+          </th>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Package Period
+          </th>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Amount (Rs.)
+          </th>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Date & Time
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let payment of recentPayments"
+          class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
-          TXN-7821
-        </th>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">Kamal Perera</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">6 Months</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">15,000.00</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-          2024-01-15 14:30
-        </td>
-      </tr>
-      <tr
-        class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        <th
-          scope="row"
-          class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
-        >
-          TXN-7822
-        </th>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">Sunil Fernando</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">12 Months</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">25,000.00</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-          2024-01-16 09:15
-        </td>
-      </tr>
-      <tr
-        class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        <th
-          scope="row"
-          class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
-        >
-          TXN-7823
-        </th>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-          Nimal Rathnayake
-        </td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">3 Months</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">8,500.00</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-          2024-01-17 16:45
-        </td>
-      </tr>
-      <tr
-        class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        <th
-          scope="row"
-          class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
-        >
-          TXN-7824
-        </th>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">Priyanka Silva</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">6 Months</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">15,000.00</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-          2024-01-18 11:20
-        </td>
-      </tr>
-      <tr
-        class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-      >
-        <th
-          scope="row"
-          class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
-        >
-          TXN-7825
-        </th>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">Anura Bandara</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">12 Months</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">25,000.00</td>
-        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-          2024-01-19 13:10
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <th
+            scope="row"
+            class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
+          >
+            {{ payment.transactionId }}
+          </th>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">{{ payment.farmerName }}</td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">{{ payment.packagePeriod }}</td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">{{ payment.amount }}</td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            {{ payment.dateTime }}
+          </td>
+        </tr>
+        <tr *ngIf="recentPayments.length === 0">
+          <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+            No recent payments found
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

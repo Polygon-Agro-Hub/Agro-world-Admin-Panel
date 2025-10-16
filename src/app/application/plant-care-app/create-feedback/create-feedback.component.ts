@@ -24,6 +24,7 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { TokenService } from '../../../services/token/services/token.service';
+import { title } from 'node:process';
 
 @Component({
   selector: 'app-create-feedback',
@@ -139,7 +140,7 @@ export class CreateFeedbackComponent {
   // Show validation errors in SweetAlert
   showValidationErrors(): void {
     let errorMessage = '<div style="text-align: left;">Please fix the following errors:<ul style="margin-top: 10px;">';
-    
+
     if (this.validationErrors.orderNumber) {
       errorMessage += `<li>${this.validationErrors.orderNumber}</li>`;
     }
@@ -152,9 +153,9 @@ export class CreateFeedbackComponent {
     if (this.validationErrors.feedbackTamil) {
       errorMessage += `<li>${this.validationErrors.feedbackTamil}</li>`;
     }
-    
+
     errorMessage += '</ul></div>';
-    
+
     Swal.fire({
       icon: 'error',
       title: 'Validation Error',
@@ -166,23 +167,27 @@ export class CreateFeedbackComponent {
       },
     });
   }
-  
+
   onSubmit() {
     // Validate form
     if (!this.validateForm()) {
       this.showValidationErrors();
       return;
     }
-    
+
     if (this.feedback.orderNumber === 11) {
-      Swal.fire(
-        'Warning',
-        'Maximum number of feedbacks are already uploaded',
-        'warning'
-      );
+      Swal.fire({
+        title: 'Warning',
+        text: 'Maximum number of feedbacks are already uploaded',
+        icon: 'warning',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
       return;
     }
-    
+
     this.isLoading = true;
     const feedbackData = {
       orderNumber: this.feedback.orderNumber,
@@ -190,28 +195,48 @@ export class CreateFeedbackComponent {
       feedbackSinahala: this.feedback.feedbackSinahala,
       feedbackTamil: this.feedback.feedbackTamil,
     };
-    
+
     this.plantcareUsersService.createFeedback(feedbackData).subscribe({
       next: (response: any) => {
         this.isLoading = false;
         if (response.status) {
-          Swal.fire('Success', response.message, 'success');
+          Swal.fire({
+            title: 'Success',
+            text: response.message,
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
           this.feedback.feedbackEnglish = '';
           this.feedback.feedbackSinahala = '';
           this.feedback.feedbackTamil = '';
           this.loadNextNumber();
           this.getAllFeedbacks();
         } else {
-          Swal.fire('Unsuccessful', response.message, 'error');
+          Swal.fire({
+            title: 'Unsuccessful',
+            text: response.message,
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
         }
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire(
-          'Error',
-          'An error occurred while creating feedback. Please try again.',
-          'error'
-        );
+        Swal.fire({
+          title: 'Error',
+          text: 'An error occurred while creating feedback. Please try again.',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
       },
     });
   }
@@ -254,7 +279,7 @@ export class CreateFeedbackComponent {
       }
     });
   }
-  
+
   loadNextNumber() {
     const token = this.tokenService.getToken();
     if (!token) {
@@ -450,20 +475,36 @@ export class CreateFeedbackComponent {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.plantcareUsersService.deleteFeedback(feedbackId).subscribe({
           next: () => {
-            Swal.fire(
-              'Deleted!',
-              'Feedback option has been deleted',
-              'success'
-            );
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Feedback option has been deleted',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
             this.getAllFeedbacks();
             this.loadNextNumber();
           },
           error: () => {
-            Swal.fire('Error!', 'Failed to delete feedback.', 'error');
+            Swal.fire({
+              title: 'Error!',
+              text: 'Failed to delete feedback.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
           },
         });
       }
@@ -482,22 +523,38 @@ export class CreateFeedbackComponent {
           this.feebackList.forEach((item, index) => {
             item.orderNumber = index + 1;
           });
-          Swal.fire(
-            'Success',
-            'Feedback order updated successfully',
-            'success'
-          );
+          Swal.fire({
+            title: 'Success',
+            text: 'Feedback order updated successfully',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
         } else {
-          Swal.fire('Error', 'Failed to update feedback order', 'error');
+          Swal.fire({
+            title: 'Error',
+            text: 'Failed to update feedback order',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
           this.getAllFeedbacks();
         }
       },
       error: () => {
-        Swal.fire(
-          'Error',
-          'An error occurred while updating feedback order',
-          'error'
-        );
+        Swal.fire({
+          title: 'Error',
+          text: 'An error occurred while updating feedback order',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
         this.getAllFeedbacks();
       },
     });

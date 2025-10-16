@@ -31,3 +31,8 @@
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
 }
+
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    padding-left: 0.5rem !important; /* reduce left space */
+    
+  }

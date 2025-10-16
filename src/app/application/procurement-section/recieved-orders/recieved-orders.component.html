@@ -126,7 +126,8 @@
         <div class="w-5"></div>
 
         <!-- Search Box -->
-        <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
+        <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96 group relative">
+  
           <input 
             type="text" 
             placeholder="Search by Crop & Variety..." 
@@ -134,6 +135,15 @@
             [(ngModel)]="search" 
             (keydown.enter)="applysearch()" 
           />
+        
+          <!-- Tooltip -->
+          <div
+  class="absolute top-full mt-2 
+         bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 
+         group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+  Search by Crop & Variety
+</div>
+        
           <button 
             type="button" 
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -143,6 +153,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
+        
           <button 
             (click)="clearSearch()" 
             type="button" 
@@ -154,6 +165,7 @@
             </svg>
           </button>
         </div>
+        
       </div>
     </div>
 

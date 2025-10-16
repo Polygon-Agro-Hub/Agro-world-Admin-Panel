@@ -32,14 +32,15 @@
                 <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
     <!-- Input field -->
     <input 
-        type="text" 
-        placeholder="Search..." 
-        title="Search by NIC/Name" 
-        [(ngModel)]="searchText" 
-        name="searchText"
-        class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" 
-        (keydown.enter)="onSearchEnter()"
-    />
+    type="text" 
+    placeholder="Search..." 
+    title="Search by NIC/Name" 
+    [(ngModel)]="searchText" 
+    name="searchText"
+    class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" 
+    (keydown.enter)="onSearchEnter()"
+    (keydown)="onKeydown($event)"
+/>
 
     <!-- Search button -->
     <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="fetchData()">

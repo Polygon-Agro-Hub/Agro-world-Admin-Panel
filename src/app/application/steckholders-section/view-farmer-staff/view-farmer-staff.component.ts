@@ -84,6 +84,20 @@ export class ViewFarmerStaffComponent implements OnInit {
     );
   }
 
+  onKeydown(event: KeyboardEvent) {
+  // Check if the pressed key is space and cursor is at the beginning
+  if (event.key === ' ' || event.keyCode === 32) {
+    const input = event.target as HTMLInputElement;
+    
+    // Check if cursor is at the beginning or if input is empty
+    if (input.selectionStart === 0 && input.selectionEnd === 0) {
+      event.preventDefault();
+      return false;
+    }
+  }
+  return true;
+}
+
   viewFarmerStaff(id: number) {
     this.router.navigate(['/steckholders/action/farmers/view-farmer-owner', id]);
   }

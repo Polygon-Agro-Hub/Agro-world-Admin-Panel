@@ -11,7 +11,7 @@ export class StakeholderService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   getAdminUserData(): Observable<any> {
     const headers = new HttpHeaders({
@@ -42,16 +42,20 @@ export class StakeholderService {
             district: item.distrct || 'N/A', // backend typo
             language: item.language
               ? item.language
-                .split(',')
-                .map((lang: string) => {
-                  switch (lang.trim()) {
-                    case 'Eng': return 'English';
-                    case 'Sin': return 'Sinhala';
-                    case 'Tam': return 'Tamil';
-                    default: return lang.trim();
-                  }
-                })
-                .join(', ')
+                  .split(',')
+                  .map((lang: string) => {
+                    switch (lang.trim()) {
+                      case 'Eng':
+                        return 'English';
+                      case 'Sin':
+                        return 'Sinhala';
+                      case 'Tam':
+                        return 'Tamil';
+                      default:
+                        return lang.trim();
+                    }
+                  })
+                  .join(', ')
               : '',
             status: item.status || 'Pending',
             phone: item.phoneNumber1
@@ -63,8 +67,6 @@ export class StakeholderService {
         )
       );
   }
-
-
 
   getAllCompanies(): Observable<any> {
     const headers = new HttpHeaders({
@@ -110,7 +112,7 @@ export class StakeholderService {
     contract?: File | null
   ): Observable<any> {
     const formData = new FormData();
-    formData.append("officerData", JSON.stringify(person));
+    formData.append('officerData', JSON.stringify(person));
 
     // Append files only if they are not null
     if (profileImage) {
@@ -133,11 +135,9 @@ export class StakeholderService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(
-      `${this.apiUrl}auth/create-field-officer`,
-      formData,
-      { headers }
-    );
+    return this.http.post(`${this.apiUrl}auth/create-field-officer`, formData, {
+      headers,
+    });
   }
 
   getFiealdOfficerById(id: number) {
@@ -189,5 +189,16 @@ export class StakeholderService {
       formData,
       { headers }
     );
+  }
+
+  // Change inspector status
+  changeInspectorStatus(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}stakeholder/update-status-send-password/${id}/${status}`;
+    return this.http.put<any>(url, {}, { headers });
   }
 }

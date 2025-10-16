@@ -92,10 +92,14 @@ export class ViewFarmerStaffComponent implements OnInit {
     this.router.navigate(['/steckholders/action/farmers/edit-user-staff', id]);
   }
 
+  onSearchEnter() {
+    this.fetchData();
+  }
+
   deleteFarmStaff(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You are about to delete this farm staff member. This action cannot be undone.',
+      text: 'Do you really want to delete this staff member? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -123,7 +127,7 @@ export class ViewFarmerStaffComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: res.message,
+            text: 'Staff member has been deleted.',
             confirmButtonText: 'OK',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

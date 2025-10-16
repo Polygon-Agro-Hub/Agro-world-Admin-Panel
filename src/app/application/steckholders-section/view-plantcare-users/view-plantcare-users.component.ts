@@ -225,7 +225,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
 
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this plant care user? This action cannot be undone.',
+      text: 'Do you really want to delete this GoviCare user? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -247,7 +247,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
               if (data) {
                 Swal.fire({
                   title: 'Deleted!',
-                  text: 'The plant care user has been deleted.',
+                  text: 'GoviCare user has been deleted.',
                   icon: 'success',
                   customClass: {
                     popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

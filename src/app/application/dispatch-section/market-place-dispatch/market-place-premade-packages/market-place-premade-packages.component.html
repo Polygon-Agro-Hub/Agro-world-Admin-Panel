@@ -69,12 +69,12 @@
     </div>
 
     <div>
-        <!-- <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
             <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-        </div> -->
+        </div>
 
-        <table class="min-w-full divide-y divide-gray-200 table-auto">
+        <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
                     <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
@@ -191,15 +191,14 @@
 
                     
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        <!-- {{ calculateTotPrice(item.additionalPrice, item.productPrice) | number: '1.2-2' }} -->
-                          --
+                          {{item.adminPackBy !== null ? item.adminPackBy : item.packBy !== null ? item.packBy : '--'}}
                     </td>
 
 
                 </tr>
             </tbody>
         </table>
-        <div class="dark:bg-[#262f45]">
+        <div *ngIf="hasData" class="dark:bg-[#262f45]">
             <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
                 [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
                 [screenReaderCurrentLabel]="'Youre on page'">

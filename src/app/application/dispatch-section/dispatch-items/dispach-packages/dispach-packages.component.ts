@@ -196,6 +196,7 @@ export class DispachPackagesComponent implements OnInit {
     this.isPopupOpen = false;
     // this.selectProduct = 
     this.newProductObj = null;
+    this.isInvalidPriceRange = false;
   }
 
   // In your component class

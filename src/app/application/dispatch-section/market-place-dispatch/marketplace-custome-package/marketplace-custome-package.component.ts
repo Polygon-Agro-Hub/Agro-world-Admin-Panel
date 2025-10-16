@@ -67,7 +67,7 @@ export class MarketplaceCustomePackageComponent {
           this.premadePackages = response.items
           this.totalItems = response.total;
 
-          this.hasData = response.items && response.items.length > 0;
+          this.hasData = response.total > 0;
           console.log(this.premadePackages);
           this.isLoading = false;
         },
@@ -83,12 +83,12 @@ export class MarketplaceCustomePackageComponent {
 
   private formatDateForAPI(date: Date | null): string {
     if (!date) return '';
-  
+
     // Convert using local time instead of UTC
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-  
+
     return `${year}-${month}-${day}`; // Local YYYY-MM-DD
   }
   applysearch() {
@@ -114,10 +114,10 @@ export class MarketplaceCustomePackageComponent {
     return parseFloat(num1) + parseFloat(num2);
   }
 
- navigateDispatchAdditionalItems(id: number) {
+  navigateDispatchAdditionalItems(id: number) {
     this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
-    queryParams: { status: true }
-  })
+      queryParams: { status: true }
+    })
   }
 }
 
@@ -129,5 +129,7 @@ interface PremadePackages {
   additionalItemPrice: number
   totalAdditionalItems: number
   packedAdditionalItems: number
-  additionalItemsStatus: string
+  additionalItemsStatus: string,
+  adminPackBy: string | null;
+  packBy: string | null;
 }

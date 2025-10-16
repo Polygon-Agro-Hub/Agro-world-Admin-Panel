@@ -223,3 +223,57 @@
     </div>
   </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div
+  *ngIf="isDeleteModalOpen && farmerToDelete"
+  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-10 rounded-md"
+>
+  <div
+    class="bg-tileLight dark:bg-tileBlack rounded-lg px-20 py-10 shadow-lg max-w-md w-full mx-4"
+  >
+    <!-- Confirmation Message -->
+    <div class="text-center mb-8">
+      <p class="font-medium dark:text-textDark mb-6">
+        Are you sure you want to remove the following farmer from this cluster?
+      </p>
+
+      <!-- Farmer Details -->
+      <div class="flex gap-2">
+        <span class="text-textLight dark:text-textDark font-medium"
+          >Farmer Name :
+        </span>
+        <span class="text-black dark:text-textDark font-semibold"
+          >{{ farmerToDelete.firstName }} {{ farmerToDelete.lastName }}</span
+        >
+      </div>
+      <div class="flex gap-2">
+        <span class="text-textLight dark:text-textDark font-medium"
+          >Farmer NIC :
+        </span>
+        <span class="text-black dark:text-textDark font-semibold">{{
+          farmerToDelete.nic
+        }}</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-center space-x-4">
+      <button
+        class="px-6 py-2 bg-gray-300 text-gray-700 hover:text-white dark:bg-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 w-32 transition-colors"
+        (click)="closeDeleteModal()"
+        [disabled]="isLoading"
+      >
+        No, <br />Cancel
+      </button>
+
+      <button
+        class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 w-32 transition-colors disabled:bg-red-400 disabled:cursor-not-allowed"
+        (click)="confirmDelete()"
+        [disabled]="isLoading"
+      >
+        Yes, <br />Remove
+      </button>
+    </div>
+  </div>
+</div>

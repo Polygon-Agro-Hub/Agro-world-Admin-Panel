@@ -39,6 +39,8 @@ export class EditFarmerClusterComponent implements OnInit {
   newFarmerNIC: string = '';
   nicError: string = '';
   nameError: string = '';
+  isDeleteModalOpen: boolean = false;
+  farmerToDelete: ClusterMember | null = null;
 
   constructor(
     private farmerClusterService: CertificateCompanyService,
@@ -172,27 +174,29 @@ export class EditFarmerClusterComponent implements OnInit {
     this.location.back();
   }
 
+  // Open delete confirmation modal
+  openDeleteModal(user: ClusterMember) {
+    this.farmerToDelete = user;
+    this.isDeleteModalOpen = true;
+  }
+
+  // Close delete confirmation modal
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+    this.farmerToDelete = null;
+  }
+
+  // Confirm and execute deletion
+  confirmDelete() {
+    if (this.farmerToDelete) {
+      this.removeUserFromCluster(this.farmerToDelete);
+      this.closeDeleteModal();
+    }
+  }
+
+  // Remove user
   removeUser(user: ClusterMember) {
-    Swal.fire({
-      html: ` <br/>
-      Are you sure you want to remove the following farmer from this cluster? <br/><br/><br/>
-      <span>Farmer Name :</span> ${user.firstName} ${user.lastName} <br/>
-      <span>Farmer NIC :</span> ${user.nic} <br/>
-    `,
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      cancelButtonText: 'No, Cancel',
-      confirmButtonText: 'Yes, Remove',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.removeUserFromCluster(user);
-      }
-    });
+    this.openDeleteModal(user);
   }
 
   removeUserFromCluster(user: ClusterMember) {

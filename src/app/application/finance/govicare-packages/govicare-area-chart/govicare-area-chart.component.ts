@@ -1,4 +1,5 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { MonthlyStatistic } from '../../../../services/plant-care/plantcare-users.service';
 
 interface ChartPoint {
   x: number;
@@ -25,21 +26,25 @@ interface ChartPadding {
   templateUrl: './govicare-area-chart.component.html',
   styleUrl: './govicare-area-chart.component.css'
 })
-export class GovicareAreaChartComponent implements AfterViewInit {
+export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
+  @Input() monthlyStats: MonthlyStatistic[] = [];
 
   ngAfterViewInit(): void {
-    // Use setTimeout to ensure the DOM is fully rendered
     setTimeout(() => {
       this.createAreaChart();
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['monthlyStats'] && !changes['monthlyStats'].firstChange) {
+      setTimeout(() => {
+        this.createAreaChart();
+      });
+    }
+  }
+
   private createAreaChart(): void {
-    // Sample data matching the image
-    const data: ChartData = {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      values: [25000, 35000, 40000, 45000, 60000, 75000, 90000, 85000, 70000, 55000, 40000, 30000]
-    };
+    const data: ChartData = this.prepareChartData();
 
     const canvas = document.getElementById('MyChart') as HTMLCanvasElement;
     if (!canvas) {
@@ -53,23 +58,31 @@ export class GovicareAreaChartComponent implements AfterViewInit {
       return;
     }
 
-    // Set canvas dimensions
     canvas.width = canvas.offsetWidth;
-    canvas.height = 300;
+    canvas.height = 400;
 
-    // Chart dimensions with padding
-    const padding: ChartPadding = { top: 40, right: 40, bottom: 40, left: 60 };
+    const padding: ChartPadding = { top: 60, right: 40, bottom: 60, left: 90 };
     const chartWidth = canvas.width - padding.left - padding.right;
     const chartHeight = canvas.height - padding.top - padding.bottom;
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw chart area
     this.drawAreaChart(ctx, data, padding, chartWidth, chartHeight);
-
-    // Draw axes and labels
     this.drawAxes(ctx, data, padding, chartWidth, chartHeight);
+  }
+
+  private prepareChartData(): ChartData {
+    if (!this.monthlyStats || this.monthlyStats.length === 0) {
+      return {
+        labels: [],
+        values: []
+      };
+    }
+
+    const labels = this.monthlyStats.map(stat => stat.monthName);
+    const values = this.monthlyStats.map(stat => Number(stat.revenue) || 0);
+
+    return { labels, values };
   }
 
   private drawAreaChart(
@@ -79,19 +92,17 @@ export class GovicareAreaChartComponent implements AfterViewInit {
     chartWidth: number, 
     chartHeight: number
   ): void {
-    const maxValue = 100000;
+    const maxValue = Math.max(...data.values) || 100000;
     const points: ChartPoint[] = data.values.map((value: number, index: number) => {
       const x = padding.left + (index * chartWidth) / (data.labels.length - 1);
       const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
       return { x, y, value };
     });
 
-    // Create gradient for area fill - Teal/Cyan colors from the image
     const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartHeight);
-    gradient.addColorStop(0, 'rgba(45, 212, 191, 0.4)'); // Brighter teal at top
-    gradient.addColorStop(1, 'rgba(45, 212, 191, 0.1)'); // Faded teal at bottom
+    gradient.addColorStop(0, 'rgba(217, 70, 239, 0.6)');
+    gradient.addColorStop(1, 'rgba(217, 70, 239, 0.05)');
 
-    // Draw area
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top + chartHeight);
     
@@ -104,7 +115,6 @@ export class GovicareAreaChartComponent implements AfterViewInit {
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Draw line - Teal color from the image
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
     
@@ -114,18 +124,17 @@ export class GovicareAreaChartComponent implements AfterViewInit {
       }
     });
     
-    ctx.strokeStyle = '#2DD4BF'; // Teal-400 color
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#D946EF';
+    ctx.lineWidth = 2.5;
     ctx.stroke();
 
-    // Draw data points
     points.forEach((point: ChartPoint) => {
       ctx.beginPath();
-      ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI);
-      ctx.fillStyle = '#2DD4BF'; // Teal-400 color
+      ctx.arc(point.x, point.y, 4, 0, 2 * Math.PI);
+      ctx.fillStyle = '#D946EF';
       ctx.fill();
-      ctx.strokeStyle = '#061E2C'; // Dark background color for border
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#061E2C';
+      ctx.lineWidth = 1.5;
       ctx.stroke();
     });
   }
@@ -137,33 +146,36 @@ export class GovicareAreaChartComponent implements AfterViewInit {
     chartWidth: number, 
     chartHeight: number
   ): void {
-    const maxValue = 100000;
+    const maxValue = Math.max(...data.values) || 100000;
+    const yLabels: number[] = this.generateYLabels(maxValue);
     
-    // Y-axis labels
-    const yLabels: number[] = [0, 25000, 50000, 75000, 100000];
-    
-    ctx.fillStyle = '#888888'; // Gray text color from the image
-    ctx.font = '12px Arial';
+    // Draw Y-axis labels
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 12px Arial';
     ctx.textAlign = 'right';
     
     yLabels.forEach((value: number) => {
       const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
-      ctx.fillText(value.toLocaleString(), padding.left - 10, y + 4);
+      ctx.fillText(
+        value.toLocaleString('en-LK', { style: 'decimal', maximumFractionDigits: 0 }), 
+        padding.left - 15, 
+        y + 4
+      );
     });
 
-    // Y-axis title
+    // Draw Y-axis label (vertical text)
     ctx.save();
-    ctx.translate(20, padding.top + chartHeight / 2);
+    ctx.translate(15, padding.top + chartHeight / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#888888'; // Gray text color
+    ctx.fillStyle = '#888888';
     ctx.font = '12px Arial';
-    ctx.fillText('Income', 0, 0);
+    ctx.fillText('Income (Rs)', 0, 0);
     ctx.restore();
 
-    // X-axis labels
+    // Draw X-axis labels
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#888888'; // Gray text color
+    ctx.fillStyle = '#888888';
     ctx.font = '12px Arial';
     
     data.labels.forEach((label: string, index: number) => {
@@ -172,13 +184,27 @@ export class GovicareAreaChartComponent implements AfterViewInit {
       ctx.fillText(label, x, y);
     });
 
-    // Draw grid lines - Dark gray from the image
-    ctx.strokeStyle = '#1E293B'; // Dark slate gray
+    // Draw legend - Income label with pink dot at center top
+    const legendX = padding.left + chartWidth / 2;
+    const legendY = padding.top - 25;
+    
+    ctx.beginPath();
+    ctx.arc(legendX - 30, legendY, 5, 0, 2 * Math.PI);
+    ctx.fillStyle = '#D946EF';
+    ctx.fill();
+    
+    ctx.fillStyle = '#888888';
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText('Income', legendX - 20, legendY + 4);
+
+    // Draw grid lines
+    ctx.strokeStyle = '#1E293B';
     ctx.lineWidth = 1;
-    ctx.setLineDash([5, 3]); // Dashed grid lines like in the image
+    ctx.setLineDash([5, 3]);
     
     yLabels.forEach((value: number) => {
-      if (value > 0) { // Don't draw grid line at the bottom
+      if (value > 0) {
         const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
         ctx.beginPath();
         ctx.moveTo(padding.left, y);
@@ -187,23 +213,52 @@ export class GovicareAreaChartComponent implements AfterViewInit {
       }
     });
 
-    // Reset line dash for axes
+    // Draw axes
     ctx.setLineDash([]);
-
-    // Draw axes lines - Medium gray
-    ctx.strokeStyle = '#4B5563'; // Medium gray
+    ctx.strokeStyle = '#4B5563';
     ctx.lineWidth = 1;
     
-    // Y-axis line
+    // Y-axis
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top);
     ctx.lineTo(padding.left, padding.top + chartHeight);
     ctx.stroke();
     
-    // X-axis line
+    // X-axis
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top + chartHeight);
     ctx.lineTo(padding.left + chartWidth, padding.top + chartHeight);
     ctx.stroke();
+  }
+
+  private generateYLabels(maxValue: number): number[] {
+    // Handle edge case where maxValue is 0
+    if (maxValue === 0) {
+      return [0, 25000, 50000, 75000, 100000];
+    }
+
+    // Calculate appropriate step size based on magnitude
+    const magnitude = Math.pow(10, Math.floor(Math.log10(maxValue)));
+    const normalizedMax = maxValue / magnitude;
+    
+    let stepDivisor: number;
+    if (normalizedMax <= 2) {
+      stepDivisor = 0.5;
+    } else if (normalizedMax <= 5) {
+      stepDivisor = 1;
+    } else {
+      stepDivisor = 2;
+    }
+    
+    const step = stepDivisor * magnitude;
+    const numSteps = Math.ceil(maxValue / step);
+    
+    // Generate labels from 0 to just above maxValue
+    const labels: number[] = [];
+    for (let i = 0; i <= numSteps; i++) {
+      labels.push(i * step);
+    }
+    
+    return labels;
   }
 }

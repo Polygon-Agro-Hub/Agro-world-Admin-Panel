@@ -961,21 +961,58 @@ checkPublishExpireDateEdit() {
 
   // Add this method to your component class
   preventLeadingSpace(event: KeyboardEvent, fieldName: string): void {
-    const input = event.target as HTMLInputElement;
-    const currentValue = input.value;
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart;
 
-    // If the field is empty and user tries to type a space, prevent it
-    if (currentValue.length === 0 && event.key === ' ') {
-      event.preventDefault();
-      return;
-    }
-
-    // If the field only contains spaces and user tries to add another space, prevent it
-    if (currentValue.trim().length === 0 && event.key === ' ') {
+  // Prevent space if:
+  // 1. Field is empty and user tries to type space
+  // 2. Cursor is at the beginning and user tries to add space
+  // 3. There are only spaces in the field and user tries to add another space
+  if (event.key === ' ') {
+    if (currentValue.length === 0 || 
+        cursorPosition === 0 || 
+        currentValue.trim().length === 0) {
       event.preventDefault();
       return;
     }
   }
+}
+
+onTitleInput(event: Event, fieldName: string): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
+
+  // Remove leading spaces
+  if (value.startsWith(' ')) {
+    value = value.replace(/^\s+/, '');
+    if (this.itemId === null) {
+      (this.createNewsObj as any)[fieldName] = value;
+    } else {
+      (this.newsItems[0] as any)[fieldName] = value;
+    }
+    
+    // Force update the input value
+    setTimeout(() => {
+      input.value = value;
+    });
+  }
+}
+
+onTitlePaste(event: ClipboardEvent, fieldName: string): void {
+  event.preventDefault();
+  const clipboardData = event.clipboardData;
+  const pastedText = clipboardData?.getData('text') || '';
+  
+  // Remove leading spaces from pasted content
+  const cleanedText = pastedText.replace(/^\s+/, '');
+  
+  if (this.itemId === null) {
+    (this.createNewsObj as any)[fieldName] = cleanedText;
+  } else {
+    (this.newsItems[0] as any)[fieldName] = cleanedText;
+  }
+}
 
   onEnglishTitleChange(value: string): void {
   // Capitalize first letter

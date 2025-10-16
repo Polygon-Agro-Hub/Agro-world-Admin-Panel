@@ -133,4 +133,8 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
     this.router.navigate(['/steckholders/action/field-officer-profile', id]);
   }
 
+  navigateToViewDistributionCompanies() {
+    this.router.navigate(['/distribution-hub/action/view-companies']);
+  }
+
 }

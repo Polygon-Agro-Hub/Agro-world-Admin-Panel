@@ -228,6 +228,7 @@ export class CollectiveofficersEditComponent {
     // Reset collection center and manager
     this.personalData.centerId = null;
     this.personalData.irmId = null;
+    this.personalData.jobRole = '';
 
     // Clear manager options
     this.managerOptions = [];

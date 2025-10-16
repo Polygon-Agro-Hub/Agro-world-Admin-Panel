@@ -747,6 +747,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   this.loaded = false;
   this.personalData.centerId = '';
   this.personalData.irmId = ''; // Clear manager selection
+  this.personalData.jobRole = '';
   this.managerOptions = []; // Clear manager options
   
   this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(

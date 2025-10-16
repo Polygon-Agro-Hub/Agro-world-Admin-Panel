@@ -151,7 +151,7 @@ export class ViewCompanyHeadComponent implements OnInit {
   deleteCompanyHead(id: any) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to delete this center head? This action cannot be undone.',
+      text: 'Do you really want to delete this centre head? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -169,7 +169,7 @@ export class ViewCompanyHeadComponent implements OnInit {
             if (data) {
               Swal.fire({
                 title: 'Deleted!',
-                text: 'The Center Head has been deleted.',
+                text: 'The Centre Head has been deleted.',
                 icon: 'success',
                 customClass: {
                   popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
@@ -182,7 +182,7 @@ export class ViewCompanyHeadComponent implements OnInit {
           (error) => {
             Swal.fire({
               title: 'Error!',
-              text: 'There was an error deleting the Center Head.',
+              text: 'There was an error deleting the Centre Head.',
               icon: 'error',
               customClass: {
                 popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',

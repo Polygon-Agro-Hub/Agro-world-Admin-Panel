@@ -761,20 +761,47 @@ export class EditSalesAgentComponent implements OnInit {
             },
             (error: any) => {
               this.isLoading = false;
-              this.errorMessage =
-                error.error.error || 'An unexpected error occurred';
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: this.errorMessage,
-                confirmButtonText: 'OK',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                  htmlContainer: 'text-left',
-                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-                },
-              });
+              let errorMessage = 'An unexpected error occurred';
+              let messages: string[] = [];
+
+              if (error.error && Array.isArray(error.error.errors)) {
+                messages = error.error.errors.map((err: string) => {
+                  switch (err) {
+                    case 'NIC':
+                      return 'The NIC number is already registered.';
+                    case 'Email':
+                      return 'Email already exists.';
+                    case 'PhoneNumber01':
+                      return 'Mobile Number 1 already exists.';
+                    case 'PhoneNumber02':
+                      return 'Mobile Number 2 already exists.';
+                    default:
+                      return 'Validation error: ' + err;
+                  }
+                });
+              }
+
+              if (messages.length > 0) {
+                errorMessage = '<div class="text-left"><p class="mb-2">The following fields already exist in the system: </p><ul class="list-disc pl-5">';
+                messages.forEach(m => {
+                  errorMessage += `<li>${m}</li>`;
+                });
+                errorMessage += '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
+
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Duplicate Information Found',
+                  html: errorMessage,
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                    htmlContainer: 'text-left',
+                    confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+                  },
+                });
+                return;
+              }
             }
           );
       }

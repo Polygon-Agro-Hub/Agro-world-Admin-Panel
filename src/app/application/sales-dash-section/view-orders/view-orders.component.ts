@@ -225,6 +225,7 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   onSearch() {
+    this.searchText = this.searchText?.trim() || ''
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,

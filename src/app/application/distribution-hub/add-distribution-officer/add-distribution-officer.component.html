@@ -145,8 +145,7 @@
           </label>
           <input id="firstNameEnglish" name="firstNameEnglish" required [(ngModel)]="personalData.firstNameEnglish"
             #firstNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"
-            (input)="capitalizeWhileTyping('firstNameEnglish')"
-            (keypress)="blockInvalidNameInput($event, 'firstNameEnglish')" (input)="trimLeadingSpace($event)"
+            (input)="onTrimInputFirstCapital($event, personalData, 'firstNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf=" (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)" class="text-red-600 text-sm">
             <ng-container *ngIf="firstNameEnglishRef.errors?.['required']">
@@ -164,8 +163,7 @@
             Last Name *
           </label>
           <input id="lastNameEnglish" name="lastNameEnglish" required [(ngModel)]="personalData.lastNameEnglish"
-            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$" (input)="capitalizeWhileTyping('lastNameEnglish')"
-            (input)="trimLeadingSpace($event)" (keypress)="blockInvalidNameInput($event, 'lastNameEnglish')"
+            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$" (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="lastNameEnglishRef.invalid && (lastNameEnglishRef.dirty || lastNameEnglishRef.touched)"
             class="text-red-600 text-sm">
@@ -287,7 +285,7 @@
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
           <input type="email" id="email" name="nic" [(ngModel)]="personalData.email"
-            (keydown)="blockLeadingSpace($event, 'nic')" (blur)="onBlur('email')" (input)="trimLeadingSpace($event)"
+             (blur)="onBlur('email')" (input)="onTrimInput($event, personalData, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <!-- Show detailed error messages from service -->
@@ -399,10 +397,9 @@
           Account Holder’s Name *
         </label>
         <input maxlength="50" id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-          (keydown)="blockLeadingSpace($event, 'nic')" #accHolderNameRef="ngModel" required
-          pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$" (input)="capitalizeWhileTyping('accHolderName')"
-          (keypress)="blockInvalidNameInput($event, personalData.accHolderName)" (blur)="onBlur('accHolderName')"
-          (input)="trimLeadingSpace($event)"
+        (input)="onTrimInput($event, personalData, 'accHolderName')" #accHolderNameRef="ngModel" required
+          pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$" 
+           (blur)="onBlur('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="accHolderNameRef.invalid && (accHolderNameRef.dirty || accHolderNameRef.touched)"
           class="text-red-600 text-sm">

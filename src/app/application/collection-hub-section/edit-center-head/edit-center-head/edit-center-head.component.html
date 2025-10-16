@@ -129,7 +129,7 @@
             (in English) *</label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameEnglishInput="ngModel" required />
+            #firstNameEnglishInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'firstNameEnglish')"/>
           <div *ngIf="firstNameEnglishInput.touched && !personalData.firstNameEnglish"
             class="text-red-500 text-sm mt-1">
             <div>First Name (in English) is required</div>
@@ -141,7 +141,7 @@
             English) *</label>
           <input id="lastName" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameEnglishInput="ngModel" required />
+            #lastNameEnglishInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"/>
           <div *ngIf="lastNameEnglishInput.touched && !personalData.lastNameEnglish" class="text-red-500 text-sm mt-1">
             <div>Last Name (in English) is required</div>
           </div>
@@ -152,7 +152,7 @@
             Sinhala) *</label>
           <input id="firstName" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameSinhalaInput="ngModel" required />
+            #firstNameSinhalaInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'firstNameSinhala')"/>
           <div *ngIf="firstNameSinhalaInput.touched && !personalData.firstNameSinhala"
             class="text-red-500 text-sm mt-1">
             <div>First Name (in Sinhala) is required</div>
@@ -164,7 +164,7 @@
             Sinhala) *</label>
           <input id="lastName" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameSinhalaInput="ngModel" required />
+            #lastNameSinhalaInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'lastNameSinhala')"/>
           <div *ngIf="lastNameSinhalaInput.touched && !personalData.lastNameSinhala" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Sinhala) is required</div>
           </div>
@@ -175,7 +175,7 @@
             Tamil) *</label>
           <input id="firstName" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #firstNameTamilInput="ngModel" required />
+            #firstNameTamilInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'firstNameTamil')"/>
           <div *ngIf="firstNameTamilInput.touched && !personalData.firstNameTamil" class="text-red-500 text-sm mt-1">
             <div>First Name (in Tamil) is required</div>
           </div>
@@ -186,7 +186,7 @@
             Tamil) *</label>
           <input id="lastName" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            #lastNameTamilInput="ngModel" required />
+            #lastNameTamilInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'lastNameTamil')"/>
           <div *ngIf="lastNameTamilInput.touched && !personalData.lastNameTamil" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Tamil) is required</div>
           </div>
@@ -356,7 +356,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email" (blur)="validateEmail()"
-            (input)="validateEmail()"
+          (input)="onTrimInput($event, personalData, 'email'); validateEmail()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #emailInput="ngModel" required />
 
@@ -393,11 +393,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot
             Number *</label>
           <input id="houseNumber" name="houseNumber" [(ngModel)]="personalData.houseNumber" #houseNumberInput="ngModel"
-            required (input)="
-    personalData.houseNumber = personalData.houseNumber
-      ? personalData.houseNumber.trimStart().charAt(0).toUpperCase() + personalData.houseNumber.trimStart().slice(1)
-      : '';
-  " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          (input)="onTrimInputFirstCapital($event, personalData, 'houseNumber')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="houseNumberInput.touched && !personalData.houseNumber" class="text-red-500 text-sm mt-1">
             <div>House Number is required</div>
@@ -408,11 +404,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
         <div class="pb-6">
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
           <input id="streetName" name="streetName" [(ngModel)]="personalData.streetName" #streetNameInput="ngModel"
-            required (input)="
-    personalData.streetName = personalData.streetName
-      ? personalData.streetName.trimStart().charAt(0).toUpperCase() + personalData.streetName.trimStart().slice(1)
-      : '';
-  " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            required (input)="onTrimInputFirstCapital($event, personalData, 'streetName')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="streetNameInput.touched && !personalData.streetName" class="text-red-500 text-sm mt-1">
             <div>Street Name is required</div>
@@ -423,11 +415,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
 
         <div class="pb-6">
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
-          <input id="city" name="city" [(ngModel)]="personalData.city" #cityInput="ngModel" required (input)="
-    personalData.city = personalData.city
-      ? personalData.city.trimStart().charAt(0).toUpperCase() + personalData.city.trimStart().slice(1)
-      : '';
-  " class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <input id="city" name="city" [(ngModel)]="personalData.city" #cityInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'city')" class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="cityInput.touched && !personalData.city" class="text-red-500 text-sm mt-1">
             <div>City is required</div>
@@ -480,7 +468,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder’s
           Name *</label>
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-          (ngModelChange)="validateAccNumber()"
+          (ngModelChange)="validateAccNumber()" (input)="onTrimInput($event, personalData, 'accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accHolderNameInput="ngModel" required />
         <div *ngIf="accHolderNameInput.touched && !personalData.accHolderName" class="text-red-500 text-sm mt-1">

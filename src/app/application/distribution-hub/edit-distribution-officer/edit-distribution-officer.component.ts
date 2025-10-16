@@ -295,6 +295,19 @@ export class EditDistributionOfficerComponent implements OnInit {
     }
   }
 
+  onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    let trimmedValue = inputElement.value.trimStart();
+  
+    // Capitalize first letter
+    if (trimmedValue.length > 0) {
+      trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+    }
+  
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
+
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
     if (charCode < 48 || charCode > 57) {

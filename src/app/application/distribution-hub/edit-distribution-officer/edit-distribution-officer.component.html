@@ -222,8 +222,8 @@
           </label>
           <input id="firstNameEnglish" name="firstNameEnglish" required [(ngModel)]="personalData.firstNameEnglish"
             #firstNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"
-            (input)="capitalizeWhileTyping('firstNameEnglish')"
-            (keypress)="blockInvalidNameInput($event, personalData.firstNameEnglish)" (input)="trimLeadingSpace($event)"
+            (input)="onTrimInputFirstCapital($event, personalData, 'firstNameEnglish')"
+            
             (blur)="onBlur('firstNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="
@@ -241,8 +241,7 @@
             Last Name *
           </label>
           <input id="lastNameEnglish" name="lastNameEnglish" required [(ngModel)]="personalData.lastNameEnglish"
-            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$" (input)="capitalizeWhileTyping('lastNameEnglish')"
-            (keypress)="blockInvalidNameInput($event, personalData.lastNameEnglish)" (input)="trimLeadingSpace($event)"
+            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"  (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"
             (blur)="onBlur('lastNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="
@@ -529,8 +528,7 @@
 
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
           #accHolderNameRef="ngModel" required pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$"
-          (input)="capitalizeWhileTyping('accHolderName')"
-          (keypress)="blockInvalidNameInput($event, personalData.accHolderName)" (input)="trimLeadingSpace($event)"
+          (input)="onTrimInputFirstCapital($event, personalData, 'accHolderName')"
           (blur)="onBlur('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 

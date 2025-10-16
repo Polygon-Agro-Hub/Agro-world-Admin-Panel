@@ -345,6 +345,26 @@ validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
     }
 }
 
+onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  let trimmedValue = inputElement.value.trimStart();
+
+  // Capitalize first letter
+  if (trimmedValue.length > 0) {
+    trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+  }
+
+  modelRef[fieldName] = trimmedValue;
+  inputElement.value = trimmedValue;
+}
+
+onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  const trimmedValue = inputElement.value.trimStart();
+  modelRef[fieldName] = trimmedValue;
+  inputElement.value = trimmedValue;
+}
+
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
@@ -838,37 +858,47 @@ onSubmit() {
           },
           error: (error: any) => {
             this.isLoading = false;
-            let errorMessage = 'An unexpected error occurred';
+              let errorMessage = 'An unexpected error occurred';
+              let messages: string[] = [];
 
-            if (error.error && error.error.error) {
-              switch (error.error.error) {
-                case 'NIC already exists':
-                  errorMessage = 'The NIC number is already registered.';
-                  break;
-                case 'Email already exists':
-                  errorMessage = 'The email address is already in use.';
-                  break;
-                case 'Primary phone number already exists':
-                  errorMessage = 'The primary phone number is already registered.';
-                  break;
-                case 'Secondary phone number already exists':
-                  errorMessage = 'The secondary phone number is already registered.';
-                  break;
-                case 'Invalid file format or file upload error':
-                  errorMessage = 'Invalid file format or error uploading the file.';
-                  break;
-                default:
-                  errorMessage = error.error.error || 'An unexpected error occurred';
+              if (error.error && Array.isArray(error.error.errors)) {
+                messages = error.error.errors.map((err: string) => {
+                  switch (err) {
+                    case 'NIC':
+                      return 'The NIC number is already registered.';
+                    case 'Email':
+                      return 'Email already exists.';
+                    case 'PhoneNumber01':
+                      return 'Mobile Number 1 already exists.';
+                    case 'PhoneNumber02':
+                      return 'Mobile Number 2 already exists.';
+                    default:
+                      return 'Validation error: ' + err;
+                  }
+                });
               }
-            }
 
-            this.errorMessage = errorMessage;
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: this.errorMessage,
-              confirmButtonText: 'OK',
-            });
+              if (messages.length > 0) {
+                errorMessage = '<div class="text-left"><p class="mb-2">The following fields already exist in the system: </p><ul class="list-disc pl-5">';
+                messages.forEach(m => {
+                  errorMessage += `<li>${m}</li>`;
+                });
+                errorMessage += '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
+
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Duplicate Information Found',
+                  html: errorMessage,
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack rounded-xl text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                    htmlContainer: 'text-left',
+                    confirmButton: 'bg-red-500 rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+                  },
+                });
+                return;
+              }
           },
         });
     } 

@@ -446,6 +446,19 @@ export class CreateCenterHeadComponent implements OnInit {
     inputElement.value = trimmedValue;
   }
 
+  onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    let trimmedValue = inputElement.value.trimStart();
+  
+    // Capitalize first letter
+    if (trimmedValue.length > 0) {
+      trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+    }
+  
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
+
   blockSpecialChars(event: KeyboardEvent) {
     // Allow letters (A-Z, a-z), space, backspace, delete, arrow keys
     const allowedKeys = [

@@ -171,7 +171,7 @@
             optionValue="dialCode"
             styleClass="custom-dropdown 
              bg-tileLight dark:bg-tileBlack 
-             text-textLight dark:text-textDark 
+             text-textLight dark:text-white 
              border-gray-300 dark:border-gray-600
              rounded-l-md mr-2 flex-shrink-0"
             [style]="{ width: '140px' }"
@@ -328,14 +328,14 @@
     <!-- Buttons -->
     <div class="flex justify-end mt-6 gap-2">
       <div
-        class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer"
+        class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40 text-center"
         (click)="onCancel()"
       >
         Cancel
       </div>
       <button
         type="submit"
-        class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-40"
         [disabled]="isLoading"
         (click)="onSubmit()"
       >

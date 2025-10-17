@@ -309,7 +309,7 @@
         <!-- Custom button -->
         <label
           for="tearmsFile"
-          class="mt-2 block w-full cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700 text-center py-2 rounded-md"
+          class="mt-2 block w-full cursor-pointer bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 text-gray-700 dark:text-white text-center py-2 rounded-md"
         >
           <i class="fa-solid fa-upload mr-2"></i> Upload PDF
         </label>
@@ -374,14 +374,14 @@
             [(ngModel)]="selectedCrop"
             [ngModelOptions]="{ standalone: true }"
             placeholder="-- Select Crop --"
-            styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
             class="w-full"
           ></p-dropdown>
 
           <button
             type="button"
             (click)="addCrop()"
-            class="px-6 bg-[#3980C0] text-white rounded-md"
+            class="px-6 bg-[#3980C0] text-white rounded-md h-12"
           >
             Add
           </button>

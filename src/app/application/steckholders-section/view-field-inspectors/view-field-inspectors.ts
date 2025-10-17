@@ -44,9 +44,8 @@ export class ViewFieldInspectorsComponent implements OnInit {
 
   // Dropdown options
   roles = [
-    { label: 'Admin', value: 'Admin' },
-    { label: 'Inspector', value: 'Inspector' },
-    { label: 'Staff', value: 'Staff' },
+    { label: 'Field Officer', value: 'Field Officer' },
+    { label: 'Chief Field Officer', value: 'Chief Field Officer' }
   ];
 
   statuses = [

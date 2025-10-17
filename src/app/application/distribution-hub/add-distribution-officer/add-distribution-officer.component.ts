@@ -696,85 +696,114 @@ capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolder
   }
 
   onSubmit() {
+  // Validate pageTwo before submitting
+  this.markAllFieldsAsTouched();
+  const validation = this.validatePageTwo();
 
-
-    // Validate pageTwo before submitting
-    this.markAllFieldsAsTouched();
-    const validation = this.validatePageTwo();
-
-    if (!validation.isValid) {
-      this.showValidationErrors(validation.errors);
-      return;
-    }
-
-    // Duplicate check for phone numbers
-    this.duplicatePhoneError = false;
-    if (
-      this.personalData.phoneNumber01 &&
-      this.personalData.phoneNumber02 &&
-      this.personalData.phoneCode01 === this.personalData.phoneCode02 &&
-      this.personalData.phoneNumber01 === this.personalData.phoneNumber02
-    ) {
-      this.duplicatePhoneError = true;
-      Swal.fire('Error', 'Mobile Number - 01 and Mobile Number - 02 cannot be the same', 'error');
-      return;
-    }
-
-    console.log('PERSONAL', this.personalData);
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to create the Distribution Centre Head?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, create it!',
-      cancelButtonText: 'No, cancel',
-      reverseButtons: true,
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isLoading = true;
-        this.distributionHubSrv
-          .createDistributionHead(this.personalData, this.selectedImage)
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              this.officerId = res.officerId;
-              this.errorMessage = '';
-
-              Swal.fire({
-                title: 'Success',
-                text: 'Created Distribution Centre Head Successfully',
-                icon: 'success',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold',
-                },
-              }).then(() => {
-                this.location.back();
-              });
-            },
-            (error: any) => {
-              this.isLoading = false;
-              this.errorMessage =
-                error.error.error || 'An unexpected error occurred';
-              // Swal.fire('Error', this.errorMessage, 'error');
-              Swal.fire({
-                title: 'Error',
-                text: this.errorMessage,
-                icon: 'error',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold',
-                },
-              })
-            }
-          );
-      }
-    });
+  if (!validation.isValid) {
+    this.showValidationErrors(validation.errors);
+    return;
   }
+
+  // Duplicate check for phone numbers
+  this.duplicatePhoneError = false;
+  if (
+    this.personalData.phoneNumber01 &&
+    this.personalData.phoneNumber02 &&
+    this.personalData.phoneCode01 === this.personalData.phoneCode02 &&
+    this.personalData.phoneNumber01 === this.personalData.phoneNumber02
+  ) {
+    this.duplicatePhoneError = true;
+    Swal.fire('Error', 'Mobile Number - 01 and Mobile Number - 02 cannot be the same', 'error');
+    return;
+  }
+
+  console.log('PERSONAL', this.personalData);
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to create the Distribution Centre Head?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, create it!',
+    cancelButtonText: 'No, cancel',
+    reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      this.distributionHubSrv
+        .createDistributionHead(this.personalData, this.selectedImage)
+        .subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            this.officerId = res.officerId;
+            this.errorMessage = '';
+
+            Swal.fire({
+              title: 'Success',
+              text: 'Created Distribution Centre Head Successfully',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            }).then(() => {
+              this.location.back();
+            });
+          },
+          (error: any) => {
+            this.isLoading = false;
+            
+            // Handle the new error format with combined duplicate messages
+            this.errorMessage = error.error || 'An unexpected error occurred';
+            
+            // If there are specific duplicate fields, you can highlight them
+            if (error.duplicateFields && error.duplicateFields.length > 0) {
+              this.highlightDuplicateFields(error.duplicateFields);
+            }
+
+            Swal.fire({
+              title: 'Error',
+              text: this.errorMessage,
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
+          }
+        );
+    }
+  });
+}
+
+highlightDuplicateFields(duplicateFields: string[]): void {
+  // Reset any previous highlights
+  this.resetFieldHighlights();
+  
+  duplicateFields.forEach(field => {
+    switch(field) {
+      case 'NIC':
+        this.touchedFields['nic'] = true;
+        break;
+      case 'Email':
+        this.touchedFields['email'] = true;
+        break;
+      case 'Mobile Number 1':
+        this.touchedFields['phoneNumber01'] = true;
+        break;
+      case 'Mobile Number 2':
+        this.touchedFields['phoneNumber02'] = true;
+        break;
+    }
+  });
+}
+
+resetFieldHighlights(): void {
+}
 
   checkSubmitValidity(): boolean {
     const {

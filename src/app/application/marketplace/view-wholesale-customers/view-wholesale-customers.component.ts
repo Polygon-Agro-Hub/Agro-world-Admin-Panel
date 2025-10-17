@@ -110,6 +110,7 @@ export class ViewWholesaleCustomersComponent implements OnInit {
 
 class Customers {
   id!: string;
+  title!:string;
   firstName!: string;
   lastName!: string;
   phoneCode!: string;

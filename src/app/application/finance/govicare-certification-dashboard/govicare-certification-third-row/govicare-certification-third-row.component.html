@@ -1,0 +1,58 @@
+<div>
+  <div class="flex items-center justify-between mb-4 mt-6">
+    <h2 class="text-gray-800 font-semibold text-lg">
+      Recent Certificate Payments
+    </h2>
+    <button
+      class="bg-white rounded-lg text-sm hover:underline shadow-md px-8 py-2"
+    >
+      View All
+      <i class="fa-solid fa-arrow-up-right-from-square text-[#415cff] ml-2"></i>
+    </button>
+  </div>
+  <div class="bg-white rounded-xl shadow-md p-2 px-8">
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="border-b text-gray-500 text-xs">
+            <th class="py-2 text-left font-normal">Transaction ID</th>
+            <th class="py-2 text-left font-normal">Farmer Name</th>
+            <th class="py-2 text-left font-normal">Validity Period</th>
+            <th class="py-2 text-left font-normal">Amount (Rs.)</th>
+            <th class="py-2 text-left font-normal">Date & Time</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr *ngFor="let payment of recentPayments" class="hover:bg-gray-50">
+            <th
+              scope="row"
+              class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
+            >
+              {{ payment.transactionId }}
+            </th>
+            <td class="py-3 text-gray-700">
+              {{ payment.farmerName }}
+            </td>
+            <td class="py-3 text-gray-700">
+              {{ payment.packagePeriod }}
+            </td>
+            <td class="py-3 text-gray-700">
+              {{ payment.amount }}
+            </td>
+            <td class="py-3 text-gray-700">
+              {{ payment.dateTime }}
+            </td>
+          </tr>
+          <tr *ngIf="recentPayments.length === 0">
+            <td
+              colspan="5"
+              class="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
+            >
+              No recent payments found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

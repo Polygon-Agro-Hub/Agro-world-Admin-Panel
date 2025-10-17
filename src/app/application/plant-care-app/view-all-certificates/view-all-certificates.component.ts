@@ -28,7 +28,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   isServicePopUp: boolean = false;
   serviceAreaArray: any = [];
 
-  QuactionFilter: any = [
+  QuestionsFilter: any = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
   ];
@@ -64,7 +64,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   constructor(
     private certificateSrv: CertificateCompanyService,
     private router: Router // private location: Location,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fetchCompany();
@@ -106,7 +106,7 @@ export class ViewAllCertificatesComponent implements OnInit {
     this.fetchData();
   }
 
-  applyFilters() { }
+  applyFilters() {}
 
   editCertificate(item: CertificateData) {
     this.router.navigate([
@@ -123,7 +123,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   deleteCertificate(item: CertificateData) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'This action cannot be undone!',
+      text: 'Are you sure you want to delete this certificate? This action cannpt be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -184,6 +184,12 @@ export class ViewAllCertificatesComponent implements OnInit {
     });
   }
 
+  getFormattedCommission(value: any): string {
+    const num = parseFloat(value);
+    if (isNaN(num)) return '-';
+    return num % 1 === 0 ? `${num}%` : `${num.toFixed(1)}%`;
+  }
+
   onBack(): void {
     this.router.navigate([`/plant-care/action/`]);
   }
@@ -202,7 +208,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   }
 
   servicePopUpOpen(areas: string) {
-    this.serviceAreaArray = areas.split(',').map(area => area.trim());
+    this.serviceAreaArray = areas.split(',').map((area) => area.trim());
     this.isServicePopUp = true;
   }
 

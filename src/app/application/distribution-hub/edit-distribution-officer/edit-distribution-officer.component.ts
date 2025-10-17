@@ -216,7 +216,7 @@ export class EditDistributionOfficerComponent implements OnInit {
         // Map fields from API response to personalData
         this.personalData.id = data.id;
         this.personalData.companyId = data.companyId;
-        this.personalData.centerId = data.centerId || null; // Ensure centerId is set if available
+        this.personalData.centerId = data.centerId || null;
         this.personalData.centerName = data.centerName || '';
         this.personalData.irmId = data.irmId || null;
         this.personalData.firstNameEnglish = data.firstNameEnglish || '';
@@ -295,15 +295,12 @@ export class EditDistributionOfficerComponent implements OnInit {
     }
   }
 
-  onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
+  // New method to handle input with trimming but allow all characters
+  onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     const inputElement = event.target as HTMLInputElement;
     let trimmedValue = inputElement.value.trimStart();
-  
-    // Capitalize first letter
-    if (trimmedValue.length > 0) {
-      trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
-    }
-  
+    
+    // Remove only leading/trailing spaces, allow all characters
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
   }
@@ -397,28 +394,22 @@ export class EditDistributionOfficerComponent implements OnInit {
     this.personalData[field] = value;
   }
 
-  capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
+  capitalizeWhileTyping(field: 'houseNumber' | 'streetName' | 'city'): void {
     let value = this.personalData[field] || '';
 
     if (field === 'houseNumber') {
       // Allow letters, numbers, spaces, and special characters like /, -, #
       value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
     } else {
-      // For name-related fields, only allow letters and spaces
-      value = value.replace(/[^A-Za-z ]/g, '');
+      // For address fields, allow all characters except potentially harmful ones
+      value = value.replace(/[<>]/g, ''); // Only block < and > for security
     }
 
     // Remove leading spaces
     value = value.replace(/^\s+/, '');
 
-    // Capitalize first letter if applicable (skip for house number)
-    if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
-      value = value.charAt(0).toUpperCase() + value.slice(1);
-    }
-
     this.personalData[field] = value;
   }
-
 
   blockPhoneLength(event: KeyboardEvent, value: string) {
     const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
@@ -436,13 +427,6 @@ export class EditDistributionOfficerComponent implements OnInit {
     const value = event.target.value || '';
     if (value.length > 9) {
       this.personalData[field] = value.slice(0, 9);
-    }
-  }
-
-  blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
-    const key = event.key;
-    if (!/^\p{L}$/u.test(key)) {
-      event.preventDefault();
     }
   }
 
@@ -545,7 +529,6 @@ export class EditDistributionOfficerComponent implements OnInit {
     // Show error only if field is touched and empty (ignores numbers or non-empty values)
     return !!this.touchedFields[fieldName] && (!value || value.toString().trim() === '');
   }
-
 
   EpmloyeIdCreate() {
     const currentCompanyId = this.personalData.companyId;
@@ -657,12 +640,13 @@ export class EditDistributionOfficerComponent implements OnInit {
 
   getFormValidationErrors(): string[] {
     const errors: string[] = [];
-    const namePattern = /^[A-Za-z ]+$/;
-    if (!this.personalData.firstNameEnglish || !namePattern.test(this.personalData.firstNameEnglish)) {
-      errors.push('First Name is required and should contain only letters');
+    
+    // Remove pattern validation for names - only check if fields are not empty
+    if (!this.personalData.firstNameEnglish) {
+      errors.push('First Name is required');
     }
-    if (!this.personalData.lastNameEnglish || !namePattern.test(this.personalData.lastNameEnglish)) {
-      errors.push('Last Name is required and should contain only letters');
+    if (!this.personalData.lastNameEnglish) {
+      errors.push('Last Name is required');
     }
     if (!this.isValidPhoneNumber(this.personalData.phoneNumber01, this.personalData.phoneCode01)) {
       errors.push('Mobile Number - 1 is required and should be valid');
@@ -686,15 +670,16 @@ export class EditDistributionOfficerComponent implements OnInit {
   }
 
   checkFormValidity(): boolean {
-    const namePattern = /^[A-Za-z ]+$/;
-    const isFirstNameValid = !!this.personalData.firstNameEnglish && namePattern.test(this.personalData.firstNameEnglish);
-    const isLastNameValid = !!this.personalData.lastNameEnglish && namePattern.test(this.personalData.lastNameEnglish);
+    // Remove pattern validation, only check if fields are not empty
+    const isFirstNameValid = !!this.personalData.firstNameEnglish && this.personalData.firstNameEnglish.trim() !== '';
+    const isLastNameValid = !!this.personalData.lastNameEnglish && this.personalData.lastNameEnglish.trim() !== '';
     const isPhoneNumberValid = this.isValidPhoneNumber(this.personalData.phoneNumber01, this.personalData.phoneCode01);
     const isEmailValid = this.personalData.email ? this.emailValidationService.isEmailValid(this.personalData.email) : false;
     const isLanguagesSelected = !!this.personalData.languages;
     const isCompanySelected = !!this.personalData.companyId;
     const isJobRoleSelected = !!this.personalData.jobRole;
     const isNicSelected = !!this.personalData.nic && this.isValidNIC(this.personalData.nic);
+    
     return (
       isFirstNameValid &&
       isLastNameValid &&
@@ -854,7 +839,6 @@ export class EditDistributionOfficerComponent implements OnInit {
     });
   }
 
-
   getSubmitValidationErrors(): string[] {
     const errors: string[] = [];
     if (!this.personalData.houseNumber) {
@@ -877,8 +861,9 @@ export class EditDistributionOfficerComponent implements OnInit {
       if (!accNumbersMatch) {
         errors.push('Account Numbers do not match');
       }
-      if (!this.personalData.accHolderName || !/^[A-Za-z ]+$/.test(this.personalData.accHolderName)) {
-        errors.push('Account Holder Name is required and should contain only letters');
+      // Remove pattern validation for account holder name
+      if (!this.personalData.accHolderName) {
+        errors.push('Account Holder Name is required');
       }
       if (!this.personalData.accNumber) {
         errors.push('Account Number is required');
@@ -906,7 +891,6 @@ export class EditDistributionOfficerComponent implements OnInit {
       const accNumbersMatch = this.personalData.accNumber.toString() === this.personalData.confirmAccNumber.toString();
       const isBankDetailsValid =
         !!this.personalData.accHolderName &&
-        /^[A-Za-z ]+$/.test(this.personalData.accHolderName) &&
         !!this.personalData.accNumber &&
         !!this.personalData.bankName &&
         !!this.personalData.branchName &&
@@ -984,8 +968,6 @@ export class EditDistributionOfficerComponent implements OnInit {
     // Implement password reset logic
     throw new Error('Method not implemented.');
   }
-
-
 
   resetPassword() {
     Swal.fire({
@@ -1099,7 +1081,7 @@ class Personal {
 class DistributionCenter {
   id!: number;
   centerName!: string;
-  centerNameEnglish!: string; // Added to match dropdown binding
+  centerNameEnglish!: string;
 }
 
 class Company {

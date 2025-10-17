@@ -658,7 +658,7 @@ export class CreateCropCalenderComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/plant-care/action/view-crop-calender']);
+        this.router.navigate(['/plant-care/action']);
       }
     });
   }

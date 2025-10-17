@@ -20,30 +20,29 @@
       <div class="flex items-center justify-between w-100">
         <div class="flex items-center justify-between gap-x-5 w-full">
           <div class="flex items-center relative group">
-            <!-- Tooltip -->
-            <!-- <div
-              class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
-            >
-              Enter NIC to search for Plant Care Users
-            </div> -->
 
-            <!-- User Icon -->
+            <!-- Icon Container -->
             <div
-              class="rounded-full bg-gray-200 h-10 w-10 flex items-center justify-center overflow-hidden mx-5 my-5 cursor-pointer"
+              class="rounded-full bg-gray-200 h-10 w-10 flex-shrink-0 flex items-center justify-center overflow-hidden mx-5 my-5 cursor-pointer"
             >
-              <i class="fa-regular fa-user"></i>
+              <i class="fa-regular fa-user text-xl"></i>
             </div>
-
+            <!-- Icon Container -->
+          
             <!-- Heading -->
-            <h3 class="text-lg font-medium dark:text-textDark">
+            <h3 class="text-lg font-medium dark:text-textDark break-words">
               {{ postRcord.heading }}
             </h3>
+          
           </div>
 
+          
           <div class="flex items-end space-x-3 mx-5 w-28">
-            <p class="text-sm text-gray-600 w-full dark:text-textDark">
+            <!-- time -->
+            <p class="text-sm whitespace-nowrap text-gray-600 w-full dark:text-textDark">
               {{ postRcord.timeAgo }}
             </p>
+            <!-- time -->
             <div
               *ngIf="
                 permissionService.hasPermission('Delete post') ||

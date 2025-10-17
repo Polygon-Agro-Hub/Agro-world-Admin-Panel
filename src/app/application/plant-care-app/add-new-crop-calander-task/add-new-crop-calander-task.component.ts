@@ -366,6 +366,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
         if (this.userId === 'null') {
+          console.log('cropTaskObj', this.cropTaskObj)
           this.cropCalendarService
             .createNewCropTask(this.cropId, this.indexId, this.cropTaskObj)
             .subscribe({
@@ -420,6 +421,7 @@ export class AddNewCropCalanderTaskComponent implements OnInit {
               },
             });
         } else {
+          console.log('cropTaskObj', this.cropTaskObj)
           this.cropCalendarService
             .createNewCropTaskU(this.cropId, this.indexId, this.userId, this.cropTaskObj, this.cultivationId, this.ongCultivationId)
             .subscribe({

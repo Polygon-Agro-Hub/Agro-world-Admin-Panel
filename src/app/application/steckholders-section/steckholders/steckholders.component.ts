@@ -114,7 +114,7 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
   }
 
   navigateToViewCompaniesAgents() {
-    this.router.navigate(['/collection-hub/manage-company']);
+    this.router.navigate(['/steckholders/action/manage-company']);
   }
 
   navigateToViewDistribution(): void {
@@ -131,6 +131,10 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
 
   navigateToViewFieldInspectorsView(id: number) {
     this.router.navigate(['/steckholders/action/field-officer-profile', id]);
+  }
+
+  navigateToViewDistributionCompanies() {
+    this.router.navigate(['/distribution-hub/action/view-companies']);
   }
 
 }

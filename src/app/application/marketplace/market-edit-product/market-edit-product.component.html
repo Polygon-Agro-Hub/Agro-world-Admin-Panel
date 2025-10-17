@@ -463,9 +463,14 @@
     required
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     placeholder="0.00"
+    #minQuantityField="ngModel"
   />
-  <div *ngIf="getMinQuantityError()" class="text-red-500 text-sm mt-1">
+  <div *ngIf="getMinQuantityError() && productObj.startValue" class="text-red-500 text-sm mt-1">
     {{ getMinQuantityError() }}
+  </div>
+
+  <div *ngIf="!productObj.startValue && minQuantityField.touched" class="text-red-500 text-sm mt-1">
+    Minimum quantity is required.
   </div>
 </div>
 
@@ -483,9 +488,14 @@
     required
     class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
     placeholder="0.00"
+    #maxQuantityField="ngModel"
   />
-  <div *ngIf="getMaxQuantityError()" class="text-red-500 text-sm mt-1">
+  <div *ngIf="getMaxQuantityError() && productObj.maxQuantity" class="text-red-500 text-sm mt-1">
     {{ getMaxQuantityError() }}
+  </div>
+
+  <div *ngIf="maxQuantityField.touched && !productObj.maxQuantity" class="text-red-500 text-sm mt-1">
+    Maximum quantity is required.
   </div>
 </div>
 
@@ -498,9 +508,14 @@
             (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'changeby')"
             (input)="validateChangeBy()" pattern="^\d+(\.\d{1,2})?$" required
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            placeholder="0.00" />
-          <div *ngIf="productObj.changeby <= 0.0" class="text-red-500 text-sm mt-1">
+            placeholder="0.00"
+            #changeByField="ngModel" />
+          <div *ngIf="productObj.changeby <= 0.0 && productObj.changeby" class="text-red-500 text-sm mt-1">
             Please enter a value greater than 0.
+          </div>
+
+          <div *ngIf="changeByField.touched && !productObj.changeby" class="text-red-500 text-sm mt-1">
+            Increase/Decrease by is required
           </div>
         </div>
       </div>

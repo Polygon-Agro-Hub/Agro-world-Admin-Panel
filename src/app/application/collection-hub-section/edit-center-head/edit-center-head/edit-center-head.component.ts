@@ -2,13 +2,14 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule,Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../../services/collection-officer/collection-officer.service';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { EmailvalidationsService } from '../../../../services/email-validation/emailvalidations.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { CollectionService } from '../../../../services/collection.service';
 
 interface Bank {
   ID: number;
@@ -115,9 +116,11 @@ export class EditCenterHeadComponent {
     private router: Router,
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
-   private location: Location,
-   public emailValidationService: EmailvalidationsService
-  ) {}
+    private location: Location,
+    public emailValidationService: EmailvalidationsService,
+    private collectionService: CollectionService
+
+  ) { }
 
   ngOnInit(): void {
     this.loadBanks();
@@ -125,75 +128,79 @@ export class EditCenterHeadComponent {
     this.itemId = this.route.snapshot.params['id'];
 
     this.districtOptions = this.districts.map(district => ({
-    label: district.name,
-    value: district.name,
-    province: district.province
-  }));
+      label: district.name,
+      value: district.name,
+      province: district.province
+    }));
 
     if (this.itemId) {
-      this.isLoading = true;
-      this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
-        next: (response: any) => {
-          const officerData = response.officerData[0];
-          this.personalData.empId = officerData.empId;
-          this.personalData.jobRole = officerData.jobRole || '';
-          this.personalData.firstNameEnglish =
-            officerData.firstNameEnglish || '';
-          this.personalData.firstNameSinhala =
-            officerData.firstNameSinhala || '';
-          this.personalData.firstNameTamil = officerData.firstNameTamil || '';
-          this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
-          this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
-          this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-          this.personalData.phoneCode01 = officerData.phoneCode01 || '+94';
-          this.personalData.phoneNumber01 = officerData.phoneNumber01 || '';
-          this.personalData.phoneCode02 = officerData.phoneCode02 || '+94';
-          this.personalData.phoneNumber02 = officerData.phoneNumber02;
-          this.personalData.nic = officerData.nic || '';
-          this.personalData.email = officerData.email || '';
-          this.personalData.houseNumber = officerData.houseNumber || '';
-          this.personalData.streetName = officerData.streetName || '';
-          this.personalData.city = officerData.city || '';
-          this.personalData.district = officerData.district || '';
-          this.personalData.province = officerData.province || '';
-          this.personalData.languages = officerData.languages || '';
-          this.personalData.companyId = officerData.companyId || '';
-          this.personalData.bankName = officerData.bankName || '';
-          this.personalData.branchName = officerData.branchName || '';
-          this.personalData.accHolderName = officerData.accHolderName || '';
-          this.personalData.accNumber = officerData.accNumber || '';
-          this.personalData.empType = officerData.empType || '';
-          this.personalData.irmId = officerData.irmId || '';
-          this.personalData.image = officerData.image || '';
-          this.selectedLanguages = this.personalData.languages.split(',');
-          this.empType = this.personalData.empType;
-          this.lastID = this.personalData.empId.slice(-5);
-          this.comId = this.personalData.companyId;
-          this.confirmAccNumber = this.personalData.accNumber;
-          this.initiateJobRole = officerData.jobRole || '';
-          this.initiateId = officerData.empId.slice(-5);
-          this.matchExistingBankToDropdown();
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.isLoading = false;
-        },
-      });
+      this.fetchData()
     }
 
     this.getAllCompanies();
   }
 
+  fetchData() {
+    this.isLoading = true;
+    this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
+      next: (response: any) => {
+        const officerData = response.officerData[0];
+        this.personalData.empId = officerData.empId;
+        this.personalData.jobRole = officerData.jobRole || '';
+        this.personalData.firstNameEnglish =
+          officerData.firstNameEnglish || '';
+        this.personalData.firstNameSinhala =
+          officerData.firstNameSinhala || '';
+        this.personalData.firstNameTamil = officerData.firstNameTamil || '';
+        this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
+        this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
+        this.personalData.lastNameTamil = officerData.lastNameTamil || '';
+        this.personalData.phoneCode01 = officerData.phoneCode01 || '+94';
+        this.personalData.phoneNumber01 = officerData.phoneNumber01;
+        this.personalData.phoneCode02 = officerData.phoneCode02 || '+94';
+        this.personalData.phoneNumber02 = officerData.phoneNumber02;
+        this.personalData.nic = officerData.nic || '';
+        this.personalData.email = officerData.email || '';
+        this.personalData.houseNumber = officerData.houseNumber || '';
+        this.personalData.streetName = officerData.streetName || '';
+        this.personalData.city = officerData.city || '';
+        this.personalData.district = officerData.district || '';
+        this.personalData.province = officerData.province || '';
+        this.personalData.languages = officerData.languages || '';
+        this.personalData.companyId = officerData.companyId || '';
+        this.personalData.bankName = officerData.bankName || '';
+        this.personalData.branchName = officerData.branchName || '';
+        this.personalData.accHolderName = officerData.accHolderName || '';
+        this.personalData.accNumber = officerData.accNumber || '';
+        this.personalData.empType = officerData.empType || '';
+        this.personalData.irmId = officerData.irmId || '';
+        this.personalData.image = officerData.image || '';
+        this.selectedLanguages = this.personalData.languages.split(',');
+        this.empType = this.personalData.empType;
+        this.lastID = this.personalData.empId.slice(-5);
+        this.comId = this.personalData.companyId;
+        this.confirmAccNumber = this.personalData.accNumber;
+        this.initiateJobRole = officerData.jobRole || '';
+        this.initiateId = officerData.empId.slice(-5);
+        this.matchExistingBankToDropdown();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+      },
+    });
+  }
+
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
-  
-  get isNICInvalid() {
-  const nic = this.personalData.nic;
-  return nic && !/^(\d{9}V|\d{12})$/.test(nic);
-}
 
-    validateNIC(event: any) {
+  get isNICInvalid() {
+    const nic = this.personalData.nic;
+    return nic && !/^(\d{9}V|\d{12})$/.test(nic);
+  }
+
+  validateNIC(event: any) {
     let value: string = event.target.value.toUpperCase();
 
     // Remove all characters except digits and 'V'
@@ -216,87 +223,87 @@ export class EditCenterHeadComponent {
     event.target.value = value;
   }
 
-restrictInput(event: KeyboardEvent) {
-  const input = event.target as HTMLInputElement;
-  const currentValue = input.value.toUpperCase();
-  const inputChar = event.key.toUpperCase();
+  restrictInput(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value.toUpperCase();
+    const inputChar = event.key.toUpperCase();
 
-  // Allow control keys (Backspace, Delete, Arrow keys, Ctrl/Cmd shortcuts)
-  if (event.ctrlKey || event.metaKey || event.key.length > 1) {
-    return true;
-  }
-
-  const digitsOnly = currentValue.replace(/[^0-9]/g, '');
-  const hasV = currentValue.includes('V');
-
-  // If NIC has 'V' (10-char format), block any further input
-  if (hasV) {
-    if (event.key === 'Backspace' || event.key === 'Delete') {
+    // Allow control keys (Backspace, Delete, Arrow keys, Ctrl/Cmd shortcuts)
+    if (event.ctrlKey || event.metaKey || event.key.length > 1) {
       return true;
     }
+
+    const digitsOnly = currentValue.replace(/[^0-9]/g, '');
+    const hasV = currentValue.includes('V');
+
+    // If NIC has 'V' (10-char format), block any further input
+    if (hasV) {
+      if (event.key === 'Backspace' || event.key === 'Delete') {
+        return true;
+      }
+      event.preventDefault();
+      return false;
+    }
+
+    // If NIC is 12 digits (no 'V'), block further input
+    if (!hasV && digitsOnly.length >= 12) {
+      if (event.key === 'Backspace' || event.key === 'Delete') {
+        return true;
+      }
+      event.preventDefault();
+      return false;
+    }
+
+    // Allow digits if under limit
+    if (/[0-9]/.test(inputChar)) {
+      return true;
+    }
+
+    // Allow 'V' only if not present and exactly 9 digits typed
+    if (inputChar === 'V' && !hasV && digitsOnly.length === 9) {
+      return true;
+    }
+
+    // Block all other characters
     event.preventDefault();
     return false;
   }
 
-  // If NIC is 12 digits (no 'V'), block further input
-  if (!hasV && digitsOnly.length >= 12) {
-    if (event.key === 'Backspace' || event.key === 'Delete') {
-      return true;
+
+  allowOnlyNumbers(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
     }
-    event.preventDefault();
-    return false;
   }
 
-  // Allow digits if under limit
-  if (/[0-9]/.test(inputChar)) {
-    return true;
+  limitPhoneLength(event: Event, maxLength: number, field: 'phoneNumber01' | 'phoneNumber02') {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length > maxLength) {
+      input.value = input.value.slice(0, maxLength);
+      this.personalData[field] = input.value;
+    }
+  }
+  // Validate if the number starts with 7 and has 9 digits
+  isValidPhone(phone: string | undefined): boolean {
+    if (!phone) return false;
+    const regex = /^7\d{8}$/; // starts with 7 + 8 digits = 9 digits
+    return regex.test(phone);
   }
 
-  // Allow 'V' only if not present and exactly 9 digits typed
-  if (inputChar === 'V' && !hasV && digitsOnly.length === 9) {
-    return true;
+  // Optional: real-time input correction
+  validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
+    const phone = this.personalData[field];
+    if (!phone) return;
+
+    // Remove any non-digit characters
+    this.personalData[field] = phone.replace(/\D/g, '');
+
+    // Limit to 9 digits
+    if (this.personalData[field].length > 9) {
+      this.personalData[field] = this.personalData[field].slice(0, 9);
+    }
   }
-
-  // Block all other characters
-  event.preventDefault();
-  return false;
-}
-
-
-allowOnlyNumbers(event: KeyboardEvent) {
-  const charCode = event.key.charCodeAt(0);
-  if (charCode < 48 || charCode > 57) {
-    event.preventDefault();
-  }
-}
-
-limitPhoneLength(event: Event, maxLength: number, field: 'phoneNumber01' | 'phoneNumber02') {
-  const input = event.target as HTMLInputElement;
-  if (input.value.length > maxLength) {
-    input.value = input.value.slice(0, maxLength);
-    this.personalData[field] = input.value;
-  }
-}
-// Validate if the number starts with 7 and has 9 digits
-isValidPhone(phone: string | undefined): boolean {
-  if (!phone) return false;
-  const regex = /^7\d{8}$/; // starts with 7 + 8 digits = 9 digits
-  return regex.test(phone);
-}
-
-// Optional: real-time input correction
-validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
-  const phone = this.personalData[field];
-  if (!phone) return;
-
-  // Remove any non-digit characters
-  this.personalData[field] = phone.replace(/\D/g, '');
-
-  // Limit to 9 digits
-  if (this.personalData[field].length > 9) {
-    this.personalData[field] = this.personalData[field].slice(0, 9);
-  }
-}
 
 
   loadBanks() {
@@ -304,7 +311,7 @@ validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
       (data) => {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -316,33 +323,53 @@ validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
         });
         this.allBranches = data;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
   matchExistingBankToDropdown() {
     if (
-        this.banks.length > 0 &&
-        Object.keys(this.allBranches).length > 0 &&
-        this.personalData &&
-        this.personalData.bankName
+      this.banks.length > 0 &&
+      Object.keys(this.allBranches).length > 0 &&
+      this.personalData &&
+      this.personalData.bankName
     ) {
-        const matchedBank = this.banks.find(
-            (bank) => bank.name === this.personalData.bankName
-        );
-        if (matchedBank) {
-            this.selectedBankId = matchedBank.ID;
-            this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-            if (this.personalData.branchName) {
-                const matchedBranch = this.branches.find(
-                    (branch) => branch.name === this.personalData.branchName
-                );
-                if (matchedBranch) {
-                    this.selectedBranchId = matchedBranch.ID;
-                }
-            }
+      const matchedBank = this.banks.find(
+        (bank) => bank.name === this.personalData.bankName
+      );
+      if (matchedBank) {
+        this.selectedBankId = matchedBank.ID;
+        this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+        if (this.personalData.branchName) {
+          const matchedBranch = this.branches.find(
+            (branch) => branch.name === this.personalData.branchName
+          );
+          if (matchedBranch) {
+            this.selectedBranchId = matchedBranch.ID;
+          }
         }
+      }
     }
+}
+
+onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  let trimmedValue = inputElement.value.trimStart();
+
+  // Capitalize first letter
+  if (trimmedValue.length > 0) {
+    trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+  }
+
+  modelRef[fieldName] = trimmedValue;
+  inputElement.value = trimmedValue;
+}
+
+onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+  const inputElement = event.target as HTMLInputElement;
+  const trimmedValue = inputElement.value.trimStart();
+  modelRef[fieldName] = trimmedValue;
+  inputElement.value = trimmedValue;
 }
 
   getAllCompanies() {
@@ -355,13 +382,13 @@ validatePhoneFormat(field: 'phoneNumber01' | 'phoneNumber02') {
     if (!this.selectedBankId) return '';
     const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
     return selectedBank ? selectedBank.name : '';
-}
+  }
 
-getSelectedBranchName(): string {
+  getSelectedBranchName(): string {
     if (!this.selectedBranchId) return '';
     const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
     return selectedBranch ? selectedBranch.name : '';
-}
+  }
 
 
   onFileSelected(event: any): void {
@@ -388,27 +415,27 @@ getSelectedBranchName(): string {
     }
   }
 
-formatNIC(event: Event) {
-  const input = event.target as HTMLInputElement;
-  let value = input.value.toUpperCase();
+  formatNIC(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.toUpperCase();
 
-  // Remove all non-digit/V characters
-  value = value.replace(/[^0-9V]/g, '');
+    // Remove all non-digit/V characters
+    value = value.replace(/[^0-9V]/g, '');
 
-  const hasV = value.includes('V');
+    const hasV = value.includes('V');
 
-  if (hasV) {
-    // Ensure V is at 10th position and no more characters after
-    const digits = value.replace(/[^0-9]/g, '').slice(0, 9);
-    value = digits + 'V';
-  } else {
-    // If no V, limit digits to 12
-    value = value.slice(0, 12);
+    if (hasV) {
+      // Ensure V is at 10th position and no more characters after
+      const digits = value.replace(/[^0-9]/g, '').slice(0, 9);
+      value = digits + 'V';
+    } else {
+      // If no V, limit digits to 12
+      value = value.slice(0, 12);
+    }
+
+    input.value = value;
+    this.personalData.nic = value;
   }
-
-  input.value = value;
-  this.personalData.nic = value;
-}
 
 
   triggerFileInput(event: Event): void {
@@ -423,24 +450,24 @@ formatNIC(event: Event) {
   }
 
   onCancel() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-       this.location.back();
-    }
-  });
-}
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+  }
 
 
   onCheckboxChange1(lang: string, event: any) {
@@ -480,35 +507,192 @@ formatNIC(event: Event) {
     this.isLanguageRequired = this.selectedLanguages.length === 0;
   }
 
-back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
+  back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
         this.location.back();
+      }
+    });
+  }
+
+
+  nextFormCreate(page: 'pageOne' | 'pageTwo') {
+    // Only validate when navigating to pageTwo
+    if (page === 'pageTwo') {
+      const missingFields: string[] = [];
+      const nicPattern = /^(\d{9}V|\d{12})$/;
+      const phonePattern = /^[0-9]{9}$/;
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      if (!this.empType) {
+        missingFields.push('Staff Employee Type');
+      }
+
+      if (this.isLanguageRequired && this.selectedLanguages.length === 0) {
+        missingFields.push('Preferred Languages - At least one language must be selected');
+      }
+
+      if (!this.personalData.companyId) {
+        missingFields.push('Company Name');
+      }
+
+      if (!this.personalData.firstNameEnglish) {
+        missingFields.push('First Name (in English)');
+      }
+
+      if (!this.personalData.lastNameEnglish) {
+        missingFields.push('Last Name (in English)');
+      }
+
+      if (!this.personalData.firstNameSinhala) {
+        missingFields.push('First Name (in Sinhala)');
+      }
+
+      if (!this.personalData.lastNameSinhala) {
+        missingFields.push('Last Name (in Sinhala)');
+      }
+
+      if (!this.personalData.firstNameTamil) {
+        missingFields.push('First Name (in Tamil)');
+      }
+
+      if (!this.personalData.lastNameTamil) {
+        missingFields.push('Last Name (in Tamil)');
+      }
+
+      if (!this.personalData.phoneNumber01) {
+        missingFields.push('Phone Number - 1');
+      } else if (!phonePattern.test(this.personalData.phoneNumber01)) {
+        missingFields.push('Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+      }
+
+      if (this.personalData.phoneNumber02) {
+        if (!phonePattern.test(this.personalData.phoneNumber02)) {
+          missingFields.push('Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
+        }
+        if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
+          missingFields.push('Phone Number - 2 - Must be different from Phone Number - 1');
+        }
+      }
+
+      if (!this.personalData.nic) {
+        missingFields.push('NIC Number');
+      } else if (!nicPattern.test(this.personalData.nic)) {
+        missingFields.push('NIC Number - Must be 9 digits followed by V or 12 digits');
+      }
+
+      if (!this.personalData.email) {
+        missingFields.push('Email');
+      } else {
+        const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
+        if (!emailValidation.isValid) {
+          missingFields.push(`Email - ${emailValidation.errorMessage}`);
+        }
+      }
+
+      // Display errors if any
+      if (missingFields.length > 0) {
+        let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        missingFields.forEach((field) => {
+          errorMessage += `<li>${field}</li>`;
+        });
+        errorMessage += '</ul></div>';
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: errorMessage,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
     }
-  });
-}
 
+    // Navigate to the requested page
+    this.selectedPage = page;
+  }
+  updateProvince(event: any): void {
+    const selectedDistrict = event.value;
+    const selected = this.districts.find(
+      (district) => district.name === selectedDistrict
+    );
+    if (selected) {
+      this.personalData.province = selected.province;
+    } else {
+      this.personalData.province = '';
+    }
+  }
 
-nextFormCreate(page: 'pageOne' | 'pageTwo') {
-  // Only validate when navigating to pageTwo
-  if (page === 'pageTwo') {
+  onBankChange() {
+    if (this.selectedBankId) {
+      this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+      const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
+      if (selectedBank) {
+        this.personalData.bankName = selectedBank.name;
+      }
+      // Reset branch selection when bank changes
+      this.selectedBranchId = null;
+      this.personalData.branchName = '';
+    } else {
+      this.branches = [];
+      this.personalData.bankName = '';
+      this.selectedBranchId = null;
+      this.personalData.branchName = '';
+    }
+  }
+
+  onBranchChange() {
+    if (this.selectedBranchId) {
+      const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
+      if (selectedBranch) {
+        this.personalData.branchName = selectedBranch.name;
+      }
+    } else {
+      this.personalData.branchName = '';
+    }
+  }
+
+  validateConfirmAccNumber(): void {
+    this.confirmAccountNumberRequired = !this.confirmAccNumber;
+    if (this.personalData.accNumber && this.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
+  validateAccNumber(): void {
+
+    if (this.personalData.accNumber && this.confirmAccNumber) {
+      this.confirmAccountNumberError =
+        this.personalData.accNumber !== this.confirmAccNumber;
+    } else {
+      this.confirmAccountNumberError = false;
+    }
+  }
+
+  onSubmit() {
     const missingFields: string[] = [];
-    const nicPattern = /^(\d{9}V|\d{12})$/;
-    const phonePattern = /^[0-9]{9}$/;
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+    // Validation for pageOne fields
     if (!this.empType) {
       missingFields.push('Staff Employee Type');
     }
@@ -547,12 +731,12 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
 
     if (!this.personalData.phoneNumber01) {
       missingFields.push('Phone Number - 1');
-    } else if (!phonePattern.test(this.personalData.phoneNumber01)) {
+    } else if (!/^[0-9]{9}$/.test(this.personalData.phoneNumber01)) {
       missingFields.push('Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
     }
 
     if (this.personalData.phoneNumber02) {
-      if (!phonePattern.test(this.personalData.phoneNumber02)) {
+      if (!/^[0-9]{9}$/.test(this.personalData.phoneNumber02)) {
         missingFields.push('Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
       }
       if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
@@ -562,18 +746,64 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
 
     if (!this.personalData.nic) {
       missingFields.push('NIC Number');
-    } else if (!nicPattern.test(this.personalData.nic)) {
+    } else if (!/^(\d{9}V|\d{12})$/.test(this.personalData.nic)) {
       missingFields.push('NIC Number - Must be 9 digits followed by V or 12 digits');
     }
 
     if (!this.personalData.email) {
-  missingFields.push('Email');
-} else {
-  const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
-  if (!emailValidation.isValid) {
-    missingFields.push(`Email - ${emailValidation.errorMessage}`);
-  }
-}
+      missingFields.push('Email');
+    } else {
+      const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
+      if (!emailValidation.isValid) {
+        missingFields.push(`Email - ${emailValidation.errorMessage}`);
+      }
+    }
+
+    // Validation for pageTwo fields
+    if (!this.personalData.houseNumber) {
+      missingFields.push('House Number');
+    }
+
+    if (!this.personalData.streetName) {
+      missingFields.push('Street Name');
+    }
+
+    if (!this.personalData.city) {
+      missingFields.push('City');
+    }
+
+    if (!this.personalData.district) {
+      missingFields.push('District');
+    }
+
+    if (!this.personalData.province) {
+      missingFields.push('Province');
+    }
+
+    // Bank details validation (only required if companyId is 1)
+    if (this.personalData.companyId == 1) {
+      if (!this.personalData.accHolderName) {
+        missingFields.push('Account Holder’s Name');
+      }
+
+      if (!this.personalData.accNumber) {
+        missingFields.push('Account Number');
+      }
+
+      if (!this.confirmAccNumber) {
+        missingFields.push('Confirm Account Number');
+      } else if (this.personalData.accNumber !== this.confirmAccNumber) {
+        missingFields.push('Confirm Account Number - Must match Account Number');
+      }
+
+      if (!this.selectedBankId) {
+        missingFields.push('Bank Name');
+      }
+
+      if (!this.selectedBranchId) {
+        missingFields.push('Branch Name');
+      }
+    }
 
     // Display errors if any
     if (missingFields.length > 0) {
@@ -596,220 +826,17 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       });
       return;
     }
-  }
 
-  // Navigate to the requested page
-  this.selectedPage = page;
-}
-  updateProvince(event: any): void {
-  const selectedDistrict = event.value;
-  const selected = this.districts.find(
-    (district) => district.name === selectedDistrict
-  );
-  if (selected) {
-    this.personalData.province = selected.province;
-  } else {
-    this.personalData.province = '';
-  }
-}
-
-  onBankChange() {
-    if (this.selectedBankId) {
-        this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-        const selectedBank = this.banks.find(bank => bank.ID === this.selectedBankId);
-        if (selectedBank) {
-            this.personalData.bankName = selectedBank.name;
-        }
-        // Reset branch selection when bank changes
-        this.selectedBranchId = null;
-        this.personalData.branchName = '';
-    } else {
-        this.branches = [];
-        this.personalData.bankName = '';
-        this.selectedBranchId = null;
-        this.personalData.branchName = '';
-    }
-}
-
-  onBranchChange() {
-    if (this.selectedBranchId) {
-        const selectedBranch = this.branches.find(branch => branch.ID === this.selectedBranchId);
-        if (selectedBranch) {
-            this.personalData.branchName = selectedBranch.name;
-        }
-    } else {
-        this.personalData.branchName = '';
-    }
-}
-
-  validateConfirmAccNumber(): void {
-    this.confirmAccountNumberRequired = !this.confirmAccNumber;
-    if (this.personalData.accNumber && this.confirmAccNumber) {
-      this.confirmAccountNumberError =
-        this.personalData.accNumber !== this.confirmAccNumber;
-    } else {
-      this.confirmAccountNumberError = false;
-    }
-  }
-
-    validateAccNumber(): void {
-   
-    if (this.personalData.accNumber && this.confirmAccNumber) {
-      this.confirmAccountNumberError =
-        this.personalData.accNumber !== this.confirmAccNumber;
-    } else {
-      this.confirmAccountNumberError = false;
-    }
-  }
-
-onSubmit() {
-  const missingFields: string[] = [];
-
-  // Validation for pageOne fields
-  if (!this.empType) {
-    missingFields.push('Staff Employee Type');
-  }
-
-  if (this.isLanguageRequired && this.selectedLanguages.length === 0) {
-    missingFields.push('Preferred Languages - At least one language must be selected');
-  }
-
-  if (!this.personalData.companyId) {
-    missingFields.push('Company Name');
-  }
-
-  if (!this.personalData.firstNameEnglish) {
-    missingFields.push('First Name (in English)');
-  }
-
-  if (!this.personalData.lastNameEnglish) {
-    missingFields.push('Last Name (in English)');
-  }
-
-  if (!this.personalData.firstNameSinhala) {
-    missingFields.push('First Name (in Sinhala)');
-  }
-
-  if (!this.personalData.lastNameSinhala) {
-    missingFields.push('Last Name (in Sinhala)');
-  }
-
-  if (!this.personalData.firstNameTamil) {
-    missingFields.push('First Name (in Tamil)');
-  }
-
-  if (!this.personalData.lastNameTamil) {
-    missingFields.push('Last Name (in Tamil)');
-  }
-
-  if (!this.personalData.phoneNumber01) {
-    missingFields.push('Phone Number - 1');
-  } else if (!/^[0-9]{9}$/.test(this.personalData.phoneNumber01)) {
-    missingFields.push('Phone Number - 1 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
-  }
-
-  if (this.personalData.phoneNumber02) {
-    if (!/^[0-9]{9}$/.test(this.personalData.phoneNumber02)) {
-      missingFields.push('Phone Number - 2 - Must be a valid 9-digit number (e.g., 77XXXXXXX)');
-    }
-    if (this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
-      missingFields.push('Phone Number - 2 - Must be different from Phone Number - 1');
-    }
-  }
-
-  if (!this.personalData.nic) {
-    missingFields.push('NIC Number');
-  } else if (!/^(\d{9}V|\d{12})$/.test(this.personalData.nic)) {
-    missingFields.push('NIC Number - Must be 9 digits followed by V or 12 digits');
-  }
-
-  if (!this.personalData.email) {
-  missingFields.push('Email');
-} else {
-  const emailValidation = this.emailValidationService.validateEmail(this.personalData.email);
-  if (!emailValidation.isValid) {
-    missingFields.push(`Email - ${emailValidation.errorMessage}`);
-  }
-}
-
-  // Validation for pageTwo fields
-  if (!this.personalData.houseNumber) {
-    missingFields.push('House Number');
-  }
-
-  if (!this.personalData.streetName) {
-    missingFields.push('Street Name');
-  }
-
-  if (!this.personalData.city) {
-    missingFields.push('City');
-  }
-
-  if (!this.personalData.district) {
-    missingFields.push('District');
-  }
-
-  if (!this.personalData.province) {
-    missingFields.push('Province');
-  }
-
-  // Bank details validation (only required if companyId is 1)
-  if (this.personalData.companyId == 1) {
-    if (!this.personalData.accHolderName) {
-      missingFields.push('Account Holder’s Name');
-    }
-
-    if (!this.personalData.accNumber) {
-      missingFields.push('Account Number');
-    }
-
-    if (!this.confirmAccNumber) {
-      missingFields.push('Confirm Account Number');
-    } else if (this.personalData.accNumber !== this.confirmAccNumber) {
-      missingFields.push('Confirm Account Number - Must match Account Number');
-    }
-
-    if (!this.selectedBankId) {
-      missingFields.push('Bank Name');
-    }
-
-    if (!this.selectedBranchId) {
-      missingFields.push('Branch Name');
-    }
-  }
-
-  // Display errors if any
-  if (missingFields.length > 0) {
-    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-    missingFields.forEach((field) => {
-      errorMessage += `<li>${field}</li>`;
-    });
-    errorMessage += '</ul></div>';
-
+    // Confirmation dialog
     Swal.fire({
-      icon: 'error',
-      title: 'Missing or Invalid Information',
-      html: errorMessage,
-      confirmButtonText: 'OK',
+      title: 'Are you sure?',
+      text: 'Do you want to edit the Centre Head?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Save it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
       customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-    });
-    return;
-  }
-
-  // Confirmation dialog
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to edit the Centre Head?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Save it!',
-    cancelButtonText: 'No, cancel',
-    reverseButtons: true,
-    customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
         htmlContainer: 'text-left',
@@ -838,37 +865,47 @@ onSubmit() {
           },
           error: (error: any) => {
             this.isLoading = false;
-            let errorMessage = 'An unexpected error occurred';
+              let errorMessage = 'An unexpected error occurred';
+              let messages: string[] = [];
 
-            if (error.error && error.error.error) {
-              switch (error.error.error) {
-                case 'NIC already exists':
-                  errorMessage = 'The NIC number is already registered.';
-                  break;
-                case 'Email already exists':
-                  errorMessage = 'The email address is already in use.';
-                  break;
-                case 'Primary phone number already exists':
-                  errorMessage = 'The primary phone number is already registered.';
-                  break;
-                case 'Secondary phone number already exists':
-                  errorMessage = 'The secondary phone number is already registered.';
-                  break;
-                case 'Invalid file format or file upload error':
-                  errorMessage = 'Invalid file format or error uploading the file.';
-                  break;
-                default:
-                  errorMessage = error.error.error || 'An unexpected error occurred';
+              if (error.error && Array.isArray(error.error.errors)) {
+                messages = error.error.errors.map((err: string) => {
+                  switch (err) {
+                    case 'NIC':
+                      return 'The NIC number is already registered.';
+                    case 'Email':
+                      return 'Email already exists.';
+                    case 'PhoneNumber01':
+                      return 'Mobile Number 1 already exists.';
+                    case 'PhoneNumber02':
+                      return 'Mobile Number 2 already exists.';
+                    default:
+                      return 'Validation error: ' + err;
+                  }
+                });
               }
-            }
 
-            this.errorMessage = errorMessage;
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: this.errorMessage,
-              confirmButtonText: 'OK',
-            });
+              if (messages.length > 0) {
+                errorMessage = '<div class="text-left"><p class="mb-2">The following fields already exist in the system: </p><ul class="list-disc pl-5">';
+                messages.forEach(m => {
+                  errorMessage += `<li>${m}</li>`;
+                });
+                errorMessage += '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
+
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Duplicate Information Found',
+                  html: errorMessage,
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack rounded-xl text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                    htmlContainer: 'text-left',
+                    confirmButton: 'bg-red-500 rounded-lg hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+                  },
+                });
+                return;
+              }
           },
         });
     } 
@@ -879,8 +916,77 @@ onSubmit() {
   }
 
   validateEmail(): void {
-  this.emailErrorMessage = this.emailValidationService.getErrorMessage(this.personalData.email);
-}
+    this.emailErrorMessage = this.emailValidationService.getErrorMessage(this.personalData.email);
+  }
+
+  resetPassword() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to reset the Collection Head password. This action cannot be undone.',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, reset password!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        this.collectionService.ChangeStatus(this.itemId, 'Approved').subscribe(
+          (res) => {
+            this.isLoading = false;
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'The Collection Head password reset successfully.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+              this.fetchData();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Something went wrong. Please try again.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'An error occurred while resetting password. Please try again.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        );
+      }
+    });
+  }
 }
 
 class Personal {

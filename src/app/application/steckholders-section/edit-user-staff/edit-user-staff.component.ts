@@ -6,11 +6,12 @@ import { PlantcareUsersService } from '../../../services/plant-care/plantcare-us
 import { TokenService } from '../../../services/token/services/token.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import  Swal  from 'sweetalert2';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-edit-user-staff',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule, LoadingSpinnerComponent, DropdownModule],
   templateUrl: './edit-user-staff.component.html',
   styleUrls: ['./edit-user-staff.component.css']
 })

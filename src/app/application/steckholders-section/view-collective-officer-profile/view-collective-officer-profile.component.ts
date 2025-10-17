@@ -578,6 +578,10 @@ fetchOfficerById(id: number) {
           title: 'Success',
           text: 'Officer Disclaimed successfully!',
           confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
         });
 
         this.showDisclaimView = false;
@@ -589,6 +593,10 @@ fetchOfficerById(id: number) {
           title: 'Error',
           text: 'Failed to Disclaim the Officer!',
           confirmButtonText: 'Try Again',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
         });
       }
     );

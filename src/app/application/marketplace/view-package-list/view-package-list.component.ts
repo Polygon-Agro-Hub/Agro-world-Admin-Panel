@@ -95,10 +95,20 @@ export class ViewPackageListComponent implements OnInit {
         console.error('Error fetching all Packages', error);
         this.isLoading = false;
         if (error.status === 401) {
-          Swal.fire('Unauthorized', 'Please log in again.', 'error');
+        Swal.fire({title: 'Unauthorized', text: 'Please log in again.', icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },}
+          );
           this.router.navigate(['/login']);
         } else {
-          Swal.fire('Error', 'Failed to fetch packages.', 'error');
+            Swal.fire({title: 'Error', text: 'Failed to fetch packages.', icon: 'error', 
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            }}
+          );
         }
       }
     );
@@ -125,6 +135,10 @@ export class ViewPackageListComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
@@ -140,16 +154,25 @@ export class ViewPackageListComponent implements OnInit {
           .subscribe({
             next: (response) => {
               this.isLoading = false;
-              Swal.fire('Deleted!', 'The package has been deleted.', 'success');
+              Swal.fire({title: 'Deleted', text: 'The package has been deleted.', icon: 'success', 
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            }})
               this.fetchAllPackages();
             },
             error: (error) => {
               this.isLoading = false;
               console.error('Error deleting package:', error);
               Swal.fire(
-                'Error',
-                'There was a problem deleting the package.',
-                'error'
+                {title: 'Error',
+                text: 'There was a problem deleting the package.',
+                icon: 'error',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                }}
+                
               );
             },
           });
@@ -171,7 +194,17 @@ export class ViewPackageListComponent implements OnInit {
 onSearch() {
     this.searchtext = this.searchtext.trim(); // Trim leading/trailing spaces
     if (!this.searchtext) {
-      Swal.fire('Info', 'Please enter a valid search term.', 'info');
+      
+      Swal.fire(
+        {title: 'Info',
+        text: 'Please enter a valid search term.',
+        icon: 'info',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        }}
+        
+      );
       return;
     }
     this.fetchAllPackages(this.searchtext, this.date);
@@ -244,12 +277,32 @@ onSearch() {
     this.viewPackagesList.changePackageStatus({id:this.popUpId, status:this.popUpStatus}).subscribe(
       (res)=>{
         if(res.status){
-          Swal.fire('Success', 'Package status updated successfully', 'success');
+          
+          Swal.fire(
+            {title: 'Success',
+            text: 'Package status updated successfully',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            }}
+            
+          );
           this.isPopupVisible = false;
           this.popUpStatus = '';
           this.fetchAllPackages();
         }else{
-          Swal.fire('Error', 'Failed to update package status', 'error');
+          
+          Swal.fire(
+            {title: 'Error',
+            text: 'Failed to update package status',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            }}
+            
+          );
         }
       }
     )

@@ -154,6 +154,7 @@ export class ViewAllDisributionComplainComponent {
   }
 
   searchComplain() {
+    this.searchText = this.searchText?.trim() || ''
     this.page = 1;
     this.fetchAllComplain(this.page, this.itemsPerPage);
   }

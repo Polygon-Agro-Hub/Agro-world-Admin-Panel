@@ -221,6 +221,26 @@ capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolder
     }
   }
 
+  onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    let trimmedValue = inputElement.value.trimStart();
+  
+    // Capitalize first letter
+    if (trimmedValue.length > 0) {
+      trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+    }
+  
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
+
+  onTrimInput(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    const trimmedValue = inputElement.value.trimStart();
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
+
 
   getAllDistributionCetnter(id: number) {
     this.loaded = false;

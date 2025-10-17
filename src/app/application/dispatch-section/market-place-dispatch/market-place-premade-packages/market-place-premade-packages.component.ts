@@ -64,7 +64,7 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
           this.premadePackages = response.items
           this.totalItems = response.total;
 
-          this.hasData = response.items && response.items.length > 0;
+          this.hasData = response.total > 0;
           console.log(this.premadePackages);
           this.isLoading = false;
         },
@@ -80,12 +80,12 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
 
   private formatDateForAPI(date: Date | null): string {
     if (!date) return '';
-  
+
     // Convert using local time instead of UTC
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-  
+
     return `${year}-${month}-${day}`; // Local YYYY-MM-DD
   }
 
@@ -138,5 +138,7 @@ interface PremadePackages {
   packedAdditionalItems: number;
   packingStatus: string;
   additionalItemsStatus: string;
-  packageStatus:string
+  packageStatus: string,
+  adminPackBy: string | null;
+  packBy: string | null;
 }

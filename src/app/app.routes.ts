@@ -217,6 +217,8 @@ import { GovicarePackagesMainComponent } from './application/finance/govicare-pa
 import { ViewFarmerClustersComponent } from './application/plant-care-app/view-farmer-clusters/view-farmer-clusters.component';
 import { ViewClusterUsersComponent } from './application/plant-care-app/view-cluster-users/view-cluster-users.component';
 import { EditFarmerClusterComponent } from './application/plant-care-app/edit-farmer-cluster/edit-farmer-cluster.component';
+import { GovilinkServicesDashboardComponent } from './application/finance/govilink-services-dashboard/govilink-services-dashboard.component';
+import { GovicareCertificationMainComponent } from './application/finance/govicare-certification-dashboard/govicare-certification-main/govicare-certification-main.component';
 
 export const routes: Routes = [
   {
@@ -520,6 +522,14 @@ export const routes: Routes = [
               {
                 path: 'govicare-packages',
                 component: GovicarePackagesMainComponent,
+              },
+              {
+                path: 'govilink-services-dashboard',
+                component: GovilinkServicesDashboardComponent,
+              },
+              {
+                path: 'govicare-certifications-dashboard',
+                component: GovicareCertificationMainComponent,
               },
             ],
           },

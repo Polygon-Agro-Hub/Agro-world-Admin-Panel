@@ -21,4 +21,8 @@ export class FinanceActionComponent {
   govicarePackages(): void {
     this.router.navigate(['/finance/action/govicare-packages']);
   }
+
+  govilinkServices(): void {
+    this.router.navigate(['/finance/action/govilink-services-dashboard']);
+  }
 }

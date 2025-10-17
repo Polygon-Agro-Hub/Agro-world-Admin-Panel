@@ -1,0 +1,24 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  class="text-textLight dark:text-textDark flex items-center gap-2 mb-4"
+  (click)="onBack()"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div *ngIf="!isLoading && dashboardData">
+  <div class="w-full">
+    <app-govicare-certification-first-row [dashboardData]="dashboardData" />
+  </div>
+  <div class="flex flex-row justify-between items-center gap-6 my-10">
+    <div class="h-auto w-[65%]">
+      <app-govicare-certification-area-chart [monthlyStats]="dashboardData.monthlyStatistics" />
+    </div>
+    <div class="h-auto w-[35%]">
+      <app-govicare-certification-pichart [enrollments]="dashboardData.packageEnrollments" />
+    </div>
+  </div>
+  <div class="my-10">
+    <app-govicare-certification-third-row [recentPayments]="dashboardData.recentPayments" />
+  </div>
+</div>

@@ -1,6 +1,11 @@
-import { Component, AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import Chart from 'chart.js/auto';
-import { PackageEnrollments } from '../../../../services/plant-care/plantcare-users.service';
 
 @Component({
   selector: 'app-govicare-certification-pichart',
@@ -9,9 +14,18 @@ import { PackageEnrollments } from '../../../../services/plant-care/plantcare-us
   templateUrl: './govicare-certification-pichart.component.html',
   styleUrl: './govicare-certification-pichart.component.css',
 })
-export class GovicareCertificationPichartComponent implements AfterViewInit, OnChanges {
-  @Input() enrollments: PackageEnrollments | null = null;
+export class GovicareCertificationPichartComponent
+  implements AfterViewInit, OnChanges
+{
+  @Input() enrollments: any = null;
   private chart: Chart | null = null;
+
+  // Dummy data for the pie chart
+  private dummyEnrollments = {
+    forCrop: 45,
+    forFarm: 28,
+    forFarmCluster: 17,
+  };
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -37,20 +51,21 @@ export class GovicareCertificationPichartComponent implements AfterViewInit, OnC
       this.chart.destroy();
     }
 
-    const freeCount = this.enrollments?.free || 0;
-    const proCount = this.enrollments?.pro || 0;
+    // Use input data if available, otherwise use dummy data
+    const enrollmentsData = this.enrollments || this.dummyEnrollments;
+
+    const cropCount = enrollmentsData.forCrop || 0;
+    const farmCount = enrollmentsData.forFarm || 0;
+    const farmClusterCount = enrollmentsData.forFarmCluster || 0;
 
     this.chart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Free', 'Pro'],
+        labels: ['For Crop', 'For Farm', 'For Farm Cluster'],
         datasets: [
           {
-            data: [freeCount, proCount],
-            backgroundColor: [
-              '#415CFF', // Blue for Free
-              '#FFDD00', // Green for Pro
-            ],
+            data: [cropCount, farmCount, farmClusterCount],
+            backgroundColor: ['#0D9488', '#A05CA6', '#FF9263'],
             borderColor: '#061E2C',
             borderWidth: 4,
             hoverOffset: 8,
@@ -73,7 +88,8 @@ export class GovicareCertificationPichartComponent implements AfterViewInit, OnC
                   (a: number, b: number) => a + b,
                   0
                 );
-                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
+                const percentage =
+                  total > 0 ? ((value / total) * 100).toFixed(1) : '0';
                 return `${label}: ${value} (${percentage}%)`;
               },
             },
@@ -92,5 +108,26 @@ export class GovicareCertificationPichartComponent implements AfterViewInit, OnC
         },
       },
     });
+  }
+
+  // Get total enrollments for percentage calculation
+  getTotalEnrollments(): number {
+    const enrollmentsData = this.enrollments || this.dummyEnrollments;
+    return (
+      (enrollmentsData.forCrop || 0) +
+      (enrollmentsData.forFarm || 0) +
+      (enrollmentsData.forFarmCluster || 0)
+    );
+  }
+
+  // Get percentage for each type
+  getPercentage(value: number): string {
+    const total = this.getTotalEnrollments();
+    return total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+  }
+
+  // Get the enrollment data to display (uses input if available, otherwise dummy data)
+  getDisplayEnrollments(): any {
+    return this.enrollments || this.dummyEnrollments;
   }
 }

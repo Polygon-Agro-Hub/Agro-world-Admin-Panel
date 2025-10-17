@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <button
-  class="text-textLight dark:text-textDark flex items-center gap-2 mb-4"
   (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
 >
   <i class="fa-solid fa-arrow-left"></i>
   Back
@@ -12,13 +12,15 @@
   </div>
   <div class="flex flex-row justify-between items-center gap-6 my-10">
     <div class="h-auto w-[65%]">
-      <app-govicare-certification-area-chart [monthlyStats]="dashboardData.monthlyStatistics" />
+      <app-govicare-certification-area-chart />
     </div>
     <div class="h-auto w-[35%]">
-      <app-govicare-certification-pichart [enrollments]="dashboardData.packageEnrollments" />
+      <app-govicare-certification-pichart />
     </div>
   </div>
   <div class="my-10">
-    <app-govicare-certification-third-row [recentPayments]="dashboardData.recentPayments" />
+    <app-govicare-certification-third-row
+      [recentPayments]="dashboardData.recentPayments"
+    />
   </div>
 </div>

@@ -78,115 +78,143 @@ export class GovicareCertificationMainComponent implements OnInit {
 
   private getDummyData(): DashboardData {
     return {
-      status: true,
-      data: {
-        statistics: {
-          totalUsers: 54,
-          proUsers: 1,
-          freeUsers: 53,
-          monthlyIncome: 1416.666666,
-          relativeIncomeValue: 0,
-          incomeStatus: 'stable',
-        },
-        recentPayments: [
-          {
-            transactionId: 'TXN-8',
-            farmerName: 'Hashinika Dilrukshi',
-            packagePeriod: '12months',
-            amount: '8,500.00',
-            dateTime: '2025-09-10 07:39',
-          },
-          {
-            transactionId: 'TXN-7',
-            farmerName: 'Hashinika Dilrukshi',
-            packagePeriod: '12months',
-            amount: '8,500.00',
-            dateTime: '2025-09-10 07:36',
-          },
-        ],
-        packageEnrollments: {
-          free: 53,
-          pro: 1,
-        },
-        monthlyStatistics: [
-          {
-            month: '2025-01',
-            monthName: 'Jan',
-            payments: 0,
-            revenue: 0,
-          },
-          {
-            month: '2025-02',
-            monthName: 'Feb',
-            payments: 0,
-            revenue: 0,
-          },
-          {
-            month: '2025-03',
-            monthName: 'Mar',
-            payments: 0,
-            revenue: 0,
-          },
-          {
-            month: '2025-04',
-            monthName: 'Apr',
-            payments: 0,
-            revenue: 0,
-          },
-          {
-            month: '2025-05',
-            monthName: 'May',
-            payments: 0,
-            revenue: 0,
-          },
-          {
-            month: '2025-06',
-            monthName: 'Jun',
-            payments: 0,
-            revenue: 0,
-          },
-          {
-            month: '2025-07',
-            monthName: 'Jul',
-            payments: 0,
-            revenue: 0,
-          },
-          {
-            month: '2025-08',
-            monthName: 'Aug',
-            payments: 0,
-            revenue: 0,
-          },
-          {
-            month: '2025-09',
-            monthName: 'Sep',
-            payments: 2,
-            revenue: 1416.666666,
-          },
-          {
-            month: '2025-10',
-            monthName: 'Oct',
-            payments: 0,
-            revenue: 0,
-          },
-        ],
-        areaChartData: {
-          labels: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-          ],
-          values: [0, 0, 0, 0, 0, 0, 0, 0, 1416.666666, 0],
-        },
+      statistics: {
+        totalUsers: 156,
+        proUsers: 42,
+        freeUsers: 114,
+        monthlyIncome: 89250,
+        relativeIncomeValue: 15.3,
+        incomeStatus: 'increased',
       },
-    }.data;
+      recentPayments: [
+        {
+          transactionId: 'TXN-015',
+          farmerName: 'Kamal Perera',
+          packagePeriod: '12months',
+          amount: '12,500.00',
+          dateTime: '2025-01-15 09:25',
+        },
+        {
+          transactionId: 'TXN-014',
+          farmerName: 'Samantha Silva',
+          packagePeriod: '6months',
+          amount: '7,500.00',
+          dateTime: '2025-01-14 14:30',
+        },
+        {
+          transactionId: 'TXN-013',
+          farmerName: 'Nimal Fernando',
+          packagePeriod: '12months',
+          amount: '12,500.00',
+          dateTime: '2025-01-13 11:15',
+        },
+        {
+          transactionId: 'TXN-012',
+          farmerName: 'Priya Rathnayake',
+          packagePeriod: '3months',
+          amount: '4,500.00',
+          dateTime: '2025-01-12 16:45',
+        },
+      ],
+      packageEnrollments: {
+        free: 114,
+        pro: 42,
+      },
+      monthlyStatistics: [
+        {
+          month: '2024-01',
+          monthName: 'Jan',
+          payments: 12,
+          revenue: 45000,
+        },
+        {
+          month: '2024-02',
+          monthName: 'Feb',
+          payments: 18,
+          revenue: 68000,
+        },
+        {
+          month: '2024-03',
+          monthName: 'Mar',
+          payments: 22,
+          revenue: 82000,
+        },
+        {
+          month: '2024-04',
+          monthName: 'Apr',
+          payments: 15,
+          revenue: 58000,
+        },
+        {
+          month: '2024-05',
+          monthName: 'May',
+          payments: 28,
+          revenue: 15000,
+        },
+        {
+          month: '2024-06',
+          monthName: 'Jun',
+          payments: 32,
+          revenue: 12000,
+        },
+        {
+          month: '2024-07',
+          monthName: 'Jul',
+          payments: 30,
+          revenue: 18000,
+        },
+        {
+          month: '2024-08',
+          monthName: 'Aug',
+          payments: 35,
+          revenue: 14000,
+        },
+        {
+          month: '2024-09',
+          monthName: 'Sep',
+          payments: 38,
+          revenue: 16000,
+        },
+        {
+          month: '2024-10',
+          monthName: 'Oct',
+          payments: 34,
+          revenue: 35000,
+        },
+        {
+          month: '2024-11',
+          monthName: 'Nov',
+          payments: 40,
+          revenue: 82000,
+        },
+        {
+          month: '2024-12',
+          monthName: 'Dec',
+          payments: 45,
+          revenue: 82000,
+        },
+      ],
+      areaChartData: {
+        labels: [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ],
+        values: [
+          45000, 68000, 82000, 58000, 82000, 58000, 82000, 58000, 82000, 58000,
+          58000, 58000,
+        ],
+      },
+    };
   }
 
   // Optional: Method to refresh data if needed

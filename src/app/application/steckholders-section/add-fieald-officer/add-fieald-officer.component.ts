@@ -126,6 +126,10 @@ export class AddFiealdOfficerComponent implements OnInit {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
   }
 
+  markFieldAsTouched(fieldName: keyof Personal): void {
+  this.touchedFields[fieldName] = true;
+}
+
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -240,8 +244,22 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
-    return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
+  const isTouched = !!this.touchedFields[fieldName];
+  
+  if (!isTouched) {
+    return false;
   }
+  
+  const value = this.personalData[fieldName];
+  
+  // Special handling for assignDistrict array
+  if (fieldName === 'assignDistrict') {
+    return !value || (Array.isArray(value) && value.length === 0);
+  }
+  
+  // Default validation for other fields
+  return !value;
+}
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
@@ -598,6 +616,11 @@ export class AddFiealdOfficerComponent implements OnInit {
       // if (!this.personalData.companyId) {
       //   missingFields.push('Company Name is Required');
       // }
+
+      if (!this.personalData.assignDistrict || 
+        (Array.isArray(this.personalData.assignDistrict) && this.personalData.assignDistrict.length === 0)) {
+      missingFields.push('Assigned Districts is Required');
+    }
 
       if (!this.personalData.jobRole) {
         missingFields.push('Job Role is Required');

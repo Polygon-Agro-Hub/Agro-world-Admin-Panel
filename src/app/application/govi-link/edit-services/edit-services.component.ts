@@ -165,6 +165,10 @@ this.goviLinkService.updateOfficerService(this.serviceId, this.serviceData).subs
       title: 'Success',
       text: 'Service updated successfully!',
       confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then(() => {
       this.router.navigate(['/govi-link/action/view-services-list']);
     });

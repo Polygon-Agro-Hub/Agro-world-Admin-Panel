@@ -34,6 +34,7 @@ export class AddCompanyDetailsComponent implements OnInit {
   sameNumberError = false;
   contactNumberError1 = false;
   contactNumberError2 = false;
+  logoRequiredError = false;
 
   // Logo related
   @ViewChild('logoInput', { static: false })
@@ -64,14 +65,14 @@ export class AddCompanyDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.companyForm = this.fb.group({
-      registrationNumber: ['', Validators.required],
-      taxId: ['', Validators.required],
-      companyName: ['', Validators.required],
-      phoneCode1: ['+94', Validators.required],
-      phone1: ['', Validators.required], // validators added dynamically
+      registrationNumber: ['', [Validators.required]],
+      taxId: ['', [Validators.required]],
+      companyName: ['', [Validators.required]],
+      phoneCode1: ['+94', [Validators.required]],
+      phone1: ['', [Validators.required]],
       phoneCode2: ['+94'],
-      phone2: [''], // optional
-      address: ['', Validators.required],
+      phone2: [''],
+      address: ['', [Validators.required]],
     });
 
     // Dynamic phone validation for phone1
@@ -131,24 +132,28 @@ export class AddCompanyDetailsComponent implements OnInit {
     return `https://flagcdn.com/w20/${code.toLowerCase()}.png`;
   }
 
-  isInvalidMobileNumber(field: 'phone1' | 'phone2'): boolean {
-    const control = this.companyForm.get(field);
-    return !!(control?.value && !/^[0-9]{9}$/.test(control.value));
-  }
-
   validateContactNumbers(): void {
     const phone1 = this.companyForm.get('phone1')?.value;
     const phone2 = this.companyForm.get('phone2')?.value;
+    const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
+    const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
 
-    this.sameNumberError = phone1 && phone2 && phone1 === phone2;
-    this.contactNumberError1 = phone1 && phone1.length !== 9;
+    // Check if numbers are the same (only if both are provided)
+    this.sameNumberError =
+      phone1 && phone2 && phone1 === phone2 && phoneCode1 === phoneCode2;
+
+    // Check Sri Lanka number validation
+    this.contactNumberError1 =
+      phoneCode1 === '+94' && phone1 && phone1.length !== 9;
     this.contactNumberError2 =
-      phone2 && phone2.length > 0 && phone2.length !== 9;
+      phoneCode2 === '+94' &&
+      phone2 &&
+      phone2.length > 0 &&
+      phone2.length !== 9;
   }
 
   // Logo helpers
   openFilePicker(): void {
-    // prefer ViewChild if available
     if (this.logoInput && this.logoInput.nativeElement) {
       this.logoInput.nativeElement.click();
     } else {
@@ -163,6 +168,7 @@ export class AddCompanyDetailsComponent implements OnInit {
       this.logoError = true;
       this.logoFile = null;
       this.logoPreview = null;
+      this.logoRequiredError = true;
       return;
     }
 
@@ -173,6 +179,7 @@ export class AddCompanyDetailsComponent implements OnInit {
       this.logoError = true;
       this.logoFile = null;
       this.logoPreview = null;
+      this.logoRequiredError = true;
       Swal.fire({
         icon: 'error',
         title: 'Invalid File',
@@ -187,11 +194,12 @@ export class AddCompanyDetailsComponent implements OnInit {
     }
 
     // check file size (example: < 5MB)
-    const maxSizeBytes = 5 * 1024 * 1024; // 2 MB
+    const maxSizeBytes = 5 * 1024 * 1024; // 5 MB
     if (file.size > maxSizeBytes) {
       this.logoError = true;
       this.logoFile = null;
       this.logoPreview = null;
+      this.logoRequiredError = true;
       Swal.fire({
         icon: 'error',
         title: 'File Too Large',
@@ -207,6 +215,7 @@ export class AddCompanyDetailsComponent implements OnInit {
 
     // All good
     this.logoError = false;
+    this.logoRequiredError = false;
     this.logoFile = file;
 
     const reader = new FileReader();
@@ -220,6 +229,7 @@ export class AddCompanyDetailsComponent implements OnInit {
     this.logoFile = null;
     this.logoPreview = null;
     this.logoError = false;
+    this.logoRequiredError = true; // Show required error when logo is removed
     if (this.logoInput && this.logoInput.nativeElement) {
       this.logoInput.nativeElement.value = '';
     } else {
@@ -233,18 +243,21 @@ export class AddCompanyDetailsComponent implements OnInit {
     this.companyForm.markAllAsTouched();
     this.validateContactNumbers();
 
-    // enforce logo required
-    if (!this.logoFile) {
-      this.logoError = true;
-    }
+    // Check if logo is required
+    this.logoRequiredError = !this.logoFile;
 
-    if (this.companyForm.invalid || this.sameNumberError || this.logoError) {
+    if (
+      this.companyForm.invalid ||
+      this.sameNumberError ||
+      this.logoRequiredError
+    ) {
+      // Scroll to first error
+      this.scrollToFirstError();
+
       Swal.fire({
         icon: 'error',
         title: 'Invalid Input',
-        text: this.logoError
-          ? 'Please upload a valid company logo.'
-          : 'Please fix the errors before submitting.',
+        text: 'Please fix the errors before submitting.',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
@@ -276,7 +289,7 @@ export class AddCompanyDetailsComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          text: res.message || 'Certificate Company Created  Successfully.',
+          text: res.message || 'Certificate Company Created Successfully.',
           timer: 2000,
           showConfirmButton: false,
           customClass: {
@@ -304,6 +317,17 @@ export class AddCompanyDetailsComponent implements OnInit {
         });
       },
     });
+  }
+
+  // Helper method to scroll to first error
+  private scrollToFirstError(): void {
+    const firstErrorElement = document.querySelector('.border-red-500');
+    if (firstErrorElement) {
+      firstErrorElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
   }
 
   onCancel(): void {

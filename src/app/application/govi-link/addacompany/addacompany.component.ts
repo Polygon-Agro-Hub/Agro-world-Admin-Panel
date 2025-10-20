@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -75,6 +75,7 @@ export class AddacompanyComponent {
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router,
+    private location: Location,
     private goviLinkSrv: GoviLinkService
   ) {
     this.userForm = this.fb.group({
@@ -95,6 +96,25 @@ export class AddacompanyComponent {
     // Initialize modifyBy with a default value
     this.companyData.modifyBy = 'system';
   }
+
+    onCancel(): void {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the added data after going back!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Go Back',
+        cancelButtonText: 'No, Stay Here',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.location.back();
+        }
+      });
+    }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {

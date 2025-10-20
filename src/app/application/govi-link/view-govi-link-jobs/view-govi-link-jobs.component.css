@@ -1,53 +1,102 @@
-/* Add any custom styles if needed */
-.view-field {
-  background-color: inherit;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.375rem;
-  padding: 0.5rem;
-  min-height: 42px;
-  display: flex;
-  align-items: center;
-}
-
-.dark .view-field {
+:host ::ng-deep .dark .p-dropdown {
+  color: var(--text-textDark);
+  background-color: var(--tile-tileBlack);
   border-color: #4b5563;
 }
 
-/* Modal animations */
-.modal-enter {
-  animation: modalEnter 0.3s ease-out;
+:host ::ng-deep .p-dropdown.p-invalid {
+  border-color: #dc2626;
 }
 
-@keyframes modalEnter {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+::ng-deep .dark .p-dropdown-item.p-highlight {
+  background-color: #1e40af;
+  color: white;
 }
 
-/* Scrollbar styling for modal */
-.modal-content::-webkit-scrollbar {
-  width: 6px;
+::ng-deep .dark .p-dropdown-item {
+  color: #f9fafb;
 }
 
-.modal-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
+::ng-deep .p-dropdown-item:hover {
+  background-color: #f3f4f6;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
+::ng-deep .dark .p-dropdown-item:hover {
+  background-color: #4b5563;
 }
 
-.dark .modal-content::-webkit-scrollbar-track {
-  background: #374151;
+::ng-deep .p-dropdown-item.p-highlight {
+  background-color: #dbeafe;
+  color: #1e40af;
 }
 
-.dark .modal-content::-webkit-scrollbar-thumb {
-  background: #6b7280;
+::ng-deep .p-dropdown-item {
+  border: none;
+  color: #374151;
+  background-color: transparent;
+  transition: background-color 0.15s ease-in-out;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #374151;
+  border-color: #6b7280;
+}
+
+::ng-deep .p-dropdown-panel {
+  z-index: 1000 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+}
+
+::ng-deep .dark .p-dropdown-custom .p-dropdown {
+  background-color: #374151;
+  border-color: #6b7280;
+  color: #f9fafb;
+}
+
+::ng-deep .p-dropdown-custom .p-dropdown {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+::ng-deep .p-dropdown-filter {
+  padding: 0.375rem 0.75rem;
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+}
+
+::ng-deep .dark .p-dropdown-filter-container {
+  border-bottom-color: #6b7280;
+}
+
+::ng-deep .dark .p-dropdown-header {
+  background-color: #4b5563;
+}
+
+::ng-deep .p-dropdown-filter-container {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+::ng-deep .dark .p-dropdown-item.p-highlight {
+  background-color: #1e40af;
+  color: white;
+}
+
+::ng-deep .p-dropdown-item.p-highlight {
+  background-color: #dbeafe;
+  color: #1e40af;
 }

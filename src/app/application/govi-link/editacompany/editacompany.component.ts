@@ -1,8 +1,13 @@
 import { Component } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
-import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
@@ -28,7 +33,7 @@ interface BranchesData {
   standalone: true,
   imports: [LoadingSpinnerComponent, CommonModule, FormsModule, DropdownModule],
   templateUrl: './editacompany.component.html',
-  styleUrl: './editacompany.component.css'
+  styleUrl: './editacompany.component.css',
 })
 export class EditacompanyComponent {
   isLoading = false;
@@ -61,13 +66,14 @@ export class EditacompanyComponent {
     { name: 'Cambodia', code: 'KH', dialCode: '+855' },
     { name: 'Bangladesh', code: 'BD', dialCode: '+880' },
     { name: 'India', code: 'IN', dialCode: '+91' },
-    { name: 'Netherlands', code: 'NL', dialCode: '+31' }
+    { name: 'Netherlands', code: 'NL', dialCode: '+31' },
   ];
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private http: HttpClient,
+    private location: Location,
     private router: Router,
     private goviLinkSrv: GoviLinkService
   ) {
@@ -88,6 +94,25 @@ export class EditacompanyComponent {
 
     // Initialize modifyBy with a default value
     this.companyData.modifyBy = 'system'; // You can get this from your auth service
+  }
+
+  onCancel(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   ngOnInit() {
@@ -119,7 +144,7 @@ export class EditacompanyComponent {
       this.isLoading = true;
       this.goviLinkSrv.getCompanyById(this.itemId).subscribe(
         (response: any) => {
-          console.log("API Fetching", response);
+          console.log('API Fetching', response);
 
           this.isLoading = false;
           this.companyData = response;
@@ -133,7 +158,10 @@ export class EditacompanyComponent {
           }
 
           // Set confirmAccNumber to match accNumber for editing
-          if (!this.companyData.confirmAccNumber && this.companyData.accNumber) {
+          if (
+            !this.companyData.confirmAccNumber &&
+            this.companyData.accNumber
+          ) {
             this.companyData.confirmAccNumber = this.companyData.accNumber;
           }
 
@@ -158,7 +186,7 @@ export class EditacompanyComponent {
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
-      (error) => { }
+      (error) => {}
     );
   }
 
@@ -168,7 +196,7 @@ export class EditacompanyComponent {
         this.allBranches = data;
         this.matchExistingBankToDropdown();
       },
-      (error) => { }
+      (error) => {}
     );
   }
 
@@ -269,7 +297,12 @@ export class EditacompanyComponent {
 
     // For confirm account number, check both required and matching
     if (fieldName === 'confirmAccNumber') {
-      return isTouched && (!value || value.toString().trim() === '' || this.confirmAccountNumberError);
+      return (
+        isTouched &&
+        (!value ||
+          value.toString().trim() === '' ||
+          this.confirmAccountNumberError)
+      );
     }
 
     // For other fields
@@ -344,7 +377,7 @@ export class EditacompanyComponent {
         Swal.fire({
           icon: 'error',
           title: 'File Too Large',
-          text: 'Logo must be less than 1MB'
+          text: 'Logo must be less than 1MB',
         });
         input.value = '';
         return;
@@ -381,13 +414,26 @@ export class EditacompanyComponent {
     this.touchedFields['logo'] = true;
   }
 
-  handleInputWithSpaceTrimming(event: KeyboardEvent, fieldName: keyof Company): void {
+  handleInputWithSpaceTrimming(
+    event: KeyboardEvent,
+    fieldName: keyof Company
+  ): void {
     const input = event.target as HTMLInputElement;
     const key = event.key;
     const currentValue = input.value;
     const cursorPosition = input.selectionStart || 0;
 
-    const controlKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+    const controlKeys = [
+      'Backspace',
+      'Delete',
+      'Tab',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Home',
+      'End',
+    ];
     if (controlKeys.includes(key)) {
       return;
     }
@@ -397,7 +443,12 @@ export class EditacompanyComponent {
       return;
     }
 
-    const numericFields = ['accNumber', 'confirmAccNumber', 'phoneNumber1', 'phoneNumber2'];
+    const numericFields = [
+      'accNumber',
+      'confirmAccNumber',
+      'phoneNumber1',
+      'phoneNumber2',
+    ];
     const englishOnlyFields = ['accName', 'financeOfficerName'];
     const emailFields = ['email'];
     const businessNameFields = ['companyName'];
@@ -438,7 +489,9 @@ export class EditacompanyComponent {
     }
 
     if (!numericFields.includes(fieldName) && key === ' ') {
-      const hasLetters = /[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(currentValue);
+      const hasLetters = /[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(
+        currentValue
+      );
       const charBeforeCursor = currentValue.charAt(cursorPosition - 1);
 
       if (cursorPosition === 0 || charBeforeCursor === ' ' || !hasLetters) {
@@ -458,7 +511,10 @@ export class EditacompanyComponent {
           input.value = trimmedValue;
           (this.companyData as any)[fieldName] = trimmedValue;
 
-          const newCursorPosition = Math.min(cursorPosition, trimmedValue.length);
+          const newCursorPosition = Math.min(
+            cursorPosition,
+            trimmedValue.length
+          );
           input.setSelectionRange(newCursorPosition, newCursorPosition);
         }
       }, 0);
@@ -469,10 +525,13 @@ export class EditacompanyComponent {
     return value ? value.replace(/^\s+/, '') : value;
   }
 
-  capitalizeFirstLetter(field: 'companyName' | 'financeOfficerName' | 'accName'): void {
+  capitalizeFirstLetter(
+    field: 'companyName' | 'financeOfficerName' | 'accName'
+  ): void {
     const currentValue = this.companyData[field];
     if (currentValue && currentValue.length > 0) {
-      this.companyData[field] = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
+      this.companyData[field] =
+        currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
     }
   }
 
@@ -520,14 +579,16 @@ export class EditacompanyComponent {
     // Check for invalid characters (allow letters, numbers, plus sign, and specific special characters)
     const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
     if (invalidCharRegex.test(trimmedEmail)) {
-      this.emailValidationMessage = 'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
+      this.emailValidationMessage =
+        'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
       return false;
     }
 
     // Basic email format validation
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(trimmedEmail)) {
-      this.emailValidationMessage = 'Please enter a valid email in the format: example@domain.com';
+      this.emailValidationMessage =
+        'Please enter a valid email in the format: example@domain.com';
       return false;
     }
 
@@ -553,12 +614,21 @@ export class EditacompanyComponent {
   allowOnlyEnglishLettersForAccountHolder(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const char = event.key;
-    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+    const allowedKeys = [
+      'Backspace',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Tab',
+    ];
 
     if (allowedKeys.includes(char)) return;
 
     // Prevent space at the start or multiple consecutive spaces
-    if (char === ' ' && (input.selectionStart === 0 || input.value.endsWith(' '))) {
+    if (
+      char === ' ' &&
+      (input.selectionStart === 0 || input.value.endsWith(' '))
+    ) {
       event.preventDefault();
       return;
     }
@@ -595,9 +665,18 @@ export class EditacompanyComponent {
     }
   }
 
-  allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'confirmAccNumber' | 'phoneNumber1' | 'phoneNumber2'): void {
+  allowOnlyDigitsForAccountNumber(
+    event: KeyboardEvent,
+    field: 'accNumber' | 'confirmAccNumber' | 'phoneNumber1' | 'phoneNumber2'
+  ): void {
     const char = event.key;
-    const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+    const allowedKeys = [
+      'Backspace',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete',
+      'Tab',
+    ];
 
     if (allowedKeys.includes(char)) return;
 
@@ -645,7 +724,9 @@ export class EditacompanyComponent {
 
   onBranchChange() {
     if (this.selectedBranchId) {
-      const selectedBranch = this.branches.find((branch) => branch.ID === this.selectedBranchId);
+      const selectedBranch = this.branches.find(
+        (branch) => branch.ID === this.selectedBranchId
+      );
       if (selectedBranch) {
         this.companyData.branch = selectedBranch.name;
         this.invalidFields.delete('branch');
@@ -735,8 +816,14 @@ export class EditacompanyComponent {
   }
 
   isInvalidMobileNumber(numberField: 'phoneNumber1' | 'phoneNumber2'): boolean {
-    const code = numberField === 'phoneNumber1' ? this.companyData.phoneCode1 : this.companyData.phoneCode2;
-    const number = numberField === 'phoneNumber1' ? this.companyData.phoneNumber1 : this.companyData.phoneNumber2;
+    const code =
+      numberField === 'phoneNumber1'
+        ? this.companyData.phoneCode1
+        : this.companyData.phoneCode2;
+    const number =
+      numberField === 'phoneNumber1'
+        ? this.companyData.phoneNumber1
+        : this.companyData.phoneNumber2;
 
     // Skip validation if fields are empty or number is not 9 digits
     if (!code || !number || number.toString().length !== 9) {
@@ -783,7 +870,7 @@ export class EditacompanyComponent {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   }
 
@@ -800,7 +887,7 @@ export class EditacompanyComponent {
       'bank',
       'branch',
       'phoneCode1',
-      'phoneNumber1'
+      'phoneNumber1',
     ];
 
     for (const field of requiredFields) {
@@ -831,11 +918,17 @@ export class EditacompanyComponent {
     const errors: string[] = [];
 
     // Check required fields
-    if (!this.companyData.RegNumber || this.companyData.RegNumber.trim() === '') {
+    if (
+      !this.companyData.RegNumber ||
+      this.companyData.RegNumber.trim() === ''
+    ) {
       errors.push('Registration Number is required');
     }
 
-    if (!this.companyData.companyName || this.companyData.companyName.trim() === '') {
+    if (
+      !this.companyData.companyName ||
+      this.companyData.companyName.trim() === ''
+    ) {
       errors.push('Company Name is required');
     }
 
@@ -845,7 +938,10 @@ export class EditacompanyComponent {
       errors.push('Please enter a valid email address');
     }
 
-    if (!this.companyData.financeOfficerName || this.companyData.financeOfficerName.trim() === '') {
+    if (
+      !this.companyData.financeOfficerName ||
+      this.companyData.financeOfficerName.trim() === ''
+    ) {
       errors.push('Finance Officer Name is required');
     }
 
@@ -853,25 +949,44 @@ export class EditacompanyComponent {
       errors.push('Account Holder Name is required');
     }
 
-    if (!this.companyData.accNumber || this.companyData.accNumber.toString().trim() === '') {
+    if (
+      !this.companyData.accNumber ||
+      this.companyData.accNumber.toString().trim() === ''
+    ) {
       errors.push('Account Number is required');
     }
 
-    if (!this.companyData.confirmAccNumber || this.companyData.confirmAccNumber.toString().trim() === '') {
+    if (
+      !this.companyData.confirmAccNumber ||
+      this.companyData.confirmAccNumber.toString().trim() === ''
+    ) {
       errors.push('Confirm Account Number is required');
-    } else if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
+    } else if (
+      this.companyData.accNumber !== this.companyData.confirmAccNumber
+    ) {
       errors.push('Account Numbers do not match');
     }
 
-    if (!this.companyData.bank || this.companyData.bank.trim() === '' || !this.selectedBankId) {
+    if (
+      !this.companyData.bank ||
+      this.companyData.bank.trim() === '' ||
+      !this.selectedBankId
+    ) {
       errors.push('Bank Name is required');
     }
 
-    if (!this.companyData.branch || this.companyData.branch.trim() === '' || !this.selectedBranchId) {
+    if (
+      !this.companyData.branch ||
+      this.companyData.branch.trim() === '' ||
+      !this.selectedBranchId
+    ) {
       errors.push('Branch Name is required');
     }
 
-    if (!this.companyData.phoneNumber1 || this.companyData.phoneNumber1.toString().trim() === '') {
+    if (
+      !this.companyData.phoneNumber1 ||
+      this.companyData.phoneNumber1.toString().trim() === ''
+    ) {
       errors.push('Contact Number 1 is required');
     } else if (this.getContactNumber1ErrorMessage()) {
       errors.push(this.getContactNumber1ErrorMessage());
@@ -899,19 +1014,28 @@ export class EditacompanyComponent {
         text: 'No company ID found for update',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        }
+        },
       });
       return;
     }
 
     // Mark all fields as touched to show validation errors
     const fieldsToValidate: (keyof Company)[] = [
-      'RegNumber', 'companyName', 'email', 'financeOfficerName',
-      'accName', 'accNumber', 'confirmAccNumber', 'bank',
-      'branch', 'phoneCode1', 'phoneNumber1', 'logo'
+      'RegNumber',
+      'companyName',
+      'email',
+      'financeOfficerName',
+      'accName',
+      'accNumber',
+      'confirmAccNumber',
+      'bank',
+      'branch',
+      'phoneCode1',
+      'phoneNumber1',
+      'logo',
     ];
 
-    fieldsToValidate.forEach(key => {
+    fieldsToValidate.forEach((key) => {
       this.touchedFields[key] = true;
     });
 
@@ -927,7 +1051,9 @@ export class EditacompanyComponent {
         <div class="text-left">
           <p class="mb-3 font-semibold">Please fix the following errors:</p>
           <ul class="list-disc list-inside space-y-1 max-h-60 overflow-y-auto">
-            ${validationErrors.map(error => `<li class="text-sm">${error}</li>`).join('')}
+            ${validationErrors
+              .map((error) => `<li class="text-sm">${error}</li>`)
+              .join('')}
           </ul>
         </div>
       `,
@@ -935,7 +1061,7 @@ export class EditacompanyComponent {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         },
         confirmButtonText: 'OK',
-        width: '600px'
+        width: '600px',
       });
       return;
     }
@@ -958,8 +1084,10 @@ export class EditacompanyComponent {
         phoneNumber1: this.companyData.phoneNumber1,
         phoneCode2: this.companyData.phoneCode2,
         phoneNumber2: this.companyData.phoneNumber2,
-        logo: this.companyData.logoFile ? await this.fileToBase64(this.companyData.logoFile) : this.companyData.logo,
-        modifyBy: this.companyData.modifyBy || 'system'
+        logo: this.companyData.logoFile
+          ? await this.fileToBase64(this.companyData.logoFile)
+          : this.companyData.logo,
+        modifyBy: this.companyData.modifyBy || 'system',
       };
 
       // Use the updateCompany service method
@@ -972,8 +1100,9 @@ export class EditacompanyComponent {
               title: 'Success',
               text: response.message || 'Company updated successfully!',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              }
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              },
             }).then(() => {
               this.router.navigate(['/govi-link/action/view-company-list']);
             });
@@ -983,8 +1112,9 @@ export class EditacompanyComponent {
               title: 'Error',
               text: response.message || 'Failed to update company.',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              }
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              },
             });
           }
         },
@@ -996,7 +1126,8 @@ export class EditacompanyComponent {
           if (error.error?.message) {
             errorMessage = error.error.message;
           } else if (error.status === 0) {
-            errorMessage = 'Unable to connect to server. Please check your connection.';
+            errorMessage =
+              'Unable to connect to server. Please check your connection.';
           }
 
           Swal.fire({
@@ -1004,8 +1135,9 @@ export class EditacompanyComponent {
             title: 'Error',
             text: errorMessage,
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            }
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            },
           });
         }
       );
@@ -1018,7 +1150,7 @@ export class EditacompanyComponent {
         text: 'An unexpected error occurred.',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        }
+        },
       });
     }
   }

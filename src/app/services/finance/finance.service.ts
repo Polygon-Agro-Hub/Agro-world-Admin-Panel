@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { TokenService } from '../token/services/token.service';
@@ -52,6 +52,22 @@ export interface DashboardResponse {
   data: DashboardData;
 }
 
+// Package Payments interfaces
+export interface PackagePayment {
+  transactionId: number;
+  farmerName: string;
+  phoneNumber: string;
+  packagePeriod: string;
+  amount: string;
+  dateTime: string;
+  sortDate: string;
+}
+
+export interface PackagePaymentsResponse {
+  items: PackagePayment[];
+  total: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -64,12 +80,44 @@ export class FinanceService {
     private tokenService: TokenService
   ) {}
 
-  getDashboardData(): Observable<DashboardResponse> {
-    const headers = new HttpHeaders({
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
+  }
 
+  getDashboardData(): Observable<DashboardResponse> {
     const url = `${this.apiUrl}finance/dashboard`;
-    return this.http.get<DashboardResponse>(url, { headers });
+    return this.http.get<DashboardResponse>(url, { headers: this.getHeaders() });
+  }
+
+  getAllPackagePayments(
+    page: number = 1,
+    limit: number = 10,
+    search: string = '',
+    fromDate: string = '',
+    toDate: string = ''
+  ): Observable<PackagePaymentsResponse> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    if (fromDate) {
+      params = params.set('fromDate', fromDate);
+    }
+
+    if (toDate) {
+      params = params.set('toDate', toDate);
+    }
+
+    const url = `${this.apiUrl}finance/package-payments`;
+    return this.http.get<PackagePaymentsResponse>(url, { 
+      headers: this.getHeaders(),
+      params: params
+    });
   }
 }

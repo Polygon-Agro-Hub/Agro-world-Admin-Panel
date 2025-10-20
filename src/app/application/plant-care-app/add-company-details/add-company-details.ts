@@ -276,7 +276,7 @@ export class AddCompanyDetailsComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          text: res.message || 'Company details added successfully!',
+          text: res.message || 'Certificate Company Created  Successfully.',
           timer: 2000,
           showConfirmButton: false,
           customClass: {
@@ -307,7 +307,21 @@ export class AddCompanyDetailsComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.companyForm.reset({ phoneCode1: '+94', phoneCode2: '+94' });
-    this.removeLogo();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 }

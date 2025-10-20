@@ -20,6 +20,77 @@
   <div
     class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
   >
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        View Certificates
+      </h2>
+
+      <div class="flex flex-row gap-x-3 items-center justify-center">
+        <p-dropdown
+          styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+          [options]="QuestionsFilter"
+          [(ngModel)]="selectQaction"
+          optionLabel="label"
+          optionValue="value"
+          [showClear]="!!selectQaction"
+          placeholder="Questions"
+          (onChange)="fetchData()"
+        ></p-dropdown>
+
+        <p-dropdown
+          styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+          [options]="serviceAreasOptions"
+          [(ngModel)]="selectArea"
+          optionLabel="name"
+          optionValue="value"
+          [showClear]="!!selectArea"
+          placeholder="Area"
+          (onChange)="fetchData()"
+        ></p-dropdown>
+
+        <p-dropdown
+          styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+          [options]="companyArr"
+          [(ngModel)]="selectCompany"
+          optionLabel="companyName"
+          optionValue="id"
+          [showClear]="!!selectCompany"
+          placeholder="Company"
+          (onChange)="fetchData()"
+        ></p-dropdown>
+
+        <!-- Search bar -->
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5"
+        >
+          <input
+            type="text"
+            placeholder="Search by Certificate Number / Name"
+            [(ngModel)]="searchText"
+            (keyup.enter)="onSearch()"
+            (keyup.esc)="offSearch()"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          />
+
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
+          >
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="offSearch()"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div *ngIf="!hasData" class="text-center py-8">
       <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
       <img
@@ -29,108 +100,6 @@
       />
     </div>
     <div *ngIf="hasData">
-      <div class="flex items-center justify-between">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-2">
-          View Certificates
-        </h2>
-
-        <div class="flex flex-row gap-x-3 items-center justify-center">
-          <p-dropdown
-            styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-            [options]="QuactionFilter"
-            [(ngModel)]="selectQaction"
-            optionLabel="label"
-            optionValue="value"
-            [showClear]="!!selectQaction"
-            placeholder="Quactions"
-            (onChange)="fetchData()"
-          >
-          </p-dropdown>
-
-          <p-dropdown
-            styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-            [options]="serviceAreasOptions"
-            [(ngModel)]="selectArea"
-            optionLabel="name"
-            optionValue="value"
-            [showClear]="!!selectArea"
-            placeholder="Area"
-            (onChange)="fetchData()"
-          >
-          </p-dropdown>
-
-          <p-dropdown
-            styleClass="mb-5 border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-            [options]="companyArr"
-            [(ngModel)]="selectCompany"
-            optionLabel="companyName"
-            optionValue="id"
-            [showClear]="!!selectCompany"
-            placeholder="Company"
-            (onChange)="fetchData()"
-          >
-          </p-dropdown>
-
-          <!-- Search bar -->
-          <div
-            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5"
-          >
-            <input
-              type="text"
-              placeholder="Search by Certificate Number / Name"
-              [(ngModel)]="searchText"
-              (keyup.enter)="onSearch()"
-              (keyup.esc)="offSearch()"
-              class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-            />
-
-            <!-- Search button -->
-            <button
-              type="button"
-              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-              (click)="onSearch()"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-                />
-              </svg>
-            </button>
-
-            <!-- Clear button -->
-            <button
-              type="button"
-              class="text-gray-500 hover:text-gray-700 focus:outline-none"
-              (click)="offSearch()"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <table
         class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4"
       >
@@ -212,7 +181,7 @@
               {{ item.companyName }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.commission }}%
+              {{ getFormattedCommission(item.commission) }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
@@ -238,12 +207,15 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <p
                 [ngClass]="
-                  item.qCount === 0 ? 'text-[#FF0000]' : 'text-[#000000]'
+                  item.qCount === 0
+                    ? 'text-[#FF0000] dark:text-[#FF6B6B]'
+                    : 'text-[#000000] dark:text-[#FFFFFF]'
                 "
               >
                 {{ item.qCount === 0 ? "No" : "Yes" }}
               </p>
             </td>
+
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 [ngClass]="

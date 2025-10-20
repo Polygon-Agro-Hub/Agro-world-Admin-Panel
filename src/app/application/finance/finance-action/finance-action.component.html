@@ -48,6 +48,7 @@
           'View and download collection officer reports'
         ) || tokenService.getUserDetails().role === '1'
       "
+      (click)="govicareCertificates()"
       class="flex justify-center cursor-pointer"
     >
       <div
@@ -68,6 +69,7 @@
         permissionService.hasPermission('View and download district report') ||
         tokenService.getUserDetails().role === '1'
       "
+      (click)="govilinkServices()"
       class="flex justify-center cursor-pointer"
     >
       <div

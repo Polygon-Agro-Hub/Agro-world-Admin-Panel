@@ -215,7 +215,7 @@ export class EditCompanyDetailsComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          text: res.message || 'Company details updated successfully!',
+          text: res.message || 'Certificate Company Updated Successfully.',
           timer: 2000,
           showConfirmButton: false,
           customClass: {

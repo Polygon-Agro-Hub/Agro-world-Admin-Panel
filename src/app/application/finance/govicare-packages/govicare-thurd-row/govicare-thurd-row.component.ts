@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RecentPayment } from '../../../../services/plant-care/plantcare-users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-govicare-thurd-row',
@@ -11,6 +12,7 @@ import { RecentPayment } from '../../../../services/plant-care/plantcare-users.s
 })
 export class GovicareThurdRowComponent {
   @Input() recentPayments: RecentPayment[] = [];
+  constructor(private router: Router) {}
 
   formatDate(dateTime: string): string {
     const date = new Date(dateTime);
@@ -28,5 +30,9 @@ export class GovicareThurdRowComponent {
       minute: '2-digit',
       hour12: true
     });
+  }
+  
+    ViewAll(): void {
+    this.router.navigate(['/finance/action/view-all-package-payments']);
   }
 }

@@ -56,6 +56,7 @@ export class ViewCompanyListComponent implements OnInit {
 
   fetchCompanies() {
     this.isLoading = true;
+    this.searchTerm = this.searchTerm.trim();
     this.companyService.getAllCompanies(this.searchTerm).subscribe(
       (data) => {
         this.isLoading = false;

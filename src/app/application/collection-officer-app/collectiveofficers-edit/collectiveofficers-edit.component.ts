@@ -2,7 +2,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location  } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
@@ -141,6 +141,7 @@ export class CollectiveofficersEditComponent {
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
     private collectionService: CollectionService,
+    private location: Location
 
   ) { }
 
@@ -328,7 +329,8 @@ export class CollectiveofficersEditComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/collective-officer']);
+        // this.router.navigate(['/steckholders/action/collective-officer']);
+        this.location.back();
       }
     });
   }
@@ -872,7 +874,8 @@ export class CollectiveofficersEditComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
+        // this.navigatePath('/steckholders/action/collective-officer');
+        this.location.back();
       }
     });
   }

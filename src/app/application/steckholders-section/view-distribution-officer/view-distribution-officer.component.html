@@ -235,7 +235,7 @@
               Role
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Centre
+              Centre Reg Code
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
                 permissionService.hasPermission('Claim collection officer') ||
@@ -304,7 +304,7 @@
               {{ item.jobRole }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.centerName ? item.centerName : "---" }}
+              {{ item.regCode }} 
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>

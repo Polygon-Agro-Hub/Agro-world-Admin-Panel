@@ -34,7 +34,7 @@ export class ViewOfficerTargetComponent {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location
-  ) {}
+  ) { }
 
   goBack() {
     this.location.back();
@@ -44,28 +44,6 @@ export class ViewOfficerTargetComponent {
     this.officerId = this.route.snapshot.params['officerId'];
     this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
-
-  // fetchSelectedOfficerTarget(
-  //   officerId: number,
-  //   status: string = this.selectStatus,
-  //   search: string = this.searchText
-  // ) {
-  //   this.TargetSrv.getSelectedOfficerTargetData(
-  //     officerId,
-  //     status,
-  //     search
-  //   ).subscribe((res) => {
-  //     console.log(res);
-
-  //     this.selectedOfficerDataArr = res.items;
-  //     console.log(res.items.length);
-  //     if (res.items.length === 0) {
-  //       this.hasData = false;
-  //     } else {
-  //       this.hasData = true;
-  //     }
-  //   });
-  // }
 
   fetchSelectedOfficerTarget(
     officerId: number,
@@ -88,41 +66,41 @@ export class ViewOfficerTargetComponent {
       },
       (error) => {
         console.error('Error fetching officer target data:', error);
-        this.hasData = false; // Assume no data in case of an error
+        this.isLoading = false;
+        this.hasData = false;
       }
     );
   }
-
-  // cancelStatus() {
-  //   this.selectStatus = '';
-  //   this.fetchSelectedOfficerTarget(this.officerId, this.selectStatus, this.searchText);
-  // }
 
   cancelStatus() {
     this.selectStatus = '';
     this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
 
-  // filterStatus() {
-  //   this.fetchSelectedOfficerTarget(this.officerId, this.selectStatus, this.searchText);
-  // }
-
   filterStatus() {
     this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
-
-  // onSearch() {
-  //   this.fetchSelectedOfficerTarget(this.officerId, this.selectStatus, this.searchText);
-  // }
 
   onSearch() {
     this.fetchSelectedOfficerTarget(this.officerId, this.searchText);
   }
 
-  // offSearch() {
-  //   this.searchText = '';
-  //   this.fetchSelectedOfficerTarget(this.officerId, this.selectStatus, this.searchText);
-  // }
+  onSearchKeyPress(event: KeyboardEvent) {
+    // Block leading spaces
+    if (this.searchText && this.searchText.length === 1 && this.searchText === ' ') {
+      this.searchText = '';
+      return;
+    }
+
+    // Trim leading spaces
+    if (this.searchText && this.searchText.startsWith(' ')) {
+      this.searchText = this.searchText.trimStart();
+    }
+
+    if (event.key === 'Enter') {
+      this.onSearch();
+    }
+  }
 
   offSearch() {
     this.searchText = '';

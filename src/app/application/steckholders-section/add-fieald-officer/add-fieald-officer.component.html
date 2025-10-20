@@ -12,7 +12,7 @@
   *ngIf="this.itemId == null"
   class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg"
 >
-  <div *ngIf="selectedPage === 'pageOne'">
+    <div *ngIf="selectedPage === 'pageOne'">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Add Personal Details
     </h2>
@@ -291,7 +291,7 @@
         </div>
         <div>
           <label
-            for="lastNameEnglish"
+            for="lastName"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
             >Last Name in English *</label
           >
@@ -309,6 +309,81 @@
           <!-- <span *ngIf="hasInvalidNameCharacters('lastNameEnglish')" class="text-red-600 text-sm">Last Name should only
             contain English letters</span> -->
         </div>
+
+        <!-- New Fields: Sinhala and Tamil Names -->
+        <div>
+          <label
+            for="firstNameSinhala"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >First Name in Sinhala *</label
+          >
+          <input
+            id="firstNameSinhala"
+            [(ngModel)]="personalData.firstNameSinhala"
+            name="firstNameSinhala"
+            (input)="onTrimInput($event, personalData, 'firstNameSinhala')"
+            (keypress)="allowSinhalaCharacters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('firstNameSinhala')" class="text-red-600 text-sm"
+            >First Name in Sinhala is a required field</span
+          >
+        </div>
+        <div>
+          <label
+            for="lastNameSinhala"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Last Name in Sinhala *</label
+          >
+          <input
+            id="lastNameSinhala"
+            [(ngModel)]="personalData.lastNameSinhala"
+            name="lastNameSinhala"
+            (input)="onTrimInput($event, personalData, 'lastNameSinhala')"
+            (keypress)="allowSinhalaCharacters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('lastNameSinhala')" class="text-red-600 text-sm"
+            >Last Name in Sinhala is a required field</span
+          >
+        </div>
+        <div>
+          <label
+            for="firstNameTamil"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >First Name in Tamil *</label
+          >
+          <input
+            id="firstNameTamil"
+            [(ngModel)]="personalData.firstNameTamil"
+            name="firstNameTamil"
+            (input)="onTrimInput($event, personalData, 'firstNameTamil')"
+            (keypress)="allowTamilCharacters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('firstNameTamil')" class="text-red-600 text-sm"
+            >First Name in Tamil is a required field</span
+          >
+        </div>
+        <div>
+          <label
+            for="lastNameTamil"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Last Name in Tamil *</label
+          >
+          <input
+            id="lastNameTamil"
+            [(ngModel)]="personalData.lastNameTamil"
+            name="lastNameTamil"
+            (input)="onTrimInput($event, personalData, 'lastNameTamil')"
+            (keypress)="allowTamilCharacters($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span *ngIf="isFieldInvalid('lastNameTamil')" class="text-red-600 text-sm"
+            >Last Name in Tamil is a required field</span
+          >
+        </div>
+
         <div>
           <label
             for="phoneNumber1"

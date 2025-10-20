@@ -75,18 +75,16 @@
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              companyForm.get('registrationNumber')?.invalid &&
-              companyForm.get('registrationNumber')?.touched
+              (companyForm.get('registrationNumber')?.invalid &&
+              companyForm.get('registrationNumber')?.touched) ||
+              (companyForm.get('registrationNumber')?.errors?.['required'] && companyForm.get('registrationNumber')?.touched)
           }"
         />
         <div
-          *ngIf="
-            companyForm.get('registrationNumber')?.invalid &&
-            companyForm.get('registrationNumber')?.touched
-          "
+          *ngIf="companyForm.get('registrationNumber')?.errors?.['required'] && companyForm.get('registrationNumber')?.touched"
           class="text-red-500 text-sm mt-1"
         >
-          Registration number is required
+          Registration Number is Required
         </div>
       </div>
 
@@ -105,18 +103,16 @@
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              companyForm.get('taxId')?.invalid &&
-              companyForm.get('taxId')?.touched
+              (companyForm.get('taxId')?.invalid &&
+              companyForm.get('taxId')?.touched) ||
+              (companyForm.get('taxId')?.errors?.['required'] && companyForm.get('taxId')?.touched)
           }"
         />
         <div
-          *ngIf="
-            companyForm.get('taxId')?.invalid &&
-            companyForm.get('taxId')?.touched
-          "
+          *ngIf="companyForm.get('taxId')?.errors?.['required'] && companyForm.get('taxId')?.touched"
           class="text-red-500 text-sm mt-1"
         >
-          Tax ID is required
+          Tax ID is Required
         </div>
       </div>
 
@@ -135,18 +131,16 @@
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              companyForm.get('companyName')?.invalid &&
-              companyForm.get('companyName')?.touched
+              (companyForm.get('companyName')?.invalid &&
+              companyForm.get('companyName')?.touched) ||
+              (companyForm.get('companyName')?.errors?.['required'] && companyForm.get('companyName')?.touched)
           }"
         />
         <div
-          *ngIf="
-            companyForm.get('companyName')?.invalid &&
-            companyForm.get('companyName')?.touched
-          "
+          *ngIf="companyForm.get('companyName')?.errors?.['required'] && companyForm.get('companyName')?.touched"
           class="text-red-500 text-sm mt-1"
         >
-          Company name is required
+          Company Name is Required
         </div>
       </div>
 
@@ -203,6 +197,12 @@
             (blur)="validateContactNumbers()"
             placeholder="Enter phone number"
             class="block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            [ngClass]="{
+              'border-red-500':
+                (companyForm.get('phone1')?.invalid &&
+                  companyForm.get('phone1')?.touched) ||
+                contactNumberError1
+            }"
           />
         </div>
 
@@ -211,12 +211,17 @@
           <div
             *ngIf="companyForm.get('phone1')?.errors?.['required'] && companyForm.get('phone1')?.touched"
           >
-            Contact Number 1 is required.
+            Contact Number 1 is Required
           </div>
-          <div *ngIf="contactNumberError1">
+          <div *ngIf="contactNumberError1 && companyForm.get('phone1')?.value">
             <span *ngIf="companyForm.get('phoneCode1')?.value === '+94'">
-              Please enter a valid mobile number (format: +947XXXXXXXX).
+              Contact Number must be exactly 9 digits for Sri Lanka (+94).
             </span>
+          </div>
+          <div
+            *ngIf="companyForm.get('phone1')?.errors?.['pattern'] && companyForm.get('phone1')?.touched && companyForm.get('phoneCode1')?.value !== '+94'"
+          >
+            Please enter a valid phone number containing only digits.
           </div>
         </div>
       </div>
@@ -274,21 +279,30 @@
             (blur)="validateContactNumbers()"
             placeholder="Enter phone number"
             class="block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            [ngClass]="{
+              'border-red-500': contactNumberError2 || sameNumberError
+            }"
           />
         </div>
 
         <!-- Errors -->
         <div class="mt-1 text-red-500 text-sm">
-          <div *ngIf="contactNumberError2">
+          <div *ngIf="contactNumberError2 && companyForm.get('phone2')?.value">
             <span *ngIf="companyForm.get('phoneCode2')?.value === '+94'">
-              Please enter a valid mobile number (format: +947XXXXXXXX)
+              Contact Number must be exactly 9 digits for Sri Lanka (+94).
             </span>
+          </div>
+          <div
+            *ngIf="companyForm.get('phone2')?.errors?.['pattern'] && companyForm.get('phone2')?.touched && companyForm.get('phoneCode2')?.value !== '+94'"
+          >
+            Please enter a valid phone number containing only digits.
           </div>
           <div *ngIf="sameNumberError">
             Contact Number - 1 and Contact Number - 2 cannot be the same.
           </div>
         </div>
       </div>
+
       <!-- Address -->
       <div class="my-3 md:col-span-2">
         <label
@@ -304,18 +318,16 @@
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              companyForm.get('address')?.invalid &&
-              companyForm.get('address')?.touched
+              (companyForm.get('address')?.invalid &&
+              companyForm.get('address')?.touched) ||
+              (companyForm.get('address')?.errors?.['required'] && companyForm.get('address')?.touched)
           }"
         ></textarea>
         <div
-          *ngIf="
-            companyForm.get('address')?.invalid &&
-            companyForm.get('address')?.touched
-          "
+          *ngIf="companyForm.get('address')?.errors?.['required'] && companyForm.get('address')?.touched"
           class="text-red-500 text-sm mt-1"
         >
-          Address is required
+          Address is Required
         </div>
       </div>
     </div>
@@ -323,14 +335,14 @@
     <!-- Buttons -->
     <div class="flex justify-end mt-6 gap-2">
       <div
-        class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer"
+        class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40 text-center"
         (click)="onCancel()"
       >
         Cancel
       </div>
       <button
         type="submit"
-        class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-40"
         [disabled]="isLoading"
         (click)="onSubmit()"
       >

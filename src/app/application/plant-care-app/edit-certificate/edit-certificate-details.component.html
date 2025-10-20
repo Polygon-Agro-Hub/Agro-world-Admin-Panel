@@ -15,6 +15,49 @@
   </h2>
 
   <form [formGroup]="certificateForm" (ngSubmit)="onSubmit()">
+    <!-- Logo Upload -->
+    <div class="mb-6 flex items-center gap-6">
+      <span class="mt-2 text-sm text-textLight dark:text-textDark font-medium">
+        {{ logoPreview ? "Certificate Logo" : "No Logo Available" }}
+      </span>
+      <div class="flex items-center gap-4">
+        <!-- Upload Button -->
+        <button
+          type="button"
+          class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-3 rounded-md border-2 border-[#3980C0] transition-colors duration-200"
+          (click)="openLogoFilePicker()"
+        >
+          <i class="fa-solid fa-plus text-[#3980C0]"></i>
+        </button>
+
+        <!-- Logo Preview -->
+        <div
+          class="w-12 h-12 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-md"
+        >
+          <img
+            *ngIf="logoPreview"
+            [src]="logoPreview"
+            alt="Certificate Logo"
+            class="object-cover w-full h-full"
+          />
+          <i
+            *ngIf="!logoPreview"
+            class="fa-solid fa-image text-gray-400 text-4xl"
+          ></i>
+        </div>
+      </div>
+
+      <!-- Hidden File Input -->
+      <input
+        type="file"
+        #logoInput
+        id="logo"
+        accept="image/*"
+        (change)="onLogoChange($event)"
+        class="hidden"
+      />
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Certificate Name -->
       <div class="my-3">

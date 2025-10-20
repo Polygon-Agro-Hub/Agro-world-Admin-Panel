@@ -8,9 +8,32 @@
 </button>
 
 <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-  <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-2">
+  <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-6">
     View Certificate Details
   </h2>
+
+  <!-- Certificate Logo -->
+  <div class="flex items-center mb-6 gap-4">
+    <span class="mt-2 text-sm text-textLight dark:text-textDark font-medium">
+      {{ certificateData?.logo ? "Certificate Logo" : "No Logo Available" }}
+    </span>
+
+    <!-- Show logo if available -->
+    <img
+      *ngIf="certificateData?.logo"
+      [src]="certificateData.logo"
+      alt="Certificate Logo"
+      class="w-12 h-12 object-cover rounded-lg border border-gray-300 dark:border-gray-600 shadow-md"
+    />
+
+    <!-- Show icon if no logo -->
+    <div
+      *ngIf="!certificateData?.logo"
+      class="w-12 h-12 flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 shadow-md"
+    >
+      <i class="fa-solid fa-image text-gray-400 text-2xl"></i>
+    </div>
+  </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- Certificate Name -->

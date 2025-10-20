@@ -298,7 +298,7 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   getAllCollectionManagers() {
     this.stakeHolderSrv
-      .getAllManagerList(this.personalData.companyId)
+      .getAllManagerList()
       .subscribe((res) => {
         this.fiealdManagerData = res;
         // Convert to dropdown options format

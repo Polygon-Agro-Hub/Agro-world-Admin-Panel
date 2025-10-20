@@ -48,10 +48,8 @@ export class EditFiealdOfficerComponent implements OnInit {
   selectedImage: string | ArrayBuffer | null = null;
   empType!: string;
   languagesRequired: boolean = false;
-  companyOptions: any[] = [];
   loaded = true;
   managerOptions: any[] = [];
-  companyData: Company[] = [];
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberRequired: boolean = false;
   confirmAccountNumberError: boolean = false;
@@ -231,16 +229,6 @@ export class EditFiealdOfficerComponent implements OnInit {
     );
   }
 
-  getAllCompanies() {
-    this.stakeHolderSrv.getAllCompanies().subscribe((res) => {
-      this.companyData = res;
-      this.companyOptions = this.companyData.map(company => ({
-        label: company.companyName,
-        value: company.id
-      }));
-    });
-  }
-
   isFieldInvalid(fieldName: keyof Personal): boolean {
     const value = this.personalData[fieldName];
     
@@ -257,23 +245,14 @@ export class EditFiealdOfficerComponent implements OnInit {
   }
 
   selectjobRole(role: string) {
-    if (role === 'Collection Centre Manager') {
-      this.personalData.jobRole = 'Collection Centre Manager';
-      this.toggleDropdown();
-      console.log('dropdownOpen', this.dropdownOpen);
-    } else {
-      this.personalData.jobRole = role;
-      this.toggleDropdown();
-      console.log('dropdownOpen', this.dropdownOpen);
-    }
+    this.personalData.jobRole = role;
+    this.toggleDropdown();
     console.log('personalData', this.personalData);
 
     this.EpmloyeIdCreate(); // call your method
   }
 
   EpmloyeIdCreate() {
-    const currentCompanyId = this.personalData.companyId;
-
     this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
 
@@ -293,7 +272,6 @@ export class EditFiealdOfficerComponent implements OnInit {
         this.personalData.empId = rolePrefix + lastID;
       })
       .catch((error) => { });
-    this.personalData.companyId = currentCompanyId;
   }
 
   getAllCollectionManagers() {
@@ -351,6 +329,42 @@ export class EditFiealdOfficerComponent implements OnInit {
     // if (!/[a-zA-Z\s]/.test(char)) {
     //   event.preventDefault();
     // }
+  }
+
+  // New method for Sinhala character validation
+  allowSinhalaCharacters(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+
+    // Block space if it's at the start (cursor at position 0)
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow Sinhala Unicode range: \u0D80-\u0DFF
+    // Also allow spaces and basic punctuation
+    if (!/[\u0D80-\u0DFF\s]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // New method for Tamil character validation
+  allowTamilCharacters(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+
+    // Block space if it's at the start (cursor at position 0)
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow Tamil Unicode range: \u0B80-\u0BFF
+    // Also allow spaces and basic punctuation
+    if (!/[\u0B80-\u0BFF\s]/.test(char)) {
+      event.preventDefault();
+    }
   }
 
   isValidPhoneNumber(phone: string): boolean {
@@ -577,34 +591,38 @@ export class EditFiealdOfficerComponent implements OnInit {
         missingFields.push('Preferred Language is Required');
       }
 
-      if (!this.personalData.companyId) {
-        missingFields.push('Company Name is Required');
-      }
-
-      if (
-        !this.personalData.irmId &&
-        this.personalData.jobRole === 'Collection Officer'
-      ) {
-        missingFields.push('Collection Centre Manager is Required');
-      }
-
       if (!this.personalData.jobRole) {
         missingFields.push('Job Role is Required');
       }
 
-      if (
-        this.personalData.jobRole === 'Collection Officer' &&
-        !this.personalData.irmId
-      ) {
-        missingFields.push('Manager Name is Required');
+      if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
+        missingFields.push('Chief Field Officer is Required');
       }
 
       if (!this.personalData.firstName) {
-        missingFields.push('First Name is Required');
+        missingFields.push('First Name in English is Required');
       }
 
       if (!this.personalData.lastName) {
-        missingFields.push('Last Name is Required');
+        missingFields.push('Last Name in English is Required');
+      }
+
+      // Validate Sinhala names
+      if (!this.personalData.firstNameSinhala) {
+        missingFields.push('First Name in Sinhala is Required');
+      }
+
+      if (!this.personalData.lastNameSinhala) {
+        missingFields.push('Last Name in Sinhala is Required');
+      }
+
+      // Validate Tamil names
+      if (!this.personalData.firstNameTamil) {
+        missingFields.push('First Name in Tamil is Required');
+      }
+
+      if (!this.personalData.lastNameTamil) {
+        missingFields.push('Last Name in Tamil is Required');
       }
 
       if (!this.personalData.phoneNumber1) {
@@ -729,13 +747,14 @@ export class EditFiealdOfficerComponent implements OnInit {
     const pageOneFields: (keyof Personal)[] = [
       'firstName',
       'lastName',
-      'firstName',
-      'lastName',
+      'firstNameSinhala',
+      'lastNameSinhala',
+      'firstNameTamil',
+      'lastNameTamil',
       'phoneNumber1',
       'phoneNumber2',
       'nic',
       'email',
-      'companyId',
       'jobRole',
       'irmId',
       'assignDistrict'
@@ -975,7 +994,6 @@ export class EditFiealdOfficerComponent implements OnInit {
   ngOnInit(): void {
     this.loadBanks();
     this.loadBranches();
-    this.getAllCompanies();
     
     // Get the ID from route parameters
     this.route.params.subscribe(params => {
@@ -994,123 +1012,149 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   // Add this method to load field officer data
   loadFieldOfficerData(id: number): void {
-    this.isLoading = true;
-    this.stakeHolderSrv.getFiealdOfficerById(id).subscribe(
-      (response: any) => {
-        this.isLoading = false;
-        if (response && response.officerData && response.officerData.fieldOfficer) {
-          this.populateFormData(response.officerData.fieldOfficer);
+  this.isLoading = true;
+  this.stakeHolderSrv.getFiealdOfficerById(id).subscribe(
+    (response: any) => {
+      this.isLoading = false;
+      console.log('Full API Response:', response); // Debug log
+      
+      if (response && response.officerData) {
+        // Try different possible response structures
+        const officerData = response.officerData.fieldOfficer || response.officerData;
+        
+        if (officerData) {
+          this.populateFormData(officerData);
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Field officer not found',
-            confirmButtonText: 'OK',
-          });
-          this.router.navigate(['/steckholders/action/field-inspectors']);
+          this.showErrorAndRedirect('Field officer data not found in response');
         }
-      },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to load field officer data',
-          confirmButtonText: 'OK',
-        });
-        console.error('Error loading field officer:', error);
+      } else {
+        this.showErrorAndRedirect('Invalid response structure');
       }
-    );
-  }
+    },
+    (error) => {
+      this.isLoading = false;
+      this.showErrorAndRedirect('Failed to load field officer data');
+      console.error('Error loading field officer:', error);
+    }
+  );
+}
+
+// Helper method for error handling
+private showErrorAndRedirect(message: string): void {
+  Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: message,
+    confirmButtonText: 'OK',
+  });
+  this.router.navigate(['/steckholders/action/field-inspectors']);
+}
 
   // Add this method to populate form with existing data
   populateFormData(officerData: any): void {
-    // Personal Details
-    this.personalData.id = officerData.id;
-    this.personalData.firstName = officerData.firstName;
-    this.personalData.lastName = officerData.lastName;
-    this.personalData.phoneNumber1 = officerData.phoneNumber01;
-    this.personalData.phoneNumber2 = officerData.phoneNumber02;
-    this.personalData.phoneCode1 = officerData.phoneCode01 || '+94';
-    this.personalData.phoneCode2 = officerData.phoneCode02 || '+94';
-    this.personalData.nic = officerData.nic;
-    this.personalData.email = officerData.email;
+  // Personal Details
+  this.personalData.id = officerData.id;
+  this.personalData.firstName = officerData.firstName;
+  this.personalData.lastName = officerData.lastName;
+  
+  // FIXED: Check for different possible field names for Sinhala and Tamil names
+  // Try multiple possible field name variations from the API
+  this.personalData.firstNameSinhala = officerData.firstNameSinhala || officerData.firstnameSinhala || officerData.first_name_sinhala || '';
+  this.personalData.lastNameSinhala = officerData.lastNameSinhala || officerData.lastnameSinhala || officerData.last_name_sinhala || '';
+  this.personalData.firstNameTamil = officerData.firstNameTamil || officerData.firstnameTamil || officerData.first_name_tamil || '';
+  this.personalData.lastNameTamil = officerData.lastNameTamil || officerData.lastnameTamil || officerData.last_name_tamil || '';
+  
+  // Debug log to see what's actually coming from the API
+  console.log('Officer Data from API:', officerData);
+  console.log('Sinhala Names - First:', this.personalData.firstNameSinhala, 'Last:', this.personalData.lastNameSinhala);
+  console.log('Tamil Names - First:', this.personalData.firstNameTamil, 'Last:', this.personalData.lastNameTamil);
+  
+  this.personalData.phoneNumber1 = officerData.phoneNumber01 || officerData.phoneNumber1;
+  this.personalData.phoneNumber2 = officerData.phoneNumber02 || officerData.phoneNumber2;
+  this.personalData.phoneCode1 = officerData.phoneCode01 || officerData.phoneCode1 || '+94';
+  this.personalData.phoneCode2 = officerData.phoneCode02 || officerData.phoneCode2 || '+94';
+  this.personalData.nic = officerData.nic;
+  this.personalData.email = officerData.email;
+  
+  // Employment Details
+  this.empType = officerData.employeeType || officerData.empType;
+  this.personalData.empType = officerData.employeeType || officerData.empType;
+  this.personalData.jobRole = officerData.jobRole;
+  this.personalData.empId = officerData.empId;
+  
+  // Languages
+  if (officerData.language) {
+    this.personalData.language = officerData.language;
+  }
+  
+  // Residential Details
+  this.personalData.house = officerData.houseNumber || officerData.house;
+  this.personalData.street = officerData.streetName || officerData.street;
+  this.personalData.city = officerData.city;
+  this.personalData.distrct = officerData.district || officerData.distrct;
+  this.personalData.province = officerData.province;
+  this.personalData.country = officerData.country || 'Sri Lanka';
+  
+  // Bank Details
+  this.personalData.comAmount = officerData.comAmount;
+  this.personalData.accName = officerData.accHolderName || officerData.accName;
+  this.personalData.accNumber = officerData.accNumber;
+  this.personalData.bank = officerData.bankName || officerData.bank;
+  this.personalData.branch = officerData.branchName || officerData.branch;
+  
+  // Assign Districts - FIXED: Convert district names to district objects
+  if (officerData.assignDistricts || officerData.assignDistrict) {
+    const districtsData = officerData.assignDistricts || officerData.assignDistrict;
     
-    // Employment Details
-    this.empType = officerData.employeeType;
-    this.personalData.empType = officerData.employeeType;
-    this.personalData.jobRole = officerData.jobRole;
-    this.personalData.empId = officerData.empId;
-    this.personalData.companyId = officerData.companyId;
-    
-    // Languages
-    if (officerData.language) {
-      this.personalData.language = officerData.language;
-    }
-    
-    // Residential Details
-    this.personalData.house = officerData.houseNumber;
-    this.personalData.street = officerData.streetName;
-    this.personalData.city = officerData.city;
-    this.personalData.distrct = officerData.district;
-    this.personalData.province = officerData.province;
-    this.personalData.country = officerData.country || 'Sri Lanka';
-    
-    // Bank Details
-    this.personalData.comAmount = officerData.comAmount;
-    this.personalData.accName = officerData.accHolderName;
-    this.personalData.accNumber = officerData.accNumber;
-    this.personalData.bank = officerData.bankName;
-    this.personalData.branch = officerData.branchName;
-    
-    // Assign Districts - FIXED: Convert district names to district objects
-    if (officerData.assignDistricts) {
-      if (Array.isArray(officerData.assignDistricts)) {
-        // If it's already an array of district names, map to district objects
-        this.personalData.assignDistrict = officerData.assignDistricts
-          .map((districtName: string) => 
-            this.districts.find(d => d.name === districtName)
-          )
-          .filter((d: any) => d !== undefined); // Remove undefined values
-      } else if (typeof officerData.assignDistricts === 'string') {
-        // If it's a comma-separated string, split and map to district objects
-        this.personalData.assignDistrict = officerData.assignDistricts
-          .split(',')
-          .map((districtName: string) => districtName.trim())
-          .filter((districtName: string) => districtName.length > 0)
-          .map((districtName: string) => 
-            this.districts.find(d => d.name === districtName)
-          )
-          .filter((d: any) => d !== undefined); // Remove undefined values
-      } else {
-        this.personalData.assignDistrict = [];
-      }
+    if (Array.isArray(districtsData)) {
+      // If it's already an array of district names, map to district objects
+      this.personalData.assignDistrict = districtsData
+        .map((districtName: string) => 
+          this.districts.find(d => d.name === districtName)
+        )
+        .filter((d: any) => d !== undefined); // Remove undefined values
+    } else if (typeof districtsData === 'string') {
+      // If it's a comma-separated string, split and map to district objects
+      this.personalData.assignDistrict = districtsData
+        .split(',')
+        .map((districtName: string) => districtName.trim())
+        .filter((districtName: string) => districtName.length > 0)
+        .map((districtName: string) => 
+          this.districts.find(d => d.name === districtName)
+        )
+        .filter((d: any) => d !== undefined); // Remove undefined values
     } else {
       this.personalData.assignDistrict = [];
     }
-    
-    // Load images if available
-    this.loadExistingImages(officerData);
-    
-    // Set bank and branch dropdowns
-    this.setBankAndBranch(officerData.bankName, officerData.branchName);
-    
-    // Load manager if needed
-    if (officerData.irmId) {
-      this.personalData.irmId = officerData.irmId;
-      this.getAllCollectionManagers();
-    }
-
-    // Set profile image if available
-    if (officerData.image) {
-      this.selectedImage = officerData.image;
-    }
-
-    // Mark fields as touched if needed (optional)
-    setTimeout(() => {
-      this.touchedFields['assignDistrict'] = true;
-    }, 0);
+  } else {
+    this.personalData.assignDistrict = [];
   }
+  
+  // Load images if available
+  this.loadExistingImages(officerData);
+  
+  // Set bank and branch dropdowns
+  this.setBankAndBranch(
+    officerData.bankName || officerData.bank, 
+    officerData.branchName || officerData.branch
+  );
+  
+  // Load manager if needed
+  if (officerData.irmId) {
+    this.personalData.irmId = officerData.irmId;
+    this.getAllCollectionManagers();
+  }
+
+  // Set profile image if available
+  if (officerData.image || officerData.profile) {
+    this.selectedImage = officerData.image || officerData.profile;
+  }
+
+  // Mark fields as touched if needed (optional)
+  setTimeout(() => {
+    this.touchedFields['assignDistrict'] = true;
+  }, 0);
+}
 
   // Add method to load existing images
   loadExistingImages(officerData: any): void {
@@ -1382,287 +1426,8 @@ export class EditFiealdOfficerComponent implements OnInit {
     }
   }
 
-  // Add update method
+  // Updated update method with new fields
   updateFieldOfficer(): void {
-  // Mark all fields as touched to show validation messages
-  this.markAllFieldsAsTouched();
-
-  const missingFields: string[] = [];
-
-  // Check required fields for pageOne
-  if (!this.personalData.empType) {
-    missingFields.push('Staff Employee Type is Required');
-  }
-
-  if (!this.isAtLeastOneLanguageSelected()) {
-    missingFields.push('Preferred Languages is Required');
-  }
-
-  if (!this.personalData.companyId) {
-    missingFields.push('Company Name is Required');
-  }
-
-  if (!this.personalData.jobRole) {
-    missingFields.push('Job Role is Required');
-  }
-
-  if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
-    missingFields.push('Chief Field Officer is Required');
-  }
-
-  if (!this.personalData.firstName) {
-    missingFields.push('First Name (in English) is Required');
-  }
-
-  if (!this.personalData.lastName) {
-    missingFields.push('Last Name (in English) is Required');
-  }
-
-  if (!this.personalData.phoneNumber1) {
-    missingFields.push('Mobile Number - 01 is Required');
-  } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber1)) {
-    missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
-  }
-
-  if (this.personalData.phoneNumber2 && !this.isValidPhoneNumber(this.personalData.phoneNumber2)) {
-    missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
-  }
-
-  if (this.areDuplicatePhoneNumbers()) {
-    missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
-  }
-
-  if (!this.personalData.nic) {
-    missingFields.push('NIC Number is Required');
-  } else if (!this.isValidNIC(this.personalData.nic)) {
-    missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
-  }
-
-  if (!this.personalData.email) {
-    missingFields.push('Email is Required');
-  } else if (!this.isValidEmail(this.personalData.email)) {
-    missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-  }
-
-  // Check required fields for pageTwo
-  if (!this.personalData.house) {
-    missingFields.push('House / Plot Number is Required');
-  }
-
-  if (!this.personalData.street) {
-    missingFields.push('Street Name is Required');
-  }
-
-  if (!this.personalData.city) {
-    missingFields.push('City is Required');
-  }
-
-  if (!this.personalData.distrct) {
-    missingFields.push('District is Required');
-  }
-
-  if (!this.personalData.province) {
-    missingFields.push('Province is Required');
-  }
-
-  if (!this.personalData.accName) {
-    missingFields.push("Account Holder's Name is Required");
-  } else if (this.hasInvalidAccountHolderCharacters()) {
-    missingFields.push("Account Holder's Name should only contain English letters");
-  }
-
-  if (!this.personalData.accNumber) {
-    missingFields.push('Account Number is Required');
-  } else if (!this.isValidAccountNumber()) {
-    missingFields.push('Account Number must be between 8 and 16 digits');
-  }
-
-  if (!this.personalData.bank) {
-    missingFields.push('Bank Name is Required');
-  }
-
-  if (!this.personalData.branch) {
-    missingFields.push('Branch Name is Required');
-  }
-
-  if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-    missingFields.push('Commission Amount is required and must be greater than 0');
-  }
-
-  // Check assigned districts
-  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-    missingFields.push('At least one Assigned District is required');
-  }
-
-  // If errors, show list and stop - validation messages will now be visible
-  if (missingFields.length > 0) {
-    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-    missingFields.forEach((field) => {
-      errorMessage += `<li>${field}</li>`;
-    });
-    errorMessage += '</ul></div>';
-
-    Swal.fire({
-      icon: 'error',
-      title: 'Missing or Invalid Information',
-      html: errorMessage,
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-      },
-    });
-    return;
-  }
-
-  // If valid, confirm update
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to update the field officer?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, update it!',
-    cancelButtonText: 'No, cancel',
-    reverseButtons: true,
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-
-      // Prepare the officer data object for the API with CORRECT field names
-      const officerData = {
-        // Personal Details - using correct field names that match backend
-        firstName: this.personalData.firstName,
-        lastName: this.personalData.lastName,
-        phoneNumber1: this.personalData.phoneNumber1,
-        phoneNumber2: this.personalData.phoneNumber2,
-        phoneCode1: this.personalData.phoneCode1,
-        phoneCode2: this.personalData.phoneCode2,
-        nic: this.personalData.nic,
-        email: this.personalData.email,
-        
-        // Employment Details - using correct field names
-        empType: this.personalData.empType,
-        jobRole: this.personalData.jobRole,
-        empId: this.personalData.empId,
-        companyId: this.personalData.companyId,
-        irmId: this.personalData.irmId,
-        
-        // Languages
-        language: this.personalData.language,
-        
-        // Residential Details - using correct field names
-        house: this.personalData.house,
-        street: this.personalData.street,
-        city: this.personalData.city,
-        distrct: this.personalData.distrct,
-        province: this.personalData.province,
-        country: this.personalData.country,
-        
-        // Bank Details - using correct field names
-        comAmount: this.personalData.comAmount,
-        accName: this.personalData.accName,
-        accNumber: this.personalData.accNumber,
-        bank: this.personalData.bank,
-        branch: this.personalData.branch,
-        
-        // Assign Districts - FIXED: Convert district objects to comma-separated names
-        assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
-        
-        // Status
-        status: "Not Aproved"
-      };
-
-      console.log('Sending update data:', officerData);
-
-      // Call the update service method
-      this.stakeHolderSrv.editFieldOfficer(
-        officerData,
-        this.itemId!,
-        this.selectedFile || undefined, // profile image (optional)
-        this.selectedFrontNicFile || undefined, // nicFront (optional)
-        this.selectedBackNicFile || undefined, // nicBack (optional)
-        this.selectedPassbookFile || undefined, // passbook (optional)
-        this.selectedContractFile || undefined // contract (optional)
-      ).subscribe(
-        (res: any) => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Field Officer Updated Successfully',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            },
-          });
-          this.navigatePath('/steckholders/action/field-inspectors');
-        },
-        (error: any) => {
-          this.isLoading = false;
-          let errorMessage = 'An unexpected error occurred';
-          let messages: string[] = [];
-
-          if (error.error && Array.isArray(error.error.errors)) {
-            // Map backend error keys to user-friendly messages
-            messages = error.error.errors.map((err: string) => {
-              switch (err) {
-                case 'NIC':
-                  return 'The NIC number is already registered.';
-                case 'Email':
-                  return 'Email already exists.';
-                case 'PhoneNumber1':
-                  return 'Mobile Number 1 already exists.';
-                case 'PhoneNumber2':
-                  return 'Mobile Number 2 already exists.';
-                default:
-                  return 'Validation error: ' + err;
-              }
-            });
-          }
-
-          if (messages.length > 0) {
-            errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
-            messages.forEach(m => {
-              errorMessage += `<li>${m}</li>`;
-            });
-            errorMessage += '</ul></div>';
-
-            Swal.fire({
-              icon: 'error',
-              title: 'Duplicate Information',
-              html: errorMessage,
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-                htmlContainer: 'text-left',
-              },
-            });
-          } else {
-            // Generic error message
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Failed to update field officer. Please try again.',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              },
-            });
-          }
-          console.error('Error updating field officer:', error);
-        }
-      );
-    }
-  });
-}
-
-  // Keep your existing createFieldOfficer logic
-  createFieldOfficer(): void {
     // Mark all fields as touched to show validation messages
     this.markAllFieldsAsTouched();
 
@@ -1675,10 +1440,6 @@ export class EditFiealdOfficerComponent implements OnInit {
 
     if (!this.isAtLeastOneLanguageSelected()) {
       missingFields.push('Preferred Languages is Required');
-    }
-
-    if (!this.personalData.companyId) {
-      missingFields.push('Company Name is Required');
     }
 
     if (!this.personalData.jobRole) {
@@ -1695,6 +1456,320 @@ export class EditFiealdOfficerComponent implements OnInit {
 
     if (!this.personalData.lastName) {
       missingFields.push('Last Name (in English) is Required');
+    }
+
+    // Validate Sinhala names
+    if (!this.personalData.firstNameSinhala) {
+      missingFields.push('First Name in Sinhala is Required');
+    }
+
+    if (!this.personalData.lastNameSinhala) {
+      missingFields.push('Last Name in Sinhala is Required');
+    }
+
+    // Validate Tamil names
+    if (!this.personalData.firstNameTamil) {
+      missingFields.push('First Name in Tamil is Required');
+    }
+
+    if (!this.personalData.lastNameTamil) {
+      missingFields.push('Last Name in Tamil is Required');
+    }
+
+    if (!this.personalData.phoneNumber1) {
+      missingFields.push('Mobile Number - 01 is Required');
+    } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber1)) {
+      missingFields.push('Mobile Number - 01 - Must be 9 digits starting with 7');
+    }
+
+    if (this.personalData.phoneNumber2 && !this.isValidPhoneNumber(this.personalData.phoneNumber2)) {
+      missingFields.push('Mobile Number - 02 - Must be 9 digits starting with 7');
+    }
+
+    if (this.areDuplicatePhoneNumbers()) {
+      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+    }
+
+    if (!this.personalData.nic) {
+      missingFields.push('NIC Number is Required');
+    } else if (!this.isValidNIC(this.personalData.nic)) {
+      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+    }
+
+    if (!this.personalData.email) {
+      missingFields.push('Email is Required');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+    }
+
+    // Check required fields for pageTwo
+    if (!this.personalData.house) {
+      missingFields.push('House / Plot Number is Required');
+    }
+
+    if (!this.personalData.street) {
+      missingFields.push('Street Name is Required');
+    }
+
+    if (!this.personalData.city) {
+      missingFields.push('City is Required');
+    }
+
+    if (!this.personalData.distrct) {
+      missingFields.push('District is Required');
+    }
+
+    if (!this.personalData.province) {
+      missingFields.push('Province is Required');
+    }
+
+    if (!this.personalData.accName) {
+      missingFields.push("Account Holder's Name is Required");
+    } else if (this.hasInvalidAccountHolderCharacters()) {
+      missingFields.push("Account Holder's Name should only contain English letters");
+    }
+
+    if (!this.personalData.accNumber) {
+      missingFields.push('Account Number is Required');
+    } else if (!this.isValidAccountNumber()) {
+      missingFields.push('Account Number must be between 8 and 16 digits');
+    }
+
+    if (!this.personalData.bank) {
+      missingFields.push('Bank Name is Required');
+    }
+
+    if (!this.personalData.branch) {
+      missingFields.push('Branch Name is Required');
+    }
+
+    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
+      missingFields.push('Commission Amount is required and must be greater than 0');
+    }
+
+    // Check assigned districts
+    if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+      missingFields.push('At least one Assigned District is required');
+    }
+
+    // If errors, show list and stop - validation messages will now be visible
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
+
+    // If valid, confirm update
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to update the field officer?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'No, cancel',
+      reverseButtons: true,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+
+        // Prepare the officer data object for the API with CORRECT field names including new fields
+        const officerData = {
+          // Personal Details - using correct field names that match backend
+          firstName: this.personalData.firstName,
+          lastName: this.personalData.lastName,
+          firstNameSinhala: this.personalData.firstNameSinhala,
+          lastNameSinhala: this.personalData.lastNameSinhala,
+          firstNameTamil: this.personalData.firstNameTamil,
+          lastNameTamil: this.personalData.lastNameTamil,
+          phoneNumber1: this.personalData.phoneNumber1,
+          phoneNumber2: this.personalData.phoneNumber2,
+          phoneCode1: this.personalData.phoneCode1,
+          phoneCode2: this.personalData.phoneCode2,
+          nic: this.personalData.nic,
+          email: this.personalData.email,
+          
+          // Employment Details - using correct field names
+          empType: this.personalData.empType,
+          jobRole: this.personalData.jobRole,
+          empId: this.personalData.empId,
+          irmId: this.personalData.irmId,
+          
+          // Languages
+          language: this.personalData.language,
+          
+          // Residential Details - using correct field names
+          house: this.personalData.house,
+          street: this.personalData.street,
+          city: this.personalData.city,
+          distrct: this.personalData.distrct,
+          province: this.personalData.province,
+          country: this.personalData.country,
+          
+          // Bank Details - using correct field names
+          comAmount: this.personalData.comAmount,
+          accName: this.personalData.accName,
+          accNumber: this.personalData.accNumber,
+          bank: this.personalData.bank,
+          branch: this.personalData.branch,
+          
+          // Assign Districts - FIXED: Convert district objects to comma-separated names
+          assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
+          
+          // Status
+          status: "Not Approved"
+        };
+
+        console.log('Sending update data:', officerData);
+
+        // Call the update service method
+        this.stakeHolderSrv.editFieldOfficer(
+          officerData,
+          this.itemId!,
+          this.selectedFile || undefined, // profile image (optional)
+          this.selectedFrontNicFile || undefined, // nicFront (optional)
+          this.selectedBackNicFile || undefined, // nicBack (optional)
+          this.selectedPassbookFile || undefined, // passbook (optional)
+          this.selectedContractFile || undefined // contract (optional)
+        ).subscribe(
+          (res: any) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Field Officer Updated Successfully',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              },
+            });
+            this.navigatePath('/steckholders/action/field-inspectors');
+          },
+          (error: any) => {
+            this.isLoading = false;
+            let errorMessage = 'An unexpected error occurred';
+            let messages: string[] = [];
+
+            if (error.error && Array.isArray(error.error.errors)) {
+              // Map backend error keys to user-friendly messages
+              messages = error.error.errors.map((err: string) => {
+                switch (err) {
+                  case 'NIC':
+                    return 'The NIC number is already registered.';
+                  case 'Email':
+                    return 'Email already exists.';
+                  case 'PhoneNumber1':
+                    return 'Mobile Number 1 already exists.';
+                  case 'PhoneNumber2':
+                    return 'Mobile Number 2 already exists.';
+                  default:
+                    return 'Validation error: ' + err;
+                }
+              });
+            }
+
+            if (messages.length > 0) {
+              errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+              messages.forEach(m => {
+                errorMessage += `<li>${m}</li>`;
+              });
+              errorMessage += '</ul></div>';
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Duplicate Information',
+                html: errorMessage,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+            } else {
+              // Generic error message
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to update field officer. Please try again.',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                },
+              });
+            }
+            console.error('Error updating field officer:', error);
+          }
+        );
+      }
+    });
+  }
+
+  // Keep your existing createFieldOfficer logic (updated with new fields)
+  createFieldOfficer(): void {
+    // Mark all fields as touched to show validation messages
+    this.markAllFieldsAsTouched();
+
+    const missingFields: string[] = [];
+
+    // Check required fields for pageOne
+    if (!this.personalData.empType) {
+      missingFields.push('Staff Employee Type is Required');
+    }
+
+    if (!this.isAtLeastOneLanguageSelected()) {
+      missingFields.push('Preferred Languages is Required');
+    }
+
+    if (!this.personalData.jobRole) {
+      missingFields.push('Job Role is Required');
+    }
+
+    if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
+      missingFields.push('Chief Field Officer is Required');
+    }
+
+    if (!this.personalData.firstName) {
+      missingFields.push('First Name (in English) is Required');
+    }
+
+    if (!this.personalData.lastName) {
+      missingFields.push('Last Name (in English) is Required');
+    }
+
+    // Validate Sinhala names
+    if (!this.personalData.firstNameSinhala) {
+      missingFields.push('First Name in Sinhala is Required');
+    }
+
+    if (!this.personalData.lastNameSinhala) {
+      missingFields.push('Last Name in Sinhala is Required');
+    }
+
+    // Validate Tamil names
+    if (!this.personalData.firstNameTamil) {
+      missingFields.push('First Name in Tamil is Required');
+    }
+
+    if (!this.personalData.lastNameTamil) {
+      missingFields.push('Last Name in Tamil is Required');
     }
 
     if (!this.personalData.phoneNumber1) {
@@ -1828,11 +1903,15 @@ export class EditFiealdOfficerComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        // Prepare officer data for creation
+        // Prepare officer data for creation with new fields
         const officerData = {
           // Personal Details
           firstName: this.personalData.firstName,
           lastName: this.personalData.lastName,
+          firstNameSinhala: this.personalData.firstNameSinhala,
+          lastNameSinhala: this.personalData.lastNameSinhala,
+          firstNameTamil: this.personalData.firstNameTamil,
+          lastNameTamil: this.personalData.lastNameTamil,
           phoneNumber1: this.personalData.phoneNumber1,
           phoneNumber2: this.personalData.phoneNumber2,
           phoneCode1: this.personalData.phoneCode1,
@@ -1844,7 +1923,6 @@ export class EditFiealdOfficerComponent implements OnInit {
           empType: this.personalData.empType,
           jobRole: this.personalData.jobRole,
           empId: this.personalData.empId,
-          companyId: this.personalData.companyId,
           irmId: this.personalData.irmId,
           
           // Languages
@@ -1869,7 +1947,7 @@ export class EditFiealdOfficerComponent implements OnInit {
           assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
           
           // Status
-          status: "Not Aproved"
+          status: "Not Approved"
         };
 
         // Call the service method with all the files
@@ -1967,8 +2045,9 @@ export class EditFiealdOfficerComponent implements OnInit {
   markAllFieldsAsTouched(): void {
     // Mark page one fields
     const pageOneFields: (keyof Personal)[] = [
-      'empType', 'language', 'companyId', 'jobRole', 'irmId',
-      'firstName', 'lastName', 'phoneNumber1', 'phoneNumber2',
+      'empType', 'language', 'jobRole', 'irmId',
+      'firstName', 'lastName', 'firstNameSinhala', 'lastNameSinhala',
+      'firstNameTamil', 'lastNameTamil', 'phoneNumber1', 'phoneNumber2',
       'nic', 'email', 'distrct', 'assignDistrict'
     ];
 
@@ -1996,10 +2075,13 @@ export class EditFiealdOfficerComponent implements OnInit {
 
 class Personal {
   id!: number;
-  companyId!: number;
   irmId!: number | string;
   firstName!: string;
   lastName!: string;
+  firstNameSinhala!: string;
+  lastNameSinhala!: string;
+  firstNameTamil!: string;
+  lastNameTamil!: string;
   empType!: string;
   empId!: string;
   jobRole!: string;
@@ -2030,11 +2112,6 @@ class Personal {
   createdAt!: Date;
   language: string = '';
   email!: string;
-}
-
-class Company {
-  id!: number;
-  companyName!: string;
 }
 
 class fiealdManager {

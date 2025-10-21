@@ -7,6 +7,7 @@ import { AdminRowComponent } from '../admin-row/admin-row.component';
 import { CollectionOfficerUsersRowComponent } from '../collection-officer-users-row/collection-officer-users-row.component';
 import { PlantcareUsersRowComponent } from '../plantcare-users-row/plantcare-users-row.component';
 import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.component';
+import { DistributionOfficerUsersRowComponent } from '../distribution-officer-users-row/distribution-officer-users-row.component';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { jsPDF } from 'jspdf';
 
@@ -20,6 +21,7 @@ import { jsPDF } from 'jspdf';
     CollectionOfficerUsersRowComponent,
     PlantcareUsersRowComponent,
     SalesAgentsRowComponent,
+    DistributionOfficerUsersRowComponent,
     LoadingSpinnerComponent,
   ],
   templateUrl: './dashboard-main.component.html',
@@ -30,11 +32,13 @@ export class DashboardMainComponent implements OnInit {
   secondRow: any = {};
   thirdRow: any = {};
   fourthRow: any = {};
+  fifthRow: any = {};
   isLoading = false;
   adminRowData: any = {};
   collectionOfficerRowData: any = {};
   salesAgentRowData: any = {};
   plantCareRowData: any = {};
+  distributionOfficerRowData: any = {}; 
   isDownloading: boolean = false;
   currentDate = new Date().toISOString().split('T')[0];
 
@@ -52,6 +56,7 @@ export class DashboardMainComponent implements OnInit {
         this.secondRow = res.secondRow;
         this.thirdRow = res.thirdRow;
         this.fourthRow = res.fourthRow;
+        this.fifthRow = res.fifthRow;
         this.isLoading = false;
       },
       () => {
@@ -76,6 +81,11 @@ export class DashboardMainComponent implements OnInit {
     this.salesAgentRowData = data;
   }
 
+  // Add this new event handler
+  onDistributionOfficerDataEmitted(data: any) {
+    this.distributionOfficerRowData = data;
+  }
+
   exportReport(): void {
     this.isDownloading = true;
     const minLoadingTime = 2000;
@@ -89,6 +99,7 @@ export class DashboardMainComponent implements OnInit {
           orange: '#ff7f00',
           teal: '#17a2b8',
           purple: '#6f42c1',
+          pink: '#980775',
           white: '#ffffff',
           black: '#000000',
           stark: '#FFF4CE',
@@ -113,8 +124,6 @@ export class DashboardMainComponent implements OnInit {
         // Generate filename with today's date only
         const today = new Date();
         const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-        // const fileName = `${formattedDate}.pdf`;
-
         const fileName = `Stakeholder Dashboard Report on ${currentDate}.pdf`;
 
         doc.setFontSize(18);
@@ -170,6 +179,7 @@ export class DashboardMainComponent implements OnInit {
         const getY = (row: number) =>
           baseY + row * (baseBoxHeight + verticalSpacing);
 
+        // First Row - Admin Users
         drawBox(
           getX(0),
           getY(0),
@@ -178,7 +188,7 @@ export class DashboardMainComponent implements OnInit {
           colors.blue,
           colors.white,
           'Admin Users',
-          `Total: ${this.adminRowData.allAdminUsers}`
+          `Total: ${this.adminRowData.allAdminUsers || 0}`
         );
         drawBox(
           getX(1),
@@ -188,7 +198,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Active Admins',
-          `Just Now: ${this.adminRowData.allAdminUsers}`
+          `Just Now: ${this.adminRowData.allAdminUsers || 0}`
         );
         drawBox(
           getX(2),
@@ -198,7 +208,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'New Admins',
-          `Total: ${this.adminRowData.newAdminUsers}`
+          `Total: ${this.adminRowData.newAdminUsers || 0}`
         );
         drawBox(
           getX(3),
@@ -208,7 +218,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Total Associate',
-          `${this.adminRowData.associateAdmins}`
+          `${this.adminRowData.associateAdmins || 0}`
         );
         drawBox(
           getX(3),
@@ -218,7 +228,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Total Officers',
-          `${this.adminRowData.officerAdmins}`
+          `${this.adminRowData.officerAdmins || 0}`
         );
         drawBox(
           getX(4),
@@ -228,7 +238,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Total Executives',
-          `${this.adminRowData.executiveAdmins}`
+          `${this.adminRowData.executiveAdmins || 0}`
         );
         drawBox(
           getX(4),
@@ -238,9 +248,10 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Total Manager',
-          `${this.adminRowData.managerAdmins}`
+          `${this.adminRowData.managerAdmins || 0}`
         );
 
+        // Second Row - Plant Care Users
         drawBox(
           getX(0),
           getY(1),
@@ -249,7 +260,7 @@ export class DashboardMainComponent implements OnInit {
           colors.orange,
           colors.white,
           'Plant Care Users',
-          `Total: ${this.plantCareRowData.allPlantCareUsers}`
+          `Total: ${this.plantCareRowData.allPlantCareUsers || 0}`
         );
         drawBox(
           getX(1),
@@ -259,7 +270,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Active Users',
-          `Just Now: ${this.plantCareRowData.activePlantCareUsers}`
+          `Just Now: ${this.plantCareRowData.activePlantCareUsers || 0}`
         );
         drawBox(
           getX(2),
@@ -269,7 +280,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Active Users',
-          `Today: ${this.plantCareRowData.newPlantCareUsers}`
+          `Today: ${this.plantCareRowData.newPlantCareUsers || 0}`
         );
         drawBox(
           getX(3),
@@ -279,7 +290,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Qr Registered Users',
-          `${this.plantCareRowData.plantCareUsersWithQrForOutput}`
+          `${this.plantCareRowData.plantCareUsersWithQrForOutput || 0}`
         );
         drawBox(
           getX(3),
@@ -289,9 +300,10 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Unregistered Users',
-          `${this.plantCareRowData.plantCareUsersWithOutQrForOutput}`
+          `${this.plantCareRowData.plantCareUsersWithOutQrForOutput || 0}`
         );
 
+        // QR Chart
         const box5X = getX(4);
         const box5Y = getY(1);
 
@@ -309,8 +321,8 @@ export class DashboardMainComponent implements OnInit {
           box5Y + 8
         );
 
-        const QRpresentage = this.plantCareRowData.QRpresentageForOutput;
-        const nonQRpresentage = this.plantCareRowData.nonQRpresentageForOutput;
+        const QRpresentage = this.plantCareRowData.QRpresentageForOutput || 0;
+        const nonQRpresentage = this.plantCareRowData.nonQRpresentageForOutput || 0;
         const barWidth = boxWidth * 0.35;
         const barMaxHeight = secondRowBoxHeight * 0.55;
         const startX = box5X + (boxWidth - (2 * barWidth + 5)) / 2;
@@ -369,6 +381,7 @@ export class DashboardMainComponent implements OnInit {
           startY + (barMaxHeight - unregisteredBarHeight) - 2
         );
 
+        // Third Row - Collection Officers
         const row3YAdjustment = getY(2) + (secondRowBoxHeight - baseBoxHeight);
         drawBox(
           getX(0),
@@ -378,7 +391,7 @@ export class DashboardMainComponent implements OnInit {
           colors.teal,
           colors.white,
           'Collection Officers',
-          `Total: ${this.collectionOfficerRowData.allOfficers}`
+          `Total: ${this.collectionOfficerRowData.allOfficers || 0}`
         );
         drawBox(
           getX(1),
@@ -388,7 +401,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Active Officers',
-          `Just Now: ${this.collectionOfficerRowData.activeOfficers}`
+          `Just Now: ${this.collectionOfficerRowData.activeOfficers || 0}`
         );
         drawBox(
           getX(2),
@@ -398,7 +411,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'New Officers',
-          `Today: ${this.collectionOfficerRowData.newOfficers}`
+          `Today: ${this.collectionOfficerRowData.newOfficers || 0}`
         );
         drawBox(
           getX(3),
@@ -408,7 +421,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Center Head Officers',
-          `${this.collectionOfficerRowData.centerHeadOfficers}`
+          `${this.collectionOfficerRowData.centerHeadOfficers || 0}`
         );
         drawBox(
           getX(3),
@@ -418,7 +431,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Center Managers',
-          `${this.collectionOfficerRowData.centerManagers}`
+          `${this.collectionOfficerRowData.centerManagers || 0}`
         );
         drawBox(
           getX(4),
@@ -428,7 +441,7 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Collection Officers',
-          `${this.collectionOfficerRowData.collectionOfficers}`
+          `${this.collectionOfficerRowData.collectionOfficers || 0}`
         );
         drawBox(
           getX(4),
@@ -438,19 +451,20 @@ export class DashboardMainComponent implements OnInit {
           colors.white,
           colors.black,
           'Customer Officers',
-          `${this.collectionOfficerRowData.customerOfficers}`
+          `${this.collectionOfficerRowData.customerOfficers || 0}`
         );
 
+        // Fourth Row - Distribution Officers
         const row4YAdjustment = getY(3) + (secondRowBoxHeight - baseBoxHeight);
         drawBox(
           getX(0),
           row4YAdjustment,
           boxWidth,
           baseBoxHeight,
-          colors.purple,
+          colors.pink,
           colors.white,
-          'Sales Agents',
-          `Total: ${this.salesAgentRowData.allSalesAgents}`
+          'Distribution Officers',
+          `Total: ${this.distributionOfficerRowData.allOfficers || 0}`
         );
         drawBox(
           getX(1),
@@ -459,8 +473,8 @@ export class DashboardMainComponent implements OnInit {
           baseBoxHeight,
           colors.white,
           colors.black,
-          'Active Agents',
-          `Just Now: ${this.salesAgentRowData.activeSalesAgents}`
+          'Active Officers',
+          `Just Now: ${this.distributionOfficerRowData.activeOfficers || 0}`
         );
         drawBox(
           getX(2),
@@ -469,13 +483,78 @@ export class DashboardMainComponent implements OnInit {
           baseBoxHeight,
           colors.white,
           colors.black,
+          'New Officers',
+          `Today: ${this.distributionOfficerRowData.newOfficers || 0}`
+        );
+        drawBox(
+          getX(3),
+          row4YAdjustment,
+          boxWidth,
+          halfBoxHeight,
+          colors.white,
+          colors.black,
+          'Centre Head Officers',
+          `${this.distributionOfficerRowData.centerHeadOfficers || 0}`
+        );
+        drawBox(
+          getX(3),
+          row4YAdjustment + halfBoxHeight + 4,
+          boxWidth,
+          halfBoxHeight,
+          colors.white,
+          colors.black,
+          'Centre Managers',
+          `${this.distributionOfficerRowData.centerManagers || 0}`
+        );
+        drawBox(
+          getX(4),
+          row4YAdjustment,
+          boxWidth,
+          halfBoxHeight,
+          colors.white,
+          colors.black,
+          'Distribution Officers',
+          `${this.distributionOfficerRowData.distributionOfficers || 0}`
+        );
+        
+        // Fifth Row - Sales Agents
+        const row5YAdjustment = getY(4) + (secondRowBoxHeight - baseBoxHeight);
+        drawBox(
+          getX(0),
+          row5YAdjustment,
+          boxWidth,
+          baseBoxHeight,
+          colors.purple,
+          colors.white,
+          'Sales Agents',
+          `Total: ${this.salesAgentRowData.allSalesAgents || 0}`
+        );
+        drawBox(
+          getX(1),
+          row5YAdjustment,
+          boxWidth,
+          baseBoxHeight,
+          colors.white,
+          colors.black,
+          'Active Agents',
+          `Just Now: ${this.salesAgentRowData.activeSalesAgents || 0}`
+        );
+        drawBox(
+          getX(2),
+          row5YAdjustment,
+          boxWidth,
+          baseBoxHeight,
+          colors.white,
+          colors.black,
           'New Agents',
-          `Today: ${this.salesAgentRowData.newSalesAgents}`
+          `Today: ${this.salesAgentRowData.newSalesAgents || 0}`
         );
 
         // Use the generated filename with today's date only
         doc.save(fileName);
-      } catch {}
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
     };
 
     const completeExport = () => {

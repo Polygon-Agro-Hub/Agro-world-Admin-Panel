@@ -51,7 +51,7 @@ export class EditCertificateDetailsComponent implements OnInit {
   applicableOptions = [
     { label: 'For Selected Crops', value: 'For Selected Crops' },
     { label: 'For Farm', value: 'For Farm' },
-    { label: 'For Farm Cluster', value: 'For Farm Cluster' },
+    { label: 'For Farmer Cluster', value: 'For Farmer Cluster' },
   ];
 
   serviceAreasOptions = [

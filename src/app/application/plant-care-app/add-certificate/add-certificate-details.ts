@@ -48,7 +48,7 @@ export class AddCertificateDetailsComponent implements OnInit {
   applicableOptions = [
     { label: 'For Selected Crops', value: 'For Selected Crops' },
     { label: 'For Farm', value: 'For Farm' },
-    { label: 'For Farm Cluster', value: 'For Farm Cluster' },
+    { label: 'For Farmer Cluster', value: 'For Farmer Cluster' },
   ];
 
   serviceAreasOptions = [
@@ -111,6 +111,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       ],
       scope: ['', Validators.required],
       tearmsFile: [null, Validators.required],
+      logo: [null, Validators.required],
     });
 
     // Load crop groups for dropdown
@@ -141,6 +142,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       this.logoError = 'Please select a valid image file.';
       this.uploadedLogo = null;
       this.logoPreview = null;
+      this.certificateForm.patchValue({ logo: null }); // Clear form value
       return;
     }
 
@@ -148,9 +150,11 @@ export class AddCertificateDetailsComponent implements OnInit {
 
     // Validate file type (image only)
     if (!file.type.startsWith('image/')) {
-      this.logoError = 'Please select a valid image file (JPEG, JPG, PNG, WebP).';
+      this.logoError =
+        'Please select a valid image file (JPEG, JPG, PNG, WebP).';
       this.uploadedLogo = null;
       this.logoPreview = null;
+      this.certificateForm.patchValue({ logo: null }); // Clear form value
       return;
     }
 
@@ -160,12 +164,15 @@ export class AddCertificateDetailsComponent implements OnInit {
       this.logoError = 'Logo must be smaller than 5 MB.';
       this.uploadedLogo = null;
       this.logoPreview = null;
+      this.certificateForm.patchValue({ logo: null }); // Clear form value
       return;
     }
 
     // All good
     this.logoError = '';
     this.uploadedLogo = file;
+    this.certificateForm.patchValue({ logo: file }); // Set form value
+    this.certificateForm.get('logo')?.markAsTouched(); // Mark as touched
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -178,6 +185,9 @@ export class AddCertificateDetailsComponent implements OnInit {
     this.uploadedLogo = null;
     this.logoPreview = null;
     this.logoError = '';
+    this.certificateForm.patchValue({ logo: null }); // Clear form value
+    this.certificateForm.get('logo')?.markAsTouched(); // Mark as touched
+
     if (this.logoInput && this.logoInput.nativeElement) {
       this.logoInput.nativeElement.value = '';
     } else {
@@ -246,7 +256,10 @@ export class AddCertificateDetailsComponent implements OnInit {
     if (this.isForSelectedCrops) {
       // For Selected Crops - user selects manually
       this.selectedCrops = [];
-    } else if (applicable === 'For Farm' || applicable === 'For Farm Cluster') {
+    } else if (
+      applicable === 'For Farm' ||
+      applicable === 'For Farmer Cluster'
+    ) {
       // For Farm or Farm Cluster - do not send crop IDs, just show "All crops are selected"
       this.selectedCrops = [];
     }
@@ -294,6 +307,20 @@ export class AddCertificateDetailsComponent implements OnInit {
 
   onSubmit(): void {
     this.certificateForm.markAllAsTouched();
+
+    // Validate logo
+    if (!this.uploadedLogo) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Logo Required',
+        text: 'Please upload a logo for the certificate.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
 
     // Validate target crops based on applicable selection
     const applicable = this.certificateForm.get('applicable')?.value;
@@ -368,7 +395,7 @@ export class AddCertificateDetailsComponent implements OnInit {
 
     // Append cropIds only if "For Selected Crops" is selected
     if (applicable === 'For Selected Crops' && this.selectedCrops.length > 0) {
-      const cropIds = this.selectedCrops.map(c => c.id);
+      const cropIds = this.selectedCrops.map((c) => c.id);
       formData.append('cropIds', JSON.stringify(cropIds));
     }
 

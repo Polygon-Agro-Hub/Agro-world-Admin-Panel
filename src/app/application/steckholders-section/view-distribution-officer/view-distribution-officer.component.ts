@@ -26,6 +26,7 @@ interface DistributionOfficers {
   jobRole: string;
   created_at: string;
   centerName: string;
+  regCode: string;
 }
 
 interface JobRole {

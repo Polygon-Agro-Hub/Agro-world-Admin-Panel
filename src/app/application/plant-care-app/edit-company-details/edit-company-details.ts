@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -39,6 +39,9 @@ export class EditCompanyDetailsComponent implements OnInit {
   contactNumberError1 = false;
   contactNumberError2 = false;
 
+  @ViewChild('logoInput', { static: false })
+  logoInput!: ElementRef<HTMLInputElement>;
+
   countries = [
     { name: 'Sri Lanka', code: 'LK', dialCode: '+94' },
     { name: 'Vietnam', code: 'VN', dialCode: '+84' },
@@ -58,14 +61,14 @@ export class EditCompanyDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.companyForm = this.fb.group({
-      registrationNumber: ['', Validators.required],
-      taxId: ['', Validators.required],
-      companyName: ['', Validators.required],
-      phoneCode1: ['+94', Validators.required],
-      phone1: ['', Validators.required],
+      registrationNumber: ['', [Validators.required]],
+      taxId: ['', [Validators.required]],
+      companyName: ['', [Validators.required]],
+      phoneCode1: ['+94', [Validators.required]],
+      phone1: ['', [Validators.required]],
       phoneCode2: ['+94'],
       phone2: [''],
-      address: ['', Validators.required],
+      address: ['', [Validators.required]],
     });
 
     // Dynamic phone validation for phone1
@@ -84,6 +87,18 @@ export class EditCompanyDetailsComponent implements OnInit {
         this.loadCompanyDetails();
       }
     });
+
+    // Initialize validators
+    this.setPhoneValidators(
+      'phone1',
+      this.companyForm.get('phoneCode1')?.value,
+      true
+    );
+    this.setPhoneValidators(
+      'phone2',
+      this.companyForm.get('phoneCode2')?.value,
+      false
+    );
   }
 
   private loadCompanyDetails(): void {
@@ -129,21 +144,31 @@ export class EditCompanyDetailsComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to load company details', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to load company details',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
         this.router.navigate(['/plant-care/action/view-company-list']);
       },
     });
   }
 
-  // Add this method to your component class
   openFilePicker(): void {
-    const fileInput = document.getElementById('logo') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.click();
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.click();
+    } else {
+      const fileInput = document.getElementById('logo') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.click();
+      }
     }
   }
 
-  // Your existing onLogoChange method remains the same
   onLogoChange(event: any): void {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -154,6 +179,21 @@ export class EditCompanyDetailsComponent implements OnInit {
         icon: 'error',
         title: 'Invalid File',
         text: 'Please select a valid image file.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    // Check file size (5MB limit)
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'Logo must be smaller than 5 MB.',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
@@ -175,6 +215,9 @@ export class EditCompanyDetailsComponent implements OnInit {
     this.validateContactNumbers();
 
     if (this.companyForm.invalid || this.sameNumberError) {
+      // Scroll to first error
+      this.scrollToFirstError();
+
       Swal.fire({
         icon: 'error',
         title: 'Invalid Input',
@@ -282,8 +325,9 @@ export class EditCompanyDetailsComponent implements OnInit {
     const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
     const phone2 = this.companyForm.get('phone2')?.value;
 
-    // Check if numbers are the same
-    this.sameNumberError = phone1 && phone2 && phone1 === phone2;
+    // Check if numbers are the same (only if both are provided and same country code)
+    this.sameNumberError =
+      phone1 && phone2 && phone1 === phone2 && phoneCode1 === phoneCode2;
 
     // Check Sri Lanka number validation
     this.contactNumberError1 =
@@ -295,24 +339,37 @@ export class EditCompanyDetailsComponent implements OnInit {
       phone2.length !== 9;
   }
 
-  isInvalidMobileNumber(field: 'phone1' | 'phone2'): boolean {
-    const control = this.companyForm.get(field);
-    const dialCode =
-      field === 'phone1'
-        ? this.companyForm.get('phoneCode1')?.value
-        : this.companyForm.get('phoneCode2')?.value;
-
-    if (dialCode === '+94') {
-      return !!(control?.value && !/^[0-9]{9}$/.test(control.value));
+  // Helper method to scroll to first error
+  private scrollToFirstError(): void {
+    const firstErrorElement = document.querySelector('.border-red-500');
+    if (firstErrorElement) {
+      firstErrorElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
-    return !!(control?.value && !/^[0-9]*$/.test(control.value));
   }
 
   onCancel(): void {
-    this.location.back();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the unsaved changes!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   onBack(): void {
-    this.location.back();
+    this.onCancel();
   }
 }

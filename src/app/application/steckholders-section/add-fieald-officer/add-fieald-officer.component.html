@@ -148,6 +148,9 @@
             Preferred Languages is a required field
           </p>
         </div>
+
+        <!-- Company Section - Commented Out -->
+        <!--
         <div>
           <label
             for="centerId"
@@ -174,6 +177,8 @@
             >Company Name is a required field</span
           >
         </div>
+        -->
+
         <div>
           <label
             for="centerId"
@@ -190,13 +195,18 @@
             placeholder="Select districts"
             [filter]="true"
             [showClear]="true"
-            [styleClass]="'mt-1 w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
+            [styleClass]="
+              'mt-1 w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'
+            "
             [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }"
             selectedItemsLabel="{0} districts selected"
           />
-          <!-- <span class="text-red-600 text-sm"
-            >Collection Centre Name is a required field</span
-          > -->
+          <span
+            *ngIf="isFieldInvalid('assignDistrict')"
+            class="text-red-600 text-sm mt-1 block"
+          >
+            Assigned Districts is a required field
+          </span>
         </div>
         <div class="w-full">
           <label
@@ -268,7 +278,7 @@
           <label
             for="firstName"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >First Name *</label
+            >First Name in English *</label
           >
           <input
             id="firstName"
@@ -286,9 +296,9 @@
         </div>
         <div>
           <label
-            for="lastNameEnglish"
+            for="lastName"
             class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >Last Name *</label
+            >Last Name in English *</label
           >
           <input
             id="lastName"
@@ -304,6 +314,85 @@
           <!-- <span *ngIf="hasInvalidNameCharacters('lastNameEnglish')" class="text-red-600 text-sm">Last Name should only
             contain English letters</span> -->
         </div>
+
+        <!-- New Fields: Sinhala and Tamil Names -->
+        <div>
+          <label
+            for="firstNameSinhala"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >First Name in Sinhala *</label
+          >
+          <input
+            id="firstNameSinhala"
+            [(ngModel)]="personalData.firstNameSinhala"
+            name="firstNameSinhala"
+            (input)="onTrimInput($event, personalData, 'firstNameSinhala')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('firstNameSinhala')"
+            class="text-red-600 text-sm"
+            >First Name in Sinhala is a required field</span
+          >
+        </div>
+        <div>
+          <label
+            for="lastNameSinhala"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Last Name in Sinhala *</label
+          >
+          <input
+            id="lastNameSinhala"
+            [(ngModel)]="personalData.lastNameSinhala"
+            name="lastNameSinhala"
+            (input)="onTrimInput($event, personalData, 'lastNameSinhala')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('lastNameSinhala')"
+            class="text-red-600 text-sm"
+            >Last Name in Sinhala is a required field</span
+          >
+        </div>
+        <div>
+          <label
+            for="firstNameTamil"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >First Name in Tamil *</label
+          >
+          <input
+            id="firstNameTamil"
+            [(ngModel)]="personalData.firstNameTamil"
+            name="firstNameTamil"
+            (input)="onTrimInput($event, personalData, 'firstNameTamil')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('firstNameTamil')"
+            class="text-red-600 text-sm"
+            >First Name in Tamil is a required field</span
+          >
+        </div>
+        <div>
+          <label
+            for="lastNameTamil"
+            class="block text-sm font-medium text-gray-700 dark:text-textDark"
+            >Last Name in Tamil *</label
+          >
+          <input
+            id="lastNameTamil"
+            [(ngModel)]="personalData.lastNameTamil"
+            name="lastNameTamil"
+            (input)="onTrimInput($event, personalData, 'lastNameTamil')"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          />
+          <span
+            *ngIf="isFieldInvalid('lastNameTamil')"
+            class="text-red-600 text-sm"
+            >Last Name in Tamil is a required field</span
+          >
+        </div>
+
         <div>
           <label
             for="phoneNumber1"

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -38,8 +38,14 @@ export class EditCertificateDetailsComponent implements OnInit {
   isLoading = false;
   isInitializing = true;
   uploadedFile: File | null = null;
+  uploadedLogo: File | null = null;
+  logoPreview: string | ArrayBuffer | null = null;
+  logoError: string = '';
   existingFileName: string = '';
   certificateId!: number;
+
+  @ViewChild('logoInput', { static: false })
+  logoInput!: ElementRef<HTMLInputElement>;
 
   companies: { label: string; value: number }[] = [];
   applicableOptions = [
@@ -190,6 +196,11 @@ export class EditCertificateDetailsComponent implements OnInit {
       this.existingFileName = this.extractFileName(certificate.tearms);
     }
 
+    // Set logo preview if exists
+    if (certificate.logo) {
+      this.logoPreview = certificate.logo;
+    }
+
     let serviceAreasArray: string[] = [];
 
     // Handle various formats gracefully
@@ -236,6 +247,68 @@ export class EditCertificateDetailsComponent implements OnInit {
     }
 
     this.onApplicableChange();
+  }
+
+  // Logo file picker methods
+  openLogoFilePicker(): void {
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.click();
+    } else {
+      const el = document.getElementById('logo') as HTMLInputElement | null;
+      if (el) el.click();
+    }
+  }
+
+  onLogoChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input || !input.files || input.files.length === 0) {
+      this.logoError = 'Please select a valid image file.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    const file = input.files[0];
+
+    // Validate file type (image only)
+    if (!file.type.startsWith('image/')) {
+      this.logoError =
+        'Please select a valid image file (JPEG, JPG, PNG, WebP).';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    // Check file size (5MB limit)
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.logoError = 'Logo must be smaller than 5 MB.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    // All good
+    this.logoError = '';
+    this.uploadedLogo = file;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.logoPreview = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeLogo(): void {
+    this.uploadedLogo = null;
+    this.logoPreview = null;
+    this.logoError = '';
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.value = '';
+    } else {
+      const el = document.getElementById('logo') as HTMLInputElement | null;
+      if (el) el.value = '';
+    }
   }
 
   extractFileName(url: string): string {
@@ -434,6 +507,11 @@ export class EditCertificateDetailsComponent implements OnInit {
     // Append PDF file only if a new one is uploaded
     if (this.uploadedFile) {
       formData.append('tearmsFile', this.uploadedFile);
+    }
+
+    // Append logo file only if a new one is uploaded
+    if (this.uploadedLogo) {
+      formData.append('logo', this.uploadedLogo);
     }
 
     this.certificateCompanyService

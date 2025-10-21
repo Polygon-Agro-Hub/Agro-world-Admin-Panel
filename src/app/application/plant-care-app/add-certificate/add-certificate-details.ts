@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -37,6 +37,12 @@ export class AddCertificateDetailsComponent implements OnInit {
   certificateForm!: FormGroup;
   isLoading = false;
   uploadedFile: File | null = null;
+  uploadedLogo: File | null = null;
+  logoPreview: string | ArrayBuffer | null = null;
+  logoError: string = '';
+
+  @ViewChild('logoInput', { static: false })
+  logoInput!: ElementRef<HTMLInputElement>;
 
   companies: { label: string; value: number }[] = [];
   applicableOptions = [
@@ -119,6 +125,90 @@ export class AddCertificateDetailsComponent implements OnInit {
     });
   }
 
+  // Logo file picker methods
+  openLogoFilePicker(): void {
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.click();
+    } else {
+      const el = document.getElementById('logo') as HTMLInputElement | null;
+      if (el) el.click();
+    }
+  }
+
+  onLogoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input || !input.files || input.files.length === 0) {
+      this.logoError = 'Please select a valid image file.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    const file = input.files[0];
+
+    // Validate file type (image only)
+    if (!file.type.startsWith('image/')) {
+      this.logoError = 'Please select a valid image file (JPEG, JPG, PNG, WebP).';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    // Check file size (5MB limit)
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.logoError = 'Logo must be smaller than 5 MB.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    // All good
+    this.logoError = '';
+    this.uploadedLogo = file;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.logoPreview = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeLogo(): void {
+    this.uploadedLogo = null;
+    this.logoPreview = null;
+    this.logoError = '';
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.value = '';
+    } else {
+      const el = document.getElementById('logo') as HTMLInputElement | null;
+      if (el) el.value = '';
+    }
+  }
+
+  onFileUpload(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Validate PDF file type
+      if (file.type !== 'application/pdf') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid File',
+          text: 'Please select a PDF file for Payment Terms.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.uploadedFile = file;
+      this.certificateForm.patchValue({ tearmsFile: file });
+      this.certificateForm.get('tearmsFile')?.markAsTouched();
+    }
+  }
+
   loadCropGroups(): void {
     this.cropCalendarService.getAllCropGroupNamesOnly().subscribe({
       next: (data) => {
@@ -159,15 +249,6 @@ export class AddCertificateDetailsComponent implements OnInit {
     } else if (applicable === 'For Farm' || applicable === 'For Farm Cluster') {
       // For Farm or Farm Cluster - do not send crop IDs, just show "All crops are selected"
       this.selectedCrops = [];
-    }
-  }
-
-  onFileUpload(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.uploadedFile = file;
-      this.certificateForm.patchValue({ tearmsFile: file });
-      this.certificateForm.get('tearmsFile')?.markAsTouched();
     }
   }
 
@@ -287,13 +368,17 @@ export class AddCertificateDetailsComponent implements OnInit {
 
     // Append cropIds only if "For Selected Crops" is selected
     if (applicable === 'For Selected Crops' && this.selectedCrops.length > 0) {
-      this.selectedCrops.forEach((c) => {
-        formData.append('cropIds[]', c.id.toString());
-      });
+      const cropIds = this.selectedCrops.map(c => c.id);
+      formData.append('cropIds', JSON.stringify(cropIds));
     }
 
-    // PDF file - using the exact field name from database
+    // PDF file - using the exact field name from backend route
     formData.append('tearmsFile', this.uploadedFile);
+
+    // Logo file - append if uploaded
+    if (this.uploadedLogo) {
+      formData.append('logo', this.uploadedLogo);
+    }
 
     this.certificateCompanyService.createCertificate(formData).subscribe({
       next: (res) => {

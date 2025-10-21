@@ -15,6 +15,7 @@ export interface NewCropCalender {
   natOfCul: string;
   cropDuration: string;
   createdAt: string;
+  specialNotes:string;
   suitableAreas: string; // Added to match component usage
 }
 

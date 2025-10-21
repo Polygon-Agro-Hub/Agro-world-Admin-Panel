@@ -188,13 +188,10 @@ import path from 'path';
 import { ResetPasswordComponent } from './application/main-components/reset-password/reset-password.component';
 import { GoviLinkDashbordComponent } from './application/govi-link/govi-link-dashbord/govi-link-dashbord.component';
 import { GovilinkComponent } from './application/govi-link/govilink/govilink.component';
-import { AddacompanyComponent } from './application/govi-link/addacompany/addacompany.component';
 import { AddCompanyDetailsComponent } from './application/plant-care-app/add-company-details/add-company-details';
 import { ViewCompanyListComponent } from './application/plant-care-app/view-company-list/view-company-list.component';
 import { AddServicesComponent } from './application/govi-link/add-services/add-services.component';
 import { EditServicesComponent } from './application/govi-link/edit-services/edit-services.component';
-import { ViewcompanylistComponent } from './application/govi-link/viewcompanylist/viewcompanylist.component';
-import { EditacompanyComponent } from './application/govi-link/editacompany/editacompany.component';
 import { EditCompanyDetailsComponent } from './application/plant-care-app/edit-company-details/edit-company-details';
 import { ViewCompanyDetailsComponent } from './application/plant-care-app/view-company-details/view-company-details';
 import { ViewFieldInspectorsComponent } from './application/steckholders-section/view-field-inspectors/view-field-inspectors';
@@ -1367,18 +1364,6 @@ export const routes: Routes = [
               {
                 path: '',
                 component: GovilinkComponent,
-              },
-              {
-                path: 'add-a-company',
-                component: AddacompanyComponent,
-              },
-              {
-                path: 'view-company-list',
-                component: ViewcompanylistComponent,
-              },
-              {
-                path: 'edit-company',
-                component: EditacompanyComponent,
               },
               {
                 path: 'add-services',

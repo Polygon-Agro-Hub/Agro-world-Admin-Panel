@@ -108,6 +108,19 @@
           </div>
 
           <div class="md:col-span-2 mt-3" style="width: 100%;">
+            <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Special Notes *
+            </label>
+            <textarea id="specialNotes" name="specialNotes" formControlName="specialNotes" rows="4"
+              placeholder="Enter any special notes about this crop..."
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack resize-vertical mb-6"
+              [ngClass]="{'border-red-500': cropForm.get('specialNotes')?.invalid && (cropForm.get('specialNotes')?.dirty || cropForm.get('specialNotes')?.touched)}">
+            </textarea>
+            <div
+              *ngIf="cropForm.get('specialNotes')?.invalid && (cropForm.get('specialNotes')?.dirty || cropForm.get('specialNotes')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Please enter valid special notes
+            </div>
             <label for="suitableAreas" class="block text-sm font-medium text-textLight dark:text-textDark">
               Suitable Areas *
             </label>
@@ -210,6 +223,19 @@
           </div>
 
           <div class="md:col-span-2 my-3 w-full">
+            <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Special Notes *
+            </label>
+            <textarea id="specialNotes" name="specialNotes" formControlName="specialNotes" rows="4"
+              placeholder="Enter any special notes about this crop..."
+              class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack resize-vertical mb-6"
+              [ngClass]="{'border-red-500': cropForm.get('specialNotes')?.invalid && (cropForm.get('specialNotes')?.dirty || cropForm.get('specialNotes')?.touched)}">
+            </textarea>
+            <div
+              *ngIf="cropForm.get('specialNotes')?.invalid && (cropForm.get('specialNotes')?.dirty || cropForm.get('specialNotes')?.touched)"
+              class="text-red-500 text-sm mt-1">
+              Please enter valid special notes
+            </div>
             <label for="suitableAreas" class="block text-sm font-medium text-textLight dark:text-textDark">
               Suitable Areas *
             </label>

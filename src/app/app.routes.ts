@@ -624,6 +624,10 @@ export const routes: Routes = [
                 component: ManageCompanyComponent
               },
               {
+                path: 'view-companies',
+                component: ViewCompaniesComponent,
+              },
+              {
                 path: 'view-distribution-officers',
                 children: [
                   {

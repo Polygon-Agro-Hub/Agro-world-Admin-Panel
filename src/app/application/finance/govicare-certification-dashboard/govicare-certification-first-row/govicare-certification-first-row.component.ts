@@ -1,6 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardData } from '../../../../services/plant-care/plantcare-users.service';
+
+// Define the interface locally to match the certificate dashboard structure
+export interface CertificateStatistics {
+  totalCertificates: number;
+  activeEnrollments: number;
+  expiredEnrollments: number;
+  monthlyIncome: number;
+  relativeIncomeValue: number;
+  incomeStatus: string;
+}
+
+export interface CertificateDashboardData {
+  statistics: CertificateStatistics;
+}
 
 @Component({
   selector: 'app-govicare-certification-first-row',
@@ -10,7 +23,7 @@ import { DashboardData } from '../../../../services/plant-care/plantcare-users.s
   styleUrl: './govicare-certification-first-row.component.css'
 })
 export class GovicareCertificationFirstRowComponent {
-  @Input() dashboardData: DashboardData | null = null;
+  @Input() dashboardData: CertificateDashboardData | null = null;
 
   formatCurrency(value: number): string {
     return new Intl.NumberFormat('en-LK', {

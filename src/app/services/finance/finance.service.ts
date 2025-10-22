@@ -68,6 +68,47 @@ export interface PackagePaymentsResponse {
   total: number;
 }
 
+// Certificate Dashboard interfaces
+export interface CertificateStatistics {
+  totalCertificates: number;
+  activeEnrollments: number;
+  expiredEnrollments: number;
+  monthlyIncome: number;
+  relativeIncomeValue: number;
+  incomeStatus: string;
+}
+
+export interface CertificatePayment {
+  transactionId: string;
+  farmerName: string;
+  certificateName: string;
+  payType: string;
+  amount: string;
+  dateTime: string;
+  expiryDate: string;
+  validityPeriod: string;
+}
+
+export interface CertificateEnrollmentBreakdown {
+  forCrop: number;
+  forFarm: number;
+  forFarmCluster: number;
+}
+
+export interface CertificateDashboardData {
+  statistics: CertificateStatistics;
+  recentPayments: CertificatePayment[];
+  enrollmentBreakdown: CertificateEnrollmentBreakdown;
+  monthlyStatistics: MonthlyStatistic[];
+  areaChartData: AreaChartData;
+  dashboardData:any
+}
+
+export interface CertificateDashboardResponse {
+  status: boolean;
+  data: CertificateDashboardData;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -86,6 +127,7 @@ export class FinanceService {
     });
   }
 
+  // Plant Care Package Dashboard
   getDashboardData(): Observable<DashboardResponse> {
     const url = `${this.apiUrl}finance/dashboard`;
     return this.http.get<DashboardResponse>(url, { headers: this.getHeaders() });
@@ -119,5 +161,11 @@ export class FinanceService {
       headers: this.getHeaders(),
       params: params
     });
+  }
+
+  // Certificate Dashboard
+  getCertificateDashboardData(): Observable<CertificateDashboardResponse> {
+    const url = `${this.apiUrl}finance/certificate-dashboard`;
+    return this.http.get<CertificateDashboardResponse>(url, { headers: this.getHeaders() });
   }
 }

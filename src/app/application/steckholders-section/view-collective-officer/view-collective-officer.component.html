@@ -42,9 +42,9 @@
         class="flex mt-4 align-middle justify-start items-center gap-x-12">
         <label class="block text-gray-700 pl-16 dark:text-gray-200 mb-2">Select Manager</label>
         <div class="flex flex-col">
-          <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" optionValue="id" placeholder="Select a manager"
-            [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel" name="selectedIrmId" required
-            panelStyleClass="custom-dropdown-panel"
+          <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" optionValue="id"
+            placeholder="Select a manager" [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel"
+            name="selectedIrmId" required panelStyleClass="custom-dropdown-panel"
             [styleClass]="'min-w-52 border ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'">
           </p-dropdown>
 
@@ -119,13 +119,13 @@
   <div class="pt-5 px-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
     <div class="flex justify-between items-center mb-8">
-      <div *ngIf="!Cname"class="flex items-center">
+      <div *ngIf="!Cname" class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           Collection Officers ({{ this.totalItems }})
         </h2>
       </div>
 
-      <div *ngIf="Cname"class="flex items-center">
+      <div *ngIf="Cname" class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           {{Cname}} ({{ this.totalItems }})
         </h2>
@@ -369,8 +369,14 @@
             </td> -->
 
             <td *ngIf="(permissionService.hasPermission('View individual collection officer') ||
-            tokenService.getUserDetails().role === '1') && Cname" [class.ml-4]="Cname" class="px-4 py-3 text-center">
-              
+            tokenService.getUserDetails().role === '1')" [class.ml-4]="Cname" class="px-4 py-3 text-center">
+              <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
             </td>
 
             <td *ngIf="

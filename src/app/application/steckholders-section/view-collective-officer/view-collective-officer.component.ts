@@ -27,6 +27,8 @@ interface CollectionOfficers {
   jobRole: string;
   created_at: string;
   centerName: string;
+  officerModiyBy: string;
+  adminModifyBy:string;
   regCode: string;
 }
 
@@ -688,6 +690,10 @@ export class ViewCollectiveOfficerComponent {
     this.selectStatus = '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
+
+  getModifiedBy(item: CollectionOfficers): string {
+  return item.officerModiyBy || item.adminModifyBy || 'N/A';
+}
 }
 
 class Company {

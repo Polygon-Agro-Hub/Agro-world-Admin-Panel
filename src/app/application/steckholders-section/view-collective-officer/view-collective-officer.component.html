@@ -258,6 +258,9 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               NIC
             </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+              Last Modified By
+            </th>
             <th *ngIf="
                ( permissionService.hasPermission('View individual collection officer') ||
                 tokenService.getUserDetails().role === '1') && !Cname
@@ -361,6 +364,9 @@
             </td>
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.nic }}
+            </td>
+            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+              {{ getModifiedBy(item) }}
             </td>
 
             <!-- <td class="px-4 py-3 text-center">

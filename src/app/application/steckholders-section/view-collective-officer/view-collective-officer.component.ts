@@ -692,7 +692,7 @@ export class ViewCollectiveOfficerComponent {
   }
 
   getModifiedBy(item: CollectionOfficers): string {
-  return item.officerModiyBy || item.adminModifyBy || 'N/A';
+  return item.officerModiyBy || item.adminModifyBy || '--';
 }
 }
 

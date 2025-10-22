@@ -201,4 +201,9 @@ export class FinanceService {
       params: params,
     });
   }
+  
+   getCertificateDashboardData(): Observable<CertificateDashboardResponse> {
+    const url = `${this.apiUrl}finance/certificate-dashboard`;
+    return this.http.get<CertificateDashboardResponse>(url, { headers: this.getHeaders() });
+  }
 }

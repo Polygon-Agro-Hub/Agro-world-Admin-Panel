@@ -52,14 +52,20 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
   methodOptions = [
     { label: 'Delivery', value: 'delivery' },
     { label: 'Pickup', value: 'pickup' },
+    { label: 'Out For Delivery', value: 'Out For Delivery' },
+
   ];
 
   statusOptions = [
-    { label: 'Assigned', value: 'Ordered' },
     { label: 'Delivered', value: 'Delivered' },
-   
+    { label: 'On the way', value: 'On the way' },
+    { label: 'Assigned', value: 'Ordered' },
+    { label: 'Out For Delivery', value: 'Out For Delivery' },
     { label: 'Picked Up', value: 'Picked Up' },
     { label: 'Processing', value: 'Processing' },
+    { label: 'Cancelled', value: 'Cancelled' },
+    { label: 'Ready to Pickup', value: 'Ready to Pickup' },
+    { label: 'Failed', value: 'Failed' },
   ];
 
   constructor(

@@ -124,7 +124,7 @@ export class DistributionViewCompanyComponent implements OnInit {
   deleteDistributionHead(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "Do you really want to delete this center head?",
+      text: "Do you really want to delete this centre head?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

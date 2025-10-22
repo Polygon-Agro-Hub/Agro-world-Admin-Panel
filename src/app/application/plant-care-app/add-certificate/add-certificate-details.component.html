@@ -20,7 +20,7 @@
           for="logo"
           class="block text-sm font-medium text-textLight dark:text-textDark"
         >
-          Certificate Logo
+          Add Logo *
         </label>
 
         <!-- Upload Button -->
@@ -64,6 +64,15 @@
       <!-- Validation error -->
       <div *ngIf="logoError" class="text-red-500 text-sm mt-2">
         {{ logoError }}
+      </div>
+      <div
+        *ngIf="
+          certificateForm.get('logo')?.invalid &&
+          certificateForm.get('logo')?.touched
+        "
+        class="text-red-500 text-sm mt-2"
+      >
+        Logo is required
       </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -115,7 +115,7 @@ export const navbarData = [
   {
     RouterLink: 'market',
     icon: 'fa-solid fa-shop',
-    label: 'Market Place',
+    label: 'GoviMart',
     expanded: false,
     children: [
       {

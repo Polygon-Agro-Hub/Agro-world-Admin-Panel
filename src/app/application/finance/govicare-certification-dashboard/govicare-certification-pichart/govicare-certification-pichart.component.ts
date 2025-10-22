@@ -61,7 +61,7 @@ export class GovicareCertificationPichartComponent
     this.chart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['For Crop', 'For Farm', 'For Farm Cluster'],
+        labels: ['For Crop', 'For Farm', 'For Farmer Cluster'],
         datasets: [
           {
             data: [cropCount, farmCount, farmClusterCount],

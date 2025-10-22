@@ -2071,6 +2071,77 @@ private showErrorAndRedirect(message: string): void {
     this.jobRoleTouched = true;
   }
 
+  resetPassword() {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to reset the Field Officer password. This action cannot be undone.',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, reset password!',
+        cancelButtonText: 'Cancel',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+          cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.isLoading = true;
+  
+          // Use the component's known id property (itemId) or fallback to personalData.id
+          this.stakeHolderSrv.changeInspectorStatus(this.itemId || this.personalData.id, 'Approved').subscribe(
+            (res) => {
+              this.isLoading = false;
+              if (res.status) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success!',
+                  text: 'The Field Officer password reset successfully.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+                // Reload the currently loaded field officer data
+                this.loadFieldOfficerData(this.itemId || this.personalData.id);
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'Something went wrong. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+              }
+            },
+            () => {
+              this.isLoading = false;
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while resetting password. Please try again.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+            }
+          );
+        }
+      });
+    }
+
 }
 
 class Personal {

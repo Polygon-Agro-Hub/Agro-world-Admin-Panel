@@ -106,6 +106,14 @@ export class ViewWholesaleCustomersComponent implements OnInit {
       this.searchText = this.searchText.trimStart();
     }
   }
+
+checkLeadingSpace(event: any): boolean {
+  if (!this.searchText || this.searchText.length === 0) {
+    event.preventDefault();
+    return false;
+  }
+  return true;
+}
 }
 
 class Customers {

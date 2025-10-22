@@ -108,6 +108,27 @@
           </div>
 
           <div class="md:col-span-2 mt-3" style="width: 100%;">
+            <div class="mb-6">
+            <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Special Notes *
+            </label>
+            <textarea 
+    id="specialNotes" 
+    name="specialNotes" 
+    formControlName="specialNotes" 
+    rows="4"
+    placeholder="Enter any special notes about this crop..."
+    (input)="onTextareaInput($event)"
+    (blur)="capitalizeTextarea()"
+    class="capitalize-first-letter mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack resize-vertical"
+    [class.border-red-500]="cropForm.get('specialNotes')?.invalid && (cropForm.get('specialNotes')?.dirty || cropForm.get('specialNotes')?.touched)">
+  </textarea>
+            <div
+              *ngIf="cropForm.get('specialNotes')?.invalid && (cropForm.get('specialNotes')?.dirty || cropForm.get('specialNotes')?.touched)"
+              class="text-red-500 text-sm mt-1 mb-6">
+              Please enter valid special notes
+            </div>
+            </div>
             <label for="suitableAreas" class="block text-sm font-medium text-textLight dark:text-textDark">
               Suitable Areas *
             </label>
@@ -210,6 +231,28 @@
           </div>
 
           <div class="md:col-span-2 my-3 w-full">
+            <div class="mb-6">
+            <label for="specialNotes" class="block text-sm font-medium text-textLight dark:text-textDark">
+              Special Notes *
+            </label>
+            <textarea 
+  id="specialNotes" 
+  name="specialNotes" 
+  formControlName="specialNotes" 
+  rows="4"
+  placeholder="Enter any special notes about this crop..."
+  (keydown)="blockStartingSpace($event)"
+  (blur)="capitalizeFirstLetter($event, 'specialNotes')"
+  (input)="trimStartingSpaces($event, 'specialNotes')"
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack resize-vertical "
+  [ngClass]="{'border-red-500': cropForm.get('specialNotes')?.invalid && (cropForm.get('specialNotes')?.dirty || cropForm.get('specialNotes')?.touched)}">
+</textarea>
+            <div
+              *ngIf="cropForm.get('specialNotes')?.invalid && (cropForm.get('specialNotes')?.dirty || cropForm.get('specialNotes')?.touched)"
+              class="text-red-500 text-sm mt-1 mb-6">
+              Please enter valid special notes
+            </div>
+            </div>
             <label for="suitableAreas" class="block text-sm font-medium text-textLight dark:text-textDark">
               Suitable Areas *
             </label>

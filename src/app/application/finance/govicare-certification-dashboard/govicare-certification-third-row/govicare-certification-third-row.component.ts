@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { RecentPayment } from '../../../../services/plant-care/plantcare-users.service';
+import { CertificatePayment } from '../../../../services/finance/finance.service';
 
 @Component({
   selector: 'app-govicare-certification-third-row',
@@ -10,7 +10,7 @@ import { RecentPayment } from '../../../../services/plant-care/plantcare-users.s
   styleUrl: './govicare-certification-third-row.component.css'
 })
 export class GovicareCertificationThirdRowComponent {
-  @Input() recentPayments: RecentPayment[] = [];
+  @Input() recentPayments: CertificatePayment[] = [];
 
   formatDate(dateTime: string): string {
     const date = new Date(dateTime);

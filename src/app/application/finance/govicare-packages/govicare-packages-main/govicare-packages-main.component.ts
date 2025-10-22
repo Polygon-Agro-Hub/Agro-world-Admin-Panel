@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { GovicarePackagesFirstRowComponent } from '../govicare-packages-first-row/govicare-packages-first-row.component';
 import { GovicareAreaChartComponent } from '../govicare-area-chart/govicare-area-chart.component';
@@ -25,7 +25,7 @@ export class GovicarePackagesMainComponent implements OnInit {
   isLoading: boolean = false;
   dashboardData: DashboardData | null = null;
 
-  constructor(private FinanceService: FinanceService) {}
+  constructor(@Inject(FinanceService) private financeService: FinanceService) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -33,7 +33,7 @@ export class GovicarePackagesMainComponent implements OnInit {
 
   loadDashboardData(): void {
     this.isLoading = true;
-    this.FinanceService.getDashboardData().subscribe({
+    this.financeService.getDashboardData().subscribe({
       next: (response) => {
         if (response.status) {
           this.dashboardData = response.data;

@@ -12,10 +12,14 @@
   </div>
   <div class="flex flex-row justify-between items-center gap-6 my-10">
     <div class="h-auto w-[65%]">
-      <app-govicare-certification-area-chart />
+      <app-govicare-certification-area-chart 
+        [monthlyStats]="dashboardData.monthlyStatistics"
+      />
     </div>
     <div class="h-auto w-[35%]">
-      <app-govicare-certification-pichart />
+      <app-govicare-certification-pichart 
+        [enrollments]="dashboardData.enrollmentBreakdown"
+      />
     </div>
   </div>
   <div class="my-10">

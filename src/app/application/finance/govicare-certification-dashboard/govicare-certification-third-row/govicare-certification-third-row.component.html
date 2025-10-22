@@ -48,7 +48,7 @@
             {{ payment.farmerName }}
           </td>
           <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-            {{ payment.packagePeriod }}
+            {{ payment.validityPeriod }}
           </td>
           <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
             {{ payment.amount }}
@@ -56,10 +56,11 @@
           <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
             {{ payment.dateTime }}
           </td>
+
         </tr>
         <tr *ngIf="recentPayments.length === 0">
           <td
-            colspan="5"
+            colspan="7"
             class="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
           >
             No recent payments found

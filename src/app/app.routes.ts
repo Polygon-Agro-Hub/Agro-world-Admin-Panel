@@ -219,6 +219,7 @@ import { GovilinkServicesDashboardComponent } from './application/finance/govili
 import { GovicareCertificationMainComponent } from './application/finance/govicare-certification-dashboard/govicare-certification-main/govicare-certification-main.component';
 import { ViewAllCertificatePaymentsComponent } from './application/finance/govicare-certification-dashboard/view-all-certificate-payments/view-all-certificate-payments.component';
 import { CommissionRangeComponent } from './application/finance/commission-range/commission-range.component';
+import { ViewAllServicePaymentsComponent } from './application/finance/view-all-service-payments/view-all-service-payments.component';
 
 export const routes: Routes = [
   {
@@ -535,13 +536,18 @@ export const routes: Routes = [
               {
                 path: 'govicare-certifications-dashboard',
                 component: GovicareCertificationMainComponent,
-              },              {
+              },              
+              {
                 path: 'view-all-certificate-payments',
                 component: ViewAllCertificatePaymentsComponent,
               },
               {
                 path: 'commission-range',
                 component: CommissionRangeComponent,
+              },
+              {
+                path: 'view-all-service-payments',
+                component: ViewAllServicePaymentsComponent,
               },
             ],
           },

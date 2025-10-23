@@ -48,7 +48,8 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   hasData: boolean = false;
   isFilterApplied: boolean = false; // New flag to track if filtering is applied
 
-   maxDate: Date = new Date();
+  maxDate: Date = new Date();
+  minDate: Date = new Date();
 
   constructor(
     private router: Router,

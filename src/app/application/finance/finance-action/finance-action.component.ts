@@ -29,4 +29,8 @@ export class FinanceActionComponent {
   govicareCertificates(): void {
     this.router.navigate(['/finance/action/govicare-certifications-dashboard']);
   }
+
+  commissionRangeNavigation(): void {
+    this.router.navigate(['/finance/action/commission-range']);
+  }
 }

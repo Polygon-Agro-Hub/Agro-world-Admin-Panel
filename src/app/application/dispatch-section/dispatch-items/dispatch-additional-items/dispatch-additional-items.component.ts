@@ -30,6 +30,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
 
   isLastOrder: boolean = false;
   isAllPacked: boolean = false;
+  isShouldAllblock:boolean = true;
 
 
   ngOnInit(): void {
@@ -58,6 +59,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
         this.packageArr = res.packageData;
         this.orderDetails = res.orderDetails
         // this.productArr = res.marketplaceItems
+        this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
         this.isLoading = false
       }
     )

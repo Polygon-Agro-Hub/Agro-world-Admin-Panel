@@ -15,6 +15,7 @@ import {
   MonthlyStatistic,
 } from '../../../services/finance/finance.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { Router } from '@angular/router';
 
 interface ChartPoint {
   x: number;
@@ -66,7 +67,8 @@ export class GovilinkServicesDashboardComponent
 
   constructor(
     private location: Location,
-    private financeService: FinanceService
+    private financeService: FinanceService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -426,5 +428,9 @@ export class GovilinkServicesDashboardComponent
         text: `${this.incomeChangePercent}%`,
       };
     }
+  }
+
+  ViewAll(): void {
+    this.router.navigate(['/finance/action/view-all-service-payments']);
   }
 }

@@ -4,21 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CalendarModule } from 'primeng/calendar';
-import { FinanceService } from '../../../services/finance/finance.service';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { FinanceService } from '../../../../services/finance/finance.service';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
-interface PackagePayment {
-  transactionId: number;
+interface CertificatePayment {
+  transactionId: string;
   farmerName: string;
-  phoneNumber: string;
-  packagePeriod: string;
   amount: string;
   dateTime: string;
+  expireDate: string;
+  validityPeriod: string;
   sortDate: string;
 }
 
 @Component({
-  selector: 'app-view-all-package-payments',
+  selector: 'app-view-all-certificate-payments',
   standalone: true,
   imports: [
     CommonModule,
@@ -27,11 +27,11 @@ interface PackagePayment {
     LoadingSpinnerComponent,
     CalendarModule
   ],
-  templateUrl: './view-all-package-payments.component.html',
-  styleUrl: './view-all-package-payments.component.css'
+  templateUrl: './view-all-certificate-payments.component.html',
+  styleUrl: './view-all-certificate-payments.component.css'
 })
-export class ViewAllPackagePaymentsComponent implements OnInit {
-  packagePayments: PackagePayment[] = [];
+export class ViewAllCertificatePaymentsComponent implements OnInit {
+  certificatePayments: CertificatePayment[] = [];
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
@@ -50,7 +50,7 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
 
   ngOnInit() {
     // Keep dates blank by default - don't fetch until user applies filter
-    // Don't call fetchPackagePayments() here
+    // Don't call fetchCertificatePayments() here
   }
 
   // Called when fromDate changes
@@ -75,14 +75,14 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
     }
   }
 
-  fetchPackagePayments() {
+  fetchCertificatePayments() {
     this.isLoading = true;
     
     // Convert Date objects to string format for API
     const fromDateStr = this.fromDate ? this.formatDate(this.fromDate) : '';
     const toDateStr = this.toDate ? this.formatDate(this.toDate) : '';
     
-    this.financeService.getAllPackagePayments(
+    this.financeService.getAllCertificatePayments(
       this.page,
       this.itemsPerPage,
       this.searchTerm,
@@ -91,13 +91,13 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
     ).subscribe(
       (response) => {
         this.isLoading = false;
-        this.packagePayments = response.items;
+        this.certificatePayments = response.items;
         this.totalItems = response.total;
         this.hasData = response.total > 0;
       },
       (error) => {
         this.isLoading = false;
-        console.error('Error fetching package payments:', error);
+        console.error('Error fetching certificate payments:', error);
         this.hasData = false;
       }
     );
@@ -112,27 +112,27 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchPackagePayments();
+    this.fetchCertificatePayments();
   }
 
   onSearch() {
     this.searchTerm = this.searchTerm?.trim() || '';
     this.page = 1; // Reset to first page on search
-    this.fetchPackagePayments();
+    this.fetchCertificatePayments();
   }
 
   offSearch() {
     this.searchTerm = '';
     this.page = 1;
-    this.fetchPackagePayments();
+    this.fetchCertificatePayments();
   }
 
   applyDateFilter() {
     this.page = 1; // Reset to first page on filter
-    this.fetchPackagePayments();
+    this.fetchCertificatePayments();
   }
 
   back(): void {
-    this.router.navigate(['/finance/action/govicare-packages']);
+    this.router.navigate(['/finance/action/govicare-certifications-dashboard']);
   }
 }

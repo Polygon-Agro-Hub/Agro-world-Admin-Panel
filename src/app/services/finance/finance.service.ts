@@ -68,6 +68,22 @@ export interface PackagePaymentsResponse {
   total: number;
 }
 
+// Certificate Payments interfaces
+export interface CertificatePayment {
+  transactionId: string;
+  farmerName: string;
+  amount: string;
+  dateTime: string;
+  expireDate: string;
+  validityPeriod: string;
+  sortDate: string;
+}
+
+export interface CertificatePaymentsResponse {
+  items: CertificatePayment[];
+  total: number;
+}
+
 export interface GoviJobDashboardStatistics {
   totalIncome: number;
   relativeIncomeValue: number;
@@ -118,17 +134,6 @@ export interface CertificateStatistics {
   incomeStatus: string;
 }
 
-export interface CertificatePayment {
-  transactionId: string;
-  farmerName: string;
-  certificateName: string;
-  payType: string;
-  amount: string;
-  dateTime: string;
-  expiryDate: string;
-  validityPeriod: string;
-}
-
 export interface CertificateEnrollmentBreakdown {
   forCrop: number;
   forFarm: number;
@@ -172,6 +177,7 @@ export class FinanceService {
     });
   }
 
+  // Package Payments
   getAllPackagePayments(
     page: number = 1,
     limit: number = 10,
@@ -202,6 +208,38 @@ export class FinanceService {
     });
   }
 
+  // Certificate Payments
+  getAllCertificatePayments(
+    page: number = 1,
+    limit: number = 10,
+    search: string = '',
+    fromDate: string = '',
+    toDate: string = ''
+  ): Observable<CertificatePaymentsResponse> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    if (fromDate) {
+      params = params.set('fromDate', fromDate);
+    }
+
+    if (toDate) {
+      params = params.set('toDate', toDate);
+    }
+
+    const url = `${this.apiUrl}finance/certificate-payments`;
+    return this.http.get<CertificatePaymentsResponse>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
+  }
+
+  // Certificate Dashboard
   getCertificateDashboardData(): Observable<CertificateDashboardResponse> {
     const url = `${this.apiUrl}finance/certificate-dashboard`;
     return this.http.get<CertificateDashboardResponse>(url, {
@@ -209,7 +247,7 @@ export class FinanceService {
     });
   }
 
-  // Get govi job dashboard data
+  // Govi Job Dashboard
   getGoviJobDashboardData(): Observable<GoviJobDashboardResponse> {
     const url = `${this.apiUrl}finance/govi-job-dashboard-data`;
     return this.http.get<GoviJobDashboardResponse>(url, {

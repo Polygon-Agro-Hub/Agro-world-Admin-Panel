@@ -13,42 +13,60 @@
 
   <!-- Date Filter Section -->
   <div class="flex items-center gap-4 w-full">
-    <div class="flex items-center gap-2 flex-1">
-      <label class="text-textLight dark:text-textDark whitespace-nowrap"
+    <div class="flex items-center gap-2 w-full">
+      <label class="text-textLight dark:text-textDark whitespace-nowrap w-16"
         >From :</label
       >
-      <p-calendar
-        [(ngModel)]="fromDate"
-        [showIcon]="true"
-        dateFormat="yy-mm-dd"
-        [showButtonBar]="true"
-        inputId="fromDate"
-        styleClass="w-full"
-        [class]="
-          'border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-textLight dark:text-textDark w-full py-2 px-2'
-        "
-        [baseZIndex]="10000"
-      >
-      </p-calendar>
+      <div class="flex-1 w-full">
+        <p-calendar
+          [(ngModel)]="fromDate"
+          [showIcon]="true"
+          dateFormat="yy-mm-dd"
+          [showButtonBar]="true"
+          [showClear]="false"
+          inputId="fromDate"
+          iconDisplay="input"
+          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+          inputStyleClass="p-2 border cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12 border-gray-300 dark:border-gray-600"
+          [baseZIndex]="10000"
+          styleClass="w-full"
+        >
+        </p-calendar>
+      </div>
     </div>
 
-    <div class="flex items-center gap-2 flex-1">
-      <label class="text-textLight dark:text-textDark whitespace-nowrap"
+    <div class="flex items-center gap-2 w-full">
+      <label class="text-textLight dark:text-textDark whitespace-nowrap w-16"
         >To :</label
       >
-      <p-calendar
-        [(ngModel)]="toDate"
-        [showIcon]="true"
-        dateFormat="yy-mm-dd"
-        [showButtonBar]="true"
-        inputId="toDate"
-        styleClass="w-full"
-        [class]="
-          'border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-textLight dark:text-textDark w-full py-2 px-2'
-        "
-        [baseZIndex]="10000"
-      >
-      </p-calendar>
+      <div class="flex-1 w-full">
+        <p-calendar
+          [(ngModel)]="toDate"
+          [showIcon]="true"
+          dateFormat="yy-mm-dd"
+          [showButtonBar]="true"
+          [showClear]="false"
+          inputId="toDate"
+          iconDisplay="input"
+          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+          inputStyleClass="p-2 border cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12 border-gray-300 dark:border-gray-600"
+          [baseZIndex]="10000"
+          styleClass="w-full"
+        >
+        </p-calendar>
+      </div>
     </div>
 
     <button

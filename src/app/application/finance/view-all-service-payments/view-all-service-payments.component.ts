@@ -50,7 +50,7 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   constructor(
     private router: Router,
     private financeService: FinanceService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchServicePayments();
@@ -66,11 +66,11 @@ export class ViewAllServicePaymentsComponent implements OnInit {
 
   fetchServicePayments() {
     this.isLoading = true;
-    
+
     // Convert Date objects to string format for API
     const fromDateString = this.formatDateForAPI(this.fromDate);
     const toDateString = this.formatDateForAPI(this.toDate);
-    
+
     this.financeService.getAllServicePayments(
       this.page,
       this.itemsPerPage,

@@ -6,6 +6,9 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { Router } from '@angular/router';
 import { FinanceService } from '../../../services/finance/finance.service';
 
+// Import PrimeNG modules
+import { CalendarModule } from 'primeng/calendar';
+
 interface ServicePayment {
   transactionId: number;
   farmerName: string;
@@ -27,7 +30,8 @@ interface ServicePaymentsResponse {
     CommonModule,
     FormsModule,
     NgxPaginationModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    CalendarModule // Add CalendarModule to imports
   ],
   templateUrl: './view-all-service-payments.component.html',
   styleUrl: './view-all-service-payments.component.css'
@@ -38,8 +42,8 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   searchTerm: string = '';
-  fromDate: string = '';
-  toDate: string = '';
+  fromDate: Date | null = null; // Changed from string to Date | null
+  toDate: Date | null = null; // Changed from string to Date | null
   isLoading: boolean = false;
   hasData: boolean = false;
 
@@ -49,12 +53,11 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Removed default date setting - date pickers will be empty initially
     this.fetchServicePayments();
   }
 
-  // You can keep this method for future use if needed elsewhere
-  formatDate(date: Date): string {
+  formatDateForAPI(date: Date | null): string {
+    if (!date) return '';
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -64,12 +67,16 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   fetchServicePayments() {
     this.isLoading = true;
     
+    // Convert Date objects to string format for API
+    const fromDateString = this.formatDateForAPI(this.fromDate);
+    const toDateString = this.formatDateForAPI(this.toDate);
+    
     this.financeService.getAllServicePayments(
       this.page,
       this.itemsPerPage,
       this.searchTerm,
-      this.fromDate,
-      this.toDate
+      fromDateString, // Pass formatted string
+      toDateString // Pass formatted string
     ).subscribe(
       (response: ServicePaymentsResponse) => {
         this.isLoading = false;

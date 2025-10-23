@@ -31,7 +31,7 @@ interface ServicePaymentsResponse {
     FormsModule,
     NgxPaginationModule,
     LoadingSpinnerComponent,
-    CalendarModule // Add CalendarModule to imports
+    CalendarModule
   ],
   templateUrl: './view-all-service-payments.component.html',
   styleUrl: './view-all-service-payments.component.css'
@@ -42,10 +42,11 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   searchTerm: string = '';
-  fromDate: Date | null = null; // Changed from string to Date | null
-  toDate: Date | null = null; // Changed from string to Date | null
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
   isLoading: boolean = false;
   hasData: boolean = false;
+  isFilterApplied: boolean = false; // New flag to track if filtering is applied
 
   constructor(
     private router: Router,
@@ -53,7 +54,9 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.fetchServicePayments();
+    // Don't fetch data on init - wait for user to apply filters
+    this.hasData = false;
+    this.isFilterApplied = false;
   }
 
   formatDateForAPI(date: Date | null): string {
@@ -75,19 +78,21 @@ export class ViewAllServicePaymentsComponent implements OnInit {
       this.page,
       this.itemsPerPage,
       this.searchTerm,
-      fromDateString, // Pass formatted string
-      toDateString // Pass formatted string
+      fromDateString,
+      toDateString
     ).subscribe(
       (response: ServicePaymentsResponse) => {
         this.isLoading = false;
         this.servicePayments = response.items;
         this.totalItems = response.total;
         this.hasData = response.total > 0;
+        this.isFilterApplied = true; // Set flag when data is fetched
       },
       (error) => {
         this.isLoading = false;
         console.error('Error fetching service payments:', error);
         this.hasData = false;
+        this.isFilterApplied = true; // Still set flag even on error
       }
     );
   }
@@ -106,12 +111,40 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   offSearch() {
     this.searchTerm = '';
     this.page = 1;
-    this.fetchServicePayments();
+    // If no other filters are applied, reset to default state
+    if (!this.fromDate && !this.toDate) {
+      this.hasData = false;
+      this.isFilterApplied = false;
+      this.servicePayments = [];
+      this.totalItems = 0;
+    } else {
+      this.fetchServicePayments();
+    }
   }
 
   applyDateFilter() {
     this.page = 1;
-    this.fetchServicePayments();
+    // Only fetch data if at least one date is selected
+    if (this.fromDate || this.toDate) {
+      this.fetchServicePayments();
+    } else {
+      // If both dates are cleared, reset to default state
+      this.hasData = false;
+      this.isFilterApplied = false;
+      this.servicePayments = [];
+      this.totalItems = 0;
+    }
+  }
+
+  clearAllFilters() {
+    this.searchTerm = '';
+    this.fromDate = null;
+    this.toDate = null;
+    this.page = 1;
+    this.hasData = false;
+    this.isFilterApplied = false;
+    this.servicePayments = [];
+    this.totalItems = 0;
   }
 
   back(): void {

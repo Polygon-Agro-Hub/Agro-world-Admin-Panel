@@ -141,7 +141,7 @@ export interface CertificateDashboardData {
   enrollmentBreakdown: CertificateEnrollmentBreakdown;
   monthlyStatistics: MonthlyStatistic[];
   areaChartData: AreaChartData;
-  dashboardData:any
+  dashboardData: any;
 }
 
 export interface CertificateDashboardResponse {
@@ -201,9 +201,19 @@ export class FinanceService {
       params: params,
     });
   }
-  
-   getCertificateDashboardData(): Observable<CertificateDashboardResponse> {
+
+  getCertificateDashboardData(): Observable<CertificateDashboardResponse> {
     const url = `${this.apiUrl}finance/certificate-dashboard`;
-    return this.http.get<CertificateDashboardResponse>(url, { headers: this.getHeaders() });
+    return this.http.get<CertificateDashboardResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // Get govi job dashboard data
+  getGoviJobDashboardData(): Observable<GoviJobDashboardResponse> {
+    const url = `${this.apiUrl}finance/govi-job-dashboard-data`;
+    return this.http.get<GoviJobDashboardResponse>(url, {
+      headers: this.getHeaders(),
+    });
   }
 }

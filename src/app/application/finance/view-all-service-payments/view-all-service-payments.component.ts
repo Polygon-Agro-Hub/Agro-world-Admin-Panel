@@ -1,12 +1,113 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { Router } from '@angular/router';
+import { FinanceService } from '../../../services/finance/finance.service';
+
+interface ServicePayment {
+  transactionId: number;
+  farmerName: string;
+  serviceName: string;
+  amount: string;
+  dateTime: string;
+  sortDate: string;
+}
+
+interface ServicePaymentsResponse {
+  items: ServicePayment[];
+  total: number;
+}
 
 @Component({
   selector: 'app-view-all-service-payments',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgxPaginationModule,
+    LoadingSpinnerComponent
+  ],
   templateUrl: './view-all-service-payments.component.html',
   styleUrl: './view-all-service-payments.component.css'
 })
-export class ViewAllServicePaymentsComponent {
+export class ViewAllServicePaymentsComponent implements OnInit {
+  servicePayments: ServicePayment[] = [];
+  page: number = 1;
+  totalItems: number = 0;
+  itemsPerPage: number = 10;
+  searchTerm: string = '';
+  fromDate: string = '';
+  toDate: string = '';
+  isLoading: boolean = false;
+  hasData: boolean = false;
 
+  constructor(
+    private router: Router,
+    private financeService: FinanceService
+  ) {}
+
+  ngOnInit() {
+    // Removed default date setting - date pickers will be empty initially
+    this.fetchServicePayments();
+  }
+
+  // You can keep this method for future use if needed elsewhere
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  fetchServicePayments() {
+    this.isLoading = true;
+    
+    this.financeService.getAllServicePayments(
+      this.page,
+      this.itemsPerPage,
+      this.searchTerm,
+      this.fromDate,
+      this.toDate
+    ).subscribe(
+      (response: ServicePaymentsResponse) => {
+        this.isLoading = false;
+        this.servicePayments = response.items;
+        this.totalItems = response.total;
+        this.hasData = response.total > 0;
+      },
+      (error) => {
+        this.isLoading = false;
+        console.error('Error fetching service payments:', error);
+        this.hasData = false;
+      }
+    );
+  }
+
+  onPageChange(event: number) {
+    this.page = event;
+    this.fetchServicePayments();
+  }
+
+  onSearch() {
+    this.searchTerm = this.searchTerm?.trim() || '';
+    this.page = 1;
+    this.fetchServicePayments();
+  }
+
+  offSearch() {
+    this.searchTerm = '';
+    this.page = 1;
+    this.fetchServicePayments();
+  }
+
+  applyDateFilter() {
+    this.page = 1;
+    this.fetchServicePayments();
+  }
+
+  back(): void {
+    this.router.navigate(['/finance/action/govilink-services-dashboard']);
+  }
 }

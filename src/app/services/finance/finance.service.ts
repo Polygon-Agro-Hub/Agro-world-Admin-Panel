@@ -68,6 +68,11 @@ export interface PackagePaymentsResponse {
   total: number;
 }
 
+export interface ServicePaymentsResponse {
+  items: ServicePayment[];
+  total: number;
+}
+
 export interface GoviJobDashboardStatistics {
   totalIncome: number;
   relativeIncomeValue: number;
@@ -149,6 +154,16 @@ export interface CertificateDashboardResponse {
   data: CertificateDashboardData;
 }
 
+export interface ServicePayment {
+  transactionId: number;
+  farmerName: string;
+  phoneNumber: string;
+  serviceName: string;
+  amount: string;
+  dateTime: string;
+  sortDate: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -216,4 +231,34 @@ export class FinanceService {
       headers: this.getHeaders(),
     });
   }
+
+  getAllServicePayments(
+  page: number = 1,
+  limit: number = 10,
+  search: string = '',
+  fromDate: string = '',
+  toDate: string = ''
+): Observable<ServicePaymentsResponse> {
+  let params = new HttpParams()
+    .set('page', page.toString())
+    .set('limit', limit.toString());
+
+  if (search && search.trim()) {
+    params = params.set('search', search.trim());
+  }
+
+  if (fromDate) {
+    params = params.set('fromDate', fromDate);
+  }
+
+  if (toDate) {
+    params = params.set('toDate', toDate);
+  }
+
+  const url = `${this.apiUrl}finance/service-payments`;
+  return this.http.get<ServicePaymentsResponse>(url, {
+    headers: this.getHeaders(),
+    params: params,
+  });
+}
 }

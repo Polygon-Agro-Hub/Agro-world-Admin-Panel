@@ -4,6 +4,52 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { TokenService } from '../token/services/token.service';
 
+// Agent Commission Interfaces
+export interface AgentCommission {
+  id: number;
+  slot: number;
+  minRange: number;
+  maxRange: number;
+  value: number;
+  modifyDate?: string;
+  modifyByName?: string;
+  modifyByEmail?: string;
+  modifyBy?: number;
+  createdAt?: string;
+}
+
+export interface AgentCommissionResponse {
+  status: boolean;
+  message: string;
+  data: {
+    items: AgentCommission[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface SingleAgentCommissionResponse {
+  status: boolean;
+  message: string;
+  data: AgentCommission;
+}
+
+export interface CreateAgentCommissionRequest {
+  minRange: number;
+  maxRange: number;
+  value: number;
+  modifyBy?: number;
+}
+
+export interface UpdateAgentCommissionRequest {
+  minRange?: number;
+  maxRange?: number;
+  value?: number;
+  modifyBy?: number;
+}
+
 // Dashboard interfaces
 export interface DashboardStatistics {
   totalUsers: number;
@@ -251,6 +297,68 @@ export class FinanceService {
   getGoviJobDashboardData(): Observable<GoviJobDashboardResponse> {
     const url = `${this.apiUrl}finance/govi-job-dashboard-data`;
     return this.http.get<GoviJobDashboardResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // Agent Commission CRUD Operations
+  getAllAgentCommissions(
+    page: number = 1,
+    limit: number = 10,
+    search: string = ''
+  ): Observable<AgentCommissionResponse> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/get-all-agent-commissions`;
+    return this.http.get<AgentCommissionResponse>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
+  }
+
+  getAgentCommissionById(
+    id: number
+  ): Observable<SingleAgentCommissionResponse> {
+    const url = `${this.apiUrl}finance/get-agent-commission/${id}`;
+    return this.http.get<SingleAgentCommissionResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  createAgentCommission(
+    data: CreateAgentCommissionRequest
+  ): Observable<SingleAgentCommissionResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+    const url = `${this.apiUrl}finance/create-agent-commission`;
+    return this.http.post<SingleAgentCommissionResponse>(url, data, {
+      headers,
+    });
+  }
+
+  updateAgentCommission(
+    id: number,
+    data: any
+  ): Observable<SingleAgentCommissionResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+    const url = `${this.apiUrl}finance/update-agent-commission/${id}`;
+    return this.http.put<SingleAgentCommissionResponse>(url, data, {
+      headers,
+    });
+  }
+
+  deleteAgentCommission(id: number): Observable<any> {
+    const url = `${this.apiUrl}finance/delete-agent-commission/${id}`;
+    return this.http.delete(url, {
       headers: this.getHeaders(),
     });
   }

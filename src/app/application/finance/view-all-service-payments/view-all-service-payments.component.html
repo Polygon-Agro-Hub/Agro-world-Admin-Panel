@@ -38,6 +38,7 @@
           inputStyleClass="p-2 border cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12 border-gray-300 dark:border-gray-600"
           [baseZIndex]="10000"
           styleClass="w-full"
+          (onSelect)="onFromDateSelect()"
         >
         </p-calendar>
       </div>
@@ -55,6 +56,7 @@
           [showButtonBar]="true"
           [showClear]="false"
           [minDate]="minDate"
+          [disabled]="!fromDate" 
           inputId="toDate"
           iconDisplay="input"
           placeholder="--Select Date--"
@@ -75,7 +77,8 @@
 
     <button
       (click)="applyDateFilter()"
-      class="bg-[#3980C0] text-white px-8 py-2 rounded-md hover:bg-[#2c6ba0] transition duration-200"
+      [disabled]="!fromDate" 
+      class="bg-[#3980C0] text-white px-8 py-2 rounded-md hover:bg-[#2c6ba0] transition duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
     >
       Go
     </button>

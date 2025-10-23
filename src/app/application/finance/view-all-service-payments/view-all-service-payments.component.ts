@@ -62,6 +62,16 @@ export class ViewAllServicePaymentsComponent implements OnInit {
     this.isFilterApplied = false;
   }
 
+  onFromDateSelect() {
+    // When From date is selected, set minDate for To field
+    if (this.fromDate) {
+      this.minDate = new Date(this.fromDate);
+    } else {
+      this.minDate = new Date();
+      this.toDate = null; // Reset To date if From date is cleared
+    }
+  }
+
   formatDateForAPI(date: Date | null): string {
     if (!date) return '';
     const year = date.getFullYear();

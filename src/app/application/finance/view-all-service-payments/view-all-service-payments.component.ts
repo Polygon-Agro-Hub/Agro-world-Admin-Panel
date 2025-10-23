@@ -46,7 +46,7 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   toDate: Date | null = null;
   isLoading: boolean = false;
   hasData: boolean = false;
-  isFilterApplied: boolean = false; // New flag to track if filtering is applied
+  isFilterApplied: boolean = false;
 
   maxDate: Date = new Date();
   minDate: Date = new Date();
@@ -57,18 +57,16 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Don't fetch data on init - wait for user to apply filters
     this.hasData = false;
     this.isFilterApplied = false;
   }
 
   onFromDateSelect() {
-    // When From date is selected, set minDate for To field
     if (this.fromDate) {
       this.minDate = new Date(this.fromDate);
     } else {
       this.minDate = new Date();
-      this.toDate = null; // Reset To date if From date is cleared
+      this.toDate = null;
     }
   }
 
@@ -80,10 +78,38 @@ export class ViewAllServicePaymentsComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  // New method to format date for display
+  formatDateTimeForDisplay(dateTimeString: string): string {
+    if (!dateTimeString) return '';
+    
+    const date = new Date(dateTimeString);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return dateTimeString; // Return original string if invalid date
+    }
+
+    // Format date part: 20 Sep, 2025
+    const day = date.getDate();
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+
+    // Format time part: 07:39AM
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const formattedHours = String(hours).padStart(2, '0');
+
+    return `${day} ${month}, ${year} ${formattedHours}:${minutes}${ampm}`;
+  }
+
   fetchServicePayments() {
     this.isLoading = true;
 
-    // Convert Date objects to string format for API
     const fromDateString = this.formatDateForAPI(this.fromDate);
     const toDateString = this.formatDateForAPI(this.toDate);
 
@@ -96,16 +122,22 @@ export class ViewAllServicePaymentsComponent implements OnInit {
     ).subscribe(
       (response: ServicePaymentsResponse) => {
         this.isLoading = false;
-        this.servicePayments = response.items;
+        
+        // Format the dateTime for each item before assigning
+        this.servicePayments = response.items.map(item => ({
+          ...item,
+          dateTime: this.formatDateTimeForDisplay(item.dateTime)
+        }));
+        
         this.totalItems = response.total;
         this.hasData = response.total > 0;
-        this.isFilterApplied = true; // Set flag when data is fetched
+        this.isFilterApplied = true;
       },
       (error) => {
         this.isLoading = false;
         console.error('Error fetching service payments:', error);
         this.hasData = false;
-        this.isFilterApplied = true; // Still set flag even on error
+        this.isFilterApplied = true;
       }
     );
   }
@@ -124,7 +156,6 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   offSearch() {
     this.searchTerm = '';
     this.page = 1;
-    // If no other filters are applied, reset to default state
     if (!this.fromDate && !this.toDate) {
       this.hasData = false;
       this.isFilterApplied = false;
@@ -137,11 +168,9 @@ export class ViewAllServicePaymentsComponent implements OnInit {
 
   applyDateFilter() {
     this.page = 1;
-    // Only fetch data if at least one date is selected
     if (this.fromDate || this.toDate) {
       this.fetchServicePayments();
     } else {
-      // If both dates are cleared, reset to default state
       this.hasData = false;
       this.isFilterApplied = false;
       this.servicePayments = [];

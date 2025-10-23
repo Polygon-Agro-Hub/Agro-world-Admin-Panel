@@ -212,9 +212,9 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
         this.personalData.lastNameTamil = officerData.lastNameTamil || '';
         this.personalData.contact1Code = officerData.phoneCode01 || '+94';
-        this.personalData.contact1 = officerData.phoneNumber01 || '';
+        this.personalData.contact1 = officerData.phoneNumber01 ;
         this.personalData.contact2Code = officerData.phoneCode02 || '+94';
-        this.personalData.contact2 = officerData.phoneNumber02 || '';
+        this.personalData.contact2 = officerData.phoneNumber02;
         this.personalData.nic = officerData.nic || '';
         this.personalData.email = officerData.email || '';
         this.personalData.houseNumber = officerData.houseNumber || '';
@@ -1183,9 +1183,9 @@ export class UpdateDistributionOfficerComponent {
         // Map phone number fields to backend expected names
         const payload = {
           ...this.personalData,
-          phoneNumber01: this.personalData.contact1 || '',
+          phoneNumber01: this.personalData.contact1 ,
           phoneCode01: this.personalData.contact1Code || '+94',
-          phoneNumber02: this.personalData.contact2 || '',
+          phoneNumber02: this.personalData.contact2,
           phoneCode02:
             this.personalData.contact2Code ||
             this.personalData.contact1Code ||

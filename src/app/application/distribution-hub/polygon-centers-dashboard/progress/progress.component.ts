@@ -73,7 +73,7 @@ export class ProgressComponent implements OnChanges {
     (res) => {
       this.targetArr = res.data;
       this.targetCount = res.data.length || 0;
-      this.hasData = this.targetCount === 0; // Update hasData based on results
+      this.hasData = this.targetCount > 0; // Update hasData based on results
     }
   )
 }

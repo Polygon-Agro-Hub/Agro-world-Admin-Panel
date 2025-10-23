@@ -15,8 +15,8 @@
         </div>
       </div>
     </div>
-    <div *ngIf="hasData" class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
-      <table class="min-w-full divide-y divide-gray-200">
+    <div  class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
+      <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -74,20 +74,12 @@
           </tr>
         </tbody>
       </table>
-      <div *ngIf="hasData" class="dark:bg-[#262f45]">
+      <!-- <div *ngIf="hasData" class="dark:bg-[#262f45]">
         <pagination-controls [responsive]="true" [previousLabel]="'Previous'" [nextLabel]="'Next'"
           [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
           [screenReaderCurrentLabel]="'Youre on page'">
         </pagination-controls>
-      </div>
-
-      <div *ngIf="hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
-        <p class="text-[#494949] my-6 dark:text-textDark">
-          --No Data Available--
-        </p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-      </div>
-    </div>
+      </div> -->
 
     <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
       <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>

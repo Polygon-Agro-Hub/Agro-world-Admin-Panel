@@ -22,9 +22,9 @@
       </div>
       <div
         class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
-        <input type="text" placeholder="Search..." title="Search By EMP ID, First Name / Last Name & Email" [(ngModel)]="searchText"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (input)="trimLeadingSpaces()"
-          (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" />
+        <input type="text" placeholder="Search..." title="Search By EMP ID, First Name / Last Name & Email"
+          [(ngModel)]="searchText" class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          (input)="trimLeadingSpaces()" (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" />
         <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -69,6 +69,9 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Mobile Number 02
             </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+              Last Modified By
+            </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Created At
             </th>
@@ -109,8 +112,7 @@
                       item.status === 'Approved',
                     'font-bold px-3 py-1 text-sm bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
-                  }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-center"
+                  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-center"
                   (click)="openPopup(item)">
                   {{ item.status }}
                 </span>
@@ -127,6 +129,9 @@
               <span *ngIf="item.phoneNumber02 != null && item.phoneNumber02 !== ''"
                 class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneCode02 + "" +
                 item.phoneNumber02 }}</span>
+            </td>
+            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.adminModify !== null ? item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.createdAtFormatted }}

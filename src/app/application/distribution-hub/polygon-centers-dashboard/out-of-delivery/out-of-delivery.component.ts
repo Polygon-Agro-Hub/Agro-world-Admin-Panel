@@ -118,7 +118,7 @@ export class OutOfDeliveryComponent implements OnChanges {
         this.orderArr = res.data || [];
         this.filteredOrders = [...this.orderArr];
         this.orderCount = this.filteredOrders.length;
-        this.hasData = this.filteredOrders.length === 0;
+        this.hasData = this.filteredOrders.length > 0;
         this.isLoading = false;
       },
       (error) => {

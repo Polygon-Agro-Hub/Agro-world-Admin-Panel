@@ -40,14 +40,15 @@
 
 
     <!-- Manager Dropdown -->
-    <div class="flex mt-4 align-middle justify-center items-center" *ngIf="selectedOfficer?.jobRole !== 'Distribution Centre Manager'">
+    <div class="flex mt-4 align-middle justify-center items-center"
+      *ngIf="selectedOfficer?.jobRole !== 'Distribution Centre Manager'">
       <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Manager</label>
 
       <div class="flex flex-col w-full ml-4">
         <p-dropdown name="selectedIrmId" [(ngModel)]="selectedIrmId" [options]="collectionCenterManagerNames"
-          optionLabel="labelName" optionValue="id" placeholder="Select a manager" [showClear]="false"
-          [required]="true" [filter]="true" filterBy="firstNameEnglish,lastNameEnglish"
-          filterPlaceholder="Search managers..." class="w-full" (onChange)="irmValidationError = false"
+          optionLabel="labelName" optionValue="id" placeholder="Select a manager" [showClear]="false" [required]="true"
+          [filter]="true" filterBy="firstNameEnglish,lastNameEnglish" filterPlaceholder="Search managers..."
+          class="w-full" (onChange)="irmValidationError = false"
           [ngClass]="{'border-red-500': irmValidationError, 'border-gray-300': !irmValidationError}">
         </p-dropdown>
 
@@ -255,6 +256,9 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               NIC
             </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
+              Last Modified By
+            </th>
             <th *ngIf="
                 permissionService.hasPermission('View individual collection officer') ||
                 tokenService.getUserDetails().role === '1'
@@ -303,8 +307,8 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.jobRole }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.regCode }} 
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
+              {{ item.regCode || '--'}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
@@ -356,8 +360,11 @@
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.phoneNumber01 }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.nic }}
+            </td>
+             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.adminModify !== null ?  item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
             </td>
 
             <td *ngIf="

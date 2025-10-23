@@ -118,6 +118,11 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 px-12 pb-5 min-w-[1650px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
+    <div class="flex items-center my-5">
+        <h2 class="text-xl font-normal text-textLight dark:text-textDark">
+          Center: {{Cname}}
+        </h2>
+      </div>
     <div class="flex justify-between items-center mb-8">
       <div *ngIf="!Cname" class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -127,7 +132,7 @@
 
       <div *ngIf="Cname" class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          {{Cname}} ({{ this.totalItems }})
+          All ({{ this.totalItems }})
         </h2>
       </div>
 
@@ -212,7 +217,7 @@
     <div *ngIf="hasData" class="w-full">
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
-          <tr>
+          <tr class="whitespace-nowrap">
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               No
             </th>
@@ -252,6 +257,9 @@
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               NIC
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+              Last Modified By
             </th>
             <th *ngIf="
                ( permissionService.hasPermission('View individual collection officer') ||
@@ -356,6 +364,9 @@
             </td>
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.nic }}
+            </td>
+            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+              {{ getModifiedBy(item) }}
             </td>
 
             <!-- <td class="px-4 py-3 text-center">

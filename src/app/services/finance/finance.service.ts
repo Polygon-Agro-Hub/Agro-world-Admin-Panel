@@ -68,27 +68,108 @@ export interface PackagePaymentsResponse {
   total: number;
 }
 
+export interface GoviJobDashboardStatistics {
+  totalIncome: number;
+  relativeIncomeValue: number;
+  incomeStatus: string;
+  serviceRequestsThisMonth: number;
+  serviceRequestsToday: number;
+}
+
+export interface GoviJobRecentPayment {
+  transactionId: string;
+  farmerName: string;
+  serviceName: string;
+  amount: string;
+  dateTime: string;
+}
+
+export interface GoviJobMonthlyStatistic {
+  month: string;
+  monthName: string;
+  payments: number;
+  revenue: number;
+}
+
+export interface GoviJobAreaChartData {
+  labels: string[];
+  values: number[];
+}
+
+export interface GoviJobDashboardData {
+  statistics: GoviJobDashboardStatistics;
+  recentPayments: GoviJobRecentPayment[];
+  monthlyStatistics: GoviJobMonthlyStatistic[];
+  areaChartData: GoviJobAreaChartData;
+}
+
+export interface GoviJobDashboardResponse {
+  status: boolean;
+  data: GoviJobDashboardData;
+}
+
+// Certificate Dashboard interfaces
+export interface CertificateStatistics {
+  totalCertificates: number;
+  activeEnrollments: number;
+  expiredEnrollments: number;
+  monthlyIncome: number;
+  relativeIncomeValue: number;
+  incomeStatus: string;
+}
+
+export interface CertificatePayment {
+  transactionId: string;
+  farmerName: string;
+  certificateName: string;
+  payType: string;
+  amount: string;
+  dateTime: string;
+  expiryDate: string;
+  validityPeriod: string;
+}
+
+export interface CertificateEnrollmentBreakdown {
+  forCrop: number;
+  forFarm: number;
+  forFarmCluster: number;
+}
+
+export interface CertificateDashboardData {
+  statistics: CertificateStatistics;
+  recentPayments: CertificatePayment[];
+  enrollmentBreakdown: CertificateEnrollmentBreakdown;
+  monthlyStatistics: MonthlyStatistic[];
+  areaChartData: AreaChartData;
+  dashboardData: any;
+}
+
+export interface CertificateDashboardResponse {
+  status: boolean;
+  data: CertificateDashboardData;
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FinanceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(
-    private http: HttpClient,
-    private tokenService: TokenService
-  ) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
-      Authorization: `Bearer ${this.token}`
+      Authorization: `Bearer ${this.token}`,
     });
   }
 
+  // Plant Care Package Dashboard
   getDashboardData(): Observable<DashboardResponse> {
     const url = `${this.apiUrl}finance/dashboard`;
-    return this.http.get<DashboardResponse>(url, { headers: this.getHeaders() });
+    return this.http.get<DashboardResponse>(url, {
+      headers: this.getHeaders(),
+    });
   }
 
   getAllPackagePayments(
@@ -115,9 +196,24 @@ export class FinanceService {
     }
 
     const url = `${this.apiUrl}finance/package-payments`;
-    return this.http.get<PackagePaymentsResponse>(url, { 
+    return this.http.get<PackagePaymentsResponse>(url, {
       headers: this.getHeaders(),
-      params: params
+      params: params,
+    });
+  }
+
+  getCertificateDashboardData(): Observable<CertificateDashboardResponse> {
+    const url = `${this.apiUrl}finance/certificate-dashboard`;
+    return this.http.get<CertificateDashboardResponse>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  // Get govi job dashboard data
+  getGoviJobDashboardData(): Observable<GoviJobDashboardResponse> {
+    const url = `${this.apiUrl}finance/govi-job-dashboard-data`;
+    return this.http.get<GoviJobDashboardResponse>(url, {
+      headers: this.getHeaders(),
     });
   }
 }

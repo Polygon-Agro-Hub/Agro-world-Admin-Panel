@@ -380,15 +380,16 @@
             </td> -->
 
             <td *ngIf="(permissionService.hasPermission('View individual collection officer') ||
-            tokenService.getUserDetails().role === '1')" [class.ml-4]="Cname" class="px-4 py-3 text-center">
-              <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </button>
-            </td>
+            tokenService.getUserDetails().role === '1') && isSteckholdersRoute" 
+    [class.ml-4]="Cname" class="px-4 py-3 text-center">
+  <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+</td>
 
             <td *ngIf="
                 permissionService.hasPermission('Manage CO / CCM / DO') ||

@@ -1,4 +1,11 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  onclick="history.back()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
 <div *ngIf="!isLoading && dashboardData">
   <div class="w-full">
     <app-govicare-packages-first-row [dashboardData]="dashboardData" />

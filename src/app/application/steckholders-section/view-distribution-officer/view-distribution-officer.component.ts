@@ -27,6 +27,8 @@ interface DistributionOfficers {
   created_at: string;
   centerName: string;
   regCode: string;
+  officeModify: string | null;
+  adminModify: string | null;
 }
 
 interface JobRole {
@@ -660,5 +662,5 @@ class ManagerNames {
   firstNameEnglish!: string;
   lastNameEnglish!: string;
   empId!: string;
-  labelName!:string
+  labelName!: string
 }

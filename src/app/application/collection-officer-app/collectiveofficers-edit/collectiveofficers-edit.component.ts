@@ -1271,9 +1271,9 @@ export class CollectiveofficersEditComponent {
 
         const payload = {
           ...this.personalData,
-          phoneNumber01: this.personalData.contact1 || '',
+          phoneNumber01: this.personalData.contact1,
           phoneCode01: this.personalData.contact1Code || '+94',
-          phoneNumber02: this.personalData.contact2 || '',
+          phoneNumber02: this.personalData.contact2,
           phoneCode02: this.personalData.contact2Code || this.personalData.contact1Code || '+94',
         };
 

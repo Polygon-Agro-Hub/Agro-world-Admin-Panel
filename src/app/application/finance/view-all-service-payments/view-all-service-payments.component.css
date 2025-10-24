@@ -1,0 +1,18 @@
+::ng-deep .calendar-popup-small {
+  min-width: 280px !important;
+  max-width: 420px !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker {
+  width: 100% !important;
+  font-size: 100% !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker table td > span {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker .p-datepicker-header {
+  padding: 0.5rem !important;
+}

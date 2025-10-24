@@ -356,4 +356,6 @@ class CompanyHead {
   createdAt!: Date;
   status!: string;
   createdAtFormatted!: string | null;
+  officeModify: string | null = null;
+  adminModify: string | null = null;
 }

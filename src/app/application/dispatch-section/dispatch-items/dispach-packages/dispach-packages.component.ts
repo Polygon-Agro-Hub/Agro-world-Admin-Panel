@@ -41,6 +41,8 @@ export class DispachPackagesComponent implements OnInit {
 
   isInvalidPriceRange: boolean = false;
 
+  isShouldAllblock:boolean = true;
+
 
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id']
@@ -74,7 +76,9 @@ export class DispachPackagesComponent implements OnInit {
         // this.packageObj = res
         this.packageArr = res.packageData;
         this.productArr = res.marketplaceItems
-        this.isLoading = false
+        this.isLoading = false;
+        this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
+        
       }
     )
   }

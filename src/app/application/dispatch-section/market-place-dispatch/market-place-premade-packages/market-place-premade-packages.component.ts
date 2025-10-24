@@ -28,13 +28,18 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
   page: number = 1;
 
   selectedStatus: any = '';
-  date: Date = new Date();
+  date: Date | null = new Date();
   status = ['Pending', 'Completed', 'Opened'];
 
 
 
   hasData = false;
   hasDataCustom = false;
+
+  clearDate() {
+    this.date = null; // Clear the date
+    this.getPreMadePackages(); // Reset the data table
+  }
 
   ngOnInit(): void {
     this.getPreMadePackages();
@@ -95,6 +100,8 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
   }
   clearSearch() {
     this.search = '';
+    this.date = null; // Clear date when clearing search
+    this.selectedStatus = ''; // Clear status when clearing search
     this.getPreMadePackages();
   }
 

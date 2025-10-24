@@ -41,7 +41,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   isLoading: boolean = false;
 
   isStatusDropdownOpen = false;
-  statusDropdownOptions = ['Pending', 'Completed', 'Exceeded'];
+  statusDropdownOptions = ['Pending', 'Completed', 'Exceeded', 'Extra'];
 
   toggleStatusDropdown() {
     this.isStatusDropdownOpen = !this.isStatusDropdownOpen;
@@ -91,6 +91,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
       (res) => {
         this.targetArr = res.items;
         console.log(res.items)
+        console.log('target', this.targetArr)
         if (res.items.length > 0) {
           this.hasData = true;
           console.log('fetched')

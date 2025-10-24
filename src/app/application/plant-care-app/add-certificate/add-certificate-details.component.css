@@ -284,3 +284,29 @@ div .dropdown div:hover {
 ::ng-deep .dark .p-multiselect-header {
   background-color: #4b5563;
 }
+
+/* Make placeholder text italic for dropdown */
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8; /* optional, gives subtle "placeholder" look */
+}
+
+/* Dark mode italic placeholder */
+::ng-deep .dark .p-dropdown .p-dropdown-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
+  color: #d1d5db; /* optional: lighter gray for contrast */
+}
+
+/* Make placeholder text italic for MultiSelect */
+::ng-deep .p-multiselect .p-multiselect-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8; 
+}
+
+/* Dark mode placeholder italic */
+::ng-deep .dark .p-multiselect .p-multiselect-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
+  color: #d1d5db; 
+}

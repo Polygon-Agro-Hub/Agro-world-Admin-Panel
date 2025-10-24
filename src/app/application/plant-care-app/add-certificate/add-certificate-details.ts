@@ -43,6 +43,8 @@ export class AddCertificateDetailsComponent implements OnInit {
 
   @ViewChild('logoInput', { static: false })
   logoInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('cropSearchInput', { static: false })
+  cropSearchInput!: ElementRef<HTMLInputElement>;
 
   companies: { label: string; value: number }[] = [];
   applicableOptions = [
@@ -80,6 +82,7 @@ export class AddCertificateDetailsComponent implements OnInit {
   ];
 
   cropDropdownOptions: { label: string; value: number }[] = [];
+  filteredCropOptions: { label: string; value: number }[] = [];
   selectedCrop: number | null = null;
   selectedCrops: { id: number; cropNameEnglish: string }[] = [];
 
@@ -110,6 +113,7 @@ export class AddCertificateDetailsComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
       scope: ['', Validators.required],
+      noOfVisit: ['', [Validators.min(0)]], 
       tearmsFile: [null, Validators.required],
       logo: [null, Validators.required],
     });
@@ -142,7 +146,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       this.logoError = 'Please select a valid image file.';
       this.uploadedLogo = null;
       this.logoPreview = null;
-      this.certificateForm.patchValue({ logo: null }); // Clear form value
+      this.certificateForm.patchValue({ logo: null });
       return;
     }
 
@@ -154,7 +158,7 @@ export class AddCertificateDetailsComponent implements OnInit {
         'Please select a valid image file (JPEG, JPG, PNG, WebP).';
       this.uploadedLogo = null;
       this.logoPreview = null;
-      this.certificateForm.patchValue({ logo: null }); // Clear form value
+      this.certificateForm.patchValue({ logo: null });
       return;
     }
 
@@ -164,15 +168,15 @@ export class AddCertificateDetailsComponent implements OnInit {
       this.logoError = 'Logo must be smaller than 5 MB.';
       this.uploadedLogo = null;
       this.logoPreview = null;
-      this.certificateForm.patchValue({ logo: null }); // Clear form value
+      this.certificateForm.patchValue({ logo: null });
       return;
     }
 
     // All good
     this.logoError = '';
     this.uploadedLogo = file;
-    this.certificateForm.patchValue({ logo: file }); // Set form value
-    this.certificateForm.get('logo')?.markAsTouched(); // Mark as touched
+    this.certificateForm.patchValue({ logo: file });
+    this.certificateForm.get('logo')?.markAsTouched();
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -185,8 +189,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     this.uploadedLogo = null;
     this.logoPreview = null;
     this.logoError = '';
-    this.certificateForm.patchValue({ logo: null }); // Clear form value
-    this.certificateForm.get('logo')?.markAsTouched(); // Mark as touched
+    this.certificateForm.patchValue({ logo: null });
+    this.certificateForm.get('logo')?.markAsTouched();
 
     if (this.logoInput && this.logoInput.nativeElement) {
       this.logoInput.nativeElement.value = '';
@@ -226,6 +230,7 @@ export class AddCertificateDetailsComponent implements OnInit {
           label: crop.cropNameEnglish,
           value: crop.id,
         }));
+        this.filteredCropOptions = [...this.cropDropdownOptions];
       },
       error: (err) => {
         console.error('Error fetching crop groups:', err);
@@ -251,30 +256,50 @@ export class AddCertificateDetailsComponent implements OnInit {
     const applicable = this.certificateForm.get('applicable')?.value;
 
     this.isForSelectedCrops = applicable === 'For Selected Crops';
-    this.showTargetCropsSection = !!applicable; // Show the section if any option is selected
+    this.showTargetCropsSection = !!applicable;
 
     if (this.isForSelectedCrops) {
-      // For Selected Crops - user selects manually
       this.selectedCrops = [];
     } else if (
       applicable === 'For Farm' ||
       applicable === 'For Farmer Cluster'
     ) {
-      // For Farm or Farm Cluster - do not send crop IDs, just show "All crops are selected"
       this.selectedCrops = [];
     }
   }
 
+  // Enhanced crop search functionality
+  onCropFilter(event: any): void {
+    // PrimeNG handles the filtering automatically when filter=true
+  }
+
+  onCropSearchInput(event: any): void {
+    const searchTerm = event.target.value.toLowerCase();
+    if (searchTerm) {
+      this.filteredCropOptions = this.cropDropdownOptions.filter(option =>
+        option.label.toLowerCase().includes(searchTerm)
+      );
+    } else {
+      this.filteredCropOptions = [...this.cropDropdownOptions];
+    }
+  }
+
   addCrop(): void {
+    if (!this.selectedCrop) return;
+
     const selected = this.cropDropdownOptions.find(
       (c) => c.value === this.selectedCrop
     );
+    
     if (selected && !this.selectedCrops.some((c) => c.id === selected.value)) {
       this.selectedCrops.push({
         id: selected.value,
         cropNameEnglish: selected.label,
       });
       this.selectedCrop = null;
+      
+      // Clear the search filter after adding
+      this.filteredCropOptions = [...this.cropDropdownOptions];
     }
   }
 
@@ -380,7 +405,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     formData.append('applicable', formValue.applicable);
     formData.append('accreditation', formValue.accreditation);
 
-    // Service areas as JSON string (since it's stored as TEXT in DB)
+    // Service areas as JSON string
     const serviceAreas = Array.isArray(formValue.serviceAreas)
       ? formValue.serviceAreas.map((area: any) =>
           typeof area === 'object' ? area.value : area
@@ -392,6 +417,11 @@ export class AddCertificateDetailsComponent implements OnInit {
     formData.append('timeLine', formValue.timeLine.toString());
     formData.append('commission', formValue.commission.toString());
     formData.append('scope', formValue.scope);
+    
+    // Add noOfVisit to formData
+    if (formValue.noOfVisit) {
+      formData.append('noOfVisit', formValue.noOfVisit.toString());
+    }
 
     // Append cropIds only if "For Selected Crops" is selected
     if (applicable === 'For Selected Crops' && this.selectedCrops.length > 0) {
@@ -399,10 +429,10 @@ export class AddCertificateDetailsComponent implements OnInit {
       formData.append('cropIds', JSON.stringify(cropIds));
     }
 
-    // PDF file - using the exact field name from backend route
+    // PDF file
     formData.append('tearmsFile', this.uploadedFile);
 
-    // Logo file - append if uploaded
+    // Logo file
     if (this.uploadedLogo) {
       formData.append('logo', this.uploadedLogo);
     }

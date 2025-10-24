@@ -50,7 +50,9 @@ export interface Questionnaire {
 
 export interface FarmerCluster {
   clusterName: string;
-  farmerNICs: string[];
+  district: string;
+  certificateId: number;
+  farmers: FarmerDetail[];
   clusterId?: number;
   memberCount?: number;
   lastModifiedBy?: string;
@@ -65,6 +67,11 @@ export interface FarmerCluster {
   members?: ClusterMember[];
 }
 
+export interface FarmerDetail {
+  farmerNIC: string;
+  regCode: string;
+}
+
 export interface ClusterMember {
   no: string;
   id: number;
@@ -76,6 +83,12 @@ export interface ClusterMember {
   addedDate?: string;
 }
 
+export interface Certificate {
+  id: number;
+  srtName: string;
+  srtNumber: string;
+  applicable: string;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -401,5 +414,24 @@ export class CertificateCompanyService {
       { clusterName },
       { headers }
     );
+  }
+
+  // Get all certificates for farmer clusters
+  getFarmerClusterCertificates(): Observable<{
+    status: boolean;
+    message: string;
+    data: any[];
+  }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.get<{
+      status: boolean;
+      message: string;
+      data: any[];
+    }>(`${this.apiUrl}certificate-company/get-farmer-cluster-certificates`, {
+      headers,
+    });
   }
 }

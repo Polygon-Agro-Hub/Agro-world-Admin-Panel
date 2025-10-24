@@ -274,6 +274,6 @@ export class ViewCentreRequirementComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/previous-route']); // Update with your actual route
+    this.router.navigate(['/procurement']); 
   }
 }

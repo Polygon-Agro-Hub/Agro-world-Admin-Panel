@@ -462,6 +462,49 @@ export class ProcumentsService {
   
     return this.http.get<any>(url, { headers });
   }
+  
+  getDistributionOrders(
+  page: number,
+  limit: number,
+  centerId: string = '',
+  deliveryDate: string = '',
+  search: string = ''
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  console.log('centerId', centerId, 'deliveryDate', deliveryDate, 'search', search);
+
+  let url = `${this.apiUrl}procument/get-distribution-orders?page=${page}&limit=${limit}`;
+
+  if (centerId) {
+    url += `&centerId=${centerId}`;
+  }
+
+  if (deliveryDate) {
+    url += `&deliveryDate=${deliveryDate}`;
+  }
+
+  if (search) {
+    url += `&search=${encodeURIComponent(search)}`;
+  }
+
+  return this.http.get<any>(url, { headers });
+}
+
+getAllCenters(): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}procument/get-all-distribution-centers`;
+
+  return this.http.get<any>(url, { headers });
+}
+  
 }
 
 

@@ -13,69 +13,97 @@
   </h2>
 
   <form [formGroup]="certificateForm" (ngSubmit)="onSubmit()">
-    <!-- Logo Upload -->
-    <div class="my-3 md:col-span-2">
-      <div class="flex items-center gap-4">
-        <label
-          for="logo"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
-          Add Logo *
-        </label>
+    <!-- Logo and No of Visit Row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <!-- Logo Upload -->
+      <div class="my-3">
+        <div class="flex items-center gap-4">
+          <label
+            for="logo"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
+            Add Logo *
+          </label>
 
-        <!-- Upload Button -->
-        <button
-          type="button"
-          class="flex items-center gap-2 bg-gray-100 hover:bg-gray-600 text-white px-3 py-3 rounded-md border-2 border-[#3980C0]"
-          (click)="openLogoFilePicker()"
-        >
-          <i class="fa-solid fa-plus text-gray-500 hover:text-gray-100"></i>
-        </button>
+          <!-- Upload Button -->
+          <button
+            type="button"
+            class="flex items-center gap-2 bg-gray-100 hover:bg-gray-600 text-white px-3 py-3 rounded-md border-2 border-[#3980C0]"
+            (click)="openLogoFilePicker()"
+          >
+            <i class="fa-solid fa-plus text-gray-500 hover:text-gray-100"></i>
+          </button>
 
-        <!-- Logo Preview -->
-        <div
-          class="w-11 h-11 border border-gray-300 rounded-md flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800"
-        >
-          <img
-            *ngIf="logoPreview"
-            [src]="logoPreview"
-            alt="Certificate Logo"
-            class="object-cover w-full h-full"
+          <!-- Logo Preview -->
+          <div
+            class="w-11 h-11 border border-gray-300 rounded-md flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800"
+          >
+            <img
+              *ngIf="logoPreview"
+              [src]="logoPreview"
+              alt="Certificate Logo"
+              class="object-cover w-full h-full"
+            />
+            <i
+              *ngIf="!logoPreview"
+              class="fa-solid fa-image text-gray-400 text-3xl"
+            ></i>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <!-- Hidden File Input -->
+          <input
+            type="file"
+            #logoInput
+            id="logo"
+            accept="image/*"
+            (change)="onLogoSelected($event)"
+            hidden
           />
-          <i
-            *ngIf="!logoPreview"
-            class="fa-solid fa-image text-gray-400 text-3xl"
-          ></i>
+        </div>
+
+        <!-- Validation error -->
+        <div *ngIf="logoError" class="text-red-500 text-sm mt-2">
+          {{ logoError }}
+        </div>
+        <div
+          *ngIf="
+            certificateForm.get('logo')?.invalid &&
+            certificateForm.get('logo')?.touched
+          "
+          class="text-red-500 text-sm mt-2"
+        >
+          Logo is required
         </div>
       </div>
 
-      <div class="flex items-center gap-4">
-        <!-- Hidden File Input -->
-        <input
-          type="file"
-          #logoInput
-          id="logo"
-          accept="image/*"
-          (change)="onLogoSelected($event)"
-          hidden
-        />
+      <!-- Company Dropdown -->
+      <div class="my-3">
+        <label
+          for="srtcomapnyId"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Company *</label
+        >
+        <p-dropdown
+          formControlName="srtcomapnyId"
+          [options]="companies"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="--Select Company--"
+          styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        ></p-dropdown>
+        <div
+          *ngIf="
+            certificateForm.get('srtcomapnyId')?.invalid &&
+            certificateForm.get('srtcomapnyId')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Company is required
+        </div>
       </div>
 
-      <!-- Validation error -->
-      <div *ngIf="logoError" class="text-red-500 text-sm mt-2">
-        {{ logoError }}
-      </div>
-      <div
-        *ngIf="
-          certificateForm.get('logo')?.invalid &&
-          certificateForm.get('logo')?.touched
-        "
-        class="text-red-500 text-sm mt-2"
-      >
-        Logo is required
-      </div>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Certificate Name -->
       <div class="my-3">
         <label
@@ -134,29 +162,33 @@
         </div>
       </div>
 
-      <!-- Company Dropdown -->
+      <!-- No of Visit -->
       <div class="my-3">
         <label
-          for="srtcomapnyId"
+          for="noOfVisit"
           class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Company *</label
+          >Number of Visits</label
         >
-        <p-dropdown
-          formControlName="srtcomapnyId"
-          [options]="companies"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Select Company"
-          styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        ></p-dropdown>
+        <input
+          id="noOfVisit"
+          type="number"
+          formControlName="noOfVisit"
+          min="0"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              certificateForm.get('noOfVisit')?.invalid &&
+              certificateForm.get('noOfVisit')?.touched
+          }"
+        />
         <div
           *ngIf="
-            certificateForm.get('srtcomapnyId')?.invalid &&
-            certificateForm.get('srtcomapnyId')?.touched
+            certificateForm.get('noOfVisit')?.errors?.['min'] &&
+            certificateForm.get('noOfVisit')?.touched
           "
           class="text-red-500 text-sm mt-1"
         >
-          Company is required
+          Number of visits cannot be negative
         </div>
       </div>
 
@@ -225,7 +257,7 @@
           formControlName="serviceAreas"
           [options]="serviceAreasOptions"
           optionLabel="name"
-          placeholder="Select Service Areas"
+          placeholder="--Select Districts--"
           styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         ></p-multiSelect>
         <div
@@ -392,107 +424,127 @@
           Payment Terms File is required
         </div>
       </div>
+    </div>
 
-      <!-- Scope -->
-      <div class="my-3 md:col-span-2">
-        <label
-          for="scope"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Scope *</label
-        >
-        <textarea
-          id="scope"
-          rows="3"
-          formControlName="scope"
-          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [ngClass]="{
-            'border-red-500':
-              certificateForm.get('scope')?.invalid &&
-              certificateForm.get('scope')?.touched
-          }"
-        ></textarea>
-        <div
-          *ngIf="
+    <!-- Scope -->
+    <div class="my-3 md:col-span-2">
+      <label
+        for="scope"
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Scope *</label
+      >
+      <textarea
+        id="scope"
+        rows="3"
+        formControlName="scope"
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [ngClass]="{
+          'border-red-500':
             certificateForm.get('scope')?.invalid &&
             certificateForm.get('scope')?.touched
-          "
-          class="text-red-500 text-sm mt-1"
+        }"
+      ></textarea>
+      <div
+        *ngIf="
+          certificateForm.get('scope')?.invalid &&
+          certificateForm.get('scope')?.touched
+        "
+        class="text-red-500 text-sm mt-1"
+      >
+        Scope is required
+      </div>
+    </div>
+
+    <!-- Target Crops Section -->
+    <div class="my-3 w-full md:col-span-2" *ngIf="showTargetCropsSection">
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark mb-3"
+        >Target Crops</label
+      >
+
+      <!-- For Selected Crops - Show dropdown with search functionality -->
+      <div *ngIf="isForSelectedCrops" class="flex gap-2 w-full mb-2">
+        <p-dropdown
+          [options]="cropDropdownOptions"
+          [(ngModel)]="selectedCrop"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="--Select Crop--"
+          [filter]="true"
+          filterBy="label"
+          [showClear]="true"
+          styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
+          class="w-full"
+          (onFilter)="onCropFilter($event)"
         >
-          Scope is required
-        </div>
+          <ng-template pTemplate="header">
+            <div class="p-2 border-b">
+              <input
+                type="text"
+                #cropSearchInput
+                (input)="onCropSearchInput($event)"
+                placeholder="Type to search crops..."
+                class="w-full p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
+              />
+            </div>
+          </ng-template>
+        </p-dropdown>
+
+        <button
+          type="button"
+          (click)="addCrop()"
+          class="px-6 bg-[#3980C0] text-white rounded-md h-12 whitespace-nowrap"
+          [disabled]="!selectedCrop"
+        >
+          Add Crop
+        </button>
       </div>
 
-      <!-- Target Crops Section -->
-      <div class="my-3 w-full md:col-span-2" *ngIf="showTargetCropsSection">
-        <label
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Target Crops</label
-        >
-
-        <!-- For Selected Crops - Show dropdown and add functionality -->
-        <div *ngIf="isForSelectedCrops" class="flex gap-2 w-full mb-2">
-          <p-dropdown
-            [options]="cropDropdownOptions"
-            [(ngModel)]="selectedCrop"
-            [ngModelOptions]="{ standalone: true }"
-            placeholder="-- Select Crop --"
-            styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
-            class="w-full"
-          ></p-dropdown>
-
-          <button
-            type="button"
-            (click)="addCrop()"
-            class="px-6 bg-[#3980C0] text-white rounded-md h-12"
-          >
-            Add
-          </button>
-        </div>
-
-        <!-- Selected crops box -->
-        <div
-          class="mt-3 border rounded-md p-3 min-h-[50px] flex flex-wrap gap-2"
-        >
-          <ng-container *ngIf="isForSelectedCrops">
-            <ng-container *ngIf="selectedCrops.length > 0; else noCrops">
-              <div
-                *ngFor="let crop of selectedCrops; let i = index"
-                class="bg-[#F2F2F2] px-3 py-1 rounded-md flex items-center gap-2"
+      <!-- Selected crops box -->
+      <div class="mt-3 border rounded-md p-3 min-h-[50px] flex flex-wrap gap-2">
+        <ng-container *ngIf="isForSelectedCrops">
+          <ng-container *ngIf="selectedCrops.length > 0; else noCrops">
+            <div
+              *ngFor="let crop of selectedCrops; let i = index"
+              class="bg-[#F2F2F2] px-3 py-1 rounded-md flex items-center gap-2"
+            >
+              {{ crop.cropNameEnglish }}
+              <button
+                type="button"
+                (click)="removeCrop(i)"
+                class="text-white font-bold bg-red-500 p-1 m-auto rounded-md flex items-center justify-center h-5 w-5"
+                title="Remove crop"
               >
-                {{ crop.cropNameEnglish }}
-                <button
-                  type="button"
-                  (click)="removeCrop(i)"
-                  class="text-white font-bold bg-red-500 p-1 m-auto rounded-md flex items-center justify-center h-5 w-5"
-                >
-                  -
-                </button>
-              </div>
-            </ng-container>
-            <ng-template #noCrops>
-              <span
-                class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]"
-                >-- No crops selected --</span
-              >
-            </ng-template>
+                -
+              </button>
+            </div>
           </ng-container>
-
-          <!-- Show this message if not "For Selected Crops" -->
-          <ng-container *ngIf="!isForSelectedCrops">
+          <ng-template #noCrops>
             <span
               class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]"
-              >-- All crops has been selected --</span
+              >-- No crops selected --</span
             >
-          </ng-container>
-        </div>
+          </ng-template>
+        </ng-container>
 
-        <!-- Validation Message -->
-        <div
-          *ngIf="isForSelectedCrops && selectedCrops.length === 0"
-          class="text-red-500 text-sm mt-1"
-        >
-          -- Please add at least 1 crop for "For Selected Crops" option --
-        </div>
+        <!-- Show this message if not "For Selected Crops" -->
+        <ng-container *ngIf="!isForSelectedCrops">
+          <span
+            class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]"
+            >-- All crops has been selected --</span
+          >
+        </ng-container>
+      </div>
+
+      <!-- Selected crops count and validation -->
+      <div
+        *ngIf="
+          isForSelectedCrops &&
+          selectedCrops.length === 0 &&
+          certificateForm.get('applicable')?.touched
+        "
+        class="text-red-500 text-sm mt-1"
+      >
+        -- Please add at least 1 crop for "For Selected Crops" option --
       </div>
     </div>
 
@@ -508,9 +560,14 @@
       <button
         type="submit"
         class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-40"
-        [disabled]="isLoading"
+        [disabled]="
+          isLoading ||
+          certificateForm.invalid ||
+          (isForSelectedCrops && selectedCrops.length === 0)
+        "
       >
-        Save
+        <span *ngIf="!isLoading">Save</span>
+        <span *ngIf="isLoading">Saving...</span>
       </button>
     </div>
   </form>

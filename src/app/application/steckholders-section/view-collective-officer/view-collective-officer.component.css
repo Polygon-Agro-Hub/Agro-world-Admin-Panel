@@ -203,12 +203,29 @@
 }
 
 /* Reduce dropdown item padding */
-::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+::ng-deep .custom-top-dropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   padding-left: 0.1rem !important;
 }
 
-::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+::ng-deep .custom-top-dropdown .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   padding-left: 0.1rem !important;
+}
+
+::ng-deep .custom-center-dropdown .p-dropdown {
+  padding-left: 16px !important;
+}
+
+::ng-deep .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 16px !important;
+}
+
+/* For dark mode */
+::ng-deep .dark .custom-center-dropdown .p-dropdown {
+  padding-left: 16px !important;
+}
+
+::ng-deep .dark .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 16px !important;
 }
 
 /* The rest of your existing calendar styles... */

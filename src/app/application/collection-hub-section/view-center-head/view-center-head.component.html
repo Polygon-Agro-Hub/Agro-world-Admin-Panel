@@ -289,11 +289,11 @@
                 </div>
               </ng-template>
             </p-dropdown>
-            <input [disabled]="true" id="phoneNumber02" name="phoneNumber02" type="number"
-              [(ngModel)]="personalData.phoneNumber02"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number" #phoneNumber02Input="ngModel" minlength="9" maxlength="9"
-              pattern="^[0-9]{9}$" />
+            <input [disabled]="true" id="phoneNumber02" name="phoneNumber02" type="text"
+       [ngModel]="personalData.phoneNumber02 || '--'"
+       class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+       placeholder="Enter your phone number" #phoneNumber02Input="ngModel" 
+       minlength="9" maxlength="9" pattern="^[0-9]{9}$" readonly />
           </div>
           <div *ngIf="phoneNumber02Input.touched && phoneNumber02Input.errors?.['maxlength']"
             class="text-red-500 text-sm mt-1">

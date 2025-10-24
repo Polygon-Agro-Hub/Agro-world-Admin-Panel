@@ -220,6 +220,7 @@ import { GovicareCertificationMainComponent } from './application/finance/govica
 import { ViewAllCertificatePaymentsComponent } from './application/finance/govicare-certification-dashboard/view-all-certificate-payments/view-all-certificate-payments.component';
 import { CommissionRangeComponent } from './application/finance/commission-range/commission-range.component';
 import { ViewAllServicePaymentsComponent } from './application/finance/view-all-service-payments/view-all-service-payments.component';
+import { ViewCentreRequirementComponent } from './application/procurement-section/view-centre-requirement/view-centre-requirement.component';
 
 export const routes: Routes = [
   {
@@ -998,6 +999,10 @@ export const routes: Routes = [
           {
             path: 'view-dispatched-define-package',
             component: ViewDispatchOrdersComponent,
+          },
+                    {
+            path: 'view-centre-requirement',
+            component: ViewCentreRequirementComponent,
           },
         ],
       },

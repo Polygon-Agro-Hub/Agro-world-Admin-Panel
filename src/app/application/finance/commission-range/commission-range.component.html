@@ -53,7 +53,7 @@
           <thead class="bg-white dark:bg-gray-700 border-b">
             <tr>
               <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
               >
                 No
               </th>
@@ -61,7 +61,7 @@
               <!-- NOT EDITING STATE - Show Range column -->
               <th
                 *ngIf="!isEditing"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
               >
                 Range
               </th>
@@ -69,20 +69,20 @@
               <!-- EDITING STATE - Show separate Min and Max columns -->
               <th
                 *ngIf="isEditing"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+                class="px-6 py-3 text-center text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
               >
                 Min (%)
               </th>
               <th
                 *ngIf="isEditing"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+                class="px-6 py-3 text-center text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
               >
                 Max (%)
               </th>
 
               <th
                 *ngIf="!isEditing"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+                class="px-6 py-3 text-center text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
               >
                 Value (Rs.)
               </th>
@@ -90,12 +90,19 @@
               <!-- Modified User Column -->
               <th
                 *ngIf="!isEditing"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
               >
                 Last Modified By
               </th>
 
-              <th *ngIf="isEditing" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 tracking-wider"></th>
+              <th
+                *ngIf="isEditing"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              ></th>
+              <th
+                *ngIf="isEditing"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              ></th>
             </tr>
           </thead>
           <tbody
@@ -111,21 +118,21 @@
               >
                 <!-- No Column -->
                 <td
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                  class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100"
                 >
                   {{ (i + 1).toString().padStart(2, "0") }}
                 </td>
 
                 <!-- NOT EDITING STATE - Show combined Range -->
                 <td *ngIf="!isEditing" class="px-6 py-4 whitespace-nowrap">
-                  <span class="text-sm text-gray-900 dark:text-gray-100">
+                  <span class="text-md text-gray-900 dark:text-gray-100">
                     {{ range.value.minRange }} % - {{ range.value.maxRange }} %
                   </span>
                 </td>
 
                 <!-- EDITING STATE - Show separate Min and Max inputs -->
                 <td *ngIf="isEditing" class="px-6 py-4 whitespace-nowrap">
-                  <div>
+                  <div class="flex justify-center">
                     <input
                       type="number"
                       formControlName="minRange"
@@ -142,7 +149,7 @@
                         range.get('minRange')?.invalid &&
                         range.get('minRange')?.touched
                       "
-                      class="text-red-500 text-xs mt-1"
+                      class="text-red-500 text-md mt-1"
                     >
                       <div *ngIf="range.get('minRange')?.errors?.['required']">
                         Required
@@ -158,7 +165,7 @@
                 </td>
 
                 <td *ngIf="isEditing" class="px-6 py-4 whitespace-nowrap">
-                  <div>
+                  <div class="flex justify-center">
                     <input
                       type="number"
                       formControlName="maxRange"
@@ -175,7 +182,7 @@
                         range.get('maxRange')?.invalid &&
                         range.get('maxRange')?.touched
                       "
-                      class="text-red-500 text-xs mt-1"
+                      class="text-red-500 text-md mt-1"
                     >
                       <div *ngIf="range.get('maxRange')?.errors?.['required']">
                         Required
@@ -192,7 +199,7 @@
 
                 <!-- Value Column - Different behavior based on state -->
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div>
+                  <div class="flex justify-center">
                     <!-- Default state: Show input for all rows -->
                     <input
                       *ngIf="!isEditing"
@@ -212,7 +219,7 @@
                         range.get('value')?.invalid &&
                         range.get('value')?.touched
                       "
-                      class="text-red-500 text-xs mt-1"
+                      class="text-red-500 text-md mt-1"
                     >
                       <div *ngIf="range.get('value')?.errors?.['required']">
                         Required
@@ -230,7 +237,7 @@
                 <!-- NEW: Modified User Column - Only show in non-edit mode -->
                 <td
                   *ngIf="!isEditing"
-                  class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100"
+                  class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100"
                 >
                   {{ getModifiedUserDisplay(i) }}
                 </td>
@@ -238,7 +245,7 @@
                 <!-- Actions Column - Only show in edit mode -->
                 <td
                   *ngIf="isEditing"
-                  class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                  class="px-6 py-4 whitespace-nowrap text-md font-medium"
                 >
                   <button
                     type="button"

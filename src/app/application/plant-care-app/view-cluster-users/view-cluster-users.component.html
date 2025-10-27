@@ -20,6 +20,72 @@
   <div
     class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
   >
+    <!-- Search bar - Always visible regardless of data -->
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        Farmers of " {{ clusterName }} "
+        <span *ngIf="hasData">{{ users.length | number : "2.0" }}</span>
+      </h2>
+
+      <!-- Search bar -->
+      <div
+        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+      >
+        <input
+          type="text"
+          placeholder="Search by NIC / Phone / Farm ID.."
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+        />
+
+        <!-- Search button -->
+        <button
+          type="button"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+          (click)="onSearch()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+            />
+          </svg>
+        </button>
+
+        <!-- Clear button -->
+        <button
+          type="button"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none"
+          (click)="offSearch()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- No Data Available Section -->
     <div *ngIf="!hasData && !isLoading" class="text-center py-8">
       <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
       <img
@@ -29,70 +95,8 @@
       />
     </div>
 
-    <div *ngIf="hasData || isLoading">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Farmers of " {{ clusterName }} "
-          <span>{{ users.length | number : "2.0" }}</span>
-        </h2>
-
-        <!-- Search bar -->
-        <div
-          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
-        >
-          <input
-            type="text"
-            placeholder="Search by NIC / Phone Number"
-            [(ngModel)]="searchTerm"
-            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          />
-
-          <!-- Search button -->
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-              />
-            </svg>
-          </button>
-
-          <!-- Clear button -->
-          <button
-            type="button"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-            (click)="offSearch()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-
+    <!-- Data Table Section -->
+    <div *ngIf="hasData">
       <table
         class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4"
       >
@@ -111,14 +115,21 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Farmer’s NIC
+              Farm ID
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Farmer's NIC
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Phone Number
             </th>
-            <th></th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            ></th>
           </tr>
         </thead>
         <tbody>
@@ -130,7 +141,10 @@
               {{ user.no }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ user.firstName }} {{ user.lastName }}
+              {{ user.farmerName }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ user.farmId }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ user.nic }}
@@ -190,7 +204,9 @@
   *ngIf="isAddFarmerModalOpen"
   class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-10 rounded-md"
 >
-  <div class="bg-tileLight dark:bg-tileBlack rounded-lg px-20 py-10 shadow-lg">
+  <div
+    class="bg-white dark:bg-tileBlack rounded-2xl shadow-2xl w-full max-w-md p-8 text-center"
+  >
     <h2
       class="text-lg font-semibold text-textLight dark:text-textDark mb-4 text-center"
     >
@@ -211,6 +227,21 @@
       {{ nicError }}
     </div>
 
+    <!-- Farm ID Input -->
+    <div class="my-6">
+      <input
+        type="text"
+        [(ngModel)]="newFarmerFarmId"
+        placeholder="--Enter the Farm ID--"
+        [class.border-red-500]="farmIdError"
+        class="text-center px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#272F45] text-textLight dark:text-textDark mb-1 w-96"
+      />
+      <!-- Farm ID Error -->
+      <div *ngIf="farmIdError" class="text-red-500 text-sm mb-2 text-center">
+        {{ farmIdError }}
+      </div>
+    </div>
+
     <div class="flex justify-center space-x-3 mt-6">
       <button
         class="px-4 py-2 bg-gray-300 text-gray-500 hover:text-white dark:bg-gray-700 rounded hover:bg-gray-400 dark:hover:bg-gray-600 w-36"
@@ -222,11 +253,20 @@
       <button
         class="px-4 py-2 text-white rounded w-36"
         [ngClass]="{
-          'bg-[#3980C0]': newFarmerNIC.trim().length >= 10 && !isLoading,
+          'bg-[#3980C0]':
+            newFarmerNIC.trim().length >= 9 &&
+            newFarmerFarmId.trim().length >= 1 &&
+            !isLoading,
           'bg-gray-400 cursor-not-allowed':
-            newFarmerNIC.trim().length < 10 || isLoading
+            newFarmerNIC.trim().length < 9 ||
+            newFarmerFarmId.trim().length < 1 ||
+            isLoading
         }"
-        [disabled]="newFarmerNIC.trim().length < 10 || isLoading"
+        [disabled]="
+          newFarmerNIC.trim().length < 9 ||
+          newFarmerFarmId.trim().length < 1 ||
+          isLoading
+        "
         (click)="submitAddFarmer()"
       >
         Add
@@ -250,13 +290,13 @@
       </p>
 
       <!-- Farmer Details -->
-      <div class="flex gap-2">
+      <div class="flex gap-2 mb-2">
         <span class="text-textLight dark:text-textDark font-medium"
           >Farmer Name :
         </span>
-        <span class="text-black dark:text-textDark font-semibold"
-          >{{ farmerToDelete.firstName }} {{ farmerToDelete.lastName }}</span
-        >
+        <span class="text-black dark:text-textDark font-semibold">{{
+          farmerToDelete.farmerName
+        }}</span>
       </div>
       <div class="flex gap-2">
         <span class="text-textLight dark:text-textDark font-medium"
@@ -264,6 +304,14 @@
         </span>
         <span class="text-black dark:text-textDark font-semibold">{{
           farmerToDelete.nic
+        }}</span>
+      </div>
+      <div class="flex gap-2 mb-2">
+        <span class="text-textLight dark:text-textDark font-medium"
+          >Farm ID :
+        </span>
+        <span class="text-black dark:text-textDark font-semibold">{{
+          farmerToDelete.farmId
         }}</span>
       </div>
     </div>

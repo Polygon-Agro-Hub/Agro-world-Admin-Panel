@@ -49,21 +49,23 @@ export interface Questionnaire {
 }
 
 export interface FarmerCluster {
+  clusterId?: number;
   clusterName: string;
   district: string;
   certificateId: number;
-  farmers: FarmerDetail[];
-  clusterId?: number;
+  certificateName?: string;
   memberCount?: number;
+  status?: string;
   lastModifiedBy?: string;
   lastModifiedDate?: string;
+  lastModifiedOn?: string;
+  farmers: FarmerDetail[];
   farmersAdded?: number;
   totalFarmers?: number;
   missingNICs?: string[];
   existingNICs?: string[];
   details?: string;
   message?: string;
-  status?: boolean;
   members?: ClusterMember[];
 }
 
@@ -76,6 +78,9 @@ export interface ClusterMember {
   no: string;
   id: number;
   farmerId: number;
+  farmerName: string;
+  farmName: string;
+  farmId: string;
   firstName: string;
   lastName: string;
   nic: string;
@@ -326,13 +331,19 @@ export class CertificateCompanyService {
   }
 
   // Add single farmer to existing cluster
-  addFarmerToCluster(clusterId: number, nic: string): Observable<any> {
+  addFarmerToCluster(
+    clusterId: number,
+    data: { nic: string; farmId: string }
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
       'Content-Type': 'application/json',
     });
 
-    const payload = { nic };
+    const payload = {
+      nic: data.nic,
+      farmId: data.farmId,
+    };
 
     return this.http.post<any>(
       `${this.apiUrl}certificate-company/add-single-farmer-to-cluster/${clusterId}`,
@@ -379,14 +390,22 @@ export class CertificateCompanyService {
   }
 
   // Get cluster members by clusterId
-  getClusterMembers(clusterId: number): Observable<FarmerCluster> {
+  getClusterMembers(
+    clusterId: number,
+    searchTerm: string = ''
+  ): Observable<FarmerCluster> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
 
+    let params = new HttpParams();
+    if (searchTerm) {
+      params = params.set('search', searchTerm);
+    }
+
     return this.http.get<FarmerCluster>(
       `${this.apiUrl}certificate-company/get-cluster-users/${clusterId}`,
-      { headers }
+      { headers, params }
     );
   }
 
@@ -402,8 +421,11 @@ export class CertificateCompanyService {
     );
   }
 
-  // Update cluster name only
-  updateClusterName(clusterId: number, clusterName: string): Observable<any> {
+  // Update cluster
+  updateFarmerCluster(
+    clusterId: number,
+    updateData: { clusterName: string; district: string; certificateId: number }
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
       'Content-Type': 'application/json',
@@ -411,7 +433,7 @@ export class CertificateCompanyService {
 
     return this.http.put<any>(
       `${this.apiUrl}certificate-company/update-farmer-cluster/${clusterId}`,
-      { clusterName },
+      updateData,
       { headers }
     );
   }
@@ -433,5 +455,19 @@ export class CertificateCompanyService {
     }>(`${this.apiUrl}certificate-company/get-farmer-cluster-certificates`, {
       headers,
     });
+  }
+
+  // Update cluster status
+  updateClusterStatus(clusterId: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.patch(
+      `${this.apiUrl}certificate-company/update-cluster-status`,
+      { clusterId, status },
+      { headers }
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -26,11 +26,18 @@ import {
   templateUrl: './view-farmer-clusters.component.html',
   styleUrls: ['./view-farmer-clusters.component.css'],
 })
-export class ViewFarmerClustersComponent implements OnInit {
+export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
   clusters: FarmerCluster[] = [];
   isLoading = false;
   hasData: boolean = true;
   searchTerm: string = '';
+  
+  // Status modal properties
+  showStatusModal: boolean = false;
+  selectedCluster: FarmerCluster | null = null;
+  countdown: number = 30;
+  countdownInterval: any;
+  isCountdownCompleted: boolean = false;
 
   constructor(
     private farmerClusterService: CertificateCompanyService,
@@ -41,6 +48,10 @@ export class ViewFarmerClustersComponent implements OnInit {
 
   ngOnInit() {
     this.fetchClusters();
+  }
+
+  ngOnDestroy() {
+    this.clearCountdown();
   }
 
   onSearch() {
@@ -57,7 +68,6 @@ export class ViewFarmerClustersComponent implements OnInit {
     this.farmerClusterService.getAllFarmerClusters(this.searchTerm).subscribe(
       (response) => {
         this.isLoading = false;
-        // Access the data array from the response
         this.clusters = response.data as FarmerCluster[];
         this.hasData = this.clusters.length > 0;
       },
@@ -75,6 +85,107 @@ export class ViewFarmerClustersComponent implements OnInit {
         });
       }
     );
+  }
+
+  openStatusConfirmation(cluster: FarmerCluster) {
+    this.selectedCluster = cluster;
+    this.showStatusModal = true;
+    this.countdown = 30;
+    this.isCountdownCompleted = false;
+    
+    this.clearCountdown();
+    this.countdownInterval = setInterval(() => {
+      this.countdown--;
+      
+      if (this.countdown <= 0) {
+        this.isCountdownCompleted = true;
+        this.autoCancelStatusUpdate();
+      }
+    }, 1000);
+  }
+
+  cancelStatusUpdate() {
+    this.clearCountdown();
+    this.showStatusModal = false;
+    this.selectedCluster = null;
+    this.isCountdownCompleted = false;
+    
+    // Show cancellation message only if user manually cancelled
+    if (this.countdown > 0) {
+      Swal.fire({
+        title: 'Cancelled',
+        text: 'Status update was cancelled.',
+        icon: 'info',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+    }
+  }
+
+  autoCancelStatusUpdate() {
+    this.clearCountdown();
+    this.showStatusModal = false;
+    
+    Swal.fire({
+      title: 'Time Expired',
+      text: 'Status update was automatically cancelled due to inactivity.',
+      icon: 'warning',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    
+    this.selectedCluster = null;
+    this.isCountdownCompleted = false;
+  }
+
+  confirmStatusUpdate() {
+    this.clearCountdown();
+    this.showStatusModal = false;
+    this.isCountdownCompleted = false;
+    
+    if (this.selectedCluster) {
+      this.isLoading = true;
+      // Call your API to update the cluster status to "Started"
+      this.farmerClusterService.updateClusterStatus(this.selectedCluster.clusterId!, 'Started').subscribe(
+        (response) => {
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Success!',
+            text: 'Cluster status updated to Started.',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+          // Refresh the clusters list
+          this.fetchClusters();
+        },
+        (error) => {
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Error',
+            text: 'Failed to update cluster status.',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      );
+    }
+  }
+
+  private clearCountdown() {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
   }
 
   viewMembers(clusterId: number) {
@@ -109,8 +220,7 @@ export class ViewFarmerClustersComponent implements OnInit {
               text: response.message || 'Cluster deleted successfully',
               icon: 'success',
               customClass: {
-                popup:
-                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
@@ -123,8 +233,7 @@ export class ViewFarmerClustersComponent implements OnInit {
               text: error.message || 'Failed to delete cluster.',
               icon: 'error',
               customClass: {
-                popup:
-                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });

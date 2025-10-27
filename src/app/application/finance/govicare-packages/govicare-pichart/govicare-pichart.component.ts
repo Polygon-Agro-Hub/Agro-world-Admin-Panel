@@ -40,6 +40,30 @@ export class GovicarePichartComponent implements AfterViewInit, OnChanges {
     const freeCount = this.enrollments?.free || 0;
     const proCount = this.enrollments?.pro || 0;
 
+    // Plugin to draw text in the center of each slice
+    const centerTextPlugin = {
+      id: 'centerText',
+      afterDatasetDraw(chart: any) {
+        const { ctx, data } = chart;
+        const meta = chart.getDatasetMeta(0);
+        
+        meta.data.forEach((element: any, index: number) => {
+          const { x, y } = element.tooltipPosition();
+          
+          ctx.save();
+          ctx.font = 'bold 16px Arial';
+          ctx.fillStyle = '#FFFFFF';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          
+          const value = data.datasets[0].data[index];
+          ctx.fillText(value.toString(), x, y);
+          
+          ctx.restore();
+        });
+      }
+    };
+
     this.chart = new Chart(ctx, {
       type: 'pie',
       data: {
@@ -49,7 +73,7 @@ export class GovicarePichartComponent implements AfterViewInit, OnChanges {
             data: [freeCount, proCount],
             backgroundColor: [
               '#415CFF', // Blue for Free
-              '#FFDD00', // Green for Pro
+              '#FFDD00', // Yellow for Pro
             ],
             borderColor: '#061E2C',
             borderWidth: 4,
@@ -91,6 +115,7 @@ export class GovicarePichartComponent implements AfterViewInit, OnChanges {
           },
         },
       },
+      plugins: [centerTextPlugin],
     });
   }
 }

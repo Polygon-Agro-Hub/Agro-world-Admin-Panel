@@ -251,14 +251,9 @@ fetchOfficerById(id: number) {
     let empId = this.officerObj.empId || '';
     let empCodeText = this.empHeader ? `${this.empHeader}${empId}` : empId;
 
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    let empTypeText = `${getValueOrNA(empType)} - `;
-    doc.text(empTypeText, detailsX, y + 10);
-    let textWidth = doc.getTextWidth(empTypeText);
     doc.setFont("Inter", "bold");
     doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(empCodeText), detailsX + textWidth, y + 10);
+    doc.text(getValueOrNA(empCodeText), detailsX, y + 10);
     y += 7;
 
     // Center Name (if exists)

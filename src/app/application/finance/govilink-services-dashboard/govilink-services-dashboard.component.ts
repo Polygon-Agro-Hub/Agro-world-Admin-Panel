@@ -408,22 +408,22 @@ export class GovilinkServicesDashboardComponent
   }
 
   // Helper method to get arrow and color based on income status
-  getIncomeChangeDisplay(): { arrow: string; color: string; text: string } {
+  getIncomeChangeDisplay(): { icon: string; color: string; text: string } {
     if (this.incomeStatus === 'increased') {
       return {
-        arrow: '↑',
-        color: 'text-green-500',
+        icon: 'fa-arrow-trend-up',
+        color: 'text-teal-600',
         text: `+${this.incomeChangePercent}%`,
       };
     } else if (this.incomeStatus === 'decreased') {
       return {
-        arrow: '↓',
-        color: 'text-red-500',
+        icon: 'fa-arrow-trend-down',
+        color: 'text-red-600',
         text: `-${this.incomeChangePercent}%`,
       };
     } else {
       return {
-        arrow: '→',
+        icon: 'fa-arrow-right-long',
         color: 'text-gray-500',
         text: `${this.incomeChangePercent}%`,
       };

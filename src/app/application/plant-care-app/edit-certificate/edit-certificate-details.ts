@@ -84,6 +84,7 @@ export class EditCertificateDetailsComponent implements OnInit {
 
   cropDropdownOptions: { label: string; value: number }[] = [];
   selectedCrop: number | null = null;
+  filteredCropOptions: { label: string; value: number }[] = [];
   selectedCrops: { id: number; cropNameEnglish: string }[] = [];
 
   // New properties for conditional logic
@@ -114,6 +115,7 @@ export class EditCertificateDetailsComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
       scope: ['', Validators.required],
+      noOfVisit: ['', [Validators.min(0)]],
       tearmsFile: [null], // Not required for edit
     });
 
@@ -237,6 +239,7 @@ export class EditCertificateDetailsComponent implements OnInit {
       timeLine: certificate.timeLine || '',
       commission: certificate.commission || '',
       scope: certificate.scope || '',
+      noOfVisit: certificate.noOfVisit || '',
     });
 
     if (
@@ -437,8 +440,38 @@ export class EditCertificateDetailsComponent implements OnInit {
     this.router.navigate(['/plant-care/action/view-certificate-list']);
   }
 
+  // Enhanced crop search functionality
+  onCropFilter(event: any): void {
+    // PrimeNG handles the filtering automatically when filter=true
+  }
+
+  onCropSearchInput(event: any): void {
+    const searchTerm = event.target.value.toLowerCase();
+    if (searchTerm) {
+      this.filteredCropOptions = this.cropDropdownOptions.filter((option) =>
+        option.label.toLowerCase().includes(searchTerm)
+      );
+    } else {
+      this.filteredCropOptions = [...this.cropDropdownOptions];
+    }
+  }
+
   onSubmit(): void {
     this.certificateForm.markAllAsTouched();
+
+    // Validate noOfVisit
+    if (this.certificateForm.get('noOfVisit')?.invalid) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Input',
+        text: 'Number of visits cannot be negative.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      return;
+    }
 
     // Validate target crops based on applicable selection
     const applicable = this.certificateForm.get('applicable')?.value;
@@ -495,6 +528,13 @@ export class EditCertificateDetailsComponent implements OnInit {
     formData.append('timeLine', formValue.timeLine.toString());
     formData.append('commission', formValue.commission.toString());
     formData.append('scope', formValue.scope);
+
+    // Add noOfVisit to formData
+    if (formValue.noOfVisit) {
+      formData.append('noOfVisit', formValue.noOfVisit.toString());
+    } else {
+      formData.append('noOfVisit', '');
+    }
 
     // Append cropIds only if "For Selected Crops" is selected
     if (applicable === 'For Selected Crops' && this.selectedCrops.length > 0) {

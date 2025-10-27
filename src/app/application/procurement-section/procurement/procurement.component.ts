@@ -16,10 +16,14 @@ export class ProcurementComponent {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   purchaseReport(): void {
     this.router.navigate(['/procurement/received-orders']);
+  }
+
+  viewCenterRequirement(): void {
+    this.router.navigate(['/procurement/view-centre-requirement']);
   }
 
   definePackages(): void {

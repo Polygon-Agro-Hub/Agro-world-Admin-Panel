@@ -81,6 +81,7 @@ export class ViewCollectiveOfficerComponent {
   selectedIrmId: string | null = null;
   selectCenterStatus: string = '';
   selectStatus: string = '';
+  isSteckholdersRoute: boolean = false;
 
   hasData: boolean = false;
 
@@ -235,6 +236,7 @@ export class ViewCollectiveOfficerComponent {
   }
 
   ngOnInit() {
+    this.isSteckholdersRoute = this.router.url.includes('/steckholders/action/collective-officer');
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchCenterNames();

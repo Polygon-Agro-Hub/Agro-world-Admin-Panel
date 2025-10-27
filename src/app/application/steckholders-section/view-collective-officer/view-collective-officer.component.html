@@ -25,12 +25,19 @@
       <div class="flex align-middle justify-start items-center gap-x-12">
         <label class="block text-gray-700 pl-20 dark:text-gray-200 mb-2 ">Select Centre</label>
         <div class="flex flex-col">
-          <p-dropdown [options]="centerNames" optionLabel="centerName" optionValue="id" placeholder="Select a centre"
-            [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
-            name="selectedCenterId" required
-            [styleClass]="'border min-w-52 ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white'"
-            panelStyleClass="custom-dropdown-panel">
-          </p-dropdown>
+          <p-dropdown 
+  [options]="centerNames" 
+  optionLabel="centerName" 
+  optionValue="id" 
+  placeholder="Select a centre"
+  [(ngModel)]="selectedCenterId" 
+  #selectedCenterIdInput="ngModel" 
+  (onChange)="onCenterChange()"
+  name="selectedCenterId" 
+  required
+  [styleClass]="'border min-w-52 ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white custom-center-dropdown'" 
+  panelStyleClass="custom-dropdown-panel">
+</p-dropdown>
           <div *ngIf="selectedCenterIdInput.touched && !selectedCenterId" class="text-red-500 ml-2 text-sm mt-1">
             <div>Centre Name is required</div>
           </div>
@@ -150,25 +157,26 @@
         <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="selectStatus != null && selectStatus !== ''" placeholder="Status" [(ngModel)]="selectStatus"
-            (onChange)="applyStatusFilters()"></p-dropdown>
+            (onChange)="applyStatusFilters()"
+            panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="centerStatusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="selectCenterStatus != null && selectCenterStatus !== ''" placeholder="Centre Status"
-            [(ngModel)]="selectCenterStatus" (onChange)="applyCenterStatusFilters()"></p-dropdown>
+            [(ngModel)]="selectCenterStatus" (onChange)="applyCenterStatusFilters()" panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
             [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="role != null && role !== ''"
-            placeholder="Role" [(ngModel)]="role" (onChange)="applyFilters()"></p-dropdown>
+            placeholder="Role" [(ngModel)]="role" (onChange)="applyFilters()" panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
         <!-- <div class="mr-5">
@@ -380,15 +388,16 @@
             </td> -->
 
             <td *ngIf="(permissionService.hasPermission('View individual collection officer') ||
-            tokenService.getUserDetails().role === '1')" [class.ml-4]="Cname" class="px-4 py-3 text-center">
-              <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </button>
-            </td>
+            tokenService.getUserDetails().role === '1') && isSteckholdersRoute" 
+    [class.ml-4]="Cname" class="px-4 py-3 text-center">
+  <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+</td>
 
             <td *ngIf="
                 permissionService.hasPermission('Manage CO / CCM / DO') ||

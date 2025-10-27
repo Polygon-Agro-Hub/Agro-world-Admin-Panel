@@ -152,14 +152,15 @@ export class PlantcareComponent {
   downloadFarmerClusterTemplate(): void {
     this.isLoading = true;
 
-    // 1. Define the header row first
-    const header = ['NIC'];
+    // 1. Define the header row with two columns
+    const header = ['RegCode', 'NIC'];
 
     // 2. Define sample empty data rows
     const numberOfRowsToGenerate = 10000;
 
     const emptyRows = Array.from({ length: numberOfRowsToGenerate }, () => [
-      '',
+      '', // RegCode (empty)
+      '', // NIC (empty)
     ]);
 
     // Combine header and data rows
@@ -167,24 +168,35 @@ export class PlantcareComponent {
 
     const ws = XLSX.utils.aoa_to_sheet(worksheetData);
 
-    // 3. Force the NIC column (Column A, index 0) to be treated as TEXT
+    // 3. Force both columns to be treated as TEXT
     const range = XLSX.utils.decode_range(ws['!ref']!);
 
-    // Iterate over all cells in column A from the second row onwards (data rows)
+    // Iterate over all cells in both columns
     for (let R = range.s.r; R <= range.e.r; ++R) {
-      const cellAddress = XLSX.utils.encode_cell({ r: R, c: 0 });
-
-      // Ensure the cell exists before modifying
-      if (!ws[cellAddress]) {
-        ws[cellAddress] = { v: '', t: 's' };
+      // Column A: RegCode
+      const cellAddressA = XLSX.utils.encode_cell({ r: R, c: 0 });
+      if (!ws[cellAddressA]) {
+        ws[cellAddressA] = { v: '', t: 's' };
       } else {
-        ws[cellAddress].t = 's';
+        ws[cellAddressA].t = 's';
       }
+      ws[cellAddressA].z = '@';
 
-      ws[cellAddress].z = '@';
+      // Column B: NIC
+      const cellAddressB = XLSX.utils.encode_cell({ r: R, c: 1 });
+      if (!ws[cellAddressB]) {
+        ws[cellAddressB] = { v: '', t: 's' };
+      } else {
+        ws[cellAddressB].t = 's';
+      }
+      ws[cellAddressB].z = '@';
     }
 
-    ws['!cols'] = [{ wch: 20 }];
+    // Set column widths
+    ws['!cols'] = [
+      { wch: 25 }, // RegCode column width
+      { wch: 20 }, // NIC column width
+    ];
 
     // Create workbook
     const wb = XLSX.utils.book_new();

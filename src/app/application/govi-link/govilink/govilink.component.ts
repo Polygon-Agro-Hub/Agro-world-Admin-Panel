@@ -72,4 +72,8 @@ export class GovilinkComponent {
   assignGoViLinkJobs(): void {
     this.router.navigate(['/govi-link/action/view-govi-link-jobs']);
   }
+  
+    viewjobHistory(): void {
+    this.router.navigate(['/govi-link/action/view-job-history']);
+  }
 }

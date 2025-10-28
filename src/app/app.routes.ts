@@ -221,6 +221,7 @@ import { ViewAllCertificatePaymentsComponent } from './application/finance/govic
 import { CommissionRangeComponent } from './application/finance/commission-range/commission-range.component';
 import { ViewAllServicePaymentsComponent } from './application/finance/view-all-service-payments/view-all-service-payments.component';
 import { ViewCentreRequirementComponent } from './application/procurement-section/view-centre-requirement/view-centre-requirement.component';
+import { ViewJobHistoryComponent } from './application/govi-link/view-job-history/view-job-history.component';
 
 export const routes: Routes = [
   {
@@ -1404,6 +1405,10 @@ export const routes: Routes = [
               {
                 path: 'view-govi-link-jobs',
                 component: ViewGoviLinkJobsComponent,
+              },
+                            {
+                path: 'view-job-history',
+                component: ViewJobHistoryComponent,
               },
             ],
           },

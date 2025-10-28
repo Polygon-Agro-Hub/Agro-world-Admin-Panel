@@ -35,6 +35,8 @@ export class ViewClusterUsersComponent implements OnInit {
   clusterName: string = 'Loading...';
   searchTerm: string = '';
   isAddFarmerModalOpen: boolean = false;
+  farmIdError: string = '';
+  newFarmerFarmId: string = '';
   newFarmerNIC: string = '';
   nicError: string = '';
   isDeleteModalOpen: boolean = false;
@@ -57,19 +59,21 @@ export class ViewClusterUsersComponent implements OnInit {
     });
   }
 
-  fetchClusterUsers() {
+  fetchClusterUsers(searchTerm: string = '') {
     this.isLoading = true;
-    this.farmerClusterService.getClusterMembers(this.clusterId).subscribe(
+    this.farmerClusterService.getClusterMembers(this.clusterId, searchTerm).subscribe(
       (response: any) => {
         this.isLoading = false;
 
-        // Set cluster name
-        this.clusterName = response.data?.clusterName || 'Unknown Cluster';
+        if (response.data) {
+          // Set cluster name
+          this.clusterName = response.data.clusterName || 'Unknown Cluster';
 
-        // Set users list
-        this.users = response.data?.members || [];
-        this.filteredUsers = [...this.users];
-        this.hasData = this.users.length > 0;
+          // Set users list
+          this.users = response.data.members || [];
+          this.filteredUsers = [...this.users];
+          this.hasData = this.users.length > 0;
+        }
       },
       (error) => {
         this.isLoading = false;
@@ -88,25 +92,16 @@ export class ViewClusterUsersComponent implements OnInit {
   }
 
   onSearch() {
-    if (!this.searchTerm.trim()) {
-      this.filteredUsers = [...this.users];
-      return;
-    }
-
-    const term = this.searchTerm.toLowerCase().trim();
-    this.filteredUsers = this.users.filter(
-      (user) =>
-        user.nic.toLowerCase().includes(term) ||
-        user.phoneNumber.toLowerCase().includes(term)
-    );
+    // Only search when search icon is clicked
+    this.fetchClusterUsers(this.searchTerm.trim());
   }
 
   offSearch() {
     this.searchTerm = '';
-    this.filteredUsers = [...this.users];
+    this.fetchClusterUsers(); // Fetch all users without search term
   }
 
-   // Open delete confirmation modal
+  // Open delete confirmation modal
   openDeleteModal(user: ClusterMember) {
     this.farmerToDelete = user;
     this.isDeleteModalOpen = true;
@@ -131,8 +126,6 @@ export class ViewClusterUsersComponent implements OnInit {
     this.openDeleteModal(user);
   }
 
-
-
   removeUserFromCluster(user: ClusterMember) {
     this.isLoading = true;
     this.farmerClusterService
@@ -150,12 +143,8 @@ export class ViewClusterUsersComponent implements OnInit {
               title: 'font-semibold text-lg',
             },
           });
-          // Remove user from local arrays
-          this.users = this.users.filter((u) => u.farmerId !== user.farmerId);
-          this.filteredUsers = this.filteredUsers.filter(
-            (u) => u.farmerId !== user.farmerId
-          );
-          this.hasData = this.users.length > 0;
+          // Refresh the user list after removal
+          this.fetchClusterUsers(this.searchTerm);
         },
         (error) => {
           this.isLoading = false;
@@ -180,16 +169,23 @@ export class ViewClusterUsersComponent implements OnInit {
 
   addNew() {
     this.newFarmerNIC = '';
+    this.newFarmerFarmId = '';
+    this.nicError = '';
+    this.farmIdError = '';
     this.isAddFarmerModalOpen = true;
   }
 
   closeAddFarmerModal() {
     this.isAddFarmerModalOpen = false;
+    this.nicError = '';
+    this.farmIdError = '';
   }
 
   submitAddFarmer() {
     this.nicError = '';
+    this.farmIdError = '';
 
+    // Validate NIC
     if (!this.newFarmerNIC.trim()) {
       this.nicError = 'NIC is required';
       return;
@@ -200,9 +196,27 @@ export class ViewClusterUsersComponent implements OnInit {
       return;
     }
 
+    // Validate Farm ID
+    if (!this.newFarmerFarmId.trim()) {
+      this.farmIdError = 'Farm ID is required';
+      return;
+    }
+
+    if (this.newFarmerFarmId.trim().length < 1) {
+      this.farmIdError = 'Farm ID is required';
+      return;
+    }
+
     this.isLoading = true;
+
+    // Prepare data to send to backend
+    const addFarmerData = {
+      nic: this.newFarmerNIC.trim(),
+      farmId: this.newFarmerFarmId.trim(),
+    };
+
     this.farmerClusterService
-      .addFarmerToCluster(this.clusterId, this.newFarmerNIC.trim())
+      .addFarmerToCluster(this.clusterId, addFarmerData)
       .subscribe(
         (response: any) => {
           this.isLoading = false;
@@ -216,12 +230,22 @@ export class ViewClusterUsersComponent implements OnInit {
               title: 'font-semibold text-lg',
             },
           });
-          this.fetchClusterUsers();
+          // Refresh with current search term
+          this.fetchClusterUsers(this.searchTerm);
           this.closeAddFarmerModal();
         },
         (error) => {
           this.isLoading = false;
-          this.nicError = error.error?.message || 'Failed to add farmer';
+          const errorMessage = error.error?.message || 'Failed to add farmer';
+
+          // Check if error is specifically for NIC or Farm ID
+          if (errorMessage.toLowerCase().includes('nic')) {
+            this.nicError = errorMessage;
+          } else if (errorMessage.toLowerCase().includes('farm')) {
+            this.farmIdError = errorMessage;
+          } else {
+            this.nicError = errorMessage;
+          }
         }
       );
   }

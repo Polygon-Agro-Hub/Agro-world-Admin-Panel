@@ -6,6 +6,7 @@ import { GovicareAreaChartComponent } from '../govicare-area-chart/govicare-area
 import { GovicarePichartComponent } from '../govicare-pichart/govicare-pichart.component';
 import { GovicareThurdRowComponent } from '../govicare-thurd-row/govicare-thurd-row.component';
 import { FinanceService, DashboardData } from '../../../../services/finance/finance.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-govicare-packages-main',
@@ -25,7 +26,10 @@ export class GovicarePackagesMainComponent implements OnInit {
   isLoading: boolean = false;
   dashboardData: DashboardData | null = null;
 
-  constructor(@Inject(FinanceService) private financeService: FinanceService) {}
+  constructor(
+    @Inject(FinanceService) private financeService: FinanceService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -45,6 +49,10 @@ export class GovicarePackagesMainComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+  
+    back(): void {
+    this.router.navigate(['/finance/action']); 
   }
   
   

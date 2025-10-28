@@ -3,6 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -11,7 +12,28 @@ import { TokenService } from '../../../services/token/services/token.service';
 import {
   CertificateCompanyService,
   ClusterMember,
+  Certificate,
 } from '../../../services/plant-care/certificate-company.service';
+
+interface District {
+  name: string;
+  value: string;
+}
+
+interface ClusterData {
+  clusterId: number;
+  clusterName: string;
+  clusterStatus: string;
+  district: string;
+  certificateId: number;
+  certificateName: string;
+  certificateNumber: string;
+  lastModifiedBy: string;
+  lastModifiedOn: string;
+  createdAt: string;
+  members: ClusterMember[];
+  totalMembers: number;
+}
 
 @Component({
   selector: 'app-edit-farmer-cluster',
@@ -22,6 +44,7 @@ import {
     LoadingSpinnerComponent,
     NgxPaginationModule,
     FormsModule,
+    DropdownModule,
   ],
   templateUrl: './edit-farmer-cluster.component.html',
   styleUrls: ['./edit-farmer-cluster.component.css'],
@@ -32,15 +55,53 @@ export class EditFarmerClusterComponent implements OnInit {
   isLoading = false;
   hasData: boolean = false;
   clusterId!: number;
+  clusterData: ClusterData | null = null;
   clusterName: string = '';
   originalClusterName: string = '';
+  selectedDistrict: string = '';
+  originalDistrict: string = '';
+  selectedCertificateId: number | null = null;
+  originalCertificateId: number | null = null;
   searchTerm: string = '';
   isAddFarmerModalOpen: boolean = false;
   newFarmerNIC: string = '';
+  newFarmerFarmId: string = '';
   nicError: string = '';
+  farmIdError: string = '';
   nameError: string = '';
   isDeleteModalOpen: boolean = false;
   farmerToDelete: ClusterMember | null = null;
+  formSubmitted: boolean = false;
+  certificates: Certificate[] = [];
+  isInitializing: boolean = false;
+
+  districts: District[] = [
+    { name: 'Ampara', value: 'Ampara' },
+    { name: 'Anuradhapura', value: 'Anuradhapura' },
+    { name: 'Badulla', value: 'Badulla' },
+    { name: 'Batticaloa', value: 'Batticaloa' },
+    { name: 'Colombo', value: 'Colombo' },
+    { name: 'Galle', value: 'Galle' },
+    { name: 'Gampaha', value: 'Gampaha' },
+    { name: 'Hambantota', value: 'Hambantota' },
+    { name: 'Jaffna', value: 'Jaffna' },
+    { name: 'Kalutara', value: 'Kalutara' },
+    { name: 'Kandy', value: 'Kandy' },
+    { name: 'Kegalle', value: 'Kegalle' },
+    { name: 'Kilinochchi', value: 'Kilinochchi' },
+    { name: 'Kurunegala', value: 'Kurunegala' },
+    { name: 'Mannar', value: 'Mannar' },
+    { name: 'Matale', value: 'Matale' },
+    { name: 'Matara', value: 'Matara' },
+    { name: 'Monaragala', value: 'Monaragala' },
+    { name: 'Mullaitivu', value: 'Mullaitivu' },
+    { name: 'Nuwara Eliya', value: 'Nuwara Eliya' },
+    { name: 'Polonnaruwa', value: 'Polonnaruwa' },
+    { name: 'Puttalam', value: 'Puttalam' },
+    { name: 'Rathnapura', value: 'Rathnapura' },
+    { name: 'Trincomalee', value: 'Trincomalee' },
+    { name: 'Vavuniya', value: 'Vavuniya' },
+  ];
 
   constructor(
     private farmerClusterService: CertificateCompanyService,
@@ -54,6 +115,7 @@ export class EditFarmerClusterComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.clusterId = +params['clusterId'];
       if (this.clusterId) {
+        this.loadCertificates();
         this.fetchClusterUsers();
       }
     });
@@ -65,65 +127,146 @@ export class EditFarmerClusterComponent implements OnInit {
       (response: any) => {
         this.isLoading = false;
 
-        // Set cluster name
-        this.clusterName = response.data?.clusterName || 'Unknown Cluster';
+        if (response.data) {
+          this.clusterData = response.data;
 
-        // Set users list
-        this.users = response.data?.members || [];
-        this.filteredUsers = [...this.users];
-        this.hasData = this.users.length > 0;
+          // Set form values
+          this.clusterName = response.data.clusterName || '';
+          this.originalClusterName = this.clusterName;
+
+          this.selectedDistrict = response.data.district || '';
+          this.originalDistrict = this.selectedDistrict;
+
+          this.selectedCertificateId = response.data.certificateId || null;
+          this.originalCertificateId = this.selectedCertificateId;
+
+          // Set users list
+          this.users = response.data.members || [];
+          this.filteredUsers = [...this.users];
+          this.hasData = this.users.length > 0;
+        }
       },
       (error) => {
         this.isLoading = false;
         console.error('Error fetching cluster users:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to fetch cluster members.',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+        this.showErrorPopup('Error', 'Failed to fetch cluster members.');
       }
     );
   }
 
-  updateClusterName() {
+  loadCertificates(): void {
+    this.isInitializing = true;
+    this.farmerClusterService.getFarmerClusterCertificates().subscribe({
+      next: (response) => {
+        this.isInitializing = false;
+        if (response.status && response.data) {
+          this.certificates = response.data;
+        } else {
+          this.showErrorPopup(
+            'Certificate Load Error',
+            'Failed to load certificates. Please try again.'
+          );
+        }
+      },
+      error: (error) => {
+        this.isInitializing = false;
+        console.error('Error loading certificates:', error);
+        this.showErrorPopup(
+          'Certificate Load Error',
+          'Failed to load certificates. Please try again.'
+        );
+      },
+    });
+  }
+
+  getSelectedCertificateName(): string {
+    const selectedCert = this.certificates.find(
+      (cert) => cert.id === this.selectedCertificateId
+    );
+    return selectedCert
+      ? `${selectedCert.srtName} (${selectedCert.srtNumber})`
+      : '';
+  }
+
+  hasChanges(): boolean {
+    return (
+      this.clusterName !== this.originalClusterName ||
+      this.selectedDistrict !== this.originalDistrict ||
+      this.selectedCertificateId !== this.originalCertificateId
+    );
+  }
+
+  updateCluster() {
+    this.formSubmitted = true;
     this.nameError = '';
 
+    // Validate required fields
     if (!this.clusterName.trim()) {
       this.nameError = 'Cluster name is required';
       return;
     }
 
-    if (this.clusterName === this.originalClusterName) {
-      this.nameError = 'Cluster name is unchanged';
+    if (!this.selectedDistrict) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'District is required',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    if (!this.selectedCertificateId) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Certificate selection is required',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
       return;
     }
 
     this.isLoading = true;
+    const updateData = {
+      clusterName: this.clusterName.trim(),
+      district: this.selectedDistrict,
+      certificateId: this.selectedCertificateId,
+    };
+
     this.farmerClusterService
-      .updateClusterName(this.clusterId, this.clusterName)
+      .updateFarmerCluster(this.clusterId, updateData)
       .subscribe(
         (response: any) => {
           this.isLoading = false;
           Swal.fire({
             title: 'Success!',
-            text: response.message || 'Cluster name updated successfully',
+            text: response.message || 'Cluster updated successfully',
             icon: 'success',
             customClass: {
               popup:
                 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
+          }).then(() => {
+            // Update original values
+            this.originalClusterName = this.clusterName;
+            this.originalDistrict = this.selectedDistrict;
+            this.originalCertificateId = this.selectedCertificateId;
+            this.formSubmitted = false;
+
+            // Refresh cluster data
+            this.fetchClusterUsers();
           });
-          this.originalClusterName = this.clusterName;
         },
         (error) => {
           this.isLoading = false;
-          this.nameError =
-            error.error?.message || 'Failed to update cluster name';
+          this.nameError = error.error?.message || 'Failed to update cluster';
         }
       );
   }
@@ -138,7 +281,10 @@ export class EditFarmerClusterComponent implements OnInit {
     this.filteredUsers = this.users.filter(
       (user) =>
         user.nic.toLowerCase().includes(term) ||
-        user.phoneNumber.toLowerCase().includes(term)
+        user.phoneNumber?.toLowerCase().includes(term) ||
+        user.farmerName.toLowerCase().includes(term) ||
+        user.farmId.toString().includes(term) ||
+        user.farmName?.toLowerCase().includes(term)
     );
   }
 
@@ -148,7 +294,7 @@ export class EditFarmerClusterComponent implements OnInit {
   }
 
   onCancel() {
-    if (this.clusterName !== this.originalClusterName) {
+    if (this.hasChanges()) {
       Swal.fire({
         title: 'Are you sure?',
         text: 'You have unsaved changes. Do you want to cancel without saving?',
@@ -222,20 +368,20 @@ export class EditFarmerClusterComponent implements OnInit {
             (u) => u.farmerId !== user.farmerId
           );
           this.hasData = this.users.length > 0;
+
+          // Update cluster data
+          if (this.clusterData) {
+            this.clusterData.members = this.users;
+            this.clusterData.totalMembers = this.users.length;
+          }
         },
         (error) => {
           this.isLoading = false;
           console.error('Error removing user:', error);
-          Swal.fire({
-            title: 'Error',
-            text: error.error?.message || 'Failed to remove user from cluster',
-            icon: 'error',
-            customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
+          this.showErrorPopup(
+            'Error',
+            error.error?.message || 'Failed to remove user from cluster'
+          );
         }
       );
   }
@@ -246,18 +392,23 @@ export class EditFarmerClusterComponent implements OnInit {
 
   addNew() {
     this.newFarmerNIC = '';
+    this.newFarmerFarmId = '';
     this.nicError = '';
+    this.farmIdError = '';
     this.isAddFarmerModalOpen = true;
   }
 
   closeAddFarmerModal() {
     this.isAddFarmerModalOpen = false;
     this.nicError = '';
+    this.farmIdError = '';
   }
 
   submitAddFarmer() {
     this.nicError = '';
+    this.farmIdError = '';
 
+    // Validate NIC
     if (!this.newFarmerNIC.trim()) {
       this.nicError = 'NIC is required';
       return;
@@ -268,9 +419,27 @@ export class EditFarmerClusterComponent implements OnInit {
       return;
     }
 
+    // Validate Farm ID
+    if (!this.newFarmerFarmId.trim()) {
+      this.farmIdError = 'Farm ID is required';
+      return;
+    }
+
+    if (this.newFarmerFarmId.trim().length < 1) {
+      this.farmIdError = 'Farm ID is required';
+      return;
+    }
+
     this.isLoading = true;
+    
+    // Prepare data to send to backend
+    const addFarmerData = {
+      nic: this.newFarmerNIC.trim(),
+      farmId: this.newFarmerFarmId.trim()
+    };
+
     this.farmerClusterService
-      .addFarmerToCluster(this.clusterId, this.newFarmerNIC.trim())
+      .addFarmerToCluster(this.clusterId, addFarmerData)
       .subscribe(
         (response: any) => {
           this.isLoading = false;
@@ -289,8 +458,36 @@ export class EditFarmerClusterComponent implements OnInit {
         },
         (error) => {
           this.isLoading = false;
-          this.nicError = error.error?.message || 'Failed to add farmer';
+          const errorMessage = error.error?.message || 'Failed to add farmer';
+          
+          // Check if error is specifically for NIC or Farm ID
+          if (errorMessage.toLowerCase().includes('nic')) {
+            this.nicError = errorMessage;
+          } else if (errorMessage.toLowerCase().includes('farm')) {
+            this.farmIdError = errorMessage;
+          } else {
+            this.nicError = errorMessage;
+          }
         }
       );
+  }
+
+  // Helper method to check if form is valid
+  isAddFarmerFormValid(): boolean {
+    return this.newFarmerNIC.trim().length >= 9 && 
+           this.newFarmerFarmId.trim().length > 0 && 
+           !this.isLoading;
+  }
+
+  private showErrorPopup(title: string, message: string) {
+    Swal.fire({
+      title: title,
+      text: message,
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
   }
 }

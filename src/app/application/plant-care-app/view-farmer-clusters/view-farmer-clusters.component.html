@@ -39,13 +39,12 @@
 
         <!-- Search bar -->
         <div
-          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5"
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-tileBlack text-textLight dark:text-textDark mb-5"
         >
           <input
             type="text"
             placeholder="Search by Cluster Name"
             [(ngModel)]="searchTerm"
-            (keyup.enter)="onSearch()"
             (keyup.esc)="offSearch()"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
           />
@@ -112,6 +111,16 @@
               Cluster Name
             </th>
             <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              District
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Certificate Name
+            </th>
+            <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Member Count
@@ -120,6 +129,11 @@
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               View Members
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Status
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -131,7 +145,9 @@
             >
               Last Modified On
             </th>
-            <th></th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            ></th>
           </tr>
         </thead>
         <tbody>
@@ -145,6 +161,12 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ cluster.clusterName }}
             </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ cluster.district || "--" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ cluster.certificateName || "No Certificate" }}
+            </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{
                 cluster.memberCount
@@ -155,10 +177,25 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 (click)="viewMembers(cluster.clusterId!)"
-                class="text-blue-500"
+                class="text-blue-500 hover:text-blue-700 transition-colors"
                 title="View Cluster Members"
               >
-                <i class="fa-solid fa-users text-2xl"></i>
+                <i class="fa-solid fa-users text-xl"></i>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <button
+                *ngIf="cluster.status === 'Started'"
+                class="bg-[#BBFFC6] text-[#308233] px-3 py-1 rounded-lg text-sm cursor-default w-36"
+              >
+                Started
+              </button>
+              <button
+                *ngIf="cluster.status !== 'Started'"
+                (click)="openStatusConfirmation(cluster)"
+                class="bg-[#F8FFA6] text-[#A8A100] px-3 py-1 rounded-lg text-sm transition-colors w-36"
+              >
+                {{ cluster.status || "Not Started" }}
               </button>
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -166,17 +203,17 @@
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{
-                cluster.lastModifiedDate
-                  ? (cluster.lastModifiedDate | date : "yyyy-MM-dd hh:mm:ss a")
+                cluster.lastModifiedOn
+                  ? (cluster.lastModifiedOn | date : "yyyy-MM-dd hh:mm:ss a")
                   : "--"
               }}
             </td>
-            <td class="px-4 py-3 text-left">
-              <div class="flex space-x-3">
+            <td class="px-4 py-3 text-center">
+              <div class="flex space-x-3 justify-center">
                 <!-- EDIT -->
                 <button
                   *ngIf="tokenService.getUserDetails().role === '1'"
-                  class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6"
+                  class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6 transition-colors"
                   (click)="editCluster(cluster.clusterId!)"
                   [disabled]="isLoading"
                   title="Edit Cluster"
@@ -198,7 +235,7 @@
                 <!-- DELETE -->
                 <button
                   *ngIf="tokenService.getUserDetails().role === '1'"
-                  class="text-red-500 hover:text-red-700"
+                  class="text-red-500 hover:text-red-700 transition-colors"
                   (click)="deleteCluster(cluster.clusterId!)"
                   title="Delete Cluster"
                 >
@@ -225,6 +262,113 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Status Confirmation Modal -->
+<div
+  *ngIf="showStatusModal"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+>
+  <div
+    class="bg-white dark:bg-tileBlack rounded-2xl shadow-2xl w-full max-w-md p-8 text-center"
+  >
+    <!-- Title -->
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+      Confirmation
+    </h3>
+
+    <!-- Description -->
+    <p class="text-gray-600 dark:text-gray-300 mb-8">
+      Marking as started in 30 seconds.<br />
+      Tap 'Cancel & Go Back' to cancel.
+    </p>
+
+    <!-- Countdown Circle -->
+    <div class="flex justify-center mb-8">
+      <div class="relative w-40 h-40">
+        <!-- Outer Bigger Circle with Shadow -->
+        <svg class="w-full h-full transform -rotate-90">
+          <!-- Outer Circle Background -->
+          <circle
+            cx="80"
+            cy="80"
+            r="70"
+            stroke="#E5E7EB"
+            stroke-width="6"
+            fill="none"
+            filter="drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.1))"
+          ></circle>
+
+          <!-- Outer Progress Circle -->
+          <circle
+            cx="80"
+            cy="80"
+            r="70"
+            stroke="#3980C0"
+            stroke-width="1"
+            fill="none"
+            stroke-linecap="round"
+            [attr.stroke-dasharray]="439.82"
+            [attr.stroke-dashoffset]="439.82 - (countdown / 30) * 439.82"
+            class="transition-all duration-300 ease-linear"
+            filter="drop-shadow(0px 2px 4px rgba(57, 128, 192, 0.3))"
+          ></circle>
+        </svg>
+
+        <!-- Inner Smaller Circle with Shadow -->
+        <svg class="w-32 h-32 transform -rotate-90 absolute top-4 left-4">
+          <!-- Inner Circle Background -->
+          <circle
+            cx="64"
+            cy="64"
+            r="54"
+            stroke="#F3F4F6"
+            stroke-width="1.5"
+            fill="none"
+            filter="drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.05))"
+          ></circle>
+
+          <!-- Inner Progress Circle -->
+          <circle
+            cx="64"
+            cy="64"
+            r="54"
+            stroke="#F3F4F6"
+            stroke-width="1"
+            fill="none"
+            stroke-linecap="round"
+            class="transition-all duration-300 ease-linear"
+            filter="drop-shadow(0px 1px 2px rgba(57, 128, 192, 0.2))"
+          ></circle>
+        </svg>
+
+        <!-- Countdown Text -->
+        <div
+          class="absolute inset-0 flex flex-col items-center justify-center text-gray-900 dark:text-white"
+        >
+          <span class="text-xl tracking-tighter">
+            {{ countdown < 10 ? "00.0" + countdown : "00." + countdown }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-between gap-4">
+      <button
+        (click)="cancelStatusUpdate()"
+        class="flex-1 bg-[#74788D] hover:bg-gray-500 text-white font-medium py-2 rounded-lg transition-colors"
+      >
+        Cancel & Go Back
+      </button>
+      <button
+        (click)="confirmStatusUpdate()"
+        class="flex-1 bg-[#3980C0] hover:bg-[#2a6ca8] text-white font-medium py-2 rounded-lg transition-colors"
+      >
+        Confirm & Start
+      </button>
     </div>
   </div>
 </div>

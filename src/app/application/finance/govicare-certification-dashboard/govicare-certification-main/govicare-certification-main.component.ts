@@ -6,7 +6,11 @@ import { GovicareCertificationFirstRowComponent } from '../govicare-certificatio
 import { GovicareCertificationAreaChartComponent } from '../govicare-certification-area-chart/govicare-certification-area-chart.component';
 import { GovicareCertificationPichartComponent } from '../govicare-certification-pichart/govicare-certification-pichart.component';
 import { GovicareCertificationThirdRowComponent } from '../govicare-certification-third-row/govicare-certification-third-row.component';
-import { FinanceService, CertificateDashboardData } from '../../../../services/finance/finance.service';
+import {
+  FinanceService,
+  CertificateDashboardData,
+} from '../../../../services/finance/finance.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-govicare-certification-main',
@@ -28,6 +32,7 @@ export class GovicareCertificationMainComponent implements OnInit {
 
   constructor(
     private location: Location,
+    private router: Router,
     private financeService: FinanceService
   ) {}
 
@@ -36,7 +41,7 @@ export class GovicareCertificationMainComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    this.router.navigate(['/finance/action']);
   }
 
   loadDashboardData(): void {
@@ -52,7 +57,7 @@ export class GovicareCertificationMainComponent implements OnInit {
       error: (error) => {
         console.error('Error loading dashboard data:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 

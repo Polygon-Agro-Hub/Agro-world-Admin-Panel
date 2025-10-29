@@ -81,7 +81,7 @@ export class ViewServicesListComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: `You are about to delete "${service.englishName}" service!`,
+      text: `Are you sure you want to delete this "${service.englishName}" Service? This action cannot be undone.`,
       showCancelButton: true,
       confirmButtonText: 'Yes, Delete',
       cancelButtonText: 'No, Cancel',

@@ -270,20 +270,23 @@ fetchOfficerById(id: number) {
   // Add extra space between profile section and Personal Information section
   y += 25; // Increased from 20 to 25 for more spacing
 
-  // Check if we need a new page
+  // Improved page break check function
   const checkNewPage = (requiredHeight: number) => {
-    if (y + requiredHeight > pageHeight - margin) {
+    if (y + requiredHeight > pageHeight - margin - 10) { // Added buffer of 10mm
       doc.addPage();
       y = margin;
       // Set background for new page
       doc.setFillColor(colors.background);
       doc.rect(0, 0, pageWidth, pageHeight, 'F');
+      return true; // Return true if new page was added
     }
+    return false; // Return false if no new page was needed
   };
 
   // Personal Information Section
-  checkNewPage(70);
-  // Removed background color for this section
+  const personalInfoHeight = 70;
+  checkNewPage(personalInfoHeight);
+  
   doc.setFontSize(16);
   doc.setFont("Inter", "bold");
   doc.setTextColor(colors.textPrimary);
@@ -347,8 +350,9 @@ fetchOfficerById(id: number) {
   y += 70;
 
   // Address Details Section
-  checkNewPage(70);
-  // Removed background color for this section
+  const addressDetailsHeight = 70;
+  checkNewPage(addressDetailsHeight);
+  
   doc.setFontSize(16);
   doc.setFont("Inter", "bold");
   doc.setTextColor(colors.textPrimary);
@@ -397,8 +401,9 @@ fetchOfficerById(id: number) {
   y += 70;
 
   // Bank Details Section
-  checkNewPage(50);
-  // Removed background color for this section
+  const bankDetailsHeight = 50;
+  checkNewPage(bankDetailsHeight);
+  
   doc.setFontSize(16);
   doc.setFont("Inter", "bold");
   doc.setTextColor(colors.textPrimary);
@@ -434,8 +439,8 @@ fetchOfficerById(id: number) {
 
   y += 50;
 
-  // Footer
-  checkNewPage(20);
+  // Footer - ALWAYS on first page, no page break check
+  // Simply place it at the bottom of the first page
   doc.setFontSize(10);
   doc.setFont("Inter", "normal");
   doc.setTextColor(colors.footerText);

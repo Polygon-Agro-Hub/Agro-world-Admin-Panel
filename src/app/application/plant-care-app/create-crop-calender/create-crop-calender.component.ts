@@ -419,6 +419,10 @@ export class CreateCropCalenderComponent implements OnInit {
         confirmButtonText: 'OK',
         focusConfirm: false,
         allowOutsideClick: false,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
       }).then(() => {
         const firstInvalidField = this.getFirstInvalidField();
         if (firstInvalidField) {
@@ -461,7 +465,7 @@ export class CreateCropCalenderComponent implements OnInit {
       if (this.cropId !== null && (controlName === 'groupId' || controlName === 'varietyId')) {
         continue;
       }
-      
+
       if (controls[controlName].invalid) {
         return controlName;
       }
@@ -583,7 +587,7 @@ export class CreateCropCalenderComponent implements OnInit {
             natureOfCultivation: this.cropCalender[0].natOfCul || '',
             cropDuration: this.cropCalender[0].cropDuration || '',
             suitableAreas: selectedAreas,
-            specialNotes: this.cropCalender[0] .specialNotes || '',
+            specialNotes: this.cropCalender[0].specialNotes || '',
             groupId: this.cropCalender[0].groupId?.toString() || '',
             varietyId: this.cropCalender[0].varietyId?.toString() || '',
           });
@@ -693,73 +697,73 @@ export class CreateCropCalenderComponent implements OnInit {
   }
 
   blockStartingSpace(event: KeyboardEvent): void {
-  const target = event.target as HTMLTextAreaElement;
-  const cursorPosition = target.selectionStart;
-  
-  // Block space if cursor is at the beginning or if the text is empty
-  if (event.key === ' ' && (cursorPosition === 0 || target.value.length === 0)) {
-    event.preventDefault();
-  }
-}
+    const target = event.target as HTMLTextAreaElement;
+    const cursorPosition = target.selectionStart;
 
-trimStartingSpaces(event: Event, controlName: string): void {
-  const target = event.target as HTMLTextAreaElement;
-  const currentValue = target.value;
-  
-  // Remove leading spaces
-  if (currentValue.startsWith(' ')) {
-    const trimmedValue = currentValue.replace(/^\s+/, '');
-    this.cropForm.get(controlName)?.setValue(trimmedValue, { emitEvent: false });
-    
-    // Set cursor position after the update
-    setTimeout(() => {
-      target.setSelectionRange(trimmedValue.length, trimmedValue.length);
-    });
-  }
-}
-
-capitalizeFirstLetter(event: Event, controlName: string): void {
-  const target = event.target as HTMLTextAreaElement;
-  const currentValue = target.value.trim();
-  
-  if (currentValue && currentValue.length > 0) {
-    // Capitalize first letter and keep the rest as is
-    const capitalizedValue = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
-    
-    if (currentValue !== capitalizedValue) {
-      this.cropForm.get(controlName)?.setValue(capitalizedValue, { emitEvent: false });
+    // Block space if cursor is at the beginning or if the text is empty
+    if (event.key === ' ' && (cursorPosition === 0 || target.value.length === 0)) {
+      event.preventDefault();
     }
   }
-}
 
-onTextareaInput(event: Event): void {
-  const textarea = event.target as HTMLTextAreaElement;
-  const value = textarea.value;
-  
-  // Block starting spaces
-  if (value.startsWith(' ')) {
-    textarea.value = value.trimStart();
-    this.cropForm.get('specialNotes')?.setValue(textarea.value);
-    return;
-  }
-  
-  // Auto-capitalize first letter in real-time
-  if (value.length === 1) {
-    textarea.value = value.toUpperCase();
-    this.cropForm.get('specialNotes')?.setValue(textarea.value);
-  } else if (value.length > 1 && value[0] !== value[0].toUpperCase()) {
-    textarea.value = value.charAt(0).toUpperCase() + value.slice(1);
-    this.cropForm.get('specialNotes')?.setValue(textarea.value);
-  }
-}
+  trimStartingSpaces(event: Event, controlName: string): void {
+    const target = event.target as HTMLTextAreaElement;
+    const currentValue = target.value;
 
-capitalizeTextarea(): void {
-  const value = this.cropForm.get('specialNotes')?.value;
-  if (value && value.length > 0) {
-    const capitalized = value.charAt(0).toUpperCase() + value.slice(1);
-    this.cropForm.get('specialNotes')?.setValue(capitalized);
+    // Remove leading spaces
+    if (currentValue.startsWith(' ')) {
+      const trimmedValue = currentValue.replace(/^\s+/, '');
+      this.cropForm.get(controlName)?.setValue(trimmedValue, { emitEvent: false });
+
+      // Set cursor position after the update
+      setTimeout(() => {
+        target.setSelectionRange(trimmedValue.length, trimmedValue.length);
+      });
+    }
   }
-}
+
+  capitalizeFirstLetter(event: Event, controlName: string): void {
+    const target = event.target as HTMLTextAreaElement;
+    const currentValue = target.value.trim();
+
+    if (currentValue && currentValue.length > 0) {
+      // Capitalize first letter and keep the rest as is
+      const capitalizedValue = currentValue.charAt(0).toUpperCase() + currentValue.slice(1);
+
+      if (currentValue !== capitalizedValue) {
+        this.cropForm.get(controlName)?.setValue(capitalizedValue, { emitEvent: false });
+      }
+    }
+  }
+
+  onTextareaInput(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    const value = textarea.value;
+
+    // Block starting spaces
+    if (value.startsWith(' ')) {
+      textarea.value = value.trimStart();
+      this.cropForm.get('specialNotes')?.setValue(textarea.value);
+      return;
+    }
+
+    // Auto-capitalize first letter in real-time
+    if (value.length === 1) {
+      textarea.value = value.toUpperCase();
+      this.cropForm.get('specialNotes')?.setValue(textarea.value);
+    } else if (value.length > 1 && value[0] !== value[0].toUpperCase()) {
+      textarea.value = value.charAt(0).toUpperCase() + value.slice(1);
+      this.cropForm.get('specialNotes')?.setValue(textarea.value);
+    }
+  }
+
+  capitalizeTextarea(): void {
+    const value = this.cropForm.get('specialNotes')?.value;
+    if (value && value.length > 0) {
+      const capitalized = value.charAt(0).toUpperCase() + value.slice(1);
+      this.cropForm.get('specialNotes')?.setValue(capitalized);
+    }
+  }
 }
 
 export function nonZeroValidator(control: AbstractControl): ValidationErrors | null {

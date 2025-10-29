@@ -127,11 +127,9 @@
               {{ item.phoneCode01 + "" + item.phoneNumber01 }}
             </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <span *ngIf="item.phoneNumber02 === null" class="px-4 py-3 text-center text-textLight dark:text-textDark">
-                - </span>
-              <span *ngIf="item.phoneNumber02 != null"
-                class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneCode02 + "" +
-                item.phoneNumber02 }}</span>
+              <span class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                {{ item.phoneNumber02 !== null ? item.phoneCode02 + "" + item.phoneNumber02 : '--' }}
+              </span>
             </td>
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               {{ item.adminModify !== null ? item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}

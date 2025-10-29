@@ -21,7 +21,7 @@ export class ViewServicesListComponent implements OnInit {
   constructor(
     private goviLinkService: GoviLinkService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.goviLinkService.getAllOfficerServices().subscribe({
@@ -37,13 +37,12 @@ export class ViewServicesListComponent implements OnInit {
     });
   }
 
-  // 🔍 Search by button or Enter
   onSearch() {
     if (!this.searchTerm.trim()) {
       this.filteredServices = this.officerServices;
       return;
     }
-    const term = this.searchTerm.toLowerCase();
+    const term = this.searchTerm.trim().toLowerCase();
     this.filteredServices = this.officerServices.filter(service =>
       service.englishName?.toLowerCase().includes(term) ||
       service.tamilName?.toLowerCase().includes(term) ||

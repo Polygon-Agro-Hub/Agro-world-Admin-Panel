@@ -125,7 +125,6 @@ export class CreateCompanyComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.companyType = params['type'];
-      console.log('Received type:', this.companyType);
     });
     if (!this.companyData.oicConCode1) {
       this.companyData.oicConCode1 = '+94';
@@ -151,26 +150,21 @@ export class CreateCompanyComponent implements OnInit {
   }
 
 
-  // Validate a given mobile number
   isInvalidMobileNumber(numberField: 'oicConNum1' | 'oicConNum2'): boolean {
     const code = numberField === 'oicConNum1' ? this.companyData.oicConCode1 : this.companyData.oicConCode2;
     const number = numberField === 'oicConNum1' ? this.companyData.oicConNum1 : this.companyData.oicConNum2;
 
-    // Skip validation if fields are empty or number is not 9 digits
     if (!code || !number || number.toString().length !== 9) {
       return false;
     }
 
-    // Combine code + number
     const fullNumber = `${code}${number}`;
 
-    // Validate: +947XXXXXXXX (Sri Lankan mobile format)
     const mobilePattern = /^\+947\d{8}$/;
     return !mobilePattern.test(fullNumber);
   }
 
 
-  // Validate both numbers for duplication
 
 
   async compressImage(
@@ -228,16 +222,13 @@ export class CreateCompanyComponent implements OnInit {
   }
 
 
-  // Method for English name validation (block numbers and special characters)
   allowOnlyLetters(event: KeyboardEvent, inputValue: string, fieldName: string) {
     const char = event.key;
     const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
     if (allowedKeys.includes(char)) return;
 
-    // For English company name, allow alphanumeric and common special characters
     if (fieldName === 'companyNameEnglish') {
-      // Allow letters, numbers, spaces, and common business name characters
       if (!/^[\p{L}\p{Nd} .'&-]$/u.test(char)) {
         event.preventDefault();
         this.englishInputError = true;
@@ -248,7 +239,6 @@ export class CreateCompanyComponent implements OnInit {
       return;
     }
 
-    // ❌ Block numbers (English + Tamil + Sinhala + Arabic + all Unicode digits) for other fields
     if (/\p{Nd}/u.test(char)) {
       event.preventDefault();
       this.englishInputError = true;
@@ -258,13 +248,11 @@ export class CreateCompanyComponent implements OnInit {
       return;
     }
 
-    // ❌ Block first space
     if (char === ' ' && inputValue.length === 0) {
       event.preventDefault();
       return;
     }
 
-    // ❌ Block special characters (anything not a letter or space)
     if (!/^\p{L}$|^ $/u.test(char)) {
       event.preventDefault();
       this.englishInputError = true;
@@ -298,16 +286,13 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  // Method for Sinhala name validation (block numbers and special characters)
   allowOnlySinhala(event: KeyboardEvent, inputValue: string) {
     const char = event.key;
     const code = char.charCodeAt(0);
     const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
-    // Allow control keys
     if (allowedKeys.includes(char)) return;
 
-    // Block digits and special characters
     if (/^[0-9]$/.test(char) || /[^\w\s\u0D80-\u0DFF]/.test(char)) {
       event.preventDefault();
       this.sinhalaInputError = true;
@@ -317,13 +302,11 @@ export class CreateCompanyComponent implements OnInit {
       return;
     }
 
-    // Block first space
     if (char === ' ' && inputValue.length === 0) {
       event.preventDefault();
       return;
     }
 
-    // Sinhala Unicode range: U+0D80 to U+0DFF
     const isSinhala = code >= 0x0D80 && code <= 0x0DFF;
 
     if (!isSinhala && char !== ' ') {
@@ -335,16 +318,13 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  // Method for Tamil name validation (block numbers and special characters)
   allowOnlyTamil(event: KeyboardEvent, inputValue: string) {
     const char = event.key;
     const code = char.charCodeAt(0);
     const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
 
-    // Allow control keys
     if (allowedKeys.includes(char)) return;
 
-    // Block digits and special characters
     if (/^[0-9]$/.test(char) || /[^\w\s\u0B80-\u0BFF]/.test(char)) {
       event.preventDefault();
       this.tamilInputError = true;
@@ -354,13 +334,11 @@ export class CreateCompanyComponent implements OnInit {
       return;
     }
 
-    // Block first space
     if (char === ' ' && inputValue.length === 0) {
       event.preventDefault();
       return;
     }
 
-    // Tamil Unicode Range: U+0B80–U+0BFF
     const isTamil = code >= 0x0B80 && code <= 0x0BFF;
 
     if (!isTamil && char !== ' ') {
@@ -372,7 +350,6 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  // Method for account holder name validation (only English letters and spaces)
   allowOnlyEnglishLettersForAccountHolder(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const char = event.key;
@@ -380,13 +357,11 @@ export class CreateCompanyComponent implements OnInit {
 
     if (allowedKeys.includes(char)) return;
 
-    // Prevent space at the start or multiple consecutive spaces
     if (char === ' ' && (input.selectionStart === 0 || input.value.endsWith(' '))) {
       event.preventDefault();
       return;
     }
 
-    // Block digits and special characters, allow only English letters and spaces
     if (!/^[a-zA-Z\s]$/.test(char)) {
       event.preventDefault();
       this.invalidCharError = true;
@@ -396,7 +371,6 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  // Method for account number validation (only digits)
   allowOnlyDigitsForAccountNumber(event: KeyboardEvent, field: 'accNumber' | 'confirmAccNumber' | 'oicConNum1' | 'oicConNum2'): void {
     const char = event.key;
     const allowedKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
@@ -415,37 +389,6 @@ export class CreateCompanyComponent implements OnInit {
       }
     }
   }
-
-
-  // Updated contact number validation with SweetAlert
-  // validateContactNumbers(): void {
-  //   const num1 = this.companyData.oicConNum1?.toString() || '';
-  //   const num2 = this.companyData.oicConNum2?.toString() || '';
-
-  //   // Length validation errors (for UI messages)
-  //   this.contactNumberError1 = num1.length > 0 && num1.length !== 9;
-  //   this.contactNumberError2 = num2.length > 0 && num2.length !== 9;
-
-  //   // Duplicate number check with country codes
-  //   if (
-  //     num1.length === 9 &&
-  //     num2.length === 9 &&
-  //     this.companyData.oicConNum1 &&
-  //     this.companyData.oicConNum2 &&
-  //     this.companyData.oicConNum1 === this.companyData.oicConNum2 &&
-  //     this.companyData.oicConCode1 === this.companyData.oicConCode2
-  //   ) {
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Duplicate Numbers',
-  //       text: 'Company Contact Number 1 and 2 cannot be the same',
-  //     }).then(() => {
-  //       // Clear the second number
-  //       this.companyData.oicConNum2 = '';
-  //       this.contactNumberError2 = false;
-  //     });
-  //   }
-  // }
 
 
   handleInputWithSpaceTrimming(event: KeyboardEvent, fieldName: keyof Company): void {
@@ -490,7 +433,6 @@ export class CreateCompanyComponent implements OnInit {
     }
 
     if (businessNameFields.includes(fieldName)) {
-  // Allow letters, numbers, spaces, and common business characters
   if (!/^[\p{L}\p{Nd} .'&\-()\/,#]$/u.test(key)) {
     event.preventDefault();
     this.englishInputError = true;
@@ -501,9 +443,8 @@ export class CreateCompanyComponent implements OnInit {
   }
 }
 
-    // Allow all characters in email fields (validation happens on blur/submit)
     if (emailFields.includes(fieldName)) {
-      return; // Allow any character input for email
+      return;
     }
 
     if (sinhalaFields.includes(fieldName)) {
@@ -560,12 +501,11 @@ export class CreateCompanyComponent implements OnInit {
 
   async onLogoChange(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
-    // Reset size error when a new file is selected
     this.logoSizeError = false;
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      const maxSize = 1024 * 1024; // 1MB
+      const maxSize = 1024 * 1024; 
 
       if (file.size > maxSize) {
         this.logoSizeError = true;
@@ -588,7 +528,6 @@ export class CreateCompanyComponent implements OnInit {
         reader.onload = (e) => {
           this.companyData.logo = e.target?.result as string;
           this.isLoading = false;
-          // Mark the field as touched to show validation if needed
           this.touchedFields['logo'] = true;
         };
         reader.readAsDataURL(this.selectedLogoFile);
@@ -599,15 +538,13 @@ export class CreateCompanyComponent implements OnInit {
     }
   }
 
-  // Updated onFaviconChange method
   async onFaviconChange(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
-    // Reset size error when a new file is selected
     this.faviconSizeError = false;
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      const maxSize = 1024 * 1024; // 1MB
+      const maxSize = 1024 * 1024;
 
       if (file.size > maxSize) {
         this.faviconSizeError = true;
@@ -630,7 +567,6 @@ export class CreateCompanyComponent implements OnInit {
         reader.onload = (e) => {
           this.companyData.favicon = e.target?.result as string;
           this.isLoading = false;
-          // Mark the field as touched to show validation if needed
           this.touchedFields['favicon'] = true;
         };
         reader.readAsDataURL(this.selectedFaviconFile);
@@ -663,7 +599,6 @@ export class CreateCompanyComponent implements OnInit {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        // Sort banks alphabetically by name (case-insensitive)
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
         this.matchExistingBankToDropdown();
       },
@@ -738,17 +673,14 @@ export class CreateCompanyComponent implements OnInit {
         }
       }
     }
-    console.log('hit 02', console.log(this.companyData.bankName));
   }
 
   onBankChange() {
     if (this.selectedBankId) {
-      // Update and sort branches based on selected bank
       this.branches = (
         this.allBranches[this.selectedBankId.toString()] || []
       ).sort((a, b) => a.name.localeCompare(b.name));
 
-      // Update company data with bank name
       const selectedBank = this.banks.find(
         (bank) => bank.ID === this.selectedBankId
       );
@@ -756,7 +688,6 @@ export class CreateCompanyComponent implements OnInit {
         this.companyData.bankName = selectedBank.name;
       }
 
-      // Reset branch selection if the current selection doesn't belong to this bank
       const currentBranch = this.branches.find(
         (branch) => branch.ID === this.selectedBranchId
       );
@@ -782,10 +713,8 @@ export class CreateCompanyComponent implements OnInit {
     } else {
       this.companyData.branchName = '';
     }
-    console.log('Selected branch:', this.companyData.branchName);
   }
 
-  // Updated getCompanyData method to properly handle the response
   getCompanyData() {
     if (this.itemId) {
       this.isLoading = true;
@@ -794,7 +723,6 @@ export class CreateCompanyComponent implements OnInit {
           this.isLoading = false;
           this.companyData = response;
 
-          // Set default values for contact number codes if they don't exist
           if (!this.companyData.oicConCode1) {
             this.companyData.oicConCode1 = '+94';
           }
@@ -802,7 +730,6 @@ export class CreateCompanyComponent implements OnInit {
             this.companyData.oicConCode2 = '+94';
           }
 
-          // Set confirmAccNumber to match accNumber for editing
           if (!this.companyData.confirmAccNumber && this.companyData.accNumber) {
             this.companyData.confirmAccNumber = this.companyData.accNumber;
           }
@@ -825,12 +752,11 @@ export class CreateCompanyComponent implements OnInit {
     if (!number) return false;
   
     const numStr = number.toString();
-    const pattern = /^7\d{8}$/; // starts with 7 + 8 more digits (total 9)
+    const pattern = /^7\d{8}$/;
     return pattern.test(numStr);
   }
 
   saveCompanyData() {
-  // Validate company name uniqueness
   if (this.companyNameError) {
     Swal.fire({
       icon: 'error',
@@ -845,31 +771,6 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Validate contact numbers format
-  // const contactNumberErrors: string[] = [];
-  // if (!this.isInvalidMobileNumber('oicConNum1')) {
-  //   contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
-  // }
-  // if (this.companyData.oicConNum2 && !this.isInvalidMobileNumber('oicConNum2')) {
-  //   contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
-  // }
-
-  // if (contactNumberErrors.length > 0) {
-  //   Swal.fire({
-  //     icon: 'error',
-  //     title: 'Invalid Contact Numbers',
-  //     html: `<div class="text-left"><ul class="list-disc pl-5">${contactNumberErrors.map(msg => `<li>${msg}</li>`).join('')}</ul></div>`,
-  //     confirmButtonText: 'OK',
-  //     customClass: {
-  //       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-  //       title: 'font-semibold text-lg',
-  //       htmlContainer: 'text-left',
-  //     },
-  //   });
-  //   return;
-  // }
-
-  // Duplicate contact numbers
   if (
     this.companyData.oicConNum1 &&
     this.companyData.oicConNum2 &&
@@ -889,7 +790,6 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Account number mismatch
   if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
     Swal.fire({
       icon: 'error',
@@ -904,7 +804,6 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Check required fields
   const missingFields: string[] = [];
   if (!this.companyData.regNumber) missingFields.push('Registration Number is Required') ;
   if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English) is Required');
@@ -942,7 +841,6 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Validate email format
   if (!this.isValidEmail(this.companyData.email)) {
     Swal.fire({
       icon: 'error',
@@ -957,7 +855,6 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // All validations passed, submit form
   this.isLoading = true;
   const formData = new FormData();
   Object.entries(this.companyData).forEach(([key, value]) => {
@@ -1024,7 +921,6 @@ export class CreateCompanyComponent implements OnInit {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
-      // Mark all fields as touched to show validation messages
       this.touchedFields = {
         regNumber: true,
         companyNameEnglish: true,
@@ -1045,19 +941,16 @@ export class CreateCompanyComponent implements OnInit {
       if (!this.companyData.logo) missingFields.push('Company Logo is Required');
       if (!this.companyData.favicon) missingFields.push('Company Favicon is Required');
 
-      // Validate email format if email exists
       if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
         missingFields.push('Valid Email Address');
       }
 
       if (missingFields.length > 0) {
-        // Create a more detailed error message
         let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
 
         missingFields.forEach(field => {
           errorMessage += `<li>${field}</li>`;
 
-          // Add specific guidance for certain fields
           if (field === 'Company Logo' || field === 'Company Favicon') {
             errorMessage += ` (must be an image less than 1MB)`;
           } else if (field === 'Valid Email Address') {
@@ -1081,7 +974,6 @@ export class CreateCompanyComponent implements OnInit {
         return;
       }
 
-      // Validate language-specific names
       if (this.englishInputError || this.sinhalaInputError || this.tamilInputError) {
         let languageError = '';
         if (this.englishInputError) languageError += 'English name contains invalid characters. ';
@@ -1107,22 +999,19 @@ export class CreateCompanyComponent implements OnInit {
     const num1 = this.companyData.oicConNum1?.toString() || '';
     const num2 = this.companyData.oicConNum2?.toString() || '';
 
-    // Reset all error flags first
     this.contactNumberError1 = false;
     this.contactNumberError2 = false;
     this.sameNumberError = false;
 
-    // Validate number 1 - only check length if there's content
     if (num1.length > 0 && num1.length !== 9) {
       this.contactNumberError1 = true;
     }
 
-    // Validate number 2 - only check length if there's content
     if (num2.length > 0 && num2.length !== 9) {
       this.contactNumberError2 = true;
     }
 
-    // Check for duplicate numbers ONLY if both numbers are complete and valid
+    
     if (
       num1.length === 9 &&
       num2.length === 9 &&
@@ -1139,7 +1028,7 @@ export class CreateCompanyComponent implements OnInit {
     const key = event.key;
     const pattern = /^[a-zA-Z\s]$/;
 
-    // Allow essential control keys
+   
     if (
       key === 'Backspace' ||
       key === 'Delete' ||
@@ -1157,7 +1046,7 @@ export class CreateCompanyComponent implements OnInit {
 
 
  updateCompanyData() {
-  // Check if company ID exists
+  
   if (!this.itemId) {
     Swal.fire({
       icon: 'error',
@@ -1172,7 +1061,7 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Validate required fields
+  
   const missingFields: string[] = [];
   if (!this.companyData.regNumber) missingFields.push('Registration Number is Required');
   if (!this.companyData.companyNameEnglish) missingFields.push('Company Name (English) is Required');
@@ -1212,7 +1101,7 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Validate email
+  
   if (this.companyData.email && !this.isValidEmail(this.companyData.email)) {
     Swal.fire({
       icon: 'error',
@@ -1227,7 +1116,7 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Validate contact numbers
+  
   const contactNumberErrors: string[] = [];
   if (this.isInvalidMobileNumber('oicConNum1')) {
     contactNumberErrors.push('Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)');
@@ -1236,7 +1125,7 @@ export class CreateCompanyComponent implements OnInit {
     contactNumberErrors.push('Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)');
   }
 
-  // Check duplicate contact numbers
+
   if (
     this.companyData.oicConNum1 &&
     this.companyData.oicConNum2 &&
@@ -1273,7 +1162,7 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Validate account number match
+  
   if (this.companyData.accNumber !== this.companyData.confirmAccNumber) {
     Swal.fire({
       icon: 'error',
@@ -1288,7 +1177,7 @@ export class CreateCompanyComponent implements OnInit {
     return;
   }
 
-  // Prepare FormData
+  
   this.isLoading = true;
   const formData = new FormData();
   Object.entries(this.companyData).forEach(([key, value]) => {
@@ -1299,7 +1188,7 @@ export class CreateCompanyComponent implements OnInit {
   if (this.companyData.logoFile) formData.append('logo', this.companyData.logoFile);
   if (this.companyData.faviconFile) formData.append('favicon', this.companyData.faviconFile);
 
-  // Send update request
+  
   this.collectionCenterSrv.updateCompany(this.companyData, this.itemId!).subscribe(
     (response) => {
       this.isLoading = false;
@@ -1392,41 +1281,17 @@ export class CreateCompanyComponent implements OnInit {
   isFieldInvalid(fieldName: keyof Company): boolean {
     const value = this.companyData[fieldName];
 
-    // Special handling for logo and favicon
     if (fieldName === 'logo' || fieldName === 'favicon') {
       return !!this.touchedFields[fieldName] && !value;
     }
 
-    // For other fields
     return !!this.touchedFields[fieldName] && !value;
   }
-
-  // validateConfirmAccNumber(): void {
-  //   // Reset both flags initially
-  //   this.confirmAccountNumberRequired = false;
-  //   this.confirmAccountNumberError = false;
-
-  //   // Check if confirmAccNumber is empty
-  //   if (
-  //     !this.companyData.confirmAccNumber ||
-  //     this.companyData.confirmAccNumber.toString().trim() === ''
-  //   ) {
-  //     this.confirmAccountNumberRequired = true;
-  //     return;
-  //   }
-
-  //   // Check if both account numbers exist and match
-  //   if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
-  //     this.confirmAccountNumberError =
-  //       this.companyData.accNumber.toString() !==
-  //       this.companyData.confirmAccNumber.toString();
-  //   }
-  // }
 
   validateConfirmAccNumber(): void {
     this.confirmAccountNumberRequired = !this.companyData.confirmAccNumber;
 
-    // Check if account numbers match
+    
     if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.companyData.accNumber !== this.companyData.confirmAccNumber;
@@ -1437,7 +1302,7 @@ export class CreateCompanyComponent implements OnInit {
 
   validateAccNumber(): void {
 
-    // Check if account numbers match
+   
     if (this.companyData.accNumber && this.companyData.confirmAccNumber) {
       this.confirmAccountNumberError =
         this.companyData.accNumber !== this.companyData.confirmAccNumber;
@@ -1448,36 +1313,30 @@ export class CreateCompanyComponent implements OnInit {
 
 
   isValidEmail(email: string): boolean {
-    // Reset validation message
+    
     this.emailValidationMessage = '';
 
-    // Check if email is empty
     if (!email) {
       return false;
     }
 
-    // Trim the email
     const trimmedEmail = email.trim();
 
-    // Check for empty string after trimming
     if (trimmedEmail === '') {
       this.emailValidationMessage = 'Email is required.';
       return false;
     }
 
-    // Check for consecutive dots
     if (trimmedEmail.includes('..')) {
       this.emailValidationMessage = 'Email cannot contain consecutive dots.';
       return false;
     }
 
-    // Check for leading dot
     if (trimmedEmail.startsWith('.')) {
       this.emailValidationMessage = 'Email cannot start with a dot.';
       return false;
     }
 
-    // Check for trailing dot
     if (trimmedEmail.endsWith('.')) {
       this.emailValidationMessage = 'Email cannot end with a dot.';
       return false;
@@ -1488,28 +1347,24 @@ export class CreateCompanyComponent implements OnInit {
       return false;
     }
 
-    // Check for invalid characters (allow letters, numbers, plus sign, and specific special characters)
     const invalidCharRegex = /[^a-zA-Z0-9@._%+-]/;
     if (invalidCharRegex.test(trimmedEmail)) {
       this.emailValidationMessage = 'Email contains invalid characters. Only letters, numbers, and @ . _ % + - are allowed.';
       return false;
     }
 
-    // Basic email format validation
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(trimmedEmail)) {
       this.emailValidationMessage = 'Please enter a valid email in the format: example@domain.com';
       return false;
     }
 
-    // Check domain has at least one dot
     const domainPart = trimmedEmail.split('@')[1];
     if (!domainPart || domainPart.indexOf('.') === -1) {
       this.emailValidationMessage = 'Please enter a valid email domain.';
       return false;
     }
 
-    // NEW: Validate top-level domain - only allow .com and .lk
     const tld = domainPart.split('.').pop()?.toLowerCase();
     const allowedTlds = ['com', 'lk'];
 
@@ -1536,11 +1391,7 @@ export class CreateCompanyComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // Navigate back to the previous page
         window.history.back();
-
-        // Alternative if you need more control:
-        // this.location.back();
       }
     });
   }
@@ -1551,7 +1402,6 @@ export class CreateCompanyComponent implements OnInit {
   numberOnly(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
 
-    // Allow only numbers (0-9)
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
       return false;
@@ -1564,7 +1414,6 @@ export class CreateCompanyComponent implements OnInit {
     const clipboardData = event.clipboardData || (window as any).clipboardData;
     const pastedText = clipboardData.getData('text');
 
-    // Only allow paste if the text contains numbers only
     if (/^\d+$/.test(pastedText)) {
       if (fieldName === 'accNumber') {
         this.companyData.accNumber =
@@ -1589,7 +1438,6 @@ export class CreateCompanyComponent implements OnInit {
       event.preventDefault();
       this.englishInputError = true;
 
-      // Automatically hide the error after 2 seconds
       setTimeout(() => {
         this.englishInputError = false;
       }, 2000);
@@ -1610,7 +1458,6 @@ export class CreateCompanyComponent implements OnInit {
 
     const key = event.key;
 
-    // Allow control keys like Backspace, Delete, Arrow keys, etc.
     if (
       key === 'Backspace' ||
       key === 'Delete' ||
@@ -1622,7 +1469,6 @@ export class CreateCompanyComponent implements OnInit {
       return;
     }
 
-    // If not matching allowed pattern
     if (!allowedPattern.test(key)) {
       event.preventDefault();
       this.invalidCharError = true;
@@ -1639,7 +1485,6 @@ export class CreateCompanyComponent implements OnInit {
       event.preventDefault();
       this.accountNumberError = true;
 
-      // Hide error after 2 seconds
       setTimeout(() => {
         this.accountNumberError = false;
       }, 2000);
@@ -1650,7 +1495,6 @@ export class CreateCompanyComponent implements OnInit {
 
   allowOnlySinhalaLetters(event: KeyboardEvent): void {
     const charCode = event.key.charCodeAt(0);
-    // Sinhala Unicode range: U+0D80 - U+0DFF
     if ((charCode < 0x0D80 || charCode > 0x0DFF) && event.key.length === 1) {
       event.preventDefault();
       this.sinhalaInputError = true;
@@ -1663,7 +1507,6 @@ export class CreateCompanyComponent implements OnInit {
 
   allowOnlyTamilLetters(event: KeyboardEvent): void {
     const charCode = event.key.charCodeAt(0);
-    // Tamil Unicode range: U+0B80 - U+0BFF
     if ((charCode < 0x0B80 || charCode > 0x0BFF) && event.key.length === 1) {
       event.preventDefault();
       this.tamilInputError = true;
@@ -1722,17 +1565,14 @@ export class CreateCompanyComponent implements OnInit {
   getContactNumber1ErrorMessage(): string {
     const num1 = this.companyData.oicConNum1?.toString() || '';
 
-    // Priority 1: Required validation
     if (!num1) {
       return 'Contact Number 1 is required.';
     }
 
-    // Priority 2: Format validation
     if (this.isInvalidMobileNumber('oicConNum1')) {
       return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
     }
 
-    // Priority 3: Length validation
     if (this.contactNumberError1) {
       return 'Please enter a valid Contact Number - 1 (format: +947XXXXXXXX)';
     }
@@ -1743,22 +1583,18 @@ export class CreateCompanyComponent implements OnInit {
   getContactNumber2ErrorMessage(): string {
     const num2 = this.companyData.oicConNum2?.toString() || '';
 
-    // If no value, no error (this field is optional)
     if (!num2) {
       return '';
     }
 
-    // Priority 1: Format validation
     if (this.isInvalidMobileNumber('oicConNum2')) {
       return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
     }
 
-    // Priority 2: Length validation
     if (this.contactNumberError2) {
       return 'Please enter a valid Contact Number - 2 (format: +947XXXXXXXX)';
     }
 
-    // Priority 3: Duplicate validation
     if (this.sameNumberError) {
       return 'Contact number 2 cannot be the same as Contact number 1.';
     }
@@ -1769,17 +1605,14 @@ export class CreateCompanyComponent implements OnInit {
   onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     const inputElement = event.target as HTMLInputElement;
   
-    // Trim leading spaces only
     const trimmedValue = inputElement.value.replace(/^\s+/, '');
   
-    // Update the model and input value
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
   }
 
 }
 
-// Updated Company class to match the JSON response structure
 class Company {
   id!: number;
   regNumber!: string;

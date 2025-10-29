@@ -64,7 +64,6 @@ export class CenterCollectionExpenceComponent implements OnInit {
   fetchFilteredPayments(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
 
-    // Format dates for API call
     const fromDateStr = this.formatDateForAPI(this.fromDate);
     const toDateStr = this.formatDateForAPI(this.toDate);
 
@@ -130,7 +129,6 @@ export class CenterCollectionExpenceComponent implements OnInit {
   }
 
   validateToDate() {
-    console.log('logged')
     if (!this.fromDate) {
       this.toDate = null;
       if (this.toDateCalendar) {
@@ -146,27 +144,7 @@ export class CenterCollectionExpenceComponent implements OnInit {
           title: 'dark:text-white',
         }
       });
-      // return;
     }
-  
-    // if (this.toDate) {
-    //   const from = new Date(this.fromDate);
-    //   const to = new Date(this.toDate);
-  
-    //   if (to <= from) {
-    //     this.toDate = null;
-    //     (document.getElementById('toDate') as HTMLInputElement).value = '';
-    //     Swal.fire({
-    //       icon: 'warning',
-    //       title: 'Warning',
-    //       text: "The 'To' date cannot be earlier than or same to the 'From' date",
-    //       customClass: {
-    //         popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-    //         title: 'dark:text-white',
-    //       }
-    //     });
-    //   }
-    // }
   }
   
 
@@ -181,7 +159,7 @@ export class CenterCollectionExpenceComponent implements OnInit {
 
       if (to <= from) {
         this.fromDate = null;  
-        setTimeout(() => this.fromDate = null); // forces re-render
+        setTimeout(() => this.fromDate = null); 
         Swal.fire({
           icon: 'warning',
           title: 'Warning',
@@ -215,7 +193,6 @@ export class CenterCollectionExpenceComponent implements OnInit {
   downloadTemplate1() {
     this.isDownloading = true;
 
-    // Format dates for API call
     const fromDateStr = this.formatDateForAPI(this.fromDate);
     const toDateStr = this.formatDateForAPI(this.toDate);
 

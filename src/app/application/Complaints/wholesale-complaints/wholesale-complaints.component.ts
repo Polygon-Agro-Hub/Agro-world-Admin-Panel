@@ -27,7 +27,7 @@ interface Complaint {
 interface DropdownOption {
   label: string;
   value: string | null;
-  isExcluded?: boolean; // Added for exclusion styling
+  isExcluded?: boolean; 
 }
 
 interface ApiResponse {
@@ -62,7 +62,6 @@ export class WholesaleComplaintsComponent implements OnInit {
   messageContent = '';
   selectedComplaint = {} as Complaint;
 
-  // Filters + pagination
   searchText = '';
   rpst: string | null = null;
   filterComCategory: string | null = null;
@@ -73,7 +72,7 @@ export class WholesaleComplaintsComponent implements OnInit {
 
   hasData: boolean = false;
 
-  // Dropdown data
+  
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
@@ -97,7 +96,6 @@ export class WholesaleComplaintsComponent implements OnInit {
 
     this.complaintsService.fetchWholesaleComplaints().subscribe({
       next: (resp: ApiResponse) => {
-        console.log('ApiResponse', resp);
         this.complaints = resp.data
           .map(item => ({
             id: item.id.toString(),
@@ -112,7 +110,7 @@ export class WholesaleComplaintsComponent implements OnInit {
             reply: item.reply || undefined,
             complain: item.complain,
           }))
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort by latest date
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); 
         this.filteredComplaints = [...this.complaints];
         this.totalItems = this.filteredComplaints.length;
         this.comCategories = Array.from(
@@ -123,7 +121,6 @@ export class WholesaleComplaintsComponent implements OnInit {
         ).map(st => ({ label: st, value: st }));
         this.isLoading = false;
         this.hasData = this.complaints.length > 0;
-        console.log('Initial filtered complaints:', this.filteredComplaints.length);
       },
       error: (err) => {
         this.isLoading = false;
@@ -175,7 +172,6 @@ export class WholesaleComplaintsComponent implements OnInit {
   }
 
   applyFilters(): void {
-    console.log('Applying filters with rpst:', this.rpst);
     const txt = this.searchText.trim().toLowerCase();
 
     this.filteredComplaints = this.complaints
@@ -191,7 +187,7 @@ export class WholesaleComplaintsComponent implements OnInit {
         const matchesReply =
           this.rpst === null ? true :
           this.rpst === 'Yes' ? !!item.reply :
-          !item.reply; // Simplified logic for No reply
+          !item.reply; 
 
         const matchesCat =
           !this.filterComCategory || item.complainCategory === this.filterComCategory;
@@ -199,19 +195,16 @@ export class WholesaleComplaintsComponent implements OnInit {
         const matchesStat =
           !this.filterStatus || item.status === this.filterStatus;
 
-        console.log(`Complaint ID: ${item.id}, Matches Reply: ${matchesReply}, Reply Value:`, item.reply);
         return matchesSearch && matchesReply && matchesCat && matchesStat;
       })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort by latest date
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); 
 
     this.totalItems = this.filteredComplaints.length;
     this.page = 1;
     this.hasData = this.filteredComplaints.length > 0;
-    console.log('Filtered complaints count:', this.totalItems);
   }
 
   searchComplain(): void {
-    console.log('[searchComplain] searchText =', this.searchText);
     this.applyFilters();
   }
 
@@ -224,7 +217,6 @@ export class WholesaleComplaintsComponent implements OnInit {
   }
 
   regStatusFil(): void {
-    console.log('Reply Status Filter Changed, rpst:', this.rpst);
     this.applyFilters();
   }
 

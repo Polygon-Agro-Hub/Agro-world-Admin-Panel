@@ -21,7 +21,7 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
     FormsModule,
     LoadingSpinnerComponent,
   ],
-  providers: [DatePipe], // Provide DatePipe for date formatting
+  providers: [DatePipe], 
   templateUrl: "./view-complain.component.html",
   styleUrls: ["./view-complain.component.css"],
 })
@@ -67,13 +67,11 @@ export class ViewComplainComponent implements OnInit {
     private complainSrv: CollectionCenterService,
     private datePipe: DatePipe,
     private router: Router,
-    // private tokenService: TokenService,
     private http: HttpClient,
     public tokenService: TokenService,
   ) { }
 
   ngOnInit(): void {
-    console.log('user role', this.tokenService.getUserDetails().role);
 
 
     this.status = [
@@ -99,7 +97,7 @@ export class ViewComplainComponent implements OnInit {
       this.filterCategory.type = "Procuiment";
     }
 
-    console.log(this.filterCategory);
+    
     this.fetchAllComplain(this.page, this.itemsPerPage);
     this.getAllComplainCategories();
   }
@@ -119,16 +117,15 @@ export class ViewComplainComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          console.log(res.results);
+          
 
-          // Map response data to ensure createdAt is in a readable date format
           this.complainsData = res.results;
           this.totalItems = res.total;
           this.isLoading = false;
           this.hasData = this.complainsData.length > 0;
         },
         (error) => {
-          console.log("Error: ", error);
+          
           this.isLoading = false;
         },
       );
@@ -142,7 +139,7 @@ export class ViewComplainComponent implements OnInit {
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
     if (this.dropdown) {
-      this.dropdown.hide(); // Close the dropdown after selection
+      this.dropdown.hide(); 
     }
   }
 
@@ -173,13 +170,10 @@ export class ViewComplainComponent implements OnInit {
     this.complainSrv.getComplainById(id).subscribe((res) => {
       let formattedDate = this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm a');
       if (formattedDate) {
-        // Replace colon with dot and remove space before AM/PM
         res.createdAt = formattedDate.replace(':', '.').replace(' ', '').replace('AM', 'AM').replace('PM', 'PM');
       }
       this.complain = res;
-      console.log(res);
       this.isLoading = false;
-      // this.showReplyDialog(id, farmerName, language);
       this.showReplyPopUp(id, farmerName, lastName, language)
     });
   }
@@ -215,16 +209,12 @@ export class ViewComplainComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    console.log(id);
-    console.log(this.messageContent);
-
     const body = { reply: this.messageContent };
 
     this.http
       .put(`${environment.API_URL}auth/reply-complain/${id}`, body, { headers })
       .subscribe(
         (res: any) => {
-          console.log("Market Price updated successfully", res);
 
           Swal.fire({
             icon: "success",
@@ -271,7 +261,6 @@ export class ViewComplainComponent implements OnInit {
         .subscribe(
           (response) => {
             this.comCategories = response;
-            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -295,7 +284,6 @@ export class ViewComplainComponent implements OnInit {
         .subscribe(
           (response) => {
             this.comCategories = response;
-            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -306,7 +294,6 @@ export class ViewComplainComponent implements OnInit {
   }
 
   goBack() {
-    // Example: Navigate to the previous page, like a menu or dashboard
     this.router.navigate(['/complaints']);
   }
 
@@ -325,7 +312,6 @@ export class ViewComplainComponent implements OnInit {
 
 }
 
-// Define interfaces for response data
 class Complain {
   id!: string;
   refNo!: string;

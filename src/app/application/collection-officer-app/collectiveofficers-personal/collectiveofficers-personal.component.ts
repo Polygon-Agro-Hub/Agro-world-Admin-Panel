@@ -158,7 +158,6 @@ dropdownOpen = false;
   selectedLanguages: string[] = [];
 
 markAllFieldsAsTouched(): void {
-  // Mark all form fields as touched
   const requiredFields: (keyof Personal)[] = [
     'firstNameEnglish', 'lastNameEnglish', 'firstNameSinhala', 'lastNameSinhala',
     'firstNameTamil', 'lastNameTamil', 'phoneNumber01', 'phoneNumber02',
@@ -171,7 +170,6 @@ markAllFieldsAsTouched(): void {
     this.touchedFields[field] = true;
   });
 
-  // Mark language and employee type as touched
   this.languagesTouched = true;
   this.empTypeTouched = true;
 }
@@ -205,15 +203,12 @@ selectjobRole(role: string) {
   if (role === "Collection Centre Manager") {
     this.personalData.jobRole = "Collection Centre Manager";
     this.toggleDropdown()
-    console.log('dropdownOpen', this.dropdownOpen)
   } else {
     this.personalData.jobRole = role;
     this.toggleDropdown()
-    console.log('dropdownOpen', this.dropdownOpen)
   }
-  console.log('personalData', this.personalData)
 
-  this.EpmloyeIdCreate(); // call your method
+  this.EpmloyeIdCreate(); 
 }
 
 
@@ -271,12 +266,12 @@ isJobRoleSelected(): boolean {
 
 onSubmit() {
 
-  // Mark all fields as touched to show validation messages
+  
   this.markAllFieldsAsTouched();
 
   const missingFields: string[] = [];
 
-  // Check required fields for pageOne
+  
   if (!this.personalData.empType) {
     missingFields.push('Staff Employee Type is Required');
   }
@@ -355,7 +350,7 @@ onSubmit() {
     missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
   }
 
-  // Check required fields for pageTwo
+  
   if (!this.personalData.houseNumber) {
     missingFields.push('House Number is Required');
   }
@@ -398,7 +393,7 @@ onSubmit() {
     missingFields.push('Branch Name is Required');
   }
 
-  // If errors, show list and stop - validation messages will now be visible
+  
   if (missingFields.length > 0) {
     let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
     missingFields.forEach((field) => {
@@ -421,7 +416,6 @@ onSubmit() {
     return;
   }
 
-  // If valid, confirm creation
   Swal.fire({
     title: 'Are you sure?',
     text: 'Do you want to create the collection officer?',
@@ -467,7 +461,6 @@ onSubmit() {
             let messages: string[] = [];
           
             if (error.error && Array.isArray(error.error.errors)) {
-              // Map backend error keys to user-friendly messages
               messages = error.error.errors.map((err: string) => {
                 switch (err) {
                   case 'NIC':
@@ -512,7 +505,6 @@ onSubmit() {
   });
 }
 
-// Or combine both into a single function
 capitalizeNames() {
   if (this.personalData.firstNameEnglish) {
     this.personalData.firstNameEnglish = 
@@ -525,10 +517,10 @@ capitalizeNames() {
       this.personalData.lastNameEnglish.slice(1);
   }
 }
-// Prevent spaces anywhere in the input after typing starts
+
 blockSpaces(event: KeyboardEvent) {
   if (event.key === ' ') {
-    event.preventDefault(); // stop space character
+    event.preventDefault(); 
   }
 }
 onCancel() {
@@ -552,15 +544,11 @@ onCancel() {
 }
 
 nextFormCreate(page: 'pageOne' | 'pageTwo') {
-  console.log('personalData', this.personalData)
   if (page === 'pageTwo') {
-  
-    // Mark page one fields as touched to show validation messages
     this.markPageOneFieldsAsTouched();
 
     const missingFields: string[] = [];
 
-    // Validate pageOne fields
     if (!this.personalData.empType) {
       missingFields.push('Staff Employee Type is Required');
     }
@@ -639,8 +627,6 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
     }
 
-    // If errors exist, the validation messages will now be visible due to touched fields
-    // Show popup and stop navigation
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
@@ -663,7 +649,6 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     }
   }
 
-  // Navigate to the selected page
   this.selectedPage = page;
 }
 
@@ -673,7 +658,6 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
     this.loadBranches();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
-    // Pre-fill country with Sri Lanka
     this.personalData.country = 'Sri Lanka';
   }
   loadBranches() {
@@ -688,10 +672,8 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        // Sort banks alphabetically by name
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
 
-        // Convert to dropdown options format
         this.bankOptions = this.banks.map(bank => ({
           label: bank.name,
           value: bank.ID
@@ -704,10 +686,8 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   onBankChange() {
     if (this.selectedBankId) {
       const branchesForBank = this.allBranches[this.selectedBankId.toString()] || [];
-      // Sort branches alphabetically
       this.branches = branchesForBank.sort((a, b) => a.name.localeCompare(b.name));
 
-      // Convert to dropdown options format
       this.branchOptions = this.branches.map(branch => ({
         label: branch.name,
         value: branch.ID
@@ -746,9 +726,9 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   getAllCollectionCetnter(id: number) {
   this.loaded = false;
   this.personalData.centerId = '';
-  this.personalData.irmId = ''; // Clear manager selection
+  this.personalData.irmId = ''; 
   this.personalData.jobRole = '';
-  this.managerOptions = []; // Clear manager options
+  this.managerOptions = []; 
   
   this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
     (res) => {
@@ -770,7 +750,6 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
-      // Convert to dropdown options format
       this.companyOptions = this.CompanyData.map(company => ({
         label: company.companyNameEnglish,
         value: company.id
@@ -786,7 +765,6 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       )
       .subscribe((res) => {
         this.collectionManagerData = res;
-        // Convert to dropdown options format
         this.managerOptions = this.collectionManagerData.map(manager => ({
           label: manager.firstNameEnglish + " " + manager.lastNameEnglish,
           value: manager.id
@@ -893,16 +871,12 @@ updateProvince(event: DropdownChangeEvent): void {
   formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
       value = value.replace(/[^a-zA-Z\s]/g, '');
 
-      // Remove leading spaces
       value = value.replace(/^\s+/, '');
 
-      // Replace multiple consecutive spaces with single space
       value = value.replace(/\s{2,}/g, ' ');
 
-      // Capitalize first letter and make rest lowercase
       if (value.length > 0) {
         value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
       }
@@ -914,127 +888,100 @@ onLetterKeyPress(event: KeyboardEvent) {
   const input = event.target as HTMLInputElement;
   const char = event.key;
   
-  // Block space if it's at the start (cursor at position 0)
   if (char === ' ' && input.selectionStart === 0) {
     event.preventDefault();
     return;
   }
   
-  // Allow all letters (\p{L}) and space (but not at the beginning), block numbers and special characters
-  // const regex = /^[\p{L} ]$/u;
-  // if (!regex.test(char)) {
-  //   event.preventDefault(); // block the key
-  // }
+  
 }
 
-// Add this method to handle input events and remove leading spaces
 onSinhalaTamilInput(event: Event, fieldName: 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
   const input = event.target as HTMLInputElement;
-  let value = input.value;
-  
-  // Remove leading spaces
+  let value = input.value
   if (value.startsWith(' ')) {
     value = value.trimStart();
     this.personalData[fieldName] = value;
     
-    // Force update the model to reflect the change
+    
     setTimeout(() => {
       input.value = value;
     }, 0);
   }
 }
 
-  // Updated formatSinhalaName function
+  
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Allow only Sinhala unicode characters and spaces
       value = value.replace(/[^\u0D80-\u0DFF\s]/g, '');
 
-      // Remove leading spaces
       value = value.replace(/^\s+/, '');
 
-      // Replace multiple consecutive spaces with single space
       value = value.replace(/\s{2,}/g, ' ');
 
       this.personalData[fieldName] = value;
     }
   }
 
-  // Updated formatTamilName function
 formatTamilName(fieldName: 'firstNameTamil' | 'lastNameTamil'): void {
   let value = this.personalData[fieldName];
   if (value) {
-    // Allow only Tamil letters (\u0B80-\u0BFF) and spaces
     value = value.replace(/[^\u0B80-\u0BFF ]/g, '');
-    // Trim spaces and remove multiple consecutive spaces
     value = value.trim().replace(/\s{2,}/g, ' ');
     this.personalData[fieldName] = value;
   }
 }
 
 
-  // Updated formatAccountHolderName function
+  
   formatAccountHolderName(): void {
     let value = this.personalData.accHolderName;
     if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
       value = value.replace(/[^a-zA-Z\s]/g, '');
 
-      // Remove leading spaces
       value = value.replace(/^\s+/, '');
 
-      // Replace multiple consecutive spaces with single space
       value = value.replace(/\s{2,}/g, ' ');
 
-      // Capitalize first letter of each word
       value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
 
       this.personalData.accHolderName = value;
     }
   }
 
-  // Add new keypress handler for account holder name input
   preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
+    
     if (!this.handleSpaceRestrictions(event)) {
       return;
     }
 
     const char = String.fromCharCode(event.which);
-    // Allow only letters (a-z, A-Z) and space
     if (!/[a-zA-Z\s]/.test(char)) {
       event.preventDefault();
     }
   }
 
-  // Add new keypress handlers for address fields
   preventAddressSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
     if (!this.handleSpaceRestrictions(event)) {
       return;
     }
 
     const char = String.fromCharCode(event.which);
-    // Allow letters, numbers, and space for address fields
     if (!/[a-zA-Z0-9\s\-\/\\#]/.test(char)) {
     event.preventDefault();
   }
   }
 
-  // Format address fields to handle spaces
   formatAddressField(fieldName: 'houseNumber' | 'streetName' | 'city'): void {
   let value = this.personalData[fieldName];
   if (value) {
-    // Remove leading/trailing spaces and replace multiple spaces with single space
     value = value.trim().replace(/\s{2,}/g, ' ');
 
-    // Capitalize first letter of each word for streetName and city
     if (fieldName === 'streetName' || fieldName === 'city') {
       value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
     }
     
-    // For houseNumber, capitalize the first letter only if it's alphabetic
     if (fieldName === 'houseNumber' && value.length > 0) {
       const firstChar = value.charAt(0);
       if (/[a-zA-Z]/.test(firstChar)) {
@@ -1050,7 +997,6 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   const inputElement = event.target as HTMLInputElement;
   let trimmedValue = inputElement.value.trimStart();
 
-  // ✅ Capitalize the first letter (if not empty)
   if (trimmedValue.length > 0) {
     trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
   }
@@ -1058,36 +1004,27 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   modelRef[fieldName] = trimmedValue;
   inputElement.value = trimmedValue;
 }
-
-  // Check if name has invalid characters (numbers or special characters)
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];
     if (!value) return false;
-    // Check if contains numbers or special characters
     return /[^a-zA-Z\s]/.test(value);
   }
 
-  // Check if Sinhala name has invalid characters
   hasInvalidSinhalaCharacters(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): boolean {
     const value = this.personalData[fieldName];
     if (!value) return false;
-    // Check if contains non-Sinhala characters
     return /[^\u0D80-\u0DFF\s]/.test(value);
   }
 
-  // Check if Tamil name has invalid characters
   hasInvalidTamilCharacters(fieldName: 'firstNameTamil' | 'lastNameTamil'): boolean {
     const value = this.personalData[fieldName];
     if (!value) return false;
-    // Check if contains non-Tamil characters
     return /[^\u0B80-\u0BFF\s]/.test(value);
   }
 
-  // Check if account holder name has invalid characters
   hasInvalidAccountHolderCharacters(): boolean {
     const value = this.personalData.accHolderName;
     if (!value) return false;
-    // Check if contains numbers or special characters
     return /[^a-zA-Z\s]/.test(value);
   }
 
@@ -1119,28 +1056,23 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   isValidEmail(email: string): boolean {
   if (!email) return false;
   
-  // Updated email regex to allow + character
   const emailRegex = /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
   
-  // Check for invalid patterns
   if (email.includes('..')) {
-    return false; // Consecutive dots
+    return false; 
   }
   if (email.startsWith('.') || email.endsWith('.')) {
-    return false; // Leading or trailing dot
+    return false; 
   }
-  // Updated special characters check to exclude + from invalid characters
   if (/[!#$%^&*()=<>?\/\\]/.test(email.replace(/\+/g, ''))) {
-    return false; // Invalid special characters (excluding +)
+    return false; 
   }
   
   return emailRegex.test(email);
 }
 
-  // Updated NIC validation
   isValidNIC(nic: string): boolean {
     if (!nic) return false;
-    // Allow 12 digits or 9 digits followed by 'V' (case insensitive)
     const nicRegex = /^(?:\d{12}|\d{9}[vV])$/;
     return nicRegex.test(nic);
   }
@@ -1154,12 +1086,10 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   isValidPhoneNumber(phone: string): boolean {
   if (!phone) return false;
   
-  // Must start with 7 and have exactly 9 digits total
   const phoneRegex = /^7\d{8}$/;
   return phoneRegex.test(phone);
 }
 
-  // Check if phone numbers are duplicate
   areDuplicatePhoneNumbers(): boolean {
     const phone1 = this.personalData.phoneNumber01;
     const phone2 = this.personalData.phoneNumber02;
@@ -1272,7 +1202,6 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
     );
   }
 
-  // Updated submit validity check
   checkSubmitValidity(): boolean {
     const {
       accHolderName,
@@ -1361,33 +1290,27 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
   }
 
 
-// Handle NIC input restrictions
 preventNICInvalidCharacters(event: KeyboardEvent): void {
   const charCode = event.which ? event.which : event.keyCode;
   const char = String.fromCharCode(charCode);
   const currentValue = (event.target as HTMLInputElement).value;
   
-  // Block spaces entirely for NIC
   if (charCode === 32) {
     event.preventDefault();
     return;
   }
   
-  // Allow only numbers and 'V' or 'v'
   if (!/[0-9Vv]/.test(char)) {
     event.preventDefault();
   }
 }
 
-// Format NIC input
 formatNIC() {
     if (this.personalData.nic) {
-      // Convert to uppercase and remove any spaces
       this.personalData.nic = this.personalData.nic
         .toUpperCase()
         .replace(/\s/g, '');
 
-      // If it ends with 'v', convert to 'V'
       if (this.personalData.nic.endsWith('v')) {
         this.personalData.nic = this.personalData.nic.slice(0, -1) + 'V';
       }
@@ -1395,7 +1318,6 @@ formatNIC() {
   }
 
   validateNICInput(event: KeyboardEvent) {
-    // Allow navigation keys
     const allowedKeys = [
       'Backspace',
       'Delete',
@@ -1407,67 +1329,55 @@ formatNIC() {
     ];
 
     if (allowedKeys.includes(event.key)) {
-      return; // Allow these special keys
+      return; 
     }
 
-    // Allow only numbers or uppercase V (but not lowercase v)
     const nicInputPattern = /^[0-9V]$/;
     if (!nicInputPattern.test(event.key.toUpperCase())) {
       event.preventDefault();
     }
   }
 
-// Add these new functions for account number handling
 preventAccountNumberInvalidCharacters(event: KeyboardEvent): void {
   const charCode = event.which ? event.which : event.keyCode;
   
-  // Block spaces entirely for account numbers
+  
   if (charCode === 32) {
     event.preventDefault();
     return;
   }
   
-  // Allow only numbers
+  
   if (charCode < 48 || charCode > 57) {
     event.preventDefault();
   }
 }
 
-// Format account number input
 formatAccountNumber(fieldName: 'accNumber' | 'confirmAccNumber'): void {
   let value = this.personalData[fieldName];
   if (value) {
-    // Remove all spaces and non-numeric characters
     value = value.replace(/[^0-9]/g, '');
     this.personalData[fieldName] = value;
   }
 }
 
-// Handle Email input restrictions
 preventEmailInvalidCharacters(event: KeyboardEvent): void {
   const charCode = event.which ? event.which : event.keyCode;
   const char = String.fromCharCode(charCode);
-  
-  // Block spaces entirely for email
   if (charCode === 32) {
     event.preventDefault();
     return;
   }
-  
-  // Updated to allow alphanumeric, @, ., -, _, and +
   if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
     event.preventDefault();
   }
 }
 
-// Format Email input
 formatEmail(): void {
   let value = this.personalData.email;
   if (value) {
-    // Remove all spaces and invalid characters
     value = value.replace(/[^a-zA-Z0-9@.\-_]/g, '');
     
-    // Convert to lowercase for consistency
     value = value.toLowerCase();
     
     this.personalData.email = value;
@@ -1478,27 +1388,20 @@ preventSpecialCharacters(event: KeyboardEvent): void {
   const input = event.target as HTMLInputElement;
   const char = String.fromCharCode(event.which);
 
-  // Block space if it's at the start (cursor at position 0)
   if (char === ' ' && input.selectionStart === 0) {
     event.preventDefault();
     return;
   }
 
-  // Allow only letters (a-z, A-Z) and spaces elsewhere
-  // if (!/[a-zA-Z\s]/.test(char)) {
-  //   event.preventDefault();
-  // }
 }
 
 
   preventNonSinhalaCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
     if (!this.handleSpaceRestrictions(event)) {
       return;
     }
 
     const char = String.fromCharCode(event.which);
-    // Allow Sinhala unicode characters and space
     if (!/[\u0D80-\u0DFF\s]/.test(char)) {
       event.preventDefault();
     }
@@ -1513,26 +1416,22 @@ preventSpecialCharacters(event: KeyboardEvent): void {
       event.preventDefault();
     }
   }
-  // Prevent non-numeric characters for phone numbers
   preventNonNumeric(event: KeyboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
   const input = event.target as HTMLInputElement;
   const char = String.fromCharCode(event.which);
   const currentValue = input.value;
   const cursorPosition = input.selectionStart || 0;
   
-  // Allow only numbers (0-9)
   if (!/[0-9]/.test(char)) {
     event.preventDefault();
     return;
   }
   
-  // If this is the first character, it must be '7'
   if (cursorPosition === 0 && currentValue.length === 0 && char !== '7') {
     event.preventDefault();
     return;
   }
   
-  // If user tries to insert a character at position 0 that's not '7'
   if (cursorPosition === 0 && char !== '7') {
     event.preventDefault();
   }
@@ -1541,16 +1440,14 @@ preventSpecialCharacters(event: KeyboardEvent): void {
   formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
   let value = this.personalData[fieldName];
   if (value) {
-    // Remove non-numeric characters
     value = value.replace(/[^0-9]/g, '');
     
-    // Ensure it starts with 7
+    
     if (value.length > 0 && value.charAt(0) !== '7') {
-      // If first digit is not 7, remove it
       value = value.replace(/^[^7]*/, '');
     }
     
-    // Limit to 9 digits
+    
     if (value.length > 9) {
       value = value.substring(0, 9);
     }
@@ -1560,10 +1457,8 @@ preventSpecialCharacters(event: KeyboardEvent): void {
 }
 
   changeCenter(event: any){
-    console.log('Center changed:', this.personalData.centerId);
-    console.log('Center MAnager:', this.personalData.irmId);
+    
     this.personalData.irmId = '';
-    // this.centerOptions = [];
     this.getAllCollectionManagers();
   }
 

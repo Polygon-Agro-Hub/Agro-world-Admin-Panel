@@ -63,9 +63,7 @@ export class ViewAllDisributionComplainComponent {
 
 
   constructor(
-    // private datePipe: DatePipe,
     private router: Router,
-    // private tokenService: TokenService,
     private http: HttpClient,
     public tokenService: TokenService,
     private distributedComplainSrv: ComplaintsService
@@ -76,31 +74,7 @@ export class ViewAllDisributionComplainComponent {
 
   ngOnInit(): void {
 
-
-    // this.status = [
-    //   { id: 1, type: "Assigned" },
-    //   { id: 2, type: "Pending" },
-    //   { id: 3, type: "Closed" },
-    // ];
-
-    // this.category = [
-    //   { id: 1, type: "Agriculture" },
-    //   { id: 2, type: "Finance" },
-    //   { id: 3, type: "Call Center" },
-    //   { id: 4, type: "Procuiment" },
-    // ];
-
-    // if (this.tokenService.getUserDetails().role === "2") {
-    //   this.filterCategory.type = "Agriculture";
-    // } else if (this.tokenService.getUserDetails().role === "3") {
-    //   this.filterCategory.type = "Finance";
-    // } else if (this.tokenService.getUserDetails().role === "4") {
-    //   this.filterCategory.type = "Call Center";
-    // } else if (this.tokenService.getUserDetails().role === "5") {
-    //   this.filterCategory.type = "Procuiment";
-    // }
-
-    console.log(this.filterCategory);
+    
     this.fetchAllComplain(this.page, this.itemsPerPage);
     this.getAllComplainCategories();
     this.getAllCompanyForOfficerComplain();
@@ -121,9 +95,7 @@ export class ViewAllDisributionComplainComponent {
       )
       .subscribe(
         (res) => {
-          console.log('results', res.results);
 
-          // Map response data to ensure createdAt is in a readable date format
 
           this.complainsData = res.results;
           this.totalItems = res.total;
@@ -131,7 +103,6 @@ export class ViewAllDisributionComplainComponent {
           this.hasData = this.complainsData.length > 0;
         },
         (error) => {
-          console.log("Error: ", error);
           this.isLoading = false;
         },
       );
@@ -149,7 +120,7 @@ export class ViewAllDisributionComplainComponent {
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
     if (this.dropdown) {
-      this.dropdown.hide(); // Close the dropdown after selection
+      this.dropdown.hide(); 
     }
   }
 
@@ -174,12 +145,9 @@ export class ViewAllDisributionComplainComponent {
   fetchComplain(id: any, farmerName: string, language: string) {
     this.isLoading = true;
     this.distributedComplainSrv.getDistributionComplainById(id).subscribe((res) => {
-      // res.createdAt =
-      //   this.datePipe.transform(res.createdAt, "yyyy-MM-dd hh:mm:ss a");
+      
       this.complain = res;
-      console.log(res);
       this.isLoading = false;
-      // this.showReplyDialog(id, farmerName);
       this.showReplyPopUp(farmerName, language);
     });
   }
@@ -210,7 +178,6 @@ export class ViewAllDisributionComplainComponent {
         .subscribe(
           (response) => {
             this.comCategories = response;
-            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -234,7 +201,6 @@ export class ViewAllDisributionComplainComponent {
         .subscribe(
           (response) => {
             this.comCategories = response;
-            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -263,7 +229,6 @@ export class ViewAllDisributionComplainComponent {
       .subscribe(
         (response) => {
           this.company = response;
-          console.log('Complain Categories:', this.company);
         },
         (error) => {
           console.error('Error fetching news:', error);

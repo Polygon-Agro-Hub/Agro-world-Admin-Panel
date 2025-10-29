@@ -137,31 +137,31 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       backgroundColor: "transparent", // Changed to transparent
       title: {
         text: `${this.selectedDistrict.name} - Crop Weights`,
-        fontColor: isDarkMode ? '#ffffff' : '#000000',
+        fontColor: '#666666',
       },
       axisX: {
         title: 'Crops',
         reversed: true,
-        titleFontColor: isDarkMode ? '#ffffff' : '#000000',
-        labelFontColor: isDarkMode ? '#d1d5db' : '#374151',
+        titleFontColor: '#666666',
+        labelFontColor: '#666666',
         lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
         tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
       },
       axisY: {
         title: 'Total Weight (Kg)',
         includeZero: true,
-        titleFontColor: isDarkMode ? '#ffffff' : '#000000',
-        labelFontColor: isDarkMode ? '#d1d5db' : '#374151',
+        titleFontColor: '#666666',
+        labelFontColor: '#666666',
         lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
         tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
         gridColor: isDarkMode ? '#374151' : '#e5e7eb',
       },
       legend: {
-        fontColor: isDarkMode ? '#d1d5db' : '#374151',
+        fontColor: '#666666',
       },
       toolTip: {
         backgroundColor: isDarkMode ? '#374151' : '#ffffff',
-        fontColor: isDarkMode ? '#ffffff' : '#374151',
+        fontColor: '#666666',
         borderColor: isDarkMode ? '#4b5563' : '#d1d5db',
       },
       data: [
@@ -190,126 +190,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     };
     this.loadingChart = false;
   }
-
-  // async exportToPDF(): Promise<void> {
-  //   this.isDownloading = true;
-
-  //   setTimeout(() => {
-  //     const doc = new jsPDF('p', 'mm', 'a4');
-  //     const pageWidth = doc.internal.pageSize.getWidth();
-  //     const startX = 30;
-  //     const startY = 30;
-  //     const barHeight = 10;
-  //     const gap = 15;
-  //     const chartWidth = 140;
-  //     const titleFontSize = 14;
-  //     const contentFontSize = 10;
-  //     const colors = {
-  //       gradeA: '#FF9263',
-  //       gradeB: '#5F75E9',
-  //       gradeC: '#3DE188',
-  //     };
-
-  //     doc.setFontSize(titleFontSize);
-  //     doc.text(
-  //       `${this.selectedDistrict.name} - Crop Grade Report`,
-  //       pageWidth / 2,
-  //       20,
-  //       { align: 'center' }
-  //     );
-
-  //     if (!this.reportDetails || this.reportDetails.length === 0) {
-  //       doc.setFontSize(contentFontSize);
-  //       doc.text('No data available to display.', startX, startY);
-  //       doc.save(`${this.selectedDistrict.name}_Report.pdf`);
-  //       this.isDownloading = false;
-  //       return;
-  //     }
-
-  //     const groupedData = this.reportDetails.map((crop) => ({
-  //       cropName: crop.cropName,
-  //       gradeA: crop.qtyA || 0,
-  //       gradeB: crop.qtyB || 0,
-  //       gradeC: crop.qtyC || 0,
-  //       totalWeight: (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0),
-  //     }));
-
-  //     const maxWeight = Math.max(
-  //       ...groupedData.map((crop) => crop.totalWeight)
-  //     );
-
-  //     let currentY = startY;
-  //     groupedData.forEach((crop) => {
-  //       let currentX = startX;
-  //       const labelYOffset = currentY + barHeight / 2 + 3;
-
-  //       doc.setFontSize(contentFontSize);
-  //       doc.setTextColor(0, 0, 0);
-  //       doc.text(crop.cropName, startX - 20, labelYOffset);
-
-  //       (['A', 'B', 'C'] as const).forEach((grade) => {
-  //         const gradeKey = `grade${grade}` as 'gradeA' | 'gradeB' | 'gradeC';
-  //         const gradeWeight = crop[gradeKey];
-  //         if (gradeWeight > 0) {
-  //           const barWidth = (gradeWeight / maxWeight) * chartWidth;
-  //           doc.setFillColor(colors[gradeKey]);
-  //           doc.rect(currentX, currentY, barWidth, barHeight, 'F');
-  //           doc.setTextColor(255, 255, 255);
-  //           doc.setFontSize(8);
-  //           doc.text(
-  //             `${gradeWeight} kg`,
-  //             currentX + barWidth / 2,
-  //             currentY + barHeight / 2 + 3,
-  //             { align: 'center' }
-  //           );
-  //           currentX += barWidth;
-  //         }
-  //       });
-
-  //       currentY += gap;
-  //     });
-
-  //     const tableStartY = currentY + 20;
-  //     const cellPadding = 5;
-  //     const cellHeight = 8;
-  //     const tableColWidths = [50, 30, 30, 30, 30];
-  //     let rowY = tableStartY;
-
-  //     const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
-  //     doc.setFontSize(contentFontSize);
-  //     doc.setTextColor(0, 0, 0);
-  //     headers.forEach((header, index) => {
-  //       const cellX =
-  //         startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-  //       doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
-  //       doc.text(header, cellX + cellPadding, rowY + cellHeight / 2 + 3);
-  //     });
-
-  //     rowY += cellHeight;
-
-  //     groupedData.forEach((crop) => {
-  //       const cropValues = [
-  //         crop.cropName,
-  //         crop.gradeA ? `${crop.gradeA} kg` : '-',
-  //         crop.gradeB ? `${crop.gradeB} kg` : '-',
-  //         crop.gradeC ? `${crop.gradeC} kg` : '-',
-  //         `${crop.totalWeight} kg`,
-  //       ];
-
-  //       cropValues.forEach((value, index) => {
-  //         const cellX =
-  //           startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-  //         doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
-  //         doc.text(value, cellX + cellPadding, rowY + cellHeight / 2 + 3);
-  //       });
-
-  //       rowY += cellHeight;
-  //     });
-
-  //     doc.save(`${this.selectedDistrict.name}_CropGradeReport.pdf`);
-  //     this.isDownloading = false;
-  //   }, 0);
-  // }
 
   async exportToPDF(): Promise<void> {
     this.isDownloading = true;

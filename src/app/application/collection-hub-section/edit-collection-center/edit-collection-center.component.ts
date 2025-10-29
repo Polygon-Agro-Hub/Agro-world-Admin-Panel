@@ -164,7 +164,6 @@ export class EditCollectionCenterComponent implements OnInit {
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
-    // Only allow 0-9
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
       return false;
@@ -205,32 +204,28 @@ export class EditCollectionCenterComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let input = inputElement.value;
 
-    // Reset errors
+  
     this.leadingSpaceError = false;
     this.specialCharOrNumberError = false;
 
-    // Check for leading space
     if (input.startsWith(' ')) {
       this.leadingSpaceError = true;
-      input = input.trimStart(); // remove leading space
+      input = input.trimStart(); 
     }
 
-    // Allow English letters, Sinhala (\u0D80-\u0DFF), Tamil (\u0B80-\u0BFF), and spaces
     const validInput = input.replace(/[^A-Za-z\u0D80-\u0DFF\u0B80-\u0BFF ]/g, '');
     if (validInput !== input) {
       this.specialCharOrNumberError = true;
     }
     
-    // Capitalize the first letter
     if (validInput.length > 0) {
-      validInput.trimStart(); // ensure no leading space
+      validInput.trimStart(); 
       this.centerFetchData.centerName =
         validInput.charAt(0).toUpperCase() + validInput.slice(1);
     } else {
       this.centerFetchData.centerName = '';
     }
 
-    // Update input element value to reflect filtered result
     inputElement.value = this.centerFetchData.centerName;
   }
 
@@ -240,10 +235,9 @@ export class EditCollectionCenterComponent implements OnInit {
     const trimmedValue = rawValue.replace(/^\s+/, '');
     
     if (rawValue !== trimmedValue) {
-      rawValue = trimmedValue; // Remove leading spaces
+      rawValue = trimmedValue; 
     }
     
-    // Capitalize first letter
     if (rawValue.length > 0) {
       this.centerFetchData.buildingNumber = 
         rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
@@ -251,7 +245,7 @@ export class EditCollectionCenterComponent implements OnInit {
       this.centerFetchData.buildingNumber = '';
     }
     
-    // Update input field value
+    
     inputElement.value = this.centerFetchData.buildingNumber;
   }
 
@@ -261,10 +255,9 @@ export class EditCollectionCenterComponent implements OnInit {
     const trimmedValue = rawValue.replace(/^\s+/, '');
     
     if (rawValue !== trimmedValue) {
-      rawValue = trimmedValue; // Remove leading spaces
+      rawValue = trimmedValue; 
     }
     
-    // Capitalize first letter
     if (rawValue.length > 0) {
       this.centerFetchData.street = 
         rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
@@ -272,12 +265,10 @@ export class EditCollectionCenterComponent implements OnInit {
       this.centerFetchData.street = '';
     }
     
-    // Update input field value
     inputElement.value = this.centerFetchData.street;
   }
 
   onCompanyChange(event: any): void {
-    // Update the companies string for display/backend compatibility
     const selectedCompanies = this.CompanyData.filter((c) =>
       this.selectedCompaniesIds.includes(c.id)
     );
@@ -306,7 +297,6 @@ export class EditCollectionCenterComponent implements OnInit {
           if (res?.status) {
             this.centerFetchData = res.results;
             
-            // Load districts for the selected province (if province exists)
             if (this.centerFetchData.province) {
               const filteredProvince = this.ProvinceData.find(
                 (item) => item.province === this.centerFetchData.province
@@ -359,7 +349,7 @@ export class EditCollectionCenterComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.location.back(); // 👈 this takes the user back to the previous page
+        this.location.back(); 
       }
     });
   }
@@ -375,13 +365,11 @@ export class EditCollectionCenterComponent implements OnInit {
   }
 
   onProvinceChange() {
-    console.log('Province changed to:', this.centerFetchData.province);
     
-    // Clear district selection when province changes
+    
     this.centerFetchData.district = '';
     this.selectedDistrict = [];
     
-    // Find districts for the selected province
     const filteredProvince = this.ProvinceData.find(
       (item) => item.province === this.centerFetchData.province
     );
@@ -390,14 +378,11 @@ export class EditCollectionCenterComponent implements OnInit {
       this.selectedDistrict = filteredProvince.district;
     }
     
-    // Generate reg code if all required fields are present
     this.generateRegCodeIfReady();
   }
 
   onDistrictChange() {
-    console.log('District changed to:', this.centerFetchData.district);
     
-    // Generate reg code if all required fields are present
     this.generateRegCodeIfReady();
   }
 
@@ -407,10 +392,9 @@ export class EditCollectionCenterComponent implements OnInit {
     const trimmedValue = rawValue.replace(/^\s+/, '');
     
     if (rawValue !== trimmedValue) {
-      rawValue = trimmedValue; // Remove leading spaces
+      rawValue = trimmedValue; 
     }
     
-    // Capitalize first letter
     if (rawValue.length > 0) {
       this.centerFetchData.city = 
         rawValue.charAt(0).toUpperCase() + rawValue.slice(1);
@@ -418,21 +402,18 @@ export class EditCollectionCenterComponent implements OnInit {
       this.centerFetchData.city = '';
     }
     
-    // Update input field value
+    
     inputElement.value = this.centerFetchData.city;
     
-    // Call the original logic for reg code generation
+    
     this.onCityChange();
   }
 
   onCityChange() {
-    console.log('City changed to:', this.centerFetchData.city);
     
-    // Generate reg code if all required fields are present
     this.generateRegCodeIfReady();
   }
 
-  // Helper method to generate reg code only when all required fields are present
   private generateRegCodeIfReady() {
     const selectedProvince = this.centerFetchData.province;
     const selectedDistrict = this.centerFetchData.district;
@@ -455,7 +436,6 @@ export class EditCollectionCenterComponent implements OnInit {
   onSubmit() {
     const missingFields: string[] = [];
 
-    // Validation for required fields
     if (!this.centerFetchData.centerName || this.centerFetchData.centerName.trim() === '') {
       missingFields.push('Collection Centre Name is Required');
     } else if (/[^A-Za-z ]/.test(this.centerFetchData.centerName)) {
@@ -509,7 +489,6 @@ export class EditCollectionCenterComponent implements OnInit {
       missingFields.push('Collection Centre Reg Code is Required');
     }
 
-    // Display validation errors if any
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
@@ -531,7 +510,6 @@ export class EditCollectionCenterComponent implements OnInit {
       return;
     }
 
-    // Confirmation dialog
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to update this Collection Centre?',
@@ -548,7 +526,6 @@ export class EditCollectionCenterComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        // Call the service to update the Collection Centre
         this.collectionCenterService.updateColectionCenter(this.centerFetchData, this.selectedCompaniesIds, this.collectionCenterID).subscribe({
           next: (res: any) => {
             this.isLoading = false;

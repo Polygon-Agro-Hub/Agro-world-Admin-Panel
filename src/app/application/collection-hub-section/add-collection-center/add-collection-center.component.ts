@@ -94,7 +94,7 @@ export class AddCollectionCenterComponent implements OnInit {
     this.selectedCountry2 = defaultCountry;
     this.filteredCompanies = [...this.CompanyData];
   }
-  //serachable company dropdown
+
   filterCompanies(event: Event): void {
     const input = (event.target as HTMLInputElement).value.toLowerCase().trim();
 
@@ -114,10 +114,8 @@ export class AddCollectionCenterComponent implements OnInit {
     this.dropdownOpen = !this.dropdownOpen;
     this.companyTouched = true;
 
-    // Reset search input and filtered data
     this.filteredCompanies = [...this.CompanyData];
 
-    // Clear the actual input field (optional but recommended)
     const inputElement = document.querySelector(
       '#companySearchInput'
     ) as HTMLInputElement;
@@ -128,7 +126,7 @@ export class AddCollectionCenterComponent implements OnInit {
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
-    // Only allow 0-9
+
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
       return false;
@@ -180,13 +178,12 @@ export class AddCollectionCenterComponent implements OnInit {
   }
 
   private initializeDropdownOptions(): void {
-  // Convert ProvinceData to dropdown options
+
   this.provinceOptions = this.ProvinceData.map(province => ({
     label: province.province,
     value: province.province
   }));
 
-  // Initialize district options based on selected province if any
   this.updateDistrictOptions();
 }
 
@@ -228,24 +225,15 @@ isFieldInvalid(field: string): boolean {
     }
 
     this.companyDisplayText = this.selectedCompaniesNames.join(', ');
-    console.log('companyDisplayText', this.companyDisplayText);
   }
-
-  // trimCity(): void {
-  //   const control = this.collectionCenterForm.get('buildingNumber');
-  //   if (control) {
-  //     const value = control.value || '';
-  //     control.setValue(value.replace(/^\s+/, ''), { emitEvent: false });
-  //   }
-  // }
 
   onProvinceChange() {
   this.updateDistrictOptions();
   
-  // Reset district value when province changes
+  
   this.collectionCenterForm.get('district')?.reset();
   
-  // Rest of your existing code...
+  
   const control = this.collectionCenterForm.get('city');
   if (control) {
     const value = control.value || '';
@@ -311,12 +299,12 @@ isFieldInvalid(field: string): boolean {
   }
 
  onSubmit() {
-  // Mark all form fields as touched to trigger validation
+  
   this.collectionCenterForm.markAllAsTouched();
 
   const missingFields: string[] = [];
 
-  // Validation for form fields
+  
   if (!this.collectionCenterForm.get('centerName')?.value || this.collectionCenterForm.get('centerName')?.value.trim() === '') {
     missingFields.push('Collection Centre Name is Required');
   }
@@ -339,14 +327,6 @@ isFieldInvalid(field: string): boolean {
       missingFields.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
     }
   }
-
-  // if (!this.collectionCenterForm.get('contact01Code')?.value) {
-  //   missingFields.push('Contact Number - 1 Code');
-  // }
-
-  // if (this.collectionCenterForm.get('contact02')?.value && !this.collectionCenterForm.get('contact02Code')?.value) {
-  //   missingFields.push('Contact Number - 2 Code');
-  // }
 
   if (!this.collectionCenterForm.get('buildingNumber')?.value || this.collectionCenterForm.get('buildingNumber')?.value.trim() === '') {
     missingFields.push('Building Number  is Required');
@@ -398,7 +378,6 @@ isFieldInvalid(field: string): boolean {
     return;
   }
 
-  // Confirmation dialog
   Swal.fire({
     title: 'Are you sure?',
     text: 'Do you want to create this Collection Centre?',
@@ -415,7 +394,6 @@ isFieldInvalid(field: string): boolean {
     if (result.isConfirmed) {
       this.isLoading = true;
 
-      // Prepare data for submission
       const formData = {
         centerName: this.collectionCenterForm.get('centerName')?.value.trim(),
         companyIds: this.selectedCompaniesIds,
@@ -432,7 +410,6 @@ isFieldInvalid(field: string): boolean {
         regCode: this.collectionCenterForm.get('regCode')?.value,
       };
 
-      // Call the service to create the Collection Centre
       this.collectionCenterService.createCollectionCenter(formData, this.selectedCompaniesIds).subscribe({
         next: (res: any) => {
           this.isLoading = false;
@@ -512,7 +489,7 @@ onCancel() {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      this.location.back(); // 👈 this takes the user back to the previous page
+      this.location.back(); 
     }
   });
 }
@@ -520,7 +497,6 @@ onCancel() {
 
 getAllCompanies() {
   this.collectionCenterService.getAllCompanyList().subscribe((res) => {
-    console.log('Raw response from service:', res);
     this.CompanyData = res;
 
  
@@ -531,7 +507,6 @@ getAllCompanies() {
     this.filteredCompanies = this.filteredCompanies.filter(
       (item, index, self) => index === self.findIndex(i => i.id === item.id)
     );
-    console.log('Companies for dropdown:', this.filteredCompanies);
   });
 }
 
@@ -634,7 +609,6 @@ getAllCompanies() {
   if (control) {
     let value = control.value || '';
     value = value.replace(/^\s+/, '');
-    // Capitalize first letter
     value = this.capitalizeFirstLetter(value);
     control.setValue(value, { emitEvent: false });
   }
@@ -645,7 +619,6 @@ getAllCompanies() {
   if (control) {
     let value = control.value || '';
     value = value.replace(/^\s+/, '');
-    // Capitalize first letter
     value = this.capitalizeFirstLetter(value);
     control.setValue(value, { emitEvent: false });
   }
@@ -656,7 +629,6 @@ getAllCompanies() {
   if (control) {
     let value = control.value || '';
     value = value.replace(/^\s+/, '');
-    // Capitalize first letter
     value = this.capitalizeFirstLetter(value);
     control.setValue(value, { emitEvent: false });
   }
@@ -666,11 +638,9 @@ getAllCompanies() {
     const inputElement = event.target as HTMLInputElement;
     let input = inputElement.value;
 
-    // Reset errors
     this.leadingSpaceError = false;
     this.specialCharOrNumberError = false;
 
-    // Remove leading spaces and flag if they existed
     if (input.startsWith(' ')) {
       this.leadingSpaceError = true;
       input = input.trimStart();
@@ -682,18 +652,15 @@ getAllCompanies() {
     this.specialCharOrNumberError = true;
   }
 
-    // Capitalize the first letter (if input is not empty)
     const capitalizedInput =
       filteredInput.length > 0
         ? filteredInput.charAt(0).toUpperCase() + filteredInput.slice(1)
         : '';
 
-    // Update form control value without emitting a new event to avoid infinite loop
     this.collectionCenterForm
       .get('centerName')
       ?.setValue(capitalizedInput, { emitEvent: false });
 
-    // If you're storing it separately too
     this.centerData.centerName = capitalizedInput;
   }
 

@@ -155,7 +155,6 @@ export class CollectiveofficersEditComponent {
       this.fetchData();
     }
 
-    // this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
@@ -164,7 +163,6 @@ export class CollectiveofficersEditComponent {
     this.isLoading = true;
     this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
       next: (response: any) => {
-        console.log('Officer Data Response:', response);
         const officerData = response.officerData[0];
 
         this.personalData.empId = officerData.empId || '';
@@ -188,7 +186,6 @@ export class CollectiveofficersEditComponent {
         this.personalData.province = officerData.province || '';
         this.personalData.languages = officerData.languages || '';
 
-        // Handle null values for IDs
         this.personalData.companyId = officerData.companyId || null;
         this.personalData.centerId = officerData.centerId || null;
         this.personalData.irmId = officerData.irmId || null;
@@ -224,21 +221,17 @@ export class CollectiveofficersEditComponent {
   }
 
   onCompanyChange(event: any): void {
-    console.log('Company changed:', this.personalData.companyId);
 
-    // Reset collection center and manager
     this.personalData.centerId = null;
     this.personalData.irmId = null;
     this.personalData.jobRole = '';
 
-    // Clear manager options
     this.managerOptions = [];
     this.getAllCollectionCenters();
   }
 
   changeCenter(event: any): void {
-    console.log('Center changed:', this.personalData.centerId);
-    console.log('Center Manager:', this.personalData.irmId);
+    
     this.personalData.irmId = null;
     this.getAllCollectionManagers();
   }
@@ -329,7 +322,6 @@ export class CollectiveofficersEditComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.router.navigate(['/steckholders/action/collective-officer']);
         this.location.back();
       }
     });
@@ -347,14 +339,14 @@ export class CollectiveofficersEditComponent {
 
   onBankChange() {
     const selectedBankName = this.personalData.bankName;
-    console.log('Selected Bank Name:', selectedBankName);
+    
     if (selectedBankName) {
       const selectedBank = this.banks.find((bank) => bank.name === selectedBankName);
-      console.log('Selected Bank:', selectedBank);
+      
       if (selectedBank) {
         this.selectedBankId = selectedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-        console.log('Branches for Bank:', this.branches);
+        
         this.branchOptions = this.branches.map(branch => ({
           label: branch.name,
           value: branch.name
@@ -390,7 +382,7 @@ export class CollectiveofficersEditComponent {
       const matchedBank = this.banks.find(
         (bank) => bank.name === this.personalData.bankName
       );
-      console.log('Matched Bank:', matchedBank);
+      
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
@@ -398,7 +390,7 @@ export class CollectiveofficersEditComponent {
           label: branch.name,
           value: branch.name
         }));
-        console.log('Branch Options:', this.branchOptions);
+        
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(
             (branch) => branch.name === this.personalData.branchName
@@ -874,7 +866,6 @@ export class CollectiveofficersEditComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.navigatePath('/steckholders/action/collective-officer');
         this.location.back();
       }
     });
@@ -991,7 +982,7 @@ export class CollectiveofficersEditComponent {
     }
 
     this.selectedPage = page;
-    console.log('perdsonal', this.personalData)
+    
   }
 
   updateProvince(event: DropdownChangeEvent): void {
@@ -1033,7 +1024,6 @@ export class CollectiveofficersEditComponent {
       .subscribe((res) => {
         this.collectionCenterData = res;
 
-        // Convert to dropdown options format
         this.centerOptions = this.collectionCenterData.map((center) => ({
           label: center.centerName,
           value: center.id,
@@ -1042,7 +1032,6 @@ export class CollectiveofficersEditComponent {
   }
 
   getAllCollectionCenters() {
-    //miss func
     this.collectionCenterData = []
     this.personalData.centerId = null;
     this.managerOptions = [];
@@ -1054,8 +1043,6 @@ export class CollectiveofficersEditComponent {
       )
       .subscribe((res) => {
         this.collectionCenterData = res;
-
-        // Convert to dropdown options format
         this.centerOptions = this.collectionCenterData.map((center) => ({
           label: center.centerName,
           value: center.id,
@@ -1065,7 +1052,6 @@ export class CollectiveofficersEditComponent {
 
 
   getAllCollectionManagers() {
-    // Only call the API if both companyId and centerId are available
     if (this.personalData.companyId && this.personalData.centerId) {
       this.collectionCenterSrv
         .getAllManagerList(
@@ -1080,7 +1066,6 @@ export class CollectiveofficersEditComponent {
           }));
         });
     } else {
-      // Clear manager options if companyId or centerId is null
       this.managerOptions = [];
     }
   }
@@ -1103,12 +1088,7 @@ export class CollectiveofficersEditComponent {
   }
 
   onSubmit() {
-    console.log('personalData before submit:', {
-      contact1: this.personalData.contact1,
-      contact1Code: this.personalData.contact1Code,
-      contact2: this.personalData.contact2,
-      contact2Code: this.personalData.contact2Code
-    });
+    
 
     const missingFields: string[] = [];
 
@@ -1277,12 +1257,7 @@ export class CollectiveofficersEditComponent {
           phoneCode02: this.personalData.contact2Code || this.personalData.contact1Code || '+94',
         };
 
-        console.log('Payload sent to backend:', {
-          phoneNumber01: payload.phoneNumber01,
-          phoneCode01: payload.phoneCode01,
-          phoneNumber02: payload.phoneNumber02,
-          phoneCode02: payload.phoneCode02,
-        });
+        
 
         this.collectionOfficerService
           .editCollectiveOfficer(payload, this.itemId, this.selectedImage)

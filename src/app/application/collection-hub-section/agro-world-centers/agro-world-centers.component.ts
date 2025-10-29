@@ -146,7 +146,6 @@ export class AgroWorldCentersComponent {
       value: p.province,
     })).sort((a, b) => a.label.localeCompare(b.label));
 
-    // District dropdown (all districts initially, sorted alphabetically)
     this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
       .map((d) => ({
         label: d.districtName,
@@ -167,7 +166,6 @@ export class AgroWorldCentersComponent {
       .getAllCollectionCenterPageAW(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
-          console.log("Data", response);
 
           this.isLoading = false;
           this.collectionObj = response.items;
@@ -193,8 +191,8 @@ export class AgroWorldCentersComponent {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
       },
-      confirmButtonColor: '#2563eb', // Blue confirm
-      cancelButtonColor: '#dc2626',  // Red cancel
+      confirmButtonColor: '#2563eb', 
+      cancelButtonColor: '#dc2626',  
     }).then((result) => {
       if (result.isConfirmed) {
         this.collectionService.deleteCollectionCenter(id).subscribe(
@@ -236,8 +234,8 @@ export class AgroWorldCentersComponent {
   }
 
   searchPlantCareUsers() {
-    this.searchItem = this.searchItem.trim(); // remove leading/trailing whitespace
-    this.page = 1; // optional: reset to page 1 on new search
+    this.searchItem = this.searchItem.trim(); 
+    this.page = 1;
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
@@ -252,7 +250,6 @@ export class AgroWorldCentersComponent {
         (p) => p.province === this.selectProvince
       );
 
-      // Filter and sort districts for selected province
       this.districtOptions =
         selected?.district
           .map((d) => ({
@@ -261,10 +258,8 @@ export class AgroWorldCentersComponent {
           }))
           .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-      // Reset district selection
       this.selectDistrict = '';
     } else {
-      // Province cleared → show all districts, sorted
       this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
         .map((d) => ({
           label: d.districtName,
@@ -272,8 +267,6 @@ export class AgroWorldCentersComponent {
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
     }
-
-    console.log(this.selectProvince);
 
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -287,14 +280,12 @@ export class AgroWorldCentersComponent {
       if (matchingProvince) {
         this.selectProvince = matchingProvince.province;
 
-        // Filter district list for this province
         this.districtOptions = matchingProvince.district.map((d) => ({
           label: d.districtName,
           value: d.districtName,
         }));
       }
     }
-    console.log(this.selectDistrict);
 
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }

@@ -38,7 +38,6 @@ export class AdditionalItemsComponent implements OnInit {
   name!: string;
   fullTotal!: number;
   additionalItemsArr: AdditionalItems[] = [];
-  // productItemsArr: ProductItems[] = [];
   totalAdditionalItems!: number;
 
   selectedProductId: number | null = null;
@@ -82,7 +81,6 @@ export class AdditionalItemsComponent implements OnInit {
     });
 
     this.getAdditionalItemData(this.id!);
-    // this.getAllProducts();
 
   }
 
@@ -96,7 +94,6 @@ export class AdditionalItemsComponent implements OnInit {
         this.packedAll = response.items.every((item: AdditionalItems) => item.packedStatus === 1);
         console.log('All Packed:', this.packedAll);
 
-        // Map the full item objects
         this.additionalItemsArr = response.items.map((item: AdditionalItems) => {
           return {
             ...item,
@@ -122,7 +119,6 @@ export class AdditionalItemsComponent implements OnInit {
       (error) => {
         console.error('Error fetching package items:', error);
         if (error.status === 401) {
-          // Handle unauthorized error if needed
         }
         this.isLoading = false;
       }
@@ -165,16 +161,15 @@ export class AdditionalItemsComponent implements OnInit {
     this.showCountdown = true;
   }
   
-  // Called when countdown finishes or user clicks "Mark as Completed"
+  
   onTimerCompleted() {
     this.showCountdown = false;
-    this.executeApiCall(); // Perform the API call
+    this.executeApiCall(); 
   }
   
-  // Called when user clicks "Go Back to Edit"
+  
   onTimerCancelled() {
     this.showCountdown = false;
-    // Optionally: reset form or show editing state again
   }
 
   private executeApiCall() {
@@ -201,31 +196,6 @@ export class AdditionalItemsComponent implements OnInit {
       }
     );
   }
-
-  // saveCheckedItems() {
-  //   this.isLoading = true;
-
-  //   const updatedData = this.additionalItemsArr.map(item => ({
-
-  //     productId: item.productId,
-  //     packedStatus: item.packedStatus,
-
-  //   }));
-
-  //   console.log('data', updatedData )
-  //   this.dispatchService.updateAdditionalItemData(updatedData, this.id!).subscribe(
-  //     (res) => {
-  //       this.isLoading = false;
-  //       console.log('Updated successfully:', res);
-  //       Swal.fire('Success', 'Product Updated Successfully', 'success');
-  //       this.router.navigate(['/dispatch/salesdash-orders']);
-  //     },
-  //     (err) => {
-  //       console.error('Update failed:', err);
-  //       Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
-  //     }
-  //   );
-  // }
 
 }
 

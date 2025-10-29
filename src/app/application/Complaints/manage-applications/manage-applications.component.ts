@@ -41,20 +41,15 @@ export class ManageApplicationsComponent {
         this.isLoading=false;
       },
       (error) => {
-        console.log("Error: ", error);
-        // this.isLoading = false;
       },
     );
   }
 
-  //---------------------------------this one not usefull------------------------------------
   showAlert(systemAppId: number) {
-    console.log("Fetching data for System Application ID: ", systemAppId);
 
     this.complaintSrv
       .getComplainCategoriesByAppId(systemAppId)
       .subscribe((res: any) => {
-        console.log(res);
 
         let htmlContent = "";
 
@@ -76,7 +71,6 @@ export class ManageApplicationsComponent {
           html: htmlContent,
           showConfirmButton: false,
           didOpen: () => {
-            // Apply Tailwind styles using document.querySelector
             const swalPopup = document.querySelector(
               ".swal2-popup",
             ) as HTMLElement;
@@ -146,8 +140,6 @@ export class ManageApplicationsComponent {
       });
   }
 
-  // swal2-input w-48 h-16 text-sm rounded-lg px-2 border border-gray-300
-  // focus:border-blue-500 focus:outline-none
   addNewApp() {
   Swal.fire({
     html: `
@@ -174,7 +166,6 @@ export class ManageApplicationsComponent {
     },
 
     didRender: () => {
-      // Apply Tailwind styles dynamically after popup is rendered
       const popup = document.querySelector(".rounded-card");
       if (popup) {
         popup.classList.add("rounded-xl", "p-5", "dark:bg-tileBlack");
@@ -295,13 +286,12 @@ export class ManageApplicationsComponent {
       showCancelButton: true,
       confirmButtonText: "Delete",
       cancelButtonText: "Cancel",
-      reverseButtons: true, // Keeps cancel button first
+      reverseButtons: true, 
       customClass: {
-        confirmButton: "delete-btn", // Red "Delete" button
-        cancelButton: "cancel-btn", // Gray "Cancel" button
+        confirmButton: "delete-btn", 
+        cancelButton: "cancel-btn", 
       },
       willOpen: () => {
-        // Apply Tailwind styles dynamically
         document
           .querySelector(".delete-btn")
           ?.classList.add(
@@ -332,16 +322,12 @@ export class ManageApplicationsComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        // If "Delete" is clicked
         this.complaintSrv.deleteApplicationById(systemAppId).subscribe(
           (res: any) => {
-            console.log(res);
 
             let htmlContent = "";
 
-            // Check if the result indicates a successful deletion
             if (res.message === "application not found") {
-              // If the application was not found
               htmlContent = `<p style="font-size: 18px; text-align: center;">Application could not be deleted. It was not found.</p>`;
               Swal.fire({
                 title: "Error",
@@ -350,7 +336,6 @@ export class ManageApplicationsComponent {
                 showConfirmButton: true,
               });
             } else {
-              // If deletion was successful
               htmlContent = `<p style="font-size: 18px; text-align: center;">Application successfully deleted.</p>`;
               Swal.fire({
                 title: "Success",
@@ -358,13 +343,11 @@ export class ManageApplicationsComponent {
                 icon: "success",
                 showConfirmButton: true,
               }).then(() => {
-                // Reload the page after confirmation
                 window.location.reload();
               });
             }
           },
           (error) => {
-            // In case of an error from the backend
             console.error(error);
             Swal.fire({
               title: "Error",

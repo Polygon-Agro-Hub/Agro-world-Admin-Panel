@@ -26,15 +26,15 @@ import { environment } from '../../../../environment/environment.development';
   ],
   templateUrl: './view-each-distributed-complain.component.html',
   styleUrl: './view-each-distributed-complain.component.css',
-  providers: [DatePipe], // Add DatePipe to providers
+  providers: [DatePipe],
 
 })
 export class ViewEachDistributedComplainComponent {
   complain: Complain = new Complain();
   complainId!: string;
   farmerName!: string;
-  display: boolean = false; // Controls dialog visibility
-  complaintText: string = ""; // Holds the text entered in the textarea
+  display: boolean = false; 
+  complaintText: string = ""; 
   messageContent: string = "";
   isLoading = false;
 
@@ -71,7 +71,6 @@ export class ViewEachDistributedComplainComponent {
         this.datePipe.transform(res.createdAt, "yyyy-MM-dd hh:mm:ss a") ||
         res.createdAt;
       this.complain = res;
-      console.log(res);
       this.isLoading = false;
     });
   }
@@ -102,29 +101,27 @@ export class ViewEachDistributedComplainComponent {
       showCancelButton: true,
       confirmButtonText: "Send",
       cancelButtonText: "Cancel",
-      confirmButtonColor: "#3980C0", // Green color for Send button
-      cancelButtonColor: "#74788D", // Blue-gray for Cancel button
+      confirmButtonColor: "#3980C0", 
+      cancelButtonColor: "#74788D", 
       width: "600px",
-      reverseButtons: true, // Swap button positions
+      reverseButtons: true, 
       preConfirm: () => {
         const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
         return textarea.value;
       },
       didOpen: () => {
-        // Direct DOM manipulation for button alignment
         setTimeout(() => {
           const actionsElement = document.querySelector('.swal2-actions');
           if (actionsElement) {
             actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
 
-            // Also swap buttons if needed (in addition to reverseButtons)
             const cancelButton = document.querySelector('.swal2-cancel');
             const confirmButton = document.querySelector('.swal2-confirm');
             if (cancelButton && confirmButton && actionsElement) {
               actionsElement.insertBefore(cancelButton, confirmButton);
             }
           }
-        },); // Small delay to ensure DOM is ready
+        },); 
       }
     }).then((result) => {
       if (result.isConfirmed) {
@@ -170,7 +167,6 @@ export class ViewEachDistributedComplainComponent {
       )
       .subscribe(
         (res: any) => {
-          console.log("Reply Sent successfully", res);
 
           Swal.fire({
             icon: "success",
@@ -181,9 +177,7 @@ export class ViewEachDistributedComplainComponent {
               title: 'font-semibold',
             },
           }).then((result) => {
-            // This code executes when the user clicks OK
             if (result.isConfirmed) {
-              // Redirect to the complaints page
               this.router.navigate(['/complaints/distributed-center-complains']);
             }
             this.fetchComplain();
@@ -207,11 +201,11 @@ export class ViewEachDistributedComplainComponent {
 
 
   showDialog() {
-    this.display = true; // Opens the dialog
+    this.display = true; 
   }
 
   hideDialog() {
-    this.display = false; // Closes the dialog
+    this.display = false; 
   }
 
   showReplyPopUp(fname: string, language: string) {

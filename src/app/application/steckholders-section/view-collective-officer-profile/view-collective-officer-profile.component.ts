@@ -255,10 +255,10 @@ fetchOfficerById(id: number) {
   y += 7;
 
   // Center Name (if exists)
-  if (this.officerObj.centerName) {
+  if (this.officerObj.centerRegCode) {
     doc.setFont("Inter", "normal");
     doc.setTextColor(colors.textSecondary);
-    doc.text(getValueOrNA(this.officerObj.centerName), detailsX, y + 10);
+    doc.text(getValueOrNA(this.officerObj.centerRegCode), detailsX, y + 10);
     y += 7;
   }
 

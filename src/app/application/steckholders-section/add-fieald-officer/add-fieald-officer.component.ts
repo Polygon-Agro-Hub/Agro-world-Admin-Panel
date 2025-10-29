@@ -657,7 +657,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       // Validate assigned districts
       if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-        missingFields.push('Assigned Districts is Required');
+        missingFields.push('Assigned Districts are Required');
       }
 
       if (!this.personalData.phoneNumber1) {
@@ -1322,7 +1322,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Validate assigned districts
     if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-      missingFields.push('Assigned Districts is Required');
+      missingFields.push('Assigned Districts are Required');
     }
 
     if (!this.personalData.phoneNumber1) {

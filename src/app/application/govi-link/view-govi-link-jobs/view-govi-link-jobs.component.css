@@ -100,3 +100,28 @@
   background-color: #dbeafe;
   color: #1e40af;
 }
+
+.custom-calendar-wrapper {
+  width: 100%;
+}
+
+::ng-deep .custom-calendar-addon {
+  background: #F1F1F1 !important;
+  border: 2px solid #d1d5db !important;
+  border-right: none !important;
+  border-radius: 0.75rem 0 0 0.75rem !important;
+  padding: 0 0.75rem !important;
+  color: #6b7280 !important;
+}
+
+:host-context(.dark) ::ng-deep .custom-calendar-addon {
+  background: #272F45 !important;
+  border-color: #AFAFAF !important;
+  color: #d1d5db !important;
+}
+
+/* Adjust the calendar input border */
+::ng-deep .custom-calendar-wrapper .p-calendar .p-inputtext {
+  border-left: none !important;
+  border-radius: 0 0.75rem 0.75rem 0 !important;
+}

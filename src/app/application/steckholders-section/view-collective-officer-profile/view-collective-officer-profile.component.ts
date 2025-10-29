@@ -546,4 +546,5 @@ class CollectionOfficer {
   vehSideImgB?: string;
   distributedCenterName!: string;
   fullEmpId!: string;
+  centerRegCode!: string;
 }

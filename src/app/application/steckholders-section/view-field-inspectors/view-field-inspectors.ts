@@ -92,7 +92,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
     private router: Router,
     private location: Location,
     private stakeholderService: StakeholderService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadInspectors();
@@ -127,7 +127,10 @@ export class ViewFieldInspectorsComponent implements OnInit {
   applyFilters() {
     const filters: any = {};
 
-    if (this.searchTerm) filters.search = this.searchTerm;
+   
+    if (this.searchTerm && this.searchTerm.trim()) {
+      filters.search = this.searchTerm.trim();
+    }
     if (this.filterStatus) filters.status = this.filterStatus;
     if (this.filterLanguage) filters.language = this.filterLanguage;
     if (this.filterDistrict) filters.district = this.filterDistrict;
@@ -181,16 +184,14 @@ export class ViewFieldInspectorsComponent implements OnInit {
           <p class="text-center dark:text-white">${message}</p>
         </div>
         <div class="flex justify-center mt-4">
-          ${
-            showRejectButton
-              ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>'
-              : ''
-          }
-          ${
-            showApproveButton
-              ? '<button id="approveButton" class="bg-green-500 text-white px-6 py-2 rounded-lg">Approve</button>'
-              : ''
-          }
+          ${showRejectButton
+        ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>'
+        : ''
+      }
+          ${showApproveButton
+        ? '<button id="approveButton" class="bg-green-500 text-white px-6 py-2 rounded-lg">Approve</button>'
+        : ''
+      }
         </div>
       </div>
     `;

@@ -10,7 +10,7 @@
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All ({{orderCount | number: '2.0'}})
+            All ({{(orderCount || orderCount === 0) ? (orderCount | number: '2.0') : '0'}})
           </h2>
         </div>
       </div>
@@ -43,21 +43,22 @@
         <tbody class="divide-y divide-gray-200">
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" *ngFor="let item of ordersArr; let i = index">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{i +1 | number : '2.0'}}
+              {{i + 1 | number : '2.0'}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{item.empId}}
+              {{item.empId || ''}}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{item.firstNameEnglish}} {{item.lastNameEnglish}}
+              {{(item.firstNameEnglish || '') + ' ' + (item.lastNameEnglish || '')}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{item.target | number: '2.0'}}
+              {{((item.target || item.target === 0) ? item.target : 0) | number: '2.0'}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{(item.target - item.complete) <= 0 ? 0 : (item.target - item.complete) | number: '2.0' }} </td>
+              {{((((item.target || item.target === 0) ? item.target : 0) - ((item.complete || item.complete === 0) ? item.complete : 0)) <= 0 ? 0 : (((item.target || item.target === 0) ? item.target : 0) - ((item.complete || item.complete === 0) ? item.complete : 0))) | number: '2.0'}}
+            </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{item.complete | number: '2.0'}}
+              {{((item.complete || item.complete === 0) ? item.complete : 0) | number: '2.0'}}
             </td>
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="selectOfficer()">

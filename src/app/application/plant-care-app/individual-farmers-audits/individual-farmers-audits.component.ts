@@ -174,7 +174,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   }
 
   getAssignClass(officerFirstName: string | null): string {
-    return officerFirstName ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+    return officerFirstName ? 'bg-[#BBFFC6] text-[#308233]' : 'bg-[#F8FFA6] text-[#A8A100]';
   }
 
   getAssignText(officerFirstName: string | null): string {

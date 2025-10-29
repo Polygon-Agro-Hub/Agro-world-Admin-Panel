@@ -617,10 +617,10 @@ export class AddFiealdOfficerComponent implements OnInit {
       //   missingFields.push('Company Name is Required');
       // }
 
-      if (!this.personalData.assignDistrict || 
-        (Array.isArray(this.personalData.assignDistrict) && this.personalData.assignDistrict.length === 0)) {
-      missingFields.push('Assigned Districts is Required');
-    }
+    //   if (!this.personalData.assignDistrict || 
+    //     (Array.isArray(this.personalData.assignDistrict) && this.personalData.assignDistrict.length === 0)) {
+    //   missingFields.push('Assigned Districts is Required');
+    // }
 
       if (!this.personalData.jobRole) {
         missingFields.push('Job Role is Required');

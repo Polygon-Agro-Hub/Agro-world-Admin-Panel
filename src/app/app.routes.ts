@@ -222,6 +222,7 @@ import { CommissionRangeComponent } from './application/finance/commission-range
 import { ViewAllServicePaymentsComponent } from './application/finance/view-all-service-payments/view-all-service-payments.component';
 import { ViewCentreRequirementComponent } from './application/procurement-section/view-centre-requirement/view-centre-requirement.component';
 import { ViewJobHistoryComponent } from './application/govi-link/view-job-history/view-job-history.component';
+import { IndividualFarmersAuditsComponent } from './application/plant-care-app/individual-farmers-audits/individual-farmers-audits.component';
 
 export const routes: Routes = [
   {
@@ -508,7 +509,11 @@ export const routes: Routes = [
               {
                 path: 'edit-farmer-cluster/:clusterId',
                 component: EditFarmerClusterComponent
-              }
+              },
+              {
+                path: 'individual-farmers-list',
+                component: IndividualFarmersAuditsComponent,
+              },
             ],
           },
         ],

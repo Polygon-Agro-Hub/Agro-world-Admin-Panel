@@ -9,6 +9,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
 
 interface TaskList {
   id: any;
@@ -36,7 +37,8 @@ interface TaskList {
     FormsModule,
     NgxPaginationModule,
     LoadingSpinnerComponent,
-  ],
+    CdkDragPlaceholder
+],
   templateUrl: './user-crop-calendar.component.html',
   styleUrl: './user-crop-calendar.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -253,5 +255,11 @@ export class UserCropCalendarComponent {
 
   closeImageSlider() {
     this.isModalOpen = false;
+  }
+
+  checkDueStatus(taskDate: string): boolean {
+    const today = new Date();
+    const taskDueDate = new Date(taskDate);
+    return taskDueDate < today;
   }
 }

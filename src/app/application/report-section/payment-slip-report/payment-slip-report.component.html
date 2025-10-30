@@ -26,7 +26,7 @@
       </i>
       <div>
         <div class="flex  ml-45">
-          <p-calendar id="fromDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="false" [(ngModel)]="createdDate" name="createdDate" (onSelect)="loadPayments()"
+          <p-calendar id="fromDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="true" [(ngModel)]="createdDate" name="createdDate" (onSelect)="loadPayments()"
             [showButtonBar]="true" iconDisplay="input" [style]="{ width: '18rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:text-white

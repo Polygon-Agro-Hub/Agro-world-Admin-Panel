@@ -262,7 +262,9 @@
                       item.orderStatus === 'Ordered' ||
                       item.orderStatus === 'Assigned',
                     'font-bold px-3 py-1 text-sm bg-[#FFDCDA] text-[#FF1100] rounded-3xl':
-                      item.orderStatus === 'Failed'
+                      item.orderStatus === 'Failed',
+                    'text-[#00818A] bg-[#ACFBFF] border-[]':
+                    item.orderStatus === 'Ready to Pickup'
                   }"
                   class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs  text-center">
                   {{

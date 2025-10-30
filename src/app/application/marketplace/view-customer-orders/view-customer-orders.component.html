@@ -35,6 +35,23 @@
         Out For Delivery
       </button>
       <button [ngClass]="
+          activeButton === 'Ready to Pickup'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        (click)="onStatusChange('Ready to Pickup')">
+        <i *ngIf="activeButton === 'Ready to Pickup'" class="fa fa-check"></i>
+        Ready to Pickup
+      </button>
+      <button [ngClass]="
+          activeButton === 'Picked up'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2" (click)="onStatusChange('Picked up')">
+        <i *ngIf="activeButton === 'Picked up'" class="fa fa-check"></i>
+        Picked up
+      </button>
+      <button [ngClass]="
           activeButton === 'delivered'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -131,6 +148,12 @@
                   class="bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-5 py-2">Cancelled</span>
                 <span *ngIf="activeButton === 'failed'"
                   class="bg-[#FFDCDA] text-[#FF1100] rounded-xl px-5 py-2">Failed</span>
+                <span *ngIf="activeButton === 'Ready to Pickup'"
+                  class="bg-[#ACFBFF] text-[#00818A] rounded-xl px-5 py-2">Ready to Pickup</span>
+                <span *ngIf="activeButton === 'Picked up'"
+                  class="bg-[#BBFFC6] text-[#308233] rounded-xl px-5 py-2">Picked up</span>
+
+
               </td>
               <td class="px-3 py-3 flex justify-center dark:text-textDark">
                 <button class="text-textLight dark:text-textDark flex justify-center gap-1"

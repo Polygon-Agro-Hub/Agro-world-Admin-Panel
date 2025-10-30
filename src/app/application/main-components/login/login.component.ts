@@ -41,7 +41,6 @@ export class LoginComponent {
   ngOnInit() {
     this.tokenService.clearLoginDetails();
     this.clearAllCookies();
-    console.log('Login component initialized 7/27');
   }
 
   clearAllCookies() {

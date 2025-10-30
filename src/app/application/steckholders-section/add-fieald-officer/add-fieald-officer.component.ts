@@ -617,10 +617,10 @@ export class AddFiealdOfficerComponent implements OnInit {
       //   missingFields.push('Company Name is Required');
       // }
 
-      if (!this.personalData.assignDistrict || 
-        (Array.isArray(this.personalData.assignDistrict) && this.personalData.assignDistrict.length === 0)) {
-      missingFields.push('Assigned Districts is Required');
-    }
+    //   if (!this.personalData.assignDistrict || 
+    //     (Array.isArray(this.personalData.assignDistrict) && this.personalData.assignDistrict.length === 0)) {
+    //   missingFields.push('Assigned Districts is Required');
+    // }
 
       if (!this.personalData.jobRole) {
         missingFields.push('Job Role is Required');
@@ -657,7 +657,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       // Validate assigned districts
       if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-        missingFields.push('Assigned Districts is Required');
+        missingFields.push('Assigned Districts are Required');
       }
 
       if (!this.personalData.phoneNumber1) {
@@ -879,49 +879,58 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   formatAmount(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value;
+  const input = event.target as HTMLInputElement;
+  let value = input.value;
 
-    // Allow control keys
-    if ([8, 9, 46, 37, 39, 116].includes(event.which)) {
-      return;
-    }
+  // Allow control keys (backspace, delete, arrows, tab, etc.)
+  if ([8, 9, 46, 37, 39, 116].includes(event.which)) {
+    return;
+  }
 
-    const char = String.fromCharCode(event.which);
+  const char = String.fromCharCode(event.which);
 
-    // Allow only numbers and decimal point
-    if (!/[0-9.]/.test(char)) {
-      event.preventDefault();
-      return;
-    }
+  // Allow only numbers and decimal point
+  if (!/[0-9.]/.test(char)) {
+    event.preventDefault();
+    return;
+  }
 
-    // Prevent multiple decimal points
-    if (char === '.' && value.includes('.')) {
-      event.preventDefault();
-      return;
-    }
+  // Prevent multiple decimal points
+  if (char === '.' && value.includes('.')) {
+    event.preventDefault();
+    return;
+  }
 
-    // If adding decimal point, automatically add .00
-    if (char === '.' && !value.includes('.')) {
-      // Let the decimal point be added naturally, then format
-      setTimeout(() => {
-        if (!value.endsWith('.00')) {
-          input.value = value + '00';
-          // Move cursor before the zeros
-          const position = value.length + 1;
-          input.setSelectionRange(position, position);
-        }
-      }, 0);
-    }
+  // Check if adding this character would exceed 100
+  const testValue = value + char;
+  const numericValue = parseFloat(testValue);
+  
+  if (!isNaN(numericValue) && numericValue > 100) {
+    event.preventDefault();
+    return;
+  }
 
-    // Limit to 2 decimal places
-    if (value.includes('.')) {
-      const decimalPart = value.split('.')[1];
-      if (decimalPart && decimalPart.length >= 2) {
-        event.preventDefault();
+  // If adding decimal point, automatically add .00
+  if (char === '.' && !value.includes('.')) {
+    // Let the decimal point be added naturally, then format
+    setTimeout(() => {
+      if (!value.endsWith('.00')) {
+        input.value = value + '00';
+        // Move cursor before the zeros
+        const position = value.length + 1;
+        input.setSelectionRange(position, position);
       }
+    }, 0);
+  }
+
+  // Limit to 2 decimal places
+  if (value.includes('.')) {
+    const decimalPart = value.split('.')[1];
+    if (decimalPart && decimalPart.length >= 2) {
+      event.preventDefault();
     }
   }
+}
 
   hasInvalidAccountHolderCharacters(): boolean {
     const value = this.personalData.accName;
@@ -1313,7 +1322,7 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Validate assigned districts
     if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-      missingFields.push('Assigned Districts is Required');
+      missingFields.push('Assigned Districts are Required');
     }
 
     if (!this.personalData.phoneNumber1) {

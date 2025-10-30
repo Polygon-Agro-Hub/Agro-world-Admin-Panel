@@ -24,9 +24,15 @@
         <p class="text-gray-500 mr-5">Filter By</p>
         <div class="mr-5">
           <p-dropdown
-            styleClass="border border-2 rounded-xl w-auto h-8 items-center dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600"
-            [options]="centers" [(ngModel)]="selectedCenter" optionLabel="centerName" optionValue="centerName" [showClear]="true" placeholder=" Centre"
-            (onChange)="applyFilters()" name="selectedCenter"/>
+    styleClass="border border-2 rounded-xl w-auto h-8 items-center dark:text-white bg-white dark:bg-[#1F2937] border-gray-300 dark:border-gray-600"
+    [options]="centers" 
+    [(ngModel)]="selectedCenter" 
+    optionLabel="centerName" 
+    optionValue="centerName" 
+    [showClear]="selectedCenter !== ''" 
+    placeholder=" Centre"
+    (onChange)="applyFilters()" 
+    name="selectedCenter"/>
 
         </div>
         <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">

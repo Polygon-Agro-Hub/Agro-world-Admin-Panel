@@ -311,7 +311,6 @@ export class ViewGoviLinkJobsComponent implements OnInit {
         if (response.success) {
           this.assignPopupClose();
           this.fetchJobs(); // Refresh the job list
-          console.log('Officer assigned successfully');
         } else {
           this.assignError = response.message || 'Failed to assign officer';
         }
@@ -369,7 +368,6 @@ export class ViewGoviLinkJobsComponent implements OnInit {
 
   addNew(): void {
     // Navigate to add new job page
-    console.log('Add new job');
   }
 
   clearAllFilters(): void {

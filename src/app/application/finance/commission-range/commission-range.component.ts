@@ -238,7 +238,6 @@ export class CommissionRangeComponent implements OnInit {
                 .toPromise()
             );
           } else {
-            console.log(`No changes detected for commission ${formData.id}`);
           }
         }
       } else if (formData.isNew) {

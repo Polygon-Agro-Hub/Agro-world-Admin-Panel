@@ -39,7 +39,6 @@ export class ViewCompaniesComponent implements OnInit {
     this.distributionHubService.getAllCompanyDetails(this.search.trim())
       .subscribe(
         (response: any) => {
-          console.log('API Response:', response);
           this.isLoading = false;
           this.companies = response.results || [];
           this.total = response.total || 0;
@@ -54,7 +53,6 @@ export class ViewCompaniesComponent implements OnInit {
   }
 
   searchPlantCareUsers() {
-    console.log('Search triggered:', this.search);
     this.fetchAllCompanys();
   }
 
@@ -76,7 +74,6 @@ export class ViewCompaniesComponent implements OnInit {
   }
 
   viewCompanyHeadPortals(id: number, companyName: string) {
-    console.log('id', id, 'companyName', companyName);
     this.router.navigate(
       ['/distribution-hub/action/view-distribution-company'],
       {

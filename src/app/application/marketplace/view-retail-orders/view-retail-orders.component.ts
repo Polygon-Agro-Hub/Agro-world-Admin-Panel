@@ -60,6 +60,7 @@ export class ViewRetailOrdersComponent implements OnInit {
     { label: 'Out For Delivery', value: 'Out For Delivery' },
     { label: 'Picked Up', value: 'Picked Up' },
     { label: 'Processing', value: 'Processing' },
+    { label: 'Ready to Pickup', value: 'Ready to Pickup' },
   ];
 
   constructor(

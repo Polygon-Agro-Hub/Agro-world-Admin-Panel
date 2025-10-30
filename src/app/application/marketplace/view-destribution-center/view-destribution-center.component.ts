@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
@@ -10,7 +10,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { Router, ActivatedRoute } from '@angular/router';
 import { DestributionService } from '../../../services/destribution-service/destribution-service.service';
 import Swal from 'sweetalert2';
-import {FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 
 interface PhoneCode {
@@ -42,7 +42,7 @@ interface DistributionCenter {
 @Component({
   selector: 'app-view-destribution-center',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,  DropdownModule ,LoadingSpinnerComponent],
+  imports: [CommonModule, ReactiveFormsModule, DropdownModule, LoadingSpinnerComponent],
   templateUrl: './view-destribution-center.component.html',
   styleUrl: './view-destribution-center.component.css',
 })
@@ -55,7 +55,7 @@ export class ViewDestributionCenterComponent implements OnInit {
 
   companyOptions: any[] = [];
 
- form = new FormGroup({
+  form = new FormGroup({
     company: new FormControl(null),
   });
 
@@ -71,20 +71,20 @@ export class ViewDestributionCenterComponent implements OnInit {
     'Sabaragamuwa',
   ];
 
-      countries: PhoneCode[] = [
-  { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
-  { code: 'VN', dialCode: '+84', name: 'Vietnam' },
-  { code: 'KH', dialCode: '+855', name: 'Cambodia' },
-  { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
-  { code: 'IN', dialCode: '+91', name: 'India' },
-  { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-  { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-  { code: 'US', dialCode: '+1', name: 'United States' }
-];
+  countries: PhoneCode[] = [
+    { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
+    { code: 'VN', dialCode: '+84', name: 'Vietnam' },
+    { code: 'KH', dialCode: '+855', name: 'Cambodia' },
+    { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
+    { code: 'IN', dialCode: '+91', name: 'India' },
+    { code: 'NL', dialCode: '+31', name: 'Netherlands' },
+    { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+    { code: 'US', dialCode: '+1', name: 'United States' }
+  ];
 
-getFlagUrl(countryCode: string): string {
-  return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
-}
+  getFlagUrl(countryCode: string): string {
+    return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
 
   districtsMap: { [key: string]: string[] } = {
     Central: ['Kandy', 'Matale', 'Nuwara Eliya'],
@@ -102,7 +102,8 @@ getFlagUrl(countryCode: string): string {
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private distributionService: DestributionService
+    private distributionService: DestributionService,
+    private location: Location
   ) {
     this.initializeForm();
   }
@@ -142,7 +143,8 @@ getFlagUrl(countryCode: string): string {
   }
 
   back(): void {
-    this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+    // this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+    this.location.back();
   }
 
   fetchAllCompanies() {
@@ -189,10 +191,10 @@ getFlagUrl(countryCode: string): string {
   }
 
   getCompanyNameById(id: string | number | null): string | undefined {
-  return this.companyList?.find(company => company.id === id)?.companyNameEnglish;
-}
+    return this.companyList?.find(company => company.id === id)?.companyNameEnglish;
+  }
 
-getCompanyName(): string {
+  getCompanyName(): string {
     if (!this.distributionCenterDetails || !this.distributionCenterDetails.company) {
       return 'Loading...';
     }

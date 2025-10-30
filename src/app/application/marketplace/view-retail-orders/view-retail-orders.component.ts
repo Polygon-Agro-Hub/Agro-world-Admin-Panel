@@ -84,7 +84,6 @@ export class ViewRetailOrdersComponent implements OnInit {
     formattedDate: string = this.formattedDate
   ) {
     this.isLoading = true;
-    console.log('sending', status);
     this.MaketplaceSrv.getAllRetailOrders(
       page,
       limit,
@@ -94,7 +93,6 @@ export class ViewRetailOrdersComponent implements OnInit {
       formattedDate
     ).subscribe(
       (response) => {
-        console.log('These are the data', response);
 
         this.isLoading = false;
         this.retailordersArr = response.items;
@@ -136,7 +134,6 @@ export class ViewRetailOrdersComponent implements OnInit {
   }
 
   applyStatusFilters() {
-    console.log('status', this.selectStatus);
     this.fetchAllRetailOrders();
   }
 
@@ -152,13 +149,12 @@ export class ViewRetailOrdersComponent implements OnInit {
       const month = String(this.selectDate.getMonth() + 1).padStart(2, '0');
       const day = String(this.selectDate.getDate()).padStart(2, '0');
       this.formattedDate = `${year}-${month}-${day}`;
-      console.log('Filter by date:', this.formattedDate);
       this.fetchAllRetailOrders();
     }
   }
 
   dateFilter() {
-    console.log('date', this.selectDate);
+ 
     this.applyDateFilter();
   }
 
@@ -173,7 +169,6 @@ export class ViewRetailOrdersComponent implements OnInit {
 
   downloadInvoice(id: number, tableInvoiceNo: string): void {
   this.isLoading = true;
-  console.log('Starting download - Table InvoiceNo:', tableInvoiceNo, 'ID:', id);
 
   this.finalInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
     .then(() => {
@@ -191,7 +186,6 @@ export class ViewRetailOrdersComponent implements OnInit {
     })
     .finally(() => {
       this.isLoading = false;
-      console.log('Finished loading invoice details');
     });
 }
 }

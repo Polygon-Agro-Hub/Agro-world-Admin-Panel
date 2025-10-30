@@ -223,6 +223,7 @@ import { ViewAllServicePaymentsComponent } from './application/finance/view-all-
 import { ViewCentreRequirementComponent } from './application/procurement-section/view-centre-requirement/view-centre-requirement.component';
 import { ViewJobHistoryComponent } from './application/govi-link/view-job-history/view-job-history.component';
 import { IndividualFarmersAuditsComponent } from './application/plant-care-app/individual-farmers-audits/individual-farmers-audits.component';
+import { FarmersClustersAuditsComponent } from './application/plant-care-app/farmers-clusters-audits/farmers-clusters-audits.component';
 
 export const routes: Routes = [
   {
@@ -513,6 +514,10 @@ export const routes: Routes = [
               {
                 path: 'individual-farmers-list',
                 component: IndividualFarmersAuditsComponent,
+              },
+              {
+                path: 'farmers-clusters-list',
+                component: FarmersClustersAuditsComponent,
               },
             ],
           },

@@ -166,4 +166,44 @@ export class GoviLinkService {
       headers,
     });
   }
+  
+  getFieldAuditHistory(filters: any = {}): Observable<any> {
+  const token = this.tokenService.getToken();
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+  });
+
+  let params = new HttpParams();
+
+  // Filters
+  if (filters.status) {
+    params = params.set('status', filters.status);
+  }
+  if (filters.district) {
+    params = params.set('district', filters.district);
+  }
+  if (filters.completedDateFrom) {
+    params = params.set('completedDateFrom', filters.completedDateFrom);
+  }
+  if (filters.completedDateTo) {
+    params = params.set('completedDateTo', filters.completedDateTo);
+  }
+
+  // Search
+  if (filters.searchJobId) {
+    params = params.set('searchJobId', filters.searchJobId);
+  }
+  if (filters.searchFarmId) {
+    params = params.set('searchFarmId', filters.searchFarmId);
+  }
+  if (filters.searchNic) {
+    params = params.set('searchNic', filters.searchNic);
+  }
+
+  return this.http.get<any>(`${this.apiUrl}get-field-audit-history`, {
+    headers,
+    params,
+  });
+}
 }

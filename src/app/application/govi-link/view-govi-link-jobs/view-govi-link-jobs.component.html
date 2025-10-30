@@ -73,17 +73,22 @@
 
         <!-- Date Filter with p-calendar -->
         <div class="relative mb-5">
-          <p-calendar
-            [(ngModel)]="dateFilter"
-            (onSelect)="onDateSelect()"
-            [showClear]="true"
-            (onClear)="clearDateFilter()"
-            dateFormat="yy-mm-dd"
-            placeholder="Select Date"
-            inputStyleClass="w-full h-8 text-sm border border-2 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] px-3"
-            panelStyleClass="text-sm dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600"
-          >
-          </p-calendar>
+          <div class="p-inputgroup custom-calendar-wrapper">
+            <span class="p-inputgroup-addon custom-calendar-addon">
+              <i class="pi pi-calendar"></i>
+            </span>
+            <p-calendar
+              [(ngModel)]="dateFilter"
+              (onSelect)="onDateSelect()"
+              [showClear]="true"
+              (onClear)="clearDateFilter()"
+              dateFormat="yy-mm-dd"
+              placeholder="Select Date"
+              inputStyleClass="w-full h-8 text-sm border border-2 rounded-r-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] border-l-0 px-3"
+              panelStyleClass="text-sm dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600"
+            >
+            </p-calendar>
+          </div>
         </div>
 
         <!-- Search bar -->

@@ -146,7 +146,6 @@ export class CollectionAllViewComponent implements OnInit {
       value: p.province,
     })).sort((a, b) => a.label.localeCompare(b.label));
 
-    // District dropdown (all districts initially, sorted alphabetically)
     this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
       .map((d) => ({
         label: d.districtName,
@@ -167,7 +166,6 @@ export class CollectionAllViewComponent implements OnInit {
       .getAllCollectionCenterPage(page, limit, district, province, searchItem)
       .subscribe(
         (response) => {
-          console.log("Data", response);
 
           this.isLoading = false;
           this.collectionObj = response.items;
@@ -176,7 +174,6 @@ export class CollectionAllViewComponent implements OnInit {
         },
         (error) => {
           if (error.status === 401) {
-            // Unauthorized access handling (left empty intentionally)
           }
         }
       );
@@ -194,8 +191,8 @@ deleteCollectionCenter(id: number) {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
     },
-    confirmButtonColor: '#2563eb', // Blue confirm
-    cancelButtonColor: '#dc2626',  // Red cancel
+    confirmButtonColor: '#2563eb',
+    cancelButtonColor: '#dc2626',
   }).then((result) => {
     if (result.isConfirmed) {
       this.collectionService.deleteCollectionCenter(id).subscribe(
@@ -252,22 +249,12 @@ deleteCollectionCenter(id: number) {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
-  // applyDistrictFilters() {
-  //   this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
-  // }
-
-  // clearDistrictFilter() {
-  //   this.selectDistrict = ''
-  //   this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
-  // }
-
   applyProvinceFilters() {
     if (this.selectProvince) {
       const selected = this.ProvinceData.find(
         (p) => p.province === this.selectProvince
       );
 
-      // Filter and sort districts for selected province
       this.districtOptions =
         selected?.district
           .map((d) => ({
@@ -276,10 +263,8 @@ deleteCollectionCenter(id: number) {
           }))
           .sort((a, b) => a.label.localeCompare(b.label)) || [];
 
-      // Reset district selection
       this.selectDistrict = '';
     } else {
-      // Province cleared → show all districts, sorted
       this.districtOptions = this.ProvinceData.flatMap((p) => p.district)
         .map((d) => ({
           label: d.districtName,
@@ -288,7 +273,6 @@ deleteCollectionCenter(id: number) {
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
-    console.log(this.selectProvince);
 
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -302,14 +286,12 @@ deleteCollectionCenter(id: number) {
       if (matchingProvince) {
         this.selectProvince = matchingProvince.province;
 
-        // Filter district list for this province
         this.districtOptions = matchingProvince.district.map((d) => ({
           label: d.districtName,
           value: d.districtName,
         }));
       }
     }
-    console.log(this.selectDistrict);
 
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -344,7 +326,6 @@ deleteCollectionCenter(id: number) {
   }
 
   assignTarget(items: any, centerId: number) {
-    console.log(centerId, '<---centerId');
 
     let comId;
     items?.some((company: Company) =>

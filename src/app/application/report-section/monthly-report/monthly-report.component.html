@@ -98,11 +98,11 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mb-6">
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">From</p>
-          <p class="dark:text-textDark text-gray-800">: {{ convertToISO(fromDate) | date : 'yyyy-mm-dd' }}</p>
+          <p class="dark:text-textDark text-gray-800">: {{ convertToISO(fromDate) | date : 'mm/dd/yyyy' }}</p>
         </div>
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">To</p>
-          <p class="dark:text-textDark text-gray-800">: {{ convertToISO(toDate) | date : 'yyyy-mm-dd' }}</p>
+          <p class="dark:text-textDark text-gray-800">: {{ convertToISO(toDate) | date : 'mm/dd/yyyy' }}</p>
         </div>
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">EMP ID</p>

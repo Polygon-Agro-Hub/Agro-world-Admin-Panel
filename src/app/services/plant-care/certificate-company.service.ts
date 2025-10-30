@@ -94,6 +94,41 @@ export interface Certificate {
   srtNumber: string;
   applicable: string;
 }
+export interface FieldAudit {
+  auditNo: number;
+  status: string;
+  farmerFirstName: string;
+  farmerLastName: string;
+  farmerDistrict: string;
+  farmerPhoneNumber: string;
+  certificateApplicable: string;
+  certificateName: string;
+  officerFirstName?: string;
+  officerLastName?: string;
+  assignBy?: string;
+}
+export interface FieldAuditResponse {
+  message: string;
+  status: boolean;
+  data: FieldAudit[];
+}
+export interface Crop {
+  cropId: number;
+  cropNameEnglish: string;
+}
+export interface CropsResponse {
+  message: string;
+  status: boolean;
+  data: {
+    certificate: {
+      certificateId: number;
+      certificateName: string;
+      applicable: string;
+    };
+    crops: Crop[];
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -467,6 +502,36 @@ export class CertificateCompanyService {
     return this.http.patch(
       `${this.apiUrl}certificate-company/update-cluster-status`,
       { clusterId, status },
+      { headers }
+    );
+  }
+
+  // Add this method to get field audits with search
+  getFieldAudits(searchTerm?: string): Observable<FieldAuditResponse> {
+    let params = new HttpParams();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+
+    if (searchTerm && searchTerm.trim() !== '') {
+      params = params.set('search', searchTerm.trim());
+    }
+
+    return this.http.get<FieldAuditResponse>(
+      `${this.apiUrl}certificate-company/get-field-audits`,
+      { headers, params }
+    );
+  }
+
+    // New method to get crops by field audit ID
+  getCropsByFieldAuditId(fieldAuditId: number): Observable<CropsResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<CropsResponse>(
+      `${this.apiUrl}certificate-company/crops-by-field-audit/${fieldAuditId}`,
       { headers }
     );
   }

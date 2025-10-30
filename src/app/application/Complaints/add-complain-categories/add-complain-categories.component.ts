@@ -31,7 +31,6 @@ export class AddComplainCategoriesComponent implements OnInit {
   fetchComplainCategory() {
     this.complaintSrv.getAdminComplainCategoryForCreate().subscribe(
       (res) => {
-        console.log(res);
         this.roleArr = res.adminRoles;
         this.appsArr = res.systemApps;
       }

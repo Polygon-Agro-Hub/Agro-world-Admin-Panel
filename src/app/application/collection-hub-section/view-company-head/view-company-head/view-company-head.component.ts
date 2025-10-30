@@ -115,13 +115,11 @@ export class ViewCompanyHeadComponent implements OnInit {
   }
 
   onSearch() {
-    // Remove leading spaces from the search text
     if (this.searchText) {
       this.searchText = this.searchText.replace(/^\s+/, '');
-      console.log('searchText', this.searchText)
     }
 
-    this.page = 1; // Reset to first page on new search
+    this.page = 1; 
     this.fetchAllCompanyHeads(
       this.companyId!,
       this.page,
@@ -133,7 +131,7 @@ export class ViewCompanyHeadComponent implements OnInit {
 
   offSearch() {
     this.searchText = '';
-    this.page = 1; // Reset to first page when clearing search
+    this.page = 1; 
     this.fetchAllCompanyHeads(
       this.companyId!,
       this.page,

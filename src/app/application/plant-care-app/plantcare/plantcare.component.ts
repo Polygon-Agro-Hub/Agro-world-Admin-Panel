@@ -20,6 +20,7 @@ export class PlantcareComponent {
   popupVisibleCropCalender = false;
   popupVisibleCertification = false;
   popupVisibleFarmerClusters = false;
+  popupVisibleAuditFarmers = false;
 
   constructor(
     private router: Router,
@@ -72,6 +73,17 @@ export class PlantcareComponent {
     if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
     if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
     if (this.popupVisibleCertification) this.popupVisibleCertification = false;
+  }
+
+  // Toggle function for Audit Farmers popup
+  togglePopupAuditFarmers() {
+    this.popupVisibleAuditFarmers = !this.popupVisibleAuditFarmers;
+    if (this.popupVisibleNews) this.popupVisibleNews = false;
+    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
+    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
+    if (this.popupVisibleFarmerClusters)
+      this.popupVisibleFarmerClusters = false;
   }
 
   navigateToCreateNews(): void {
@@ -206,5 +218,14 @@ export class PlantcareComponent {
     XLSX.writeFile(wb, 'farmer_cluster_template.xlsx');
 
     this.isLoading = false;
+  }
+
+  viewIndividualFarmers(): void {
+    this.router.navigate(['/plant-care/action/individual-farmers-list']);
+  }
+
+  // Navigation function for Farmer Clusters
+  viewFarmerClusters(): void {
+    this.router.navigate(['/plant-care/action/view-farmer-clusters']);
   }
 }

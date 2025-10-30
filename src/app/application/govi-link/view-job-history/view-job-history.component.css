@@ -1,0 +1,174 @@
+/* Calendar button color styles */
+:host ::ng-deep .p-calendar .p-button {
+  color: black;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-button {
+  color: white;
+}
+
+/* Calendar input padding to make room for icons */
+::ng-deep .p-calendar .p-inputtext {
+  padding-right: 3rem !important;
+}
+
+/* Clear icon positioning */
+::ng-deep .p-calendar .p-calendar-clear-icon {
+  right: 1.2rem !important;
+  top: 8.2px !important;
+  order: 1;
+}
+
+/* Calendar trigger icon positioning */
+::ng-deep .p-calendar .p-datepicker-trigger {
+  right: 0.5rem !important;
+  order: 2;
+}
+
+/* Light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c;
+}
+
+/* Dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8B8B8B;
+}
+
+/* Making popup small */
+::ng-deep .calendar-popup-small {
+  width: 320px !important;
+  min-width: 280px !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  font-size: 0.875rem;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.25rem !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  line-height: 1.5rem !important;
+}
+
+/* Shrink calendar icon */
+:host ::ng-deep .p-calendar .p-datepicker-trigger {
+  width: 1rem !important;
+  height: 1rem !important;
+  font-size: 0.75rem !important;
+  right: 0.3rem !important;
+  top: 0.3rem !important;
+}
+
+/* Reduce calendar popup size */
+:host ::ng-deep .p-datepicker {
+  font-size: 0.75rem !important;
+  padding: 0.25rem !important;
+  min-width: 5rem !important;
+}
+
+/* Reduce padding and cell size inside popup */
+:host ::ng-deep .p-datepicker td > span {
+  padding: 0.25rem !important;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+}
+
+/* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
+}
+
+/* Dark mode dropdown styles */
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+
+
+/* Dark mode fix for dropdown filter search input */
+::ng-deep .dark .p-dropdown-filter {
+  border-color: #6b7280;
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+/* Dark mode for filter input placeholder */
+::ng-deep .dark .p-dropdown-filter::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Dark mode for filter container */
+::ng-deep .dark .p-dropdown-filter-container {
+  background-color: #374151 !important;
+  border-bottom-color: #6b7280 !important;
+}
+
+/* Dark mode for filter icon */
+::ng-deep .dark .p-dropdown-filter-icon {
+  color: #9ca3af !important;
+}
+
+/* Ensure the input text is visible in dark mode */
+::ng-deep .dark .p-dropdown-filter:focus {
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+  outline: none;
+}
+::ng-deep .dark .p-dropdown-filter {
+  border-color: #6b7280;
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+::ng-deep .dark .p-dropdown-filter::placeholder {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark .p-dropdown-filter-container {
+  background-color: #374151 !important;
+  border-bottom-color: #6b7280 !important;
+}
+
+::ng-deep .dark .p-dropdown-filter:focus {
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+  outline: none;
+}
+
+::ng-deep .dark .p-dropdown-filter-icon {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark .p-dropdown-header {
+  background-color: #4b5563;
+}

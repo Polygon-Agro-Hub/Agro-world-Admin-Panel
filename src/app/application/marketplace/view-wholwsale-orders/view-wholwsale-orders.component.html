@@ -181,7 +181,9 @@
                   'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]':
                     item.status === 'Failed', 
                   'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]':
-                    item.status === 'Cancelled'
+                    item.status === 'Cancelled',
+                  'text-[#00818A] bg-[#ACFBFF] border-[]':
+                    item.status === 'Ready to Pickup'
                     
                 }">
                 {{ item.status === 'Ordered' ? 'Assigned' : item.status }}

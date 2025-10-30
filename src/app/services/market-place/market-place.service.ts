@@ -11,7 +11,7 @@ export class MarketPlaceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -22,21 +22,21 @@ export class MarketPlaceService {
     return this.http.get<any>(url, { headers });
   }
 
-getSubscriptions(buyerType: 'retail' | 'wholesale'): Observable<any[]> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
-  const url = `${this.apiUrl}market-place/marketplace-users?buyerType=${buyerType}`;
-  return this.http.get<any[]>(url, { headers });
-}
+  getSubscriptions(buyerType: 'retail' | 'wholesale'): Observable<any[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    const url = `${this.apiUrl}market-place/marketplace-users?buyerType=${buyerType}`;
+    return this.http.get<any[]>(url, { headers });
+  }
 
-deleteUser(id: number): Observable<{ status: boolean; message: string }> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
-  const url = `${this.apiUrl}market-place/marketplace-dltusers/${id}`;
-  return this.http.delete<{ status: boolean; message: string }>(url, { headers });
-}
+  deleteUser(id: number): Observable<{ status: boolean; message: string }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    const url = `${this.apiUrl}market-place/marketplace-dltusers/${id}`;
+    return this.http.delete<{ status: boolean; message: string }>(url, { headers });
+  }
 
 
   getPackageHistory(packageId: number, date: string): Observable<any> {
@@ -48,13 +48,13 @@ deleteUser(id: number): Observable<{ status: boolean; message: string }> {
     return this.http.get<any>(url, { headers });
   }
 
-getProductTypes(): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
-  const url = `${this.apiUrl}market-place/get-product-type`;
-  return this.http.get<any>(url, { headers });
-}
+  getProductTypes(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    const url = `${this.apiUrl}market-place/get-product-type`;
+    return this.http.get<any>(url, { headers });
+  }
 
   createProduct(Data: any): Observable<any> {
     const headers = new HttpHeaders({
@@ -69,24 +69,15 @@ getProductTypes(): Observable<any> {
       }
     );
   }
-  
 
-  // createCoupen(Data: any): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-  //   return this.http.post(`${this.apiUrl}market-place/create-coupen`, Data, {
-  //     headers,
-  //   });
-  // }
 
-  createCoupen(couponData: any): Observable<{message?: string, result?: any, status: boolean, error?: string}> {
+
+  createCoupen(couponData: any): Observable<{ message?: string, result?: any, status: boolean, error?: string }> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    
+
     return this.http.post<{
       message?: string,
       result?: any,
@@ -94,21 +85,21 @@ getProductTypes(): Observable<any> {
       error?: string
     }>(`${this.apiUrl}market-place/create-coupen`, couponData, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Handle different error statuses as per the endpoint
+
         if (error.status === 400) {
-          // Joi validation error
+
           return throwError(() => ({
             error: error.error?.error || 'Validation failed',
             status: false
           }));
         } else if (error.status === 409) {
-          // Conflict - coupon already exists
+
           return throwError(() => ({
             error: error.error?.error || 'Coupon with this code already exists',
             status: false
           }));
         } else {
-          // Generic server error
+
           return throwError(() => ({
             error: 'An error occurred while creating coupon',
             status: false
@@ -125,7 +116,7 @@ getProductTypes(): Observable<any> {
     types: any,
     search: string
   ): Observable<any> {
-    console.log('search', search)
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -163,7 +154,7 @@ getProductTypes(): Observable<any> {
     return this.http.delete(url, { headers });
   }
 
-  
+
 
   getProuctCropVerity(): Observable<any> {
     const headers = new HttpHeaders({
@@ -175,21 +166,21 @@ getProductTypes(): Observable<any> {
   }
 
   createPackage(Data: any, selectedImage: any): Observable<any> {
-    console.log('this is data', Data);
+
     const formData = new FormData();
-    console.log(selectedImage);
+
     formData.append('package', JSON.stringify(Data));
 
     if (selectedImage) {
       formData.append('file', selectedImage);
     }
-    console.log('formDta', formData);
+
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
 
-    // Send the request
+
     return this.http.post(`${this.apiUrl}market-place/add-package`, formData, {
       headers,
     });
@@ -250,21 +241,21 @@ getProductTypes(): Observable<any> {
     return this.http.get<any>(url, { headers });
   }
 
-  // In your MarketPlaceService
+
   updatePackage(data: any, id: number, base64Image?: string): Observable<any> {
-    // Ensure all numeric values are properly converted
+
     const cleanedData = {
       ...data,
       Items: data.Items.map((item: any) => ({
         ...item,
-        mpItemId: Number(item.mpItemId), // Ensure mpItemId is a number
-        quantity: Number(item.quantity), // Ensure quantity is a number
-        discountedPrice: Number(item.discountedPrice), // Ensure price is a number
+        mpItemId: Number(item.mpItemId),
+        quantity: Number(item.quantity),
+        discountedPrice: Number(item.discountedPrice),
       })),
     };
 
     const requestBody = {
-      package: JSON.stringify(cleanedData), // Stringify the cleaned data
+      package: JSON.stringify(cleanedData),
       file: base64Image,
     };
 
@@ -383,27 +374,9 @@ getProductTypes(): Observable<any> {
     return this.http.get<any>(url, { headers });
   }
 
-  //   editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
-  //   console.log('this is data', Data);
-  //   const formData = new FormData();
-  //   formData.append('package', JSON.stringify(Data));
-
-  //   if (selectedImage) {
-  //     formData.append('file', selectedImage);
-  //   }
-
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //   });
-
-  //   return this.http.post(`${this.apiUrl}market-place/add-package`,{
-  //     headers,
-  //   });
-  // }
 
   editPackage(Data: any, selectedImage: any, id: number): Observable<any> {
-    console.log('this is data', Data);
-    console.log('this is image', selectedImage);
+
     const formData = new FormData();
 
     formData.append('package', JSON.stringify(Data));
@@ -412,7 +385,7 @@ getProductTypes(): Observable<any> {
       formData.append('file', selectedImage);
     }
 
-    console.log('formData', formData);
+
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -475,7 +448,7 @@ getProductTypes(): Observable<any> {
     searchItem: string = '',
     formattedDate: string = ''
   ): Observable<any> {
-    console.log(page, limit, status, method, searchItem, formattedDate);
+
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -512,10 +485,10 @@ getProductTypes(): Observable<any> {
 
     let url = `${this.apiUrl}market-place/get-all-delivery-charges`;
 
-    // Start with an empty HttpParams
+
     let params = new HttpParams();
 
-    // Add parameters conditionally
+
     if (searchCity) {
       params = params.set('searchItem', searchCity);
     }
@@ -560,7 +533,7 @@ getProductTypes(): Observable<any> {
     );
   }
 
-  // In your market-place.service.ts
+
   checkPackageDisplayName(displayName: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -662,7 +635,7 @@ getProductTypes(): Observable<any> {
           () =>
             new Error(
               error.error?.message ||
-                'An error occurred while fetching marketplace items'
+              'An error occurred while fetching marketplace items'
             )
         );
       })
@@ -683,14 +656,14 @@ getProductTypes(): Observable<any> {
       'Content-Type': 'application/json',
     });
 
-    // Structure the data to match the endpoint's expected format
+
     const requestData = {
       packageData: packageData,
       packageItems: packageItems,
     };
 
-    // Log the data being sent
-    console.log('Creating package with items:', requestData);
+
+
 
     return this.http
       .post(
@@ -732,13 +705,13 @@ getProductTypes(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    console.log('userId:', userId);
+
 
     const url = `${this.apiUrl}market-place/get-user-orders/${userId}?status=${statusFilter}`;
 
     return this.http.get<any>(url, { headers }).pipe(
       catchError((error) => {
-        // You can handle specific error cases here if needed
+
         console.error('Error fetching user orders:', error);
         return throwError(error);
       })
@@ -753,7 +726,7 @@ getProductTypes(): Observable<any> {
     searchItem: string = '',
     formattedDate: string = ''
   ): Observable<any> {
-    console.log(page, limit, status, method, searchItem, formattedDate);
+
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -781,7 +754,7 @@ getProductTypes(): Observable<any> {
   }
 
   getCoupen(coupenId: number): Observable<any> {
-    console.log('coupenId', coupenId)
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -801,7 +774,7 @@ getProductTypes(): Observable<any> {
     });
   }
 
-   getMarketPlaceDashbordDetails(): Observable<any> {
+  getMarketPlaceDashbordDetails(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

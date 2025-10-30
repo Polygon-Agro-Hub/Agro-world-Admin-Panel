@@ -189,7 +189,7 @@ fetchOfficerById(id: number) {
     const modifiedFarmerUrl = appendCacheBuster(this.officerObj.image);
     img.src = await loadImageAsBase64(modifiedFarmerUrl);
 
-    const imgDiameter = 40;
+    const imgDiameter = 35;
     const imgRadius = imgDiameter / 2;
     const imgX = margin;
     const imgY = y;

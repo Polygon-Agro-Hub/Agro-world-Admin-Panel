@@ -52,7 +52,9 @@ export class ViewCustomerOrdersComponent implements OnInit {
     ontheway: 'Out For Delivery',
     cancelled: 'Cancelled',
     failed: 'Faild',
-    "Out For Delivery": "Out For Delivery"
+    "Out For Delivery": "Out For Delivery",
+    "Ready to Pickup": "Ready to Pickup",
+    "Picked up" : "Picked up"
   };
 
   constructor(

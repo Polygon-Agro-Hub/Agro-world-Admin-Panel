@@ -67,8 +67,7 @@ export class SelectedOfficerTargetComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // this.officerId = Number(this.route.snapshot.paramMap.get('officerId'));
-    // console.log('Selected officerId:', this.officerId);
+    
     this.fetchSelectedOfficerTargets();
     
   }
@@ -136,7 +135,6 @@ export class SelectedOfficerTargetComponent implements OnInit {
         });
         
   
-        console.log('ordersarr', this.ordersArr);
         this.totalItems = res.total;
   
         this.hasData = this.ordersArr.length > 0;

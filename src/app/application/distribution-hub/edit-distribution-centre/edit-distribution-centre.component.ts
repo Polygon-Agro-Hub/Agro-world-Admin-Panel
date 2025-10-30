@@ -142,7 +142,6 @@ export class EditDistributionCentreComponent implements OnInit {
 
     // Add this for debugging - remove after fixing
     this.distributionForm.statusChanges.subscribe((status) => {
-      console.log('Form status:', status);
       if (status === 'INVALID') {
         this.checkFormValidity();
       }
@@ -245,13 +244,10 @@ export class EditDistributionCentreComponent implements OnInit {
   }
 
   checkFormValidity(): void {
-    console.log('Form valid:', this.distributionForm.valid);
-    console.log('Form errors:', this.distributionForm.errors);
 
     Object.keys(this.distributionForm.controls).forEach((key) => {
       const control = this.distributionForm.get(key);
       if (control && control.invalid) {
-        console.log(`${key} errors:`, control.errors);
       }
     });
   }
@@ -329,7 +325,6 @@ export class EditDistributionCentreComponent implements OnInit {
         value: company.id,
       }));
 
-      console.log('Company list loaded:', this.companyList);
       
       // If distribution center details are already loaded, set the company value
       if (this.distributionCenterDetails) {
@@ -645,11 +640,9 @@ export class EditDistributionCentreComponent implements OnInit {
   }
 
   updateRegCode() {
-    console.log('update reg code');
     const province = this.distributionForm.get('province')?.value;
     const district = this.distributionForm.get('district')?.value;
     const city = this.distributionForm.get('city')?.value;
-    console.log('province', province, 'district', district, 'city', city);
 
     if (province && district && city && city.trim().length > 0) {
       this.isLoadingregcode = true;
@@ -665,7 +658,6 @@ export class EditDistributionCentreComponent implements OnInit {
             const regCode = `D-${province.slice(0, 2).toUpperCase()}${district
               .slice(0, 1)
               .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
-            console.log('regCode fallback', regCode);
             this.distributionForm.patchValue({ regCode });
             this.isLoadingregcode = false;
           },
@@ -678,12 +670,10 @@ export class EditDistributionCentreComponent implements OnInit {
 
 
   fetchDistributionCenterById(id: number) {
-  console.log('Fetching distribution centre with ID:', id);
   this.isLoading = true;
 
   this.distributionService.getDistributionCentreById(id).subscribe(
     (response: DistributionCenter) => {
-      console.log('Distribution centre details:', response);
       this.distributionCenterDetails = response;
       this.hasData = !!response;
       
@@ -750,7 +740,6 @@ export class EditDistributionCentreComponent implements OnInit {
     regCode: data.regCode,
   });
 
-  console.log('distributionForm', this.distributionForm);
 }
 
 private setCompanyValue(data: DistributionCenter): void {
@@ -762,7 +751,6 @@ private setCompanyValue(data: DistributionCenter): void {
     this.distributionForm.patchValue({
       company: matchingCompany.id
     });
-    console.log('Company set to:', matchingCompany.id, matchingCompany.companyNameEnglish);
   } else {
     console.warn('No matching company found for:', data.company);
   }
@@ -847,9 +835,6 @@ private setCompanyValue(data: DistributionCenter): void {
       missingFields.push('Contact Number Code is Required');
     }
 
-    // if (!this.distributionForm.get('company')?.value) {
-    //   missingFields.push('Company is Required');
-    // }
 
     const contact1Control = this.distributionForm.get('contact1');
 
@@ -1014,7 +999,6 @@ private setCompanyValue(data: DistributionCenter): void {
           .updateDistributionCentreDetails(id, updateData)
           .subscribe(
             (response) => {
-              console.log('response', response);
               this.isLoading = false;
               if (response.success) {
                 Swal.fire({

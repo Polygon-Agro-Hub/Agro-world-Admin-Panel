@@ -31,7 +31,7 @@ export class SalesdashCustomePackageComponent implements OnInit {
   pagesl: number = 1;
   statussl = ['Pending', 'Completed', 'Opened'];
   selectedStatussl: string = '';
-  dateFilter: Date | null = new Date(); // Initialize with current date
+  dateFilter: Date | null = new Date(); 
   searchsl: string = '';
   hasDataCustom = false;
   selectdPackage: SelectdPackage[] = [];
@@ -46,7 +46,6 @@ export class SalesdashCustomePackageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('Initializing with date:', this.dateFilter);
     this.getSelectedPackages();
   }
 back(): void {
@@ -61,7 +60,6 @@ back(): void {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
     },
-    // keep default button styling
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
@@ -72,7 +70,7 @@ back(): void {
   getSelectedPackages(pagesl: number = 1, limitsl: number = this.itemsPerPagesl) {
     this.isLoading = true;
     const formattedDate = this.formatDateForAPI(this.dateFilter);
-    console.log('Fetching packages with:', { pagesl, limitsl, status: this.selectedStatussl, date: this.dateFilter, formattedDate, search: this.searchsl.trim() });
+   
 
     this.dispatchService
       .getSelectedPackages(
@@ -84,7 +82,7 @@ back(): void {
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response);
+          
 
           if (response && response.items) {
             this.selectdPackage = response.items.map((item: any) => ({
@@ -92,7 +90,7 @@ back(): void {
               orderId: item.orderId,
               processOrderId: item.processOrderId,
               invNo: item.invNo,
-              sheduleDate: item.sheduleDate, // backend field
+              sheduleDate: item.sheduleDate, 
               orderAdditionalCount: item.orderAdditionalCount,
               additionalPrice: item.additionalPrice,
               totalAdditionalItems: item.totalAdditionalItems,
@@ -125,7 +123,7 @@ back(): void {
             this.hasDataCustom = this.totalItemssl > 0;
           }
 
-          console.log('Processed Packages:', this.selectdPackage);
+          
           this.isLoading = false;
         },
         error: (error) => {
@@ -140,14 +138,14 @@ back(): void {
 
   private formatDateForAPI(date: Date | null): string {
     if (!date || isNaN(date.getTime())) {
-      console.log('Invalid or null date, returning empty string');
-      return ''; // Return empty string to fetch all packages
+      
+      return ''; 
     }
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const formatted = `${year}-${month}-${day}`;
-    console.log('Formatted date for API:', formatted);
+    
     return formatted;
   }
 
@@ -158,48 +156,43 @@ back(): void {
   }
 
   onDateFilterClear(): void {
-    console.log('Date filter cleared');
+    
     this.dateFilter = null;
     this.pagesl = 1;
     this.getSelectedPackages();
   }
 
   onFilterChange(): void {
-    console.log('Date filter changed:', this.dateFilter, 'Event:', event);
+    
     this.pagesl = 1;
     this.getSelectedPackages();
   }
 
   applyStatussl(): void {
-    console.log('Applying status:', this.selectedStatussl);
+    
     this.pagesl = 1;
     this.getSelectedPackages();
   }
 
   applySearchsl(): void {
-    console.log('Applying search:', this.searchsl);
+    
     this.pagesl = 1;
     this.getSelectedPackages();
   }
 
   clearSearchsl(): void {
-    console.log('Clearing search');
     this.searchsl = '';
     this.pagesl = 1;
     this.getSelectedPackages();
   }
 
   onPageChangesl(event: number): void {
-    console.log('Page changed:', event);
     this.pagesl = event;
     this.getSelectedPackages(this.pagesl, this.itemsPerPagesl);
   }
 
   navigateToCustomAdditionalItemView(id: number): void {
-    // console.log('Navigating to custom additional items:', { id, invNo, total, fullTotal });
-    // this.router.navigate(['/dispatch/custom-additional-items'], {
-    //   queryParams: { id, invNo, total, fullTotal }
-    // });
+    
     this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
       queryParams: { status: true}
     });
@@ -211,13 +204,13 @@ interface SelectdPackage {
   orderId: number;
   processOrderId: number;
   invNo: string;
-  sheduleDate: string; // backend spelling
+  sheduleDate: string; 
   orderAdditionalCount: number;
   additionalPrice: number;
   totalAdditionalItems: number;
   packedAdditionalItems: number;
   additionalItemsStatus: string;
-  scheduleDateFormattedSL?: string; // for UI
+  scheduleDateFormattedSL?: string; 
   userName:string;
   packOfficer:string;
 }

@@ -90,7 +90,6 @@ export class AssignCitiesComponent implements OnInit {
     
     this.distributionHubSrv.getAssignForCityes(provinceName, districtName).subscribe(
       (res) => {
-        console.log(res);
         this.citiesArr = res.cities;
         
         // Filter out duplicate centers by id
@@ -154,7 +153,6 @@ export class AssignCitiesComponent implements OnInit {
       }
     });
     
-    console.log('Initialized assignments:', this.assignments);
   }
 
   isCityAssignedToCenter(cityId: number, centerId: number): boolean {
@@ -178,7 +176,6 @@ export class AssignCitiesComponent implements OnInit {
       this.removeAssignment(cityId, previousCenterId as any);
     }
     
-    console.log('Updated assignments:', this.assignments);
   }
 
   saveAssignment(cityId: number, centerId: number): void {
@@ -186,7 +183,6 @@ export class AssignCitiesComponent implements OnInit {
     
     const assignmentToSave = { cityId, centerId };
     
-    console.log('Saving assignment:', assignmentToSave);
     
     this.distributionHubSrv.AssigCityToDistributedCenter(assignmentToSave).subscribe(
       (res) => {
@@ -222,7 +218,6 @@ export class AssignCitiesComponent implements OnInit {
     
     const assignmentToRemove = { cityId, centerId };
     
-    console.log('Removing assignment:', assignmentToRemove);
     
     this.distributionHubSrv.removeAssigCityToDistributedCenter(assignmentToRemove).subscribe(
       (res) => {

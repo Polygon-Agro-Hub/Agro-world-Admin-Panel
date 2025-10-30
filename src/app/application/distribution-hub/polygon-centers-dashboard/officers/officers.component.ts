@@ -73,9 +73,6 @@ export class OfficersComponent implements OnChanges {
       this.selectStatus,
       this.searchText
     ).subscribe((res) => {
-      // this.targetArr = res.data;
-      // this.targetCount = res.data.length || 0;
-      console.log('Distributed Center Officers', res);
       this.officersArr = res.data;
       this.officerCount = res.data?.length || 0;
       this.hasData = this.officerCount > 0;
@@ -109,7 +106,6 @@ export class OfficersComponent implements OnChanges {
     const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
     const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
 
-    // Dynamic message based on status
     let message = '';
     if (item.status === 'Approved') {
       message = 'Are you sure you want to reject this distribution officer?';

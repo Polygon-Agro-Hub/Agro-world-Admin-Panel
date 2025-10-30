@@ -77,7 +77,6 @@ export class AdditionalItemsComponent implements OnInit {
       this.total = params['total'] ? +params['total'] : 0;
       this.name = params['name'] || '';
       this.fullTotal = params['fullTotal'] ? +params['fullTotal'] : 0;
-      console.log(this.id);
     });
 
     this.getAdditionalItemData(this.id!);
@@ -89,10 +88,9 @@ export class AdditionalItemsComponent implements OnInit {
   
     this.dispatchService.getAdditionalItems(id).subscribe(
       (response) => {
-        console.log(response);
   
         this.packedAll = response.items.every((item: AdditionalItems) => item.packedStatus === 1);
-        console.log('All Packed:', this.packedAll);
+        
 
         this.additionalItemsArr = response.items.map((item: AdditionalItems) => {
           return {
@@ -114,7 +112,7 @@ export class AdditionalItemsComponent implements OnInit {
 
         this.isLoading = false;
 
-        console.log('Array:', this.additionalItemsArr);
+        
       },
       (error) => {
         console.error('Error fetching package items:', error);
@@ -154,7 +152,7 @@ export class AdditionalItemsComponent implements OnInit {
       this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
       this.validationFailedMessage = '';
     }
-    console.log(this.additionalItemsArr);
+    
   }
 
   saveCheckedItems() {
@@ -182,11 +180,10 @@ export class AdditionalItemsComponent implements OnInit {
 
     }));
 
-    console.log('data', updatedData )
+    
     this.dispatchService.updateAdditionalItemData(updatedData, this.id!).subscribe(
       (res) => {
         this.isLoading = false;
-        console.log('Updated successfully:', res);
         Swal.fire('Success', 'Product Updated Successfully', 'success');
         this.router.navigate(['/dispatch/salesdash-orders']);
       },

@@ -36,7 +36,6 @@ export class CustomAdditionalItemsComponent {
   name!: string;
   fullTotal!: number;
   customAdditionalItemsArr: CustomAdditionalItems[] = [];
-  // productItemsArr: ProductItems[] = [];
   totalCustomAdditionalItems!: number;
 
   selectedProductId: number | null = null;
@@ -60,7 +59,6 @@ export class CustomAdditionalItemsComponent {
   isPopupOpen: boolean = false;
 
   showCountdown: boolean = false;
-  // timeLeft: number = 0;
   
 
   constructor(
@@ -77,11 +75,9 @@ export class CustomAdditionalItemsComponent {
       this.invNo = params['invNo'] || null;
       this.total = params['total'] ? +params['total'] : 0;
       this.fullTotal = params['fullTotal'] ? +params['fullTotal'] : 0;
-      console.log(this.id);
     });
 
     this.getCustomAdditionalItemData(this.id!);
-    // this.getAllProducts();
 
   }
 
@@ -90,12 +86,10 @@ export class CustomAdditionalItemsComponent {
 
     this.dispatchService.getCustomAdditionalItems(id).subscribe(
       (response) => {
-        console.log(response);
 
         this.packedAll = response.items.every((item: CustomAdditionalItems) => item.packedStatus === 1);
-        console.log('All Packed:', this.packedAll);
 
-        // Map the full item objects
+       
         this.customAdditionalItemsArr = response.items.map((item: CustomAdditionalItems) => {
           return {
             ...item,
@@ -115,13 +109,10 @@ export class CustomAdditionalItemsComponent {
         }
 
         this.isLoading = false;
-
-        console.log('Array:', this.customAdditionalItemsArr);
       },
       (error) => {
         console.error('Error fetching package items:', error);
         if (error.status === 401) {
-          // Handle unauthorized error if needed
         }
         this.isLoading = false;
       }
@@ -139,7 +130,6 @@ back(): void {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
     },
-    // keep default button styling
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
@@ -177,23 +167,20 @@ back(): void {
       this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
       this.validationFailedMessage = '';
     }
-    console.log(this.customAdditionalItemsArr);
   }
 
   saveCheckedItems() {
     this.showCountdown = true;
   }
   
-  // Called when countdown finishes or user clicks "Mark as Completed"
   onTimerCompleted() {
     this.showCountdown = false;
-    this.executeApiCall(); // Perform the API call
+    this.executeApiCall();
   }
   
-  // Called when user clicks "Go Back to Edit"
+  
   onTimerCancelled() {
     this.showCountdown = false;
-    // Optionally: reset form or show editing state again
   }
   
   private executeApiCall() {

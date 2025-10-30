@@ -58,24 +58,22 @@ export class MarketplaceCustomePackageComponent {
         page,
         limit,
         this.selectedStatus,
-        this.formatDateForAPI(this.date), // Convert Date to string
+        this.formatDateForAPI(this.date), 
         this.search.trim()
       )
       .subscribe(
         (response) => {
-          // Add fullTotal to each item
           this.premadePackages = response.items
           this.totalItems = response.total;
 
           this.hasData = response.total > 0;
-          console.log(this.premadePackages);
           this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching ongoing cultivations:', error);
           if (error.status === 401) {
           }
-          this.hasData = false; // Set to false on error
+          this.hasData = false; 
           this.isLoading = false;
         }
       );
@@ -84,12 +82,11 @@ export class MarketplaceCustomePackageComponent {
   private formatDateForAPI(date: Date | null): string {
     if (!date) return '';
 
-    // Convert using local time instead of UTC
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
 
-    return `${year}-${month}-${day}`; // Local YYYY-MM-DD
+    return `${year}-${month}-${day}`; 
   }
   applysearch() {
     this.getPreMadePackages();

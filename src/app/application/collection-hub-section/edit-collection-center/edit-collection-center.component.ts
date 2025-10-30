@@ -153,7 +153,8 @@ export class EditCollectionCenterComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['collection-hub/view-collection-centers']);
+        // this.router.navigate(['collection-hub/view-collection-centers']);
+        this.location.back();
       }
     });
   }

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -61,13 +61,15 @@ getFlagUrl(countryCode: string): string {
   constructor(
     private collectionCenterService: CollectionCenterService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.collectionCenterID = this.route.snapshot.params['id'];
   }
 
   back(): void {
-    this.router.navigate(['collection-hub/view-collection-centers']);
+    // this.router.navigate(['collection-hub/view-collection-centers']);
+    this.location.back();
   }
 
   ngOnInit(): void {

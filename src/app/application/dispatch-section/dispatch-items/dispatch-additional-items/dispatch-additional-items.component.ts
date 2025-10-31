@@ -55,10 +55,8 @@ export class DispatchAdditionalItemsComponent implements OnInit {
     this.isLoading = true;
     this.dispatchService.getAdditionalItemsForDispatch(this.packageId).subscribe(
       (res) => {
-        // this.packageObj = res
         this.packageArr = res.packageData;
         this.orderDetails = res.orderDetails
-        // this.productArr = res.marketplaceItems
         this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
         this.isLoading = false
       }
@@ -95,7 +93,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
 
   onTimerCompleted() {
     this.showCountdown = false;
-    this.executeApiCall(); // Perform the API call
+    this.executeApiCall(); 
   }
 
   onTimerCancelled() {
@@ -117,7 +115,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
       (res) => {
         this.isLoading = false;
         if (res.status) {
-          console.log('Updated successfully:', res);
           Swal.fire({
             icon: 'success',
             title: 'Success',
@@ -127,7 +124,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
               title: 'font-semibold text-lg',
             },
           });
-          // this.router.navigate(['/dispatch/salesdash-orders']);
           this.location.back();
         } else {
           Swal.fire({
@@ -153,7 +149,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
               title: 'font-semibold text-lg',
             },
           });
-        // Swal.fire('Error', 'Packaging status has been changed faild!', 'error');
       }
     );
   }
@@ -173,7 +168,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
       this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
       this.validationFailedMessage = '';
     }
-    // console.log(this.packageItemsArr);
+    
   }
 
 }

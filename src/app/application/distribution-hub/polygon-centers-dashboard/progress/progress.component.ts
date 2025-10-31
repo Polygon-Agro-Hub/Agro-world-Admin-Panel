@@ -44,18 +44,14 @@ export class ProgressComponent implements OnChanges {
     private router: Router,
     private DestributionSrv: DestributionService,
     private datePipe: DatePipe // Inject DatePipe
-    // public tokenService: TokenService,
-    // public permissionService: PermissionService
   ) { }
 
 
   ngOnChanges(): void {
-    console.log("Center obj eka", this.centerObj);
     this.fetchData();
   }
 
   fetchData() {
-  console.log(this.selectedDate);
   
   // Format the date for the API call
   let formattedDate = '';
@@ -104,7 +100,6 @@ export class ProgressComponent implements OnChanges {
   }
 
   changeStatus(){
-    console.log(this.selectedStatus);
     this.fetchData();
   }
 

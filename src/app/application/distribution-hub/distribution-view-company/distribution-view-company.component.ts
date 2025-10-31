@@ -51,11 +51,9 @@ export class DistributionViewCompanyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('ngonitni')
     this.route.queryParams.subscribe((params) => {
       this.companyId = params['id'] ? +params['id'] : null;
       this.companyName = params['companyName'] ? params['companyName'] : null;
-      console.log('companyId', this.companyId);
     });
     this.fetchAllCompanyHeads();
   }
@@ -71,7 +69,6 @@ export class DistributionViewCompanyComponent implements OnInit {
       .getAllDistributionCompanyHeads(companyId, page, limit, search)
       .subscribe(
         (data) => {
-          console.log('API Response:', data);
           this.isLoading = false;
           this.distributionCompanyHeads = data.items;
           this.distributionCompanyHeads.forEach((head) => {

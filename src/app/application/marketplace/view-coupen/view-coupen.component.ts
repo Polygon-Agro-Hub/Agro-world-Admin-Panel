@@ -45,7 +45,7 @@ export class ViewCoupenComponent implements OnInit {
     { name: 'Free Delivery' },
   ];
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
+  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
 
   back(): void {
     this.router.navigate(['market/action']);
@@ -59,7 +59,7 @@ export class ViewCoupenComponent implements OnInit {
     const status = this.selectedStatus?.name || '';
     const types = this.selectedType?.name || '';
     const search = this.searchText || '';
-    this.isLoading = true; // Show loading spinner
+    this.isLoading = true;
     this.hasData = true;
     this.marketSrv
       .getAllCoupen(page, limit, status, types, search)
@@ -68,7 +68,7 @@ export class ViewCoupenComponent implements OnInit {
           this.coupenObj = res.items;
           this.totalItems = res.total;
           this.hasData = res.items.length > 0;
-         this.checkDelete = false; // always unchecked after fetch
+          this.checkDelete = false;
 
           this.isLoading = false;
         },
@@ -85,13 +85,13 @@ export class ViewCoupenComponent implements OnInit {
   }
 
   searchCode() {
-    this.page = 1; // Reset to first page on search
+    this.page = 1;
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
   clearSearch() {
     this.searchText = '';
-    this.page = 1; // Reset to first page on clear search
+    this.page = 1;
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
@@ -101,12 +101,12 @@ export class ViewCoupenComponent implements OnInit {
   }
 
   applyFilterStatus() {
-    this.page = 1; // Reset to first page on filter change
+    this.page = 1;
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
   applyFilterType() {
-    this.page = 1; // Reset to first page on filter change
+    this.page = 1;
     this.fetchAllCoupon(this.page, this.itemsPerPage);
   }
 
@@ -127,7 +127,7 @@ export class ViewCoupenComponent implements OnInit {
           (data: boolean) => {
             if (data) {
               Swal.fire('Deleted!', 'The Coupon has been deleted.', 'success');
-              this.page = 1; // Reset to first page after deletion
+              this.page = 1;
               this.fetchAllCoupon(this.page, this.itemsPerPage);
             } else {
               Swal.fire(
@@ -173,7 +173,7 @@ export class ViewCoupenComponent implements OnInit {
                 'All Coupons have been deleted.',
                 'success'
               );
-              this.page = 1; // Reset to first page after deletion
+              this.page = 1;
               this.fetchAllCoupon(this.page, this.itemsPerPage);
             } else {
               Swal.fire(
@@ -209,7 +209,7 @@ export class ViewCoupenComponent implements OnInit {
   onSearchInput(event: any): void {
     const input = event.target;
     const originalValue = input.value;
-    const trimmedValue = originalValue.trimStart(); // Remove only leading spaces
+    const trimmedValue = originalValue.trimStart();
 
     if (originalValue !== trimmedValue) {
       this.searchText = trimmedValue;

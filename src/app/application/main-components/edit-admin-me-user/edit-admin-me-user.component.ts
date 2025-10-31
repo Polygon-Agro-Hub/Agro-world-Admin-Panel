@@ -43,7 +43,6 @@ export class EditAdminMeUserComponent implements OnInit {
   itemId: number | null = null;
   adminId: number | null = null;
   adminDetails: Admin[] = [];
-  //createAdminObj: CreateAdmin = new CreateAdmin();
   showPassword1: boolean = false;
   showPassword2: boolean = false;
   showPassword3: boolean = false;
@@ -239,10 +238,8 @@ onBlurTrim(controlName: string) {
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.itemId = params["id"] ? +params["id"] : null;
-      console.log("Received item ID:", this.itemId);
     });
     this.getAdminById();
-    console.log("ngonit data values", this.userForm.value);
     // this.getCurrentPassword(this.itemId);
   }
 
@@ -265,11 +262,7 @@ onBlurTrim(controlName: string) {
         (data) => {
           this.userForm.patchValue(data);
           this.adminId = this.userForm.value.id;
-          console.log("getAdminById data values", this.userForm.value);
-          console.log(
-            "getAdminById data values in data",
-            this.userForm.value.id,
-          );
+          
           this.isLoading =false;
         },
         (error) => {
@@ -301,7 +294,6 @@ onBlurTrim(controlName: string) {
       "Content-Type": "application/json", // Setting the content type to JSON
     });
 
-    console.log(this.userForm.value);
 
     this.http
       .post(
@@ -312,7 +304,6 @@ onBlurTrim(controlName: string) {
       .subscribe(
         (res: any) => {
           this.userForm.patchValue(res);
-          console.log("hi...... Admin updated successfully", res);
           Swal.fire({
             icon: "success",
             title: "Success",
@@ -341,8 +332,6 @@ onBlurTrim(controlName: string) {
   }
 
   createAdmin() {
-    console.log("clicked");
-    //console.log(this.createAdminObj);
 
     const token = this.tokenService.getToken();
     if (!token) {
@@ -350,7 +339,6 @@ onBlurTrim(controlName: string) {
       return;
     }
 
-    console.log("Admin Data:", this.userForm.value);
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
@@ -363,7 +351,6 @@ onBlurTrim(controlName: string) {
       })
       .subscribe(
         (res: any) => {
-          console.log("Admin created successfully", res);
           Swal.fire({
             icon: "success",
             title: "Success",
@@ -419,7 +406,6 @@ onCancel() {
   }
 
   savePasswordChanges(): void {
-  console.log("Password change attempt");
 
   const currentPassword = this.changePasswordForm.get("currentPassword")?.value;
   const newPassword = this.changePasswordForm.get("newPassword")?.value;

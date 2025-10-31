@@ -35,7 +35,6 @@ export class SubsriptionComponent implements OnInit {
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
-  // BaseApiURL = 
 
   constructor(
     private router: Router,
@@ -106,7 +105,6 @@ export class SubsriptionComponent implements OnInit {
 
  onSearchChange() {
   if (this.searchText) {
-    // Remove only the very first leading space, keep others
     this.searchText = this.searchText.replace(/^\s/, '');
   }
 
@@ -115,7 +113,7 @@ export class SubsriptionComponent implements OnInit {
 }
 blockFirstSpace(event: KeyboardEvent) {
   if (this.searchText.length === 0 && event.key === ' ') {
-    event.preventDefault(); // stops the space from being typed
+    event.preventDefault();
   }
 }
 

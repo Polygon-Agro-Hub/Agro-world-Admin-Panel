@@ -67,7 +67,6 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   }
 
   detailsPop(Obj: Customers) {
-    console.log('customer popup');
 
     this.isPopupOpen = true;
     this.cusObjDetails = Obj;

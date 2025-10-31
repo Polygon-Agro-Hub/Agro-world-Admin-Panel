@@ -85,8 +85,6 @@ export class AddDistributionOfficerComponent implements OnInit {
     { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
     { code: 'IN', dialCode: '+91', name: 'India' },
     { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-    // { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-    // { code: 'US', dialCode: '+1', name: 'United States' }
   ];
 
   getFlagUrl(countryCode: string): string {
@@ -150,11 +148,9 @@ export class AddDistributionOfficerComponent implements OnInit {
       const companyNameParam = params.get('companyName');
       this.companyName = companyNameParam ? companyNameParam : null;
 
-      console.log('Received ID:', this.id);
-      console.log('Received Company Name:', this.companyName);
+      
 
       this.personalData.companyId = this.id;
-      console.log('personalData', this.personalData)
     });
 
     this.loadBanks();
@@ -718,7 +714,6 @@ capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolder
     return;
   }
 
-  console.log('PERSONAL', this.personalData);
   Swal.fire({
     title: 'Are you sure?',
     text: 'Do you want to create the Distribution Centre Head?',
@@ -851,7 +846,6 @@ resetFieldHighlights(): void {
   }
 
   getAllDistributedCenters(id: number) {
-    console.log('id', id)
     this.loaded = false;
     this.distributionHubSrv.getAllDistributedCentersByCompany(id).subscribe(
       (res) => {

@@ -122,7 +122,6 @@ export class ViewJobHistoryComponent implements OnInit {
       }
     });
 
-    console.log('Fetching with filters:', filters);
 
     this.goviLinkService.getFieldAuditHistory(filters).subscribe(
       (response) => {
@@ -205,13 +204,11 @@ export class ViewJobHistoryComponent implements OnInit {
 
   // Date filter handlers
   onCompletedDateChange() {
-    console.log('Date selected:', this.completedDateFrom);
     this.page = 1;
     this.applyFilters();
   }
 
   onCompletedDateClear() {
-    console.log('Date cleared');
     this.completedDateFrom = null;
     this.page = 1;
     this.applyFilters();

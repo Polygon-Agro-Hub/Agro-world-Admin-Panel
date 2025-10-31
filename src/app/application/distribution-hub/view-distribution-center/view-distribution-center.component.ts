@@ -145,8 +145,6 @@ export class ViewDistributionCenterComponent implements OnInit {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-        console.log('Raw API response:', response); // Add this line
-        console.log('Companies fetched:', response.data); // Check the data structure
 
         if (response.success && response.data) {
           this.companyOptions = response.data
@@ -297,7 +295,6 @@ export class ViewDistributionCenterComponent implements OnInit {
         }));
       }
     }
-    console.log(this.selectDistrict);
 
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }

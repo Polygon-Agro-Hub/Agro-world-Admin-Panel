@@ -24,7 +24,7 @@ export class DashPredefinePackagesComponent implements OnInit {
   isLoading = false;
   status = ['Pending', 'Completed', 'Opened'];
   selectedStatus: string = '';
-  dateFilter: Date | null = new Date(); // Initialize with current date for initial filter
+  dateFilter: Date | null = new Date(); 
   itemsPerPage: number = 10;
   totalItems: number = 0;
   page: number = 1;
@@ -40,14 +40,12 @@ export class DashPredefinePackagesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('Initializing with date:', this.dateFilter);
-    this.getPreMadePackages(); // Fetch packages for current date on init
+    this.getPreMadePackages();
   }
 
   getPreMadePackages(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
     const formattedDate = this.formatDateForAPI(this.dateFilter);
-    console.log('Fetching packages with:', { page, limit, status: this.selectedStatus, date: this.dateFilter, formattedDate, search: this.search.trim() });
 
     this.dispatchService
       .getPreMadePackages(
@@ -59,7 +57,6 @@ export class DashPredefinePackagesComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response);
 
           if (response && response.items) {
             this.premadePackages = response.items;
@@ -72,7 +69,6 @@ export class DashPredefinePackagesComponent implements OnInit {
             this.hasData = this.premadePackages.length === 0 ? false : true;
           }
 
-          console.log('Processed Packages:', this.premadePackages);
           this.isLoading = false;
         },
         error: (error) => {
@@ -87,26 +83,22 @@ export class DashPredefinePackagesComponent implements OnInit {
 
   private formatDateForAPI(date: Date | null): string {
     if (!date || isNaN(date.getTime())) {
-      console.log('Invalid or null date, returning empty string');
-      return ''; // Return empty string to fetch all packages
+      return ''; 
     }
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const formatted = `${year}-${month}-${day}`;
-    console.log('Formatted date for API:', formatted);
     return formatted;
   }
 
   onDateFilterClear(): void {
-    console.log('Date filter cleared');
-    this.dateFilter = null; // Clear UI date picker to show placeholder
+    this.dateFilter = null; 
     this.page = 1;
-    this.getPreMadePackages(); // Fetch all packages (no date filter)
+    this.getPreMadePackages(); 
   }
 
   onFilterChange(): void {
-    console.log('Date filter changed:', this.dateFilter, 'Event:', event);
     this.page = 1;
     this.getPreMadePackages();
   }
@@ -114,26 +106,22 @@ export class DashPredefinePackagesComponent implements OnInit {
 
 
   applySearch(): void {
-    console.log('Applying search:', this.search);
     this.page = 1;
     this.getPreMadePackages();
   }
 
   clearSearch(): void {
-    console.log('Clearing search');
     this.search = '';
     this.page = 1;
     this.getPreMadePackages();
   }
 
   applyStatus(): void {
-    console.log('Applying status:', this.selectedStatus);
     this.page = 1;
     this.getPreMadePackages();
   }
 
   onPageChange(event: number): void {
-    console.log('Page changed:', event);
     this.page = event;
     this.getPreMadePackages(this.page, this.itemsPerPage);
   }
@@ -143,9 +131,7 @@ export class DashPredefinePackagesComponent implements OnInit {
   }
 
   navigateToPackageItemView(item: PremadePackages): void {
-    // this.router.navigate(['/dispatch/package-items'], {
-    //   queryParams: { id, invNo, name, total, fullTotal }
-    // });
+    
     let status = true;
     if (item.additionalItemsStatus === 'Opened' || item.additionalItemsStatus === 'Pending') {
       status = false;
@@ -157,9 +143,7 @@ export class DashPredefinePackagesComponent implements OnInit {
   }
 
   navigateToAdditionalItemView(item: PremadePackages): void {
-    // this.router.navigate(['/dispatch/additional-items'], {
-    //   queryParams: { id, invNo, name, total, fullTotal }
-    // });
+    
     let status = true;
     if (item.packageStatus === 'Opened' || item.packageStatus === 'Pending') {
       status = false;

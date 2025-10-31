@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -135,7 +135,8 @@ export class CollectionAllViewComponent implements OnInit {
     private router: Router,
     private collectionService: CollectionCenterService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -366,7 +367,7 @@ deleteCollectionCenter(id: number) {
   }
 
   back(): void {
-    this.router.navigate(['collection-hub']);
+    this.location.back();
   }
 }
 

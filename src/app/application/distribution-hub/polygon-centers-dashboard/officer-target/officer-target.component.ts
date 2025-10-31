@@ -30,9 +30,6 @@ export class OfficerTargetComponent implements OnChanges {
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,
-    // private datePipe: DatePipe // Inject DatePipe
-    // public tokenService: TokenService,
-    // public permissionService: PermissionService
   ) { }
   ngOnChanges(changes: SimpleChanges): void {
     this.fetchData();
@@ -41,9 +38,6 @@ export class OfficerTargetComponent implements OnChanges {
   fetchData() {
     this.DestributionSrv.getDailyOfficerDistributedTarget(this.centerObj.centerId).subscribe(
       (res) => {
-        // this.targetArr = res.data;
-        // this.targetCount = res.data.length || 0;
-        console.log("Distributed Center Officers", res);
         this.ordersArr = res.data;
         this.orderCount = res.data?.length || 0;
         this.hasData = this.orderCount > 0;

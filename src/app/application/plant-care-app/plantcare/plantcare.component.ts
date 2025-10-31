@@ -226,6 +226,6 @@ export class PlantcareComponent {
 
   // Navigation function for Farmer Clusters
   viewFarmerClusters(): void {
-    this.router.navigate(['/plant-care/action/view-farmer-clusters']);
+    this.router.navigate(['/plant-care/action/farmers-clusters-list']);
   }
 }

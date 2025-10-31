@@ -82,7 +82,6 @@ export class ViewRetailCustomeresComponent implements OnInit {
   }
 
   detailsPop(Obj: Customers) {
-    console.log('customer popup');
     this.isPopupOpen = true;
     this.cusObjDetails = Obj;
   }
@@ -109,17 +108,17 @@ export class ViewRetailCustomeresComponent implements OnInit {
     }
   }
   checkLeadingSpace(event: any): boolean {
-  if (!this.searchText || this.searchText.length === 0) {
-    event.preventDefault();
-    return false;
+    if (!this.searchText || this.searchText.length === 0) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
-  return true;
-}
 }
 
 class Customers {
   id!: string;
-  title!:string;
+  title!: string;
   firstName!: string;
   lastName!: string;
   phoneCode!: string;

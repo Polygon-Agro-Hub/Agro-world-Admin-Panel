@@ -76,7 +76,6 @@ export class PackageItemViewComponent implements OnInit {
       this.total = params['total'] ? +params['total'] : 0;
       this.name = params['name'] || '';
       this.fullTotal = params['fullTotal'] ? +params['fullTotal'] : 0;
-      console.log(this.id);
     });
 
     this.getPackageItemData(this.id!);
@@ -95,7 +94,6 @@ back(): void {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
     },
-    // keep default button styling
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
@@ -109,16 +107,11 @@ back(): void {
   
     this.dispatchService.getPackageItems(id).subscribe(
       (response) => {
-        console.log(response);
   
-        // Extract product IDs
         this.productIdsArr = response.items.map((item: packageItems) => item.productId);
-        console.log('productIDs', this.productIdsArr)
 
         this.packedAll = response.items.every((item: packageItems) => item.packedStatus === 1);
-        console.log('All Packed:', this.packedAll);
 
-        // Map the full item objects
         this.packageItemsArr = response.items.map((item: packageItems) => {
           return {
             ...item,
@@ -139,13 +132,11 @@ back(): void {
 
         this.isLoading = false;
   
-        console.log('Product IDs:', this.productIdsArr);
-        console.log('Array:', this.packageItemsArr);
+        
       },
       (error) => {
         console.error('Error fetching package items:', error);
         if (error.status === 401) {
-          // Handle unauthorized error if needed
         }
         this.isLoading = false;
       }
@@ -157,21 +148,17 @@ getAllProducts() {
 
   this.dispatchService.getAllProducts().subscribe(
     (response) => {
-      console.log(response);
 
-      // Sort products alphabetically by productName
       this.productItemsArr = response.items.sort((a: ProductItems, b: ProductItems) => 
         a.productName.localeCompare(b.productName)
       );
 
       this.isLoading = false;
 
-      console.log('product array', this.productItemsArr);
     },
     (error) => {
       console.error('Error fetching package items:', error);
       if (error.status === 401) {
-        // Handle unauthorized error if needed
       }
       this.isLoading = false;
     }
@@ -190,23 +177,21 @@ getAllProducts() {
       this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
       this.validationFailedMessage = '';
     }
-    console.log(this.packageItemsArr);
   }
 
   saveCheckedItems() {
     this.showCountdown = true;
   }
   
-  // Called when countdown finishes or user clicks "Mark as Completed"
   onTimerCompleted() {
     this.showCountdown = false;
-    this.executeApiCall(); // Perform the API call
+    this.executeApiCall(); 
   }
   
-  // Called when user clicks "Go Back to Edit"
+
   onTimerCancelled() {
     this.showCountdown = false;
-    // Optionally: reset form or show editing state again
+    
   }
 
   private executeApiCall() {
@@ -223,7 +208,6 @@ getAllProducts() {
     this.dispatchService.updatePackageItemData(updatedData, this.id!).subscribe(
       (res) => {
         this.isLoading = false;
-        console.log('Updated successfully:', res);
         Swal.fire('Success', 'Order dispatched successfully!', 'success');
         this.router.navigate(['/dispatch/salesdash-orders']);
       },
@@ -233,31 +217,6 @@ getAllProducts() {
       }
     );
   }
-
-  // saveCheckedItems() {
-  //   this.isLoading = true;
-
-  //   const updatedData = this.packageItemsArr.map(item => ({
-
-  //     productId: item.productId,
-  //     packedStatus: item.packedStatus,
-  //     quantity: item.quantity,
-  //     price: item.price,
-
-  //   }));
-  //   this.dispatchService.updatePackageItemData(updatedData, this.id!).subscribe(
-  //     (res) => {
-  //       this.isLoading = false;
-  //       console.log('Updated successfully:', res);
-  //       Swal.fire('Success', 'Product Updated Successfully', 'success');
-  //       this.router.navigate(['/dispatch/salesdash-orders']);
-  //     },
-  //     (err) => {
-  //       console.error('Update failed:', err);
-  //       Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
-  //     }
-  //   );
-  // }
 
   openPopUp(productId: number, displayName: string, quantity: number, price: number) {
     this.isPopupOpen = true;
@@ -284,16 +243,12 @@ getAllProducts() {
   };
 
   onProductChange() {
-    console.log('Selected Product ID (before conversion):', this.selectedProductId, typeof this.selectedProductId);
     
     if (this.selectedProductId) {
-      // Convert to number explicitly (using + or Number())
-      const selectedId = +this.selectedProductId; // or Number(this.selectedProductId)
+      const selectedId = +this.selectedProductId; 
       
-      console.log('Selected Product ID (after conversion):', selectedId, typeof selectedId);
       
       const selectedProduct = this.productItemsArr.find(p => p.id === selectedId);
-      console.log('Found Product:', selectedProduct);
       
       if (selectedProduct) {
         this.unitPrice = selectedProduct.discountedPrice;
@@ -307,11 +262,9 @@ getAllProducts() {
 
 validateQuantity(): void {
   if (this.quantity !== null && this.quantity !== undefined) {
-    // Match numbers with up to 3 decimal places
     const regex = /^\d{0,3}(\.\d{0,3})?$/;
 
     if (!regex.test(this.quantity.toString())) {
-      // Trim to 3 decimals if user types more
       this.quantity = parseFloat(parseFloat(this.quantity.toString()).toFixed(3));
     }
   }
@@ -320,16 +273,13 @@ blockInvalidDecimal($event: KeyboardEvent) {
   const input = $event.target as HTMLInputElement;
   const value = input.value;
 
-  // Allow navigation / control keys
   if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes($event.key)) {
     return;
   }
 
-  // If there's a decimal point already
   if (value.includes('.')) {
     const decimalPart = value.split('.')[1];
 
-    // Block typing more than 3 digits after decimal
     if (decimalPart && decimalPart.length >= 3) {
       $event.preventDefault();
     }
@@ -338,7 +288,6 @@ blockInvalidDecimal($event: KeyboardEvent) {
 
 
   blockInvalidKeys(event: KeyboardEvent) {
-    // Prevent entering minus sign, 'e' or other invalid characters
     if (['-', '+', 'e'].includes(event.key)) {
       event.preventDefault();
     }
@@ -350,7 +299,6 @@ blockInvalidDecimal($event: KeyboardEvent) {
     } else {
       this.totalPrice = 0;
     }
-    console.log(this.totalPrice);
   }
 
   replaceProduct() {
@@ -364,7 +312,6 @@ blockInvalidDecimal($event: KeyboardEvent) {
     this.dispatchService.replaceProductData(this.selectedProductId, this.quantity, this.totalPrice, this.id!, this.previousProductId).subscribe(
       (res) => {
         this.isLoading = false;
-        console.log('Updated successfully:', res);
         Swal.fire('Success', 'Product Replaced Successfully', 'success');
         this.isPopupOpen = false;
         this.getPackageItemData(this.id!);
@@ -387,13 +334,11 @@ blockInvalidDecimal($event: KeyboardEvent) {
   }
 
 onCancelPopup() {
-  // Clear all form data
   this.selectedProductId = null;
   this.quantity = null;
   this.unitPrice = null;
   this.totalPrice = null;
   
-  // Close the popup
   this.isPopupOpen = false;
 }
 

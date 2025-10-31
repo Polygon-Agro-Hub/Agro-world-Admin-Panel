@@ -106,9 +106,9 @@ export interface FieldAudit {
   officerFirstName?: string;
   officerLastName?: string;
   assignBy?: string;
-  sheduleDate?:Date;
-  officerEmpId:string;
-  officerJobRole:string;
+  sheduleDate?: Date;
+  officerEmpId: string;
+  officerJobRole: string;
 }
 export interface FieldAuditResponse {
   message: string;
@@ -139,9 +139,9 @@ export interface FarmerClusterAudit {
   certificateName: string;
   officerFirstName: string | null;
   officerLastName: string | null;
-  sheduleDate?: Date| null;
-  officerJobRole:string;
-  officerEmpId:string;
+  sheduleDate?: Date | null;
+  officerJobRole: string;
+  officerEmpId: string;
 }
 export interface FarmerClusterAuditResponse {
   message: string;
@@ -160,6 +160,8 @@ export interface FieldOfficer {
   email?: string;
   language?: string;
   status?: string;
+  jobCount?: number;
+  displayName?: string;
   activeJobCount?: number;
 }
 export interface FieldOfficerResponse {
@@ -597,15 +599,18 @@ export class CertificateCompanyService {
   // Add this method to the service
   getOfficersByDistrictAndRole(
     district: string,
-    jobRole: string
+    jobRole: string,
+    scheduleDate: string
   ): Observable<FieldOfficerResponse> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
       'Content-Type': 'application/json',
     });
+
     const params = new HttpParams()
       .set('district', district)
-      .set('jobRole', jobRole);
+      .set('jobRole', jobRole)
+      .set('scheduleDate', scheduleDate);
 
     return this.http.get<FieldOfficerResponse>(
       `${this.apiUrl}certificate-company/get-officers-by-district-role`,

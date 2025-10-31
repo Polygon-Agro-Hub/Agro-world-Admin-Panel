@@ -28,7 +28,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   districtFilter = '';
   statusFilter = '';
   assignStatusFilter = '';
-  dateFilter: Date | null = null; 
+  dateFilter: Date | null = null;
 
   // Dropdown options
   districtOptions: any[] = [];
@@ -56,7 +56,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   assignedOfficerArray: string[] = [];
 
   // Assign popup state
-  selectedOfficerRole: string = '';
+  selectedOfficerRole: string | null = null;
   selectedOfficerId: string = '';
   availableOfficers: any[] = [];
   selectedOfficerInfo: any = null;
@@ -81,7 +81,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     this.isLoading = true;
 
     // Format date to YYYY-MM-DD if exists
-    const formattedDate = this.dateFilter 
+    const formattedDate = this.dateFilter
       ? this.formatDateForBackend(this.dateFilter)
       : '';
 
@@ -184,8 +184,6 @@ export class ViewGoviLinkJobsComponent implements OnInit {
         empId: job.officerEmpId,
         role: job.assignedOfficerRole,
       };
-
-      this.selectedOfficerRole = 'Field Officer';
     }
 
     this.isAssignPopup = true;

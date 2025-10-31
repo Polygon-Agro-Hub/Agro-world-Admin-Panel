@@ -123,7 +123,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   deleteCertificate(item: CertificateData) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Are you sure you want to delete this certificate? This action cannpt be undone.',
+      text: 'Are you sure you want to delete this certificate? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',

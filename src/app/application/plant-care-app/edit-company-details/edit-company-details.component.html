@@ -215,7 +215,7 @@
           </div>
           <div *ngIf="contactNumberError1 && companyForm.get('phone1')?.value">
             <span *ngIf="companyForm.get('phoneCode1')?.value === '+94'">
-              Contact Number must be exactly 9 digits for Sri Lanka (+94).
+              Please enter a valid mobile number (format: +947XXXXXXXX)
             </span>
           </div>
           <div
@@ -289,7 +289,7 @@
         <div class="mt-1 text-red-500 text-sm">
           <div *ngIf="contactNumberError2 && companyForm.get('phone2')?.value">
             <span *ngIf="companyForm.get('phoneCode2')?.value === '+94'">
-              Contact Number must be exactly 9 digits for Sri Lanka (+94).
+              Please enter a valid mobile number (format: +947XXXXXXXX)
             </span>
           </div>
           <div

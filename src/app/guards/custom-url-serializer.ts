@@ -23,7 +23,7 @@ export class CustomUrlSerializer implements UrlSerializer {
     
     const parts = url.split('?');
     const pathPart = parts[0];
-    const queryPart = parts[1] ? '?' + parts[1] : '';
+    const queryPart = parts[1];
     
     // Split path into segments
     const segments = pathPart.split('/').filter(s => s);
@@ -35,7 +35,13 @@ export class CustomUrlSerializer implements UrlSerializer {
       return this.encryptionService.encryptRoute(segment);
     });
     
-    return '/' + encryptedSegments.join('/') + queryPart;
+    // Encrypt query parameters if they exist
+    let encryptedQuery = '';
+    if (queryPart) {
+      encryptedQuery = '?enc=' + this.encryptionService.encryptRoute(queryPart);
+    }
+    
+    return '/' + encryptedSegments.join('/') + encryptedQuery;
   }
 
   private decryptUrl(url: string): string {
@@ -43,7 +49,7 @@ export class CustomUrlSerializer implements UrlSerializer {
     
     const parts = url.split('?');
     const pathPart = parts[0];
-    const queryPart = parts[1] ? '?' + parts[1] : '';
+    const queryPart = parts[1];
     
     // Split path into segments
     const segments = pathPart.split('/').filter(s => s);
@@ -58,7 +64,21 @@ export class CustomUrlSerializer implements UrlSerializer {
       return segment; // Return as-is if not encrypted
     });
     
-    return '/' + decryptedSegments.join('/') + queryPart;
+    // Decrypt query parameters if they exist
+    let decryptedQuery = '';
+    if (queryPart) {
+      // Check if query params are encrypted (start with 'enc=')
+      if (queryPart.startsWith('enc=')) {
+        const encryptedParams = queryPart.substring(4); // Remove 'enc='
+        const decrypted = this.encryptionService.decryptRoute(encryptedParams);
+        decryptedQuery = decrypted ? '?' + decrypted : '?' + queryPart;
+      } else {
+        // Query params are not encrypted, return as-is
+        decryptedQuery = '?' + queryPart;
+      }
+    }
+    
+    return '/' + decryptedSegments.join('/') + decryptedQuery;
   }
 
   private isEncrypted(segment: string): boolean {

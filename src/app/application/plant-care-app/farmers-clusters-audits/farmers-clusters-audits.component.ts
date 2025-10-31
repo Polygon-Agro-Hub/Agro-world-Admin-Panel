@@ -11,15 +11,14 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import { TokenService } from '../../../services/token/services/token.service';
 import {
   CertificateCompanyService,
-  FieldAudit,
-  Crop,
+  FarmerClusterAudit,
   FieldOfficer,
 } from '../../../services/plant-care/certificate-company.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 
 @Component({
-  selector: 'app-individual-farmers-audits',
+  selector: 'app-farmers-clusters-audits',
   standalone: true,
   imports: [
     HttpClientModule,
@@ -30,21 +29,14 @@ import { CalendarModule } from 'primeng/calendar';
     DropdownModule,
     CalendarModule,
   ],
-  templateUrl: './individual-farmers-audits.component.html',
-  styleUrls: ['./individual-farmers-audits.component.css'],
+  templateUrl: './farmers-clusters-audits.component.html',
+  styleUrls: ['./farmers-clusters-audits.component.css'],
 })
-export class IndividualFarmersAuditsComponent implements OnInit {
-  audits: FieldAudit[] = [];
+export class FarmersClustersAuditsComponent implements OnInit {
+  audits: FarmerClusterAudit[] = [];
   isLoading = false;
   hasData: boolean = true;
   searchTerm: string = '';
-
-  // Modal properties
-  showCropsModal = false;
-  selectedAuditCrops: Crop[] = [];
-  selectedCertificateName: string = '';
-  selectedCertificateApplicable: string = '';
-  isLoadingCrops = false;
 
   // Popup state
   isOfficerPopUp = false;
@@ -60,10 +52,10 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   isLoadingOfficers = false;
   isAssigning = false;
   assignError = '';
-  selectedAudit: FieldAudit | null = null;
+  selectedAudit: FarmerClusterAudit | null = null;
   currentAssignedOfficer: any = null;
 
-  // Schedule date properties - Using Date type for PrimeNG Calendar
+  // Schedule date properties - Change to Date type for PrimeNG Calendar
   selectedScheduleDate: Date | null = null;
   minDate: Date = new Date();
 
@@ -103,47 +95,50 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   fetchAudits() {
     this.isLoading = true;
 
-    this.certificateCompanyService.getFieldAudits(this.searchTerm).subscribe(
-      (response) => {
-        this.isLoading = false;
-        if (response.status && response.data) {
-          this.audits = response.data;
-          this.hasData = this.audits.length > 0;
-        } else {
-          this.audits = [];
-          this.hasData = false;
+    this.certificateCompanyService
+      .getFarmerClustersAudits(this.searchTerm)
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          if (response.status && response.data) {
+            this.audits = response.data;
+            this.hasData = this.audits.length > 0;
+          } else {
+            this.audits = [];
+            this.hasData = false;
+            Swal.fire({
+              title: 'Info',
+              text: response.message || 'No cluster audits found',
+              icon: 'info',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error fetching cluster audits:', error);
           Swal.fire({
-            title: 'Info',
-            text: response.message || 'No audits found',
-            icon: 'info',
+            title: 'Error',
+            text: 'Failed to fetch cluster audits. Please try again.',
+            icon: 'error',
             customClass: {
               popup:
                 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
+          this.audits = [];
+          this.hasData = false;
         }
-      },
-      (error) => {
-        this.isLoading = false;
-        console.error('Error fetching audits:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to fetch audits. Please try again.',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-        this.audits = [];
-        this.hasData = false;
-      }
-    );
+      );
   }
 
   // Handle assign status click
-  onAssignStatusClick(audit: FieldAudit): void {
+  onAssignStatusClick(audit: FarmerClusterAudit): void {
     // Special condition: If audit is completed and assigned, show warning popup
     if (audit.status === 'Completed' && audit.officerFirstName) {
       this.selectedAudit = audit;
@@ -164,7 +159,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   }
 
   // Open assign popup
-  openAssignPopup(audit: FieldAudit): void {
+  openAssignPopup(audit: FarmerClusterAudit): void {
     this.selectedAudit = audit;
     this.selectedOfficerRole = '';
     this.selectedOfficerId = '';
@@ -177,7 +172,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
     if (audit.sheduleDate) {
       this.selectedScheduleDate = new Date(audit.sheduleDate);
     } else {
-      this.selectedScheduleDate = new Date(); // Default to today
+      this.selectedScheduleDate = new Date(); // Set default to today
     }
 
     // If audit is already assigned, pre-fill the current officer info
@@ -193,7 +188,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
       // Load officers for the selected role and district
       this.loadOfficersByDistrictAndRole(
-        audit.farmerDistrict,
+        audit.clusterDistrict,
         this.selectedOfficerRole
       );
     }
@@ -226,9 +221,13 @@ export class IndividualFarmersAuditsComponent implements OnInit {
     this.selectedOfficerInfo = null;
     this.availableOfficers = [];
 
-    if (this.selectedOfficerRole && this.selectedAudit && this.selectedScheduleDate) {
+    if (
+      this.selectedOfficerRole &&
+      this.selectedAudit &&
+      this.selectedScheduleDate
+    ) {
       this.loadOfficersByDistrictAndRole(
-        this.selectedAudit.farmerDistrict,
+        this.selectedAudit.clusterDistrict,
         this.selectedOfficerRole
       );
     }
@@ -245,7 +244,9 @@ export class IndividualFarmersAuditsComponent implements OnInit {
     this.assignError = '';
 
     // Convert Date to string format for the API using local date (fixes timezone issue)
-    const scheduleDateString = this.formatDateToYYYYMMDD(this.selectedScheduleDate);
+    const scheduleDateString = this.formatDateToYYYYMMDD(
+      this.selectedScheduleDate
+    );
 
     this.certificateCompanyService
       .getOfficersByDistrictAndRole(district, role, scheduleDateString)
@@ -294,12 +295,23 @@ export class IndividualFarmersAuditsComponent implements OnInit {
       });
   }
 
+  // Add this method to format date without timezone issues
+  formatDateToYYYYMMDD(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
   // Handle schedule date changes
   onScheduleDateChange(): void {
     // Reload officers when schedule date changes
-    if (this.selectedOfficerRole && this.selectedAudit && this.selectedScheduleDate) {
+    if (
+      this.selectedOfficerRole &&
+      this.selectedAudit &&
+      this.selectedScheduleDate
+    ) {
       this.loadOfficersByDistrictAndRole(
-        this.selectedAudit.farmerDistrict,
+        this.selectedAudit.clusterDistrict,
         this.selectedOfficerRole
       );
     }
@@ -343,10 +355,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
     const officerId = this.selectedOfficerInfo.id;
     const auditId = this.selectedAudit.auditNo;
-    
-    // Use the same date formatting method to avoid timezone issues
-    const scheduleDateString = this.formatDateToYYYYMMDD(this.selectedScheduleDate);
-    const scheduleDate = new Date(scheduleDateString);
+    const scheduleDate = this.selectedScheduleDate;
 
     // Call the service with all parameters
     this.certificateCompanyService
@@ -384,106 +393,17 @@ export class IndividualFarmersAuditsComponent implements OnInit {
       });
   }
 
-  // Add this method to format date without timezone issues
-  formatDateToYYYYMMDD(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  // Format date for display
+  getFormattedDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
   }
 
-  // Open crops modal
-  openCropsModal(audit: FieldAudit) {
-    this.isLoadingCrops = true;
-    this.showCropsModal = true;
-    this.selectedCertificateName = audit.certificateName;
-    this.selectedCertificateApplicable = audit.certificateApplicable;
-    this.selectedAuditCrops = [];
-
-    this.certificateCompanyService
-      .getCropsByFieldAuditId(audit.auditNo)
-      .subscribe(
-        (response) => {
-          this.isLoadingCrops = false;
-          if (response.status && response.data) {
-            this.selectedAuditCrops = response.data.crops;
-          } else {
-            this.selectedAuditCrops = [];
-            Swal.fire({
-              title: 'Info',
-              text: response.message || 'No crops found for this audit',
-              icon: 'info',
-              customClass: {
-                popup:
-                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              },
-            });
-          }
-        },
-        (error) => {
-          this.isLoadingCrops = false;
-          console.error('Error fetching crops:', error);
-          Swal.fire({
-            title: 'Error',
-            text: 'Failed to fetch crops. Please try again.',
-            icon: 'error',
-            customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-          this.selectedAuditCrops = [];
-        }
-      );
-  }
-
-  // Close crops modal
-  closeCropsModal() {
-    this.showCropsModal = false;
-    this.selectedAuditCrops = [];
-    this.selectedCertificateName = '';
-    this.selectedCertificateApplicable = '';
-  }
-
-  // Officer popup methods
-  officerPopUpOpen(audit: FieldAudit): void {
-    if (audit.officerFirstName) {
-      const officerInfo = [
-        `${audit.officerFirstName} ${audit.officerLastName}`,
-        `Status: ${audit.status}`,
-        `Certificate: ${audit.certificateName}`,
-        `District: ${audit.farmerDistrict}`,
-      ];
-
-      // Add schedule date if available
-      if (audit.sheduleDate) {
-        officerInfo.push(
-          `Schedule Date: ${new Date(audit.sheduleDate).toLocaleString()}`
-        );
-      }
-
-      this.assignedOfficerArray = officerInfo;
-    } else {
-      this.assignedOfficerArray = ['No officer assigned'];
-    }
-    this.isOfficerPopUp = true;
-  }
-
-  officerPopUpClose(): void {
-    this.isOfficerPopUp = false;
-    this.assignedOfficerArray = [];
-  }
-
-  getFarmerName(audit: FieldAudit): string {
-    return (
-      `${audit.farmerFirstName || ''} ${audit.farmerLastName || ''}`.trim() ||
-      '--'
-    );
-  }
-
-  getOfficerName(audit: FieldAudit): string {
+  getOfficerName(audit: FarmerClusterAudit): string {
     return (
       `${audit.officerFirstName || ''} ${audit.officerLastName || ''}`.trim() ||
       '--'
@@ -512,10 +432,39 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   }
 
   addNew() {
-    this.router.navigate(['/plant-care/action/add-new-audit']);
+    this.router.navigate(['/plant-care/action/add-new-cluster-audit']);
   }
 
   onBack(): void {
     this.location.back();
+  }
+
+  // Officer popup methods
+  officerPopUpOpen(audit: FarmerClusterAudit): void {
+    if (audit.officerFirstName) {
+      const officerInfo = [
+        `${audit.officerFirstName} ${audit.officerLastName}`,
+        `Status: ${audit.status}`,
+        `Certificate: ${audit.certificateName}`,
+        `District: ${audit.clusterDistrict}`,
+      ];
+
+      // Add schedule date if available
+      if (audit.sheduleDate) {
+        officerInfo.push(
+          `Schedule Date: ${new Date(audit.sheduleDate).toLocaleString()}`
+        );
+      }
+
+      this.assignedOfficerArray = officerInfo;
+    } else {
+      this.assignedOfficerArray = ['No officer assigned'];
+    }
+    this.isOfficerPopUp = true;
+  }
+
+  officerPopUpClose(): void {
+    this.isOfficerPopUp = false;
+    this.assignedOfficerArray = [];
   }
 }

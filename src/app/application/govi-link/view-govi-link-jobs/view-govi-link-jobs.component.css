@@ -100,28 +100,108 @@
   background-color: #dbeafe;
   color: #1e40af;
 }
-
-.custom-calendar-wrapper {
-  width: 100%;
+:host ::ng-deep .p-calendar .p-button {
+  color: black;
+}
+:host-context(.dark) ::ng-deep .p-calendar .p-button {
+  color: white;
 }
 
-::ng-deep .custom-calendar-addon {
-  background: #F1F1F1 !important;
-  border: 2px solid #d1d5db !important;
-  border-right: none !important;
-  border-radius: 0.75rem 0 0 0.75rem !important;
-  padding: 0 0.75rem !important;
-  color: #6b7280 !important;
+::ng-deep .p-calendar .p-inputtext {
+  padding-right: 3rem !important; /* Make room for both icons */
 }
 
-:host-context(.dark) ::ng-deep .custom-calendar-addon {
-  background: #272F45 !important;
-  border-color: #AFAFAF !important;
-  color: #d1d5db !important;
+::ng-deep .p-calendar .p-calendar-clear-icon {
+  right: 1.2rem !important; /* Position clear button to the left of calendar icon */
+  top: 8.2px !important; /* Move clear button slightly down */
+  order: 1;
 }
 
-/* Adjust the calendar input border */
-::ng-deep .custom-calendar-wrapper .p-calendar .p-inputtext {
-  border-left: none !important;
-  border-radius: 0 0.75rem 0.75rem 0 !important;
+::ng-deep .p-calendar .p-datepicker-trigger {
+  right: 0.5rem !important; /* Position calendar icon on the far right */
+  order: 2;
+}
+
+/* For light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c; /* gray-400 */
+}
+
+/* For dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8b8b8b; /* gray-300 */
+}
+
+/* making pop up small*/
+
+::ng-deep .calendar-popup-small {
+  width: 320px !important; /* Adjust as needed */
+  min-width: 280px !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  font-size: 0.875rem; /* Smaller font */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.25rem !important; /* Smaller cell padding */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  line-height: 1.5rem !important;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+  border-radius: 6px !important; /* <-- add this for rounded corners */
+  overflow: hidden; /* ensures child items don't spill over rounded corners */
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+  padding-left: 0.2rem !important;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+  padding-left: 0.2rem !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+/* Make placeholder text italic for dropdown */
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8; /* optional, gives subtle "placeholder" look */
+}
+
+/* Dark mode italic placeholder */
+::ng-deep .dark .p-dropdown .p-dropdown-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
+  color: #d1d5db; /* optional: lighter gray for contrast */
+}
+
+/* Make placeholder text italic for MultiSelect */
+::ng-deep .p-multiselect .p-multiselect-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Dark mode placeholder italic */
+::ng-deep .dark .p-multiselect .p-multiselect-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
+  color: #d1d5db;
 }

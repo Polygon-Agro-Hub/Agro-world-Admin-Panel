@@ -210,22 +210,98 @@ export class EditCompanyDetailsComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  // Get missing field names for the alert
+  private getMissingFields(): string[] {
+    const missingFields: string[] = [];
+
+    if (this.companyForm.get('registrationNumber')?.errors?.['required']) {
+      missingFields.push('Registration Number');
+    }
+
+    if (this.companyForm.get('taxId')?.errors?.['required']) {
+      missingFields.push('TAX ID');
+    }
+
+    if (this.companyForm.get('companyName')?.errors?.['required']) {
+      missingFields.push('Company Name');
+    }
+
+    if (this.companyForm.get('phone1')?.errors?.['required']) {
+      missingFields.push('Phone Number 1');
+    }
+
+    if (this.companyForm.get('address')?.errors?.['required']) {
+      missingFields.push('Address');
+    }
+
+    return missingFields;
+  }
+
+  // Get validation errors for the alert
+  private getValidationErrors(): string[] {
+    const errors: string[] = [];
+
+    if (this.sameNumberError) {
+      errors.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
+    }
+
+    if (this.contactNumberError1 && this.companyForm.get('phone1')?.value) {
+      errors.push('Please enter a valid mobile number (format: +947XXXXXXXX)');
+    }
+
+    if (this.contactNumberError2 && this.companyForm.get('phone2')?.value) {
+      errors.push('Please enter a valid mobile number (format: +947XXXXXXXX)');
+    }
+
+    // Check phone pattern errors
+    if (this.companyForm.get('phone1')?.errors?.['pattern'] && 
+        this.companyForm.get('phoneCode1')?.value !== '+94') {
+      errors.push('Phone Number 1 must contain only digits');
+    }
+
+    if (this.companyForm.get('phone2')?.errors?.['pattern'] && 
+        this.companyForm.get('phone2')?.value && 
+        this.companyForm.get('phoneCode2')?.value !== '+94') {
+      errors.push('Phone Number 2 must contain only digits');
+    }
+
+    return errors;
+  }
+
   onSubmit(): void {
     this.companyForm.markAllAsTouched();
     this.validateContactNumbers();
 
-    if (this.companyForm.invalid || this.sameNumberError) {
+    const missingFields = this.getMissingFields();
+    const validationErrors = this.getValidationErrors();
+
+    // If there are any missing fields or validation errors, show the warning
+    if (missingFields.length > 0 || validationErrors.length > 0) {
       // Scroll to first error
       this.scrollToFirstError();
 
+      let errorMessage = '';
+
+      if (missingFields.length > 0) {
+        errorMessage += `<strong>Missing Required Fields</strong><br><br>`;
+        errorMessage += missingFields.map(field => `${field}`).join('<br>');
+      }
+
+      if (validationErrors.length > 0) {
+        if (errorMessage) errorMessage += '<br><br>';
+        errorMessage += `<strong>Validation Errors</strong><br><br>`;
+        errorMessage += validationErrors.map(error => `${error}`).join('<br>');
+      }
+
       Swal.fire({
-        icon: 'error',
-        title: 'Invalid Input',
-        text: 'Please fix the errors before submitting.',
+        icon: 'warning',
+        html: errorMessage,
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
+          htmlContainer: 'text-left'
         },
+        confirmButtonText: 'OK',
       });
       return;
     }

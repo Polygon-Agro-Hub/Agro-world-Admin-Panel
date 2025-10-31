@@ -106,6 +106,9 @@ export interface FieldAudit {
   officerFirstName?: string;
   officerLastName?: string;
   assignBy?: string;
+  sheduleDate?: Date;
+  officerEmpId: string;
+  officerJobRole: string;
 }
 export interface FieldAuditResponse {
   message: string;
@@ -128,7 +131,45 @@ export interface CropsResponse {
     crops: Crop[];
   };
 }
-
+export interface FarmerClusterAudit {
+  auditNo: number;
+  status: string;
+  clusterName: string;
+  clusterDistrict: string;
+  certificateName: string;
+  officerFirstName: string | null;
+  officerLastName: string | null;
+  sheduleDate?: Date | null;
+  officerJobRole: string;
+  officerEmpId: string;
+}
+export interface FarmerClusterAuditResponse {
+  message: string;
+  status: boolean;
+  data: FarmerClusterAudit[];
+}
+export interface FieldOfficer {
+  id: number;
+  empId: string;
+  firstName: string;
+  lastName: string;
+  JobRole: string;
+  district: string;
+  phoneCode1?: string;
+  phoneNumber1?: string;
+  email?: string;
+  language?: string;
+  status?: string;
+  jobCount?: number;
+  displayName?: string;
+  activeJobCount?: number;
+}
+export interface FieldOfficerResponse {
+  message: string;
+  status: boolean;
+  data: FieldOfficer[];
+  total: number;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -524,7 +565,7 @@ export class CertificateCompanyService {
     );
   }
 
-    // New method to get crops by field audit ID
+  // New method to get crops by field audit ID
   getCropsByFieldAuditId(fieldAuditId: number): Observable<CropsResponse> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
@@ -532,6 +573,75 @@ export class CertificateCompanyService {
     });
     return this.http.get<CropsResponse>(
       `${this.apiUrl}certificate-company/crops-by-field-audit/${fieldAuditId}`,
+      { headers }
+    );
+  }
+
+  // Add this method to the service
+  getFarmerClustersAudits(
+    searchTerm?: string
+  ): Observable<FarmerClusterAuditResponse> {
+    let params = new HttpParams();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+    if (searchTerm && searchTerm.trim() !== '') {
+      params = params.set('search', searchTerm.trim());
+    }
+
+    return this.http.get<FarmerClusterAuditResponse>(
+      `${this.apiUrl}certificate-company/get-farmer-clusters-audits`,
+      { headers, params }
+    );
+  }
+
+  // Add this method to the service
+  getOfficersByDistrictAndRole(
+    district: string,
+    jobRole: string,
+    scheduleDate: string
+  ): Observable<FieldOfficerResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+
+    const params = new HttpParams()
+      .set('district', district)
+      .set('jobRole', jobRole)
+      .set('scheduleDate', scheduleDate);
+
+    return this.http.get<FieldOfficerResponse>(
+      `${this.apiUrl}certificate-company/get-officers-by-district-role`,
+      { headers, params }
+    );
+  }
+
+  // Assign officer to field audit
+  assignOfficerToFieldAudit(
+    auditId: number,
+    officerId: number,
+    scheduleDate?: Date
+  ): Observable<any> {
+    const data: any = {
+      auditId,
+      officerId,
+    };
+
+    // Add schedule date to the request if provided
+    if (scheduleDate) {
+      data.scheduleDate = scheduleDate;
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.put<any>(
+      `${this.apiUrl}certificate-company/assign-officer-to-audit`,
+      data,
       { headers }
     );
   }

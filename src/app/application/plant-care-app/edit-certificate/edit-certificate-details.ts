@@ -456,51 +456,110 @@ export class EditCertificateDetailsComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
-    this.certificateForm.markAllAsTouched();
+  // Get missing field names for the alert
+  private getMissingFields(): string[] {
+    const missingFields: string[] = [];
 
-    // Validate noOfVisit
-    if (this.certificateForm.get('noOfVisit')?.invalid) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Input',
-        text: 'Number of visits cannot be negative.',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
+    if (this.certificateForm.get('srtName')?.errors?.['required']) {
+      missingFields.push('Certificate Name');
     }
 
-    // Validate target crops based on applicable selection
+    if (this.certificateForm.get('srtNumber')?.errors?.['required']) {
+      missingFields.push('Certificate Number');
+    }
+
+    if (this.certificateForm.get('srtcomapnyId')?.errors?.['required']) {
+      missingFields.push('Company');
+    }
+
+    if (this.certificateForm.get('applicable')?.errors?.['required']) {
+      missingFields.push('Applicable For');
+    }
+
+    if (this.certificateForm.get('accreditation')?.errors?.['required']) {
+      missingFields.push('Accreditation');
+    }
+
+    if (this.certificateForm.get('serviceAreas')?.errors?.['required']) {
+      missingFields.push('Service Areas');
+    }
+
+    if (this.certificateForm.get('price')?.errors?.['required']) {
+      missingFields.push('Price');
+    } else if (this.certificateForm.get('price')?.errors?.['min']) {
+      missingFields.push('Price (must be greater than or equal to 0)');
+    }
+
+    if (this.certificateForm.get('timeLine')?.errors?.['required']) {
+      missingFields.push('Timeline');
+    } else if (this.certificateForm.get('timeLine')?.errors?.['min']) {
+      missingFields.push('Timeline (must be at least 1 day)');
+    }
+
+    if (this.certificateForm.get('commission')?.errors?.['required']) {
+      missingFields.push('Commission');
+    } else if (this.certificateForm.get('commission')?.errors?.['min']) {
+      missingFields.push('Commission (must be between 0% and 100%)');
+    } else if (this.certificateForm.get('commission')?.errors?.['max']) {
+      missingFields.push('Commission (must be between 0% and 100%)');
+    }
+
+    if (this.certificateForm.get('scope')?.errors?.['required']) {
+      missingFields.push('Scope');
+    }
+
+    if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
+      missingFields.push('Number of Visits (cannot be negative)');
+    }
+
+    return missingFields;
+  }
+
+  // Get validation errors for the alert
+  private getValidationErrors(): string[] {
+    const errors: string[] = [];
     const applicable = this.certificateForm.get('applicable')?.value;
 
+    // Check for target crops validation
     if (
       applicable === 'For Selected Crops' &&
       this.selectedCrops.length === 0
     ) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Input',
-        text: 'Please select at least one target crop for "For Selected Crops" option.',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
+      errors.push(
+        'Please select at least one target crop for "For Selected Crops" option.'
+      );
     }
 
-    if (this.certificateForm.invalid) {
+    return errors;
+  }
+
+  onSubmit(): void {
+    this.certificateForm.markAllAsTouched();
+
+    const missingFields = this.getMissingFields();
+    const validationErrors = this.getValidationErrors();
+
+    // If there are any missing fields or validation errors, show the warning
+    if (missingFields.length > 0 || validationErrors.length > 0) {
+      // Scroll to first error
+      this.scrollToFirstError();
+
+      let errorMessage = '';
+
+      if (missingFields.length > 0) {
+        errorMessage += missingFields.map((field) => `${field}`).join('<br>');
+      }
+
       Swal.fire({
-        icon: 'error',
-        title: 'Invalid Input',
-        text: 'Please fill all required fields correctly.',
+        icon: 'warning',
+        title: 'Missing Information',
+        html: errorMessage,
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
         },
+        confirmButtonText: 'OK',
       });
       return;
     }
@@ -537,6 +596,7 @@ export class EditCertificateDetailsComponent implements OnInit {
     }
 
     // Append cropIds only if "For Selected Crops" is selected
+    const applicable = formValue.applicable;
     if (applicable === 'For Selected Crops' && this.selectedCrops.length > 0) {
       const cropIds = this.selectedCrops.map((c) => c.id);
       formData.append('cropIds', JSON.stringify(cropIds));
@@ -608,5 +668,16 @@ export class EditCertificateDetailsComponent implements OnInit {
           });
         },
       });
+  }
+
+  // Helper method to scroll to first error
+  private scrollToFirstError(): void {
+    const firstErrorElement = document.querySelector('.border-red-500');
+    if (firstErrorElement) {
+      firstErrorElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
   }
 }

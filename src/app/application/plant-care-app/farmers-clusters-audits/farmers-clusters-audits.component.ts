@@ -15,6 +15,7 @@ import {
   FieldOfficer,
 } from '../../../services/plant-care/certificate-company.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-farmers-clusters-audits',
@@ -26,6 +27,7 @@ import { DropdownModule } from 'primeng/dropdown';
     NgxPaginationModule,
     FormsModule,
     DropdownModule,
+    CalendarModule,
   ],
   templateUrl: './farmers-clusters-audits.component.html',
   styleUrls: ['./farmers-clusters-audits.component.css'],
@@ -53,10 +55,9 @@ export class FarmersClustersAuditsComponent implements OnInit {
   selectedAudit: FarmerClusterAudit | null = null;
   currentAssignedOfficer: any = null;
 
-  // Schedule date properties
-  selectedScheduleDate: string = '';
-  showDatePicker: boolean = false;
-  minDate: string = '';
+  // Schedule date properties - Change to Date type for PrimeNG Calendar
+  selectedScheduleDate: Date | null = null;
+  minDate: Date = new Date();
 
   // Officer Role Options
   officerRoleOptions = [
@@ -79,8 +80,7 @@ export class FarmersClustersAuditsComponent implements OnInit {
 
   // Set minimum date for date picker
   setMinDate(): void {
-    const now = new Date();
-    this.minDate = now.toISOString().split('T')[0];
+    this.minDate = new Date();
   }
 
   onSearch() {
@@ -167,14 +167,12 @@ export class FarmersClustersAuditsComponent implements OnInit {
     this.selectedOfficerInfo = null;
     this.currentAssignedOfficer = null;
     this.assignError = '';
-    this.showDatePicker = false;
 
     // Set initial schedule date from audit if available
     if (audit.sheduleDate) {
-      const scheduleDate = new Date(audit.sheduleDate);
-      this.selectedScheduleDate = scheduleDate.toISOString().split('T')[0];
+      this.selectedScheduleDate = new Date(audit.sheduleDate);
     } else {
-      this.selectedScheduleDate = '';
+      this.selectedScheduleDate = new Date(); // Set default to today
     }
 
     // If audit is already assigned, pre-fill the current officer info
@@ -182,12 +180,12 @@ export class FarmersClustersAuditsComponent implements OnInit {
       this.currentAssignedOfficer = {
         name: `${audit.officerFirstName} ${audit.officerLastName}`,
         empId: audit.officerEmpId,
-        role: audit.officerJobRole || 'Field Officer'
+        role: audit.officerJobRole || 'Field Officer',
       };
 
       // Pre-select the officer role
       this.selectedOfficerRole = audit.officerJobRole || 'Field Officer';
-      
+
       // Load officers for the selected role and district
       this.loadOfficersByDistrictAndRole(
         audit.clusterDistrict,
@@ -208,8 +206,7 @@ export class FarmersClustersAuditsComponent implements OnInit {
     this.selectedOfficerInfo = null;
     this.currentAssignedOfficer = null;
     this.assignError = '';
-    this.selectedScheduleDate = '';
-    this.showDatePicker = false;
+    this.selectedScheduleDate = null;
   }
 
   // Close completed job popup
@@ -224,7 +221,11 @@ export class FarmersClustersAuditsComponent implements OnInit {
     this.selectedOfficerInfo = null;
     this.availableOfficers = [];
 
-    if (this.selectedOfficerRole && this.selectedAudit) {
+    if (
+      this.selectedOfficerRole &&
+      this.selectedAudit &&
+      this.selectedScheduleDate
+    ) {
       this.loadOfficersByDistrictAndRole(
         this.selectedAudit.clusterDistrict,
         this.selectedOfficerRole
@@ -234,11 +235,21 @@ export class FarmersClustersAuditsComponent implements OnInit {
 
   // Load officers by district and role
   loadOfficersByDistrictAndRole(district: string, role: string): void {
+    if (!this.selectedScheduleDate) {
+      this.assignError = 'Please select a schedule date first';
+      return;
+    }
+
     this.isLoadingOfficers = true;
     this.assignError = '';
 
+    // Convert Date to string format for the API using local date (fixes timezone issue)
+    const scheduleDateString = this.formatDateToYYYYMMDD(
+      this.selectedScheduleDate
+    );
+
     this.certificateCompanyService
-      .getOfficersByDistrictAndRole(district, role)
+      .getOfficersByDistrictAndRole(district, role, scheduleDateString)
       .subscribe({
         next: (response) => {
           this.isLoadingOfficers = false;
@@ -246,7 +257,10 @@ export class FarmersClustersAuditsComponent implements OnInit {
             this.availableOfficers = response.data.map(
               (officer: FieldOfficer) => ({
                 ...officer,
-                displayName: `${officer.firstName} ${officer.lastName} - (${officer.empId})`,
+                displayName: `${officer.firstName} ${officer.lastName} - ${
+                  officer.empId
+                } (Jobs: ${officer.jobCount || 0})`,
+                activeJobCount: officer.jobCount || 0,
               })
             );
 
@@ -265,7 +279,7 @@ export class FarmersClustersAuditsComponent implements OnInit {
             }
 
             if (this.availableOfficers.length === 0) {
-              this.assignError = `No ${role}s available in ${district} district`;
+              this.assignError = `No ${role}s available in ${district} district for the selected date`;
             }
           } else {
             this.availableOfficers = [];
@@ -279,6 +293,37 @@ export class FarmersClustersAuditsComponent implements OnInit {
           this.assignError = 'Failed to load officers. Please try again.';
         },
       });
+  }
+
+  // Add this method to format date without timezone issues
+  formatDateToYYYYMMDD(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  // Handle schedule date changes
+  onScheduleDateChange(): void {
+    // Reload officers when schedule date changes
+    if (
+      this.selectedOfficerRole &&
+      this.selectedAudit &&
+      this.selectedScheduleDate
+    ) {
+      this.loadOfficersByDistrictAndRole(
+        this.selectedAudit.clusterDistrict,
+        this.selectedOfficerRole
+      );
+    }
+  }
+
+  // Handle schedule date clear
+  onScheduleDateClear(): void {
+    this.selectedScheduleDate = null;
+    this.availableOfficers = [];
+    this.selectedOfficerId = '';
+    this.selectedOfficerInfo = null;
+    this.assignError = 'Please select a schedule date';
   }
 
   // When officer is selected
@@ -298,9 +343,10 @@ export class FarmersClustersAuditsComponent implements OnInit {
     if (
       !this.selectedAudit ||
       !this.selectedOfficerId ||
-      !this.selectedOfficerInfo
+      !this.selectedOfficerInfo ||
+      !this.selectedScheduleDate
     ) {
-      this.assignError = 'Please select an officer';
+      this.assignError = 'Please select a schedule date and an officer';
       return;
     }
 
@@ -309,9 +355,7 @@ export class FarmersClustersAuditsComponent implements OnInit {
 
     const officerId = this.selectedOfficerInfo.id;
     const auditId = this.selectedAudit.auditNo;
-    const scheduleDate = this.selectedScheduleDate
-      ? new Date(this.selectedScheduleDate)
-      : undefined;
+    const scheduleDate = this.selectedScheduleDate;
 
     // Call the service with all parameters
     this.certificateCompanyService
@@ -327,11 +371,9 @@ export class FarmersClustersAuditsComponent implements OnInit {
               title: 'Success',
               text:
                 response.message ||
-                (this.currentAssignedOfficer 
+                (this.currentAssignedOfficer
                   ? 'Officer assignment updated successfully'
-                  : scheduleDate
-                  ? 'Officer assigned and schedule date updated successfully'
-                  : 'Officer assigned successfully'),
+                  : 'Officer assigned and schedule date updated successfully'),
               icon: 'success',
               customClass: {
                 popup:
@@ -357,7 +399,7 @@ export class FarmersClustersAuditsComponent implements OnInit {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 

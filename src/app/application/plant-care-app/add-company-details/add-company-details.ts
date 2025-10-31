@@ -238,6 +238,37 @@ export class AddCompanyDetailsComponent implements OnInit {
     }
   }
 
+  // Get missing field names for the alert
+  private getMissingFields(): string[] {
+    const missingFields: string[] = [];
+
+    if (!this.logoFile) {
+      missingFields.push('Company Logo');
+    }
+
+    if (this.companyForm.get('registrationNumber')?.errors?.['required']) {
+      missingFields.push('Registration Number');
+    }
+
+    if (this.companyForm.get('taxId')?.errors?.['required']) {
+      missingFields.push('TAX ID');
+    }
+
+    if (this.companyForm.get('companyName')?.errors?.['required']) {
+      missingFields.push('Company Name');
+    }
+
+    if (this.companyForm.get('phone1')?.errors?.['required']) {
+      missingFields.push('Phone Number 1');
+    }
+
+    if (this.companyForm.get('address')?.errors?.['required']) {
+      missingFields.push('Address');
+    }
+
+    return missingFields;
+  }
+
   // Submit
   onSubmit(): void {
     this.companyForm.markAllAsTouched();
@@ -246,23 +277,33 @@ export class AddCompanyDetailsComponent implements OnInit {
     // Check if logo is required
     this.logoRequiredError = !this.logoFile;
 
-    if (
-      this.companyForm.invalid ||
-      this.sameNumberError ||
-      this.logoRequiredError
-    ) {
+    const missingFields = this.getMissingFields();
+    const hasValidationErrors = 
+      this.companyForm.invalid || 
+      this.sameNumberError || 
+      this.contactNumberError1 || 
+      this.contactNumberError2;
+
+    if (missingFields.length > 0 || hasValidationErrors) {
       // Scroll to first error
       this.scrollToFirstError();
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Input',
-        text: 'Please fix the errors before submitting.',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
+      // Show warning alert only for missing required fields
+      if (missingFields.length > 0) {
+        const missingFieldsList = missingFields.map(field => `${field}`).join('<br>');
+        
+        Swal.fire({
+          icon: 'warning',
+          title: 'Missing Information',
+          html: `Please fill in the following required fields:<br><br>${missingFieldsList}`,
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left'
+          },
+          confirmButtonText: 'OK',
+        });
+      }
       return;
     }
 

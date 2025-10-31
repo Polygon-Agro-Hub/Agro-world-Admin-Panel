@@ -289,3 +289,22 @@
   opacity: 0.8;
   color: #d1d5db;
 }
+
+::ng-deep .calendar-popup-small {
+  width: 320px !important; /* Adjust as needed */
+  min-width: 280px !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  font-size: 0.875rem; /* Smaller font */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.25rem !important; /* Smaller cell padding */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  line-height: 1.5rem !important;
+}

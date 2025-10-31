@@ -227,11 +227,27 @@
       >
         Schedule Date
       </label>
-      <input
-        type="date"
+      <p-calendar
+        id="scheduleDate"
         [(ngModel)]="selectedScheduleDate"
-        class="min-w-96 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-textLight dark:text-textDark focus:outline-none focus:ring-2 focus:ring-blue-500"
-        [min]="minDate"
+        (onSelect)="onScheduleDateChange()"
+        (onClear)="onScheduleDateClear()"
+        placeholder="Select Schedule Date"
+        [showIcon]="true"
+        [showClear]="false"
+        [showButtonBar]="true"
+        [minDate]="minDate"
+        iconDisplay="input"
+        [style]="{ width: '100%' }"
+        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+        inputStyleClass="p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-textLight dark:text-textDark w-full focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+        [appendTo]="'body'"
       />
     </div>
 
@@ -240,7 +256,7 @@
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
       >
-        Officer Role *
+        Officer Role
       </label>
       <p-dropdown
         [options]="officerRoleOptions"
@@ -260,7 +276,7 @@
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
       >
-        Officer *
+        Officer
       </label>
       <p-dropdown
         [options]="availableOfficers"
@@ -332,14 +348,7 @@
           class="px-4 py-2 text-sm font-medium text-white bg-[#3980C0] rounded-lg hover:bg-[#2c6da3] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
         >
           <i *ngIf="isAssigning" class="fa-solid fa-spinner fa-spin"></i>
-          {{
-            currentAssignedOfficer &&
-            selectedOfficerId === currentAssignedOfficer.empId
-              ? "Keep"
-              : currentAssignedOfficer
-              ? "Change"
-              : "Assign"
-          }}
+          Assign
         </button>
       </div>
     </div>

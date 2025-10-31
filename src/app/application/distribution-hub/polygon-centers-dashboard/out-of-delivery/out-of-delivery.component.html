@@ -66,8 +66,9 @@
       </div>
     </div>
     <div>
-      <button class="bg-[#415CFF] px-5 py-2 rounded-lg text-white text-lg mb-5">
-        Download
+      <button (click)="downloadPDF()" 
+        class="bg-[#415CFF] px-5 py-2 rounded-lg text-white text-lg mb-5 hover:bg-[#3347cc] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
+        Download 
       </button>
     </div>
     <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
@@ -94,7 +95,7 @@
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200" *ngIf="!hasData">
+        <tbody class="divide-y divide-gray-200" *ngIf="hasData">
           <tr *ngFor="let item of filteredOrders; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-700">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{i + 1 | number :'2.0'}}

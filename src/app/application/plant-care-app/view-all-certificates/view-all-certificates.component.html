@@ -16,9 +16,9 @@
   </button>
 </div>
 
-<div class="overflow-x-auto">
+<div class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div
-    class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
+    class="min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg py-5 px-8"
   >
     <div class="flex items-center justify-between mb-2">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -101,7 +101,7 @@
     </div>
     <div *ngIf="hasData">
       <table
-        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4"
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4 px-6" 
       >
         <thead>
           <tr>

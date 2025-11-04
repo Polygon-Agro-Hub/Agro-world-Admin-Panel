@@ -96,7 +96,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     private router: Router,
     private cropCalendarService: CropCalendarService,
     private certificateCompanyService: CertificateCompanyService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
@@ -113,7 +113,7 @@ export class AddCertificateDetailsComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
       scope: ['', Validators.required],
-      noOfVisit: ['', [Validators.min(0)]], 
+      noOfVisit: ['', [Validators.min(0)]],
       tearmsFile: [null, Validators.required],
       logo: [null, Validators.required],
     });
@@ -290,14 +290,14 @@ export class AddCertificateDetailsComponent implements OnInit {
     const selected = this.cropDropdownOptions.find(
       (c) => c.value === this.selectedCrop
     );
-    
+
     if (selected && !this.selectedCrops.some((c) => c.id === selected.value)) {
       this.selectedCrops.push({
         id: selected.value,
         cropNameEnglish: selected.label,
       });
       this.selectedCrop = null;
-      
+
       // Clear the search filter after adding
       this.filteredCropOptions = [...this.cropDropdownOptions];
     }
@@ -408,8 +408,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Service areas as JSON string
     const serviceAreas = Array.isArray(formValue.serviceAreas)
       ? formValue.serviceAreas.map((area: any) =>
-          typeof area === 'object' ? area.value : area
-        )
+        typeof area === 'object' ? area.value : area
+      )
       : [];
     formData.append('serviceAreas', JSON.stringify(serviceAreas));
 
@@ -417,7 +417,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     formData.append('timeLine', formValue.timeLine.toString());
     formData.append('commission', formValue.commission.toString());
     formData.append('scope', formValue.scope);
-    
+
     // Add noOfVisit to formData
     if (formValue.noOfVisit) {
       formData.append('noOfVisit', formValue.noOfVisit.toString());
@@ -486,5 +486,18 @@ export class AddCertificateDetailsComponent implements OnInit {
         });
       },
     });
+  }
+
+  trimLeadingSpaces(event: any, varibleName: string) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/^\s+/, '');
+    this.certificateForm.get(varibleName)?.setValue(input.value);
+  }
+  preventDecimalInput(event: KeyboardEvent) {
+    // Prevent decimal point, comma, and 'e' for exponential notation
+    const forbiddenKeys = ['.', ',', 'e', 'E'];
+    if (forbiddenKeys.includes(event.key)) {
+      event.preventDefault();
+    }
   }
 }

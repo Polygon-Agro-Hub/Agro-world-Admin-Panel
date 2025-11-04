@@ -20,6 +20,8 @@ interface FieldInspector {
   phone: string;
   nic: string;
   modifiedBy: string;
+  assignDistrict:string;
+  modifyBy: null | string;
 }
 
 @Component({
@@ -102,12 +104,12 @@ export class ViewFieldInspectorsComponent implements OnInit {
     this.isLoading = true;
     this.stakeholderService.getAllFieldInspectors(filters).subscribe({
       next: (data) => {
-        this.inspectors = data;
-        this.filteredInspectors = [...this.inspectors];
+        // this.inspectors = data;
+        this.filteredInspectors = data;
         this.hasData = this.filteredInspectors.length > 0;
         this.isLoading = false;
 
-        console.log('Loaded inspectors:', this.inspectors.length);
+        console.log('Loaded inspectors:', this.filteredInspectors[0].assignDistrict);
       },
       error: (err) => {
         console.error('Error fetching inspectors:', err);
@@ -127,7 +129,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
   applyFilters() {
     const filters: any = {};
 
-   
+
     if (this.searchTerm && this.searchTerm.trim()) {
       filters.search = this.searchTerm.trim();
     }
@@ -167,18 +169,18 @@ export class ViewFieldInspectorsComponent implements OnInit {
     // Dynamic message based on status
     let message = '';
     if (inspector.status === 'Approved') {
-      message = 'Are you sure you want to reject this field inspector?';
+      message = 'Are you sure you want to reject this field officer?';
     } else if (inspector.status === 'Rejected') {
-      message = 'Are you sure you want to approve this field inspector?';
+      message = 'Are you sure you want to approve this field officer?';
     } else if (inspector.status === 'Not Approved') {
       message =
-        'Are you sure you want to approve or reject this field inspector?';
+        'Are you sure you want to approve or reject this field officer?';
     }
 
     const tableHtml = `
       <div class="px-10 py-8 rounded-md bg-white dark:bg-gray-800">
         <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">
-          Inspector Name: ${inspector.firstName} ${inspector.lastName}
+          Officer Name: ${inspector.firstName} ${inspector.lastName}
         </h1>
         <div>
           <p class="text-center dark:text-white">${message}</p>
@@ -225,7 +227,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
                       Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'The Field Inspector was approved successfully.',
+                        text: 'The Field Officer was approved successfully.',
                         showConfirmButton: false,
                         timer: 3000,
                         customClass: {
@@ -284,7 +286,7 @@ export class ViewFieldInspectorsComponent implements OnInit {
                       Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'The Field Inspector was rejected successfully.',
+                        text: 'The Field Officer was rejected successfully.',
                         showConfirmButton: false,
                         timer: 3000,
                         customClass: {

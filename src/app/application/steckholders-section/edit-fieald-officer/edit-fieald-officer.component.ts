@@ -1056,6 +1056,7 @@ private showErrorAndRedirect(message: string): void {
   this.personalData.id = officerData.id;
   this.personalData.firstName = officerData.firstName;
   this.personalData.lastName = officerData.lastName;
+  this.personalData.status = officerData.status;
   
   // FIXED: Check for different possible field names for Sinhala and Tamil names
   // Try multiple possible field name variations from the API

@@ -124,7 +124,7 @@ export class FieldOfficerProfileComponent {
                 },
                 buttonsStyling: false
               });
-              this.router.navigate(['/steckholders/action']);
+              this.router.navigate(['/steckholders/action/field-inspectors']);
             } else {
               Swal.fire({
                 icon: 'error',
@@ -427,13 +427,18 @@ export class FieldOfficerProfileComponent {
       pdf.text('Commission Amount', margin, yPos);
       pdf.setTextColor(0, 0, 0);
       pdf.setFont('helvetica', 'bold');
-      pdf.text(`LKR ${this.officerObj.comAmount || '-'}`, margin, yPos + 4);
+
+      // Format the value to remove unnecessary decimals
+      const comAmount = this.officerObj.comAmount != null
+        ? `${parseFloat(this.officerObj.comAmount)}%`
+        : '-';
+      pdf.text(comAmount, margin, yPos + 4);
       yPos += 15;
 
       pdf.setFontSize(8);
       pdf.setTextColor(0, 0, 0);
       pdf.setFont('helvetica', 'italic');
-  
+
       // Save the PDF
       const fileName = `${this.officerObj.empId} - ${this.officerObj.firstName} ${this.officerObj.lastName}.pdf`;
       pdf.save(fileName);

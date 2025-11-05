@@ -84,8 +84,7 @@
               <select
                 class="rounded-xl flex-1 px-4 py-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm appearance-none cursor-default"
                 readonly (change)="onProductSelected(typeItems, $event)" onfocus="this.blur()"
-                style="pointer-events: none;" 
-                >
+                style="pointer-events: none;">
                 <option value="">--Select Product--</option>
                 <option *ngFor="let product of marketplaceItems" [value]="product.id"
                   [selected]="product.id === typeItems.productId || product.displayName === typeItems.productDescription">
@@ -132,50 +131,44 @@
   (click)="closeExcludedItemsModal()">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-md mx-4 max-h-[90vh] flex flex-col">
     <!-- Modal Header -->
-    <div class="px-6 py-4 text-center shrink-0">
+    <div class="px-6 py-4 text-center shrink-0 border-b border-gray-200 dark:border-gray-700">
       <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
         Excluded List Items
       </h3>
     </div>
 
     <!-- Modal Content -->
-    <div class="px-6 py-4 flex-1 overflow-hidden flex flex-col">
+    <div class=" flex-1 overflow-hidden flex flex-col">
       <!-- Scrollable container -->
-      <div
-        class="flex-1 overflow-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-        <div class="min-w-full">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <!-- Table Header -->
-            <thead class="sticky top-0 bg-white dark:bg-gray-800 z-10">
-              <tr>
-                <th class="py-3 text-center w-20 whitespace-nowrap border-b border-gray-300 dark:border-gray-700">
-                  Item ({{ excludedItemsArr.length }})
-                </th>
-                <th class="py-3 text-left whitespace-nowrap border-b border-gray-300 dark:border-gray-700">
-                  Item Name
-                </th>
-              </tr>
-            </thead>
+      <div class="flex-1 overflow-hidden flex flex-col">
+        <div class="shrink-0 px-6 pt-4">
+          <div
+            class="flex text-sm font-medium text-[#8492A3] dark:text-gray-400 uppercase tracking-wide border-b border-gray-200 dark:border-gray-700 pb-2">
+            <div class="w-16 text-center">NO ({{ excludedItemsArr.length }})</div>
+            <div class="flex-1 text-left pl-4">Item Name</div>
+          </div>
+        </div>
 
-            <!-- Table Body -->
-            <tbody>
-              <tr *ngFor="let item of excludedItemsArr; let i = index"
-                class="border-b border-gray-100 dark:border-gray-700">
-                <td class="py-3 text-center">{{ i + 1 }}</td>
-                <td class="py-3 text-left">{{ item.displayName }}</td>
-              </tr>
+        <div
+          class="flex-1 overflow-y-auto px-6 pb-4 scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+          <div class="space-y-2">
+            <div *ngFor="let item of excludedItemsArr; let i = index"
+              class="flex items-center py-2 border-b border-gray-100 dark:border-gray-700">
+              <div class="w-16 text-center text-gray-600 dark:text-gray-300">{{ i + 1 }}</div>
+              <div class="flex-1 text-left pl-4 text-gray-800 dark:text-gray-100 truncate">
+                {{ item.displayName }}
+              </div>
+            </div>
 
-              <!-- Empty state -->
-              <tr *ngIf="excludedItemsArr.length === 0">
-                <td colspan="2" class="py-4 text-center text-gray-400 dark:text-gray-500">
-                  No excluded items
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <div *ngIf="excludedItemsArr.length === 0" class="text-center py-8 text-gray-400 dark:text-gray-500">
+              No excluded items
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+
 
     <!-- Modal Footer -->
     <div class="px-6 py-4 flex justify-center shrink-0">

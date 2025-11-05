@@ -87,6 +87,7 @@ export class UpdateDistributionOfficerComponent {
   statusFilter: any = '';
   role: any = '';
   totalItems: number = 0;
+  isApproved: boolean = false;
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -191,75 +192,78 @@ export class UpdateDistributionOfficerComponent {
     this.EpmloyeIdCreate();
   }
 
-  fetchData() {
-    this.isLoading = true;
-    this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
-      next: (response: any) => {
-        console.log('Officer Data Response:', response); // Debug API response
-        const officerData = response.officerData[0];
-        console.log('Officer data structure:', response.officerData[0]);
+fetchData() {
+  this.isLoading = true;
+  this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
+    next: (response: any) => {
+      console.log('Officer Data Response:', response); // Debug API response
+      const officerData = response.officerData[0];
+      console.log('Officer data structure:', response.officerData[0]);
 
-        // Populate personalData with API response or fallback to defaults
-        this.personalData.id = officerData.id || this.itemId;
-        this.personalData.empId = officerData.empId || '';
-        this.personalData.jobRole = officerData.jobRole || '';
-        this.personalData.firstNameEnglish =
-          officerData.firstNameEnglish || '';
-        this.personalData.firstNameSinhala =
-          officerData.firstNameSinhala || '';
-        this.personalData.firstNameTamil = officerData.firstNameTamil || '';
-        this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
-        this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
-        this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-        this.personalData.contact1Code = officerData.phoneCode01 || '+94';
-        this.personalData.contact1 = officerData.phoneNumber01 ;
-        this.personalData.contact2Code = officerData.phoneCode02 || '+94';
-        this.personalData.contact2 = officerData.phoneNumber02;
-        this.personalData.nic = officerData.nic || '';
-        this.personalData.email = officerData.email || '';
-        this.personalData.houseNumber = officerData.houseNumber || '';
-        this.personalData.streetName = officerData.streetName || '';
-        this.personalData.city = officerData.city || '';
-        this.personalData.district = officerData.district || '';
-        this.personalData.province = officerData.province || '';
-        this.personalData.languages = officerData.languages || '';
-        this.personalData.companyId = officerData.companyId || '';
-        this.personalData.centerId = officerData.distributedCenterId || '';
-        this.personalData.bankName = officerData.bankName || '';
-        this.personalData.branchName = officerData.branchName || '';
-        this.personalData.accHolderName = officerData.accHolderName || '';
-        this.personalData.accNumber = officerData.accNumber || '';
-        this.personalData.confirmAccNumber = officerData.accNumber || '';
-        this.personalData.empType = officerData.empType || '';
-        this.personalData.irmId = officerData.irmId || '';
-        this.personalData.image = officerData.image || '';
-        this.personalData.status = officerData.status || '';
+      // Populate personalData with API response or fallback to defaults
+      this.personalData.id = officerData.id || this.itemId;
+      this.personalData.empId = officerData.empId || '';
+      this.personalData.jobRole = officerData.jobRole || '';
+      this.personalData.firstNameEnglish =
+        officerData.firstNameEnglish || '';
+      this.personalData.firstNameSinhala =
+        officerData.firstNameSinhala || '';
+      this.personalData.firstNameTamil = officerData.firstNameTamil || '';
+      this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
+      this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
+      this.personalData.lastNameTamil = officerData.lastNameTamil || '';
+      this.personalData.contact1Code = officerData.phoneCode01 || '+94';
+      this.personalData.contact1 = officerData.phoneNumber01 ;
+      this.personalData.contact2Code = officerData.phoneCode02 || '+94';
+      this.personalData.contact2 = officerData.phoneNumber02;
+      this.personalData.nic = officerData.nic || '';
+      this.personalData.email = officerData.email || '';
+      this.personalData.houseNumber = officerData.houseNumber || '';
+      this.personalData.streetName = officerData.streetName || '';
+      this.personalData.city = officerData.city || '';
+      this.personalData.district = officerData.district || '';
+      this.personalData.province = officerData.province || '';
+      this.personalData.languages = officerData.languages || '';
+      this.personalData.companyId = officerData.companyId || '';
+      this.personalData.centerId = officerData.distributedCenterId || '';
+      this.personalData.bankName = officerData.bankName || '';
+      this.personalData.branchName = officerData.branchName || '';
+      this.personalData.accHolderName = officerData.accHolderName || '';
+      this.personalData.accNumber = officerData.accNumber || '';
+      this.personalData.confirmAccNumber = officerData.accNumber || '';
+      this.personalData.empType = officerData.empType || '';
+      this.personalData.irmId = officerData.irmId || '';
+      this.personalData.image = officerData.image || '';
+      this.personalData.status = officerData.status || '';
 
-        this.selectedLanguages = this.personalData.languages
-          ? this.personalData.languages.split(',')
-          : [];
-        this.empType = this.personalData.empType;
-        this.lastID = this.personalData.empId.slice(-5);
-        this.cenId = this.personalData.centerId;
-        this.comId = this.personalData.companyId;
-        this.initiateJobRole = officerData.jobRole || '';
-        this.initiateId = officerData.empId.slice(-5);
+      // Check if status is "Approved"
+      this.isApproved = this.personalData.status === 'Approved';
 
-        console.log('Assigned Contact1Code:', this.personalData.contact1Code); // Debug
-        console.log('Assigned Contact1:', this.personalData.contact1); // Debug
-        console.log('Assigned Contact2Code:', this.personalData.contact2Code); // Debug
-        console.log('Assigned Contact2:', this.personalData.contact2); // Debug
-        this.matchExistingBankToDropdown();
-        this.getAllCollectionCetnter()
-        this.getAllCollectionManagers();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching officer data:', error);
-        this.isLoading = false;
-      },
-    });
-  }
+      this.selectedLanguages = this.personalData.languages
+        ? this.personalData.languages.split(',')
+        : [];
+      this.empType = this.personalData.empType;
+      this.lastID = this.personalData.empId.slice(-5);
+      this.cenId = this.personalData.centerId;
+      this.comId = this.personalData.companyId;
+      this.initiateJobRole = officerData.jobRole || '';
+      this.initiateId = officerData.empId.slice(-5);
+
+      console.log('Assigned Contact1Code:', this.personalData.contact1Code); // Debug
+      console.log('Assigned Contact1:', this.personalData.contact1); // Debug
+      console.log('Assigned Contact2Code:', this.personalData.contact2Code); // Debug
+      console.log('Assigned Contact2:', this.personalData.contact2); // Debug
+      this.matchExistingBankToDropdown();
+      this.getAllCollectionCetnter()
+      this.getAllCollectionManagers();
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Error fetching officer data:', error);
+      this.isLoading = false;
+    },
+  });
+}
 
 
   getFlagUrl(countryCode: string): string {

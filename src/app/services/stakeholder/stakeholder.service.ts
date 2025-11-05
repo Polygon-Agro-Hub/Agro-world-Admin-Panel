@@ -11,7 +11,7 @@ export class StakeholderService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getAdminUserData(): Observable<any> {
     const headers = new HttpHeaders({
@@ -63,7 +63,10 @@ export class StakeholderService {
               ? `${item.phoneCode1} ${item.phoneNumber1}`
               : 'N/A',
             nic: item.nic || 'N/A',
-            modifiedBy: item.modifyBy || 'System',
+            modifyBy: item.modifyBy || '--',
+            assignDistrict: (item.assignDistrict)
+              ? item.assignDistrict.split(',')
+              : ['--']
           }));
         }),
         catchError((error) => {
@@ -105,18 +108,18 @@ export class StakeholderService {
   }
 
   getAllManagerList(): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
-  
-  return this.http.get(
-    `${this.apiUrl}auth/get-all-manager-list`,
-    {
-      headers,
-    }
-  );
-}
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get(
+      `${this.apiUrl}auth/get-all-manager-list`,
+      {
+        headers,
+      }
+    );
+  }
 
   getForCreateId(role: string): Observable<any> {
     const headers = new HttpHeaders({

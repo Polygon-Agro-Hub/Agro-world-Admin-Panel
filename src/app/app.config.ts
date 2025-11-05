@@ -14,7 +14,7 @@ import { CustomUrlSerializer } from './guards/custom-url-serializer';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    { provide: UrlSerializer, useClass: CustomUrlSerializer }, //this one for encript url
+    // { provide: UrlSerializer, useClass: CustomUrlSerializer }, //this one for encript url
     provideClientHydration(),
     provideAnimationsAsync(), provideAnimationsAsync(),
     provideHttpClient(withInterceptors([authInterceptor])), provideAnimationsAsync(), // Use the function-based interceptor

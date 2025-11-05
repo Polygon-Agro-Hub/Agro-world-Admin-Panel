@@ -75,6 +75,7 @@
           optionLabel="label"
           optionValue="value"
           placeholder="Select Company"
+          [filter]="true" filterBy="label"
           styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         ></p-dropdown>
         <div
@@ -98,7 +99,7 @@
         <input
           id="srtName"
           type="text"
-          formControlName="srtName"
+          formControlName="srtName" (input)="trimLeadingSpaces($event,'srtName')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
@@ -127,7 +128,7 @@
         <input
           id="srtNumber"
           type="text"
-          formControlName="srtNumber"
+          formControlName="srtNumber" (input)="trimLeadingSpaces($event,'srtNumber')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
@@ -151,7 +152,7 @@
         <label
           for="noOfVisit"
           class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Number of Visits</label
+          >Number of Visits *</label
         >
         <input
           id="noOfVisit"
@@ -212,7 +213,7 @@
         <input
           id="accreditation"
           type="text"
-          formControlName="accreditation"
+          formControlName="accreditation" (input)="trimLeadingSpaces($event,'accreditation')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
@@ -294,7 +295,7 @@
         <input
           id="timeLine"
           type="number"
-          formControlName="timeLine"
+          formControlName="timeLine" (keydown)="preventDecimalInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
@@ -424,7 +425,7 @@
       <textarea
         id="scope"
         rows="3"
-        formControlName="scope"
+        formControlName="scope" (input)="trimLeadingSpaces($event,'scope')"
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         [ngClass]="{
           'border-red-500':

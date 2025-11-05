@@ -98,7 +98,7 @@ export class EditCertificateDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
     private certificateCompanyService: CertificateCompanyService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
@@ -678,6 +678,19 @@ export class EditCertificateDetailsComponent implements OnInit {
         behavior: 'smooth',
         block: 'center',
       });
+    }
+  }
+
+  trimLeadingSpaces(event: any, varibleName: string) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/^\s+/, '');
+    this.certificateForm.get(varibleName)?.setValue(input.value);
+  }
+  preventDecimalInput(event: KeyboardEvent) {
+    // Prevent decimal point, comma, and 'e' for exponential notation
+    const forbiddenKeys = ['.', ',', 'e', 'E'];
+    if (forbiddenKeys.includes(event.key)) {
+      event.preventDefault();
     }
   }
 }

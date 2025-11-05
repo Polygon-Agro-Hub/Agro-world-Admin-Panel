@@ -2,7 +2,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule, Location  } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
@@ -68,6 +68,7 @@ export class CollectiveofficersEditComponent {
   initiateId!: string;
   errorMessage: string = '';
   img!: string;
+  isApproved: boolean = false;
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -197,6 +198,10 @@ export class CollectiveofficersEditComponent {
         this.personalData.confirmAccNumber = officerData.accNumber || '';
         this.personalData.empType = officerData.empType || '';
         this.personalData.image = officerData.image || '';
+        this.personalData.status = officerData.status || '';
+
+        // Check if status is "Approved"
+        this.isApproved = this.personalData.status === 'Approved';
 
         this.selectedLanguages = this.personalData.languages
           ? this.personalData.languages.split(',')
@@ -231,7 +236,7 @@ export class CollectiveofficersEditComponent {
   }
 
   changeCenter(event: any): void {
-    
+
     this.personalData.irmId = null;
     this.getAllCollectionManagers();
   }
@@ -339,14 +344,14 @@ export class CollectiveofficersEditComponent {
 
   onBankChange() {
     const selectedBankName = this.personalData.bankName;
-    
+
     if (selectedBankName) {
       const selectedBank = this.banks.find((bank) => bank.name === selectedBankName);
-      
+
       if (selectedBank) {
         this.selectedBankId = selectedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-        
+
         this.branchOptions = this.branches.map(branch => ({
           label: branch.name,
           value: branch.name
@@ -382,7 +387,7 @@ export class CollectiveofficersEditComponent {
       const matchedBank = this.banks.find(
         (bank) => bank.name === this.personalData.bankName
       );
-      
+
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
@@ -390,7 +395,7 @@ export class CollectiveofficersEditComponent {
           label: branch.name,
           value: branch.name
         }));
-        
+
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(
             (branch) => branch.name === this.personalData.branchName
@@ -982,7 +987,7 @@ export class CollectiveofficersEditComponent {
     }
 
     this.selectedPage = page;
-    
+
   }
 
   updateProvince(event: DropdownChangeEvent): void {
@@ -1088,7 +1093,7 @@ export class CollectiveofficersEditComponent {
   }
 
   onSubmit() {
-    
+
 
     const missingFields: string[] = [];
 
@@ -1257,7 +1262,7 @@ export class CollectiveofficersEditComponent {
           phoneCode02: this.personalData.contact2Code || this.personalData.contact1Code || '+94',
         };
 
-        
+
 
         this.collectionOfficerService
           .editCollectiveOfficer(payload, this.itemId, this.selectedImage)
@@ -1489,6 +1494,7 @@ class Personal {
   bankName!: string;
   branchName!: string;
   confirmPassword!: string;
+  status!: string;
 }
 
 class CollectionCenter {

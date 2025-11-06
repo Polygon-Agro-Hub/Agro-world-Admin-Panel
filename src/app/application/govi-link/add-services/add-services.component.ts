@@ -201,7 +201,7 @@ export class AddServicesComponent {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You may lose the entered data after going back!',
+      text: 'You may lose the added data after canceling.',
       showCancelButton: true,
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',

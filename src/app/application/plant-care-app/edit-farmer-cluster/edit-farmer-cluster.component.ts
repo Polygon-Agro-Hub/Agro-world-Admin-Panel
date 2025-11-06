@@ -109,7 +109,7 @@ export class EditFarmerClusterComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -120,6 +120,7 @@ export class EditFarmerClusterComponent implements OnInit {
       }
     });
   }
+
 
   fetchClusterUsers() {
     this.isLoading = true;
@@ -404,6 +405,49 @@ export class EditFarmerClusterComponent implements OnInit {
     this.farmIdError = '';
   }
 
+
+
+
+  restrictNICInput(event: KeyboardEvent): void {
+    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'];
+    const char = event.key;
+
+    // Allow control keys
+    if (allowedKeys.includes(char)) {
+      return;
+    }
+
+    // Allow only alphanumeric characters (letters and numbers)
+    if (!/^[a-zA-Z0-9]$/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // Add method to validate NIC on input
+  onNICInput(): void {
+    const trimmedNIC = this.newFarmerNIC.trim();
+
+    if (trimmedNIC.length === 0) {
+      this.nicError = '';
+    } else if (trimmedNIC.length < 9) {
+      this.nicError = 'NIC must be at least 9 characters';
+    } else {
+      this.nicError = '';
+    }
+  }
+
+  // Add method to validate Farm ID on input
+  onFarmIdInput(): void {
+    const trimmedFarmId = this.newFarmerFarmId.trim();
+
+    if (trimmedFarmId.length === 0) {
+      this.farmIdError = '';
+    } else {
+      this.farmIdError = '';
+    }
+  }
+
+  // Update submitAddFarmer method
   submitAddFarmer() {
     this.nicError = '';
     this.farmIdError = '';
@@ -425,14 +469,8 @@ export class EditFarmerClusterComponent implements OnInit {
       return;
     }
 
-    if (this.newFarmerFarmId.trim().length < 1) {
-      this.farmIdError = 'Farm ID is required';
-      return;
-    }
-
     this.isLoading = true;
-    
-    // Prepare data to send to backend
+
     const addFarmerData = {
       nic: this.newFarmerNIC.trim(),
       farmId: this.newFarmerFarmId.trim()
@@ -459,8 +497,7 @@ export class EditFarmerClusterComponent implements OnInit {
         (error) => {
           this.isLoading = false;
           const errorMessage = error.error?.message || 'Failed to add farmer';
-          
-          // Check if error is specifically for NIC or Farm ID
+
           if (errorMessage.toLowerCase().includes('nic')) {
             this.nicError = errorMessage;
           } else if (errorMessage.toLowerCase().includes('farm')) {
@@ -472,11 +509,12 @@ export class EditFarmerClusterComponent implements OnInit {
       );
   }
 
+
   // Helper method to check if form is valid
   isAddFarmerFormValid(): boolean {
-    return this.newFarmerNIC.trim().length >= 9 && 
-           this.newFarmerFarmId.trim().length > 0 && 
-           !this.isLoading;
+    return this.newFarmerNIC.trim().length >= 9 &&
+      this.newFarmerFarmId.trim().length > 0 &&
+      !this.isLoading;
   }
 
   private showErrorPopup(title: string, message: string) {

@@ -31,7 +31,7 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
   isLoading = false;
   hasData: boolean = true;
   searchTerm: string = '';
-  
+
   // Status modal properties
   showStatusModal: boolean = false;
   selectedCluster: FarmerCluster | null = null;
@@ -44,7 +44,7 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
     private router: Router,
     private location: Location,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchClusters();
@@ -68,7 +68,21 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
     this.farmerClusterService.getAllFarmerClusters(this.searchTerm).subscribe(
       (response) => {
         this.isLoading = false;
-        this.clusters = response.data as FarmerCluster[];
+        let fetchedClusters = response.data as FarmerCluster[];
+
+        this.clusters = fetchedClusters.sort((a, b) => {
+ 
+          const statusA = a.status === 'Started' ? 1 : 0;
+          const statusB = b.status === 'Started' ? 1 : 0;
+
+          if (statusA !== statusB) {
+            return statusA - statusB;
+          }
+
+          // If same status, sort alphabetically by cluster name
+          return (a.clusterName || '').localeCompare(b.clusterName || '');
+        });
+
         this.hasData = this.clusters.length > 0;
       },
       (error) => {
@@ -92,11 +106,11 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
     this.showStatusModal = true;
     this.countdown = 30;
     this.isCountdownCompleted = false;
-    
+
     this.clearCountdown();
     this.countdownInterval = setInterval(() => {
       this.countdown--;
-      
+
       if (this.countdown <= 0) {
         this.isCountdownCompleted = true;
         this.autoCancelStatusUpdate();
@@ -109,7 +123,7 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
     this.showStatusModal = false;
     this.selectedCluster = null;
     this.isCountdownCompleted = false;
-    
+
     // Show cancellation message only if user manually cancelled
     if (this.countdown > 0) {
       Swal.fire({
@@ -127,7 +141,7 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
   autoCancelStatusUpdate() {
     this.clearCountdown();
     this.showStatusModal = false;
-    
+
     Swal.fire({
       title: 'Time Expired',
       text: 'Status update was automatically cancelled due to inactivity.',
@@ -137,7 +151,7 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
         title: 'font-semibold text-lg',
       },
     });
-    
+
     this.selectedCluster = null;
     this.isCountdownCompleted = false;
   }
@@ -146,7 +160,7 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
     this.clearCountdown();
     this.showStatusModal = false;
     this.isCountdownCompleted = false;
-    
+
     if (this.selectedCluster) {
       this.isLoading = true;
       // Call your API to update the cluster status to "Started"

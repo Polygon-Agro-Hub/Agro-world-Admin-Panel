@@ -113,6 +113,20 @@ export class AddFiealdOfficerComponent implements OnInit {
     { name: 'Vavuniya', province: 'Northern' },
   ];
 
+  provinces = [
+    { name: 'Central' },
+    { name: 'Eastern' },
+    { name: 'Northern' },
+    { name: 'North Central' },
+    { name: 'North Western' },
+    { name: 'Sabaragamuwa' },
+    { name: 'Southern' },
+    { name: 'Uva' },
+    { name: 'Western' }
+  ];
+
+  filteredDistricts: { name: string; province: string }[] = [];
+
   countries: PhoneCode[] = [
     { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
     { code: 'VN', dialCode: '+84', name: 'Vietnam' },
@@ -127,8 +141,8 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   markFieldAsTouched(fieldName: keyof Personal): void {
-  this.touchedFields[fieldName] = true;
-}
+    this.touchedFields[fieldName] = true;
+  }
 
   back(): void {
     Swal.fire({
@@ -152,6 +166,25 @@ export class AddFiealdOfficerComponent implements OnInit {
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  onProvinceChange(event: DropdownChangeEvent): void {
+    const selectedProvince = event.value;
+
+    // Filter districts based on selected province
+    this.filteredDistricts = this.districts.filter(
+      (district) => district.province === selectedProvince
+    );
+
+    // Reset district selection when province changes
+    if (this.personalData.distrct) {
+      const districtStillValid = this.filteredDistricts.some(
+        d => d.name === this.personalData.distrct
+      );
+      if (!districtStillValid) {
+        this.personalData.distrct = '';
+      }
+    }
   }
 
   onFileSelected(event: any): void {
@@ -244,22 +277,22 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
-  const isTouched = !!this.touchedFields[fieldName];
-  
-  if (!isTouched) {
-    return false;
+    const isTouched = !!this.touchedFields[fieldName];
+
+    if (!isTouched) {
+      return false;
+    }
+
+    const value = this.personalData[fieldName];
+
+    // Special handling for assignDistrict array
+    if (fieldName === 'assignDistrict') {
+      return !value || (Array.isArray(value) && value.length === 0);
+    }
+
+    // Default validation for other fields
+    return !value;
   }
-  
-  const value = this.personalData[fieldName];
-  
-  // Special handling for assignDistrict array
-  if (fieldName === 'assignDistrict') {
-    return !value || (Array.isArray(value) && value.length === 0);
-  }
-  
-  // Default validation for other fields
-  return !value;
-}
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
@@ -268,12 +301,12 @@ export class AddFiealdOfficerComponent implements OnInit {
   selectjobRole(role: string) {
     this.personalData.jobRole = role;
     this.toggleDropdown();
-    
+
     // Reset irmId when job role changes
     if (role !== 'Field Officer') {
       this.personalData.irmId = '';
     }
-    
+
     this.EpmloyeIdCreate();
   }
 
@@ -299,17 +332,17 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   getAllCollectionManagers() {
-  this.stakeHolderSrv
-    .getAllManagerList()
-    .subscribe((res) => {
-      this.fiealdManagerData = res;
-      // Convert to dropdown options format
-      this.managerOptions = this.fiealdManagerData.map((manager) => ({
-        label: manager.firstName + ' ' + manager.lastName,
-        value: manager.id,
-      }));
-    });
-}
+    this.stakeHolderSrv
+      .getAllManagerList()
+      .subscribe((res) => {
+        this.fiealdManagerData = res;
+        // Convert to dropdown options format
+        this.managerOptions = this.fiealdManagerData.map((manager) => ({
+          label: manager.firstName + ' ' + manager.lastName,
+          value: manager.id,
+        }));
+      });
+  }
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -617,10 +650,10 @@ export class AddFiealdOfficerComponent implements OnInit {
       //   missingFields.push('Company Name is Required');
       // }
 
-    //   if (!this.personalData.assignDistrict || 
-    //     (Array.isArray(this.personalData.assignDistrict) && this.personalData.assignDistrict.length === 0)) {
-    //   missingFields.push('Assigned Districts is Required');
-    // }
+      //   if (!this.personalData.assignDistrict || 
+      //     (Array.isArray(this.personalData.assignDistrict) && this.personalData.assignDistrict.length === 0)) {
+      //   missingFields.push('Assigned Districts is Required');
+      // }
 
       if (!this.personalData.jobRole) {
         missingFields.push('Job Role is Required');
@@ -849,21 +882,21 @@ export class AddFiealdOfficerComponent implements OnInit {
     return true;
   }
 
-  updateProvince(event: DropdownChangeEvent): void {
-    const selectedDistrict = event.value;
+  // updateProvince(event: DropdownChangeEvent): void {
+  //   const selectedDistrict = event.value;
 
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
+  //   const selected = this.districts.find(
+  //     (district) => district.name === selectedDistrict
+  //   );
 
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
-    }
-  }
+  //   if (this.itemId === null) {
+  //     if (selected) {
+  //       this.personalData.province = selected.province;
+  //     } else {
+  //       this.personalData.province = '';
+  //     }
+  //   }
+  // }
 
   preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
     // Handle space restrictions first
@@ -879,58 +912,58 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   formatAmount(event: KeyboardEvent): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
 
-  // Allow control keys (backspace, delete, arrows, tab, etc.)
-  if ([8, 9, 46, 37, 39, 116].includes(event.which)) {
-    return;
-  }
+    // Allow control keys (backspace, delete, arrows, tab, etc.)
+    if ([8, 9, 46, 37, 39, 116].includes(event.which)) {
+      return;
+    }
 
-  const char = String.fromCharCode(event.which);
+    const char = String.fromCharCode(event.which);
 
-  // Allow only numbers and decimal point
-  if (!/[0-9.]/.test(char)) {
-    event.preventDefault();
-    return;
-  }
-
-  // Prevent multiple decimal points
-  if (char === '.' && value.includes('.')) {
-    event.preventDefault();
-    return;
-  }
-
-  // Check if adding this character would exceed 100
-  const testValue = value + char;
-  const numericValue = parseFloat(testValue);
-  
-  if (!isNaN(numericValue) && numericValue > 100) {
-    event.preventDefault();
-    return;
-  }
-
-  // If adding decimal point, automatically add .00
-  if (char === '.' && !value.includes('.')) {
-    // Let the decimal point be added naturally, then format
-    setTimeout(() => {
-      if (!value.endsWith('.00')) {
-        input.value = value + '00';
-        // Move cursor before the zeros
-        const position = value.length + 1;
-        input.setSelectionRange(position, position);
-      }
-    }, 0);
-  }
-
-  // Limit to 2 decimal places
-  if (value.includes('.')) {
-    const decimalPart = value.split('.')[1];
-    if (decimalPart && decimalPart.length >= 2) {
+    // Allow only numbers and decimal point
+    if (!/[0-9.]/.test(char)) {
       event.preventDefault();
+      return;
+    }
+
+    // Prevent multiple decimal points
+    if (char === '.' && value.includes('.')) {
+      event.preventDefault();
+      return;
+    }
+
+    // Check if adding this character would exceed 100
+    const testValue = value + char;
+    const numericValue = parseFloat(testValue);
+
+    if (!isNaN(numericValue) && numericValue > 100) {
+      event.preventDefault();
+      return;
+    }
+
+    // If adding decimal point, automatically add .00
+    if (char === '.' && !value.includes('.')) {
+      // Let the decimal point be added naturally, then format
+      setTimeout(() => {
+        if (!value.endsWith('.00')) {
+          input.value = value + '00';
+          // Move cursor before the zeros
+          const position = value.length + 1;
+          input.setSelectionRange(position, position);
+        }
+      }, 0);
+    }
+
+    // Limit to 2 decimal places
+    if (value.includes('.')) {
+      const decimalPart = value.split('.')[1];
+      if (decimalPart && decimalPart.length >= 2) {
+        event.preventDefault();
+      }
     }
   }
-}
 
   hasInvalidAccountHolderCharacters(): boolean {
     const value = this.personalData.accName;
@@ -1037,7 +1070,8 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.EpmloyeIdCreate();
     // Pre-fill country with Sri Lanka
     this.personalData.country = 'Sri Lanka';
-    
+    this.getAllCollectionManagers();
+
     // Initialize assignDistrict as array
     this.personalData.assignDistrict = [];
   }
@@ -1451,17 +1485,24 @@ export class AddFiealdOfficerComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
 
+        // Store original array reference
+        const originalAssignDistrict = this.personalData.assignDistrict ? [...this.personalData.assignDistrict] : [];
+
         // Convert assignDistrict array to string for database storage
         let assignDistrictString = '';
         if (this.personalData.assignDistrict && Array.isArray(this.personalData.assignDistrict)) {
           assignDistrictString = this.personalData.assignDistrict.join(',');
         }
-        // Ensure assignDistrict string is included in personalData for backend processing
-        this.personalData.assignDistrict = assignDistrictString as any;
 
-        // Call the service method with up to 6 arguments (personalData and up to 5 files)
+        // Create a copy of personalData with string assignDistrict for API call
+        const dataToSend = {
+          ...this.personalData,
+          assignDistrict: assignDistrictString
+        };
+
+        // Call the service method with the modified data
         this.stakeHolderSrv.createFieldOfficer(
-          this.personalData,
+          dataToSend,
           this.selectedFile, // profile image
           this.selectedFrontNicFile,
           this.selectedBackNicFile,
@@ -1484,6 +1525,10 @@ export class AddFiealdOfficerComponent implements OnInit {
           },
           (error: any) => {
             this.isLoading = false;
+
+            // Restore original array so UI displays correctly when user returns
+            this.personalData.assignDistrict = originalAssignDistrict;
+
             let errorMessage = 'An unexpected error occurred';
             let messages: string[] = [];
 
@@ -1494,11 +1539,11 @@ export class AddFiealdOfficerComponent implements OnInit {
                   case 'NIC':
                     return 'The NIC number is already registered.';
                   case 'Email':
-                    return 'Email already exists.';
+                    return 'Email is already registered.';
                   case 'PhoneNumber01':
-                    return 'Mobile Number 1 already exists.';
+                    return 'Mobile Number 01 is already registered.';
                   case 'PhoneNumber02':
-                    return 'Mobile Number 2 already exists.';
+                    return 'Mobile Number 02 is already registered.';
                   default:
                     return 'Validation error: ' + err;
                 }
@@ -1506,7 +1551,7 @@ export class AddFiealdOfficerComponent implements OnInit {
             }
 
             if (messages.length > 0) {
-              errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+              errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following duplicate field issues:</p><ul class="list-disc pl-5">';
               messages.forEach(m => {
                 errorMessage += `<li>${m}</li>`;
               });

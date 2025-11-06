@@ -264,9 +264,7 @@
                 " class="text-red-600 text-sm block">
                 Please enter a valid mobile number (format: +947XXXXXXXX)
               </span>
-              <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
-                Mobile Number - 01 and Mobile Number - 02 cannot be the same
-              </span>
+              
 
               <span *ngIf="!personalData.phoneNumber1 && phone01Input.touched" class="text-red-500 text-sm mt-1">
                 Mobile Number - 01 is Required.
@@ -319,6 +317,9 @@
                   !isValidPhoneNumber(personalData.phoneNumber2)
                 " class="text-red-600 text-sm block">
                 Please enter a valid mobile number (format: +947XXXXXXXX)
+              </span>
+              <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
+                Mobile Number - 01 and Mobile Number - 02 cannot be the same
               </span>
             </div>
           </div>

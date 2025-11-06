@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-edit-services',
   standalone: true,
@@ -113,6 +114,7 @@ export class EditServicesComponent implements OnInit {
   }
 
   onUpdateService(form: NgForm) {
+    // First validate the form
     const missingFields: string[] = [];
 
     if (!this.serviceData.englishName?.trim()) {
@@ -154,6 +156,27 @@ export class EditServicesComponent implements OnInit {
       return;
     }
 
+    // Show confirmation popup before updating
+    Swal.fire({
+      icon: 'question',
+      title: 'Are you sure?',
+      text: 'Do you really want to update this service?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Update',
+      cancelButtonText: 'No, Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.performUpdate();
+      }
+      // If user clicked "No, Cancel", do nothing and stay on the page
+    });
+  }
+
+  private performUpdate() {
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;

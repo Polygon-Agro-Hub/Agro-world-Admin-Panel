@@ -452,10 +452,12 @@
       type="number" 
       step="0.01" 
       min="0" 
+      max="100"
       [(ngModel)]="personalData.comAmount"
-      (input)="onTrimInput($event, personalData, 'comAmount')" 
-      (keypress)="formatAmount($event)"
+      (input)="onCommissionAmountInput($event)"
+      (keypress)="allowDecimalNumbers($event)"
       class="flex-1 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+      placeholder="0.00"
     />
     <span class="ml-2 text-gray-700 dark:text-gray-300 font-medium">%</span>
   </div>
@@ -465,9 +467,9 @@
   <span *ngIf="
       personalData.comAmount !== null &&
       personalData.comAmount !== undefined &&
-      personalData.comAmount <= 0
+      (personalData.comAmount < 0 || personalData.comAmount > 100)
     " class="text-red-600 text-sm">
-    Commission Amount must be greater than 0
+    Commission Amount must be between 0 and 100
   </span>
 </div>
 

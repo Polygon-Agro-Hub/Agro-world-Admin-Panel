@@ -195,6 +195,75 @@ export class EditFiealdOfficerComponent implements OnInit {
     this.personalData.distrct = selectedDistrict;
   }
 
+  // Add this method to handle commission amount input
+  onCommissionAmountInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    // Ensure proper decimal formatting
+    if (value.includes('.')) {
+      const parts = value.split('.');
+      if (parts[1].length > 2) {
+        // Limit to 2 decimal places
+        value = parts[0] + '.' + parts[1].substring(0, 2);
+        input.value = value;
+        this.personalData.comAmount = parseFloat(value);
+      }
+    }
+  }
+
+  // Replace the existing formatAmount method with this one
+  allowDecimalNumbers(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+    const currentValue = input.value;
+    
+    // Allow control keys: backspace, delete, tab, escape, enter
+    if ([8, 9, 27, 13, 46].indexOf(event.keyCode) !== -1 ||
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (event.keyCode === 65 && event.ctrlKey === true) ||
+      (event.keyCode === 67 && event.ctrlKey === true) ||
+      (event.keyCode === 86 && event.ctrlKey === true) ||
+      (event.keyCode === 88 && event.ctrlKey === true) ||
+      // Allow: home, end, left, right
+      (event.keyCode >= 35 && event.keyCode <= 39)) {
+      return;
+    }
+
+    // Allow numbers (0-9)
+    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+        (event.keyCode >= 96 && event.keyCode <= 105)) {
+      return;
+    }
+
+    // Allow decimal point (.) but only one
+    if (event.keyCode === 190 || event.keyCode === 110) {
+      // Check if decimal point already exists
+      if (currentValue.includes('.')) {
+        event.preventDefault();
+        return;
+      }
+      // Don't allow decimal point at the beginning
+      if (currentValue.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      return;
+    }
+
+    // Prevent any other key
+    event.preventDefault();
+  }
+
+  // Update the validation method for commission amount
+  isValidCommissionAmount(): boolean {
+    const amount = this.personalData.comAmount;
+    return amount !== null && 
+           amount !== undefined && 
+           amount >= 0 && 
+           amount <= 100;
+  }
+
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -901,51 +970,6 @@ export class EditFiealdOfficerComponent implements OnInit {
     }
   }
 
-  formatAmount(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value;
-
-    // Allow control keys
-    if ([8, 9, 46, 37, 39, 116].includes(event.which)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-
-    // Allow only numbers and decimal point
-    if (!/[0-9.]/.test(char)) {
-      event.preventDefault();
-      return;
-    }
-
-    // Prevent multiple decimal points
-    if (char === '.' && value.includes('.')) {
-      event.preventDefault();
-      return;
-    }
-
-    // If adding decimal point, automatically add .00
-    if (char === '.' && !value.includes('.')) {
-      // Let the decimal point be added naturally, then format
-      setTimeout(() => {
-        if (!value.endsWith('.00')) {
-          input.value = value + '00';
-          // Move cursor before the zeros
-          const position = value.length + 1;
-          input.setSelectionRange(position, position);
-        }
-      }, 0);
-    }
-
-    // Limit to 2 decimal places
-    if (value.includes('.')) {
-      const decimalPart = value.split('.')[1];
-      if (decimalPart && decimalPart.length >= 2) {
-        event.preventDefault();
-      }
-    }
-  }
-
   hasInvalidAccountHolderCharacters(): boolean {
     const value = this.personalData.accName;
     if (!value) return false;
@@ -1150,8 +1174,8 @@ private showErrorAndRedirect(message: string): void {
   this.personalData.province = officerData.province;
   this.personalData.country = officerData.country || 'Sri Lanka';
   
-  // Bank Details
-  this.personalData.comAmount = officerData.comAmount;
+  // Bank Details - FIXED: Handle decimal numbers properly
+  this.personalData.comAmount = officerData.comAmount ? parseFloat(officerData.comAmount) : 0;
   this.personalData.accName = officerData.accHolderName || officerData.accName;
   this.personalData.accNumber = officerData.accNumber;
   this.personalData.bank = officerData.bankName || officerData.bank;
@@ -1279,8 +1303,10 @@ private showErrorAndRedirect(message: string): void {
   validateBankDetails(): string[] {
     const errors: string[] = [];
 
-    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      errors.push('Commission Amount is required and must be greater than 0');
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      errors.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      errors.push('Commission Amount must be between 0 and 100');
     }
 
     if (!this.personalData.accName) {
@@ -1313,11 +1339,6 @@ private showErrorAndRedirect(message: string): void {
     // Account number should be between 8-16 digits
     const accountRegex = /^\d{8,16}$/;
     return accountRegex.test(accNumber);
-  }
-
-  isValidCommissionAmount(): boolean {
-    const amount = this.personalData.comAmount;
-    return amount !== null && amount !== undefined && amount > 0;
   }
 
   markPageTwoFieldsAsTouched(): void {
@@ -1605,8 +1626,10 @@ private showErrorAndRedirect(message: string): void {
       missingFields.push('Branch Name is Required');
     }
 
-    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      missingFields.push('Commission Amount is required and must be greater than 0');
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      missingFields.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      missingFields.push('Commission Amount must be between 0 and 100');
     }
 
     // Check assigned districts
@@ -1901,8 +1924,10 @@ private showErrorAndRedirect(message: string): void {
       missingFields.push('Branch Name is Required');
     }
 
-    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      missingFields.push('Commission Amount is required and must be greater than 0');
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      missingFields.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      missingFields.push('Commission Amount must be between 0 and 100');
     }
 
     // Check assigned districts

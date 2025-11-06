@@ -402,30 +402,37 @@
         </div>
 
         <div class="pb-6">
-          <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Province *
-          </label>
-          <input id="province" name="province" [(ngModel)]="personalData.province"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            readonly />
-        </div>
+  <label for="province" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Province *
+  </label>
+  <p-dropdown id="province" name="province" [(ngModel)]="personalData.province" 
+              (onChange)="onProvinceChange($event)"
+              [options]="provinces" optionLabel="name" optionValue="name" 
+              filter="true" filterBy="name" placeholder="Select a province" 
+              class="mt-1 block w-full" [autoDisplayFirst]="false" required
+              styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+              class="mt-1 block w-full p-dropdown-custom">
+  </p-dropdown>
+  <span *ngIf="isFieldInvalid('province')" class="text-red-600 text-sm">
+    Province is a required field
+  </span>
+</div>
 
         <div class="pb-6">
-          <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            District *
-          </label>
-
-          <p-dropdown id="distrct" name="distrct" [(ngModel)]="personalData.distrct" (onChange)="updateProvince($event)"
-            [options]="districts" optionLabel="name" optionValue="name" filter="true" filterBy="name"
-            placeholder="Select a district" class="mt-1 block w-full" [autoDisplayFirst]="false" required
-            styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-            class="mt-1 block w-full p-dropdown-custom">
-          </p-dropdown>
-
-          <span *ngIf="isFieldInvalid('distrct')" class="text-red-600 text-sm">
-            District is a required field
-          </span>
-        </div>
+  <label for="district" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    District *
+  </label>
+  <p-dropdown id="distrct" name="distrct" [(ngModel)]="personalData.distrct" 
+              [options]="filteredDistricts" optionLabel="name" optionValue="name" 
+              filter="true" filterBy="name" placeholder="Select a district" 
+              class="mt-1 block w-full" [autoDisplayFirst]="false" required
+              styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
+              class="mt-1 block w-full p-dropdown-custom">
+  </p-dropdown>
+  <span *ngIf="isFieldInvalid('distrct')" class="text-red-600 text-sm">
+    District is a required field
+  </span>
+</div>
       </div>
     </div>
 

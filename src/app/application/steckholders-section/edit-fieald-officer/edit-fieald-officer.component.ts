@@ -76,6 +76,37 @@ export class EditFiealdOfficerComponent implements OnInit {
   selectedPassbookImage: string | ArrayBuffer | null = null;
   selectedContractImage: string | ArrayBuffer | null = null;
 
+  // Add these properties for province-district functionality
+  provinces: any[] = [];
+  filteredDistricts: any[] = [];
+  allDistricts = [
+    { name: 'Ampara', province: 'Eastern' },
+    { name: 'Anuradhapura', province: 'North Central' },
+    { name: 'Badulla', province: 'Uva' },
+    { name: 'Batticaloa', province: 'Eastern' },
+    { name: 'Colombo', province: 'Western' },
+    { name: 'Galle', province: 'Southern' },
+    { name: 'Gampaha', province: 'Western' },
+    { name: 'Hambantota', province: 'Southern' },
+    { name: 'Jaffna', province: 'Northern' },
+    { name: 'Kalutara', province: 'Western' },
+    { name: 'Kandy', province: 'Central' },
+    { name: 'Kegalle', province: 'Sabaragamuwa' },
+    { name: 'Kilinochchi', province: 'Northern' },
+    { name: 'Kurunegala', province: 'North Western' },
+    { name: 'Mannar', province: 'Northern' },
+    { name: 'Matale', province: 'Central' },
+    { name: 'Matara', province: 'Southern' },
+    { name: 'Monaragala', province: 'Uva' },
+    { name: 'Mullaitivu', province: 'Northern' },
+    { name: 'Nuwara Eliya', province: 'Central' },
+    { name: 'Polonnaruwa', province: 'North Central' },
+    { name: 'Puttalam', province: 'North Western' },
+    { name: 'Rathnapura', province: 'Sabaragamuwa' },
+    { name: 'Trincomalee', province: 'Eastern' },
+    { name: 'Vavuniya', province: 'Northern' },
+  ];
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -124,6 +155,44 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
+
+  // Initialize provinces
+  initializeProvinces(): void {
+    const uniqueProvinces = [...new Set(this.allDistricts.map(district => district.province))];
+    this.provinces = uniqueProvinces.map(province => ({ name: province }));
+    
+    // If editing, filter districts based on existing province
+    if (this.personalData.province) {
+      this.filterDistrictsByProvince(this.personalData.province);
+    }
+  }
+
+  // Handle province change
+  onProvinceChange(event: DropdownChangeEvent): void {
+    const selectedProvince = event.value;
+    this.personalData.province = selectedProvince;
+    
+    // Filter districts based on selected province
+    this.filterDistrictsByProvince(selectedProvince);
+    
+    // Clear district selection when province changes
+    this.personalData.distrct = '';
+  }
+
+  // Filter districts by province
+  filterDistrictsByProvince(province: string): void {
+    if (province) {
+      this.filteredDistricts = this.allDistricts.filter(district => district.province === province);
+    } else {
+      this.filteredDistricts = [];
+    }
+  }
+
+  // Handle district change
+  onDistrictChange(event: DropdownChangeEvent): void {
+    const selectedDistrict = event.value;
+    this.personalData.distrct = selectedDistrict;
   }
 
   back(): void {
@@ -819,22 +888,6 @@ export class EditFiealdOfficerComponent implements OnInit {
     return true;
   }
 
-  updateProvince(event: DropdownChangeEvent): void {
-    const selectedDistrict = event.value;
-
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
-
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
-    }
-  }
-
   preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
     // Handle space restrictions first
     if (!this.handleSpaceRestrictions(event)) {
@@ -994,6 +1047,7 @@ export class EditFiealdOfficerComponent implements OnInit {
   ngOnInit(): void {
     this.loadBanks();
     this.loadBranches();
+    this.initializeProvinces();
     
     // Get the ID from route parameters
     this.route.params.subscribe(params => {
@@ -1151,10 +1205,12 @@ private showErrorAndRedirect(message: string): void {
     this.selectedImage = officerData.image || officerData.profile;
   }
 
-  // Mark fields as touched if needed (optional)
+  // Filter districts based on the loaded province
   setTimeout(() => {
-    this.touchedFields['assignDistrict'] = true;
-  }, 0);
+    if (this.personalData.province) {
+      this.filterDistrictsByProvince(this.personalData.province);
+    }
+  }, 100);
 }
 
   // Add method to load existing images
@@ -1207,6 +1263,10 @@ private showErrorAndRedirect(message: string): void {
 
     if (!this.personalData.city) {
       errors.push('City is required');
+    }
+
+    if (!this.personalData.province) {
+      errors.push('Province is required');
     }
 
     if (!this.personalData.distrct) {
@@ -1266,6 +1326,7 @@ private showErrorAndRedirect(message: string): void {
       'street',
       'city',
       'distrct',
+      'province',
       'comAmount',
       'accName',
       'accNumber',
@@ -1516,12 +1577,12 @@ private showErrorAndRedirect(message: string): void {
       missingFields.push('City is Required');
     }
 
-    if (!this.personalData.distrct) {
-      missingFields.push('District is Required');
-    }
-
     if (!this.personalData.province) {
       missingFields.push('Province is Required');
+    }
+
+    if (!this.personalData.distrct) {
+      missingFields.push('District is Required');
     }
 
     if (!this.personalData.accName) {
@@ -1812,12 +1873,12 @@ private showErrorAndRedirect(message: string): void {
       missingFields.push('City is Required');
     }
 
-    if (!this.personalData.distrct) {
-      missingFields.push('District is Required');
-    }
-
     if (!this.personalData.province) {
       missingFields.push('Province is Required');
+    }
+
+    if (!this.personalData.distrct) {
+      missingFields.push('District is Required');
     }
 
     if (!this.personalData.accName) {

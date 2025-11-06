@@ -157,18 +157,75 @@ export class AddServicesComponent {
 
   formatEnglishName() {
     if (this.serviceData.englishName) {
-      // Trim leading spaces and capitalize first letter
-      this.serviceData.englishName = this.serviceData.englishName.trimStart();
-      this.serviceData.englishName =
-        this.serviceData.englishName.charAt(0).toUpperCase() +
-        this.serviceData.englishName.slice(1);
+      // Remove any leading spaces and capitalize first letter
+      this.serviceData.englishName = this.serviceData.englishName.replace(/^\s+/, '');
+      if (this.serviceData.englishName.length > 0) {
+        this.serviceData.englishName =
+          this.serviceData.englishName.charAt(0).toUpperCase() +
+          this.serviceData.englishName.slice(1);
+      }
     }
   }
 
   blockFirstSpace(event: KeyboardEvent) {
-    // If the input is empty and user presses space, prevent it
-    if (this.serviceData.englishName.length === 0 && event.code === 'Space') {
+    const target = event.target as HTMLInputElement;
+    const cursorPosition = target.selectionStart;
+    
+    // Prevent space if:
+    // 1. Field is completely empty, OR
+    // 2. Cursor is at the beginning of the field
+    if (event.code === 'Space' && (target.value.length === 0 || cursorPosition === 0)) {
       event.preventDefault();
+      return;
+    }
+    
+    // Also prevent multiple consecutive spaces
+    if (event.code === 'Space' && cursorPosition !== null) {
+      // Check if there's a space before the cursor position
+      const textBeforeCursor = target.value.substring(0, cursorPosition);
+      if (textBeforeCursor.endsWith(' ')) {
+        event.preventDefault();
+      }
+    }
+  }
+
+  // Trim fields when they lose focus and remove any leading spaces
+  onFieldBlur(fieldName: 'englishName' | 'sinhalaName' | 'tamilName') {
+    if (this.serviceData[fieldName]) {
+      // Remove any leading spaces
+      this.serviceData[fieldName] = this.serviceData[fieldName].replace(/^\s+/, '');
+      
+      // Capitalize first letter for English name
+      if (fieldName === 'englishName' && this.serviceData.englishName.length > 0) {
+        this.serviceData.englishName =
+          this.serviceData.englishName.charAt(0).toUpperCase() +
+          this.serviceData.englishName.slice(1);
+      }
+    }
+  }
+
+  // Additional method to handle input event and remove leading spaces in real-time
+  onInputField(event: Event, fieldName: 'englishName' | 'sinhalaName' | 'tamilName') {
+    const target = event.target as HTMLInputElement;
+    const originalValue = target.value;
+    
+    // Remove leading spaces
+    const newValue = originalValue.replace(/^\s+/, '');
+    
+    // Update the model if value changed
+    if (newValue !== originalValue) {
+      this.serviceData[fieldName] = newValue;
+      
+      // Force Angular to update the view
+      setTimeout(() => {
+        target.value = newValue;
+      });
+    }
+    
+    // Capitalize first letter for English name
+    if (fieldName === 'englishName' && newValue.length > 0) {
+      this.serviceData.englishName =
+        newValue.charAt(0).toUpperCase() + newValue.slice(1);
     }
   }
 

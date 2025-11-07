@@ -34,7 +34,7 @@ export class EditServicesComponent implements OnInit {
     private route: ActivatedRoute,
     private goviLinkService: GoviLinkService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.serviceId = Number(this.route.snapshot.paramMap.get('id'));
@@ -233,6 +233,29 @@ export class EditServicesComponent implements OnInit {
           }
         },
       });
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent) {
+    const char = event.key;
+    const input = (event.target as HTMLInputElement).value;
+
+    // Allow: numbers (0-9), one decimal point, backspace, delete, arrow keys, tab
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+
+    // Allow control keys
+    if (allowedKeys.includes(char)) {
+      return;
+    }
+
+    // Allow only one decimal point
+    if (char === '.' && !input.includes('.')) {
+      return;
+    }
+
+    // Allow only numbers
+    if (!/^\d$/.test(char)) {
+      event.preventDefault();
+    }
   }
 
   resetForm(form: NgForm) {

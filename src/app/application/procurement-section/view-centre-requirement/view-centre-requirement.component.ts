@@ -21,7 +21,7 @@ interface DistributionOrder {
 
 interface Center {
   id: number;
-  centerName: string; 
+  centerName: string;
 }
 
 @Component({
@@ -41,26 +41,26 @@ interface Center {
 export class ViewCentreRequirementComponent implements OnInit {
   isLoading: boolean = false;
   isDownloading: boolean = false;
-  
+
   distributionOrders: DistributionOrder[] = [];
   centers: Center[] = [];
-  
+
   page: number = 1;
   itemsPerPage: number = 10;
   totalItems: number = 0;
-  
+
   // Filter states
   selectedCenter: Center | null = null;
   selectedDeliveryDate: Date | null = null;
   deliveryDateFilter: string = '';
-  
+
   // Search
   search: string = '';
 
   constructor(
     private procumentsService: ProcumentsService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Set default delivery date to current date + 2 days
@@ -73,7 +73,7 @@ export class ViewCentreRequirementComponent implements OnInit {
     const today = new Date();
     const defaultDate = new Date(today);
     defaultDate.setDate(today.getDate() + 2);
-    
+
     this.selectedDeliveryDate = defaultDate;
     this.deliveryDateFilter = this.formatDate(defaultDate);
   }
@@ -93,9 +93,9 @@ export class ViewCentreRequirementComponent implements OnInit {
 
   loadDistributionOrders(): void {
     this.isLoading = true;
-    
+
     const centerId = this.selectedCenter ? this.selectedCenter.id.toString() : '';
-    
+
     this.procumentsService
       .getDistributionOrders(
         this.page,
@@ -164,15 +164,15 @@ export class ViewCentreRequirementComponent implements OnInit {
     try {
       // Create new PDF document
       const doc = new jsPDF('l', 'mm', 'a4'); // landscape orientation
-      
+
       // Add title
       doc.setFontSize(18);
       doc.text('Distribution Orders Report', 14, 15);
-      
+
       // Add generation date
       doc.setFontSize(10);
       doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
-      
+
       // Add filters info if applied
       let yPos = 28;
       if (this.deliveryDateFilter) {
@@ -274,6 +274,12 @@ export class ViewCentreRequirementComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/procurement']); 
+    this.router.navigate(['/procurement']);
+  }
+
+  clearDeliveryDateFilter(): void {
+    this.setDefaultDeliveryDate();
+    this.page = 1;
+    this.loadDistributionOrders();
   }
 }

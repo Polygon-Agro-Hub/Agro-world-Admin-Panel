@@ -1476,7 +1476,7 @@ fetchData() {
   resetPassword() {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You are about to reset the Collection Officer password. This action cannot be undone.',
+      text: 'You are about to reset the Distribution Officer password. This action cannot be undone.',
       icon: 'info',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -1500,7 +1500,7 @@ fetchData() {
               Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: 'The Collection Officer password reset successfully.',
+                text: 'The Distribution Officer password reset successfully.',
                 showConfirmButton: false,
                 timer: 3000,
                 customClass: {

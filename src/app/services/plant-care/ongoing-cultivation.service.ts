@@ -69,7 +69,7 @@ getOngoingCultivationById(cultivationId: number, userId: number): Observable<any
 
   getUserTasks(
     cropId: number,
-    userId: number,
+    userId: number | null,
     page: number = 1,
     limit: number = 10
   ): Observable<{
@@ -129,11 +129,15 @@ getOngoingCultivationById(cultivationId: number, userId: number): Observable<any
     );
   }
 
-   getFarmsByUser(userId: number): Observable<any> {
+   getFarmsByUser(userId: number | null, searchText:string=''): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
-    return this.http.get<any>(`${this.apiUrl}auth/get-farms-by-user?userId=${userId}`, { headers });
+    let url = `${this.apiUrl}auth/get-farms-by-user?userId=${userId}`;
+
+    if(searchText) url+=`&searchText=${searchText}`
+
+    return this.http.get<any>(url, { headers });
   }
 
   // Delete a farm by ID

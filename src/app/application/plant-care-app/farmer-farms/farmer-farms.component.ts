@@ -5,6 +5,7 @@ import { OngoingCultivationService } from '../../../services/plant-care/ongoing-
 import { CommonModule, NgIf, NgFor } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Location } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface FarmItem {
   no: number;
@@ -19,13 +20,14 @@ interface FarmItem {
   cropName?: string;
   cropCalendarId?: number;
   onCulscropID?: number;
+  regCode:string;
 
 }
 
 @Component({
   selector: 'app-farmer-farms',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, LoadingSpinnerComponent],
+  imports: [CommonModule, NgIf, NgFor, LoadingSpinnerComponent, FormsModule],
   templateUrl: './farmer-farms.component.html',
   styleUrls: ['./farmer-farms.component.css'],
 })
@@ -36,7 +38,7 @@ export class FarmerFarmsComponent implements OnInit {
   isLoading = true;
   hasData = true;
   ongCultivationId: number | null = null;
-
+  searchText: string = '';
 
 
   constructor(
@@ -53,7 +55,7 @@ export class FarmerFarmsComponent implements OnInit {
       this.ongCultivationId = params['ongCultivationId'] || null;
       if (this.userId) {
         this.userFullName = userName;
-        this.fetchFarms(this.userId);
+        this.fetchFarms();
       } else {
         console.error('No userId provided in query parameters');
         this.isLoading = false;
@@ -71,9 +73,10 @@ export class FarmerFarmsComponent implements OnInit {
     });
   }
 
-  fetchFarms(userId: number) {
+  fetchFarms() {
     this.isLoading = true;
-    this.ongoingCultivationService.getFarmsByUser(userId).subscribe({
+    this.searchText = this.searchText.trim();
+    this.ongoingCultivationService.getFarmsByUser(this.userId, this.searchText).subscribe({
       next: (res) => {
         if (res.items && res.items.length > 0) {
           const user = res.items[0];
@@ -86,6 +89,7 @@ export class FarmerFarmsComponent implements OnInit {
             district: farm.farmDistrict,
             staffCount: farm.staffCount ?? 0,
             cultivationCount: farm.cultivationCount,
+            regCode:farm.regCode ?? '-',
             createdDate: new Date(farm.farmCreatedAt).toLocaleDateString(),
             cultivationId: null,
             cropName: null,
@@ -94,7 +98,7 @@ export class FarmerFarmsComponent implements OnInit {
           }));
 
           this.farms.forEach((farm) => {
-            this.ongoingCultivationService.getUserTasks(farm.farmId, userId).subscribe({
+            this.ongoingCultivationService.getUserTasks(farm.farmId, this.userId).subscribe({
               next: (taskRes) => {
                 if (taskRes.items && taskRes.items.length > 0) {
                   const firstTask = taskRes.items[0];
@@ -238,5 +242,14 @@ export class FarmerFarmsComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+
+  onSearch() {
+    this.fetchFarms();
+  }
+
+  offSearch() {
+    this.searchText = '';
+    this.fetchFarms();
   }
 }

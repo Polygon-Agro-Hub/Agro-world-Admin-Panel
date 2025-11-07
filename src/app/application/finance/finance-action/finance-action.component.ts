@@ -18,6 +18,10 @@ export class FinanceActionComponent {
     public permissionService: PermissionService
   ) {}
 
+  farmerPayments(): void {
+    this.router.navigate(['/finance/action/farmer-payments']);
+  }
+
   govicarePackages(): void {
     this.router.navigate(['/finance/action/govicare-packages']);
   }

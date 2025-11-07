@@ -73,6 +73,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   constructor(private goviLinkService: GoviLinkService) {}
 
   ngOnInit(): void {
+    this.dateFilter = new Date();
     this.fetchJobs();
     this.loadDistrictOptions();
   }

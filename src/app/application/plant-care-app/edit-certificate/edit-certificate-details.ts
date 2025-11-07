@@ -436,10 +436,6 @@ export class EditCertificateDetailsComponent implements OnInit {
     this.location.back();
   }
 
-  onCancel(): void {
-    this.router.navigate(['/plant-care/action/view-certificate-list']);
-  }
-
   // Enhanced crop search functionality
   onCropFilter(event: any): void {
     // PrimeNG handles the filtering automatically when filter=true
@@ -564,6 +560,28 @@ export class EditCertificateDetailsComponent implements OnInit {
       return;
     }
 
+    // Add confirmation dialog before updating
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to update this certificate?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.updateCertificate();
+      }
+    });
+  }
+
+  private updateCertificate(): void {
     this.isLoading = true;
 
     const formValue = this.certificateForm.value;
@@ -668,6 +686,48 @@ export class EditCertificateDetailsComponent implements OnInit {
           });
         },
       });
+  }
+  
+  
+   back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/steckholders/action/farmers']);
+      }
+    });
+  }
+
+
+
+  onCancel(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   // Helper method to scroll to first error

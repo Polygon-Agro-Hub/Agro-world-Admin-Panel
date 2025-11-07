@@ -224,6 +224,7 @@ import { ViewCentreRequirementComponent } from './application/procurement-sectio
 import { ViewJobHistoryComponent } from './application/govi-link/view-job-history/view-job-history.component';
 import { IndividualFarmersAuditsComponent } from './application/plant-care-app/individual-farmers-audits/individual-farmers-audits.component';
 import { FarmersClustersAuditsComponent } from './application/plant-care-app/farmers-clusters-audits/farmers-clusters-audits.component';
+import { FarmerPaymentsComponent } from './application/finance/farmer-payments/farmer-payments.component';
 
 export const routes: Routes = [
   {
@@ -548,7 +549,7 @@ export const routes: Routes = [
               {
                 path: 'govicare-certifications-dashboard',
                 component: GovicareCertificationMainComponent,
-              },              
+              },
               {
                 path: 'view-all-certificate-payments',
                 component: ViewAllCertificatePaymentsComponent,
@@ -560,6 +561,10 @@ export const routes: Routes = [
               {
                 path: 'view-all-service-payments',
                 component: ViewAllServicePaymentsComponent,
+              },
+              {
+                path: 'farmer-payments',
+                component: FarmerPaymentsComponent,
               },
             ],
           },
@@ -1011,7 +1016,7 @@ export const routes: Routes = [
             path: 'view-dispatched-define-package',
             component: ViewDispatchOrdersComponent,
           },
-                    {
+          {
             path: 'view-centre-requirement',
             component: ViewCentreRequirementComponent,
           },
@@ -1416,7 +1421,7 @@ export const routes: Routes = [
                 path: 'view-govi-link-jobs',
                 component: ViewGoviLinkJobsComponent,
               },
-                            {
+              {
                 path: 'view-job-history',
                 component: ViewJobHistoryComponent,
               },

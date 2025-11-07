@@ -307,9 +307,26 @@ export class AddCertificateDetailsComponent implements OnInit {
     this.selectedCrops.splice(index, 1);
   }
 
-  onBack(): void {
-    this.location.back();
+ back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/plant-care/action']);
+      }
+    });
   }
+
 
   onCancel(): void {
     Swal.fire({
@@ -329,7 +346,6 @@ export class AddCertificateDetailsComponent implements OnInit {
       }
     });
   }
-
   onSubmit(): void {
     this.certificateForm.markAllAsTouched();
 
@@ -392,9 +408,32 @@ export class AddCertificateDetailsComponent implements OnInit {
       return;
     }
 
+    // Add confirmation dialog
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to create this certificate?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.createCertificate();
+      }
+    });
+  }
+
+  private createCertificate(): void {
     this.isLoading = true;
 
     const formValue = this.certificateForm.value;
+    const applicable = this.certificateForm.get('applicable')?.value;
 
     const formData = new FormData();
 
@@ -429,8 +468,10 @@ export class AddCertificateDetailsComponent implements OnInit {
       formData.append('cropIds', JSON.stringify(cropIds));
     }
 
-    // PDF file
-    formData.append('tearmsFile', this.uploadedFile);
+    // PDF file - Add null check
+    if (this.uploadedFile) {
+      formData.append('tearmsFile', this.uploadedFile);
+    }
 
     // Logo file
     if (this.uploadedLogo) {
@@ -487,6 +528,8 @@ export class AddCertificateDetailsComponent implements OnInit {
       },
     });
   }
+  
+  
 
   trimLeadingSpaces(event: any, varibleName: string) {
     const input = event.target as HTMLInputElement;

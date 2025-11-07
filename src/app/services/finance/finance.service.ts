@@ -222,7 +222,7 @@ export class FinanceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -317,34 +317,34 @@ export class FinanceService {
   }
 
   getAllServicePayments(
-  page: number = 1,
-  limit: number = 10,
-  search: string = '',
-  fromDate: string = '',
-  toDate: string = ''
-): Observable<ServicePaymentsResponse> {
-  let params = new HttpParams()
-    .set('page', page.toString())
-    .set('limit', limit.toString());
+    page: number = 1,
+    limit: number = 10,
+    search: string = '',
+    fromDate: string = '',
+    toDate: string = ''
+  ): Observable<ServicePaymentsResponse> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
 
-  if (search && search.trim()) {
-    params = params.set('search', search.trim());
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    if (fromDate) {
+      params = params.set('fromDate', fromDate);
+    }
+
+    if (toDate) {
+      params = params.set('toDate', toDate);
+    }
+
+    const url = `${this.apiUrl}finance/service-payments`;
+    return this.http.get<ServicePaymentsResponse>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
   }
-
-  if (fromDate) {
-    params = params.set('fromDate', fromDate);
-  }
-
-  if (toDate) {
-    params = params.set('toDate', toDate);
-  }
-
-  const url = `${this.apiUrl}finance/service-payments`;
-  return this.http.get<ServicePaymentsResponse>(url, {
-    headers: this.getHeaders(),
-    params: params,
-  });
-}
 
   // Agent Commission CRUD Operations
   getAllAgentCommissions(
@@ -406,5 +406,31 @@ export class FinanceService {
     return this.http.delete(url, {
       headers: this.getHeaders(),
     });
+  }
+
+  getAllFarmerPayments(date?: string, bank?: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}finance/get-all-farmer-payments`;
+
+    // Add query parameters if provided
+    const params = new URLSearchParams();
+
+    if (date) {
+      params.append('date', date);
+    }
+
+    if (bank) {
+      params.append('bank', bank);
+    }
+
+    const queryString = params.toString();
+    if (queryString) {
+      url += `?${queryString}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
   }
 }

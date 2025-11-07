@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-view-services-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-services-list.component.html',
   styleUrls: ['./view-services-list.component.css']
 })
@@ -16,7 +17,9 @@ export class ViewServicesListComponent implements OnInit {
   officerServices: any[] = [];      // all services
   filteredServices: any[] = [];     // filtered services for display
   loading = true;
+  isLoading = false;
   searchTerm: string = '';
+  hasData: boolean = true;
 
   constructor(
     private goviLinkService: GoviLinkService,
@@ -24,11 +27,12 @@ export class ViewServicesListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.goviLinkService.getAllOfficerServices().subscribe({
       next: (data) => {
         this.officerServices = data;
         this.filteredServices = data;   // initially show all
-        this.loading = false;
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching services:', err);

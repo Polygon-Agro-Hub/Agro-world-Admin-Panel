@@ -76,6 +76,37 @@ export class EditFiealdOfficerComponent implements OnInit {
   selectedPassbookImage: string | ArrayBuffer | null = null;
   selectedContractImage: string | ArrayBuffer | null = null;
 
+  // Add these properties for province-district functionality
+  provinces: any[] = [];
+  filteredDistricts: any[] = [];
+  allDistricts = [
+    { name: 'Ampara', province: 'Eastern' },
+    { name: 'Anuradhapura', province: 'North Central' },
+    { name: 'Badulla', province: 'Uva' },
+    { name: 'Batticaloa', province: 'Eastern' },
+    { name: 'Colombo', province: 'Western' },
+    { name: 'Galle', province: 'Southern' },
+    { name: 'Gampaha', province: 'Western' },
+    { name: 'Hambantota', province: 'Southern' },
+    { name: 'Jaffna', province: 'Northern' },
+    { name: 'Kalutara', province: 'Western' },
+    { name: 'Kandy', province: 'Central' },
+    { name: 'Kegalle', province: 'Sabaragamuwa' },
+    { name: 'Kilinochchi', province: 'Northern' },
+    { name: 'Kurunegala', province: 'North Western' },
+    { name: 'Mannar', province: 'Northern' },
+    { name: 'Matale', province: 'Central' },
+    { name: 'Matara', province: 'Southern' },
+    { name: 'Monaragala', province: 'Uva' },
+    { name: 'Mullaitivu', province: 'Northern' },
+    { name: 'Nuwara Eliya', province: 'Central' },
+    { name: 'Polonnaruwa', province: 'North Central' },
+    { name: 'Puttalam', province: 'North Western' },
+    { name: 'Rathnapura', province: 'Sabaragamuwa' },
+    { name: 'Trincomalee', province: 'Eastern' },
+    { name: 'Vavuniya', province: 'Northern' },
+  ];
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -124,6 +155,113 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
+
+  // Initialize provinces
+  initializeProvinces(): void {
+    const uniqueProvinces = [...new Set(this.allDistricts.map(district => district.province))];
+    this.provinces = uniqueProvinces.map(province => ({ name: province }));
+    
+    // If editing, filter districts based on existing province
+    if (this.personalData.province) {
+      this.filterDistrictsByProvince(this.personalData.province);
+    }
+  }
+
+  // Handle province change
+  onProvinceChange(event: DropdownChangeEvent): void {
+    const selectedProvince = event.value;
+    this.personalData.province = selectedProvince;
+    
+    // Filter districts based on selected province
+    this.filterDistrictsByProvince(selectedProvince);
+    
+    // Clear district selection when province changes
+    this.personalData.distrct = '';
+  }
+
+  // Filter districts by province
+  filterDistrictsByProvince(province: string): void {
+    if (province) {
+      this.filteredDistricts = this.allDistricts.filter(district => district.province === province);
+    } else {
+      this.filteredDistricts = [];
+    }
+  }
+
+  // Handle district change
+  onDistrictChange(event: DropdownChangeEvent): void {
+    const selectedDistrict = event.value;
+    this.personalData.distrct = selectedDistrict;
+  }
+
+  // Add this method to handle commission amount input
+  onCommissionAmountInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    // Ensure proper decimal formatting
+    if (value.includes('.')) {
+      const parts = value.split('.');
+      if (parts[1].length > 2) {
+        // Limit to 2 decimal places
+        value = parts[0] + '.' + parts[1].substring(0, 2);
+        input.value = value;
+        this.personalData.comAmount = parseFloat(value);
+      }
+    }
+  }
+
+  // Replace the existing formatAmount method with this one
+  allowDecimalNumbers(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+    const currentValue = input.value;
+    
+    // Allow control keys: backspace, delete, tab, escape, enter
+    if ([8, 9, 27, 13, 46].indexOf(event.keyCode) !== -1 ||
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (event.keyCode === 65 && event.ctrlKey === true) ||
+      (event.keyCode === 67 && event.ctrlKey === true) ||
+      (event.keyCode === 86 && event.ctrlKey === true) ||
+      (event.keyCode === 88 && event.ctrlKey === true) ||
+      // Allow: home, end, left, right
+      (event.keyCode >= 35 && event.keyCode <= 39)) {
+      return;
+    }
+
+    // Allow numbers (0-9)
+    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+        (event.keyCode >= 96 && event.keyCode <= 105)) {
+      return;
+    }
+
+    // Allow decimal point (.) but only one
+    if (event.keyCode === 190 || event.keyCode === 110) {
+      // Check if decimal point already exists
+      if (currentValue.includes('.')) {
+        event.preventDefault();
+        return;
+      }
+      // Don't allow decimal point at the beginning
+      if (currentValue.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      return;
+    }
+
+    // Prevent any other key
+    event.preventDefault();
+  }
+
+  // Update the validation method for commission amount
+  isValidCommissionAmount(): boolean {
+    const amount = this.personalData.comAmount;
+    return amount !== null && 
+           amount !== undefined && 
+           amount >= 0 && 
+           amount <= 100;
   }
 
   back(): void {
@@ -819,22 +957,6 @@ export class EditFiealdOfficerComponent implements OnInit {
     return true;
   }
 
-  updateProvince(event: DropdownChangeEvent): void {
-    const selectedDistrict = event.value;
-
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
-
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
-    }
-  }
-
   preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
     // Handle space restrictions first
     if (!this.handleSpaceRestrictions(event)) {
@@ -845,51 +967,6 @@ export class EditFiealdOfficerComponent implements OnInit {
     // Allow only letters (a-z, A-Z) and space
     if (!/[a-zA-Z\s]/.test(char)) {
       event.preventDefault();
-    }
-  }
-
-  formatAmount(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value;
-
-    // Allow control keys
-    if ([8, 9, 46, 37, 39, 116].includes(event.which)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-
-    // Allow only numbers and decimal point
-    if (!/[0-9.]/.test(char)) {
-      event.preventDefault();
-      return;
-    }
-
-    // Prevent multiple decimal points
-    if (char === '.' && value.includes('.')) {
-      event.preventDefault();
-      return;
-    }
-
-    // If adding decimal point, automatically add .00
-    if (char === '.' && !value.includes('.')) {
-      // Let the decimal point be added naturally, then format
-      setTimeout(() => {
-        if (!value.endsWith('.00')) {
-          input.value = value + '00';
-          // Move cursor before the zeros
-          const position = value.length + 1;
-          input.setSelectionRange(position, position);
-        }
-      }, 0);
-    }
-
-    // Limit to 2 decimal places
-    if (value.includes('.')) {
-      const decimalPart = value.split('.')[1];
-      if (decimalPart && decimalPart.length >= 2) {
-        event.preventDefault();
-      }
     }
   }
 
@@ -994,6 +1071,7 @@ export class EditFiealdOfficerComponent implements OnInit {
   ngOnInit(): void {
     this.loadBanks();
     this.loadBranches();
+    this.initializeProvinces();
     
     // Get the ID from route parameters
     this.route.params.subscribe(params => {
@@ -1096,8 +1174,8 @@ private showErrorAndRedirect(message: string): void {
   this.personalData.province = officerData.province;
   this.personalData.country = officerData.country || 'Sri Lanka';
   
-  // Bank Details
-  this.personalData.comAmount = officerData.comAmount;
+  // Bank Details - FIXED: Handle decimal numbers properly
+  this.personalData.comAmount = officerData.comAmount ? parseFloat(officerData.comAmount) : 0;
   this.personalData.accName = officerData.accHolderName || officerData.accName;
   this.personalData.accNumber = officerData.accNumber;
   this.personalData.bank = officerData.bankName || officerData.bank;
@@ -1151,10 +1229,12 @@ private showErrorAndRedirect(message: string): void {
     this.selectedImage = officerData.image || officerData.profile;
   }
 
-  // Mark fields as touched if needed (optional)
+  // Filter districts based on the loaded province
   setTimeout(() => {
-    this.touchedFields['assignDistrict'] = true;
-  }, 0);
+    if (this.personalData.province) {
+      this.filterDistrictsByProvince(this.personalData.province);
+    }
+  }, 100);
 }
 
   // Add method to load existing images
@@ -1209,6 +1289,10 @@ private showErrorAndRedirect(message: string): void {
       errors.push('City is required');
     }
 
+    if (!this.personalData.province) {
+      errors.push('Province is required');
+    }
+
     if (!this.personalData.distrct) {
       errors.push('District is required');
     }
@@ -1219,8 +1303,10 @@ private showErrorAndRedirect(message: string): void {
   validateBankDetails(): string[] {
     const errors: string[] = [];
 
-    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      errors.push('Commission Amount is required and must be greater than 0');
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      errors.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      errors.push('Commission Amount must be between 0 and 100');
     }
 
     if (!this.personalData.accName) {
@@ -1255,17 +1341,13 @@ private showErrorAndRedirect(message: string): void {
     return accountRegex.test(accNumber);
   }
 
-  isValidCommissionAmount(): boolean {
-    const amount = this.personalData.comAmount;
-    return amount !== null && amount !== undefined && amount > 0;
-  }
-
   markPageTwoFieldsAsTouched(): void {
     const pageTwoFields: (keyof Personal)[] = [
       'house',
       'street',
       'city',
       'distrct',
+      'province',
       'comAmount',
       'accName',
       'accNumber',
@@ -1516,12 +1598,12 @@ private showErrorAndRedirect(message: string): void {
       missingFields.push('City is Required');
     }
 
-    if (!this.personalData.distrct) {
-      missingFields.push('District is Required');
-    }
-
     if (!this.personalData.province) {
       missingFields.push('Province is Required');
+    }
+
+    if (!this.personalData.distrct) {
+      missingFields.push('District is Required');
     }
 
     if (!this.personalData.accName) {
@@ -1544,8 +1626,10 @@ private showErrorAndRedirect(message: string): void {
       missingFields.push('Branch Name is Required');
     }
 
-    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      missingFields.push('Commission Amount is required and must be greater than 0');
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      missingFields.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      missingFields.push('Commission Amount must be between 0 and 100');
     }
 
     // Check assigned districts
@@ -1812,12 +1896,12 @@ private showErrorAndRedirect(message: string): void {
       missingFields.push('City is Required');
     }
 
-    if (!this.personalData.distrct) {
-      missingFields.push('District is Required');
-    }
-
     if (!this.personalData.province) {
       missingFields.push('Province is Required');
+    }
+
+    if (!this.personalData.distrct) {
+      missingFields.push('District is Required');
     }
 
     if (!this.personalData.accName) {
@@ -1840,8 +1924,10 @@ private showErrorAndRedirect(message: string): void {
       missingFields.push('Branch Name is Required');
     }
 
-    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      missingFields.push('Commission Amount is required and must be greater than 0');
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      missingFields.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      missingFields.push('Commission Amount must be between 0 and 100');
     }
 
     // Check assigned districts

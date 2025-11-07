@@ -41,6 +41,7 @@ export class ViewClusterUsersComponent implements OnInit {
   nicError: string = '';
   isDeleteModalOpen: boolean = false;
   farmerToDelete: ClusterMember | null = null;
+  clusterStatus: string = '';
 
   constructor(
     private farmerClusterService: CertificateCompanyService,
@@ -48,7 +49,7 @@ export class ViewClusterUsersComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -66,8 +67,9 @@ export class ViewClusterUsersComponent implements OnInit {
         this.isLoading = false;
 
         if (response.data) {
-          // Set cluster name
+          // Set cluster name and status
           this.clusterName = response.data.clusterName || 'Unknown Cluster';
+          this.clusterStatus = response.data.clusterStatus || '';
 
           // Set users list
           this.users = response.data.members || [];
@@ -91,6 +93,44 @@ export class ViewClusterUsersComponent implements OnInit {
     );
   }
 
+  onNICInput(event: any) {
+    // Remove special characters, only allow alphanumeric
+    const value = event.target.value;
+    const sanitized = value.replace(/[^a-zA-Z0-9]/g, '');
+
+    if (value !== sanitized) {
+      this.newFarmerNIC = sanitized;
+      event.target.value = sanitized;
+    }
+
+    // Real-time validation matching submit validation
+    const trimmedNIC = this.newFarmerNIC.trim();
+
+    if (trimmedNIC.length === 0) {
+      this.nicError = 'NIC is required';
+    } else if (trimmedNIC.length < 9) {
+      this.nicError = 'NIC must be at least 9 characters';
+    } else {
+      this.nicError = ''; // Clear error when valid
+    }
+  }
+  onNICPaste(event: ClipboardEvent) {
+    event.preventDefault();
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const sanitized = pastedText.replace(/[^a-zA-Z0-9]/g, '');
+    this.newFarmerNIC = sanitized.substring(0, 12); // Respect maxlength
+
+    // Real-time validation matching submit validation
+    const trimmedNIC = this.newFarmerNIC.trim();
+
+    if (trimmedNIC.length === 0) {
+      this.nicError = 'NIC is required';
+    } else if (trimmedNIC.length < 9) {
+      this.nicError = 'NIC must be at least 9 characters';
+    } else {
+      this.nicError = '';
+    }
+  }
   onSearch() {
     // Only search when search icon is clicked
     this.fetchClusterUsers(this.searchTerm.trim());
@@ -170,8 +210,8 @@ export class ViewClusterUsersComponent implements OnInit {
   addNew() {
     this.newFarmerNIC = '';
     this.newFarmerFarmId = '';
-    this.nicError = '';
-    this.farmIdError = '';
+    this.nicError = 'NIC is required'; // Show initial error
+    this.farmIdError = 'Farm ID is required'; // Show initial error
     this.isAddFarmerModalOpen = true;
   }
 
@@ -186,23 +226,20 @@ export class ViewClusterUsersComponent implements OnInit {
     this.farmIdError = '';
 
     // Validate NIC
-    if (!this.newFarmerNIC.trim()) {
+    const trimmedNIC = this.newFarmerNIC.trim();
+    if (!trimmedNIC) {
       this.nicError = 'NIC is required';
       return;
     }
 
-    if (this.newFarmerNIC.trim().length < 9) {
+    if (trimmedNIC.length < 9) {
       this.nicError = 'NIC must be at least 9 characters';
       return;
     }
 
     // Validate Farm ID
-    if (!this.newFarmerFarmId.trim()) {
-      this.farmIdError = 'Farm ID is required';
-      return;
-    }
-
-    if (this.newFarmerFarmId.trim().length < 1) {
+    const trimmedFarmId = this.newFarmerFarmId.trim();
+    if (!trimmedFarmId) {
       this.farmIdError = 'Farm ID is required';
       return;
     }
@@ -211,8 +248,8 @@ export class ViewClusterUsersComponent implements OnInit {
 
     // Prepare data to send to backend
     const addFarmerData = {
-      nic: this.newFarmerNIC.trim(),
-      farmId: this.newFarmerFarmId.trim(),
+      nic: trimmedNIC,
+      farmId: trimmedFarmId,
     };
 
     this.farmerClusterService
@@ -249,4 +286,5 @@ export class ViewClusterUsersComponent implements OnInit {
         }
       );
   }
+
 }

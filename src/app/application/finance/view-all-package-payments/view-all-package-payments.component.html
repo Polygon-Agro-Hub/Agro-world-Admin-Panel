@@ -12,51 +12,32 @@
   </h2>
 
   <!-- Date Filter Section -->
-  <div class="flex items-center gap-4">
+  <div class="flex justify-center items-center gap-4">
     <div class="flex items-center gap-3">
       <label class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[45px]">From:</label>
-      <p-calendar 
-        id="fromDate" 
-        [(ngModel)]="fromDate" 
-        (ngModelChange)="onFromDateChange()"
-        placeholder="YYYY/MM/DD" 
-        [showIcon]="true" 
-        [showClear]="false"
-        [showButtonBar]="true" 
-        iconDisplay="input"
-        [maxDate]="maxDate"
-        [style]="{ width: '20rem', height: '2.5rem' }" 
-        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-               [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-               [&_.p-datepicker-header]:dark:text-white
-               [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-               [&_.p-button:hover]:dark:bg-[#6b7280]"
+      <p-calendar id="fromDate" [(ngModel)]="fromDate" (ngModelChange)="onFromDateChange()" placeholder="YYYY/MM/DD"
+        [showIcon]="true" [showClear]="false" [showButtonBar]="true" iconDisplay="input" [maxDate]="maxDate"
+        [style]="{ width: '20rem', height: '2.5rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+             [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+             [&_.p-datepicker-header]:dark:text-white
+             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+             [&_.p-button:hover]:dark:bg-[#6b7280]"
         inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10" />
     </div>
 
     <div class="flex items-center gap-3">
       <label class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[30px]">To:</label>
-      <p-calendar 
-        id="toDate" 
-        [(ngModel)]="toDate" 
-        placeholder="YYYY/MM/DD" 
-        [showIcon]="true" 
-        [showClear]="false"
-        [showButtonBar]="true" 
-        iconDisplay="input"
-        [maxDate]="maxDate"
-        [minDate]="minToDate"
-        [disabled]="!fromDate"
-        [style]="{ width: '20rem', height: '2.5rem' }" 
-        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-               [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-               [&_.p-datepicker-header]:dark:text-white
-               [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-               [&_.p-button:hover]:dark:bg-[#6b7280]"
+      <p-calendar id="toDate" [(ngModel)]="toDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="false"
+        [showButtonBar]="true" iconDisplay="input" [maxDate]="maxDate" [minDate]="minToDate" [disabled]="!fromDate"
+        [style]="{ width: '20rem', height: '2.5rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+             [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+             [&_.p-datepicker-header]:dark:text-white
+             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+             [&_.p-button:hover]:dark:bg-[#6b7280]"
         inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10" />
     </div>
 
@@ -98,7 +79,9 @@
 
   <!-- No Data Message -->
   <div *ngIf="!hasData && !isLoading" class="flex flex-col items-center w-full px-10 py-20">
-    <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+    <p class="text-[#494949] my-6 dark:text-textDark">
+      {{ !fromDate && !toDate ? 'Please select a date range first' : '--No Data Available--' }}
+    </p>
     <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
   </div>
 

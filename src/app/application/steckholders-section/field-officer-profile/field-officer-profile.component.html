@@ -99,7 +99,7 @@
 
         <div>
           <p class="text-[#627189] text-lg">Mobile Number - 2</p>
-          <p *ngIf="officerObj?.phoneNumber02; else noPhone" class="text-[#030308] text-lg dark:text-[#ffffff]">
+          <p *ngIf="officerObj.phoneNumber02; else noPhone" class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.phoneCode02 }} {{ officerObj.phoneNumber02 }}
           </p>
           <ng-template #noPhone>
@@ -209,7 +209,7 @@
         <div>
           <p class="text-[#627189] text-lg">Commission Amount</p>
           <p class="text-[#030308] text-lg dark:text-[#ffffff]">
-            {{ officerObj.comAmount }}
+            {{ officerObj.comAmount }}%
           </p>
         </div>
 

@@ -86,6 +86,7 @@ export interface ClusterMember {
   nic: string;
   phoneNumber: string;
   addedDate?: string;
+  farmRegCode: string;
 }
 
 export interface Certificate {

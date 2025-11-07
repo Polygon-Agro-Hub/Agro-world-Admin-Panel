@@ -1,3 +1,4 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <!-- Back button -->
 <button class="mb-5 text-textLight dark:text-textDark " (click)="goBack()">
     <i class="fa-solid fa-arrow-left"></i>
@@ -142,7 +143,7 @@
             </table>
 
             <!-- No Data -->
-            <div *ngIf="!loading && officerServices.length === 0"
+            <div *ngIf="!hasData && officerServices.length === 0"
                 class="flex flex-col justify-center items-center py-20 shadow-lg">
                 <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
                 <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />

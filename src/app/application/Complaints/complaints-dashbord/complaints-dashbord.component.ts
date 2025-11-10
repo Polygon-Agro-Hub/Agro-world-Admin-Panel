@@ -18,7 +18,8 @@ export class ComplaintsDashbordComponent {
   popupVisibleSalesAgents = false;
   popupVisibleMPRetail = false;
   popupVisibleMPWholesale = false;
-  popupVisibleDistributedcenter = false
+  popupVisibleDistributedcenter = false;
+  popupGoviLink = false;
 
   constructor(private router: Router) { }
 
@@ -67,6 +68,11 @@ export class ComplaintsDashbordComponent {
   togglePopupDistributedCenters(){
     this.closeAllPopups();
     this.popupVisibleDistributedcenter = !this.popupVisibleDistributedcenter;
+  }
+
+  togglePopupGovilink(){
+    this.closeAllPopups();
+    this.popupGoviLink = !this.popupGoviLink;
   }
 
 

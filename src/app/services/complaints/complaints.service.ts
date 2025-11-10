@@ -362,6 +362,61 @@ export class ComplaintsService {
     });
   }
 
+  getAllFiealdofficerComplains(
+    page: number,
+    limit: number,
+    status: string,
+    category: string,
+    comCategory: string,
+    searchText: string,
+    rpstatus: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    console.log('searchText', searchText);
+
+    let url = `${this.apiUrl}auth/field-officer-complains?page=${page}&limit=${limit}`;
+
+    console.log('Final url', url);
+    
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (category) {
+      url += `&category=${category}`;
+    }
+
+    if (comCategory) {
+      url += `&comCategory=${comCategory}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    if (rpstatus) {
+      url += `&rpstatus=${rpstatus}`;
+    }
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
+
+  getFieldOfficerComplainById(id: string): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+  return this.http.get(`${this.apiUrl}complain/field-officer-complains-by-id/${id}`, {
+    headers,
+  });
+}
 }
 
 

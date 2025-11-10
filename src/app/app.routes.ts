@@ -225,6 +225,7 @@ import { ViewJobHistoryComponent } from './application/govi-link/view-job-histor
 import { IndividualFarmersAuditsComponent } from './application/plant-care-app/individual-farmers-audits/individual-farmers-audits.component';
 import { FarmersClustersAuditsComponent } from './application/plant-care-app/farmers-clusters-audits/farmers-clusters-audits.component';
 import { FarmerPaymentsComponent } from './application/finance/farmer-payments/farmer-payments.component';
+import { FiealdOfficerComplaintsComponent } from './application/Complaints/fieald-officer-complaints/fieald-officer-complaints.component';
 
 export const routes: Routes = [
   {
@@ -1291,6 +1292,10 @@ export const routes: Routes = [
               },
             ],
           },
+          {
+            path: 'field-officer-complaints',
+            component: FiealdOfficerComplaintsComponent,
+          }
         ],
       },
       {

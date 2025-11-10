@@ -226,6 +226,7 @@ import { IndividualFarmersAuditsComponent } from './application/plant-care-app/i
 import { FarmersClustersAuditsComponent } from './application/plant-care-app/farmers-clusters-audits/farmers-clusters-audits.component';
 import { FarmerPaymentsComponent } from './application/finance/farmer-payments/farmer-payments.component';
 import { FiealdOfficerComplaintsComponent } from './application/Complaints/fieald-officer-complaints/fieald-officer-complaints.component';
+import { GoviLinkViewComplaintComponent } from './application/Complaints/govi-link-view-complaint/govi-link-view-complaint.component';
 
 export const routes: Routes = [
   {
@@ -1278,6 +1279,10 @@ export const routes: Routes = [
           {
             path: 'selected-wholesale-complaints/:id',
             component: SelectedwholesaleComplaintsComponent,
+          },
+          {
+            path: 'field-officer-complain/:id',
+            component: GoviLinkViewComplaintComponent
           },
           {
             path: 'distributed-center-complains',

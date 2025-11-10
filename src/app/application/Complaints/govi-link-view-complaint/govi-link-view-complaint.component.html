@@ -1,0 +1,146 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div>
+    <div class="text-center mb-4">
+      <p class="text-sm text-gray-600 dark:text-textDark">Ref No: {{complain.refNo}}</p>
+      <p class="text-sm text-gray-600 dark:text-textDark">
+        Preferred Language: <span class="font-semibold">{{complain.language}}</span>
+      </p>
+      <p class="text-sm text-gray-600 dark:text-textDark">
+        Received: {{ complain.createdAt | date : 'yyyy/MM/dd \'at\' hh.mm a' }}
+      </p>
+    </div>
+
+    <div class="flex flex-row mb-6 justify-between">
+      <label class="block text-gray-700 mb-2 mr-12 dark:text-textDark">Category</label>
+      <textarea class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+        rows="1" [value]="complain.complainCategory" disabled>
+      </textarea>
+    </div>
+
+    <div class="flex flex-row mb-6 justify-between">
+      <label class="block text-gray-700 mb-2 mr-10 dark:text-textDark">Complaint</label>
+      <textarea class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+        rows="4" [value]="complain.complain" disabled>
+      </textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div class="flex flex-row justify-between">
+        <div class="flex flex-col justify-between mr-6">
+          <label class="block text-gray-700 dark:text-textDark">Complainant</label>
+          <label class="block text-gray-700 dark:text-textDark mb-2">
+            ({{complain.JobRole === 'Chief Field Officer' ? 'CFO' :
+            complain.JobRole === 'Field Officer' ? 'FIO' : complain.JobRole}})
+          </label>
+        </div>
+        <input type="text" [value]="complain.empId"
+          class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+          disabled />
+      </div>
+
+      <div class="flex flex-row justify-between gap-4">
+        <div class="flex flex-col">
+          <label class="block text-gray-700 dark:text-textDark">Contact</label>
+          <label class="block text-gray-700 dark:text-textDark">
+            ({{complain.JobRole === 'Chief Field Officer' ? 'CFO' :
+            complain.JobRole === 'Field Officer' ? 'FIO' : complain.JobRole}})
+          </label>
+        </div>
+        <input type="text" [value]="complain.phoneNumber1"
+          class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"
+          disabled />
+      </div>
+    </div>
+
+
+    <div class="text-center">
+      <button (click)="showReplyPopUp(
+          complain.language === 'Sinhala' ? complain.officerNameSinhala : 
+          complain.language === 'Tamil' ? complain.officerNameTamil : 
+          complain.officerName, 
+          complain.language
+        )" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+        Send Message
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Reply Popup -->
+<div *ngIf="isPopUpVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-[#262f45] rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4 relative">
+    <div class="flex justify-center items-center">
+      <span class="rounded-full px-4 py-3 bg-[#F6F6F6] dark:bg-gray-400">
+        <i class="fa-regular fa-envelope text-2xl text-[#2D2D2D]"></i>
+      </span>
+    </div>
+
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-white">Reply as Polygon</h2>
+
+    <div class="text-left border rounded-lg px-3 py-5 text-[#2D2D2D] dark:text-gray-200">
+      <p *ngIf="selectedLanguage === 'Sinhala'">
+        හිතවත් <strong>{{ selectedOfficerName }}</strong>,
+      </p>
+      <p *ngIf="selectedLanguage === 'Tamil'">
+        அன்புள்ள <strong>{{ selectedOfficerName }}</strong>,
+      </p>
+      <p *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
+        Dear <strong>{{ selectedOfficerName }}</strong>,
+      </p>
+
+      <p class="mt-5" *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
+        We are pleased to inform you that your complaint has been resolved
+      </p>
+      <p class="mt-5" *ngIf="selectedLanguage === 'Tamil'">
+        நாங்கள் உங்கள் புகாரை தீர்க்கப்பட்டதாக தெரிவித்ததில் மகிழ்ச்சி அடைகிறோம்
+      </p>
+      <p class="mt-5" *ngIf="selectedLanguage === 'Sinhala'">
+        අපි ඔබට කාරුණිකව දැනුම් දෙන්න කැමතියි ඔබගේ පැමිණිල්ල විසඳා ගෙන ඇත.
+      </p>
+
+      <textarea
+        class="w-full py-2 mt-3 mb-3 bg-white dark:bg-[#262f45] dark:border-gray-600 dark:text-white border-none outline-none"
+        rows="5" placeholder="Add your message here..." [(ngModel)]="complain.reply" name="reply">
+      </textarea>
+
+      <p *ngIf="selectedLanguage === 'Sinhala'">
+        ඔබට තවත් ගැටළු හෝ ප්‍රශ්න තිබේ නම්, කරුණාකර අප හා සම්බන්ධ වන්න. ඔබේ ඉවසීම සහ අවබෝධය වෙනුවෙන් ස්තූතියි.
+      </p>
+      <p *ngIf="selectedLanguage === 'Tamil'">
+        உங்களுக்கு மேலும் ஏதேனும் சிக்கல்கள் அல்லது கேள்விகள் இருந்தால், தயவுசெய்து எங்களைத் தொடர்பு கொள்ளவும். உங்கள்
+        பொறுமைக்கும் புரிதலுக்கும் நன்றி.
+      </p>
+      <p *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
+        If you have any further concerns or questions, feel free to reach out. Thank you for your patience and
+        understanding.
+      </p>
+
+      <p class="mt-3">
+        {{ selectedLanguage === 'Tamil' ? 'இதற்கு' :
+        selectedLanguage === 'Sinhala' ? 'මෙයට' : 'Sincerely' }},
+        <br />
+        <span *ngIf="selectedLanguage === 'English'">Polygon Customer Support Team</span>
+        <span *ngIf="selectedLanguage === 'Sinhala'">Polygon පාරිභෝගික සහාය කණ්ඩායම</span>
+        <span *ngIf="selectedLanguage === 'Tamil'">Polygon வாடிக்கையாளர் ஆதரவு குழு</span>
+      </p>
+    </div>
+
+    <div class="flex flex-row justify-end gap-x-4 mt-4 mr-1">
+      <button (click)="closeReplyPopUp()"
+        class="px-4 py-2 text-[#D3D3D3] dark:text-gray-200 bg-[#74788D] rounded transition">
+        Cancel
+      </button>
+      <button class="px-4 py-2 text-white dark:text-gray-200 bg-[#3980C0] rounded transition"
+        (click)="submitComplaint()">
+        Send
+      </button>
+    </div>
+  </div>
+</div>

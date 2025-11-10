@@ -9,7 +9,9 @@ import { Observable } from 'rxjs';
 })
 export class GoviLinkService {
   private apiUrl = `${environment.API_URL}govi-link/`;
+  private authUrl = `${environment.API_URL}auth/`;
   private token = this.tokenService.getToken();
+  
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   saveOfficerService(data: {
@@ -38,16 +40,16 @@ export class GoviLinkService {
       modifyBy?: string;
     }
   ): Observable<any> {
-    const token = localStorage.getItem('AdminLoginToken'); // fetch token
+    const token = localStorage.getItem('AdminLoginToken');
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     });
 
-    const modifyBy = localStorage.getItem('AdminUserId'); // <--- correct key
+    const modifyBy = localStorage.getItem('AdminUserId');
     const payload = { ...data, modifyBy };
 
-    console.log('Payload being sent:', payload); // optional: check in console
+    console.log('Payload being sent:', payload);
 
     return this.http.put(
       this.apiUrl + `update-officer-service/${id}`,
@@ -68,6 +70,7 @@ export class GoviLinkService {
       headers,
     });
   }
+
   getAllOfficerServices(): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -77,6 +80,7 @@ export class GoviLinkService {
       headers,
     });
   }
+
   deleteOfficerService(id: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -94,7 +98,6 @@ export class GoviLinkService {
       Authorization: `Bearer ${token}`,
     });
 
-    // Create params object from filters
     let params = new HttpParams();
 
     if (filters.searchTerm) {
@@ -119,7 +122,6 @@ export class GoviLinkService {
     });
   }
 
-  // Get officers by job role
   getOfficersByJobRole(jobRole: string, scheduleDate: string) {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
@@ -137,7 +139,6 @@ export class GoviLinkService {
     });
   }
 
-  // Assign officer to job
   assignOfficerToJob(assignmentData: { jobId: number; officerId: number }) {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
@@ -154,7 +155,6 @@ export class GoviLinkService {
     );
   }
 
-  // Get basic job details by ID
   getJobBasicDetailsById(jobId: number) {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
@@ -166,44 +166,75 @@ export class GoviLinkService {
       headers,
     });
   }
-  
+
   getFieldAuditHistory(filters: any = {}): Observable<any> {
-  const token = this.tokenService.getToken();
-  const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  });
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
 
-  let params = new HttpParams();
+    let params = new HttpParams();
 
-  // Filters
-  if (filters.status) {
-    params = params.set('status', filters.status);
-  }
-  if (filters.district) {
-    params = params.set('district', filters.district);
-  }
-  if (filters.completedDateFrom) {
-    params = params.set('completedDateFrom', filters.completedDateFrom);
-  }
-  if (filters.completedDateTo) {
-    params = params.set('completedDateTo', filters.completedDateTo);
+    if (filters.status) {
+      params = params.set('status', filters.status);
+    }
+    if (filters.district) {
+      params = params.set('district', filters.district);
+    }
+    if (filters.completedDateFrom) {
+      params = params.set('completedDateFrom', filters.completedDateFrom);
+    }
+    if (filters.completedDateTo) {
+      params = params.set('completedDateTo', filters.completedDateTo);
+    }
+    if (filters.searchJobId) {
+      params = params.set('searchJobId', filters.searchJobId);
+    }
+    if (filters.searchFarmId) {
+      params = params.set('searchFarmId', filters.searchFarmId);
+    }
+    if (filters.searchNic) {
+      params = params.set('searchNic', filters.searchNic);
+    }
+
+    return this.http.get<any>(`${this.apiUrl}get-field-audit-history`, {
+      headers,
+      params,
+    });
   }
 
-  // Search
-  if (filters.searchJobId) {
-    params = params.set('searchJobId', filters.searchJobId);
-  }
-  if (filters.searchFarmId) {
-    params = params.set('searchFarmId', filters.searchFarmId);
-  }
-  if (filters.searchNic) {
-    params = params.set('searchNic', filters.searchNic);
+  /**
+   * Get field officer complain by ID
+   */
+  getFieldOfficerComplainById(id: string | number): Observable<any> {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<any>(`${this.apiUrl}get-complain-details/${id}`, {
+      headers,
+    });
   }
 
-  return this.http.get<any>(`${this.apiUrl}get-field-audit-history`, {
-    headers,
-    params,
-  });
-}
+  /**
+   * Reply to field officer complain
+   */
+  replyFieldOfficerComplain(id: string | number, reply: string): Observable<any> {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    const body = { reply };
+
+    return this.http.put<any>(
+      `${this.apiUrl}reply-field-officer-complain/${id}`,
+      body,
+      { headers }
+    );
+  }
 }

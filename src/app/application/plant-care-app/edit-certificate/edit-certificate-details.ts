@@ -706,7 +706,7 @@ export class EditCertificateDetailsComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/farmers']);
+        this.location.back()
       }
     });
   }

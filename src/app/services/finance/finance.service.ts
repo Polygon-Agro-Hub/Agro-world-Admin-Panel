@@ -215,6 +215,47 @@ export interface ServicePayment {
   sortDate: string;
 }
 
+export interface PaymentHistory {
+  id: number;
+  receivers: string;
+  amount: number;
+  payRef: string;
+  xlLink: string;
+  issueBy: number;
+  issueDate: string;
+  issuerName?: string;
+  issuerEmail?: string;
+}
+
+export interface PaymentHistoryResponse {
+  items: PaymentHistory[];
+  total: number;
+}
+
+export interface CreatePaymentHistoryResponse {
+  message: string;
+  id: number;
+  xlLink: string;
+}
+
+export interface UpdatePaymentHistoryResponse {
+  message: string;
+  xlLink: string;
+}
+
+export interface PaymentHistoryDetail {
+  id: number;
+  receivers: string;
+  amount: number;
+  payRef: string;
+  xlLink: string;
+  issueBy: number;
+  modifyBy?: number;
+  createdAt: string;
+  issuerName?: string;
+  modifierName?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -433,4 +474,60 @@ export class FinanceService {
 
     return this.http.get<any>(url, { headers: headers });
   }
+  
+  createPaymentHistory(
+  receivers: string,
+  amount: string,
+  paymentReference: string,
+  file: File
+): Observable<CreatePaymentHistoryResponse> {
+  const formData = new FormData();
+  formData.append('receivers', receivers);
+  formData.append('amount', amount);
+  formData.append('paymentReference', paymentReference);
+  formData.append('file', file);
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.tokenService.getToken()}`,
+  });
+
+  const url = `${this.apiUrl}finance/payment-history`;
+  return this.http.post<CreatePaymentHistoryResponse>(url, formData, {
+    headers,
+  });
+}
+
+getPaymentHistoryById(id: number): Observable<any> {
+  const url = `${this.apiUrl}finance/payment-history/${id}`;
+  return this.http.get<any>(url, {
+    headers: this.getHeaders(),
+  });
+}
+
+updatePaymentHistory(
+  id: number,
+  receivers: string,
+  amount: string,
+  paymentReference: string,
+  file?: File
+): Observable<UpdatePaymentHistoryResponse> {
+  const formData = new FormData();
+  formData.append('receivers', receivers);
+  formData.append('amount', amount);
+  formData.append('paymentReference', paymentReference);
+  
+  if (file) {
+    formData.append('file', file);
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.tokenService.getToken()}`,
+  });
+
+  const url = `${this.apiUrl}finance/payment-history/${id}`;
+  return this.http.put<UpdatePaymentHistoryResponse>(url, formData, {
+    headers,
+  });
+}
+
 }

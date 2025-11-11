@@ -110,7 +110,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
         '',
-        [Validators.required, Validators.min(0), Validators.max(100)],
+        [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d*\.?\d*$/)],
       ],
       scope: ['', Validators.required],
       noOfVisit: ['', [Validators.min(0)]],

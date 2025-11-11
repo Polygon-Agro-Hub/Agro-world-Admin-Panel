@@ -416,8 +416,8 @@ export class AddCertificateDetailsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, create it!',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes, Create',
+      cancelButtonText: 'No, Cancel',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-gray-800 dark:text-white',
         title: 'dark:text-white',

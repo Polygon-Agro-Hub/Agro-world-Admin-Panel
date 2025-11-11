@@ -126,7 +126,7 @@ export class FiealdOfficerComplaintsComponent implements OnInit {
   }
 
   viewComplainDetails(id: string): void {
-    this.router.navigate([`/complaints/view-field-officer-complain/${id}`]);
+    this.router.navigate([`/complaints/field-officer-complain/${id}`]);
   }
 
   fetchComplainDetails(id: any, officerName: string, language: string): void {

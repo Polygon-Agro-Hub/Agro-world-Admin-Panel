@@ -69,4 +69,5 @@ class Categories {
   id!: number;
   role!: string;
   categoryEnglish!: string;
+  modifyBy!:string | null;
 }

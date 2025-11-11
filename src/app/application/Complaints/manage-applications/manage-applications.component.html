@@ -47,6 +47,7 @@ Add New
             <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark w-25">Application Name</th>
             <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark">No. of Categories</th>
             <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark">View Categories</th>
+            <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark whitespace-nowrap">Last Modified By</th>
             <th class="text-left py-2"></th>
             <th class="text-left py-2"></th>
           </tr>
@@ -75,6 +76,7 @@ Add New
               </button>
               
             </td>
+            <td class="py-2 vertical-align: middle text-left dark:text-white text-gray-500">{{app.modifiedBy || '--'}}</td>
             <!-- <td class="py-2" ><i class="fa-regular fa-pen-to-square text-[blue] " (click)="editApp(app.systemAppId, app.systemAppName)"></i></td> -->
             <td class="py-2" >
               <button (click)="editApp(app.systemAppId, app.systemAppName)" class="w-5 h-5 text-blue-500 hover:text-blue-700">

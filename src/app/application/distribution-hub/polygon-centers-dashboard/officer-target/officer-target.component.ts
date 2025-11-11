@@ -36,11 +36,13 @@ export class OfficerTargetComponent implements OnChanges {
   }
 
   fetchData() {
+    this.isLoading = true
     this.DestributionSrv.getDailyOfficerDistributedTarget(this.centerObj.centerId).subscribe(
       (res) => {
         this.ordersArr = res.data;
         this.orderCount = res.data?.length || 0;
         this.hasData = this.orderCount > 0;
+        this.isLoading = false
       }
     )
   }

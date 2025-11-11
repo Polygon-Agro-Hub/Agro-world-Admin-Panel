@@ -71,12 +71,14 @@ export class OfficersComponent implements OnChanges {
   }
 
   fetchData() {
+    this.isLoading = true
     this.DestributionSrv.getDistributedCenterOfficers(
       this.centerObj.centerId,
       this.selectRole,
       this.selectStatus,
       this.searchText
     ).subscribe((res) => {
+      this.isLoading = false
       this.officersArr = res.data;
       this.officerCount = res.data?.length || 0;
       this.hasData = this.officerCount > 0;

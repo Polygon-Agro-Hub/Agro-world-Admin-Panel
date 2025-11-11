@@ -25,7 +25,7 @@ export class OfficerTargetComponent implements OnChanges {
   isLoading = false;
   hasData: boolean = false;
   ordersArr: Orders[] = [];
-  orderCount : number = 0;
+  orderCount: number = 0;
 
   constructor(
     private router: Router,
@@ -47,8 +47,8 @@ export class OfficerTargetComponent implements OnChanges {
     )
   }
 
-  selectOfficer() {
-    this.router.navigate([`/distribution-hub/action/view-polygon-centers/selected-officer-target`])
+  selectOfficer(id: number) {
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/selected-officer-target`], { queryParams: { targetId: id } })
   }
 }
 

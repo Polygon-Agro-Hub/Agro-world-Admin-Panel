@@ -24,7 +24,7 @@ export class SelectedOfficerTargetComponent implements OnInit {
 
   isPass: boolean = false;
 
-  officerId: number = 111;
+  officerId: number = 66;
 
   date:  string = '';
 
@@ -67,7 +67,7 @@ export class SelectedOfficerTargetComponent implements OnInit {
 
 
   ngOnInit(): void {
-    
+    this.officerId = this.route.snapshot.queryParams['targetId'];;
     this.fetchSelectedOfficerTargets();
     
   }

@@ -413,7 +413,7 @@ export class ComplaintsService {
     Authorization: `Bearer ${this.token}`,
     'Content-Type': 'application/json',
   });
-  return this.http.get(`${this.apiUrl}complain/field-officer-complains-by-id/${id}`, {
+  return this.http.get(`${this.apiUrl}auth/field-officer-complains-by-id/${id}`, {
     headers,
   });
 }

@@ -115,7 +115,7 @@ export class EditCertificateDetailsComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
       scope: ['', Validators.required],
-      noOfVisit: ['', [Validators.min(0)]],
+      noOfVisit: ['', [Validators.required, Validators.min(0)]],
       tearmsFile: [null], // Not required for edit
     });
 
@@ -504,9 +504,11 @@ export class EditCertificateDetailsComponent implements OnInit {
       missingFields.push('Scope');
     }
 
-    if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
-      missingFields.push('Number of Visits (cannot be negative)');
-    }
+    if (this.certificateForm.get('noOfVisit')?.errors?.['required']) {
+    missingFields.push('Number of Visits');
+  } else if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
+    missingFields.push('Number of Visits (cannot be negative)');
+  }
 
     return missingFields;
   }

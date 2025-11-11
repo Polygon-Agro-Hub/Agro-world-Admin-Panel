@@ -227,6 +227,8 @@ import { FarmersClustersAuditsComponent } from './application/plant-care-app/far
 import { FarmerPaymentsComponent } from './application/finance/farmer-payments/farmer-payments.component';
 import { FiealdOfficerComplaintsComponent } from './application/Complaints/fieald-officer-complaints/fieald-officer-complaints.component';
 import { GoviLinkViewComplaintComponent } from './application/Complaints/govi-link-view-complaint/govi-link-view-complaint.component';
+import { PaymentHistoryAddNewComponent } from './application/finance/payment-history-add-new/payment-history-add-new.component';
+import { PaymentHistoryUpdateComponent } from './application/finance/payment-history-update/payment-history-update.component';
 
 export const routes: Routes = [
   {
@@ -568,6 +570,14 @@ export const routes: Routes = [
                 path: 'farmer-payments',
                 component: FarmerPaymentsComponent,
               },
+              {
+                path: 'add-new-payment',
+                component: PaymentHistoryAddNewComponent,
+              },
+              {
+                path: 'update-payment/:id',
+                component: PaymentHistoryUpdateComponent,
+              }
             ],
           },
         ],

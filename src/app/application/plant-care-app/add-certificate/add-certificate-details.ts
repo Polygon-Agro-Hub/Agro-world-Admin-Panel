@@ -529,7 +529,34 @@ export class AddCertificateDetailsComponent implements OnInit {
     });
   }
   
-  
+  allowDecimalInput(event: KeyboardEvent): void {
+    const charCode = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+    
+    // Allow: backspace, delete, tab, escape, enter
+    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
+      return;
+    }
+    
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (event.ctrlKey && ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())) {
+      return;
+    }
+    
+    // Allow: numbers 0-9
+    if (charCode >= '0' && charCode <= '9') {
+      return;
+    }
+    
+    // Allow: decimal point (only one)
+    if (charCode === '.' && !currentValue.includes('.')) {
+      return;
+    }
+    
+    // Prevent any other key
+    event.preventDefault();
+  }
 
   trimLeadingSpaces(event: any, varibleName: string) {
     const input = event.target as HTMLInputElement;

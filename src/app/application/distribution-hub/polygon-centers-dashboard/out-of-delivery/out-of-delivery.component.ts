@@ -84,7 +84,7 @@ export class OutOfDeliveryComponent implements OnChanges {
     // Add center information
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Center: ${this.centerObj.centerRegCode} ${this.centerObj.centerName}`, 14, 30);
+    doc.text(`Centre: ${this.centerObj.centerRegCode} ${this.centerObj.centerName}`, 14, 30);
     
     // Add filter information if applied
     let yPos = 38;

@@ -50,7 +50,25 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
 
   ngOnInit() {
     // Keep dates blank by default - don't fetch until user applies filter
-    // Don't call fetchPackagePayments() here
+  }
+
+  // Called when clear button is clicked in either calendar
+  onDateClear() {
+    // Reset both dates
+    this.fromDate = null;
+    this.toDate = null;
+    this.minToDate = null;
+    
+    // Reset to first page and clear the table data
+    this.page = 1;
+    this.clearTableData();
+  }
+
+  // Clear table data and reset pagination
+  clearTableData() {
+    this.packagePayments = [];
+    this.totalItems = 0;
+    this.hasData = false;
   }
 
   // Called when fromDate changes
@@ -72,10 +90,18 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
       }
     } else {
       this.minToDate = null;
+      // If fromDate is cleared, also clear toDate
+      this.toDate = null;
     }
   }
 
   fetchPackagePayments() {
+    // Don't fetch if both dates are not selected
+    if (!this.fromDate || !this.toDate) {
+      this.clearTableData();
+      return;
+    }
+
     this.isLoading = true;
     
     // Convert Date objects to string format for API
@@ -99,6 +125,7 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
         this.isLoading = false;
         console.error('Error fetching package payments:', error);
         this.hasData = false;
+        this.clearTableData();
       }
     );
   }
@@ -118,16 +145,34 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
   onSearch() {
     this.searchTerm = this.searchTerm?.trim() || '';
     this.page = 1; // Reset to first page on search
-    this.fetchPackagePayments();
+    
+    // Only fetch if dates are selected
+    if (this.fromDate && this.toDate) {
+      this.fetchPackagePayments();
+    } else {
+      this.clearTableData();
+    }
   }
 
   offSearch() {
     this.searchTerm = '';
     this.page = 1;
-    this.fetchPackagePayments();
+    
+    // Only fetch if dates are selected
+    if (this.fromDate && this.toDate) {
+      this.fetchPackagePayments();
+    } else {
+      this.clearTableData();
+    }
   }
 
   applyDateFilter() {
+    // Validate that both dates are selected
+    if (!this.fromDate || !this.toDate) {
+      this.clearTableData();
+      return;
+    }
+
     this.page = 1; // Reset to first page on filter
     this.fetchPackagePayments();
   }

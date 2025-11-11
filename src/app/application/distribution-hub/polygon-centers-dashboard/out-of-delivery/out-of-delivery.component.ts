@@ -60,6 +60,7 @@ export class OutOfDeliveryComponent implements OnChanges {
   }
 
   onSearch() {
+    this.searchText = this.searchText.trim();
     this.fetchData();
   }
 
@@ -213,6 +214,15 @@ export class OutOfDeliveryComponent implements OnChanges {
         this.hasData = false;
       }
     );
+  }
+
+  onSearchInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    // Remove spaces from the beginning and end
+    this.searchText = input.value.trim();
+    
+    // Optional: Also prevent multiple consecutive spaces
+    this.searchText = this.searchText.replace(/\s+/g, ' ');
   }
 }
 

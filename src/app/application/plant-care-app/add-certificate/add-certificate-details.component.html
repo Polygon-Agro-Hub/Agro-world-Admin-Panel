@@ -167,34 +167,57 @@
       </div>
 
       <!-- No of Visit -->
-      <div class="my-3">
-        <label
-          for="noOfVisit"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Number of Visits *</label
-        >
-        <input
-          id="noOfVisit"
-          type="number"
-          formControlName="noOfVisit"
-          min="0"
-          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [ngClass]="{
-            'border-red-500':
-              certificateForm.get('noOfVisit')?.invalid &&
-              certificateForm.get('noOfVisit')?.touched
-          }"
-        />
-        <div
-          *ngIf="
-            certificateForm.get('noOfVisit')?.errors?.['min'] &&
-            certificateForm.get('noOfVisit')?.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          Number of visits cannot be negative
-        </div>
-      </div>
+      <!-- No of Visit -->
+<div class="my-3">
+  <label
+    for="noOfVisit"
+    class="block text-sm font-medium text-textLight dark:text-textDark"
+    >Number of Visits *</label
+  >
+  <input
+    id="noOfVisit"
+    type="number"
+    formControlName="noOfVisit"
+    min="0"
+    class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+    [ngClass]="{
+      'border-red-500':
+        certificateForm.get('noOfVisit')?.invalid &&
+        certificateForm.get('noOfVisit')?.touched
+    }"
+  />
+  
+  <!-- Validation Messages -->
+  <div
+    *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['required'] &&
+      certificateForm.get('noOfVisit')?.touched
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Number of visits is required
+  </div>
+  
+  <div
+    *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['min'] &&
+      certificateForm.get('noOfVisit')?.touched
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Number of visits cannot be negative
+  </div>
+
+  <div
+    *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['pattern'] &&
+      certificateForm.get('noOfVisit')?.touched
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Please enter a valid whole number
+  </div>
+</div>
 
       <!-- Applicable For Dropdown -->
       <div class="my-3">

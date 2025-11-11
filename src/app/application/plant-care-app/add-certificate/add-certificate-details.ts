@@ -113,7 +113,7 @@ export class AddCertificateDetailsComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d*\.?\d*$/)],
       ],
       scope: ['', Validators.required],
-      noOfVisit: ['', [Validators.min(0)]],
+      noOfVisit: ['', [Validators.required, Validators.min(0)]],
       tearmsFile: [null, Validators.required],
       logo: [null, Validators.required],
     });

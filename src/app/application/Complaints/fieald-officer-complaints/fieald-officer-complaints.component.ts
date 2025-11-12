@@ -254,6 +254,7 @@ class Complain {
   officerPhone!: string;
   farmerName!: string;
   language!: string;
+  adminReplyByName!:string;
 }
 
 class ComplainN {

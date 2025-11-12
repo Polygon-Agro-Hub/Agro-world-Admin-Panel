@@ -85,7 +85,7 @@ export class AddFarmerClustersComponent implements OnInit {
     private router: Router,
     private location: Location,
     private farmerClusterService: CertificateCompanyService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCertificates();
@@ -134,7 +134,23 @@ export class AddFarmerClustersComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   onFileSelected(event: any): void {
@@ -167,7 +183,7 @@ export class AddFarmerClustersComponent implements OnInit {
     if (fileExtension && allowedExtensions.includes(`.${fileExtension}`)) {
       this.selectedFile = file;
       this.errorMessage = '';
-      this.checkDuplicatesImmediately(file);
+      // this.checkDuplicatesImmediately(file);
     } else {
       this.errorMessage =
         'Invalid file type. Please upload a CSV or XLSX file.';
@@ -332,17 +348,35 @@ export class AddFarmerClustersComponent implements OnInit {
           farmers: farmers,
         };
 
-        this.farmerClusterService.createFarmerCluster(payload).subscribe({
-          next: (response) => {
-            this.isLoading = false;
-            this.showSuccessPopup(response);
-            this.resetForm();
+        Swal.fire({
+          icon: 'info',
+          title: 'Are you sure?',
+          text: 'Do you really want to create this cluster?',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Create',
+          cancelButtonText: 'No, Cancel',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
           },
-          error: (error) => {
-            this.isLoading = false;
-            this.handleError(error);
-          },
+          buttonsStyling: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.farmerClusterService.createFarmerCluster(payload).subscribe({
+              next: (response) => {
+                this.isLoading = false;
+                this.showSuccessPopup(response);
+                this.resetForm();
+              },
+              error: (error) => {
+                this.isLoading = false;
+                this.handleError(error);
+              },
+            });
+          }
         });
+
+
       } catch (error) {
         this.isLoading = false;
         console.error('Error processing file:', error);
@@ -432,8 +466,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `duplicate_entries_${
-          this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `duplicate_entries_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -470,8 +503,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `unregistered_users_${
-          this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `unregistered_users_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -510,8 +542,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `mismatched_farmers_${
-          this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `mismatched_farmers_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -598,25 +629,22 @@ export class AddFarmerClustersComponent implements OnInit {
             </thead>
             <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
               ${duplicates
-                .map(
-                  (entry, index) => `
+        .map(
+          (entry, index) => `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                    <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
                   </td>
-                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
-                    index + 1
-                  }</td>
-                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
-                    entry.NIC
-                  }</td>
-                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
-                    entry.regCode
-                  }</td>
+                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${index + 1
+            }</td>
+                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${entry.NIC
+            }</td>
+                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${entry.regCode
+            }</td>
                 </tr>
               `
-                )
-                .join('')}
+        )
+        .join('')}
             </tbody>
           </table>
         </div>
@@ -709,25 +737,22 @@ export class AddFarmerClustersComponent implements OnInit {
           </thead>
           <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
             ${mismatchedFarmers
-              .map(
-                (farmer, index) => `
+        .map(
+          (farmer, index) => `
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                   <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
                 </td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
-                  index + 1
-                }</td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
-                  farmer.farmerNIC
-                }</td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
-                  farmer.regCode
-                }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${index + 1
+            }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${farmer.farmerNIC
+            }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${farmer.regCode
+            }</td>
               </tr>
             `
-              )
-              .join('')}
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -893,20 +918,19 @@ export class AddFarmerClustersComponent implements OnInit {
           </thead>
           <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
             ${missingNICs
-              .map(
-                (nic, index) => `
+        .map(
+          (nic, index) => `
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                   <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
                 </td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
-                  index + 1
-                }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${index + 1
+            }</td>
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${nic}</td>
               </tr>
             `
-              )
-              .join('')}
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -1020,20 +1044,19 @@ export class AddFarmerClustersComponent implements OnInit {
           </thead>
           <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
             ${missingRegCodes
-              .map(
-                (regCode, index) => `
+        .map(
+          (regCode, index) => `
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                   <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
                 </td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
-                  index + 1
-                }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${index + 1
+            }</td>
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${regCode}</td>
               </tr>
             `
-              )
-              .join('')}
+        )
+        .join('')}
           </tbody>
         </table>
       </div>
@@ -1079,8 +1102,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `invalid_farm_ids_${
-          this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `invalid_farm_ids_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';

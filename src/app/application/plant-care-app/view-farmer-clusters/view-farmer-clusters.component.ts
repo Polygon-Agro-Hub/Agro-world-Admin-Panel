@@ -123,19 +123,6 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
     this.showStatusModal = false;
     this.selectedCluster = null;
     this.isCountdownCompleted = false;
-
-    // Show cancellation message only if user manually cancelled
-    if (this.countdown > 0) {
-      Swal.fire({
-        title: 'Cancelled',
-        text: 'Status update was cancelled.',
-        icon: 'info',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
-    }
   }
 
   autoCancelStatusUpdate() {

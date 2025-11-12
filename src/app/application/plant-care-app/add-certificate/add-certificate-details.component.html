@@ -77,6 +77,7 @@
           Logo is required
         </div>
       </div>
+      <div></div>
 
       <!-- Company Dropdown -->
       <div class="my-3">
@@ -103,36 +104,6 @@
           class="text-red-500 text-sm mt-1"
         >
           Company is required
-        </div>
-      </div>
-
-      <!-- Certificate Name -->
-      <div class="my-3">
-        <label
-          for="srtName"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Certificate Name *</label
-        >
-        <input
-          id="srtName"
-          type="text"
-          formControlName="srtName"
-          (input)="trimLeadingSpaces($event, 'srtName')"
-          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [ngClass]="{
-            'border-red-500':
-              certificateForm.get('srtName')?.invalid &&
-              certificateForm.get('srtName')?.touched
-          }"
-        />
-        <div
-          *ngIf="
-            certificateForm.get('srtName')?.invalid &&
-            certificateForm.get('srtName')?.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          Certificate Name is required
         </div>
       </div>
 
@@ -165,59 +136,151 @@
           Certificate Number is required
         </div>
       </div>
+    </div>
+    <div class="grid grid-cols-1 gap-4 mb-4">
+      <!-- Certificate Name -->
+      <div class="my-3">
+        <label
+          for="srtName"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Certificate Name (in English) *</label
+        >
+        <input
+          id="srtName"
+          type="text"
+          formControlName="srtName"
+          (input)="trimLeadingSpaces($event, 'srtName')"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              certificateForm.get('srtName')?.invalid &&
+              certificateForm.get('srtName')?.touched
+          }"
+        />
+        <div
+          *ngIf="
+            certificateForm.get('srtName')?.invalid &&
+            certificateForm.get('srtName')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Certificate Name (in English) is required
+        </div>
+      </div>
 
-      <!-- No of Visit -->
-      <!-- No of Visit -->
-<div class="my-3">
-  <label
-    for="noOfVisit"
-    class="block text-sm font-medium text-textLight dark:text-textDark"
-    >Number of Visits *</label
-  >
-  <input
-    id="noOfVisit"
-    type="number"
-    formControlName="noOfVisit"
-    min="0"
-    class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-    [ngClass]="{
-      'border-red-500':
-        certificateForm.get('noOfVisit')?.invalid &&
-        certificateForm.get('noOfVisit')?.touched
-    }"
-  />
-  
-  <!-- Validation Messages -->
-  <div
-    *ngIf="
-      certificateForm.get('noOfVisit')?.errors?.['required'] &&
-      certificateForm.get('noOfVisit')?.touched
-    "
-    class="text-red-500 text-sm mt-1"
-  >
-    Number of visits is required
-  </div>
-  
-  <div
-    *ngIf="
-      certificateForm.get('noOfVisit')?.errors?.['min'] &&
-      certificateForm.get('noOfVisit')?.touched
-    "
-    class="text-red-500 text-sm mt-1"
-  >
-    Number of visits cannot be negative
-  </div>
+      <!-- Certificate Name Sinhala -->
+      <div class="my-3">
+        <label
+          for="srtNameSinhala"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Certificate Name (in Sinhala) *</label
+        >
+        <input
+          id="srtNameSinhala"
+          type="text"
+          formControlName="srtNameSinhala"
+          (input)="trimLeadingSpaces($event, 'srtNameSinhala')"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              certificateForm.get('srtNameSinhala')?.invalid &&
+              certificateForm.get('srtNameSinhala')?.touched
+          }"
+        />
+        <div
+          *ngIf="
+            certificateForm.get('srtNameSinhala')?.invalid &&
+            certificateForm.get('srtNameSinhala')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Certificate Name (in Sinhala) is required
+        </div>
+      </div>
 
-  <div
-    *ngIf="
-      certificateForm.get('noOfVisit')?.errors?.['pattern'] &&
-      certificateForm.get('noOfVisit')?.touched
-    "
-    class="text-red-500 text-sm mt-1"
-  >
-    Please enter a valid whole number
-  </div>
-</div>
+      <!-- Certificate Name Tamil -->
+      <div class="my-3">
+        <label
+          for="srtNameTamil"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Certificate Name (in Tamil) *</label
+        >
+        <input
+          id="srtNameTamil"
+          type="text"
+          formControlName="srtNameTamil"
+          (input)="trimLeadingSpaces($event, 'srtNameTamil')"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              certificateForm.get('srtNameTamil')?.invalid &&
+              certificateForm.get('srtNameTamil')?.touched
+          }"
+        />
+        <div
+          *ngIf="
+            certificateForm.get('srtNameTamil')?.invalid &&
+            certificateForm.get('srtNameTamil')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Certificate Name (in Tamil) is required
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <!-- No of Visit -->
+      <div class="my-3">
+        <label
+          for="noOfVisit"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Number of Visits *</label
+        >
+        <input
+          id="noOfVisit"
+          type="number"
+          (input)="trimLeadingSpaces($event, 'numberOfVisits')"
+          formControlName="noOfVisit"
+          min="0"
+          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          [ngClass]="{
+            'border-red-500':
+              certificateForm.get('noOfVisit')?.invalid &&
+              certificateForm.get('noOfVisit')?.touched
+          }"
+        />
+
+        <!-- Validation Messages -->
+        <div
+          *ngIf="
+            certificateForm.get('noOfVisit')?.errors?.['required'] &&
+            certificateForm.get('noOfVisit')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Number of visits is required
+        </div>
+
+        <div
+          *ngIf="
+            certificateForm.get('noOfVisit')?.errors?.['min'] &&
+            certificateForm.get('noOfVisit')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Number of visits cannot be negative
+        </div>
+
+        <div
+          *ngIf="
+            certificateForm.get('noOfVisit')?.errors?.['pattern'] &&
+            certificateForm.get('noOfVisit')?.touched
+          "
+          class="text-red-500 text-sm mt-1"
+        >
+          Please enter a valid whole number
+        </div>
+      </div>
 
       <!-- Applicable For Dropdown -->
       <div class="my-3">
@@ -310,6 +373,7 @@
           id="price"
           type="number"
           formControlName="price"
+          (input)="trimLeadingSpaces($event, 'price')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
@@ -342,6 +406,7 @@
           step="1"
           min="1"
           (keydown)="preventDecimalInput($event)"
+          (input)="trimLeadingSpaces($event, 'timelineMonths')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
@@ -356,7 +421,7 @@
           "
           class="text-red-500 text-sm mt-1"
         >
-          Timeline is required
+          Timeline (Months) is required
         </div>
       </div>
 

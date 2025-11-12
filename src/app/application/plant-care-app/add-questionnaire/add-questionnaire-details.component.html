@@ -63,7 +63,7 @@
             <button
               *ngIf="q.value.done && !q.value.editing"
               type="button"
-              class="text-blue-500 bg-blue-100 rounded-md disabled:bg-gray-100 disabled:text-blue-500 disabled:cursor-not-allowed px-3 py-2"
+              class="text-blue-500 bg-blue-100 rounded-md disabled:text-gray-500 disabled:bg-gray-100 disabled:cursor-not-allowed px-3 py-2"
               (click)="markEditing(i)"
               [disabled]="isAnyQuestionEditing()"
             >
@@ -107,6 +107,7 @@
             <textarea
               rows="2"
               formControlName="qEnglish"
+              (keydown)="preventLeadingSpace($event)"
               class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
               [class.border-red-500]="
                 q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched
@@ -127,6 +128,7 @@
             <textarea
               rows="2"
               formControlName="qSinhala"
+              (keydown)="preventLeadingSpace($event)"
               class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
               [class.border-red-500]="
                 q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched
@@ -147,6 +149,7 @@
             <textarea
               rows="2"
               formControlName="qTamil"
+              (keydown)="preventLeadingSpace($event)"
               class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
               [class.border-red-500]="
                 q.get('qTamil')?.invalid && q.get('qTamil')?.touched

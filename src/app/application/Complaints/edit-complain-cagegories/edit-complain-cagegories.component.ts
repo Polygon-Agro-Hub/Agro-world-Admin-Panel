@@ -139,7 +139,7 @@ export class EditComplainCagegoriesComponent implements OnInit {
               confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
             }
           });
-          this.router.navigate(['/complaints/manage-applications']);
+          window.history.back()
         } else {
           Swal.fire({
             icon: 'error',

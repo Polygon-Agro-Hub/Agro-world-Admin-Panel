@@ -1,5 +1,8 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button (click)="back()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
+<button
+  (click)="back()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -15,258 +18,454 @@
       <!-- Logo Upload -->
       <div class="my-3">
         <div class="flex items-center gap-4">
-          <label for="logo" class="block text-sm font-medium text-textLight dark:text-textDark">
+          <label
+            for="logo"
+            class="block text-sm font-medium text-textLight dark:text-textDark"
+          >
             Add Logo *
           </label>
 
           <!-- Upload Button -->
-          <button type="button"
+          <button
+            type="button"
             class="flex items-center gap-2 bg-gray-100 hover:bg-gray-600 text-white px-3 py-3 rounded-md border-2 border-[#3980C0]"
-            (click)="openLogoFilePicker()">
+            (click)="openLogoFilePicker()"
+          >
             <i class="fa-solid fa-plus text-gray-500 hover:text-gray-100"></i>
           </button>
 
           <!-- Logo Preview -->
           <div
-            class="w-11 h-11 border border-gray-300 rounded-md flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800">
-            <img *ngIf="logoPreview" [src]="logoPreview" alt="Certificate Logo" class="object-cover w-full h-full" />
-            <i *ngIf="!logoPreview" class="fa-solid fa-image text-gray-400 text-3xl"></i>
+            class="w-11 h-11 border border-gray-300 rounded-md flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800"
+          >
+            <img
+              *ngIf="logoPreview"
+              [src]="logoPreview"
+              alt="Certificate Logo"
+              class="object-cover w-full h-full"
+            />
+            <i
+              *ngIf="!logoPreview"
+              class="fa-solid fa-image text-gray-400 text-3xl"
+            ></i>
           </div>
         </div>
 
         <div class="flex items-center gap-4">
           <!-- Hidden File Input -->
-          <input type="file" #logoInput id="logo" accept="image/*" (change)="onLogoSelected($event)" hidden />
+          <input
+            type="file"
+            #logoInput
+            id="logo"
+            accept="image/*"
+            (change)="onLogoSelected($event)"
+            hidden
+          />
         </div>
 
         <!-- Validation error -->
         <div *ngIf="logoError" class="text-red-500 text-sm mt-2">
           {{ logoError }}
         </div>
-        <div *ngIf="
+        <div
+          *ngIf="
             certificateForm.get('logo')?.invalid &&
             certificateForm.get('logo')?.touched
-          " class="text-red-500 text-sm mt-2">
+          "
+          class="text-red-500 text-sm mt-2"
+        >
           Logo is required
         </div>
       </div>
 
       <!-- Company Dropdown -->
       <div class="my-3">
-        <label for="srtcomapnyId" class="block text-sm font-medium text-textLight dark:text-textDark">Company *</label>
-        <p-dropdown formControlName="srtcomapnyId" [options]="companies" optionLabel="label" optionValue="value"
-          placeholder="--Select Company--" [filter]="true" filterBy="label"
-          styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></p-dropdown>
-        <div *ngIf="
+        <label
+          for="srtcomapnyId"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Company *</label
+        >
+        <p-dropdown
+          formControlName="srtcomapnyId"
+          [options]="companies"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="--Select Company--"
+          [filter]="true"
+          filterBy="label"
+          styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        ></p-dropdown>
+        <div
+          *ngIf="
             certificateForm.get('srtcomapnyId')?.invalid &&
             certificateForm.get('srtcomapnyId')?.touched
-          " class="text-red-500 text-sm mt-1">
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Company is required
         </div>
       </div>
 
       <!-- Certificate Name -->
       <div class="my-3">
-        <label for="srtName" class="block text-sm font-medium text-textLight dark:text-textDark">Certificate Name
-          *</label>
-        <input id="srtName" type="text" formControlName="srtName" (input)="trimLeadingSpaces($event,'srtName')"
+        <label
+          for="srtName"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Certificate Name *</label
+        >
+        <input
+          id="srtName"
+          type="text"
+          formControlName="srtName"
+          (input)="trimLeadingSpaces($event, 'srtName')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
               certificateForm.get('srtName')?.invalid &&
               certificateForm.get('srtName')?.touched
-          }" />
-        <div *ngIf="
+          }"
+        />
+        <div
+          *ngIf="
             certificateForm.get('srtName')?.invalid &&
             certificateForm.get('srtName')?.touched
-          " class="text-red-500 text-sm mt-1">
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Certificate Name is required
         </div>
       </div>
 
       <!-- Certificate Number -->
       <div class="my-3">
-        <label for="srtNumber" class="block text-sm font-medium text-textLight dark:text-textDark">Certificate Number
-          *</label>
-        <input id="srtNumber" type="text" formControlName="srtNumber" (input)="trimLeadingSpaces($event,'srtNumber')"
+        <label
+          for="srtNumber"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Certificate Number *</label
+        >
+        <input
+          id="srtNumber"
+          type="text"
+          formControlName="srtNumber"
+          (input)="trimLeadingSpaces($event, 'srtNumber')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
               certificateForm.get('srtNumber')?.invalid &&
               certificateForm.get('srtNumber')?.touched
-          }" />
-        <div *ngIf="
+          }"
+        />
+        <div
+          *ngIf="
             certificateForm.get('srtNumber')?.invalid &&
             certificateForm.get('srtNumber')?.touched
-          " class="text-red-500 text-sm mt-1">
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Certificate Number is required
         </div>
       </div>
 
       <!-- No of Visit -->
-      <div class="my-3">
-        <label for="noOfVisit" class="block text-sm font-medium text-textLight dark:text-textDark">Number of Visits
-          *</label>
-        <input id="noOfVisit" type="number" formControlName="noOfVisit" min="0"
-          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [ngClass]="{
-            'border-red-500':
-              certificateForm.get('noOfVisit')?.invalid &&
-              certificateForm.get('noOfVisit')?.touched
-          }" />
-        <div *ngIf="
-            certificateForm.get('noOfVisit')?.errors?.['min'] &&
-            certificateForm.get('noOfVisit')?.touched
-          " class="text-red-500 text-sm mt-1">
-          Number of visits cannot be negative
-        </div>
-      </div>
+      <!-- No of Visit -->
+<div class="my-3">
+  <label
+    for="noOfVisit"
+    class="block text-sm font-medium text-textLight dark:text-textDark"
+    >Number of Visits *</label
+  >
+  <input
+    id="noOfVisit"
+    type="number"
+    formControlName="noOfVisit"
+    min="0"
+    class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+    [ngClass]="{
+      'border-red-500':
+        certificateForm.get('noOfVisit')?.invalid &&
+        certificateForm.get('noOfVisit')?.touched
+    }"
+  />
+  
+  <!-- Validation Messages -->
+  <div
+    *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['required'] &&
+      certificateForm.get('noOfVisit')?.touched
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Number of visits is required
+  </div>
+  
+  <div
+    *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['min'] &&
+      certificateForm.get('noOfVisit')?.touched
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Number of visits cannot be negative
+  </div>
+
+  <div
+    *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['pattern'] &&
+      certificateForm.get('noOfVisit')?.touched
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Please enter a valid whole number
+  </div>
+</div>
 
       <!-- Applicable For Dropdown -->
       <div class="my-3">
-        <label for="applicable" class="block text-sm font-medium text-textLight dark:text-textDark">Applicable For
-          *</label>
-        <p-dropdown formControlName="applicable" [options]="applicableOptions" placeholder="--Select from here--"
+        <label
+          for="applicable"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Applicable For *</label
+        >
+        <p-dropdown
+          formControlName="applicable"
+          [options]="applicableOptions"
+          placeholder="--Select from here--"
           styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          (onChange)="onApplicableChange()"></p-dropdown>
-        <div *ngIf="
+          (onChange)="onApplicableChange()"
+        ></p-dropdown>
+        <div
+          *ngIf="
             certificateForm.get('applicable')?.invalid &&
             certificateForm.get('applicable')?.touched
-          " class="text-red-500 text-sm mt-1">
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Applicable For is required
         </div>
       </div>
 
       <!-- Accreditation Body -->
       <div class="my-3">
-        <label for="accreditation" class="block text-sm font-medium text-textLight dark:text-textDark">Accreditation
-          Body *</label>
-        <input id="accreditation" type="text" formControlName="accreditation" (input)="trimLeadingSpaces($event,'accreditation')"
+        <label
+          for="accreditation"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Accreditation Body *</label
+        >
+        <input
+          id="accreditation"
+          type="text"
+          formControlName="accreditation"
+          (input)="trimLeadingSpaces($event, 'accreditation')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
               certificateForm.get('accreditation')?.invalid &&
               certificateForm.get('accreditation')?.touched
-          }" />
-        <div *ngIf="
+          }"
+        />
+        <div
+          *ngIf="
             certificateForm.get('accreditation')?.invalid &&
             certificateForm.get('accreditation')?.touched
-          " class="text-red-500 text-sm mt-1">
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Accreditation Body is required
         </div>
       </div>
 
       <!-- Service Areas Dropdown -->
       <div class="my-3">
-        <label for="serviceAreas" class="block text-sm font-medium text-textLight dark:text-textDark">Service Areas
-          *</label>
-        <p-multiSelect formControlName="serviceAreas" [options]="serviceAreasOptions" optionLabel="name"
+        <label
+          for="serviceAreas"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Service Areas *</label
+        >
+        <p-multiSelect
+          formControlName="serviceAreas"
+          [options]="serviceAreasOptions"
+          optionLabel="name"
           placeholder="--Select Districts--"
-          styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></p-multiSelect>
-        <div *ngIf="
+          styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        ></p-multiSelect>
+        <div
+          *ngIf="
             certificateForm.get('serviceAreas')?.invalid &&
             certificateForm.get('serviceAreas')?.touched
-          " class="text-red-500 text-sm mt-1">
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Service Areas are required
         </div>
       </div>
 
       <!-- Price -->
       <div class="my-3">
-        <label for="price" class="block text-sm font-medium text-textLight dark:text-textDark">Price (Rs.) *</label>
-        <input id="price" type="number" formControlName="price"
+        <label
+          for="price"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Price (Rs.) *</label
+        >
+        <input
+          id="price"
+          type="number"
+          formControlName="price"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
               certificateForm.get('price')?.invalid &&
               certificateForm.get('price')?.touched
-          }" />
-        <div *ngIf="
+          }"
+        />
+        <div
+          *ngIf="
             certificateForm.get('price')?.invalid &&
             certificateForm.get('price')?.touched
-          " class="text-red-500 text-sm mt-1">
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Price is required
         </div>
       </div>
 
       <!-- Timeline -->
       <div class="my-3">
-        <label for="timeLine" class="block text-sm font-medium text-textLight dark:text-textDark">Timeline (Months)
-          *</label>
-        <input id="timeLine" type="number" formControlName="timeLine" step="1" min="1" (keydown)="preventDecimalInput($event)"
+        <label
+          for="timeLine"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+          >Timeline (Months) *</label
+        >
+        <input
+          id="timeLine"
+          type="number"
+          formControlName="timeLine"
+          step="1"
+          min="1"
+          (keydown)="preventDecimalInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
               certificateForm.get('timeLine')?.invalid &&
               certificateForm.get('timeLine')?.touched
-          }" />
-        <div *ngIf="
+          }"
+        />
+        <div
+          *ngIf="
             certificateForm.get('timeLine')?.invalid &&
             certificateForm.get('timeLine')?.touched
-          " class="text-red-500 text-sm mt-1">
+          "
+          class="text-red-500 text-sm mt-1"
+        >
           Timeline is required
         </div>
       </div>
 
       <!-- Commission -->
       <div class="my-3">
-        <label for="commission" class="block text-sm font-medium text-textLight dark:text-textDark">Agreed Commission
-          (%) *</label>
-        <input id="commission" type="number" formControlName="commission" (input)="trimLeadingSpaces($event,'commission')"
+        <label
+          for="commission"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
+          Agreed Commission (%) *
+        </label>
+        <input
+          id="commission"
+          type="text"
+          formControlName="commission"
+          (input)="trimLeadingSpaces($event, 'commission')"
+          (keypress)="allowDecimalInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
               certificateForm.get('commission')?.invalid &&
               certificateForm.get('commission')?.touched
-          }" />
+          }"
+        />
 
         <!-- Negative value error -->
-        <div *ngIf="
-      certificateForm.get('commission')?.errors?.['min'] &&
-      certificateForm.get('commission')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div
+          *ngIf="
+    certificateForm.get('commission')?.errors?.['min'] &&
+    certificateForm.get('commission')?.touched
+  "
+          class="text-red-500 text-sm mt-1"
+        >
           Negative values are not allowed
         </div>
 
         <!-- Above 100 error -->
-        <div *ngIf="
-      certificateForm.get('commission')?.errors?.['max'] &&
-      certificateForm.get('commission')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div
+          *ngIf="
+    certificateForm.get('commission')?.errors?.['max'] &&
+    certificateForm.get('commission')?.touched
+  "
+          class="text-red-500 text-sm mt-1"
+        >
           Enter a valid commission between 0 and 100
         </div>
 
         <!-- Required error -->
-        <div *ngIf="
-      certificateForm.get('commission')?.errors?.['required'] &&
-      certificateForm.get('commission')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div
+          *ngIf="
+    certificateForm.get('commission')?.errors?.['required'] &&
+    certificateForm.get('commission')?.touched
+  "
+          class="text-red-500 text-sm mt-1"
+        >
           Commission is required
+        </div>
+
+        <!-- Decimal format error -->
+        <div
+          *ngIf="
+    certificateForm.get('commission')?.errors?.['pattern'] &&
+    certificateForm.get('commission')?.touched
+  "
+          class="text-red-500 text-sm mt-1"
+        >
+          Please enter a valid decimal number (e.g., 12.5)
         </div>
       </div>
 
       <!-- Payment Terms -->
       <div class="my-3">
-        <label for="tearmsFile" class="block text-sm font-medium text-textLight dark:text-textDark">
+        <label
+          for="tearmsFile"
+          class="block text-sm font-medium text-textLight dark:text-textDark"
+        >
           Payment Terms File *
         </label>
 
         <!-- Hidden file input -->
-        <input type="file" id="tearmsFile" (change)="onFileUpload($event)" class="hidden" accept=".pdf" />
+        <input
+          type="file"
+          id="tearmsFile"
+          (change)="onFileUpload($event)"
+          class="hidden"
+          accept=".pdf"
+        />
 
         <!-- Custom button -->
-        <label for="tearmsFile"
-          class="mt-2 block w-full cursor-pointer bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 text-gray-700 dark:text-white text-center py-2 rounded-md">
+        <label
+          for="tearmsFile"
+          class="mt-2 block w-full cursor-pointer bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 text-gray-700 dark:text-white text-center py-2 rounded-md"
+        >
           <i class="fa-solid fa-upload mr-2"></i> Upload PDF
         </label>
 
         <!-- Show attached file -->
-        <div *ngIf="uploadedFile" class="mt-2 text-textLight dark:text-textDark">
+        <div
+          *ngIf="uploadedFile"
+          class="mt-2 text-textLight dark:text-textDark"
+        >
           Attached: <span class="text-[#415CFF]">{{ uploadedFile.name }} </span>
         </div>
 
         <!-- Validation error -->
-        <div *ngIf="!uploadedFile && certificateForm.get('tearmsFile')?.touched" class="text-red-500 text-sm mt-1">
+        <div
+          *ngIf="!uploadedFile && certificateForm.get('tearmsFile')?.touched"
+          class="text-red-500 text-sm mt-1"
+        >
           Payment Terms File is required
         </div>
       </div>
@@ -274,43 +473,74 @@
 
     <!-- Scope -->
     <div class="my-3 md:col-span-2">
-      <label for="scope" class="block text-sm font-medium text-textLight dark:text-textDark">Scope *</label>
-      <textarea id="scope" rows="3" formControlName="scope" (input)="trimLeadingSpaces($event,'scope')"
+      <label
+        for="scope"
+        class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Scope *</label
+      >
+      <textarea
+        id="scope"
+        rows="3"
+        formControlName="scope"
+        (input)="trimLeadingSpaces($event, 'scope')"
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         [ngClass]="{
           'border-red-500':
             certificateForm.get('scope')?.invalid &&
             certificateForm.get('scope')?.touched
-        }"></textarea>
-      <div *ngIf="
+        }"
+      ></textarea>
+      <div
+        *ngIf="
           certificateForm.get('scope')?.invalid &&
           certificateForm.get('scope')?.touched
-        " class="text-red-500 text-sm mt-1">
+        "
+        class="text-red-500 text-sm mt-1"
+      >
         Scope is required
       </div>
     </div>
 
     <!-- Target Crops Section -->
     <div class="my-3 w-full md:col-span-2" *ngIf="showTargetCropsSection">
-      <label class="block text-sm font-medium text-textLight dark:text-textDark mb-3">Target Crops</label>
+      <label
+        class="block text-sm font-medium text-textLight dark:text-textDark mb-3"
+        >Target Crops</label
+      >
 
       <!-- For Selected Crops - Show dropdown with search functionality -->
       <div *ngIf="isForSelectedCrops" class="flex gap-2 w-full mb-2">
-        <p-dropdown [options]="cropDropdownOptions" [(ngModel)]="selectedCrop" [ngModelOptions]="{ standalone: true }"
-          placeholder="--Select Crop--" [filter]="true" filterBy="label" [showClear]="true"
+        <p-dropdown
+          [options]="cropDropdownOptions"
+          [(ngModel)]="selectedCrop"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="--Select Crop--"
+          [filter]="true"
+          filterBy="label"
+          [showClear]="true"
           styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
-          class="w-full" (onFilter)="onCropFilter($event)">
+          class="w-full"
+          (onFilter)="onCropFilter($event)"
+        >
           <ng-template pTemplate="header">
             <div class="p-2 border-b">
-              <input type="text" #cropSearchInput (input)="onCropSearchInput($event)"
+              <input
+                type="text"
+                #cropSearchInput
+                (input)="onCropSearchInput($event)"
                 placeholder="Type to search crops..."
-                class="w-full p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white" />
+                class="w-full p-2 border rounded bg-white dark:bg-gray-700 text-black dark:text-white"
+              />
             </div>
           </ng-template>
         </p-dropdown>
 
-        <button type="button" (click)="addCrop()" class="px-6 bg-[#3980C0] text-white rounded-md h-12 whitespace-nowrap"
-          [disabled]="!selectedCrop">
+        <button
+          type="button"
+          (click)="addCrop()"
+          class="px-6 bg-[#3980C0] text-white rounded-md h-12 whitespace-nowrap"
+          [disabled]="!selectedCrop"
+        >
           Add Crop
         </button>
       </div>
@@ -319,50 +549,69 @@
       <div class="mt-3 border rounded-md p-3 min-h-[50px] flex flex-wrap gap-2">
         <ng-container *ngIf="isForSelectedCrops">
           <ng-container *ngIf="selectedCrops.length > 0; else noCrops">
-            <div *ngFor="let crop of selectedCrops; let i = index"
-              class="bg-[#F2F2F2] px-3 py-1 rounded-md flex items-center gap-2">
+            <div
+              *ngFor="let crop of selectedCrops; let i = index"
+              class="bg-[#F2F2F2] px-3 py-1 rounded-md flex items-center gap-2"
+            >
               {{ crop.cropNameEnglish }}
-              <button type="button" (click)="removeCrop(i)"
+              <button
+                type="button"
+                (click)="removeCrop(i)"
                 class="text-white font-bold bg-red-500 p-1 m-auto rounded-md flex items-center justify-center h-5 w-5"
-                title="Remove crop">
+                title="Remove crop"
+              >
                 -
               </button>
             </div>
           </ng-container>
           <ng-template #noCrops>
-            <span class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]">-- No crops
-              selected --</span>
+            <span
+              class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]"
+              >-- No crops selected --</span
+            >
           </ng-template>
         </ng-container>
 
         <!-- Show this message if not "For Selected Crops" -->
         <ng-container *ngIf="!isForSelectedCrops">
-          <span class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]">-- All crops has
-            been selected --</span>
+          <span
+            class="text-gray-500 text-sm flex items-center justify-center mx-auto min-h-[50px]"
+            >-- All crops has been selected --</span
+          >
         </ng-container>
       </div>
 
       <!-- Selected crops count and validation -->
-      <div *ngIf="
+      <div
+        *ngIf="
           isForSelectedCrops &&
           selectedCrops.length === 0 &&
           certificateForm.get('applicable')?.touched
-        " class="text-red-500 text-sm mt-1">
+        "
+        class="text-red-500 text-sm mt-1"
+      >
         -- Please add at least 1 crop for "For Selected Crops" option --
       </div>
     </div>
 
     <!-- Buttons -->
     <div class="flex justify-end mt-6 gap-2">
-      <button type="button" class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40"
-        (click)="onCancel()">
+      <button
+        type="button"
+        class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40"
+        (click)="onCancel()"
+      >
         Cancel
       </button>
-      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-40" [disabled]="
+      <button
+        type="submit"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-40"
+        [disabled]="
           isLoading ||
           certificateForm.invalid ||
           (isForSelectedCrops && selectedCrops.length === 0)
-        ">
+        "
+      >
         <span *ngIf="!isLoading">Save</span>
         <span *ngIf="isLoading">Saving...</span>
       </button>

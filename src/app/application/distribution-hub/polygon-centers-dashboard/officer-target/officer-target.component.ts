@@ -25,7 +25,7 @@ export class OfficerTargetComponent implements OnChanges {
   isLoading = false;
   hasData: boolean = false;
   ordersArr: Orders[] = [];
-  orderCount : number = 0;
+  orderCount: number = 0;
 
   constructor(
     private router: Router,
@@ -36,17 +36,19 @@ export class OfficerTargetComponent implements OnChanges {
   }
 
   fetchData() {
+    this.isLoading = true
     this.DestributionSrv.getDailyOfficerDistributedTarget(this.centerObj.centerId).subscribe(
       (res) => {
         this.ordersArr = res.data;
         this.orderCount = res.data?.length || 0;
         this.hasData = this.orderCount > 0;
+        this.isLoading = false
       }
     )
   }
 
-  selectOfficer() {
-    this.router.navigate([`/distribution-hub/action/view-polygon-centers/selected-officer-target`])
+  selectOfficer(id: number) {
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/selected-officer-target`], { queryParams: { targetId: id } })
   }
 }
 

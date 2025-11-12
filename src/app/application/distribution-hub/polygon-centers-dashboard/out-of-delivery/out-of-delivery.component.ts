@@ -60,6 +60,7 @@ export class OutOfDeliveryComponent implements OnChanges {
   }
 
   onSearch() {
+    this.searchText = this.searchText.trim();
     this.fetchData();
   }
 
@@ -84,7 +85,7 @@ export class OutOfDeliveryComponent implements OnChanges {
     // Add center information
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Center: ${this.centerObj.centerRegCode} ${this.centerObj.centerName}`, 14, 30);
+    doc.text(`Centre: ${this.centerObj.centerRegCode} ${this.centerObj.centerName}`, 14, 30);
     
     // Add filter information if applied
     let yPos = 38;
@@ -213,6 +214,15 @@ export class OutOfDeliveryComponent implements OnChanges {
         this.hasData = false;
       }
     );
+  }
+
+  onSearchInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    // Remove spaces from the beginning and end
+    this.searchText = input.value.trim();
+    
+    // Optional: Also prevent multiple consecutive spaces
+    this.searchText = this.searchText.replace(/\s+/g, ' ');
   }
 }
 

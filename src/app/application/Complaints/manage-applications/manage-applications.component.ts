@@ -378,4 +378,5 @@ class SystemApplications {
   categoryCount!: number;
   systemAppId!: number;
   systemAppName!: string;
+  modifiedBy!: string | null;
 }

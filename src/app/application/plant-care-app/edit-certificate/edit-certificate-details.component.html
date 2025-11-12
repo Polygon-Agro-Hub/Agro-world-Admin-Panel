@@ -148,35 +148,49 @@
       </div>
 
       <!-- No of Visit -->
-      <div class="my-3">
-        <label
-          for="noOfVisit"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-          >Number of Visits *</label
-        >
-        <input
-          id="noOfVisit"
-          type="number"
-          formControlName="noOfVisit"
-          min="0"
-          class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          [ngClass]="{
-            'border-red-500':
-              certificateForm.get('noOfVisit')?.invalid &&
-              certificateForm.get('noOfVisit')?.touched
-          }"
-          placeholder="Enter number of visits"
-        />
-        <div
-          *ngIf="
-            certificateForm.get('noOfVisit')?.errors?.['min'] &&
-            certificateForm.get('noOfVisit')?.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          Number of visits cannot be negative
-        </div>
-      </div>
+      <!-- Number of Visit -->
+<div class="my-3">
+  <label
+    for="noOfVisit"
+    class="block text-sm font-medium text-textLight dark:text-textDark"
+    >Number of Visits *</label
+  >
+  <input
+    id="noOfVisit"
+    type="number"
+    formControlName="noOfVisit"
+    min="0"
+    class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+    [ngClass]="{
+      'border-red-500':
+        certificateForm.get('noOfVisit')?.invalid &&
+        certificateForm.get('noOfVisit')?.touched
+    }"
+    placeholder="Enter number of visits"
+  />
+  
+  <!-- Required error -->
+  <div
+    *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['required'] &&
+      certificateForm.get('noOfVisit')?.touched
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Number of Visits is required
+  </div>
+  
+  <!-- Negative value error -->
+  <div
+    *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['min'] &&
+      certificateForm.get('noOfVisit')?.touched
+    "
+    class="text-red-500 text-sm mt-1"
+  >
+    Number of visits cannot be negative
+  </div>
+</div>
 
       <!-- Applicable For Dropdown -->
       <div class="my-3">

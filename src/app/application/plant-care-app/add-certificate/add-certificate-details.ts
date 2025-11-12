@@ -110,10 +110,10 @@ export class AddCertificateDetailsComponent implements OnInit {
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
         '',
-        [Validators.required, Validators.min(0), Validators.max(100)],
+        [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d*\.?\d*$/)],
       ],
       scope: ['', Validators.required],
-      noOfVisit: ['', [Validators.min(0)]],
+      noOfVisit: ['', [Validators.required, Validators.min(0)]],
       tearmsFile: [null, Validators.required],
       logo: [null, Validators.required],
     });
@@ -332,10 +332,10 @@ export class AddCertificateDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
+      text: 'You may lose the added data after canceling!',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Stay Here',
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
@@ -416,8 +416,8 @@ export class AddCertificateDetailsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, create it!',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes, Create',
+      cancelButtonText: 'No, Cancel',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-gray-800 dark:text-white',
         title: 'dark:text-white',
@@ -529,7 +529,34 @@ export class AddCertificateDetailsComponent implements OnInit {
     });
   }
   
-  
+  allowDecimalInput(event: KeyboardEvent): void {
+    const charCode = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+    
+    // Allow: backspace, delete, tab, escape, enter
+    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
+      return;
+    }
+    
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (event.ctrlKey && ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())) {
+      return;
+    }
+    
+    // Allow: numbers 0-9
+    if (charCode >= '0' && charCode <= '9') {
+      return;
+    }
+    
+    // Allow: decimal point (only one)
+    if (charCode === '.' && !currentValue.includes('.')) {
+      return;
+    }
+    
+    // Prevent any other key
+    event.preventDefault();
+  }
 
   trimLeadingSpaces(event: any, varibleName: string) {
     const input = event.target as HTMLInputElement;

@@ -225,6 +225,10 @@ import { ViewJobHistoryComponent } from './application/govi-link/view-job-histor
 import { IndividualFarmersAuditsComponent } from './application/plant-care-app/individual-farmers-audits/individual-farmers-audits.component';
 import { FarmersClustersAuditsComponent } from './application/plant-care-app/farmers-clusters-audits/farmers-clusters-audits.component';
 import { FarmerPaymentsComponent } from './application/finance/farmer-payments/farmer-payments.component';
+import { FiealdOfficerComplaintsComponent } from './application/Complaints/fieald-officer-complaints/fieald-officer-complaints.component';
+import { GoviLinkViewComplaintComponent } from './application/Complaints/govi-link-view-complaint/govi-link-view-complaint.component';
+import { PaymentHistoryAddNewComponent } from './application/finance/payment-history-add-new/payment-history-add-new.component';
+import { PaymentHistoryUpdateComponent } from './application/finance/payment-history-update/payment-history-update.component';
 
 export const routes: Routes = [
   {
@@ -566,6 +570,14 @@ export const routes: Routes = [
                 path: 'farmer-payments',
                 component: FarmerPaymentsComponent,
               },
+              {
+                path: 'add-new-payment',
+                component: PaymentHistoryAddNewComponent,
+              },
+              {
+                path: 'update-payment/:id',
+                component: PaymentHistoryUpdateComponent,
+              }
             ],
           },
         ],
@@ -1279,6 +1291,10 @@ export const routes: Routes = [
             component: SelectedwholesaleComplaintsComponent,
           },
           {
+            path: 'field-officer-complain/:id',
+            component: GoviLinkViewComplaintComponent
+          },
+          {
             path: 'distributed-center-complains',
             children: [
               {
@@ -1291,6 +1307,10 @@ export const routes: Routes = [
               },
             ],
           },
+          {
+            path: 'field-officer-complaints',
+            component: FiealdOfficerComplaintsComponent,
+          }
         ],
       },
       {

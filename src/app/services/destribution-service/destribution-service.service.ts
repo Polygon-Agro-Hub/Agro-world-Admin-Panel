@@ -294,7 +294,7 @@ export class DestributionService {
     });
   
     console.log('officerId', officerId )
-    let url = `${this.apiUrl}distribution/get-selected-officer-targets?officerId=${officerId}`;
+    let url = `${this.apiUrl}distribution/get-selected-officer-targets?targetId=${officerId}`;
   
     if (searchText) {
       url += `&searchText=${searchText}`

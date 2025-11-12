@@ -115,7 +115,7 @@ export class EditCertificateDetailsComponent implements OnInit {
         [Validators.required, Validators.min(0), Validators.max(100)],
       ],
       scope: ['', Validators.required],
-      noOfVisit: ['', [Validators.min(0)]],
+      noOfVisit: ['', [Validators.required, Validators.min(0)]],
       tearmsFile: [null], // Not required for edit
     });
 
@@ -504,9 +504,11 @@ export class EditCertificateDetailsComponent implements OnInit {
       missingFields.push('Scope');
     }
 
-    if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
-      missingFields.push('Number of Visits (cannot be negative)');
-    }
+    if (this.certificateForm.get('noOfVisit')?.errors?.['required']) {
+    missingFields.push('Number of Visits');
+  } else if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
+    missingFields.push('Number of Visits (cannot be negative)');
+  }
 
     return missingFields;
   }
@@ -568,8 +570,8 @@ export class EditCertificateDetailsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, update it!',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes, Update',
+      cancelButtonText: 'No, Cancel',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-gray-800 dark:text-white',
         title: 'dark:text-white',
@@ -704,7 +706,7 @@ export class EditCertificateDetailsComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/farmers']);
+        this.location.back()
       }
     });
   }
@@ -715,10 +717,10 @@ export class EditCertificateDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
+      text: 'You may lose the added data after canceling!',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Stay Here',
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',

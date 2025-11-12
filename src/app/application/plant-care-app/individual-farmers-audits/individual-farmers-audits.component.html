@@ -19,7 +19,7 @@
         class="w-20 h-20 mx-auto"
       />
     </div>
-    <div *ngIf="hasData">
+    <div>
       <div class="flex items-center justify-between">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-6">
           Individual Farmers Audits ({{ audits.length | number : "2.0" }})
@@ -84,6 +84,7 @@
       </div>
 
       <table
+      *ngIf="hasData"
         class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4"
       >
         <thead>

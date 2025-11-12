@@ -134,7 +134,23 @@ export class AddFarmerClustersComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    Swal.fire({
+          icon: 'warning',
+          title: 'Are you sure?',
+          text: 'You may lose the added data after going back!',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Go Back',
+          cancelButtonText: 'No, Stay Here',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+          buttonsStyling: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.location.back()
+          }
+        });
   }
 
   onFileSelected(event: any): void {

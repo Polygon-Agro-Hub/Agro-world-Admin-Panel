@@ -141,67 +141,86 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
       qSinhala: ['', Validators.required],
       qTamil: ['', Validators.required],
       done: [false],
-      editing: [true], // Start in editing mode for new questions
+      editing: [false],
     });
     this.questions.push(group);
+  }
+
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
   }
 
   deleteQuestion(index: number): void {
     const question = this.questions.at(index);
     const questionId = question.value.id;
+    const isQuestionValid = this.isQuestionValid(index);
 
-    if (questionId) {
-      // Existing question - show confirmation
+    // If Done button is enabled (question is valid), show confirmation
+    if (isQuestionValid) {
       Swal.fire({
         title: 'Are you sure?',
-        text: 'This question will be permanently deleted!',
+        text: 'Do you really want to delete this question? This action cannot be undone.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Yes, Delete',
+        cancelButtonText: 'No, Cancel',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
+          title: 'font-semibold',
+          confirmButton:
+            'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+          cancelButton:
+            'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2',
         },
       }).then((result) => {
         if (result.isConfirmed) {
-          this.isLoading = true;
-          this.certificateCompanyService
-            .deleteQuestionnaire(questionId)
-            .subscribe({
-              next: (res) => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Deleted!',
-                  text: res.message,
-                  timer: 1500,
-                  showConfirmButton: false,
-                  customClass: {
-                    popup:
-                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold text-lg',
-                  },
-                });
-                this.questions.removeAt(index);
-                this.renumberQuestions();
-              },
-              error: (err) => {
-                this.isLoading = false;
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: err.error?.message || 'Failed to delete questionnaire.',
-                  customClass: {
-                    popup:
-                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                    title: 'font-semibold text-lg',
-                  },
-                });
-              },
-            });
+          this.performDelete(index, questionId);
         }
+      });
+    } else {
+      // If Done button is disabled (question is invalid), delete directly
+      this.performDelete(index, questionId);
+    }
+  }
+
+  private performDelete(index: number, questionId: number | null): void {
+    if (questionId) {
+      // Existing question - delete from API
+      this.isLoading = true;
+      this.certificateCompanyService.deleteQuestionnaire(questionId).subscribe({
+        next: (res) => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            text: res.message,
+            timer: 1500,
+            showConfirmButton: false,
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+          this.questions.removeAt(index);
+          this.renumberQuestions();
+        },
+        error: (err) => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err.error?.message || 'Failed to delete questionnaire.',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
       });
     } else {
       // New question - just remove from form
@@ -248,10 +267,15 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
         group.get('qTamil')?.setValue(originalQuestion.qTamil);
       }
     } else {
-      // New question - remove it
-      this.questions.removeAt(index);
-      this.renumberQuestions();
+      // New question - just cancel editing mode (don't remove)
+      group.get('editing')?.setValue(false);
+      group.get('done')?.setValue(false);
     }
+  }
+
+  isNewQuestion(index: number): boolean {
+    const question = this.questions.at(index);
+    return !question.value.id;
   }
 
   isQuestionValid(index: number): boolean {
@@ -307,9 +331,23 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
-
   // Save all changes - both updates and new questions
   onSubmit(): void {
     this.form.markAllAsTouched();
@@ -334,6 +372,28 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
       return;
     }
 
+    // Show confirmation dialog before submitting
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'Do you really want to update the question(s)?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Update',
+      cancelButtonText: 'No, Cancel',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.performSubmission();
+      }
+    });
+  }
+
+  private performSubmission(): void {
     this.isLoading = true;
 
     // Separate existing and new questions
@@ -415,7 +475,22 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
       });
   }
 
-  goBack(): void {
-    this.location.back();
+  onCancle(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 }

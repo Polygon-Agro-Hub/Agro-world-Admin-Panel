@@ -39,6 +39,7 @@
             </div>
           </div>
           <div class="flex gap-2">
+            <!-- For incomplete questions (both new and existing) - Show Done/Update button -->
             <button
               *ngIf="!q.value.done && !q.value.editing"
               type="button"
@@ -46,8 +47,10 @@
               [disabled]="!isQuestionValid(i)"
               (click)="markDone(i)"
             >
-              Done
+              {{ q.value.id ? "Update" : "Done" }}
             </button>
+
+            <!-- For questions in editing mode - Show Update and Cancel -->
             <button
               *ngIf="q.value.editing"
               type="button"
@@ -57,15 +60,7 @@
             >
               Update
             </button>
-            <button
-              *ngIf="q.value.done && !q.value.editing"
-              type="button"
-              class="text-blue-500 bg-blue-100 rounded-md disabled:bg-gray-100 disabled:text-blue-500 disabled:cursor-not-allowed px-3 py-2"
-              (click)="markEditing(i)"
-              [disabled]="isAnyQuestionEditing()"
-            >
-              <i class="fa-solid fa-pen"></i>
-            </button>
+
             <button
               *ngIf="q.value.editing"
               type="button"
@@ -74,11 +69,23 @@
             >
               Cancel
             </button>
+
+            <!-- Always show Edit button for completed questions (both new and existing) -->
+            <button
+              *ngIf="q.value.done && !q.value.editing"
+              type="button"
+              class="text-blue-500 bg-blue-100 rounded-md disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed px-3 py-2"
+              (click)="markEditing(i)"
+              [disabled]="isAnyQuestionEditing()"
+            >
+              <i class="fa-solid fa-pen"></i>
+            </button>
+
+            <!-- Delete button -->
             <button
               type="button"
               class="text-red-500 disabled:text-red-400 disabled:bg-gray-100 disabled:cursor-not-allowed px-3 py-2 bg-red-100 rounded-md"
               (click)="deleteQuestion(i)"
-              [disabled]="isAnyQuestionEditing() && !q.value.editing"
             >
               <i class="fa-solid fa-trash"></i>
             </button>
@@ -111,13 +118,16 @@
                   <textarea
                     rows="2"
                     formControlName="qEnglish"
+                    (keydown)="preventLeadingSpace($event)"
                     class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                     [class.border-red-500]="
                       q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched
                     "
                   ></textarea>
                   <small
-                    *ngIf="q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched"
+                    *ngIf="
+                      q.get('qEnglish')?.invalid && q.get('qEnglish')?.touched
+                    "
                     class="text-red-500"
                   >
                     English question is required
@@ -131,13 +141,16 @@
                   <textarea
                     rows="2"
                     formControlName="qSinhala"
+                    (keydown)="preventLeadingSpace($event)"
                     class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                     [class.border-red-500]="
                       q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched
                     "
                   ></textarea>
                   <small
-                    *ngIf="q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched"
+                    *ngIf="
+                      q.get('qSinhala')?.invalid && q.get('qSinhala')?.touched
+                    "
                     class="text-red-500"
                   >
                     Sinhala question is required
@@ -151,6 +164,7 @@
                   <textarea
                     rows="2"
                     formControlName="qTamil"
+                    (keydown)="preventLeadingSpace($event)"
                     class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
                     [class.border-red-500]="
                       q.get('qTamil')?.invalid && q.get('qTamil')?.touched
@@ -203,7 +217,7 @@
       <button
         type="button"
         class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40"
-        (click)="goBack()"
+        (click)="onCancle()"
       >
         Cancel
       </button>
@@ -212,7 +226,7 @@
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed w-40"
         [disabled]="isLoading || !isFormValid() || isAnyQuestionEditing()"
       >
-        Save Changes
+        Save
       </button>
     </div>
   </form>

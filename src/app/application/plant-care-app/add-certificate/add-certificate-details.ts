@@ -96,11 +96,13 @@ export class AddCertificateDetailsComponent implements OnInit {
     private router: Router,
     private cropCalendarService: CropCalendarService,
     private certificateCompanyService: CertificateCompanyService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
       srtName: ['', Validators.required],
+      srtNameSinhala: ['', Validators.required],
+      srtNameTamil: ['', Validators.required],
       srtNumber: ['', Validators.required],
       srtcomapnyId: ['', Validators.required],
       applicable: ['', Validators.required],
@@ -110,7 +112,12 @@ export class AddCertificateDetailsComponent implements OnInit {
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
         '',
-        [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern(/^\d*\.?\d*$/)],
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.max(100),
+          Validators.pattern(/^\d*\.?\d*$/),
+        ],
       ],
       scope: ['', Validators.required],
       noOfVisit: ['', [Validators.required, Validators.min(0)]],
@@ -276,7 +283,7 @@ export class AddCertificateDetailsComponent implements OnInit {
   onCropSearchInput(event: any): void {
     const searchTerm = event.target.value.toLowerCase();
     if (searchTerm) {
-      this.filteredCropOptions = this.cropDropdownOptions.filter(option =>
+      this.filteredCropOptions = this.cropDropdownOptions.filter((option) =>
         option.label.toLowerCase().includes(searchTerm)
       );
     } else {
@@ -307,7 +314,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     this.selectedCrops.splice(index, 1);
   }
 
- back(): void {
+  back(): void {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -326,7 +333,6 @@ export class AddCertificateDetailsComponent implements OnInit {
       }
     });
   }
-
 
   onCancel(): void {
     Swal.fire({
@@ -421,7 +427,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-gray-800 dark:text-white',
         title: 'dark:text-white',
-      }
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.createCertificate();
@@ -440,6 +446,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Use exact database field names
     formData.append('srtcomapnyId', formValue.srtcomapnyId.toString());
     formData.append('srtName', formValue.srtName);
+    formData.append('srtNameSinhala', formValue.srtNameSinhala || '');
+    formData.append('srtNameTamil', formValue.srtNameTamil || '');
     formData.append('srtNumber', formValue.srtNumber);
     formData.append('applicable', formValue.applicable);
     formData.append('accreditation', formValue.accreditation);
@@ -447,8 +455,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Service areas as JSON string
     const serviceAreas = Array.isArray(formValue.serviceAreas)
       ? formValue.serviceAreas.map((area: any) =>
-        typeof area === 'object' ? area.value : area
-      )
+          typeof area === 'object' ? area.value : area
+        )
       : [];
     formData.append('serviceAreas', JSON.stringify(serviceAreas));
 
@@ -528,32 +536,35 @@ export class AddCertificateDetailsComponent implements OnInit {
       },
     });
   }
-  
+
   allowDecimalInput(event: KeyboardEvent): void {
     const charCode = event.key;
     const input = event.target as HTMLInputElement;
     const currentValue = input.value;
-    
+
     // Allow: backspace, delete, tab, escape, enter
     if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
       return;
     }
-    
+
     // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-    if (event.ctrlKey && ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())) {
+    if (
+      event.ctrlKey &&
+      ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())
+    ) {
       return;
     }
-    
+
     // Allow: numbers 0-9
     if (charCode >= '0' && charCode <= '9') {
       return;
     }
-    
+
     // Allow: decimal point (only one)
     if (charCode === '.' && !currentValue.includes('.')) {
       return;
     }
-    
+
     // Prevent any other key
     event.preventDefault();
   }

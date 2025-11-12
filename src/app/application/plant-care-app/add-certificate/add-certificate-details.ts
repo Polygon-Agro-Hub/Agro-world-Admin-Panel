@@ -329,7 +329,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/plant-care/action']);
+        window.history.back()
       }
     });
   }

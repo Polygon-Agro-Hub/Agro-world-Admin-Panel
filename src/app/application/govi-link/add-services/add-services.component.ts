@@ -276,4 +276,79 @@ export class AddServicesComponent {
       // If user clicked "No", do nothing and stay on the page
     });
   }
+
+  onFeeKeyDown(event: KeyboardEvent) {
+    const allowedKeys = [
+      'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 
+      'Home', 'End', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+    ];
+
+    // Allow control keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+
+    // Allow numbers
+    if (event.key >= '0' && event.key <= '9') {
+      return;
+    }
+
+    // Allow decimal point (only one)
+    if (event.key === '.') {
+      const input = event.target as HTMLInputElement;
+      if (input.value.includes('.')) {
+        event.preventDefault();
+        return;
+      }
+      return;
+    }
+
+    // Allow Ctrl/Cmd + A, C, V, X
+    if (event.ctrlKey || event.metaKey) {
+      if (['a', 'c', 'v', 'x'].includes(event.key.toLowerCase())) {
+        return;
+      }
+    }
+
+    // Prevent all other keys
+    event.preventDefault();
+  }
+
+  onFeeInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    // Remove any non-numeric characters except decimal point
+    value = value.replace(/[^\d.]/g, '');
+
+    // Ensure only one decimal point
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    // Limit to 2 decimal places
+    if (parts.length === 2 && parts[1].length > 2) {
+      value = parts[0] + '.' + parts[1].substring(0, 2);
+    }
+
+    // Update the input value
+    input.value = value;
+    
+    // Update the model
+    if (value === '' || value === '.') {
+      this.serviceData.srvFee = undefined;
+    } else {
+      this.serviceData.srvFee = parseFloat(value);
+    }
+  }
+
+  formatFeeOnBlur() {
+    if (this.serviceData.srvFee !== null && this.serviceData.srvFee !== undefined) {
+      // Format to 2 decimal places
+      const formattedValue = parseFloat(this.serviceData.srvFee.toString()).toFixed(2);
+      this.serviceData.srvFee = parseFloat(formattedValue);
+    }
+  }
+
 }

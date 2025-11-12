@@ -94,7 +94,7 @@ export class AddComplainCategoriesComponent implements OnInit {
               confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
             }
           });
-          this.router.navigate(['/complaints/manage-applications']);
+          window.history.back()
         } else {
           if (res.message === 'Category already added') {
             Swal.fire({
@@ -173,7 +173,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(["/complaints"]);
+        window.history.back()
       }
     });
   }

@@ -110,6 +110,7 @@ export interface FieldAudit {
   sheduleDate?: Date;
   officerEmpId: string;
   officerJobRole: string;
+  userName:string
 }
 export interface FieldAuditResponse {
   message: string;

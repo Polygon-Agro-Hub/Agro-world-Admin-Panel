@@ -85,7 +85,7 @@ export class AddFarmerClustersComponent implements OnInit {
     private router: Router,
     private location: Location,
     private farmerClusterService: CertificateCompanyService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadCertificates();
@@ -375,8 +375,6 @@ export class AddFarmerClustersComponent implements OnInit {
             });
           }
         });
-
-
       } catch (error) {
         this.isLoading = false;
         console.error('Error processing file:', error);
@@ -466,7 +464,8 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `duplicate_entries_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `duplicate_entries_${
+          this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -503,7 +502,8 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `unregistered_users_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `unregistered_users_${
+          this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -542,7 +542,8 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `mismatched_farmers_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `mismatched_farmers_${
+          this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -629,22 +630,25 @@ export class AddFarmerClustersComponent implements OnInit {
             </thead>
             <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
               ${duplicates
-        .map(
-          (entry, index) => `
+                .map(
+                  (entry, index) => `
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                    <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
                   </td>
-                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${index + 1
-            }</td>
-                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${entry.NIC
-            }</td>
-                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${entry.regCode
-            }</td>
+                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
+                    index + 1
+                  }</td>
+                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
+                    entry.NIC
+                  }</td>
+                  <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
+                    entry.regCode
+                  }</td>
                 </tr>
               `
-        )
-        .join('')}
+                )
+                .join('')}
             </tbody>
           </table>
         </div>
@@ -737,22 +741,25 @@ export class AddFarmerClustersComponent implements OnInit {
           </thead>
           <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
             ${mismatchedFarmers
-        .map(
-          (farmer, index) => `
+              .map(
+                (farmer, index) => `
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                   <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
                 </td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${index + 1
-            }</td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${farmer.farmerNIC
-            }</td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${farmer.regCode
-            }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
+                  index + 1
+                }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
+                  farmer.farmerNIC
+                }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
+                  farmer.regCode
+                }</td>
               </tr>
             `
-        )
-        .join('')}
+              )
+              .join('')}
           </tbody>
         </table>
       </div>
@@ -816,8 +823,9 @@ export class AddFarmerClustersComponent implements OnInit {
     }
 
     if (error.error?.missingRegCodes) {
-      const missingRegCodes = error.error.missingRegCodes;
-      this.showMissingRegCodesErrorPopup(missingRegCodes);
+      // Handle the new response structure with missingRegCodeDetails
+      const missingRegCodeDetails = error.error.missingRegCodeDetails || [];
+      this.showMissingRegCodesErrorPopup(missingRegCodeDetails);
       return;
     }
 
@@ -918,19 +926,20 @@ export class AddFarmerClustersComponent implements OnInit {
           </thead>
           <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
             ${missingNICs
-        .map(
-          (nic, index) => `
+              .map(
+                (nic, index) => `
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                   <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
                 </td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${index + 1
-            }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
+                  index + 1
+                }</td>
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${nic}</td>
               </tr>
             `
-        )
-        .join('')}
+              )
+              .join('')}
           </tbody>
         </table>
       </div>
@@ -972,11 +981,11 @@ export class AddFarmerClustersComponent implements OnInit {
     });
   }
 
-  private showMissingRegCodesErrorPopup(missingRegCodes: string[]): void {
+  private showMissingRegCodesErrorPopup(missingRegCodeDetails: any[]): void {
     Swal.fire({
-      html: this.generateMissingRegCodesPopupHTML(missingRegCodes),
+      html: this.generateMissingRegCodesPopupHTML(missingRegCodeDetails),
       showConfirmButton: false,
-      width: '800px',
+      width: '900px',
       customClass: {
         popup: '!bg-white dark:!bg-gray-800 !text-gray-800 dark:!text-white',
         container: '!flex !items-center !justify-center',
@@ -997,14 +1006,16 @@ export class AddFarmerClustersComponent implements OnInit {
         );
         if (downloadButton) {
           downloadButton.addEventListener('click', () => {
-            this.downloadMissingRegCodesCSV(missingRegCodes);
+            this.downloadMissingRegCodesCSV(missingRegCodeDetails);
           });
         }
       },
     });
   }
 
-  private generateMissingRegCodesPopupHTML(missingRegCodes: string[]): string {
+  private generateMissingRegCodesPopupHTML(
+    missingRegCodeDetails: any[]
+  ): string {
     return `
     <div class="p-6 bg-white dark:bg-gray-800 rounded-lg max-w-4xl mx-auto">
       <!-- Header -->
@@ -1032,38 +1043,45 @@ export class AddFarmerClustersComponent implements OnInit {
         </button>
       </div>
 
-      <!-- Missing Registration Codes Table -->
+      <!-- Missing Registration Codes Table with NIC -->
       <div class="mb-6">
         <table class="w-full">
           <thead>
             <tr>
               <th></th>
               <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">No</th>
+              <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">NIC</th>
               <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">Farm ID</th>
             </tr>
           </thead>
           <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
-            ${missingRegCodes
-        .map(
-          (regCode, index) => `
+            ${missingRegCodeDetails
+              .map(
+                (detail, index) => `
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                   <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
                 </td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${index + 1
-            }</td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${regCode}</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
+                  index + 1
+                }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
+                  detail.farmerNIC
+                }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
+                  detail.regCode
+                }</td>
               </tr>
             `
-        )
-        .join('')}
+              )
+              .join('')}
           </tbody>
         </table>
       </div>
 
       <!-- Summary -->
       <p class="text-left font-semibold">
-        ${missingRegCodes.length} items
+        ${missingRegCodeDetails.length} items
       </p>
 
       <!-- Action Button -->
@@ -1102,7 +1120,8 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `invalid_farm_ids_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `invalid_farm_ids_${
+          this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';

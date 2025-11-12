@@ -173,7 +173,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(["/complaints"]);
+        window.history.back()
       }
     });
   }

@@ -928,6 +928,12 @@ export class AddFiealdOfficerComponent implements OnInit {
       return;
     }
 
+    // Prevent decimal point at the start (e.g., .55)
+    if (char === '.' && (!value || value.length === 0)) {
+      event.preventDefault();
+      return;
+    }
+
     // Prevent multiple decimal points
     if (char === '.' && value.includes('.')) {
       event.preventDefault();
@@ -941,19 +947,6 @@ export class AddFiealdOfficerComponent implements OnInit {
     if (!isNaN(numericValue) && numericValue > 100) {
       event.preventDefault();
       return;
-    }
-
-    // If adding decimal point, automatically add .00
-    if (char === '.' && !value.includes('.')) {
-      // Let the decimal point be added naturally, then format
-      setTimeout(() => {
-        if (!value.endsWith('.00')) {
-          input.value = value + '00';
-          // Move cursor before the zeros
-          const position = value.length + 1;
-          input.setSelectionRange(position, position);
-        }
-      }, 0);
     }
 
     // Limit to 2 decimal places

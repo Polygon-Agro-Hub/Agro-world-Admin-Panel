@@ -31,7 +31,7 @@ export class PaymentHistoryAddNewComponent {
   ) {}
 
   back(): void {
-    this.router.navigate(['/payment-history']);
+    this.router.navigate(['/finance/action/viewAll-payments']);
   }
 
   onFileSelected(event: Event): void {
@@ -230,7 +230,7 @@ export class PaymentHistoryAddNewComponent {
             confirmButton: 'bg-blue-500 hover:bg-blue-600',
           },
         }).then(() => {
-          this.router.navigate(['/payment-history']);
+          this.router.navigate(['/finance/action/viewAll-payments']);
         });
       },
       error: (error) => {
@@ -280,11 +280,11 @@ export class PaymentHistoryAddNewComponent {
         },
       }).then((result) => {
         if (result.isConfirmed) {
-          this.router.navigate(['/payment-history']);
+          this.router.navigate(['/finance/action/viewAll-payments']);
         }
       });
     } else {
-      this.router.navigate(['/payment-history']);
+      this.router.navigate(['/finance/action/viewAll-payments']);
     }
   }
 

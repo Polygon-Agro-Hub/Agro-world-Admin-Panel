@@ -16,7 +16,7 @@ export class FinanceActionComponent {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   farmerPayments(): void {
     this.router.navigate(['/finance/action/farmer-payments']);
@@ -36,5 +36,9 @@ export class FinanceActionComponent {
 
   commissionRangeNavigation(): void {
     this.router.navigate(['/finance/action/commission-range']);
+  }
+
+  PaymentHistoryNavigation(): void {
+    this.router.navigate(['/finance/action/viewAll-payments']);
   }
 }

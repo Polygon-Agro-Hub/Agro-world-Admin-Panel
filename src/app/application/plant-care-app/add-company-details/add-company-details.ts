@@ -60,7 +60,22 @@ export class AddCompanyDetailsComponent implements OnInit {
   ) {}
 
   onBack(): void {
-    this.location.back();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -132,24 +147,54 @@ export class AddCompanyDetailsComponent implements OnInit {
     return `https://flagcdn.com/w20/${code.toLowerCase()}.png`;
   }
 
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
+  }
+
   validateContactNumbers(): void {
     const phone1 = this.companyForm.get('phone1')?.value;
     const phone2 = this.companyForm.get('phone2')?.value;
     const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
     const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
 
-    // Check if numbers are the same (only if both are provided)
-    this.sameNumberError =
-      phone1 && phone2 && phone1 === phone2 && phoneCode1 === phoneCode2;
+    // Reset all phone errors first
+    this.contactNumberError1 = false;
+    this.contactNumberError2 = false;
+    this.sameNumberError = false;
 
-    // Check Sri Lanka number validation
-    this.contactNumberError1 =
-      phoneCode1 === '+94' && phone1 && phone1.length !== 9;
-    this.contactNumberError2 =
+    // Step 1: Validate phone number formats first
+    if (phoneCode1 === '+94' && phone1 && phone1.length !== 9) {
+      this.contactNumberError1 = true;
+    }
+
+    if (
       phoneCode2 === '+94' &&
       phone2 &&
       phone2.length > 0 &&
-      phone2.length !== 9;
+      phone2.length !== 9
+    ) {
+      this.contactNumberError2 = true;
+    }
+
+    // Step 2: Only check for duplicate numbers if both numbers have valid formats
+    if (!this.contactNumberError1 && !this.contactNumberError2) {
+      this.sameNumberError =
+        phone1 && phone2 && phone1 === phone2 && phoneCode1 === phoneCode2;
+    }
+  }
+
+  // Check if phone numbers have valid format (for validation popup)
+  private hasValidPhoneFormat(phone: string, dialCode: string): boolean {
+    if (!phone) return false;
+
+    if (dialCode === '+94') {
+      return phone.length === 9;
+    }
+
+    return /^[0-9]+$/.test(phone); // Only numbers for other countries
   }
 
   // Logo helpers
@@ -238,35 +283,115 @@ export class AddCompanyDetailsComponent implements OnInit {
     }
   }
 
-  // Get missing field names for the alert
-  private getMissingFields(): string[] {
-    const missingFields: string[] = [];
+  // Get all validation errors for the popup
+  private getAllValidationErrors(): { field: string; message: string }[] {
+    const errors: { field: string; message: string }[] = [];
 
+    // Logo validation
     if (!this.logoFile) {
-      missingFields.push('Company Logo');
+      errors.push({
+        field: 'Company Logo',
+        message: 'Company logo is required',
+      });
     }
 
-    if (this.companyForm.get('registrationNumber')?.errors?.['required']) {
-      missingFields.push('Registration Number');
+    // Registration Number
+    const regNumberControl = this.companyForm.get('registrationNumber');
+    if (regNumberControl?.errors?.['required'] && regNumberControl.touched) {
+      errors.push({
+        field: 'Registration Number',
+        message: 'Registration Number is required',
+      });
     }
 
-    if (this.companyForm.get('taxId')?.errors?.['required']) {
-      missingFields.push('TAX ID');
+    // Tax ID
+    const taxIdControl = this.companyForm.get('taxId');
+    if (taxIdControl?.errors?.['required'] && taxIdControl.touched) {
+      errors.push({ field: 'TAX ID', message: 'TAX ID is required' });
     }
 
-    if (this.companyForm.get('companyName')?.errors?.['required']) {
-      missingFields.push('Company Name');
+    // Company Name
+    const companyNameControl = this.companyForm.get('companyName');
+    if (
+      companyNameControl?.errors?.['required'] &&
+      companyNameControl.touched
+    ) {
+      errors.push({
+        field: 'Company Name',
+        message: 'Company Name is required',
+      });
     }
 
-    if (this.companyForm.get('phone1')?.errors?.['required']) {
-      missingFields.push('Phone Number 1');
+    // Phone 1 - Format validation first
+    const phone1Control = this.companyForm.get('phone1');
+    const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
+
+    if (phone1Control?.errors?.['required'] && phone1Control.touched) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Phone Number - 1 is required',
+      });
     }
 
-    if (this.companyForm.get('address')?.errors?.['required']) {
-      missingFields.push('Address');
+    if (this.contactNumberError1) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Phone Number must be exactly 9 digits for Sri Lanka (+94)',
+      });
     }
 
-    return missingFields;
+    if (
+      phone1Control?.errors?.['pattern'] &&
+      phone1Control.touched &&
+      phoneCode1 !== '+94'
+    ) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Please enter a valid phone number containing only digits',
+      });
+    }
+
+    // Phone 2 - Format validation first
+    const phone2Control = this.companyForm.get('phone2');
+    const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
+
+    if (this.contactNumberError2) {
+      errors.push({
+        field: 'Phone Number - 2',
+        message: 'Phone Number must be exactly 9 digits for Sri Lanka (+94)',
+      });
+    }
+
+    if (
+      phone2Control?.errors?.['pattern'] &&
+      phone2Control.touched &&
+      phoneCode2 !== '+94'
+    ) {
+      errors.push({
+        field: 'Phone Number - 2',
+        message: 'Please enter a valid phone number containing only digits',
+      });
+    }
+
+    // Only check for duplicate numbers if both numbers have valid formats
+    if (
+      !this.contactNumberError1 &&
+      !this.contactNumberError2 &&
+      this.sameNumberError
+    ) {
+      errors.push({
+        field: 'Phone Numbers',
+        message: 'Phone Number - 1 and Phone Number - 2 cannot be the same',
+      });
+    }
+
+    // Address
+    const addressControl = this.companyForm.get('address');
+    if (addressControl?.errors?.['required'] && addressControl.touched) {
+      errors.push({ field: 'Address', message: 'Address is required' });
+    }
+
+    return errors;
   }
 
   // Submit
@@ -277,86 +402,112 @@ export class AddCompanyDetailsComponent implements OnInit {
     // Check if logo is required
     this.logoRequiredError = !this.logoFile;
 
-    const missingFields = this.getMissingFields();
-    const hasValidationErrors = 
-      this.companyForm.invalid || 
-      this.sameNumberError || 
-      this.contactNumberError1 || 
-      this.contactNumberError2;
+    const validationErrors = this.getAllValidationErrors();
 
-    if (missingFields.length > 0 || hasValidationErrors) {
-      // Scroll to first error
+    if (validationErrors.length > 0) {
       this.scrollToFirstError();
-
-      // Show warning alert only for missing required fields
-      if (missingFields.length > 0) {
-        const missingFieldsList = missingFields.map(field => `${field}`).join('<br>');
-        
-        Swal.fire({
-          icon: 'warning',
-          title: 'Missing Information',
-          html: `Please fill in the following required fields:<br><br>${missingFieldsList}`,
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-            htmlContainer: 'text-left'
-          },
-          confirmButtonText: 'OK',
-        });
-      }
+      this.showValidationErrorPopup(validationErrors);
       return;
     }
 
-    this.isLoading = true;
-    const formValue = this.companyForm.value;
-
-    // Build FormData for multipart/form-data
-    const formData = new FormData();
-    formData.append('companyName', formValue.companyName);
-    formData.append('regNumber', formValue.registrationNumber);
-    formData.append('taxId', formValue.taxId);
-    formData.append('phoneCode1', formValue.phoneCode1);
-    formData.append('phoneNumber1', formValue.phone1);
-    formData.append('phoneCode2', formValue.phoneCode2 || '');
-    formData.append('phoneNumber2', formValue.phone2 || '');
-    formData.append('address', formValue.address);
-    if (this.logoFile) {
-      formData.append('logo', this.logoFile, this.logoFile.name);
-    }
-
-    this.companyService.createCompany(formData).subscribe({
-      next: (res: { message: string; status: boolean; id?: number }) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: res.message || 'Certificate Company Created Successfully.',
-          timer: 2000,
-          showConfirmButton: false,
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        }).then(() => {
-          this.router.navigate(['/plant-care/action/view-company-list']);
-        });
-        this.companyForm.reset({ phoneCode1: '+94', phoneCode2: '+94' });
-        this.removeLogo();
+    // Show confirmation popup before saving
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'Do you really want to create a new certificate company?',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+        title: 'dark:text-white',
       },
-      error: (err: any) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text:
-            err.error?.message ||
-            'Failed to add company details. Please try again.',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        const formValue = this.companyForm.value;
+
+        const formData = new FormData();
+        formData.append('companyName', formValue.companyName);
+        formData.append('regNumber', formValue.registrationNumber);
+        formData.append('taxId', formValue.taxId);
+        formData.append('phoneCode1', formValue.phoneCode1);
+        formData.append('phoneNumber1', formValue.phone1);
+        formData.append('phoneCode2', formValue.phoneCode2 || '');
+        formData.append('phoneNumber2', formValue.phone2 || '');
+        formData.append('address', formValue.address);
+        if (this.logoFile) {
+          formData.append('logo', this.logoFile, this.logoFile.name);
+        }
+
+        this.companyService.createCompany(formData).subscribe({
+          next: (res: { message: string; status: boolean; id?: number }) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: res.message || 'Certificate Company Created Successfully.',
+              timer: 2000,
+              showConfirmButton: false,
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            }).then(() => {
+              this.router.navigate(['/plant-care/action/view-company-list']);
+            });
+            this.companyForm.reset({ phoneCode1: '+94', phoneCode2: '+94' });
+            this.removeLogo();
+          },
+          error: (err: any) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text:
+                err.error?.message ||
+                'Failed to add company details. Please try again.',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
           },
         });
+      }
+    });
+  }
+
+  // Show validation error popup with all errors
+  private showValidationErrorPopup(
+    errors: { field: string; message: string }[]
+  ): void {
+    const errorsList = errors
+      .map((error) => `<li>${error.message}</li>`)
+      .join('');
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: `
+        <div class="text-left">
+          <p class="mb-3">Please fix the following issues:</p>
+            <ul class="list-disc list-inside space-y-1 validation-errors max-h-60 overflow-y-auto">
+          ${errorsList}
+        </ul>
+        </div>
+      `,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
       },
+      confirmButtonText: 'OK',
+      width: '600px',
     });
   }
 
@@ -375,10 +526,10 @@ export class AddCompanyDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
+      text: 'You may lose the added data after canceling!',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Stay Here',
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',

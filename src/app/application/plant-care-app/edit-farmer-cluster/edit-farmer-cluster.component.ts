@@ -239,37 +239,55 @@ export class EditFarmerClusterComponent implements OnInit {
       district: this.selectedDistrict,
       certificateId: this.selectedCertificateId,
     };
+    Swal.fire({
+      title: 'Are you sure?',
+      text: ' Do you really want to update this cluster?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Update',
+      cancelButtonText: 'No, Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.farmerClusterService
+          .updateFarmerCluster(this.clusterId, updateData)
+          .subscribe(
+            (response: any) => {
+              this.isLoading = false;
+              Swal.fire({
+                title: 'Success!',
+                text: response.message || 'Cluster updated successfully',
+                icon: 'success',
+                customClass: {
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              }).then(() => {
+                // Update original values
+                // this.originalClusterName = this.clusterName;
+                // this.originalDistrict = this.selectedDistrict;
+                // this.originalCertificateId = this.selectedCertificateId;
+                // this.formSubmitted = false;
 
-    this.farmerClusterService
-      .updateFarmerCluster(this.clusterId, updateData)
-      .subscribe(
-        (response: any) => {
-          this.isLoading = false;
-          Swal.fire({
-            title: 'Success!',
-            text: response.message || 'Cluster updated successfully',
-            icon: 'success',
-            customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
+                // // Refresh cluster data
+                // this.fetchClusterUsers();
+                this.goBack();
+              });
             },
-          }).then(() => {
-            // Update original values
-            this.originalClusterName = this.clusterName;
-            this.originalDistrict = this.selectedDistrict;
-            this.originalCertificateId = this.selectedCertificateId;
-            this.formSubmitted = false;
+            (error) => {
+              this.isLoading = false;
+              this.nameError = error.error?.message || 'Failed to update cluster';
+            }
+          );
+      }
+      this.isLoading = false;
 
-            // Refresh cluster data
-            this.fetchClusterUsers();
-          });
-        },
-        (error) => {
-          this.isLoading = false;
-          this.nameError = error.error?.message || 'Failed to update cluster';
-        }
-      );
+    });
+
   }
 
   onSearch() {
@@ -388,7 +406,23 @@ export class EditFarmerClusterComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   addNew() {

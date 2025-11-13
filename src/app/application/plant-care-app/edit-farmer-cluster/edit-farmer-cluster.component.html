@@ -16,7 +16,7 @@
       <label class="block text-md font-medium text-textLight dark:text-textDark mb-2">
         Farm Cluster Name *
       </label>
-      <input type="text" [(ngModel)]="clusterName" placeholder="Enter cluster name"
+      <input type="text" [(ngModel)]="clusterName" placeholder="Enter cluster name" (ngModelChange)="clusterName = $event.trimStart()"
         class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
         [class.border-red-500]="nameError" />
       <div *ngIf="nameError" class="text-red-500 text-sm mt-1">
@@ -30,7 +30,7 @@
         District *
       </label>
       <p-dropdown [(ngModel)]="selectedDistrict" [options]="districts" optionLabel="name" optionValue="value"
-        placeholder="--Select District here--" filterBy="name"
+        placeholder="--Select District here--" filterBy="name" [filter]="true"
         styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
         class="w-full" name="district" required>
       </p-dropdown>
@@ -46,7 +46,7 @@
       Certificate *
     </label>
     <p-dropdown [(ngModel)]="selectedCertificateId" [options]="certificates" optionLabel="srtName" optionValue="id"
-      placeholder="--Select Certificate here--" filterBy="srtName"
+      placeholder="--Select Certificate here--" [filter]="true" filterBy="srtName"
       styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
       class="w-full" name="certificate" required>
       <ng-template pTemplate="selectedItem">
@@ -107,7 +107,7 @@
               {{ user.no }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100">
-              {{ user.farmId }}
+              {{ user.farmRegCode }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100">
               {{ user.nic }}
@@ -240,7 +240,7 @@
         <span class="text-textLight dark:text-textDark font-medium">Farme ID :
         </span>
         <span class="text-black dark:text-textDark font-semibold">{{
-          farmerToDelete.farmId
+          farmerToDelete.farmRegCode
           }}</span>
       </div>
     </div>
@@ -248,13 +248,13 @@
     <!-- Action Buttons -->
     <div class="flex justify-center space-x-4">
       <button
-        class="px-6 py-2 bg-gray-300 text-gray-700 hover:text-white dark:bg-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 w-32 transition-colors"
+        class="px-3 py-1 bg-gray-300 text-gray-700 hover:text-white dark:bg-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 w-24 transition-colors"
         (click)="closeDeleteModal()" [disabled]="isLoading">
         No, <br />Cancel
       </button>
 
       <button
-        class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 w-32 transition-colors disabled:bg-red-400 disabled:cursor-not-allowed"
+        class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 w-24 transition-colors disabled:bg-red-400 disabled:cursor-not-allowed"
         (click)="confirmDelete()" [disabled]="isLoading">
         Yes, <br />Remove
       </button>

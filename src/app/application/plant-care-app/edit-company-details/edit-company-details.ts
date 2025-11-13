@@ -38,6 +38,7 @@ export class EditCompanyDetailsComponent implements OnInit {
   sameNumberError = false;
   contactNumberError1 = false;
   contactNumberError2 = false;
+  logoRequiredError = false;
 
   @ViewChild('logoInput', { static: false })
   logoInput!: ElementRef<HTMLInputElement>;
@@ -158,6 +159,13 @@ export class EditCompanyDetailsComponent implements OnInit {
     });
   }
 
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
+  }
+
   openFilePicker(): void {
     if (this.logoInput && this.logoInput.nativeElement) {
       this.logoInput.nativeElement.click();
@@ -203,6 +211,7 @@ export class EditCompanyDetailsComponent implements OnInit {
     }
 
     this.logoFile = file;
+    this.logoRequiredError = false;
     const reader = new FileReader();
     reader.onload = (e: ProgressEvent<FileReader>) => {
       this.logoPreview = e.target?.result ?? null;
@@ -210,102 +219,192 @@ export class EditCompanyDetailsComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  // Get missing field names for the alert
-  private getMissingFields(): string[] {
-    const missingFields: string[] = [];
+  // Get all validation errors for the popup - EXACTLY LIKE REFERENCE
+  private getAllValidationErrors(): { field: string; message: string }[] {
+    const errors: { field: string; message: string }[] = [];
 
-    if (this.companyForm.get('registrationNumber')?.errors?.['required']) {
-      missingFields.push('Registration Number');
+    // Logo validation
+    if (!this.logoFile && !this.logoPreview) {
+      errors.push({
+        field: 'Company Logo',
+        message: 'Company logo is required',
+      });
     }
 
-    if (this.companyForm.get('taxId')?.errors?.['required']) {
-      missingFields.push('TAX ID');
+    // Registration Number
+    const regNumberControl = this.companyForm.get('registrationNumber');
+    if (regNumberControl?.errors?.['required'] && regNumberControl.touched) {
+      errors.push({
+        field: 'Registration Number',
+        message: 'Registration Number is required',
+      });
     }
 
-    if (this.companyForm.get('companyName')?.errors?.['required']) {
-      missingFields.push('Company Name');
+    // Tax ID
+    const taxIdControl = this.companyForm.get('taxId');
+    if (taxIdControl?.errors?.['required'] && taxIdControl.touched) {
+      errors.push({ field: 'TAX ID', message: 'TAX ID is required' });
     }
 
-    if (this.companyForm.get('phone1')?.errors?.['required']) {
-      missingFields.push('Phone Number 1');
+    // Company Name
+    const companyNameControl = this.companyForm.get('companyName');
+    if (
+      companyNameControl?.errors?.['required'] &&
+      companyNameControl.touched
+    ) {
+      errors.push({
+        field: 'Company Name',
+        message: 'Company Name is required',
+      });
     }
 
-    if (this.companyForm.get('address')?.errors?.['required']) {
-      missingFields.push('Address');
+    // Phone 1 - Format validation first
+    const phone1Control = this.companyForm.get('phone1');
+    const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
+
+    if (phone1Control?.errors?.['required'] && phone1Control.touched) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Phone Number - 1 is required',
+      });
     }
 
-    return missingFields;
-  }
-
-  // Get validation errors for the alert
-  private getValidationErrors(): string[] {
-    const errors: string[] = [];
-
-    if (this.sameNumberError) {
-      errors.push('Contact Number - 1 and Contact Number - 2 cannot be the same');
+    if (this.contactNumberError1) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Phone Number must be exactly 9 digits for Sri Lanka (+94)',
+      });
     }
 
-    if (this.contactNumberError1 && this.companyForm.get('phone1')?.value) {
-      errors.push('Please enter a valid mobile number (format: +947XXXXXXXX)');
+    if (
+      phone1Control?.errors?.['pattern'] &&
+      phone1Control.touched &&
+      phoneCode1 !== '+94'
+    ) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Please enter a valid phone number containing only digits',
+      });
     }
 
-    if (this.contactNumberError2 && this.companyForm.get('phone2')?.value) {
-      errors.push('Please enter a valid mobile number (format: +947XXXXXXXX)');
+    // Phone 2 - Format validation first
+    const phone2Control = this.companyForm.get('phone2');
+    const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
+
+    if (this.contactNumberError2) {
+      errors.push({
+        field: 'Phone Number - 2',
+        message: 'Phone Number must be exactly 9 digits for Sri Lanka (+94)',
+      });
     }
 
-    // Check phone pattern errors
-    if (this.companyForm.get('phone1')?.errors?.['pattern'] && 
-        this.companyForm.get('phoneCode1')?.value !== '+94') {
-      errors.push('Phone Number 1 must contain only digits');
+    if (
+      phone2Control?.errors?.['pattern'] &&
+      phone2Control.touched &&
+      phoneCode2 !== '+94'
+    ) {
+      errors.push({
+        field: 'Phone Number - 2',
+        message: 'Please enter a valid phone number containing only digits',
+      });
     }
 
-    if (this.companyForm.get('phone2')?.errors?.['pattern'] && 
-        this.companyForm.get('phone2')?.value && 
-        this.companyForm.get('phoneCode2')?.value !== '+94') {
-      errors.push('Phone Number 2 must contain only digits');
+    // Only check for duplicate numbers if both numbers have valid formats
+    if (
+      !this.contactNumberError1 &&
+      !this.contactNumberError2 &&
+      this.sameNumberError
+    ) {
+      errors.push({
+        field: 'Phone Numbers',
+        message: 'Phone Number - 1 and Phone Number - 2 cannot be the same',
+      });
+    }
+
+    // Address
+    const addressControl = this.companyForm.get('address');
+    if (addressControl?.errors?.['required'] && addressControl.touched) {
+      errors.push({ field: 'Address', message: 'Address is required' });
     }
 
     return errors;
   }
 
+  // Show validation error popup with all errors - EXACTLY LIKE REFERENCE
+  private showValidationErrorPopup(
+    errors: { field: string; message: string }[]
+  ): void {
+    const errorsList = errors
+      .map((error) => `<li>${error.message}</li>`)
+      .join('');
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: `
+        <div class="text-left">
+          <p class="mb-3">Please fix the following issues:</p>
+            <ul class="list-disc list-inside space-y-1 validation-errors max-h-60 overflow-y-auto">
+          ${errorsList}
+        </ul>
+        </div>
+      `,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+      confirmButtonText: 'OK',
+      width: '600px',
+    });
+  }
+
+  // FIXED VALIDATION FLOW
   onSubmit(): void {
     this.companyForm.markAllAsTouched();
     this.validateContactNumbers();
 
-    const missingFields = this.getMissingFields();
-    const validationErrors = this.getValidationErrors();
+    // Check if logo is required (for new uploads, but keep existing logo)
+    if (!this.logoFile && !this.logoPreview) {
+      this.logoRequiredError = true;
+    }
 
-    // If there are any missing fields or validation errors, show the warning
-    if (missingFields.length > 0 || validationErrors.length > 0) {
-      // Scroll to first error
+    const validationErrors = this.getAllValidationErrors();
+
+    if (validationErrors.length > 0) {
       this.scrollToFirstError();
-
-      let errorMessage = '';
-
-      if (missingFields.length > 0) {
-        errorMessage += `<strong>Missing Required Fields</strong><br><br>`;
-        errorMessage += missingFields.map(field => `${field}`).join('<br>');
-      }
-
-      if (validationErrors.length > 0) {
-        if (errorMessage) errorMessage += '<br><br>';
-        errorMessage += `<strong>Validation Errors</strong><br><br>`;
-        errorMessage += validationErrors.map(error => `${error}`).join('<br>');
-      }
-
-      Swal.fire({
-        icon: 'warning',
-        html: errorMessage,
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-          htmlContainer: 'text-left'
-        },
-        confirmButtonText: 'OK',
-      });
+      this.showValidationErrorPopup(validationErrors);
       return;
     }
 
+    // SHOW CONFIRMATION POPUP BEFORE UPDATE
+    this.showUpdateConfirmation();
+  }
+
+  // ADDED CONFIRMATION POPUP METHOD
+  private showUpdateConfirmation(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'Do you really want to update certificate company?',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.performUpdate();
+      }
+    });
+  }
+
+  // EXTRACTED UPDATE LOGIC
+  private performUpdate(): void {
     this.isLoading = true;
     const formData = new FormData();
     const val = this.companyForm.value;
@@ -395,24 +494,32 @@ export class EditCompanyDetailsComponent implements OnInit {
     return `https://flagcdn.com/w20/${code.toLowerCase()}.png`;
   }
 
+  // FIXED VALIDATION LOGIC - NO OVERLAP
   validateContactNumbers(): void {
     const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
     const phone1 = this.companyForm.get('phone1')?.value;
     const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
     const phone2 = this.companyForm.get('phone2')?.value;
 
-    // Check if numbers are the same (only if both are provided and same country code)
-    this.sameNumberError =
-      phone1 && phone2 && phone1 === phone2 && phoneCode1 === phoneCode2;
+    // Reset all errors first
+    this.contactNumberError1 = false;
+    this.contactNumberError2 = false;
+    this.sameNumberError = false;
 
-    // Check Sri Lanka number validation
-    this.contactNumberError1 =
-      phoneCode1 === '+94' && phone1 && phone1.length !== 9;
-    this.contactNumberError2 =
-      phoneCode2 === '+94' &&
-      phone2 &&
-      phone2.length > 0 &&
-      phone2.length !== 9;
+    // Step 1: Check Sri Lanka number validation FIRST
+    if (phoneCode1 === '+94' && phone1) {
+      this.contactNumberError1 = phone1.length !== 9;
+    }
+
+    if (phoneCode2 === '+94' && phone2 && phone2.length > 0) {
+      this.contactNumberError2 = phone2.length !== 9;
+    }
+
+    // Step 2: Only check for same number if both numbers have valid formats
+    if (!this.contactNumberError1 && !this.contactNumberError2) {
+      this.sameNumberError =
+        phone1 && phone2 && phone1 === phone2 && phoneCode1 === phoneCode2;
+    }
   }
 
   // Helper method to scroll to first error
@@ -430,10 +537,10 @@ export class EditCompanyDetailsComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You may lose the unsaved changes!',
+      text: 'You may lose the added data after canceling!',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Stay Here',
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
@@ -446,6 +553,21 @@ export class EditCompanyDetailsComponent implements OnInit {
   }
 
   onBack(): void {
-    this.onCancel();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 }

@@ -185,10 +185,19 @@ export class ViewAllCertificatesComponent implements OnInit {
   }
 
   getFormattedCommission(value: any): string {
-    const num = parseFloat(value);
-    if (isNaN(num)) return '-';
-    return num % 1 === 0 ? `${num}%` : `${num.toFixed(1)}%`;
+  const num = parseFloat(value);
+  if (isNaN(num)) return '-';
+  
+  // Convert to string to preserve all decimal places
+  const numStr = num.toString();
+  
+  // Check if it has decimal places
+  if (numStr.includes('.')) {
+    return `${numStr}%`;
+  } else {
+    return `${num}%`;
   }
+}
 
   onBack(): void {
     this.router.navigate([`/plant-care/action/`]);

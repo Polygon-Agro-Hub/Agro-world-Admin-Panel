@@ -452,19 +452,27 @@
       </h2>
 
       <div class="pb-6">
-        <label for="comAmount" class="block text-sm font-medium text-gray-700 dark:text-textDark">Commission Amount (%)
-          *</label>
-        <input id="comAmount" name="comAmount" type="number" step="0.01" min="0" max="100"
-          [(ngModel)]="personalData.comAmount" (input)="onTrimInput($event, personalData, 'comAmount')"
+        <label for="comAmount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Commission Amount (%) *
+        </label>
+        <input id="comAmount" name="comAmount" type="number" step="0.01" min="0.01" max="100"
+          [(ngModel)]="personalData.comAmount" (blur)="markFieldAsTouched('comAmount')"
           (keypress)="formatAmount($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        <span *ngIf="isFieldInvalid('comAmount')" class="text-red-600 text-sm block mt-1">Commission Amount is a
-          required field</span>
-        <span *ngIf="
-      personalData.comAmount !== null &&
-      personalData.comAmount !== undefined &&
-      personalData.comAmount <= 0
-    " class="text-red-600 text-sm block mt-1">Commission Amount must be greater than 0</span>
+
+        <!-- Show "required field" message only if empty/null/undefined -->
+        <span
+          *ngIf="isFieldInvalid('comAmount') && (personalData.comAmount === null || personalData.comAmount === undefined)"
+          class="text-red-600 text-sm block mt-1">
+          Commission Amount is a required field
+        </span>
+
+        <!-- Show "must be greater than 0" message only if value exists but is <= 0 -->
+        <span
+          *ngIf="personalData.comAmount !== null && personalData.comAmount !== undefined && personalData.comAmount <= 0"
+          class="text-red-600 text-sm block mt-1">
+          Commission Amount must be greater than 0
+        </span>
       </div>
       <div class="pb-6">
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's

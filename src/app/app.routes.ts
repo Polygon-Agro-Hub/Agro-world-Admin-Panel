@@ -229,6 +229,7 @@ import { FiealdOfficerComplaintsComponent } from './application/Complaints/fieal
 import { GoviLinkViewComplaintComponent } from './application/Complaints/govi-link-view-complaint/govi-link-view-complaint.component';
 import { PaymentHistoryAddNewComponent } from './application/finance/payment-history-add-new/payment-history-add-new.component';
 import { PaymentHistoryUpdateComponent } from './application/finance/payment-history-update/payment-history-update.component';
+import { ViewAllPaymentHistoryComponent } from './application/finance/view-all-payment-history/view-all-payment-history.component';
 
 export const routes: Routes = [
   {
@@ -577,6 +578,10 @@ export const routes: Routes = [
               {
                 path: 'update-payment/:id',
                 component: PaymentHistoryUpdateComponent,
+              },
+              {
+                path: 'viewAll-payments',
+                component: ViewAllPaymentHistoryComponent,
               }
             ],
           },

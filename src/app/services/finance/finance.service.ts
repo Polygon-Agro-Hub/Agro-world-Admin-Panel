@@ -256,6 +256,24 @@ export interface PaymentHistoryDetail {
   modifierName?: string;
 }
 
+export interface PaymentHistoryListItem {
+  id: number;
+  receivers: string;
+  amount: number;
+  payRef: string;
+  xlLink: string;
+  issueBy: number;
+  modifyBy?: number;
+  createdAt: string;
+  issuerName?: string;
+  modifierName?: string;
+}
+
+export interface PaymentHistoryListResponse {
+  count: number;
+  data: PaymentHistoryListItem[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -527,6 +545,39 @@ updatePaymentHistory(
   const url = `${this.apiUrl}finance/payment-history/${id}`;
   return this.http.put<UpdatePaymentHistoryResponse>(url, formData, {
     headers,
+  });
+}
+
+getAllPaymentHistory(
+  receivers?: string,
+  issuedDate?: string,
+  search?: string
+): Observable<PaymentHistoryListResponse> {
+  let params = new HttpParams();
+
+  if (receivers && receivers.trim()) {
+    params = params.set('receivers', receivers.trim());
+  }
+
+  if (issuedDate) {
+    params = params.set('issuedDate', issuedDate);
+  }
+
+  if (search && search.trim()) {
+    params = params.set('search', search.trim());
+  }
+
+  const url = `${this.apiUrl}finance/payment-history`;
+  return this.http.get<PaymentHistoryListResponse>(url, {
+    headers: this.getHeaders(),
+    params: params,
+  });
+}
+
+deletePaymentHistory(id: number): Observable<any> {
+  const url = `${this.apiUrl}finance/payment-history/${id}`;
+  return this.http.delete(url, {
+    headers: this.getHeaders(),
   });
 }
 

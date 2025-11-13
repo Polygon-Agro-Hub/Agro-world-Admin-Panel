@@ -35,10 +35,11 @@
         <i class="fa-solid fa-image text-gray-400 text-2xl"></i>
       </div>
     </div>
+    <div></div>
     <!-- Certificate Name -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Company</label
+        >Company *</label
       >
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
@@ -47,10 +48,23 @@
       </div>
     </div>
 
+    <!-- Certificate Number -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Certificate Number *</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.srtNumber || "--" }}
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 gap-2">
     <!-- Certificate Name -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Certificate Name</label
+        >Certificate Name (in English)*</label
       >
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
@@ -59,23 +73,37 @@
       </div>
     </div>
 
-    <!-- Certificate Number -->
+    <!-- Certificate Name -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Certificate Number</label
+        >Certificate Name (in Sinhala)*</label
       >
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
       >
-        {{ certificateData?.srtNumber || "--" }}
+        {{ certificateData?.srtNameSinhala || "--" }}
       </div>
     </div>
 
+    <!-- Certificate Name -->
+    <div class="my-3">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark"
+        >Certificate Name (in Tamil)*</label
+      >
+      <div
+        class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
+      >
+        {{ certificateData?.srtNameTamil || "--" }}
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <!-- No. of Visits -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >No. of Visits </label
-      >
+        >No. of Visits *
+      </label>
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
       >
@@ -86,8 +114,8 @@
     <!-- Applicable For -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Applicable For </label
-      >
+        >Applicable For *
+      </label>
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
       >
@@ -98,8 +126,8 @@
     <!-- Accreditation Body -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Accreditation Body </label
-      >
+        >Accreditation Body *
+      </label>
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
       >
@@ -111,8 +139,8 @@
     <div class="my-3">
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark mb-1"
-        >Service Areas </label
-      >
+        >Service Areas *
+      </label>
       <button
         (click)="showServiceAreasModal()"
         class="px-4 py-2 bg-[#3980C0] text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2 w-full justify-center"
@@ -124,8 +152,8 @@
     <!-- Price -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Price (Rs.) </label
-      >
+        >Price (Rs.) *
+      </label>
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
       >
@@ -136,8 +164,8 @@
     <!-- Timeline -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Timeline (Mention in months) </label
-      >
+        >Timeline <span class="text-xs font-thin">(Mention in months)</span> *
+      </label>
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
       >
@@ -148,8 +176,8 @@
     <!-- Commission -->
     <div class="my-3">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Agreed Commission (%) </label
-      >
+        >Agreed Commission (%) *
+      </label>
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[42px]"
       >
@@ -162,7 +190,7 @@
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark"
       >
-        Payment Terms 
+        Payment Terms *
       </label>
       <div class="mt-2">
         <div *ngIf="certificateData?.tearms" class="flex items-center gap-2">
@@ -182,8 +210,8 @@
     <!-- Scope -->
     <div class="my-3 md:col-span-2">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Scope </label
-      >
+        >Scope *
+      </label>
       <div
         class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark min-h-[80px]"
       >
@@ -194,8 +222,8 @@
     <!-- Target Crops Section -->
     <div class="my-3 w-full md:col-span-2" *ngIf="showTargetCropsSection">
       <label class="block text-sm font-medium text-textLight dark:text-textDark"
-        >Target Crops </label
-      >
+        >Target Crops *
+      </label>
       <div class="mt-3 border rounded-md p-3 min-h-[50px] flex flex-wrap gap-2">
         <ng-container *ngIf="isForSelectedCrops">
           <ng-container *ngIf="selectedCrops.length > 0; else noCrops">

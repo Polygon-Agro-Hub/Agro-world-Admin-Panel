@@ -19,7 +19,7 @@
     <!-- Logo Upload -->
     <div class="mb-6 flex items-center gap-6">
       <span class="mt-2 text-sm text-textLight dark:text-textDark font-medium">
-        {{ logoPreview ? "Company Logo" : "No Logo Available" }}
+        {{ logoPreview ? "Company Logo *" : "No Logo Available" }}
       </span>
       <div class="flex items-center gap-4">
         <!-- Upload Button -->
@@ -71,6 +71,7 @@
         <input
           id="registrationNumber"
           type="text"
+          (keydown)="preventLeadingSpace($event)"
           formControlName="registrationNumber"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
@@ -99,6 +100,7 @@
         <input
           id="taxId"
           type="text"
+          (keydown)="preventLeadingSpace($event)"
           formControlName="taxId"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
@@ -112,7 +114,7 @@
           *ngIf="companyForm.get('taxId')?.errors?.['required'] && companyForm.get('taxId')?.touched"
           class="text-red-500 text-sm mt-1"
         >
-          Tax ID is Required
+          TAX ID is Required
         </div>
       </div>
 
@@ -127,6 +129,7 @@
         <input
           id="companyName"
           type="text"
+          (keydown)="preventLeadingSpace($event)"
           formControlName="companyName"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
@@ -211,11 +214,11 @@
           <div
             *ngIf="companyForm.get('phone1')?.errors?.['required'] && companyForm.get('phone1')?.touched"
           >
-            Contact Number 1 is Required
+            Phone Number - 1 is Required
           </div>
           <div *ngIf="contactNumberError1 && companyForm.get('phone1')?.value">
             <span *ngIf="companyForm.get('phoneCode1')?.value === '+94'">
-              Please enter a valid mobile number (format: +947XXXXXXXX)
+              Phone Number must be exactly 9 digits for Sri Lanka (+94).
             </span>
           </div>
           <div
@@ -289,7 +292,7 @@
         <div class="mt-1 text-red-500 text-sm">
           <div *ngIf="contactNumberError2 && companyForm.get('phone2')?.value">
             <span *ngIf="companyForm.get('phoneCode2')?.value === '+94'">
-              Please enter a valid mobile number (format: +947XXXXXXXX)
+              Phone Number must be exactly 9 digits for Sri Lanka (+94).
             </span>
           </div>
           <div
@@ -298,7 +301,7 @@
             Please enter a valid phone number containing only digits.
           </div>
           <div *ngIf="sameNumberError">
-            Contact Number - 1 and Contact Number - 2 cannot be the same.
+            Phone Number - 1 and Phone Number - 2 cannot be the same.
           </div>
         </div>
       </div>
@@ -315,6 +318,7 @@
           id="address"
           formControlName="address"
           rows="3"
+          (keydown)="preventLeadingSpace($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':

@@ -40,7 +40,7 @@
             [options]="comCategories"
             [(ngModel)]="filterComCategory"
             (onChange)="applyFilters()"
-            [checkmark]="true"
+            [checkmark]="false"
             optionLabel="categoryEnglish"
             [showClear]="!!filterComCategory"
             placeholder="Category"
@@ -55,7 +55,7 @@
             [options]="status"
             [(ngModel)]="filterStatus"
             (onChange)="applyFilters()"
-            [checkmark]="true"
+            [checkmark]="false"
             optionLabel="type"
             [showClear]="!!filterStatus"
             placeholder="Status"
@@ -65,7 +65,7 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="replyStatus"
-            [checkmark]="true"
+            [checkmark]="false"
             optionLabel="status"
             optionValue="value"
             [showClear]="!!rpst"
@@ -211,7 +211,7 @@
               {{ item.complainCategory }}
             </td>
             <td class="py-3 dark:text-textDark text-left">{{ item.empId }}</td>
-            <td class="py-3 dark:text-textDark text-left">
+            <td class="py-3 dark:text-textDark text-center">
               {{ item.createdAt | date : "yyyy/MM/dd" : "Asia/Colombo" }}<br />
               {{ item.createdAt | date : "hh.mm a" : "Asia/Colombo" }}
             </td>
@@ -278,7 +278,7 @@
               </div>
             </td>
             <td class="py-3 dark:text-textDark text-left">
-              {{ getOfficerName(item) }}
+              {{ item.adminReplyByName }}
             </td>
           </tr>
         </tbody>

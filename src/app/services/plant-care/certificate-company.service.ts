@@ -110,6 +110,7 @@ export interface FieldAudit {
   sheduleDate?: Date;
   officerEmpId: string;
   officerJobRole: string;
+  userName:string
 }
 export interface FieldAuditResponse {
   message: string;
@@ -143,6 +144,7 @@ export interface FarmerClusterAudit {
   sheduleDate?: Date | null;
   officerJobRole: string;
   officerEmpId: string;
+  userName:string;
 }
 export interface FarmerClusterAuditResponse {
   message: string;

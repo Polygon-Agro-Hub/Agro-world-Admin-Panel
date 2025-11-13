@@ -98,11 +98,13 @@ export class EditCertificateDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
     private certificateCompanyService: CertificateCompanyService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
       srtName: ['', Validators.required],
+      srtNameSinhala: ['', Validators.required],
+      srtNameTamil: ['', Validators.required],
       srtNumber: ['', Validators.required],
       srtcomapnyId: ['', Validators.required],
       applicable: ['', Validators.required],
@@ -230,6 +232,8 @@ export class EditCertificateDetailsComponent implements OnInit {
 
     this.certificateForm.patchValue({
       srtName: certificate.srtName || '',
+      srtNameSinhala: certificate.srtNameSinhala || '',
+      srtNameTamil: certificate.srtNameTamil || '',
       srtNumber: certificate.srtNumber || '',
       srtcomapnyId: certificate.srtcomapnyId || '',
       applicable: certificate.applicable || '',
@@ -457,7 +461,7 @@ export class EditCertificateDetailsComponent implements OnInit {
     const missingFields: string[] = [];
 
     if (this.certificateForm.get('srtName')?.errors?.['required']) {
-      missingFields.push('Certificate Name');
+      missingFields.push('Certificate Name (English)');
     }
 
     if (this.certificateForm.get('srtNumber')?.errors?.['required']) {
@@ -505,10 +509,10 @@ export class EditCertificateDetailsComponent implements OnInit {
     }
 
     if (this.certificateForm.get('noOfVisit')?.errors?.['required']) {
-    missingFields.push('Number of Visits');
-  } else if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
-    missingFields.push('Number of Visits (cannot be negative)');
-  }
+      missingFields.push('Number of Visits');
+    } else if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
+      missingFields.push('Number of Visits (cannot be negative)');
+    }
 
     return missingFields;
   }
@@ -575,7 +579,7 @@ export class EditCertificateDetailsComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-gray-800 dark:text-white',
         title: 'dark:text-white',
-      }
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.updateCertificate();
@@ -593,6 +597,8 @@ export class EditCertificateDetailsComponent implements OnInit {
     // Use exact database field names
     formData.append('srtcomapnyId', formValue.srtcomapnyId.toString());
     formData.append('srtName', formValue.srtName);
+    formData.append('srtNameSinhala', formValue.srtNameSinhala || '');
+    formData.append('srtNameTamil', formValue.srtNameTamil || '');
     formData.append('srtNumber', formValue.srtNumber);
     formData.append('applicable', formValue.applicable);
     formData.append('accreditation', formValue.accreditation);
@@ -689,9 +695,8 @@ export class EditCertificateDetailsComponent implements OnInit {
         },
       });
   }
-  
-  
-   back(): void {
+
+  back(): void {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -706,12 +711,10 @@ export class EditCertificateDetailsComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.location.back()
+        this.location.back();
       }
     });
   }
-
-
 
   onCancel(): void {
     Swal.fire({
@@ -748,6 +751,7 @@ export class EditCertificateDetailsComponent implements OnInit {
     input.value = input.value.replace(/^\s+/, '');
     this.certificateForm.get(varibleName)?.setValue(input.value);
   }
+
   preventDecimalInput(event: KeyboardEvent) {
     // Prevent decimal point, comma, and 'e' for exponential notation
     const forbiddenKeys = ['.', ',', 'e', 'E'];
@@ -755,4 +759,5 @@ export class EditCertificateDetailsComponent implements OnInit {
       event.preventDefault();
     }
   }
+
 }

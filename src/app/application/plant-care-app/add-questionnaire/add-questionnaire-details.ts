@@ -65,8 +65,57 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
     this.questions.push(group);
   }
 
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
+  }
+
   deleteQuestion(index: number): void {
+    const questionGroup = this.questions.at(index) as FormGroup;
+    const qEnglish = questionGroup.get('qEnglish')?.value || '';
+    const qSinhala = questionGroup.get('qSinhala')?.value || '';
+    const qTamil = questionGroup.get('qTamil')?.value || '';
+
+    // Check if the question has any content
+    const hasContent =
+      qEnglish.trim().length > 0 ||
+      qSinhala.trim().length > 0 ||
+      qTamil.trim().length > 0;
+
+    if (hasContent) {
+      // Show confirmation dialog for questions with content
+      Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'Do you really want to delete this question? This action cannot be undone.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Delete',
+        cancelButtonText: 'No, Cancel',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton:
+            'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+          cancelButton:
+            'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.performDelete(index);
+        }
+      });
+    } else {
+      // Delete immediately if no content
+      this.performDelete(index);
+    }
+  }
+
+  private performDelete(index: number): void {
     this.questions.removeAt(index);
+
+    // Update question numbers after deletion
     this.questions.controls.forEach((ctrl, i) => {
       ctrl.get('qNo')?.setValue(i + 1);
     });
@@ -195,6 +244,30 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
       return;
     }
 
+    // Show confirmation dialog before submitting
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'Do you really want to create the question(s)?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Create',
+      cancelButtonText: 'No, Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton:
+          'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+        cancelButton:
+          'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.performSubmission();
+      }
+    });
+  }
+
+  private performSubmission(): void {
     this.isLoading = true;
 
     // Map snake_case type to human-readable
@@ -248,7 +321,7 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
       },
     });
   }
-  
+
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -268,6 +341,4 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
       }
     });
   }
-  
-  
 }

@@ -262,8 +262,11 @@ export class IndividualFarmersAuditsComponent implements OnInit {
                 activeJobCount: officer.jobCount || 0,
               })
             );
-
+            // console.log(this.availableOfficers);
+            
             // If there's a currently assigned officer, try to pre-select them
+            console.log(this.currentAssignedOfficer);
+            
             if (
               this.currentAssignedOfficer &&
               this.availableOfficers.length > 0
@@ -271,6 +274,8 @@ export class IndividualFarmersAuditsComponent implements OnInit {
               const currentOfficer = this.availableOfficers.find(
                 (officer) => officer.empId === this.currentAssignedOfficer.empId
               );
+              console.log("CURRENToFFICER ",currentOfficer);
+              
               if (currentOfficer) {
                 this.selectedOfficerId = currentOfficer.empId;
                 this.selectedOfficerInfo = currentOfficer;
@@ -321,6 +326,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
         (officer) => officer.empId === this.selectedOfficerId
       );
       this.selectedOfficerInfo = officer || null;
+      this.currentAssignedOfficer = officer
     } else {
       this.selectedOfficerInfo = null;
     }

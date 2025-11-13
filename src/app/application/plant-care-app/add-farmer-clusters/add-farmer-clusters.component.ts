@@ -134,7 +134,23 @@ export class AddFarmerClustersComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   onFileSelected(event: any): void {
@@ -167,7 +183,7 @@ export class AddFarmerClustersComponent implements OnInit {
     if (fileExtension && allowedExtensions.includes(`.${fileExtension}`)) {
       this.selectedFile = file;
       this.errorMessage = '';
-      this.checkDuplicatesImmediately(file);
+      // this.checkDuplicatesImmediately(file);
     } else {
       this.errorMessage =
         'Invalid file type. Please upload a CSV or XLSX file.';
@@ -332,16 +348,32 @@ export class AddFarmerClustersComponent implements OnInit {
           farmers: farmers,
         };
 
-        this.farmerClusterService.createFarmerCluster(payload).subscribe({
-          next: (response) => {
-            this.isLoading = false;
-            this.showSuccessPopup(response);
-            this.resetForm();
+        Swal.fire({
+          icon: 'info',
+          title: 'Are you sure?',
+          text: 'Do you really want to create this cluster?',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Create',
+          cancelButtonText: 'No, Cancel',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
           },
-          error: (error) => {
-            this.isLoading = false;
-            this.handleError(error);
-          },
+          buttonsStyling: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.farmerClusterService.createFarmerCluster(payload).subscribe({
+              next: (response) => {
+                this.isLoading = false;
+                this.showSuccessPopup(response);
+                this.resetForm();
+              },
+              error: (error) => {
+                this.isLoading = false;
+                this.handleError(error);
+              },
+            });
+          }
         });
       } catch (error) {
         this.isLoading = false;
@@ -791,8 +823,9 @@ export class AddFarmerClustersComponent implements OnInit {
     }
 
     if (error.error?.missingRegCodes) {
-      const missingRegCodes = error.error.missingRegCodes;
-      this.showMissingRegCodesErrorPopup(missingRegCodes);
+      // Handle the new response structure with missingRegCodeDetails
+      const missingRegCodeDetails = error.error.missingRegCodeDetails || [];
+      this.showMissingRegCodesErrorPopup(missingRegCodeDetails);
       return;
     }
 
@@ -948,11 +981,11 @@ export class AddFarmerClustersComponent implements OnInit {
     });
   }
 
-  private showMissingRegCodesErrorPopup(missingRegCodes: string[]): void {
+  private showMissingRegCodesErrorPopup(missingRegCodeDetails: any[]): void {
     Swal.fire({
-      html: this.generateMissingRegCodesPopupHTML(missingRegCodes),
+      html: this.generateMissingRegCodesPopupHTML(missingRegCodeDetails),
       showConfirmButton: false,
-      width: '800px',
+      width: '900px',
       customClass: {
         popup: '!bg-white dark:!bg-gray-800 !text-gray-800 dark:!text-white',
         container: '!flex !items-center !justify-center',
@@ -973,14 +1006,16 @@ export class AddFarmerClustersComponent implements OnInit {
         );
         if (downloadButton) {
           downloadButton.addEventListener('click', () => {
-            this.downloadMissingRegCodesCSV(missingRegCodes);
+            this.downloadMissingRegCodesCSV(missingRegCodeDetails);
           });
         }
       },
     });
   }
 
-  private generateMissingRegCodesPopupHTML(missingRegCodes: string[]): string {
+  private generateMissingRegCodesPopupHTML(
+    missingRegCodeDetails: any[]
+  ): string {
     return `
     <div class="p-6 bg-white dark:bg-gray-800 rounded-lg max-w-4xl mx-auto">
       <!-- Header -->
@@ -1008,20 +1043,21 @@ export class AddFarmerClustersComponent implements OnInit {
         </button>
       </div>
 
-      <!-- Missing Registration Codes Table -->
+      <!-- Missing Registration Codes Table with NIC -->
       <div class="mb-6">
         <table class="w-full">
           <thead>
             <tr>
               <th></th>
               <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">No</th>
+              <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">NIC</th>
               <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">Farm ID</th>
             </tr>
           </thead>
           <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
-            ${missingRegCodes
+            ${missingRegCodeDetails
               .map(
-                (regCode, index) => `
+                (detail, index) => `
               <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">
                   <i class="fa-solid fa-triangle-exclamation text-red-800"></i>
@@ -1029,7 +1065,12 @@ export class AddFarmerClustersComponent implements OnInit {
                 <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300">${
                   index + 1
                 }</td>
-                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${regCode}</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
+                  detail.farmerNIC
+                }</td>
+                <td class="border-b border-gray-300 dark:border-gray-600 px-4 py-2 text-gray-700 dark:text-gray-300 font-mono">${
+                  detail.regCode
+                }</td>
               </tr>
             `
               )
@@ -1040,7 +1081,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
       <!-- Summary -->
       <p class="text-left font-semibold">
-        ${missingRegCodes.length} items
+        ${missingRegCodeDetails.length} items
       </p>
 
       <!-- Action Button -->

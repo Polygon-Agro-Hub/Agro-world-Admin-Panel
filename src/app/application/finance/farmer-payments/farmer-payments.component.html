@@ -185,6 +185,12 @@
             >
               Branch Name
             </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Payment Reference
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -234,6 +240,11 @@
               class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
             >
               {{ payment.branchName }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.invNo }}
             </td>
           </tr>
         </tbody>

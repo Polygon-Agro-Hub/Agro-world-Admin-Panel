@@ -1215,6 +1215,8 @@ export const routes: Routes = [
           {
             path: 'customer',
             component: CustomersComponent,
+            canActivate:[PermissionGuard],
+            data: { permission: 'Sales Dash customer' },
           },
 
           {

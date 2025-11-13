@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { CustomersService } from '../../../services/dash/customers.service';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface Order {
   id: string;
@@ -63,6 +65,8 @@ export class CustomerOrdersComponent implements OnInit {
     private dasService: CustomersService,
     private invoiceSrv: InvoiceService,
     private http: HttpClient,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
     private finalInvoiceService: FinalinvoiceService
   ) { }
 

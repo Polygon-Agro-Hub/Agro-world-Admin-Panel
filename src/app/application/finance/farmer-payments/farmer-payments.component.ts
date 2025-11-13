@@ -300,9 +300,21 @@ export class FarmerPaymentsComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return 'N/A';
-    return dateString.split('T')[0];
+  if (!dateString) return 'N/A';
+  
+  const date = new Date(dateString);
+  
+  // Check if date is valid
+  if (isNaN(date.getTime())) {
+    return 'N/A';
   }
+  
+  const day = date.getDate();
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  
+  return `${day} ${month}, ${year}`;
+}
 
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-LK', {

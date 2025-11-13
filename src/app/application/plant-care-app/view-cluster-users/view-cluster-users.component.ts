@@ -93,44 +93,64 @@ export class ViewClusterUsersComponent implements OnInit {
     );
   }
 
-  onNICInput(event: any) {
-    // Remove special characters, only allow alphanumeric
-    const value = event.target.value;
+  onNICInput(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // Remove all special characters, keep only alphanumeric
     const sanitized = value.replace(/[^a-zA-Z0-9]/g, '');
 
     if (value !== sanitized) {
       this.newFarmerNIC = sanitized;
-      event.target.value = sanitized;
+      input.value = sanitized;
     }
 
-    // Real-time validation matching submit validation
     const trimmedNIC = this.newFarmerNIC.trim();
 
+    // Real-time validation
     if (trimmedNIC.length === 0) {
       this.nicError = 'NIC is required';
-    } else if (trimmedNIC.length < 9) {
-      this.nicError = 'NIC must be at least 9 characters';
-    } else {
-      this.nicError = ''; // Clear error when valid
-    }
-  }
-  onNICPaste(event: ClipboardEvent) {
-    event.preventDefault();
-    const pastedText = event.clipboardData?.getData('text') || '';
-    const sanitized = pastedText.replace(/[^a-zA-Z0-9]/g, '');
-    this.newFarmerNIC = sanitized.substring(0, 12); // Respect maxlength
-
-    // Real-time validation matching submit validation
-    const trimmedNIC = this.newFarmerNIC.trim();
-
-    if (trimmedNIC.length === 0) {
-      this.nicError = 'NIC is required';
-    } else if (trimmedNIC.length < 9) {
-      this.nicError = 'NIC must be at least 9 characters';
+    } else if (trimmedNIC.length < 10) {
+      this.nicError = 'NIC must be at least 10 characters';
+    } else if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
+    } else if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
+    } else if (trimmedNIC.length === 11) {
+      this.nicError = 'Invalid NIC length';
+    } else if (trimmedNIC.length > 12) {
+      this.nicError = 'NIC cannot exceed 12 characters';
     } else {
       this.nicError = '';
     }
   }
+
+
+  onNICPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const sanitized = pastedText.replace(/[^a-zA-Z0-9]/g, '');
+    this.newFarmerNIC = sanitized.substring(0, 12);
+
+    const trimmedNIC = this.newFarmerNIC.trim();
+
+    // Real-time validation
+    if (trimmedNIC.length === 0) {
+      this.nicError = 'NIC is required';
+    } else if (trimmedNIC.length < 10) {
+      this.nicError = 'NIC must be at least 10 characters';
+    } else if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
+    } else if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
+    } else if (trimmedNIC.length === 11) {
+      this.nicError = 'Invalid NIC length';
+    } else {
+      this.nicError = '';
+    }
+  }
+
+
   onSearch() {
     // Only search when search icon is clicked
     this.fetchClusterUsers(this.searchTerm.trim());
@@ -207,12 +227,30 @@ export class ViewClusterUsersComponent implements OnInit {
     this.location.back();
   }
 
+  isNICValid(): boolean {
+    const trimmedNIC = this.newFarmerNIC.trim();
+    return (
+      (trimmedNIC.length === 10 && /^\d{9}[vVxX]$/i.test(trimmedNIC)) ||
+      (trimmedNIC.length === 12 && /^\d{12}$/.test(trimmedNIC))
+    );
+  }
+
   addNew() {
     this.newFarmerNIC = '';
     this.newFarmerFarmId = '';
-    this.nicError = 'NIC is required'; // Show initial error
-    this.farmIdError = 'Farm ID is required'; // Show initial error
+    this.nicError = '';
+    this.farmIdError = '';
     this.isAddFarmerModalOpen = true;
+  }
+
+  onFarmIdInput(): void {
+    const trimmedFarmId = this.newFarmerFarmId.trim();
+
+    if (trimmedFarmId.length === 0) {
+      this.farmIdError = 'Farm ID is required';
+    } else {
+      this.farmIdError = '';
+    }
   }
 
   closeAddFarmerModal() {
@@ -232,8 +270,23 @@ export class ViewClusterUsersComponent implements OnInit {
       return;
     }
 
-    if (trimmedNIC.length < 9) {
-      this.nicError = 'NIC must be at least 9 characters';
+    if (trimmedNIC.length < 10) {
+      this.nicError = 'NIC must be at least 10 characters';
+      return;
+    }
+
+    if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
+      return;
+    }
+
+    if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
+      return;
+    }
+
+    if (trimmedNIC.length === 11 || trimmedNIC.length > 12) {
+      this.nicError = 'Invalid NIC format';
       return;
     }
 
@@ -286,5 +339,7 @@ export class ViewClusterUsersComponent implements OnInit {
         }
       );
   }
+
+
 
 }

@@ -1525,17 +1525,17 @@ export class AddFiealdOfficerComponent implements OnInit {
             let errorMessage = 'An unexpected error occurred';
             let messages: string[] = [];
 
-            if (error.error && Array.isArray(error.error.errors)) {
+                     if (error.error && Array.isArray(error.error.errors)) {
               // Map backend error keys to user-friendly messages
               messages = error.error.errors.map((err: string) => {
                 switch (err) {
                   case 'NIC':
                     return 'The NIC number is already registered.';
                   case 'Email':
-                    return 'Email is already registered.';
-                  case 'PhoneNumber01':
+                    return 'The Email is already registered.';
+                  case 'PhoneNumber1':
                     return 'Mobile Number 01 is already registered.';
-                  case 'PhoneNumber02':
+                  case 'PhoneNumber2':
                     return 'Mobile Number 02 is already registered.';
                   default:
                     return 'Validation error: ' + err;

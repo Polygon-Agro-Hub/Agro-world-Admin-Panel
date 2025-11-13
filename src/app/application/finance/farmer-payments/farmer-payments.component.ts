@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { FinanceService } from '../../../services/finance/finance.service';
-import { HttpClient } from '@angular/common/http'; // Add this import
+import { HttpClient } from '@angular/common/http';
 
 interface FarmerPayment {
   id: number;
@@ -152,13 +152,13 @@ export class FarmerPaymentsComponent implements OnInit {
   }
 
   onSearch(): void {
-  this.applyFilters();
-}
+    this.applyFilters();
+  }
 
   clearSearch(): void {
-  this.searchTerm = '';
-  this.applyFilters();
-}
+    this.searchTerm = '';
+    this.applyFilters();
+  }
 
   clearDate(): void {
     this.selectedDate = null;
@@ -225,10 +225,8 @@ export class FarmerPaymentsComponent implements OnInit {
       // Create worksheet
       const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
       
-      // Set column widths for better readability
+      // Set column widths for better readability (removed No column)
       const colWidths = [
-        { wch: 5 },   // No
-        { wch: 15 },  // Invoice No
         { wch: 25 },  // Farmer Name
         { wch: 15 },  // NIC Number
         { wch: 15 },  // Phone Number
@@ -280,9 +278,8 @@ export class FarmerPaymentsComponent implements OnInit {
   }
 
   private prepareExcelData(): any[] {
-    return this.filteredPayments.map((payment, index) => ({
-      'No': index + 1,
-      'Invoice No': payment.invNo || 'N/A',
+    return this.filteredPayments.map((payment) => ({
+      // Removed 'No' column from Excel export
       'Farmer Name': payment.farmerName || 'N/A',
       'NIC Number': payment.NICnumber || 'N/A',
       'Phone Number': payment.phoneNumber || 'N/A',

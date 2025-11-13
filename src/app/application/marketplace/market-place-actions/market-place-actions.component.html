@@ -1,6 +1,7 @@
 <div class="flex justify-center items-center">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16">
-    <div class="flex justify-center cursor-pointer" *ngIf="permissionService.hasPermission('GoviMart catalog') || tokenService.getUserDetails().role === '1'">
+    <div class="flex justify-center cursor-pointer"
+      *ngIf="permissionService.hasPermission('GoviMart catalog') || tokenService.getUserDetails().role === '1'">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
         (click)="togglePopupCatalog()">
@@ -24,7 +25,9 @@
         <hr />
 
 
-        <div *ngIf="permissionService.hasPermission('View products list') || tokenService.getUserDetails().role === '1'"
+        <div
+          class="flex align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
+          *ngIf="permissionService.hasPermission('View products list') || tokenService.getUserDetails().role === '1'"
           (click)="navigatePath('/market/action/view-products-list')">
           View Products List
         </div>
@@ -36,15 +39,13 @@
           Add Packages
         </div>
         <hr />
-        <div
-          *ngIf="permissionService.hasPermission('View packages list') || tokenService.getUserDetails().role === '1'"
+        <div *ngIf="permissionService.hasPermission('View packages list') || tokenService.getUserDetails().role === '1'"
           class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
           (click)="navigatePath('/market/action/view-packages-list')">
           View Packages List
         </div>
         <hr />
-        <div
-          *ngIf="permissionService.hasPermission('Add product type') || tokenService.getUserDetails().role === '1'"
+        <div *ngIf="permissionService.hasPermission('Add product type') || tokenService.getUserDetails().role === '1'"
           class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
           (click)="navigatePath('/market/action/add-product-type')">
           Add Product Type
@@ -58,8 +59,9 @@
       </div>
     </div>
 
-    <div class="flex justify-center cursor-pointer" *ngIf="permissionService.hasPermission('GoviMart customers') || tokenService.getUserDetails().role === '1'">
-      <div 
+    <div class="flex justify-center cursor-pointer"
+      *ngIf="permissionService.hasPermission('GoviMart customers') || tokenService.getUserDetails().role === '1'">
+      <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
         (click)="togglePopupCustomer()">
         <div class="flex items-center">
@@ -73,14 +75,16 @@
       <div
         class="mt-16 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] min-h-max absolute dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
         *ngIf="istogglePopupCustomerView">
-        <div *ngIf="permissionService.hasPermission('View retail customer') || tokenService.getUserDetails().role === '1'"
+        <div
+          *ngIf="permissionService.hasPermission('View retail customer') || tokenService.getUserDetails().role === '1'"
           class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
           (click)="navigatePath('/market/action/view-retail-customers')">
           View Retail Customers
         </div>
 
         <hr />
-        <div *ngIf="permissionService.hasPermission('View wholesale customer') || tokenService.getUserDetails().role === '1'"
+        <div
+          *ngIf="permissionService.hasPermission('View wholesale customer') || tokenService.getUserDetails().role === '1'"
           class="flex align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
           (click)="navigatePath('/market/action/view-wholesale-customers')">
           View Wholesale Customers
@@ -95,7 +99,8 @@
       </div>
     </div>
 
-    <div class="flex justify-center cursor-pointer" *ngIf="permissionService.hasPermission('GoviMart orders') || tokenService.getUserDetails().role === '1'">
+    <div class="flex justify-center cursor-pointer"
+      *ngIf="permissionService.hasPermission('GoviMart orders') || tokenService.getUserDetails().role === '1'">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
         (click)="togglePopupOrder()">
@@ -117,7 +122,8 @@
         </div>
 
         <hr />
-        <div *ngIf="permissionService.hasPermission('View wholesale orders') || tokenService.getUserDetails().role === '1'"
+        <div
+          *ngIf="permissionService.hasPermission('View wholesale orders') || tokenService.getUserDetails().role === '1'"
           class="flex rounded align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
           (click)="navigatePath('/market/action/view-wholesale-orders')">
           View Wholesale Orders
@@ -125,33 +131,9 @@
       </div>
     </div>
 
-    <!-- <div class="flex justify-center cursor-pointer">
-      <div
-        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        (click)="togglePopupCenters()"
-      >
-        <div class="flex items-center">
-          <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-shop" style="color: #4a90e2"></i>
-          </div>
-          <span class="ml-3">Centres</span>
-        </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
-      </div>
-      <div
-        class="mt-16 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] h-[40px] absolute dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        *ngIf="istogglePopupCentersView"
-      >
-        <div
-          class="flex rounded align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointe"
-          (click)="navigatePath('/collection-hub/view-collection-centers')"
-        >
-          Collection Centre Summery
-        </div>
-      </div>
-    </div> -->
 
-    <div class="flex justify-center cursor-pointer">
+    <div class="flex justify-center cursor-pointer"
+      *ngIf="permissionService.hasPermission('GoviMart Marketing') || tokenService.getUserDetails().role === '1'">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
         (click)="togglePopupMarketing()">
@@ -164,23 +146,23 @@
         <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </div>
       <div
-        class="mt-16 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] h-[120px] absolute dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+        class="mt-16 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] min-h-max absolute dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
         *ngIf="istogglePopupMarketingView">
-        <div
+        <div *ngIf="permissionService.hasPermission('Add coupon') || tokenService.getUserDetails().role === '1'"
           class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
           (click)="navigatePath('/market/action/add-coupen')">
           Add a Coupon
         </div>
 
         <hr />
-        <div
+        <div *ngIf="permissionService.hasPermission('View coupon list') || tokenService.getUserDetails().role === '1'"
           class="flex align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
           (click)="navigatePath('/market/action/view-coupen')">
           View Coupons List
         </div>
 
         <hr />
-        <div
+        <div *ngIf="permissionService.hasPermission('Manage SEO') || tokenService.getUserDetails().role === '1'"
           class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer">
           Manage SEO
         </div>

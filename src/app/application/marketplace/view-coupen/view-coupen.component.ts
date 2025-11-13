@@ -8,6 +8,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-coupen',
@@ -45,7 +47,12 @@ export class ViewCoupenComponent implements OnInit {
     { name: 'Free Delivery' },
   ];
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
+  constructor(
+    private marketSrv: MarketPlaceService,
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   back(): void {
     this.router.navigate(['market/action']);

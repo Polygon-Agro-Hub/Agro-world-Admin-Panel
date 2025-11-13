@@ -1126,10 +1126,14 @@ export const routes: Routes = [
               {
                 path: 'add-coupen',
                 component: AddCoupenComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add coupon' },
               },
               {
                 path: 'view-coupen',
                 component: ViewCoupenComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View coupon list' },
               },
               {
                 path: 'add-package',
@@ -1234,6 +1238,8 @@ export const routes: Routes = [
               {
                 path: 'edit-coupen/:id',
                 component: EditCoupenComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit coupon' }
               },
               {
                 path: 'view-wholesale-orders',

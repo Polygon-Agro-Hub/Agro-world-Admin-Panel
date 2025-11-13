@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar'; // Add this import
+import { CalendarModule } from 'primeng/calendar';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { FinanceService } from '../../../services/finance/finance.service';
+import { HttpClient } from '@angular/common/http'; // Add this import
 
 interface FarmerPayment {
   id: number;
@@ -26,13 +27,19 @@ interface BankOption {
   value: string;
 }
 
+// Add Bank interface
+interface Bank {
+  ID: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-farmer-payments',
   standalone: true,
   imports: [
     CommonModule, 
     DropdownModule, 
-    CalendarModule, // Add CalendarModule here
+    CalendarModule,
     LoadingSpinnerComponent, 
     FormsModule
   ],
@@ -48,26 +55,45 @@ export class FarmerPaymentsComponent implements OnInit {
   
   // Filter properties
   selectedBank: string = '';
-  selectedDate: Date | null = null; // Change to Date type
+  selectedDate: Date | null = null;
   searchTerm: string = '';
 
   // Dropdown options
   bankOptions: BankOption[] = [];
-  // Remove dateOptions array as we don't need it anymore
+  banks: Bank[] = []; // Add banks array
 
   constructor(
     private router: Router,
-    private financeService: FinanceService
+    private financeService: FinanceService,
+    private http: HttpClient // Add HttpClient
   ) { }
 
   ngOnInit(): void {
+    this.loadBanks(); // Load banks first
     this.loadFarmerPayments();
+  }
+
+  // Add this method to load banks from JSON
+  loadBanks(): void {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe({
+      next: (data) => {
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+        this.bankOptions = this.banks.map(bank => ({
+          label: bank.name,
+          value: bank.name
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading banks:', error);
+        // Fallback: populate from existing data if JSON fails
+        this.populateBankOptionsFromData();
+      }
+    });
   }
 
   loadFarmerPayments(): void {
     this.isLoading = true;
     
-    // Convert selectedDate to string format for API call
     const dateParam = this.selectedDate ? this.formatDateForApi(this.selectedDate) : '';
     
     this.financeService.getAllFarmerPayments(dateParam, this.selectedBank)
@@ -79,9 +105,10 @@ export class FarmerPaymentsComponent implements OnInit {
             this.filteredPayments = [...this.farmerPayments];
             this.hasData = this.filteredPayments.length > 0;
             
-            // Populate bank options from data
-            this.populateBankOptions();
-            // Remove populateDateOptions() call
+            // If banks weren't loaded from JSON, populate from data
+            if (this.bankOptions.length === 0) {
+              this.populateBankOptionsFromData();
+            }
           } else {
             this.hasData = false;
             this.farmerPayments = [];
@@ -98,7 +125,8 @@ export class FarmerPaymentsComponent implements OnInit {
       });
   }
 
-  populateBankOptions(): void {
+  // Rename this method to avoid confusion
+  populateBankOptionsFromData(): void {
     const uniqueBanks = [...new Set(this.farmerPayments
       .filter(payment => payment.bankName)
       .map(payment => payment.bankName))];
@@ -106,10 +134,8 @@ export class FarmerPaymentsComponent implements OnInit {
     this.bankOptions = uniqueBanks.map(bank => ({
       label: bank,
       value: bank
-    }));
+    })).sort((a, b) => a.label.localeCompare(b.label));
   }
-
-  // Remove populateDateOptions method
 
   onBankChange(event: any): void {
     this.selectedBank = event.value;
@@ -169,7 +195,7 @@ export class FarmerPaymentsComponent implements OnInit {
 
   refreshData(): void {
     this.selectedBank = '';
-    this.selectedDate = null; // Reset to null
+    this.selectedDate = null;
     this.searchTerm = '';
     this.loadFarmerPayments();
   }

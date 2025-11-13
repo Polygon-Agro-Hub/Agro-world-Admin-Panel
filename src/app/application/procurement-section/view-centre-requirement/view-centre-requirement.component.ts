@@ -9,6 +9,8 @@ import { ProcumentsService } from '../../../services/procuments/procuments.servi
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface DistributionOrder {
   cropNameEnglish: string;
@@ -59,7 +61,9 @@ export class ViewCentreRequirementComponent implements OnInit {
 
   constructor(
     private procumentsService: ProcumentsService,
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   ngOnInit(): void {

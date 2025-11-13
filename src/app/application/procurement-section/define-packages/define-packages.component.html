@@ -7,7 +7,8 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex space-x-4 pb-5 border-b border-gray-300">
-      <button (click)="setActiveTab('todo')" [ngClass]="
+      <button (click)="setActiveTab('todo')" *ngIf="permissionService.hasPermission('Procurement todo tab') || tokenService.getUserDetails().role === '1'"
+      [ngClass]="
           activeTab === 'todo'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -25,7 +26,8 @@
         Completed
       </button> -->
 
-      <button (click)="setActiveTab('sent')" [ngClass]="
+      <button (click)="setActiveTab('sent')" *ngIf="permissionService.hasPermission('Procurement sent to dispatch tab') || tokenService.getUserDetails().role === '1'"
+      [ngClass]="
           activeTab === 'sent'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -35,7 +37,7 @@
       </button>
     </div>
     <div class="h-5"></div>
-    <div class="tab-content">
+    <div class="tab-content" *ngIf="permissionService.hasPermission('Procurement sent to dispatch tab') || permissionService.hasPermission('Procurement todo tab') || tokenService.getUserDetails().role === '1'">
       <app-todo-define-packages *ngIf="activeTab === 'todo'"></app-todo-define-packages>
       <!-- <app-completed-define-package *ngIf="activeTab === 'completed'"></app-completed-define-package> -->
       <app-view-send-to-dispatch *ngIf="activeTab === 'sent'">

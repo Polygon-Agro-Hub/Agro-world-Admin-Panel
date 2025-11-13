@@ -1007,6 +1007,8 @@ export const routes: Routes = [
 
       {
         path: 'procurement',
+        canActivate: [PermissionGuard],
+        data: { permission: 'Procurement Tab' },
         children: [
           {
             path: '',
@@ -1015,11 +1017,15 @@ export const routes: Routes = [
           {
             path: 'received-orders',
             component: RecievedOrdersComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Procurement received orders' }
           },
 
           {
             path: 'define-packages',
             component: DefinePackagesComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Procurement dispatch packages' }
           },
           {
             path: 'todo-define-premade-packages',
@@ -1036,12 +1042,16 @@ export const routes: Routes = [
           {
             path: 'view-centre-requirement',
             component: ViewCentreRequirementComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Procurement centre requirement' }
           },
         ],
       },
 
       {
         path: 'dispatch',
+        canActivate: [PermissionGuard],
+        data: { permission: 'Dispatch Tab' },
         children: [
           {
             path: '',

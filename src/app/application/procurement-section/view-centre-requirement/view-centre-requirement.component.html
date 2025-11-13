@@ -87,8 +87,9 @@
         All ({{totalItems | number: '2.0'}})
       </h4>
 
-      <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center"
-        (click)="downloadTemplate1()" [disabled]="isDownloading || distributionOrders.length === 0">
+      <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center" 
+        (click)="downloadTemplate1()" [disabled]="isDownloading || distributionOrders.length === 0"
+         *ngIf="permissionService.hasPermission('Download centre requirement') || tokenService.getUserDetails().role === '1'">
         <i class="fa-solid fa-download px-2" *ngIf="!isDownloading"></i>
         <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
         {{ isDownloading ? " Downloading..." : " Download" }}

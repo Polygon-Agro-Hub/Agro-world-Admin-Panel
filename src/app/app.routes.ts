@@ -1191,6 +1191,8 @@ export const routes: Routes = [
               {
                 path: 'view-retail-orders',
                 component: ViewRetailOrdersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View retail orders' }
               },
 
               {
@@ -1204,6 +1206,8 @@ export const routes: Routes = [
               {
                 path: 'view-retail-customers',
                 component: ViewRetailCustomeresComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View retail customer' }
               },
               {
                 path: 'define-package-view',
@@ -1220,6 +1224,8 @@ export const routes: Routes = [
               {
                 path: 'view-wholesale-customers',
                 component: ViewWholesaleCustomersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View wholesale customer' }
               },
               {
                 path: 'view-order-details/:id',
@@ -1232,6 +1238,8 @@ export const routes: Routes = [
               {
                 path: 'view-wholesale-orders',
                 component: ViewWholwsaleOrdersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View wholesale orders' }
               },
             ],
           },

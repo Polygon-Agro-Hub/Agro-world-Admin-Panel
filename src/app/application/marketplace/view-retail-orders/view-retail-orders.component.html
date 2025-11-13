@@ -110,7 +110,7 @@
             <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
               STATUS
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
               INVOICE
             </th>
           </tr>
@@ -148,22 +148,6 @@
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               {{ item.amount | number : "1.2-2" }}
             </td>
-
-            <!-- <div>
-                <span
-                  [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg': item.status === 'Ordered',
-                    'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-lg': item.status === 'Delivered',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg': item.status === 'Assigned',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg': item.status === 'Picked Up',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg': item.status === 'Processing'
-                  }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
-                >
-                  {{ item.status }}
-                </span>
-              </div> -->
-
             <td class="px-4 py-3 text-center dark:text-textDark">
               <span class="inline-block min-w-24 font-normal rounded-2xl border px-2 py-1" [ngClass]="{
                   'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
@@ -188,7 +172,7 @@
               </span>
             </td>
 
-            <td class="px-4 py-3 flex justify-center text-center dark:text-textDark">
+            <td class="px-4 py-3 flex justify-center text-center dark:text-textDark" *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
               <button class="text-textLight dark:text-textDark flex justify-center gap-1"
                 (click)="downloadInvoice(item.orderId, item.invNo)">
                 <i class="fa-solid fa-file-lines text-2xl"></i>

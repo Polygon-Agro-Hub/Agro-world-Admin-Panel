@@ -151,10 +151,14 @@ export class FarmerPaymentsComponent implements OnInit {
     this.applyFilters();
   }
 
+  onSearch(): void {
+  this.applyFilters();
+}
+
   clearSearch(): void {
-    this.searchTerm = '';
-    this.applyFilters();
-  }
+  this.searchTerm = '';
+  this.applyFilters();
+}
 
   clearDate(): void {
     this.selectedDate = null;

@@ -9,7 +9,7 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1500px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center whitespace-nowrap">
@@ -124,7 +124,7 @@
       <i class="fa-solid fa-download mr-3" [class.fa-spin]="isDownloading"></i>
       {{ isDownloading ? "Downloading..." : "Download" }}
     </button>
-    <div class="overflow-x-auto">
+    <div>
       <table
         class="min-w-full divide-y divide-gray-200 table-auto"
         *ngIf="hasData"

@@ -25,6 +25,7 @@
   name="newTargetValue"
   step="1"
   min="1"
+  [disabled]="!hasTargetPermission()"
   (keydown)="preventDecimalInput($event); blockFirstSpace($event)"
   (blur)="validateTargetInput()"
 />
@@ -37,7 +38,7 @@
     </div>
 
     <!-- Submit Button -->
-    <div class="flex mt-2.5 ml-2 flex-col space-y-2">
+    <div *ngIf="permissionService.hasPermission('Dash sales targets set new target') || tokenService.getUserDetails().role === '1'" class="flex mt-2.5 ml-2 flex-col space-y-2">
       <button
         (click)="saveTarget()"
         class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out"

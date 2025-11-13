@@ -250,16 +250,15 @@
         </tbody>
       </table>
 
-      <div *ngIf="!hasData && !isLoading" class="text-center py-8">
-        <p class="text-textLight dark:text-textDark text-lg">
-          No farmer payments found
+      <div *ngIf="!hasData && !isLoading" class="flex flex-col justify-center items-center py-20 shadow-lg">
+        <p class="text-[#494949] dark:text-textDark mb-4">
+          -- No Data Available --
         </p>
-        <button
-          class="mt-4 bg-blue-500 text-white font-medium py-2 px-4 rounded"
-          (click)="refreshData()"
-        >
-          Refresh Data
-        </button>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 mb-4"
+        />
       </div>
     </div>
   </div>

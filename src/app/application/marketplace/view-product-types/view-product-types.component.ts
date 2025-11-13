@@ -99,6 +99,8 @@ import { Router } from '@angular/router';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-product-types',
@@ -117,8 +119,10 @@ export class ViewProductTypesComponent implements OnInit {
 
   constructor(
     private marketSrv: MarketPlaceService,
-    private router: Router
-  ) {}
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
     this.fetchProductType();

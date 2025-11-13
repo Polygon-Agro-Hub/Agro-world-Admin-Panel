@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-market-place-actions',
@@ -19,6 +21,13 @@ export class MarketPlaceActionsComponent {
   istogglePopupMediaView = false;
   istogglePopupSubscriptionView = false;
   istogglePopupDeliveryChargesView = false;
+
+  constructor(
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
+
 
   togglePopupCatalog() {
     this.istogglePopupCatalogView = !this.istogglePopupCatalogView;
@@ -138,7 +147,6 @@ export class MarketPlaceActionsComponent {
     this.istogglePopupSubscriptionView = false;
   }
 
-  constructor(private router: Router) {}
 
   navigatePath(path: string) {
     this.router.navigate([path]);

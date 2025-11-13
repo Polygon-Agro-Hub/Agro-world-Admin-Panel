@@ -1097,6 +1097,8 @@ export const routes: Routes = [
 
       {
         path: 'market',
+        canActivate: [PermissionGuard],
+        data: { permission: 'GoviMart Tab' },
         children: [
           {
             path: 'dashboard',
@@ -1112,10 +1114,14 @@ export const routes: Routes = [
               {
                 path: 'add-product',
                 component: MarketAddProductComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add product' },
               },
               {
                 path: 'view-products-list',
                 component: ViewProductsListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View products list' },
               },
               {
                 path: 'add-coupen',
@@ -1128,10 +1134,14 @@ export const routes: Routes = [
               {
                 path: 'add-package',
                 component: AddPackageComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add packages' }
               },
               {
                 path: 'edit-product/:id',
                 component: MarketEditProductComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit product' },
               },
               {
                 path: 'view-packages-history',
@@ -1140,10 +1150,14 @@ export const routes: Routes = [
               {
                 path: 'view-packages-list',
                 component: ViewPackageListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View packages list' },
               },
               {
                 path: 'edit-packages/:id',
                 component: MarketEditPackagesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit packages' }
               },
               {
                 path: 'view-package-details/:id',
@@ -1156,10 +1170,14 @@ export const routes: Routes = [
               {
                 path: 'view-product-types',
                 component: ViewProductTypesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View product type' }
               },
               {
                 path: 'add-product-type',
                 component: AddProductTypesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add product type' }
               },
               {
                 path: 'subscription',
@@ -1190,10 +1208,14 @@ export const routes: Routes = [
               {
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Define packages' }
               },
               {
                 path: 'view-package-history',
                 component: ViewPackageHistoryComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View package history' }
               },
               {
                 path: 'view-wholesale-customers',

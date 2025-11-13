@@ -14,6 +14,8 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
 import { finalize } from 'rxjs';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-orders',
@@ -79,7 +81,9 @@ export class ViewOrdersComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private finalInvoiceService: FinalinvoiceService,
-    private salesDashService: SalesDashService
+    private salesDashService: SalesDashService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   ngOnInit() {

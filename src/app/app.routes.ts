@@ -511,11 +511,11 @@ export const routes: Routes = [
               },
               {
                 path: 'view-cluster-users/:clusterId',
-                component: ViewClusterUsersComponent
+                component: ViewClusterUsersComponent,
               },
               {
                 path: 'edit-farmer-cluster/:clusterId',
-                component: EditFarmerClusterComponent
+                component: EditFarmerClusterComponent,
               },
               {
                 path: 'individual-farmers-list',
@@ -582,7 +582,7 @@ export const routes: Routes = [
               {
                 path: 'viewAll-payments',
                 component: ViewAllPaymentHistoryComponent,
-              }
+              },
             ],
           },
         ],
@@ -670,7 +670,7 @@ export const routes: Routes = [
               },
               {
                 path: 'manage-company',
-                component: ManageCompanyComponent
+                component: ManageCompanyComponent,
               },
               {
                 path: 'view-companies',
@@ -1215,13 +1215,15 @@ export const routes: Routes = [
           {
             path: 'customer',
             component: CustomersComponent,
-            canActivate:[PermissionGuard],
+            canActivate: [PermissionGuard],
             data: { permission: 'Sales Dash customer' },
           },
 
           {
             path: 'view-orders',
             component: ViewOrdersComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Sales Dash view orders' },
           },
 
           {
@@ -1299,7 +1301,7 @@ export const routes: Routes = [
           },
           {
             path: 'field-officer-complain/:id',
-            component: GoviLinkViewComplaintComponent
+            component: GoviLinkViewComplaintComponent,
           },
           {
             path: 'distributed-center-complains',
@@ -1317,7 +1319,7 @@ export const routes: Routes = [
           {
             path: 'field-officer-complaints',
             component: FiealdOfficerComplaintsComponent,
-          }
+          },
         ],
       },
       {
@@ -1465,4 +1467,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

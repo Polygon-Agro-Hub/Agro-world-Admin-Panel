@@ -183,11 +183,11 @@
 
 <div *ngIf="showAdditionalItemsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="closeAdditionalItemsModal()">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-md mx-4 max-h-[90vh] flex flex-col">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-[500px] max-w-md mx-4 max-h-[90vh] flex flex-col">
     <!-- Modal Header -->
     <div class="px-6 py-4 text-center shrink-0 border-b border-gray-200 dark:border-gray-700">
       <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
-        Additional Items
+        Additional Items 
       </h3>
     </div>
 
@@ -197,8 +197,9 @@
       <div class="shrink-0 px-6 pt-4 pb-2">
         <div
           class="flex justify-between items-center text-sm font-medium text-[#8492A3] dark:text-gray-400 uppercase tracking-wide border-b border-gray-100 dark:border-gray-700 pb-2">
-          <div class="flex-1">Item</div>
-          <div class="w-16 text-center">Quantity</div>
+          <div class="w-12 text-center">No({{ additionalItemsCount }})</div>
+          <div class="flex-1 pl-4">Item</div>
+          <div class="w-20 text-center">Quantity</div>
           <div class="w-16 text-center">Unit</div>
         </div>
       </div>
@@ -207,11 +208,14 @@
       <div
         class="flex-1 overflow-y-auto px-6 pb-4 scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
         <div class="space-y-3">
-          <div *ngFor="let item of additionalItems" class="flex justify-between items-center py-2">
-            <div class="flex-1 text-sm text-[#212121] dark:text-gray-100 truncate pr-2">
+          <div *ngFor="let item of additionalItems; let i = index" class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+            <div class="w-12 text-center text-sm text-[#808080] dark:text-gray-400">
+              {{ i + 1 }}
+            </div>
+            <div class="flex-1 pl-4 text-sm text-[#212121] dark:text-gray-100 truncate pr-2">
               {{ item.displayName }}
             </div>
-            <div class="w-16 text-center text-sm text-[#000000] dark:text-gray-100">
+            <div class="w-20 text-center text-sm text-[#000000] dark:text-gray-100">
               {{ item.qty }}
             </div>
             <div class="w-16 text-center text-sm text-[#808080] dark:text-gray-400">

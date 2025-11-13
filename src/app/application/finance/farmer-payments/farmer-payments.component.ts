@@ -210,94 +210,102 @@ export class FarmerPaymentsComponent implements OnInit {
   }
 
   downloadData(): void {
-    if (this.filteredPayments.length === 0) {
-      console.warn('No data to download');
-      alert('No data available to download');
-      return;
-    }
+  if (this.filteredPayments.length === 0) {
+    console.warn('No data to download');
+    alert('No data available to download');
+    return;
+  }
 
-    this.isDownloading = true;
+  this.isDownloading = true;
 
-    try {
-      // Prepare data for Excel
-      const excelData = this.prepareExcelData();
-      
-      // Create worksheet
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
-      
-      // Set column widths for better readability (removed No column)
-      const colWidths = [
-        { wch: 25 },  // Farmer Name
-        { wch: 15 },  // NIC Number
-        { wch: 15 },  // Phone Number
-        { wch: 15 },  // Amount
-        { wch: 12 },  // Date
-        { wch: 20 },  // Account Number
-        { wch: 20 },  // Bank Name
-        { wch: 20 }   // Branch Name
-      ];
-      ws['!cols'] = colWidths;
+  try {
+    // Prepare data for Excel (without No column)
+    const excelData = this.prepareExcelData();
+    
+    // Create worksheet
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
+    
+    // Set column widths for better readability
+    const colWidths = [
+      { wch: 25 },  // Full Name
+      { wch: 15 },  // NIC
+      { wch: 15 },  // Phone number
+      { wch: 15 },  // Amount (Rs.)
+      { wch: 12 },  // Date
+      { wch: 20 },  // Account Number
+      { wch: 20 },  // Bank Name
+      { wch: 20 },  // Branch Name
+      { wch: 25 }   // Payment Reference
+    ];
+    ws['!cols'] = colWidths;
 
-      // Add header style
-      if (ws['!ref']) {
-        const range = XLSX.utils.decode_range(ws['!ref']);
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-          const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
-          if (ws[cellAddress]) {
-            // Make header cells bold
-            if (!ws[cellAddress].s) {
-              ws[cellAddress].s = {};
+    // Add header style
+    if (ws['!ref']) {
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
+        if (ws[cellAddress]) {
+          // Make header cells bold with gray background
+          ws[cellAddress].s = {
+            font: { bold: true },
+            alignment: { horizontal: 'center' },
+            fill: {
+              fgColor: { rgb: "D3D3D3" },
+              patternType: "solid"
+            },
+            border: {
+              top: { style: 'thin' },
+              left: { style: 'thin' },
+              bottom: { style: 'thin' },
+              right: { style: 'thin' }
             }
-            ws[cellAddress].s = {
-              font: { bold: true },
-              alignment: { horizontal: 'center' },
-              fill: { fgColor: { rgb: "D3D3D3" } } // Light gray background
-            };
-          }
+          };
         }
       }
-
-      // Create workbook
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Farmer Payments');
-      
-      // Generate file name with timestamp
-      const fileName = `Farmer_Payments_${this.getCurrentTimestamp()}.xlsx`;
-      
-      // Save the file
-      XLSX.writeFile(wb, fileName);
-      
-      console.log('Excel file downloaded successfully');
-      
-    } catch (error) {
-      console.error('Error downloading Excel file:', error);
-      alert('Error downloading Excel file. Please try again.');
-    } finally {
-      this.isDownloading = false;
     }
+
+    // Create workbook
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Farmer Payments');
+    
+    // Generate file name with timestamp
+    const fileName = `Farmer_Payments_${this.getCurrentTimestamp()}.xlsx`;
+    
+    // Save the file
+    XLSX.writeFile(wb, fileName);
+    
+    console.log('Excel file downloaded successfully');
+    
+  } catch (error) {
+    console.error('Error downloading Excel file:', error);
+    alert('Error downloading Excel file. Please try again.');
+  } finally {
+    this.isDownloading = false;
   }
+}
 
   private prepareExcelData(): any[] {
-    return this.filteredPayments.map((payment) => ({
-      // Removed 'No' column from Excel export
-      'Farmer Name': payment.farmerName || 'N/A',
-      'NIC Number': payment.NICnumber || 'N/A',
-      'Phone Number': payment.phoneNumber || 'N/A',
-      'Amount (LKR)': payment.totalPayment || 0,
-      'Date': this.formatDate(payment.createdAt),
-      'Account Number': payment.accNumber || 'N/A',
-      'Bank Name': payment.bankName || 'N/A',
-      'Branch Name': payment.branchName || 'N/A'
-    }));
-  }
+  return this.filteredPayments.map((payment) => ({
+    // Note: No "No" column included - this matches your requirement
+    'Full Name': payment.farmerName || 'N/A',
+    'NIC': payment.NICnumber || 'N/A',
+    'Phone number': payment.phoneNumber || 'N/A',
+    'Amount (Rs.)': payment.totalPayment || 0,
+    'Date': this.formatDate(payment.createdAt),
+    'Account Number': payment.accNumber || 'N/A',
+    'Bank Name': payment.bankName || 'N/A',
+    'Branch Name': payment.branchName || 'N/A',
+    'Payment Reference': payment.invNo || 'N/A'
+  }));
+}
 
   private getCurrentTimestamp(): string {
-    const now = new Date();
-    return now.toISOString()
-      .replace(/[-:]/g, '')
-      .replace(/\..+/, '')
-      .replace('T', '_');
-  }
+  const now = new Date();
+  return now.toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\..+/, '')
+    .replace('T', '_');
+}
 
   formatDate(dateString: string): string {
   if (!dateString) return 'N/A';

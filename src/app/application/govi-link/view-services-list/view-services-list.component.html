@@ -6,7 +6,7 @@
 </button>
 
 <!-- Add New button -->
-<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="add()">
+<button *ngIf="permissionService.hasPermission('GoVi Link view add service') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="add()">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
@@ -83,7 +83,7 @@
               </button>
             </td>
 
-            <td class=" py-3 text-center text-textLight dark:text-textDark"> <button
+            <td *ngIf="permissionService.hasPermission('GoVi Link edit service') || tokenService.getUserDetails().role === '1'" class=" py-3 text-center text-textLight dark:text-textDark"> <button
                 class="text-blue-500 hover:text-blue-700 transition-colors duration-200" aria-label="Edit"
                 (click)="onEditService(service)"> <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                   viewBox="0 0 32 32" class="w-5 h-5">
@@ -93,7 +93,7 @@
                 </svg> </button> </td>
             <!-- Delete -->
             <td class=" py-3 text-center">
-              <button class="text-red-500" (click)="onDeleteService(service)">
+              <button *ngIf="permissionService.hasPermission('GoVi Link delete service') || tokenService.getUserDetails().role === '1'" class="text-red-500" (click)="onDeleteService(service)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />

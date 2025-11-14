@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-services-list',
@@ -23,7 +25,9 @@ export class ViewServicesListComponent implements OnInit {
 
   constructor(
     private goviLinkService: GoviLinkService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit() {

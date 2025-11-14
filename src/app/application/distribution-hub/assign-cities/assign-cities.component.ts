@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 
 // PrimeNG imports
 import { DropdownModule } from 'primeng/dropdown';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-assign-cities',
@@ -69,6 +71,8 @@ export class AssignCitiesComponent implements OnInit {
     private router: Router,
     private distributionHubSrv: DistributionHubService,
     private location: Location,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {

@@ -1404,6 +1404,8 @@ export const routes: Routes = [
               {
                 path: 'view-companies',
                 component: ViewCompaniesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Distribution Hub companies' },
               },
               {
                 path: 'view-distribution-company',

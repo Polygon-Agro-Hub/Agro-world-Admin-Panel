@@ -71,7 +71,7 @@ export const navbarData = [
     icon: 'fa-solid fa-magnifying-glass',
     label: 'GoVi Link',
     expanded: false,
-    Permission: 'Govi Link Tab',
+    Permission: 'GoviLinkTab',
     children: [
       {
         RouterLink: '/govi-link/dashboard',

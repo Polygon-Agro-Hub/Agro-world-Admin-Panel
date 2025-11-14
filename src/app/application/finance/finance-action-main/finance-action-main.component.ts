@@ -20,7 +20,7 @@ export class FinanceActionMainComponent {
     ) { }
 
     farmerPayments(): void {
-    this.router.navigate(['/finance/action/farmer-payments']);
+    this.router.navigate(['/finance/action/govicare-finance']);
   }
 
   govicarePackages(): void {

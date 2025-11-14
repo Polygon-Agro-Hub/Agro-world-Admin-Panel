@@ -11,6 +11,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TokenService } from '../../../services/token/services/token.service';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-products-list',
@@ -51,7 +52,9 @@ export class ViewProductsListComponent {
     private viewProductsList: ViewProductListService,
     private router: Router,
     private http: HttpClient,
-    private tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
   ) { }
 
   fetchAllProducts(

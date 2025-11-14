@@ -6,82 +6,55 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg relative"
-  >
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg relative">
     <div class="flex justify-end items-center mb-8 relative">
       <div class="flex items-center relative">
         <i class="mr-6 w-6 h-6 fill-current text-gray-500">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
-              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
-            />
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
           </svg>
         </i>
 
         <!-- Filter By button (only visible when no filter is applied) -->
-        <button
-          *ngIf="!filterApplied && !showFilterPopup"
+        <button *ngIf="!filterApplied && !showFilterPopup"
           class="bg-[#818AA1] text-white font-medium py-1 px-5 rounded-md text-lg flex items-center"
-          (click)="toggleFilterPopup()"
-        >
+          (click)="toggleFilterPopup()">
           <i class="fa fa-filter px-2 text-sm" aria-hidden="true"></i>
           Filter By
         </button>
 
         <!-- Applied filter display -->
-        <div
-          *ngIf="filterApplied"
-          class="bg-[#818AA1] text-white font-medium py-2 px-5 rounded-md text-lg flex items-center ml-4"
-        >
+        <div *ngIf="filterApplied"
+          class="bg-[#818AA1] text-white font-medium py-2 px-5 rounded-md text-lg flex items-center ml-4">
           <i class="fa fa-filter text-sm px-2" aria-hidden="true"></i>
           {{ getDisplayFilterType() }} : {{ date }}
-          <button
-            (click)="clearFilter()"
-            type="button"
-            class="text-white-500 hover:text-gray-700 focus:outline-none ml-2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
+          <button (click)="clearFilter()" type="button"
+            class="text-white-500 hover:text-gray-700 focus:outline-none ml-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         <!-- Filter Popup Overlay -->
-        <div
-          *ngIf="showFilterPopup"
-          class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 backdrop-blur-sm"
-        >
+        <div *ngIf="showFilterPopup"
+          class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 backdrop-blur-sm">
           <div class="px-20 py-6 bg-white dark:bg-[#1e1e2f] rounded-lg shadow-lg w-[30rem] max-w-full">
             <h2 class="flex justify-center text-xl mb-5 dark:text-white">Select Filter</h2>
-            <select
-              [(ngModel)]="selectedFilterType"
-              class="w-full p-3 mb-5 border rounded bg-white dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-600"
-            >
+            <select [(ngModel)]="selectedFilterType"
+              class="w-full p-3 mb-5 border rounded bg-white dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-600">
               <option [ngValue]="null">--Filter By--</option>
               <option *ngFor="let filter of filterTypes" [ngValue]="filter">
                 {{ filter.display }}
               </option>
             </select>
 
-            <p-calendar
-              id="toDate"
-              [(ngModel)]="dateTemp"
-              placeholder="--Select Date--"
-              [showIcon]="true"
-              [showClear]="true"
-              [showButtonBar]="true"
-              iconDisplay="input"
-              [style]="{ width: '100%', height: '2.5rem' }"
-              panelStyleClass="
+            <p-calendar id="toDate" [(ngModel)]="dateTemp" placeholder="--Select Date--" [showIcon]="true"
+              [showClear]="true" [showButtonBar]="true" iconDisplay="input"
+              [style]="{ width: '100%', height: '2.5rem' }" panelStyleClass="
                 calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568]
                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -89,29 +62,21 @@
                 [&_.p-datepicker-header]:dark:text-white
                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                 [&_.p-button:hover]:dark:bg-[#6b7280]
-              "
-              inputStyleClass="
+              " inputStyleClass="
                 p-3 border cursor-pointer rounded-xl
                 bg-[#F1F1F1] dark:bg-[#272F45]
                 text-textLight dark:text-textDark
                 w-full pr-12
-              "
-              [appendTo]="'body'"
-            >
+              " [appendTo]="'body'">
             </p-calendar>
 
             <div class="flex justify-center space-x-4 mt-6">
-              <button
-                (click)="cancelFilter()"
-                class="py-2 px-5 rounded bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-500"
-              >
+              <button (click)="cancelFilter()"
+                class="py-2 px-5 rounded bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-500">
                 Cancel
               </button>
-              <button
-                (click)="applyFilter()"
-                [disabled]="!selectedFilterType || !dateTemp"
-                class="py-2 px-5 rounded bg-[#3980C0] text-white hover:bg-[#2e6bb3] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <button (click)="applyFilter()" [disabled]="!selectedFilterType || !dateTemp"
+                class="py-2 px-5 rounded bg-[#3980C0] text-white hover:bg-[#2e6bb3] disabled:opacity-50 disabled:cursor-not-allowed">
                 Filter
               </button>
             </div>
@@ -122,61 +87,49 @@
 
         <!-- Search Box -->
         <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96 group relative">
-  
-          <input 
-            type="text" 
-            placeholder="Search by Crop & Variety..." 
-            class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300" 
-            [(ngModel)]="search" 
-            (keydown.enter)="applysearch()" 
-          />
-        
+
+          <input type="text" placeholder="Search by Crop & Variety..."
+            class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300" [(ngModel)]="search"
+            (keydown.enter)="applysearch()" />
+
           <!-- Tooltip -->
-          <div
-  class="absolute top-full mt-2 
+          <div class="absolute top-full mt-2 
          bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 
          group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-  Search by Crop & Variety
-</div>
-        
-          <button 
-            type="button" 
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="applysearch()"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            Search by Crop & Variety
+          </div>
+
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="applysearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
           </button>
-        
-          <button 
-            (click)="clearSearch()" 
-            type="button" 
-            class="text-gray-500 hover:text-gray-700 focus:outline-none"
-            *ngIf="search"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+          <button (click)="clearSearch()" type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            *ngIf="search">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
-        
+
       </div>
     </div>
 
     <div class="flex justify-between items-center mb-5">
       <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark">
-        All ({{totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems}}) Orders
-      </h4>
+        All ({{totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems}}) Orders </h4>
 
-      <button 
-        class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-        (click)="downloadTemplate1()"
-      >
-        <i class="fa-solid fa-download px-2" *ngIf="!isDownloading"></i>
-        <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
-        {{ isDownloading ? " Downloading..." : " Download" }}
-      </button>
+          <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" 
+            (click)="downloadTemplate1()" *ngIf="permissionService.hasPermission('Download received orders') || tokenService.getUserDetails().role === '1'">
+            <i class="fa-solid fa-download px-2" *ngIf="!isDownloading"></i>
+            <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
+            {{ isDownloading ? " Downloading..." : " Download" }}
+          </button>
     </div>
 
     <div>
@@ -221,8 +174,8 @@
                     let i = index
             ">
             <td class="py-3 text-[#000000] dark:text-textDark text-left">
-              {{ ((page - 1) * itemsPerPage + i + 1) < 10 ? '0' + ((page - 1) * itemsPerPage + i + 1) : ((page - 1) * itemsPerPage + i + 1) }} 
-            </td>
+              {{ ((page - 1) * itemsPerPage + i + 1) < 10 ? '0' + ((page - 1) * itemsPerPage + i + 1) : ((page - 1) *
+                itemsPerPage + i + 1) }} </td>
             <td class="px-4 py-3 text-[#000000] dark:text-textDark text-start">
               {{ item.cropNameEnglish }}
             </td>
@@ -247,20 +200,15 @@
           </tr>
         </tbody>
       </table>
-      
-   <!-- No Data Message -->
-  <div *ngIf="purchaseReport.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6 ">
-    <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-  </div>
+
+      <!-- No Data Message -->
+      <div *ngIf="purchaseReport.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6 ">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
       <div *ngIf="purchaseReport.length > 0" class="dark:bg-[#262f45] mt-4">
-        <pagination-controls 
-          (pageChange)="onPageChange($event)" 
-          [responsive]="true" 
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'" 
-          [screenReaderPaginationLabel]="'Pagination'" 
-          [screenReaderPageLabel]="'page'"
+        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
           [screenReaderCurrentLabel]="'Youre on page'">
         </pagination-controls>
       </div>

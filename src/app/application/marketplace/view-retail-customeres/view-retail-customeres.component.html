@@ -71,7 +71,7 @@
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
               Customer Details
             </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View retail customer orders') || tokenService.getUserDetails().role === '1'">
               Orders Details
             </th>
           </tr>
@@ -111,7 +111,7 @@
                 </svg>
               </button>
             </td>
-            <td class="px-3 py-3 text-center">
+            <td class="px-3 py-3 text-center" *ngIf="permissionService.hasPermission('View retail customer orders') || tokenService.getUserDetails().role === '1'">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="viewOrderDetails(item.id)">
                 <img src="assets/icons/orderdetails.png" alt="Order Details" class="w-full h-full object-contain" />
               </button>

@@ -1007,6 +1007,8 @@ export const routes: Routes = [
 
       {
         path: 'procurement',
+        canActivate: [PermissionGuard],
+        data: { permission: 'Procurement Tab' },
         children: [
           {
             path: '',
@@ -1015,11 +1017,15 @@ export const routes: Routes = [
           {
             path: 'received-orders',
             component: RecievedOrdersComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Procurement received orders' }
           },
 
           {
             path: 'define-packages',
             component: DefinePackagesComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Procurement dispatch packages' }
           },
           {
             path: 'todo-define-premade-packages',
@@ -1036,12 +1042,16 @@ export const routes: Routes = [
           {
             path: 'view-centre-requirement',
             component: ViewCentreRequirementComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Procurement centre requirement' }
           },
         ],
       },
 
       {
         path: 'dispatch',
+        canActivate: [PermissionGuard],
+        data: { permission: 'Dispatch Tab' },
         children: [
           {
             path: '',
@@ -1087,6 +1097,8 @@ export const routes: Routes = [
 
       {
         path: 'market',
+        canActivate: [PermissionGuard],
+        data: { permission: 'GoviMart Tab' },
         children: [
           {
             path: 'dashboard',
@@ -1102,26 +1114,38 @@ export const routes: Routes = [
               {
                 path: 'add-product',
                 component: MarketAddProductComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add product' },
               },
               {
                 path: 'view-products-list',
                 component: ViewProductsListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View products list' },
               },
               {
                 path: 'add-coupen',
                 component: AddCoupenComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add coupon' },
               },
               {
                 path: 'view-coupen',
                 component: ViewCoupenComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View coupon list' },
               },
               {
                 path: 'add-package',
                 component: AddPackageComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add packages' }
               },
               {
                 path: 'edit-product/:id',
                 component: MarketEditProductComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit product' },
               },
               {
                 path: 'view-packages-history',
@@ -1130,10 +1154,14 @@ export const routes: Routes = [
               {
                 path: 'view-packages-list',
                 component: ViewPackageListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View packages list' },
               },
               {
                 path: 'edit-packages/:id',
                 component: MarketEditPackagesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit packages' }
               },
               {
                 path: 'view-package-details/:id',
@@ -1146,10 +1174,14 @@ export const routes: Routes = [
               {
                 path: 'view-product-types',
                 component: ViewProductTypesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View product type' }
               },
               {
                 path: 'add-product-type',
                 component: AddProductTypesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add product type' }
               },
               {
                 path: 'subscription',
@@ -1163,6 +1195,8 @@ export const routes: Routes = [
               {
                 path: 'view-retail-orders',
                 component: ViewRetailOrdersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View retail orders' }
               },
 
               {
@@ -1176,18 +1210,26 @@ export const routes: Routes = [
               {
                 path: 'view-retail-customers',
                 component: ViewRetailCustomeresComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View retail customer' }
               },
               {
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Define packages' }
               },
               {
                 path: 'view-package-history',
                 component: ViewPackageHistoryComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View package history' }
               },
               {
                 path: 'view-wholesale-customers',
                 component: ViewWholesaleCustomersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View wholesale customer' }
               },
               {
                 path: 'view-order-details/:id',
@@ -1196,10 +1238,14 @@ export const routes: Routes = [
               {
                 path: 'edit-coupen/:id',
                 component: EditCoupenComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit coupon' }
               },
               {
                 path: 'view-wholesale-orders',
                 component: ViewWholwsaleOrdersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View wholesale orders' }
               },
             ],
           },

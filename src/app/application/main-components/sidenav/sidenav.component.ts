@@ -38,6 +38,7 @@ export class SidenavComponent implements OnInit {
   isLeftButtonVisible: boolean = true;
   navData = navbarData;
   ispopupMarketPrice = false;
+  permissionsArray: string[] = [];
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -74,6 +75,9 @@ export class SidenavComponent implements OnInit {
 
       this.onToggleSideNav.emit(this.isExpanded);
     }
+    this.permissionsArray = this.permissionService.getPermissions();
+    console.log(this.permissionService.getPermissions());
+    
   }
 
   isParentActive(item: any): boolean {
@@ -197,5 +201,9 @@ export class SidenavComponent implements OnInit {
 
   navigateToSettings(): void {
     this.router.navigate(['/settings/view-roles']);
+  }
+
+  checkPermission(permission:string): boolean{
+    return this.permissionsArray.includes(permission);
   }
 }

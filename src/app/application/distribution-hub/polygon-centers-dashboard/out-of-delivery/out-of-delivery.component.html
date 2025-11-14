@@ -22,61 +22,112 @@
             </svg>
           </i>
           <p class="text-gray-500 dark:text-textDark text-lg mr-5">Filter By</p>
+          
+          <!-- Status Dropdown -->
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [checkmark]="true" [options]="statusOptions" [(ngModel)]="selectStatus" (onChange)="onStatusChange()"
-              [showClear]="!!selectStatus" optionLabel="label" optionValue="value" placeholder="Status"></p-dropdown>
+              [checkmark]="true" 
+              [options]="statusOptions" 
+              [(ngModel)]="selectStatus" 
+              (onChange)="onStatusChange()"
+              [showClear]="!!selectStatus" 
+              optionLabel="label" 
+              optionValue="value" 
+              placeholder="Status">
+            </p-dropdown>
           </div>
 
-          <div class="relative">
-            <p-calendar id="deliveryDate" placeholder="Delivery Date" [showIcon]="true" [showClear]="true"
-              [showButtonBar]="true" dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true"
-              yearRange="1900:2030" iconDisplay="input" [(ngModel)]="selectDate" (onSelect)="onDateSelect()"
-              (onClearClick)="clearDate()" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                   [&_.p-datepicker-header]:dark:text-white
-                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+          <!-- Date Picker with Manual Clear Button -->
+          <div class="relative flex items-center">
+            <p-calendar 
+              id="deliveryDate" 
+              placeholder="Delivery Date" 
+              [showIcon]="true" 
+              [showClear]="true"
+              [showButtonBar]="true" 
+              dateFormat="yy-mm-dd" 
+              [monthNavigator]="true" 
+              [yearNavigator]="true"
+              yearRange="1900:2030" 
+              iconDisplay="input" 
+              [(ngModel)]="selectDate" 
+              (onSelect)="onDateSelect()"
+              (onClearClick)="onDateClear()"
+              [style]="{ width: '16rem', height: '2rem' }" 
+              panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                       [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                       [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                       [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                       [&_.p-datepicker-header]:dark:text-white
+                       [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                       [&_.p-button:hover]:dark:bg-[#6b7280]"
               inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
               [appendTo]="'body'" />
+            
+            <!-- Manual clear button as fallback -->
+            <button *ngIf="selectDate" 
+                    (click)="clearDate()" 
+                    class="absolute right-8 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none z-10">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
+          <!-- Search Box -->
           <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-  <input 
-    type="text" 
-    placeholder="Search by Order ID" 
-    [(ngModel)]="searchText" 
-    (keyup.enter)="onSearch()"
-    (input)="onSearchInput($event)"
-    (keydown.space)="$event.preventDefault()"
-    class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
-  <button type="button" (click)="onSearch()"
-    class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-      stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-    </svg>
-  </button>
-  <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-      stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  </button>
-</div>
+            <input 
+              type="text" 
+              placeholder="Search by Order ID" 
+              [(ngModel)]="searchText" 
+              (keyup.enter)="onSearch()"
+              (input)="onSearchInput($event)"
+              (keydown.space)="$event.preventDefault()"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+            <button type="button" (click)="onSearch()"
+              class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none mr-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+              </svg>
+            </button>
+            <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Reset All Filters Button -->
+          <button 
+            (click)="resetAllFilters()"
+            class="px-4 py-2 rounded-lg text-textLight dark:text-textDark border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm">
+            Reset All
+          </button>
         </div>
       </div>
     </div>
-    <div>
+    
+    <!-- Download Button -->
+    <div class="flex justify-between items-center mb-5">
       <button (click)="downloadPDF()" 
-        class="bg-[#415CFF] px-5 py-2 rounded-lg text-white text-lg mb-5 hover:bg-[#3347cc] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
-        Download 
+        class="bg-[#415CFF] px-5 py-2 rounded-lg text-white text-lg hover:bg-[#3347cc] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
+        Download PDF
       </button>
+      
+      <!-- Filter Status Display -->
+      <div class="text-sm text-textLight dark:text-textDark">
+        <span *ngIf="selectStatus" class="mr-3">Status: {{selectStatus}}</span>
+        <span *ngIf="selectDate" class="mr-3">Date: {{selectDate | date:'yyyy-MM-dd'}}</span>
+        <span *ngIf="searchText" class="mr-3">Search: "{{searchText}}"</span>
+        <span *ngIf="!selectStatus && !selectDate && !searchText">No filters applied</span>
+      </div>
     </div>
+    
+    <!-- Data Table -->
     <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
       <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200">
         <thead>
@@ -101,7 +152,7 @@
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-200" *ngIf="hasData">
+        <tbody class="divide-y divide-gray-200">
           <tr *ngFor="let item of filteredOrders; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-700">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{i + 1 | number :'2.0'}}
@@ -126,7 +177,7 @@
         </tbody>
       </table>
 
-
+      <!-- No Data Message -->
       <div *ngIf="!hasData" class="flex flex-col items-center w-full px-10 py-7 mt-6">
         <p class="text-[#494949] my-6 dark:text-textDark">
           --No Data Available--

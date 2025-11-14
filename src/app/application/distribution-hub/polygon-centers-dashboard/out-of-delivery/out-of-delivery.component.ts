@@ -52,25 +52,45 @@ export class OutOfDeliveryComponent implements OnChanges {
   }
 
   onStatusChange() {
+    console.log('Status changed to:', this.selectStatus);
     this.fetchData();
   }
 
   onDateSelect() {
+    console.log('Date selected:', this.selectDate);
     this.fetchData();
+  }
+
+  onDateClear() {
+    console.log('Date clear event triggered');
+    this.clearDate();
   }
 
   onSearch() {
     this.searchText = this.searchText.trim();
+    console.log('Search triggered:', this.searchText);
     this.fetchData();
   }
 
   clearSearch() {
+    console.log('Clearing search');
     this.searchText = '';
     this.fetchData();
   }
 
   clearDate() {
+    console.log('Clearing date, selectDate before:', this.selectDate);
     this.selectDate = null;
+    console.log('selectDate after:', this.selectDate);
+    this.fetchData();
+  }
+
+  // Method to reset all filters
+  resetAllFilters() {
+    console.log('Resetting all filters');
+    this.selectDate = null;
+    this.selectStatus = '';
+    this.searchText = '';
     this.fetchData();
   }
 
@@ -144,9 +164,14 @@ export class OutOfDeliveryComponent implements OnChanges {
         5: { halign: 'center', cellWidth: 25 }
       },
       didParseCell: (data) => {
-        // Make status column bold
+        // Make status column bold and color based on status
         if (data.column.index === 5 && data.section === 'body') {
           data.cell.styles.fontStyle = 'bold';
+          if (data.cell.raw === 'Late') {
+            data.cell.styles.textColor = [255, 0, 0]; // Red for Late
+          } else if (data.cell.raw === 'On Time') {
+            data.cell.styles.textColor = [65, 92, 255]; // Blue for On Time
+          }
         }
       },
       margin: { top: 10 },
@@ -192,7 +217,17 @@ export class OutOfDeliveryComponent implements OnChanges {
   fetchData() {
     this.isLoading = true;
     
-    const dateParam = this.selectDate ? this.selectDate.toISOString().split('T')[0] : '';
+    // Format date properly for API - handle null case
+    const dateParam = this.selectDate ? 
+      this.selectDate.toISOString().split('T')[0] : 
+      '';
+    
+    console.log('Fetching data with params:', {
+      centerId: this.centerObj.centerId,
+      date: dateParam || 'No date filter',
+      status: this.selectStatus || 'No status filter',
+      search: this.searchText || 'No search filter'
+    });
     
     this.DestributionSrv.getCenterOutForDlvryOrders(
       this.centerObj.centerId, 
@@ -202,7 +237,7 @@ export class OutOfDeliveryComponent implements OnChanges {
     ).subscribe(
       (res) => {
         this.orderArr = res.data || [];
-        console.log('Fetched data:', this.orderArr);
+        console.log('Fetched data count:', this.orderArr.length);
         this.filteredOrders = [...this.orderArr];
         this.orderCount = this.filteredOrders.length;
         this.hasData = this.filteredOrders.length > 0;
@@ -212,6 +247,10 @@ export class OutOfDeliveryComponent implements OnChanges {
         console.error('Error fetching data:', error);
         this.isLoading = false;
         this.hasData = false;
+        // Reset data on error
+        this.orderArr = [];
+        this.filteredOrders = [];
+        this.orderCount = 0;
       }
     );
   }

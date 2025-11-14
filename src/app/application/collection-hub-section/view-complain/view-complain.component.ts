@@ -10,6 +10,7 @@ import { TokenService } from "../../../services/token/services/token.service";
 import { environment } from "../../../environment/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { PermissionService } from "../../../services/roles-permission/permission.service";
 
 @Component({
   selector: "app-view-complain",
@@ -21,7 +22,7 @@ import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loa
     FormsModule,
     LoadingSpinnerComponent,
   ],
-  providers: [DatePipe], 
+  providers: [DatePipe],
   templateUrl: "./view-complain.component.html",
   styleUrls: ["./view-complain.component.css"],
 })
@@ -69,6 +70,7 @@ export class ViewComplainComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -91,13 +93,15 @@ export class ViewComplainComponent implements OnInit {
       this.filterCategory.type = "Agriculture";
     } else if (this.tokenService.getUserDetails().role === "3") {
       this.filterCategory.type = "Finance";
-    } else if (this.tokenService.getUserDetails().role === "4") {
-      this.filterCategory.type = "Call Center";
-    } else if (this.tokenService.getUserDetails().role === "5") {
+    }
+    // else if (this.tokenService.getUserDetails().role === "4") {
+    //   this.filterCategory.type = "Call Center";
+    // } 
+    else if (this.tokenService.getUserDetails().role === "5") {
       this.filterCategory.type = "Procuiment";
     }
 
-    
+
     this.fetchAllComplain(this.page, this.itemsPerPage);
     this.getAllComplainCategories();
   }
@@ -117,7 +121,7 @@ export class ViewComplainComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          
+
 
           this.complainsData = res.results;
           this.totalItems = res.total;
@@ -125,7 +129,7 @@ export class ViewComplainComponent implements OnInit {
           this.hasData = this.complainsData.length > 0;
         },
         (error) => {
-          
+
           this.isLoading = false;
         },
       );
@@ -139,7 +143,7 @@ export class ViewComplainComponent implements OnInit {
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
     if (this.dropdown) {
-      this.dropdown.hide(); 
+      this.dropdown.hide();
     }
   }
 

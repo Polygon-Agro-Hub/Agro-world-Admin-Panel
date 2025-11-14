@@ -9,6 +9,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface Complaint {
   id: string;
@@ -27,7 +29,7 @@ interface Complaint {
 interface DropdownOption {
   label: string;
   value: string | null;
-  isExcluded?: boolean; 
+  isExcluded?: boolean;
 }
 
 interface ApiResponse {
@@ -72,7 +74,7 @@ export class WholesaleComplaintsComponent implements OnInit {
 
   hasData: boolean = false;
 
-  
+
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
@@ -83,8 +85,10 @@ export class WholesaleComplaintsComponent implements OnInit {
   constructor(
     private router: Router,
     private datePipe: DatePipe,
-    private complaintsService: ComplaintsService
-  ) {}
+    private complaintsService: ComplaintsService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.fetchComplaints();
@@ -110,7 +114,7 @@ export class WholesaleComplaintsComponent implements OnInit {
             reply: item.reply || undefined,
             complain: item.complain,
           }))
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); 
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.filteredComplaints = [...this.complaints];
         this.totalItems = this.filteredComplaints.length;
         this.comCategories = Array.from(
@@ -186,8 +190,8 @@ export class WholesaleComplaintsComponent implements OnInit {
 
         const matchesReply =
           this.rpst === null ? true :
-          this.rpst === 'Yes' ? !!item.reply :
-          !item.reply; 
+            this.rpst === 'Yes' ? !!item.reply :
+              !item.reply;
 
         const matchesCat =
           !this.filterComCategory || item.complainCategory === this.filterComCategory;
@@ -197,7 +201,7 @@ export class WholesaleComplaintsComponent implements OnInit {
 
         return matchesSearch && matchesReply && matchesCat && matchesStat;
       })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); 
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     this.totalItems = this.filteredComplaints.length;
     this.page = 1;

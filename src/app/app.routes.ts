@@ -1310,22 +1310,32 @@ export const routes: Routes = [
           {
             path: 'view-complains',
             component: ViewComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'GoviCare Complaint' },
           },
           {
             path: 'collection-center-complains',
             component: CollectionCenterViewComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collector Complaint' },
           },
           {
             path: 'manage-applications',
             component: ManageApplicationsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Manage application' },
           },
           {
             path: 'add-complain-Categories',
             component: AddComplainCategoriesComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Add complaint categories' },
           },
           {
             path: 'manage-complaints-categories/:id',
             component: ManageComplaintsCategoriesComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View complaint categories' },
           },
           {
             path: 'edit-complaint-categories/:id',
@@ -1334,41 +1344,61 @@ export const routes: Routes = [
           {
             path: 'view-selected-complain/:id/:farmerName',
             component: ViewSelectedComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply GoviCare complaint' }
           },
           {
             path: 'view-center-complain/:id',
             component: ViewCenterComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply Collector complaint' }
           },
           {
             path: 'view-sales-dash-complain',
             component: ViewSalesDashComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Sales Agent Complaint' }
           },
           {
             path: 'view-selected-sales-dash-complain/:id/:firstName',
             component: ViewSelectedSalesDashComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply Sales complaint' }
           },
           {
             path: 'retail-complaints',
             component: RetailComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Retail Complaint' }
           },
           {
             path: 'wholesale-complaints',
             component: WholesaleComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Wholesale Complaint' }
           },
           {
             path: 'selected-retail-complaints/:id',
             component: SelectedRetailComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply Retail complaint' }
           },
           {
             path: 'selected-wholesale-complaints/:id',
             component: SelectedwholesaleComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply Wholesale complaint' }
           },
           {
             path: 'field-officer-complain/:id',
             component: GoviLinkViewComplaintComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply GoviLink complaint' },
           },
           {
             path: 'distributed-center-complains',
+            canActivate: [PermissionGuard],
+            data: { permission: 'Distribution Complaint' },
             children: [
               {
                 path: '',
@@ -1377,12 +1407,16 @@ export const routes: Routes = [
               {
                 path: 'view-complain/:id',
                 component: ViewEachDistributedComplainComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Reply Distribution complaint' }
               },
             ],
           },
           {
             path: 'field-officer-complaints',
             component: FiealdOfficerComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'GoviLink Complaint' },
           },
         ],
       },

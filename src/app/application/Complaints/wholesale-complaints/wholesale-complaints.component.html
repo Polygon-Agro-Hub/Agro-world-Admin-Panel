@@ -93,7 +93,7 @@
             <th
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               Status</th>
-            <th
+            <th *ngIf="permissionService.hasPermission('Reply Wholesale complaint') || tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               View</th>
             <th
@@ -154,7 +154,7 @@
                 {{ item.status }}
               </span>
             </td>
-            <td class="px-3 py-2 whitespace-nowrap text-center">
+            <td class="px-3 py-2 whitespace-nowrap text-center" *ngIf="permissionService.hasPermission('Reply Wholesale complaint') || tokenService.getUserDetails().role === '1'">
               <button (click)="navigateSelectComplain(item.id)" class="text-blue-600 hover:text-blue-900"
                 aria-label="View complaint details">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5">

@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-manage-complaints-categories',
@@ -21,8 +23,10 @@ export class ManageComplaintsCategoriesComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private complaintSrv: ComplaintsService
-  ) {}
+    private complaintSrv: ComplaintsService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.appId = +this.route.snapshot.params['id']; // + converts string to number
@@ -69,5 +73,5 @@ class Categories {
   id!: number;
   role!: string;
   categoryEnglish!: string;
-  modifyBy!:string | null;
+  modifyBy!: string | null;
 }

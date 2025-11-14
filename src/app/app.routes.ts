@@ -1465,6 +1465,8 @@ export const routes: Routes = [
               {
                 path: 'assign-cities',
                 component: AssignCitiesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'DDistribution Hub assign cities' },
               },
             ],
           },

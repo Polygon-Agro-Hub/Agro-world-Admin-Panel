@@ -1170,6 +1170,8 @@ export const routes: Routes = [
               {
                 path: 'banner-list',
                 component: BannerListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'GoviMart Media' }
               },
               {
                 path: 'view-product-types',
@@ -1186,6 +1188,8 @@ export const routes: Routes = [
               {
                 path: 'subscription',
                 component: SubsriptionComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'GoviMart Subscriptions' }
               },
               {
                 path: 'edit-product-type/:id',
@@ -1202,10 +1206,14 @@ export const routes: Routes = [
               {
                 path: 'view-delivery-charges',
                 component: ViewDeliveryChargesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View delivery charges' }
               },
               {
                 path: 'upload-delivery-charges',
                 component: UploadDeliveryChargesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Upload delivery charges' }
               },
               {
                 path: 'view-retail-customers',

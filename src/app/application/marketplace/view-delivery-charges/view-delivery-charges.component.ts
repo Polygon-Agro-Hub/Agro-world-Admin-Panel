@@ -7,6 +7,8 @@ import { MarketPlaceService } from '../../../services/market-place/market-place.
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface DeliveryCharge {
   id: number;
@@ -54,7 +56,9 @@ export class ViewDeliveryChargesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private deliveryChargeService: MarketPlaceService
+    private deliveryChargeService: MarketPlaceService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   ngOnInit(): void {

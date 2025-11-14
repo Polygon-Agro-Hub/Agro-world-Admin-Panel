@@ -28,6 +28,7 @@ export class DispachPackagesComponent implements OnInit {
   price: number = 0;
   packageName: string = '';
   packgeQty: number = 1;
+  total: number = 0;
 
   isLoading: boolean = true;
   validationFailedMessage: string = '';
@@ -78,6 +79,7 @@ export class DispachPackagesComponent implements OnInit {
         this.productArr = res.marketplaceItems
         this.isLoading = false;
         this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
+        this.total = this.packageArr.length;
         
       }
     )

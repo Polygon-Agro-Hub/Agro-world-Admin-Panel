@@ -1060,6 +1060,8 @@ export const routes: Routes = [
           {
             path: 'salesdash-orders',
             component: SalesdashOrdersComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Dispatch SalesDash' },
           },
 
           {
@@ -1079,6 +1081,8 @@ export const routes: Routes = [
           {
             path: 'marketplace-dispatch',
             component: DispatchMarketplaceComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Dispatch GoviMart' },
           },
           {
             path: 'view-premade-packages/:id/:inv',
@@ -1087,10 +1091,14 @@ export const routes: Routes = [
           {
             path: 'dispatch-package/:id/:orderId',
             component: DispachPackagesComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View dispatch package items' },
           },
           {
             path: 'dispatch-additional-items/:id',
             component: DispatchAdditionalItemsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View dispatch additional items' },
           },
         ],
       },
@@ -1523,4 +1531,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

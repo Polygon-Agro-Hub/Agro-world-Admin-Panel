@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketPlacePremadePackagesComponent } from '../market-place-premade-packages/market-place-premade-packages.component';
 import { MarketplaceCustomePackageComponent } from '../marketplace-custome-package/marketplace-custome-package.component';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-dispatch-marketplace',
@@ -16,6 +18,8 @@ export class DispatchMarketplaceComponent {
 
   constructor(
     private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   togglePackageType(isPremade: boolean) {

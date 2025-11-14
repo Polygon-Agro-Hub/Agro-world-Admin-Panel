@@ -100,13 +100,6 @@
               </svg>
             </button>
           </div>
-
-          <!-- Reset All Filters Button -->
-          <button 
-            (click)="resetAllFilters()"
-            class="px-4 py-2 rounded-lg text-textLight dark:text-textDark border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm">
-            Reset All
-          </button>
         </div>
       </div>
     </div>
@@ -117,14 +110,6 @@
         class="bg-[#415CFF] px-5 py-2 rounded-lg text-white text-lg hover:bg-[#3347cc] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
         Download PDF
       </button>
-      
-      <!-- Filter Status Display -->
-      <div class="text-sm text-textLight dark:text-textDark">
-        <span *ngIf="selectStatus" class="mr-3">Status: {{selectStatus}}</span>
-        <span *ngIf="selectDate" class="mr-3">Date: {{selectDate | date:'yyyy-MM-dd'}}</span>
-        <span *ngIf="searchText" class="mr-3">Search: "{{searchText}}"</span>
-        <span *ngIf="!selectStatus && !selectDate && !searchText">No filters applied</span>
-      </div>
     </div>
     
     <!-- Data Table -->

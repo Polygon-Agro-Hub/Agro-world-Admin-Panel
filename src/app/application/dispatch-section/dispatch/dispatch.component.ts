@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dispatch',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './dispatch.component.html',
   styleUrl: './dispatch.component.css'
 })

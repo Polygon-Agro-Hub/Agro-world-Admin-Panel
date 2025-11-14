@@ -10,6 +10,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { environment } from '../../../environment/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-sales-dash-complaints',
@@ -54,9 +55,9 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
     private complainSrv: ComplaintsService,
     private datePipe: DatePipe,
     private router: Router,
-    // private tokenService: TokenService,
     private http: HttpClient,
-    public tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -85,9 +86,11 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       this.filterCategory.type = 'Agriculture';
     } else if (this.tokenService.getUserDetails().role === '3') {
       this.filterCategory.type = 'Finance';
-    } else if (this.tokenService.getUserDetails().role === '4') {
+    }
+    else if (this.tokenService.getUserDetails().role === '4') {
       this.filterCategory.type = 'Call Center';
-    } else if (this.tokenService.getUserDetails().role === '5') {
+    } 
+    else if (this.tokenService.getUserDetails().role === '5') {
       this.filterCategory.type = 'Procuiment';
     }
 

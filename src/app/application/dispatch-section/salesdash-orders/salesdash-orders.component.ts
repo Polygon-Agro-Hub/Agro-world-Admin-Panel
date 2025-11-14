@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DashPredefinePackagesComponent } from '../dash-dispatch-components/dash-predefine-packages/dash-predefine-packages.component';
 import { SalesdashCustomePackageComponent } from '../dash-dispatch-components/salesdash-custome-package/salesdash-custome-package.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 
 
@@ -26,8 +28,8 @@ export class SalesdashOrdersComponent{
   constructor(
     // private dispatchService: DispatchService,
     private router: Router,
-    // public tokenService: TokenService,
-    // public permissionService: PermissionService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) { }
 
 

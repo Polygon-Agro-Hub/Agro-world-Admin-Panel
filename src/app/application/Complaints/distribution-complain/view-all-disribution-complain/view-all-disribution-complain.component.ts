@@ -11,6 +11,7 @@ import { TokenService } from '../../../../services/token/services/token.service'
 import { environment } from '../../../../environment/environment.development';
 import Swal from 'sweetalert2';
 import { ComplaintsService } from '../../../../services/complaints/complaints.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-all-disribution-complain',
@@ -49,11 +50,11 @@ export class ViewAllDisributionComplainComponent {
     { status: 'Yes', value: 'Yes' },
     { status: 'No', value: 'No' },
   ];
-  
+
   statusfilterArr = [
-    {label:'Assigned', value:'Assigned'},
-    {label:'Closed', value:'Closed'},
-    {label:'Pending', value:'Pending'},
+    { label: 'Assigned', value: 'Assigned' },
+    { label: 'Closed', value: 'Closed' },
+    { label: 'Pending', value: 'Pending' },
 
   ]
 
@@ -65,8 +66,9 @@ export class ViewAllDisributionComplainComponent {
   constructor(
     private router: Router,
     private http: HttpClient,
+    private distributedComplainSrv: ComplaintsService,
     public tokenService: TokenService,
-    private distributedComplainSrv: ComplaintsService
+    public permissionService: PermissionService
   ) { }
 
 
@@ -74,7 +76,7 @@ export class ViewAllDisributionComplainComponent {
 
   ngOnInit(): void {
 
-    
+
     this.fetchAllComplain(this.page, this.itemsPerPage);
     this.getAllComplainCategories();
     this.getAllCompanyForOfficerComplain();
@@ -120,7 +122,7 @@ export class ViewAllDisributionComplainComponent {
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
     if (this.dropdown) {
-      this.dropdown.hide(); 
+      this.dropdown.hide();
     }
   }
 
@@ -145,7 +147,7 @@ export class ViewAllDisributionComplainComponent {
   fetchComplain(id: any, farmerName: string, language: string) {
     this.isLoading = true;
     this.distributedComplainSrv.getDistributionComplainById(id).subscribe((res) => {
-      
+
       this.complain = res;
       this.isLoading = false;
       this.showReplyPopUp(farmerName, language);

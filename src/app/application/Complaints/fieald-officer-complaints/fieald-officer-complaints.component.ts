@@ -10,6 +10,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-fieald-officer-complaints',
@@ -48,8 +49,9 @@ export class FiealdOfficerComplaintsComponent implements OnInit {
     private complainSrv: ComplaintsService,
     private router: Router,
     private http: HttpClient,
-    private tokenService: TokenService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -254,7 +256,7 @@ class Complain {
   officerPhone!: string;
   farmerName!: string;
   language!: string;
-  adminReplyByName!:string;
+  adminReplyByName!: string;
 }
 
 class ComplainN {

@@ -230,6 +230,7 @@ import { GoviLinkViewComplaintComponent } from './application/Complaints/govi-li
 import { PaymentHistoryAddNewComponent } from './application/finance/payment-history-add-new/payment-history-add-new.component';
 import { PaymentHistoryUpdateComponent } from './application/finance/payment-history-update/payment-history-update.component';
 import { ViewAllPaymentHistoryComponent } from './application/finance/view-all-payment-history/view-all-payment-history.component';
+import { FinanceActionMainComponent } from './application/finance/finance-action-main/finance-action-main.component';
 
 export const routes: Routes = [
   {
@@ -537,7 +538,8 @@ export const routes: Routes = [
           {
             path: 'action',
             children: [
-              { path: '', component: FinanceActionComponent },
+              { path: '', component: FinanceActionMainComponent },
+              { path: 'govicare-finance', component: FinanceActionComponent },
               {
                 path: 'govicare-packages',
                 component: GovicarePackagesMainComponent,
@@ -1018,14 +1020,14 @@ export const routes: Routes = [
             path: 'received-orders',
             component: RecievedOrdersComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Procurement received orders' }
+            data: { permission: 'Procurement received orders' },
           },
 
           {
             path: 'define-packages',
             component: DefinePackagesComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Procurement dispatch packages' }
+            data: { permission: 'Procurement dispatch packages' },
           },
           {
             path: 'todo-define-premade-packages',
@@ -1043,7 +1045,7 @@ export const routes: Routes = [
             path: 'view-centre-requirement',
             component: ViewCentreRequirementComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Procurement centre requirement' }
+            data: { permission: 'Procurement centre requirement' },
           },
         ],
       },
@@ -1139,7 +1141,7 @@ export const routes: Routes = [
                 path: 'add-package',
                 component: AddPackageComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Add packages' }
+                data: { permission: 'Add packages' },
               },
               {
                 path: 'edit-product/:id',
@@ -1161,7 +1163,7 @@ export const routes: Routes = [
                 path: 'edit-packages/:id',
                 component: MarketEditPackagesComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Edit packages' }
+                data: { permission: 'Edit packages' },
               },
               {
                 path: 'view-package-details/:id',
@@ -1175,13 +1177,13 @@ export const routes: Routes = [
                 path: 'view-product-types',
                 component: ViewProductTypesComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View product type' }
+                data: { permission: 'View product type' },
               },
               {
                 path: 'add-product-type',
                 component: AddProductTypesComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Add product type' }
+                data: { permission: 'Add product type' },
               },
               {
                 path: 'subscription',
@@ -1196,7 +1198,7 @@ export const routes: Routes = [
                 path: 'view-retail-orders',
                 component: ViewRetailOrdersComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View retail orders' }
+                data: { permission: 'View retail orders' },
               },
 
               {
@@ -1211,25 +1213,25 @@ export const routes: Routes = [
                 path: 'view-retail-customers',
                 component: ViewRetailCustomeresComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View retail customer' }
+                data: { permission: 'View retail customer' },
               },
               {
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Define packages' }
+                data: { permission: 'Define packages' },
               },
               {
                 path: 'view-package-history',
                 component: ViewPackageHistoryComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View package history' }
+                data: { permission: 'View package history' },
               },
               {
                 path: 'view-wholesale-customers',
                 component: ViewWholesaleCustomersComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View wholesale customer' }
+                data: { permission: 'View wholesale customer' },
               },
               {
                 path: 'view-order-details/:id',
@@ -1239,13 +1241,13 @@ export const routes: Routes = [
                 path: 'edit-coupen/:id',
                 component: EditCoupenComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Edit coupon' }
+                data: { permission: 'Edit coupon' },
               },
               {
                 path: 'view-wholesale-orders',
                 component: ViewWholwsaleOrdersComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View wholesale orders' }
+                data: { permission: 'View wholesale orders' },
               },
             ],
           },

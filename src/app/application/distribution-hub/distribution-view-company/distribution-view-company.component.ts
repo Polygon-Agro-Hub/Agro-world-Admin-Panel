@@ -9,6 +9,8 @@ import { DistributionHubService } from '../../../services/distribution-hub/distr
 import Swal from 'sweetalert2';
 import { CollectionService } from '../../../services/collection.service';
 import { title } from 'process';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-distribution-view-company',
@@ -43,6 +45,8 @@ export class DistributionViewCompanyComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private distributionHubService: DistributionHubService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
     private collectionService: CollectionService
   ) { }
 

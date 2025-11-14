@@ -439,32 +439,71 @@ export class EditFarmerClusterComponent implements OnInit {
     this.farmIdError = '';
   }
 
+  onClusterNameInput(): void {
+    const trimmedName = this.clusterName.trim();
 
+    if (trimmedName.length === 0) {
+      this.nameError = 'Cluster name is required';
+    } else {
+      this.nameError = '';
+    }
+  }
 
 
   restrictNICInput(event: KeyboardEvent): void {
     const allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'];
     const char = event.key;
+    const currentValue = this.newFarmerNIC || '';
+    const currentLength = currentValue.length;
 
     // Allow control keys
     if (allowedKeys.includes(char)) {
       return;
     }
 
-    // Allow only alphanumeric characters (letters and numbers)
-    if (!/^[a-zA-Z0-9]$/.test(char)) {
-      event.preventDefault();
+    // Get cursor position
+    const input = event.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart || 0;
+
+    // For 10th character position (index 9), only allow V or X
+    if (cursorPosition === 9 && currentLength === 9 && /^[vVxX]$/.test(char)) {
+      return;
     }
+
+    // For positions 1-9, only allow digits
+    if (cursorPosition < 9 && /^\d$/.test(char)) {
+      return;
+    }
+
+    // For positions 10-12 (after 9 digits without V/X), only allow digits
+    if (cursorPosition >= 9 && currentLength >= 9 && /^\d$/.test(char)) {
+      // Check if position 9 (10th character) is NOT V or X
+      const charAtPosition9 = currentValue.charAt(9);
+      if (!charAtPosition9 || /^\d$/.test(charAtPosition9)) {
+        return;
+      }
+    }
+
+    // Block everything else
+    event.preventDefault();
   }
 
-  // Add method to validate NIC on input
+
   onNICInput(): void {
     const trimmedNIC = this.newFarmerNIC.trim();
 
     if (trimmedNIC.length === 0) {
-      this.nicError = '';
-    } else if (trimmedNIC.length < 9) {
-      this.nicError = 'NIC must be at least 9 characters';
+      this.nicError = 'NIC is required';
+    } else if (trimmedNIC.length < 10) {
+      this.nicError = 'NIC must be at least 10 characters';
+    } else if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
+    } else if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
+    } else if (trimmedNIC.length > 12) {
+      this.nicError = 'NIC cannot exceed 12 characters';
+    } else if (trimmedNIC.length === 11) {
+      this.nicError = 'Invalid NIC length';
     } else {
       this.nicError = '';
     }
@@ -481,7 +520,6 @@ export class EditFarmerClusterComponent implements OnInit {
     }
   }
 
-  // Update submitAddFarmer method
   submitAddFarmer() {
     this.nicError = '';
     this.farmIdError = '';
@@ -492,8 +530,25 @@ export class EditFarmerClusterComponent implements OnInit {
       return;
     }
 
-    if (this.newFarmerNIC.trim().length < 9) {
-      this.nicError = 'NIC must be at least 9 characters';
+    const trimmedNIC = this.newFarmerNIC.trim();
+
+    if (trimmedNIC.length < 10) {
+      this.nicError = 'NIC must be at least 10 characters';
+      return;
+    }
+
+    if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V or X';
+      return;
+    }
+
+    if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
+      return;
+    }
+
+    if (trimmedNIC.length === 11 || trimmedNIC.length > 12) {
+      this.nicError = 'Invalid NIC format';
       return;
     }
 
@@ -544,9 +599,15 @@ export class EditFarmerClusterComponent implements OnInit {
   }
 
 
-  // Helper method to check if form is valid
   isAddFarmerFormValid(): boolean {
-    return this.newFarmerNIC.trim().length >= 9 &&
+    const trimmedNIC = this.newFarmerNIC.trim();
+    const isValidLength = trimmedNIC.length === 10 || trimmedNIC.length === 12;
+    const isValidFormat =
+      (trimmedNIC.length === 10 && /^\d{9}[vVxX]$/i.test(trimmedNIC)) ||
+      (trimmedNIC.length === 12 && /^\d{12}$/.test(trimmedNIC));
+
+    return isValidLength &&
+      isValidFormat &&
       this.newFarmerFarmId.trim().length > 0 &&
       !this.isLoading;
   }

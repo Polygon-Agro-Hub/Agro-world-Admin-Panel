@@ -64,6 +64,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
   orderId!: number;
   isWithinLimit = true;
   isLoading: boolean = false;
+  additionalItemsCount: number = 0;
 
   showAdditionalItemsModal = false;
   showExcludedItemsModal = false;
@@ -187,18 +188,18 @@ export class ViewDispatchOrdersComponent implements OnInit {
     });
   }
 
-  fetchOrderDetails(id: string) {
-    // console.log('Fetching order details for ID:', id);
+ fetchOrderDetails(id: string) {
     this.loading = true;
     this.error = '';
 
     this.procurementService.getOrderPackagesByOrderId(Number(id)).subscribe({
 
       next: (response) => {
-        // console.log('Full API Response:', response); 
-        this.additionalItems = response.additionalItems
-        console.log("additional Items", this.additionalItems);
-
+        this.additionalItems = response.additionalItems || [];
+        this.additionalItemsCount = this.additionalItems.length;
+        
+        console.log("Additional Items:", this.additionalItems);
+        console.log("Additional Items Count:", this.additionalItemsCount);
 
         if (!response || !response.packages) {
           throw new Error('Invalid response structure from API');
@@ -208,7 +209,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
           const packageDetail: OrderDetailItem = {
             packageId: pkg.packageId,
             displayName: pkg.displayName,
-            packageQty:pkg.packageQty,
+            packageQty: pkg.packageQty,
             productPrice:
               typeof pkg.productPrice === 'string'
                 ? parseFloat(pkg.productPrice)
@@ -220,11 +221,11 @@ export class ViewDispatchOrdersComponent implements OnInit {
           if (pkg.productTypes && Array.isArray(pkg.productTypes)) {
             packageDetail.productTypes = pkg.productTypes.map((pt: any) => {
               const productType: ProductTypes = {
-                id: pt.id, // This is orderpackageitems.id (if needed for updates)
+                id: pt.id,
                 typeName: pt.typeName,
                 shortCode: pt.shortCode,
                 productId: pt.productId || null,
-                productTypeId: pt.productTypeId, // Check API response for correct field
+                productTypeId: pt.productTypeId,
                 selectedProductPrice: pt.price || undefined,
                 quantity: pt.qty || undefined,
                 calculatedPrice:
@@ -234,14 +235,11 @@ export class ViewDispatchOrdersComponent implements OnInit {
                 isExcluded: pt.isExcluded,
               };
 
-              // If productTypeId is still null, check alternative fields
               if (!productType.productTypeId) {
-                // Try to get it from another field (adjust based on API response)
                 productType.productTypeId =
                   pt.typeId || pt.productType?.id || null;
               }
 
-              // Set displayName from marketplace if missing
               if (pt.productId && !productType.displayName) {
                 const product = this.marketplaceItems.find(
                   (m) => m.id === pt.productId
@@ -271,7 +269,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
       },
     });
   }
-
+  
   calculateTotalPrice() {
     if (this.orderDetails && this.orderDetails.length) {
       this.totalPrice = this.getCombinedProductPrice();

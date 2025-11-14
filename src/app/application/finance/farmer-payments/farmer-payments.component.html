@@ -9,14 +9,14 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1500px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
+      <div class="flex items-center whitespace-nowrap">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           Farmer Payments
         </h2>
-        <span class="ml-4 text-sm text-gray-500">
+        <span class="ml-2 mr-5 text-xl dark:text-white">
           ({{ getTotalRecords() }})
         </span>
       </div>
@@ -39,7 +39,7 @@
             [(ngModel)]="selectedBank"
             (onChange)="onBankChange($event)"
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [checkmark]="true"
+            [showClear]="!!selectedBank"
             optionLabel="label"
             optionValue="value"
             placeholder="Bank Name"
@@ -65,14 +65,14 @@
           <input
             type="text"
             [(ngModel)]="searchTerm"
-            (input)="onSearchChange()"
+            (keyup.enter)="onSearch()"
             placeholder="Search By Name, NIC & Phone number"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
           />
           <button
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="onSearchChange()"
+            (click)="onSearch()"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +124,7 @@
       <i class="fa-solid fa-download mr-3" [class.fa-spin]="isDownloading"></i>
       {{ isDownloading ? "Downloading..." : "Download" }}
     </button>
-    <div class="overflow-x-auto">
+    <div>
       <table
         class="min-w-full divide-y divide-gray-200 table-auto"
         *ngIf="hasData"
@@ -136,12 +136,6 @@
               style="white-space: nowrap"
             >
               No
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-              style="white-space: nowrap"
-            >
-              Invoice No
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -191,6 +185,12 @@
             >
               Branch Name
             </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Payment Reference
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -199,12 +199,7 @@
             class="hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ i + 1 }}
-            </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ payment.invNo }}
+              {{ i + 1 | number:'3.0' }}
             </td>
             <td
               class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
@@ -246,20 +241,27 @@
             >
               {{ payment.branchName }}
             </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.invNo }}
+            </td>
           </tr>
         </tbody>
       </table>
 
-      <div *ngIf="!hasData && !isLoading" class="text-center py-8">
-        <p class="text-textLight dark:text-textDark text-lg">
-          No farmer payments found
+      <div
+        *ngIf="!hasData && !isLoading"
+        class="flex flex-col justify-center items-center py-20 shadow-lg"
+      >
+        <p class="text-[#494949] dark:text-textDark mb-4">
+          -- No Data Available --
         </p>
-        <button
-          class="mt-4 bg-blue-500 text-white font-medium py-2 px-4 rounded"
-          (click)="refreshData()"
-        >
-          Refresh Data
-        </button>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 mb-4"
+        />
       </div>
     </div>
   </div>

@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar'; // Add this import
+import { CalendarModule } from 'primeng/calendar';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { FinanceService } from '../../../services/finance/finance.service';
+import { HttpClient } from '@angular/common/http';
 
 interface FarmerPayment {
   id: number;
@@ -26,13 +27,19 @@ interface BankOption {
   value: string;
 }
 
+// Add Bank interface
+interface Bank {
+  ID: number;
+  name: string;
+}
+
 @Component({
   selector: 'app-farmer-payments',
   standalone: true,
   imports: [
     CommonModule, 
     DropdownModule, 
-    CalendarModule, // Add CalendarModule here
+    CalendarModule,
     LoadingSpinnerComponent, 
     FormsModule
   ],
@@ -48,26 +55,45 @@ export class FarmerPaymentsComponent implements OnInit {
   
   // Filter properties
   selectedBank: string = '';
-  selectedDate: Date | null = null; // Change to Date type
+  selectedDate: Date | null = null;
   searchTerm: string = '';
 
   // Dropdown options
   bankOptions: BankOption[] = [];
-  // Remove dateOptions array as we don't need it anymore
+  banks: Bank[] = []; // Add banks array
 
   constructor(
     private router: Router,
-    private financeService: FinanceService
+    private financeService: FinanceService,
+    private http: HttpClient // Add HttpClient
   ) { }
 
   ngOnInit(): void {
+    this.loadBanks(); // Load banks first
     this.loadFarmerPayments();
+  }
+
+  // Add this method to load banks from JSON
+  loadBanks(): void {
+    this.http.get<Bank[]>('assets/json/banks.json').subscribe({
+      next: (data) => {
+        this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
+        this.bankOptions = this.banks.map(bank => ({
+          label: bank.name,
+          value: bank.name
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading banks:', error);
+        // Fallback: populate from existing data if JSON fails
+        this.populateBankOptionsFromData();
+      }
+    });
   }
 
   loadFarmerPayments(): void {
     this.isLoading = true;
     
-    // Convert selectedDate to string format for API call
     const dateParam = this.selectedDate ? this.formatDateForApi(this.selectedDate) : '';
     
     this.financeService.getAllFarmerPayments(dateParam, this.selectedBank)
@@ -79,9 +105,10 @@ export class FarmerPaymentsComponent implements OnInit {
             this.filteredPayments = [...this.farmerPayments];
             this.hasData = this.filteredPayments.length > 0;
             
-            // Populate bank options from data
-            this.populateBankOptions();
-            // Remove populateDateOptions() call
+            // If banks weren't loaded from JSON, populate from data
+            if (this.bankOptions.length === 0) {
+              this.populateBankOptionsFromData();
+            }
           } else {
             this.hasData = false;
             this.farmerPayments = [];
@@ -98,7 +125,8 @@ export class FarmerPaymentsComponent implements OnInit {
       });
   }
 
-  populateBankOptions(): void {
+  // Rename this method to avoid confusion
+  populateBankOptionsFromData(): void {
     const uniqueBanks = [...new Set(this.farmerPayments
       .filter(payment => payment.bankName)
       .map(payment => payment.bankName))];
@@ -106,10 +134,8 @@ export class FarmerPaymentsComponent implements OnInit {
     this.bankOptions = uniqueBanks.map(bank => ({
       label: bank,
       value: bank
-    }));
+    })).sort((a, b) => a.label.localeCompare(b.label));
   }
-
-  // Remove populateDateOptions method
 
   onBankChange(event: any): void {
     this.selectedBank = event.value;
@@ -122,6 +148,10 @@ export class FarmerPaymentsComponent implements OnInit {
   }
 
   onSearchChange(): void {
+    this.applyFilters();
+  }
+
+  onSearch(): void {
     this.applyFilters();
   }
 
@@ -169,7 +199,7 @@ export class FarmerPaymentsComponent implements OnInit {
 
   refreshData(): void {
     this.selectedBank = '';
-    this.selectedDate = null; // Reset to null
+    this.selectedDate = null;
     this.searchTerm = '';
     this.loadFarmerPayments();
   }
@@ -180,107 +210,122 @@ export class FarmerPaymentsComponent implements OnInit {
   }
 
   downloadData(): void {
-    if (this.filteredPayments.length === 0) {
-      console.warn('No data to download');
-      alert('No data available to download');
-      return;
-    }
+  if (this.filteredPayments.length === 0) {
+    console.warn('No data to download');
+    alert('No data available to download');
+    return;
+  }
 
-    this.isDownloading = true;
+  this.isDownloading = true;
 
-    try {
-      // Prepare data for Excel
-      const excelData = this.prepareExcelData();
-      
-      // Create worksheet
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
-      
-      // Set column widths for better readability
-      const colWidths = [
-        { wch: 5 },   // No
-        { wch: 15 },  // Invoice No
-        { wch: 25 },  // Farmer Name
-        { wch: 15 },  // NIC Number
-        { wch: 15 },  // Phone Number
-        { wch: 15 },  // Amount
-        { wch: 12 },  // Date
-        { wch: 20 },  // Account Number
-        { wch: 20 },  // Bank Name
-        { wch: 20 }   // Branch Name
-      ];
-      ws['!cols'] = colWidths;
+  try {
+    // Prepare data for Excel (without No column)
+    const excelData = this.prepareExcelData();
+    
+    // Create worksheet
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
+    
+    // Set column widths for better readability
+    const colWidths = [
+      { wch: 25 },  // Full Name
+      { wch: 15 },  // NIC
+      { wch: 15 },  // Phone number
+      { wch: 15 },  // Amount (Rs.)
+      { wch: 12 },  // Date
+      { wch: 20 },  // Account Number
+      { wch: 20 },  // Bank Name
+      { wch: 20 },  // Branch Name
+      { wch: 25 }   // Payment Reference
+    ];
+    ws['!cols'] = colWidths;
 
-      // Add header style
-      if (ws['!ref']) {
-        const range = XLSX.utils.decode_range(ws['!ref']);
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-          const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
-          if (ws[cellAddress]) {
-            // Make header cells bold
-            if (!ws[cellAddress].s) {
-              ws[cellAddress].s = {};
+    // Add header style
+    if (ws['!ref']) {
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C });
+        if (ws[cellAddress]) {
+          // Make header cells bold with gray background
+          ws[cellAddress].s = {
+            font: { bold: true },
+            alignment: { horizontal: 'center' },
+            fill: {
+              fgColor: { rgb: "D3D3D3" },
+              patternType: "solid"
+            },
+            border: {
+              top: { style: 'thin' },
+              left: { style: 'thin' },
+              bottom: { style: 'thin' },
+              right: { style: 'thin' }
             }
-            ws[cellAddress].s = {
-              font: { bold: true },
-              alignment: { horizontal: 'center' },
-              fill: { fgColor: { rgb: "D3D3D3" } } // Light gray background
-            };
-          }
+          };
         }
       }
-
-      // Create workbook
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Farmer Payments');
-      
-      // Generate file name with timestamp
-      const fileName = `Farmer_Payments_${this.getCurrentTimestamp()}.xlsx`;
-      
-      // Save the file
-      XLSX.writeFile(wb, fileName);
-      
-      console.log('Excel file downloaded successfully');
-      
-    } catch (error) {
-      console.error('Error downloading Excel file:', error);
-      alert('Error downloading Excel file. Please try again.');
-    } finally {
-      this.isDownloading = false;
     }
+
+    // Create workbook
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Farmer Payments');
+    
+    // Generate file name with timestamp
+    const fileName = `Farmer_Payments_${this.getCurrentTimestamp()}.xlsx`;
+    
+    // Save the file
+    XLSX.writeFile(wb, fileName);
+    
+    console.log('Excel file downloaded successfully');
+    
+  } catch (error) {
+    console.error('Error downloading Excel file:', error);
+    alert('Error downloading Excel file. Please try again.');
+  } finally {
+    this.isDownloading = false;
   }
+}
 
   private prepareExcelData(): any[] {
-    return this.filteredPayments.map((payment, index) => ({
-      'No': index + 1,
-      'Invoice No': payment.invNo || 'N/A',
-      'Farmer Name': payment.farmerName || 'N/A',
-      'NIC Number': payment.NICnumber || 'N/A',
-      'Phone Number': payment.phoneNumber || 'N/A',
-      'Amount (LKR)': payment.totalPayment || 0,
-      'Date': this.formatDate(payment.createdAt),
-      'Account Number': payment.accNumber || 'N/A',
-      'Bank Name': payment.bankName || 'N/A',
-      'Branch Name': payment.branchName || 'N/A'
-    }));
-  }
+  return this.filteredPayments.map((payment) => ({
+    // Note: No "No" column included - this matches your requirement
+    'Full Name': payment.farmerName || 'N/A',
+    'NIC': payment.NICnumber || 'N/A',
+    'Phone number': payment.phoneNumber || 'N/A',
+    'Amount (Rs.)': payment.totalPayment || 0,
+    'Date': this.formatDate(payment.createdAt),
+    'Account Number': payment.accNumber || 'N/A',
+    'Bank Name': payment.bankName || 'N/A',
+    'Branch Name': payment.branchName || 'N/A',
+    'Payment Reference': payment.invNo || 'N/A'
+  }));
+}
 
   private getCurrentTimestamp(): string {
-    const now = new Date();
-    return now.toISOString()
-      .replace(/[-:]/g, '')
-      .replace(/\..+/, '')
-      .replace('T', '_');
-  }
+  const now = new Date();
+  return now.toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\..+/, '')
+    .replace('T', '_');
+}
 
   formatDate(dateString: string): string {
-    if (!dateString) return 'N/A';
-    return dateString.split('T')[0];
+  if (!dateString) return 'N/A';
+  
+  const date = new Date(dateString);
+  
+  // Check if date is valid
+  if (isNaN(date.getTime())) {
+    return 'N/A';
   }
+  
+  const day = date.getDate();
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  
+  return `${day} ${month}, ${year}`;
+}
 
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-LK', {
-      style: 'currency',
-      currency: 'LKR',
       minimumFractionDigits: 2
     }).format(amount);
   }

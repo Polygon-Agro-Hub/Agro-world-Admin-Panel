@@ -138,7 +138,7 @@
 
     <!-- Farm ID Input -->
     <div class="my-6">
-      <input type="text" [(ngModel)]="newFarmerFarmId" placeholder="--Enter the Farm ID--"
+      <input type="text" [(ngModel)]="newFarmerFarmId" (input)="onFarmIdInput()" placeholder="--Enter the Farm ID--"
         [class.border-red-500]="farmIdError"
         class="text-center px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#272F45] text-textLight dark:text-textDark mb-1 w-96" />
       <!-- Farm ID Error -->
@@ -155,19 +155,9 @@
       </button>
 
       <button class="px-4 py-2 text-white rounded w-36" [ngClass]="{
-          'bg-[#3980C0]':
-            newFarmerNIC.trim().length >= 9 &&
-            newFarmerFarmId.trim().length >= 1 &&
-            !isLoading,
-          'bg-gray-400 cursor-not-allowed':
-            newFarmerNIC.trim().length < 9 ||
-            newFarmerFarmId.trim().length < 1 ||
-            isLoading
-        }" [disabled]="
-          newFarmerNIC.trim().length < 9 ||
-          newFarmerFarmId.trim().length < 1 ||
-          isLoading
-        " (click)="submitAddFarmer()">
+    'bg-[#3980C0]': isNICValid() && newFarmerFarmId.trim().length >= 1 && !isLoading,
+    'bg-gray-400 cursor-not-allowed': !isNICValid() || newFarmerFarmId.trim().length < 1 || isLoading
+  }" [disabled]="!isNICValid() || newFarmerFarmId.trim().length < 1 || isLoading" (click)="submitAddFarmer()">
         Add
       </button>
     </div>

@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface AdditionalItem {
   id: number;
@@ -100,7 +102,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   constructor(
     private procurementService: ProcumentsService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   goBack(): void {

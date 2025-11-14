@@ -6,7 +6,9 @@
 </button>
 
 <div class="flex space-x-4">
-  <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+  <button 
+   *ngIf="permissionService.hasPermission('Add product type') || tokenService.getUserDetails().role === '1'"
+  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
     (click)="navigateToAdd()">
     <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -65,7 +67,7 @@
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">No</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Short Code</th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">Type Name</th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">Actions</th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
         </thead>
         <tbody>
@@ -81,7 +83,8 @@
             </td>
             <td class="px-3 py-3 text-center">
               <div class="flex justify-center space-x-4">
-                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateEdit(item.id)">
+                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateEdit(item.id)"
+                *ngIf="permissionService.hasPermission('Edit product type') || tokenService.getUserDetails().role === '1'">
                   <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <title>Edit</title>
                     <path
@@ -89,7 +92,8 @@
                     </path>
                   </svg>
                 </button>
-                <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProductType(item.id)">
+                <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProductType(item.id)"
+                *ngIf="permissionService.hasPermission('Delete product type') || tokenService.getUserDetails().role === '1'">
                   <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                     viewBox="0 0 24 24">
                     <title>Delete</title>

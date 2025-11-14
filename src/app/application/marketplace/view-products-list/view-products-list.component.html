@@ -8,6 +8,7 @@
   </button>
 
   <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+    *ngIf="permissionService.hasPermission('Add product') || tokenService.getUserDetails().role === '1'"
     (click)="navigateToAddProduct()">
     <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -30,41 +31,42 @@
             [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Category"></p-dropdown>
         </div>
 
-            <div class="mr-5">
-              <p-dropdown
-                styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
-                [options]="displayOptions" [(ngModel)]="selectedDisplayType" (onChange)="onDisplayTypeChange()"
-                [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Display"></p-dropdown>
-            </div>
-            
-            <div class="flex items-center rounded-full px-4 py-2 w-full sm:w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-              <input type="text" placeholder="Search by Display Name, Crop / Variety"
-                class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchVariety"
-                (keydown.enter)="searchProduct()" />
-              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-                (click)="searchProduct()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-                </svg>
-              </button>
-              <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] w-full sm:w-auto"
+            [options]="displayOptions" [(ngModel)]="selectedDisplayType" (onChange)="onDisplayTypeChange()"
+            [checkmark]="true" optionLabel="name" [showClear]="true" placeholder="Display"></p-dropdown>
         </div>
 
-        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
-          <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-          <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        <div class="flex items-center rounded-full px-4 py-2 w-full sm:w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+          <input type="text" placeholder="Search by Display Name, Crop / Variety"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchVariety"
+            (keydown.enter)="searchProduct()" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="searchProduct()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            </svg>
+          </button>
+          <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
+      </div>
+    </div>
 
-    <div *ngIf="hasData" class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+
+    <div *ngIf="hasData"
+      class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
@@ -171,7 +173,8 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.changeby }}
             </td>
-            <td class="px-4 py-3 text-center">
+            <td class="px-4 py-3 text-center" 
+            *ngIf="permissionService.hasPermission('Edit product') || tokenService.getUserDetails().role === '1'">
               <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"
                 (click)="editProduct(item.id)">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -182,7 +185,8 @@
                 </svg>
               </button>
             </td>
-            <td class="px-4 py-3 text-center">
+            <td class="px-4 py-3 text-center"
+            *ngIf="permissionService.hasPermission('Delete product') || tokenService.getUserDetails().role === '1'">
               <button class="w-6 h-6 ml-3 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteProduct(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                   viewBox="0 0 24 24">

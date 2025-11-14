@@ -1,3 +1,4 @@
+import { P } from '@angular/cdk/keycodes';
 import { RouterLink } from '@angular/router';
 import { expand } from 'rxjs';
 
@@ -7,6 +8,7 @@ export const navbarData = [
     icon: 'fa-solid fa-users',
     label: 'Stakeholders',
     expanded: false,
+    Permission: 'Steckholders Tab',
     children: [
       {
         RouterLink: '/steckholders/dashboard',
@@ -24,12 +26,14 @@ export const navbarData = [
     RouterLink: '/reports',
     icon: 'fa-solid fa-file',
     label: 'Report',
+    Permission: 'Report Tab',
   },
   {
     RouterLink: 'finance',
     icon: 'fa-solid fa-coins',
     label: 'Finance',
     expanded: false,
+    Permission: 'Finance Tab',
     children: [
       {
         RouterLink: '/finance/dashboard',
@@ -48,6 +52,7 @@ export const navbarData = [
     icon: 'fas fa-leaf',
     label: 'Govi Care',
     expanded: false,
+    Permission: 'Govi Care Tab',
     children: [
       {
         RouterLink: '/plant-care/dashboard',
@@ -66,6 +71,7 @@ export const navbarData = [
     icon: 'fa-solid fa-magnifying-glass',
     label: 'GoVi Link',
     expanded: false,
+    Permission: 'Govi Link Tab',
     children: [
       {
         RouterLink: '/govi-link/dashboard',
@@ -83,12 +89,14 @@ export const navbarData = [
     RouterLink: '/collection-hub',
     icon: 'fa-solid fa-warehouse',
     label: 'Collection Hub',
+    Permission: 'Collection Hub Tab',
   },
   {
     RouterLink: '/distribution-hub',
     icon: 'fa-solid fa-building-circle-arrow-right',
     label: 'Distribution Hub',
     expanded: false,
+    Permission: 'Distribution Hub Tab',
     children: [
       {
         RouterLink: '/distribution-hub/dashboard',
@@ -106,17 +114,20 @@ export const navbarData = [
     RouterLink: '/procurement',
     icon: 'fa-solid fa-box-open',
     label: 'Procurement',
+    Permission: 'Procurement Tab',
   },
   {
     RouterLink: '/dispatch',
     icon: 'fa-solid fa-truck-fast',
     label: 'Dispatch',
+    Permission: 'Dispatch Tab',
   },
   {
     RouterLink: 'market',
     icon: 'fa-solid fa-shop',
     label: 'GoviMart',
     expanded: false,
+    Permission: 'GoviMart Tab',
     children: [
       {
         RouterLink: '/market/dashboard',
@@ -134,10 +145,12 @@ export const navbarData = [
     RouterLink: '/sales-dash',
     icon: 'fa-solid fa-bullseye',
     label: 'Sales Dash',
+    Permission: 'Sales Dash Tab',
   },
   {
     RouterLink: '/complaints',
     icon: 'fa-solid fa-circle-question',
     label: 'Complaints',
+    Permission: 'Complaints Tab',
   },
 ];

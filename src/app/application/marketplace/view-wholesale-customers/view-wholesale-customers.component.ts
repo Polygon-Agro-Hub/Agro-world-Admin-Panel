@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-wholesale-customers',
@@ -25,7 +27,12 @@ export class ViewWholesaleCustomersComponent implements OnInit {
   itemsPerPage: number = 10;
   isLoading = true;
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
+  constructor(
+    private marketSrv: MarketPlaceService,
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.fetchWholesaleCustomers();
@@ -106,18 +113,18 @@ export class ViewWholesaleCustomersComponent implements OnInit {
     }
   }
 
-checkLeadingSpace(event: any): boolean {
-  if (!this.searchText || this.searchText.length === 0) {
-    event.preventDefault();
-    return false;
+  checkLeadingSpace(event: any): boolean {
+    if (!this.searchText || this.searchText.length === 0) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
-  return true;
-}
 }
 
 class Customers {
   id!: string;
-  title!:string;
+  title!: string;
   firstName!: string;
   lastName!: string;
   phoneCode!: string;

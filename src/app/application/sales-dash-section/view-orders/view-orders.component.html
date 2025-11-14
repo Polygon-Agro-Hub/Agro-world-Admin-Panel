@@ -166,7 +166,7 @@
             <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
               Order Status
             </th>
-            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
+            <th *ngIf="permissionService.hasPermission('Dash view orders invoice heading') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
               Invoice
             </th>
             <!-- <th
@@ -277,7 +277,7 @@
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button (click)="downloadInvoice(item.id, item.invNo)">
+              <button *ngIf="permissionService.hasPermission('Dash view orders download invoice') || tokenService.getUserDetails().role === '1'" (click)="downloadInvoice(item.id, item.invNo)">
                 <i class="fa-solid fa-file-lines text-xl text-[#5C5C5C]"></i>
               </button>
             </td>

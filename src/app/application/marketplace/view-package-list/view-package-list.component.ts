@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { CalendarModule } from 'primeng/calendar';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface PackageList {
   id: number;
@@ -29,7 +30,7 @@ interface PackageList {
 @Component({
   selector: 'app-view-package-list',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent, DropdownModule, FormsModule,CalendarModule],
+  imports: [CommonModule, LoadingSpinnerComponent, DropdownModule, FormsModule, CalendarModule],
   templateUrl: './view-package-list.component.html',
   styleUrl: './view-package-list.component.css',
 })
@@ -49,15 +50,17 @@ export class ViewPackageListComponent implements OnInit {
 
   isPopupVisible: boolean = false;
   popUpStatus: string = '';
-  popUpId!:number;
-  
+  popUpId!: number;
+
 
   constructor(
     private router: Router,
     private viewPackagesList: ViewPackageListService,
     private http: HttpClient,
-    private tokenService: TokenService
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   ngOnInit() {
     this.fetchAllPackages();
@@ -95,19 +98,23 @@ export class ViewPackageListComponent implements OnInit {
         console.error('Error fetching all Packages', error);
         this.isLoading = false;
         if (error.status === 401) {
-        Swal.fire({title: 'Unauthorized', text: 'Please log in again.', icon: 'error',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },}
-          );
-          this.router.navigate(['/login']);
-        } else {
-            Swal.fire({title: 'Error', text: 'Failed to fetch packages.', icon: 'error', 
+          Swal.fire({
+            title: 'Unauthorized', text: 'Please log in again.', icon: 'error',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-            }}
+            },
+          }
+          );
+          this.router.navigate(['/login']);
+        } else {
+          Swal.fire({
+            title: 'Error', text: 'Failed to fetch packages.', icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            }
+          }
           );
         }
       }
@@ -154,25 +161,29 @@ export class ViewPackageListComponent implements OnInit {
           .subscribe({
             next: (response) => {
               this.isLoading = false;
-              Swal.fire({title: 'Deleted', text: 'The package has been deleted.', icon: 'success', 
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            }})
+              Swal.fire({
+                title: 'Deleted', text: 'The package has been deleted.', icon: 'success',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                }
+              })
               this.fetchAllPackages();
             },
             error: (error) => {
               this.isLoading = false;
               console.error('Error deleting package:', error);
               Swal.fire(
-                {title: 'Error',
-                text: 'There was a problem deleting the package.',
-                icon: 'error',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold',
-                }}
-                
+                {
+                  title: 'Error',
+                  text: 'There was a problem deleting the package.',
+                  icon: 'error',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold',
+                  }
+                }
+
               );
             },
           });
@@ -191,19 +202,21 @@ export class ViewPackageListComponent implements OnInit {
     );
   }
 
-onSearch() {
+  onSearch() {
     this.searchtext = this.searchtext.trim(); // Trim leading/trailing spaces
     if (!this.searchtext) {
-      
+
       Swal.fire(
-        {title: 'Info',
-        text: 'Please enter a valid search term.',
-        icon: 'info',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        }}
-        
+        {
+          title: 'Info',
+          text: 'Please enter a valid search term.',
+          icon: 'info',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          }
+        }
+
       );
       return;
     }
@@ -267,41 +280,45 @@ onSearch() {
     }
   }
 
-  disablePopup(pkg:any){
-    this.isPopupVisible= true;
+  disablePopup(pkg: any) {
+    this.isPopupVisible = true;
     this.popUpStatus = pkg.status === 'Enabled' ? 'Disabled' : 'Enabled';
     this.popUpId = pkg.id;
   }
 
-  changeStatus(){
-    this.viewPackagesList.changePackageStatus({id:this.popUpId, status:this.popUpStatus}).subscribe(
-      (res)=>{
-        if(res.status){
-          
+  changeStatus() {
+    this.viewPackagesList.changePackageStatus({ id: this.popUpId, status: this.popUpStatus }).subscribe(
+      (res) => {
+        if (res.status) {
+
           Swal.fire(
-            {title: 'Success',
-            text: 'Package status updated successfully',
-            icon: 'success',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            }}
-            
+            {
+              title: 'Success',
+              text: 'Package status updated successfully',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              }
+            }
+
           );
           this.isPopupVisible = false;
           this.popUpStatus = '';
           this.fetchAllPackages();
-        }else{
-          
+        } else {
+
           Swal.fire(
-            {title: 'Error',
-            text: 'Failed to update package status',
-            icon: 'error',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            }}
-            
+            {
+              title: 'Error',
+              text: 'Failed to update package status',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              }
+            }
+
           );
         }
       }

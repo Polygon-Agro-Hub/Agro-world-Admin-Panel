@@ -7,9 +7,8 @@
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
-    <!-- Date Range Selector -->
-  <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg mb-6 overflow-hidden">
-    <div class="flex flex-col md:flex-row justify-between items-stretch gap-4 p-4">
+<div class="mb-10 p-6 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center justify-between space-x-8">
+  <div class="flex flex-col md:flex-row justify-between items-stretch gap-4 p-4">
       <!-- From Date -->
       <div class="flex items-center gap-2 w-full">
         <label for="fromDate" class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap">From:</label>
@@ -22,7 +21,7 @@
   [showClear]="false"
   [showButtonBar]="true"
   iconDisplay="input"
-  [style]="{ width: '31rem', height: '2rem' }"
+  [style]="{ width: '25rem', height: '2rem' }"
   panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -46,7 +45,7 @@
   [showClear]="false"
   [showButtonBar]="true"
   iconDisplay="input"
-  [style]="{ width: '31rem', height: '2rem' }"
+  [style]="{ width: '25rem', height: '2rem' }"
   panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -71,11 +70,14 @@
 
     <!-- Download Report Button (New Line) -->
   </div>
-
+</div>
+    <!-- Date Range Selector -->
+  <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg mb-6 overflow-hidden">
+    
   <div class="h-10"></div>
 
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-5">
       <button

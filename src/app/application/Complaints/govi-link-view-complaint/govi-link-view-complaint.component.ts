@@ -1,5 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CommonModule, DatePipe, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TokenService } from '../../../services/token/services/token.service';
@@ -28,12 +27,13 @@ export class GoviLinkViewComplaintComponent {
   selectedLanguage: string = 'English';
   selectedOfficerName: string = '';
 
-constructor(
-  private goviLinkService: GoviLinkService, 
-  private router: Router,
-  private route: ActivatedRoute,
-  private datePipe: DatePipe,
-) {}
+  constructor(
+    private goviLinkService: GoviLinkService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private datePipe: DatePipe,
+    private location: Location
+  ) { }
 
   ngOnInit(): void {
     this.complainId = this.route.snapshot.params['id'];
@@ -41,33 +41,33 @@ constructor(
   }
 
   back(): void {
-    this.router.navigate(['complaints/field-officer-complains']);
+    this.location.back();
   }
 
-fetchComplain() {
-  this.isLoading = true;
-  this.goviLinkService.getFieldOfficerComplainById(this.complainId)
-    .subscribe(
-      (res) => {
-        res.createdAt = this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm:ss a') || res.createdAt;
-        this.complain = res;
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching complain:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to fetch complaint details',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        this.isLoading = false;
-      }
-    );
-}
+  fetchComplain() {
+    this.isLoading = true;
+    this.goviLinkService.getFieldOfficerComplainById(this.complainId)
+      .subscribe(
+        (res) => {
+          res.createdAt = this.datePipe.transform(res.createdAt, 'yyyy-MM-dd hh:mm:ss a') || res.createdAt;
+          this.complain = res;
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching complain:', error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Failed to fetch complaint details',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
+          this.isLoading = false;
+        }
+      );
+  }
 
 
 
@@ -83,53 +83,53 @@ fetchComplain() {
     this.selectedLanguage = 'English';
   }
 
-submitComplaint() {
-  this.isLoading = true;
-  
-  if (!this.complain.reply?.trim()) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Warning',
-      text: 'Reply cannot be empty!',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    });
-    this.isLoading = false;
-    return;
-  }
+  submitComplaint() {
+    this.isLoading = true;
 
-  this.goviLinkService.replyFieldOfficerComplain(this.complainId, this.complain.reply)
-    .subscribe(
-      (res) => {
-        Swal.fire({
-          title: 'Success',
-          text: 'Reply sent successfully!',
-          icon: 'success',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        }).then(() => {
-          this.router.navigate(['/complaints/field-officer-complains']);
-        });
-        this.isLoading = false;
-      },
-      (error) => {
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to send reply',
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-        });
-        this.isLoading = false;
-      }
-    );
-}
+    if (!this.complain.reply?.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Warning',
+        text: 'Reply cannot be empty!',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+      this.isLoading = false;
+      return;
+    }
+
+    this.goviLinkService.replyFieldOfficerComplain(this.complainId, this.complain.reply)
+      .subscribe(
+        (res) => {
+          Swal.fire({
+            title: 'Success',
+            text: 'Reply sent successfully!',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          }).then(() => {
+            this.location.back();
+          });
+          this.isLoading = false;
+        },
+        (error) => {
+          Swal.fire({
+            title: 'Error',
+            text: 'Failed to send reply',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
+          this.isLoading = false;
+        }
+      );
+  }
 
 }
 

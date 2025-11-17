@@ -63,7 +63,7 @@ export class FiealdOfficerComplaintsComponent implements OnInit {
   initializeStatus(): void {
     this.status = [
       { id: 1, type: "Assigned" },
-      { id: 2, type: "Pending" },
+      // { id: 2, type: "Pending" },
       { id: 3, type: "Closed" },
     ];
   }
@@ -183,9 +183,9 @@ export class FiealdOfficerComplaintsComponent implements OnInit {
     let url = '';
 
     if (role === "1") {
-      url = `${environment.API_URL}auth/get-all-complain-category-list-super/2`;
+      url = `${environment.API_URL}auth/get-all-complain-category-list-super/5`;
     } else {
-      url = `${environment.API_URL}auth/get-all-complain-category-list/${role}/2`;
+      url = `${environment.API_URL}auth/get-all-complain-category-list/${role}/5`;
     }
 
     this.http.get<any>(url, { headers }).subscribe(
@@ -211,7 +211,7 @@ export class FiealdOfficerComplaintsComponent implements OnInit {
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Assigned':
+      case 'Opened':
         return 'bg-green-100 text-green-500';
       case 'Pending':
         return 'bg-[#FFB9B7] text-[#D16D6A]';

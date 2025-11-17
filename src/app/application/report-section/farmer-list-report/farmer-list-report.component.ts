@@ -464,6 +464,13 @@ export class FarmerListReportComponent {
       alert('Error generating PDF. Please check the console for details.');
     }
   }
+
+  formatNumberWithCommas(number: number): string {
+  return number.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
 }
 
 class FarmerList {

@@ -12,6 +12,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { CalendarModule } from 'primeng/calendar';
+
 interface PurchaseReport {
   id: number;
   regCode: string;
@@ -44,9 +45,10 @@ interface PurchaseReport {
 })
 export class CollectionReportComponent {
   isLoading = false;
-  fromDate: string = '';
-  toDate: string = '';
-  maxDate: string = '';
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
+  maxDate: Date = new Date();
+  minToDate: Date | null = null;
   itemsPerPage: number = 10;
   centers!: Centers[];
   selectedCenter: Centers | null = null;
@@ -66,43 +68,45 @@ export class CollectionReportComponent {
 
   ngOnInit() {
     this.getAllCenters();
-    const today = new Date();
-    this.maxDate = today.toISOString().split('T')[0];
+    this.maxDate = new Date(); // Today's date
   }
 
- fetchAllCollectionReport(page: number = 1, limit: number = this.itemsPerPage) {
-  this.isLoading = true;
-  const centerId = this.selectedCenter?.id || '';
-  const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
-  const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
+  fetchAllCollectionReport(page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
+    const centerId = this.selectedCenter?.id || '';
+    
+    // Convert Date objects to formatted strings
+    const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
+    const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
 
-  this.collectionoOfficer
-    .fetchAllCollectionReport(
-      page,
-      limit,
-      centerId,
-      formattedFromDate,
-      formattedToDate,
-      this.search
-    )
-    .subscribe(
-      (response) => {
-        this.purchaseReport = response.items;
-        this.totalItems = response.total;
-        this.purchaseReport.forEach((head) => {
-          head.createdAtFormatted = this.datePipe.transform(
-            head.createdAt,
-            "yyyy/MM/dd 'at' hh.mm a"
-          );
-        });
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching report:', error);
-        this.isLoading = false;
-      }
-    );
-}
+    this.collectionoOfficer
+      .fetchAllCollectionReport(
+        page,
+        limit,
+        centerId,
+        formattedFromDate,
+        formattedToDate,
+        this.search
+      )
+      .subscribe(
+        (response) => {
+          this.purchaseReport = response.items;
+          this.totalItems = response.total;
+          this.purchaseReport.forEach((head) => {
+            head.createdAtFormatted = this.datePipe.transform(
+              head.createdAt,
+              "yyyy/MM/dd 'at' hh.mm a"
+            );
+          });
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching report:', error);
+          this.isLoading = false;
+        }
+      );
+  }
+
   getAllCenters() {
     this.collectionoOfficer.getAllCenters().subscribe(
       (res) => {
@@ -115,14 +119,26 @@ export class CollectionReportComponent {
   }
 
   preventLeadingSpace(event: KeyboardEvent): void {
-  if (event.key === ' ' && this.search.length === 0) {
-    event.preventDefault();
+    if (event.key === ' ') {
+      const input = event.target as HTMLInputElement;
+      const cursorPosition = input.selectionStart;
+      
+      // Prevent space if it's at the beginning or if there's a space at cursor position
+      if (cursorPosition === 0 || this.search.trim() === '') {
+        event.preventDefault();
+      }
+    }
   }
-}
 
-    get hasData(): boolean {
-  return this.purchaseReport && this.purchaseReport.length > 0;
-}
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Trim leading and trailing spaces
+    this.search = input.value.trim();
+  }
+
+  get hasData(): boolean {
+    return this.purchaseReport && this.purchaseReport.length > 0;
+  }
 
   applyFiltersCrop() {
     this.fetchAllCollectionReport();
@@ -133,6 +149,8 @@ export class CollectionReportComponent {
   }
 
   applysearch() {
+    // Trim the search string before applying
+    this.search = this.search.trim();
     this.fetchAllCollectionReport();
   }
 
@@ -142,76 +160,155 @@ export class CollectionReportComponent {
   }
 
   downloadTemplate1() {
-    this.isDownloading = true;
+  this.isDownloading = true;
 
-    let queryParams = [];
+  let queryParams = [];
 
-    if (this.selectedCenter) {
-      queryParams.push(`centerId=${this.selectedCenter.id}`);
-    }
+  if (this.selectedCenter) {
+    queryParams.push(`centerId=${this.selectedCenter.id}`);
+  }
 
-    if (this.fromDate) {
-      queryParams.push(`startDate=${this.fromDate}`);
-    }
+  // Convert Date objects to formatted strings for download
+  const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
+  const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
 
-    if (this.toDate) {
-      queryParams.push(`endDate=${this.toDate}`);
-    }
+  if (formattedFromDate) {
+    queryParams.push(`startDate=${formattedFromDate}`);
+  }
 
-    if (this.search) {
-      queryParams.push(`search=${this.search}`);
-    }
+  if (formattedToDate) {
+    queryParams.push(`endDate=${formattedToDate}`);
+  }
 
-    const queryString =
-      queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-    const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
+  if (this.search) {
+    queryParams.push(`search=${this.search}`);
+  }
 
-    fetch(apiUrl, {
-      method: 'GET',
+  const queryString =
+    queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+  const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
+
+  fetch(apiUrl, {
+    method: 'GET',
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.blob();
+      } else {
+        throw new Error('Failed to download the file');
+      }
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.blob();
-        } else {
-          throw new Error('Failed to download the file');
-        }
-      })
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
 
-        let filename = 'Collection_Report';
-        if (this.fromDate) {
-          filename += `_${this.fromDate}`;
-        }
-        if (this.toDate) {
-          filename += `_${this.toDate}`;
-        }
-        if (this.selectedCenter) {
-          filename += `_${this.selectedCenter.regCode}`;
-        }
-        filename += '.xlsx';
+      // Generate filename according to requirements
+      let filename = 'Collection Report';
+      
+      // Add centre code if selected
+      if (this.selectedCenter) {
+        filename += ` of ${this.selectedCenter.regCode}`;
+      }
+      
+      // Add date range if both dates are selected
+      if (formattedFromDate && formattedToDate) {
+        const fromDateObj = new Date(this.fromDate!);
+        const toDateObj = new Date(this.toDate!);
+        
+        const fromDateFormatted = this.formatDateForFilename(fromDateObj);
+        const toDateFormatted = this.formatDateForFilename(toDateObj);
+        
+        filename += ` on ${fromDateFormatted} to ${toDateFormatted}`;
+      } else if (formattedFromDate) {
+        // If only from date is selected
+        const fromDateObj = new Date(this.fromDate!);
+        const fromDateFormatted = this.formatDateForFilename(fromDateObj);
+        filename += ` on ${fromDateFormatted}`;
+      }
+      
+      // Add generation timestamp
+      const now = new Date();
+      const generatedDate = this.formatDateForFilename(now, true);
+      const generatedTime = this.datePipe.transform(now, 'hh:mm a') || 'Unknown Time';
+      
+      filename += ` Generated at ${generatedDate} ${generatedTime}`;
+      
+      filename += '.xlsx';
 
-        a.download = filename;
-        a.click();
-        window.URL.revokeObjectURL(url);
+      a.download = filename;
+      a.click();
+      window.URL.revokeObjectURL(url);
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Downloaded',
-          text: 'Please check your downloads folder',
-        });
-        this.isDownloading = false;
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Download Failed',
-          text: error.message,
-        });
-        this.isDownloading = false;
+      Swal.fire({
+        icon: 'success',
+        title: 'Downloaded',
+        text: 'Please check your downloads folder',
       });
+      this.isDownloading = false;
+    })
+    .catch((error) => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Download Failed',
+        text: error.message,
+      });
+      this.isDownloading = false;
+    });
+}
+
+// Helper method to format dates for filename (04th August format)
+private formatDateForFilename(date: Date, forGeneration: boolean = false): string {
+  const day = date.getDate();
+  const month = date.toLocaleString('en-US', { month: 'long' });
+  const year = date.getFullYear();
+  
+  // Add ordinal suffix to day
+  const getOrdinalSuffix = (day: number): string => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+
+  const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
+  
+  if (forGeneration) {
+    // For generation timestamp, use MM/DD format (08/04)
+    const monthNum = date.getMonth() + 1;
+    const formattedMonth = monthNum.toString().padStart(2, '0');
+    const formattedDay = date.getDate().toString().padStart(2, '0');
+    return `${formattedMonth}/${formattedDay}`;
+  } else {
+    // For date ranges, use "04th August" format
+    return `${dayWithSuffix} ${month}${year !== new Date().getFullYear() ? ' ' + year : ''}`;
+  }
+}
+
+  // Method to handle from date selection
+  onFromDateChange() {
+    if (this.fromDate) {
+      // Set minimum date for toDate as today (to disable previous dates)
+      // This ensures only today and future dates can be selected in toDate
+      this.minToDate = new Date();
+      
+      // If toDate exists and is before today, reset toDate
+      if (this.toDate && this.toDate < this.minToDate) {
+        this.toDate = null;
+      }
+    } else {
+      // If fromDate is cleared, also clear toDate and reset minToDate
+      this.toDate = null;
+      this.minToDate = null;
+    }
+  }
+
+  // Getter to check if from date is selected
+  get isFromDateSelected(): boolean {
+    return !!this.fromDate;
   }
 }
 

@@ -145,3 +145,15 @@
 ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;
 }
+
+::ng-deep .p-dropdown-custom {
+  background-color: transparent !important;
+}
+
+::ng-deep .p-dropdown-custom .p-dropdown {
+  background-color: transparent !important;
+}
+
+::ng-deep .p-dropdown-custom .p-dropdown .p-dropdown-label {
+  background-color: transparent !important;
+}

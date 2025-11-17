@@ -148,6 +148,7 @@
         <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
         <div class="mr-5">
           <p-dropdown
+          #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="selectStatus != null && selectStatus !== ''" placeholder="Status" [(ngModel)]="selectStatus"
@@ -156,6 +157,7 @@
 
         <div class="mr-5">
           <p-dropdown
+          #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="centerStatusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="selectCenterStatus != null && selectCenterStatus !== ''" placeholder="Centre Status"
@@ -164,6 +166,7 @@
 
         <div class="mr-5">
           <p-dropdown
+          #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="role != null && role !== ''"
             placeholder="Role" [(ngModel)]="role" (onChange)="applyFilters()"></p-dropdown>

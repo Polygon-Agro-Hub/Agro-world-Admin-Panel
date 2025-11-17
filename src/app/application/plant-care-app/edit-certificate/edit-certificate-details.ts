@@ -98,7 +98,7 @@ export class EditCertificateDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
     private certificateCompanyService: CertificateCompanyService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
@@ -114,7 +114,12 @@ export class EditCertificateDetailsComponent implements OnInit {
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
         '',
-        [Validators.required, Validators.min(0), Validators.max(100)],
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.max(100),
+          Validators.pattern(/^\d*\.?\d*$/),
+        ],
       ],
       scope: ['', Validators.required],
       noOfVisit: ['', [Validators.required, Validators.min(0)]],
@@ -587,6 +592,8 @@ export class EditCertificateDetailsComponent implements OnInit {
     });
   }
 
+
+
   private updateCertificate(): void {
     this.isLoading = true;
 
@@ -663,9 +670,10 @@ export class EditCertificateDetailsComponent implements OnInit {
               ]);
             });
           } else {
+  
             Swal.fire({
               icon: 'error',
-              title: 'Error',
+              title: 'Validation Error',
               text:
                 res.message ||
                 'Failed to update certificate details. Please try again.',
@@ -680,15 +688,18 @@ export class EditCertificateDetailsComponent implements OnInit {
         error: (err) => {
           this.isLoading = false;
           console.error('Error updating certificate:', err);
+
+
+          const errorMessage = err.error?.message ||
+            err.message ||
+            'Failed to update certificate details. Please try again.';
+
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text:
-              err.error?.message ||
-              'Failed to update certificate details. Please try again.',
+            text: errorMessage,
             customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -753,11 +764,51 @@ export class EditCertificateDetailsComponent implements OnInit {
   }
 
   preventDecimalInput(event: KeyboardEvent) {
-    // Prevent decimal point, comma, and 'e' for exponential notation
-    const forbiddenKeys = ['.', ',', 'e', 'E'];
+    // Prevent decimal point, comma, hyphen, and 'e' for exponential notation
+    const forbiddenKeys = ['.', ',', 'e', 'E', '-'];
     if (forbiddenKeys.includes(event.key)) {
       event.preventDefault();
     }
   }
+
+  // Add the allowDecimalInput method for commission field
+  allowDecimalInput(event: KeyboardEvent): void {
+    const charCode = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    // Allow: backspace, delete, tab, escape, enter
+    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
+      return;
+    }
+
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (
+      event.ctrlKey &&
+      ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())
+    ) {
+      return;
+    }
+
+    // Block hyphen
+    if (charCode === '-') {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow: numbers 0-9
+    if (charCode >= '0' && charCode <= '9') {
+      return;
+    }
+
+    // Allow: decimal point (only one)
+    if (charCode === '.' && !currentValue.includes('.')) {
+      return;
+    }
+
+    // Prevent any other key
+    event.preventDefault();
+  }
+
 
 }

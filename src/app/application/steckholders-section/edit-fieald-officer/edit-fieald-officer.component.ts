@@ -167,6 +167,36 @@ export class EditFiealdOfficerComponent implements OnInit {
       this.filterDistrictsByProvince(this.personalData.province);
     }
   }
+  
+  isValidUrl(value: string): boolean {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+getFileName(value: string): string {
+  if (!value) return '';
+  
+  // If it's a URL, extract the filename
+  if (this.isValidUrl(value)) {
+    try {
+      const url = new URL(value);
+      const pathname = url.pathname;
+      const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+    
+      return decodeURIComponent(filename);
+    } catch {
+      return value;
+    }
+  }
+  
+  // If it's just a filename, return it as-is
+  return value;
+}
 
   // Handle province change
   onProvinceChange(event: DropdownChangeEvent): void {

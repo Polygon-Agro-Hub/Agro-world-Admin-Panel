@@ -135,6 +135,19 @@ export class AddPackageComponent implements OnInit {
     this.packageObj.displayName = value;
     event.target.value = value;
   }
+  
+    onDescriptionChange(event: any): void {
+    let value = event.target.value;
+    value = value.replace(/^\s+/, '');
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1);
+    }
+    this.packageObj.description = value;
+    event.target.value = value;
+  }
+  
+  
+  
 
   preventNegative(event: any): void {
     const value = parseFloat(event.target.value);

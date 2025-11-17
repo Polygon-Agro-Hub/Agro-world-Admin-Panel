@@ -76,11 +76,14 @@ onTypeNameInput(event: Event): void {
   const input = event.target as HTMLInputElement;
   let value = input.value;
 
-  // Remove leading spaces
   value = value.replace(/^\s+/, '');
 
-  // Allow only English letters (A–Z, a–z) and spaces
+
   value = value.replace(/[^A-Za-z\s]/g, '');
+
+  if (value.length > 0) {
+    value = value.charAt(0).toUpperCase() + value.slice(1);
+  }
 
   input.value = value;
   this.productObj.typeName = value;

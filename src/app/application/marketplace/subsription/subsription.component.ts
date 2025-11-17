@@ -38,8 +38,8 @@ export class SubsriptionComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private marketplaceService:  MarketPlaceService
-  ) {}
+    private marketplaceService: MarketPlaceService
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllSubscriptions();
@@ -103,19 +103,19 @@ export class SubsriptionComponent implements OnInit {
     this.hasData = this.totalItems > 0;
   }
 
- onSearchChange() {
-  if (this.searchText) {
-    this.searchText = this.searchText.replace(/^\s/, '');
-  }
+  onSearchChange() {
+    if (this.searchText) {
+      this.searchText = this.searchText.replace(/^\s/, '');
+    }
 
-  this.applySearchFilter();
-  this.page = 1;
-}
-blockFirstSpace(event: KeyboardEvent) {
-  if (this.searchText.length === 0 && event.key === ' ') {
-    event.preventDefault();
+    this.applySearchFilter();
+    this.page = 1;
   }
-}
+  blockFirstSpace(event: KeyboardEvent) {
+    if (this.searchText.length === 0 && event.key === ' ') {
+      event.preventDefault();
+    }
+  }
 
 
   clearSearch() {
@@ -189,7 +189,12 @@ blockFirstSpace(event: KeyboardEvent) {
       type: 'application/octet-stream',
     });
 
-    FileSaver.saveAs(blobData, 'Subscriptions.xlsx');
+    // Dynamic file name based on active tab
+    const fileName = this.activeTab === 'retail'
+      ? 'Retail Buyer Subscriptions.xlsx'
+      : 'Wholesale Buyer Subscriptions.xlsx';
+
+    FileSaver.saveAs(blobData, fileName);
   }
 }
 

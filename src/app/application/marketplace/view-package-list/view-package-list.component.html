@@ -79,9 +79,14 @@
       </div>
     </div>
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full px-10 py-7 mt-6">
       <p class="text-[#494949] my-6 dark:text-textDark">
-        --No Data Available--
+        <ng-container *ngIf="selectedStatus === 'Disabled'; else defaultNoData">
+          --No disabled packages found--
+        </ng-container>
+        <ng-template #defaultNoData>
+          --No Data Available--
+        </ng-template>
       </p>
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
@@ -118,8 +123,11 @@
               Last Modified By
             </th>
             <th></th>
-            <th *ngIf="permissionService.hasPermission('Edit packages') || tokenService.getUserDetails().role === '1'"></th>
-            <th *ngIf="permissionService.hasPermission('Delete packages') || tokenService.getUserDetails().role === '1'"></th>
+            <th *ngIf="permissionService.hasPermission('Edit packages') || tokenService.getUserDetails().role === '1'">
+            </th>
+            <th
+              *ngIf="permissionService.hasPermission('Delete packages') || tokenService.getUserDetails().role === '1'">
+            </th>
           </tr>
         </thead>
         <tbody>

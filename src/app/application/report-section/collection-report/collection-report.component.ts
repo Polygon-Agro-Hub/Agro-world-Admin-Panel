@@ -119,9 +119,21 @@ export class CollectionReportComponent {
   }
 
   preventLeadingSpace(event: KeyboardEvent): void {
-    if (event.key === ' ' && this.search.length === 0) {
-      event.preventDefault();
+    if (event.key === ' ') {
+      const input = event.target as HTMLInputElement;
+      const cursorPosition = input.selectionStart;
+      
+      // Prevent space if it's at the beginning or if there's a space at cursor position
+      if (cursorPosition === 0 || this.search.trim() === '') {
+        event.preventDefault();
+      }
     }
+  }
+
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Trim leading and trailing spaces
+    this.search = input.value.trim();
   }
 
   get hasData(): boolean {
@@ -137,6 +149,8 @@ export class CollectionReportComponent {
   }
 
   applysearch() {
+    // Trim the search string before applying
+    this.search = this.search.trim();
     this.fetchAllCollectionReport();
   }
 

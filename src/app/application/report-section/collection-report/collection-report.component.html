@@ -133,6 +133,7 @@
               [(ngModel)]="search"
               (keydown.enter)="applysearch()"
               (keydown)="preventLeadingSpace($event)"
+              (input)="onSearchInput($event)"
             />
             <button
               type="button"

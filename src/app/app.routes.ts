@@ -230,6 +230,7 @@ import { GoviLinkViewComplaintComponent } from './application/Complaints/govi-li
 import { PaymentHistoryAddNewComponent } from './application/finance/payment-history-add-new/payment-history-add-new.component';
 import { PaymentHistoryUpdateComponent } from './application/finance/payment-history-update/payment-history-update.component';
 import { ViewAllPaymentHistoryComponent } from './application/finance/view-all-payment-history/view-all-payment-history.component';
+import { FinanceActionMainComponent } from './application/finance/finance-action-main/finance-action-main.component';
 
 export const routes: Routes = [
   {
@@ -537,7 +538,8 @@ export const routes: Routes = [
           {
             path: 'action',
             children: [
-              { path: '', component: FinanceActionComponent },
+              { path: '', component: FinanceActionMainComponent },
+              { path: 'govicare-finance', component: FinanceActionComponent },
               {
                 path: 'govicare-packages',
                 component: GovicarePackagesMainComponent,
@@ -1018,14 +1020,14 @@ export const routes: Routes = [
             path: 'received-orders',
             component: RecievedOrdersComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Procurement received orders' }
+            data: { permission: 'Procurement received orders' },
           },
 
           {
             path: 'define-packages',
             component: DefinePackagesComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Procurement dispatch packages' }
+            data: { permission: 'Procurement dispatch packages' },
           },
           {
             path: 'todo-define-premade-packages',
@@ -1043,7 +1045,7 @@ export const routes: Routes = [
             path: 'view-centre-requirement',
             component: ViewCentreRequirementComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Procurement centre requirement' }
+            data: { permission: 'Procurement centre requirement' },
           },
         ],
       },
@@ -1060,6 +1062,8 @@ export const routes: Routes = [
           {
             path: 'salesdash-orders',
             component: SalesdashOrdersComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Dispatch SalesDash' },
           },
 
           {
@@ -1079,6 +1083,8 @@ export const routes: Routes = [
           {
             path: 'marketplace-dispatch',
             component: DispatchMarketplaceComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Dispatch GoviMart' },
           },
           {
             path: 'view-premade-packages/:id/:inv',
@@ -1087,10 +1093,14 @@ export const routes: Routes = [
           {
             path: 'dispatch-package/:id/:orderId',
             component: DispachPackagesComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View dispatch package items' },
           },
           {
             path: 'dispatch-additional-items/:id',
             component: DispatchAdditionalItemsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View dispatch additional items' },
           },
         ],
       },
@@ -1139,7 +1149,7 @@ export const routes: Routes = [
                 path: 'add-package',
                 component: AddPackageComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Add packages' }
+                data: { permission: 'Add packages' },
               },
               {
                 path: 'edit-product/:id',
@@ -1161,7 +1171,7 @@ export const routes: Routes = [
                 path: 'edit-packages/:id',
                 component: MarketEditPackagesComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Edit packages' }
+                data: { permission: 'Edit packages' },
               },
               {
                 path: 'view-package-details/:id',
@@ -1170,22 +1180,26 @@ export const routes: Routes = [
               {
                 path: 'banner-list',
                 component: BannerListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'GoviMart Media' }
               },
               {
                 path: 'view-product-types',
                 component: ViewProductTypesComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View product type' }
+                data: { permission: 'View product type' },
               },
               {
                 path: 'add-product-type',
                 component: AddProductTypesComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Add product type' }
+                data: { permission: 'Add product type' },
               },
               {
                 path: 'subscription',
                 component: SubsriptionComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'GoviMart Subscriptions' }
               },
               {
                 path: 'edit-product-type/:id',
@@ -1196,40 +1210,44 @@ export const routes: Routes = [
                 path: 'view-retail-orders',
                 component: ViewRetailOrdersComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View retail orders' }
+                data: { permission: 'View retail orders' },
               },
 
               {
                 path: 'view-delivery-charges',
                 component: ViewDeliveryChargesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View delivery charges' }
               },
               {
                 path: 'upload-delivery-charges',
                 component: UploadDeliveryChargesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Upload delivery charges' }
               },
               {
                 path: 'view-retail-customers',
                 component: ViewRetailCustomeresComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View retail customer' }
+                data: { permission: 'View retail customer' },
               },
               {
                 path: 'define-package-view',
                 component: DefinePackageViewComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Define packages' }
+                data: { permission: 'Define packages' },
               },
               {
                 path: 'view-package-history',
                 component: ViewPackageHistoryComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View package history' }
+                data: { permission: 'View package history' },
               },
               {
                 path: 'view-wholesale-customers',
                 component: ViewWholesaleCustomersComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View wholesale customer' }
+                data: { permission: 'View wholesale customer' },
               },
               {
                 path: 'view-order-details/:id',
@@ -1239,13 +1257,13 @@ export const routes: Routes = [
                 path: 'edit-coupen/:id',
                 component: EditCoupenComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Edit coupon' }
+                data: { permission: 'Edit coupon' },
               },
               {
                 path: 'view-wholesale-orders',
                 component: ViewWholwsaleOrdersComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View wholesale orders' }
+                data: { permission: 'View wholesale orders' },
               },
             ],
           },
@@ -1294,22 +1312,32 @@ export const routes: Routes = [
           {
             path: 'view-complains',
             component: ViewComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'GoviCare Complaint' },
           },
           {
             path: 'collection-center-complains',
             component: CollectionCenterViewComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collector Complaint' },
           },
           {
             path: 'manage-applications',
             component: ManageApplicationsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Manage application' },
           },
           {
             path: 'add-complain-Categories',
             component: AddComplainCategoriesComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Add complaint categories' },
           },
           {
             path: 'manage-complaints-categories/:id',
             component: ManageComplaintsCategoriesComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View complaint categories' },
           },
           {
             path: 'edit-complaint-categories/:id',
@@ -1318,41 +1346,61 @@ export const routes: Routes = [
           {
             path: 'view-selected-complain/:id/:farmerName',
             component: ViewSelectedComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply GoviCare complaint' }
           },
           {
             path: 'view-center-complain/:id',
             component: ViewCenterComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply Collector complaint' }
           },
           {
             path: 'view-sales-dash-complain',
             component: ViewSalesDashComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Sales Agent Complaint' }
           },
           {
             path: 'view-selected-sales-dash-complain/:id/:firstName',
             component: ViewSelectedSalesDashComplainComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply Sales complaint' }
           },
           {
             path: 'retail-complaints',
             component: RetailComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Retail Complaint' }
           },
           {
             path: 'wholesale-complaints',
             component: WholesaleComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Wholesale Complaint' }
           },
           {
             path: 'selected-retail-complaints/:id',
             component: SelectedRetailComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply Retail complaint' }
           },
           {
             path: 'selected-wholesale-complaints/:id',
             component: SelectedwholesaleComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply Wholesale complaint' }
           },
           {
             path: 'field-officer-complain/:id',
             component: GoviLinkViewComplaintComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Reply GoviLink complaint' },
           },
           {
             path: 'distributed-center-complains',
+            canActivate: [PermissionGuard],
+            data: { permission: 'Distribution Complaint' },
             children: [
               {
                 path: '',
@@ -1361,12 +1409,16 @@ export const routes: Routes = [
               {
                 path: 'view-complain/:id',
                 component: ViewEachDistributedComplainComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Reply Distribution complaint' }
               },
             ],
           },
           {
             path: 'field-officer-complaints',
             component: FiealdOfficerComplaintsComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'GoviLink Complaint' },
           },
         ],
       },
@@ -1404,6 +1456,8 @@ export const routes: Routes = [
               {
                 path: 'view-companies',
                 component: ViewCompaniesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Distribution Hub companies' },
               },
               {
                 path: 'view-distribution-company',
@@ -1463,6 +1517,8 @@ export const routes: Routes = [
               {
                 path: 'assign-cities',
                 component: AssignCitiesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'DDistribution Hub assign cities' },
               },
             ],
           },
@@ -1515,4 +1571,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

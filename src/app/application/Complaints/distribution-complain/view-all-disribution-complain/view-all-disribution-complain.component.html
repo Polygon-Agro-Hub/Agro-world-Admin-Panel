@@ -52,13 +52,7 @@
                         [(ngModel)]="filterStatus" name="filterStatus" [checkmark]="true" optionLabel="label" optionValue="value" [showClear]="!!filterStatus"
                         placeholder="Status" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
                 </div>
-                <!-- <div class="mr-5">
-        <p-dropdown
-          styleClass="border border-2 rounded-xl h-8 items-center
-        bg-[#F1F1F1] dark:bg-[#272F45]"
-          placeholder="Reply"
-        ></p-dropdown>
-      </div> -->
+                
                 <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
                     <input type="text" placeholder="Search By EMP ID, Company, Centre Code..." [(ngModel)]="searchText"
                         class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
@@ -116,7 +110,7 @@
                         <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
                             Status
                         </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th *ngIf="permissionService.hasPermission('Reply Distribution complaint') || tokenService.getUserDetails().role === '1'" class="py-3 font-normal text-textLight dark:text-textDark text-center">
                             View
                         </th>
                         <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -174,7 +168,7 @@
                                     item.status }}</span>
                             </div>
                         </td>
-                        <td class="py-3 dark:text-textDark text-center">
+                        <td *ngIf="permissionService.hasPermission('Reply Distribution complaint') || tokenService.getUserDetails().role === '1'" class="py-3 dark:text-textDark text-center">
                             <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
                                 (click)="navigateSelectComplain(item.id)">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

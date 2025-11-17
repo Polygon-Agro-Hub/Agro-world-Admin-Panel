@@ -10,6 +10,8 @@ import { environment } from '../../../environment/environment.development';
 
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-subscription',
@@ -38,8 +40,10 @@ export class SubsriptionComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private marketplaceService:  MarketPlaceService
-  ) {}
+    private marketplaceService: MarketPlaceService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllSubscriptions();
@@ -103,19 +107,19 @@ export class SubsriptionComponent implements OnInit {
     this.hasData = this.totalItems > 0;
   }
 
- onSearchChange() {
-  if (this.searchText) {
-    this.searchText = this.searchText.replace(/^\s/, '');
-  }
+  onSearchChange() {
+    if (this.searchText) {
+      this.searchText = this.searchText.replace(/^\s/, '');
+    }
 
-  this.applySearchFilter();
-  this.page = 1;
-}
-blockFirstSpace(event: KeyboardEvent) {
-  if (this.searchText.length === 0 && event.key === ' ') {
-    event.preventDefault();
+    this.applySearchFilter();
+    this.page = 1;
   }
-}
+  blockFirstSpace(event: KeyboardEvent) {
+    if (this.searchText.length === 0 && event.key === ' ') {
+      event.preventDefault();
+    }
+  }
 
 
   clearSearch() {

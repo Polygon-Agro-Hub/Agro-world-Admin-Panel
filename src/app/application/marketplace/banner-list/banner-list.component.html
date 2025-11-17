@@ -9,7 +9,8 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex space-x-4 pb-5 border-b border-gray-300">
-      <button (click)="toogleRetail(true)" [ngClass]="
+      <button (click)="toogleRetail(true)" *ngIf="permissionService.hasPermission('Retail web slider') || tokenService.getUserDetails().role === '1'"
+      [ngClass]="
           isRetail
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -18,7 +19,8 @@
         Retail Web Slider
       </button>
 
-      <button (click)="toogleRetail(false)" [ngClass]="
+      <button (click)="toogleRetail(false)" *ngIf="permissionService.hasPermission('Wholesale web slider') || tokenService.getUserDetails().role === '1'"
+      [ngClass]="
           !isRetail
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -31,8 +33,8 @@
     <div class="h-5"></div>
 
     <div *ngIf="isRetail">
-      <div class="flex items-center mb-5 gap-4">
-        <button [disabled]="maxBannersReached"
+      <div class="flex items-center mb-5 gap-4" >
+        <button [disabled]="maxBannersReached" *ngIf="permissionService.hasPermission('Add web slider') || tokenService.getUserDetails().role === '1'"
           [ngClass]="maxBannersReached ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#3980C0]'"
           class="text-white font-medium py-2 px-5 rounded text-lg flex items-center"
           (click)="!maxBannersReached && addBannerRetail()">
@@ -52,7 +54,7 @@
         </div>
       </div>
 
-      <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
+      <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md" *ngIf="permissionService.hasPermission('Retail web slider') || tokenService.getUserDetails().role === '1'">
         <div cdkDropList class="w-full space-y-3" (cdkDropListDropped)="drop($event)">
           @for (feedback of feebackList; track feedback.id) {
           <div
@@ -74,7 +76,7 @@
             </div>
 
             <!-- Delete Button -->
-            <button (click)="deletebannerRetail(feedback.id)"
+            <button (click)="deletebannerRetail(feedback.id)" *ngIf="permissionService.hasPermission('Delete web slider') || tokenService.getUserDetails().role === '1'"
               class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2">
               <i class="fa-solid fa-trash"></i>
             </button>
@@ -89,7 +91,7 @@
 
     <div *ngIf="!isRetail">
       <div class="flex items-center mb-5 gap-4">
-        <button [disabled]="maxBannersReachedWholesale"
+        <button [disabled]="maxBannersReachedWholesale" *ngIf="permissionService.hasPermission('Add web slider') || tokenService.getUserDetails().role === '1'"
           [ngClass]="maxBannersReachedWholesale ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#3980C0]'"
           class="text-white font-medium py-2 px-5 rounded text-lg flex items-center"
           (click)="!maxBannersReachedWholesale && addBannerWholesale()">
@@ -109,7 +111,7 @@
         </div>
       </div>
 
-      <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md">
+      <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-md" *ngIf="permissionService.hasPermission('Wholesale web slider') || tokenService.getUserDetails().role === '1'">
         <div cdkDropList class="w-full space-y-3" (cdkDropListDropped)="dropWhole($event)">
           @for (feedback of feebackListWhole; track feedback.id) {
           <div
@@ -131,7 +133,7 @@
             </div>
 
             <!-- Delete Button -->
-            <button (click)="deletebannerWhole(feedback.id)"
+            <button (click)="deletebannerWhole(feedback.id)" (click)="deletebannerRetail(feedback.id)" *ngIf="permissionService.hasPermission('Delete web slider') || tokenService.getUserDetails().role === '1'"
               class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2">
               <i class="fa-solid fa-trash"></i>
             </button>

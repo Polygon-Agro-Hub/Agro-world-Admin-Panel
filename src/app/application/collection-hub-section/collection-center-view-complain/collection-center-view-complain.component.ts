@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-collection-center-view-complain',
@@ -60,6 +61,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
 
@@ -85,9 +87,11 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       this.filterCategory.type = "Agriculture";
     } else if (this.tokenService.getUserDetails().role === "3") {
       this.filterCategory.type = "Finance";
-    } else if (this.tokenService.getUserDetails().role === "4") {
+    }
+    else if (this.tokenService.getUserDetails().role === "4") {
       this.filterCategory.type = "Call Center";
-    } else if (this.tokenService.getUserDetails().role === "5") {
+    } 
+    else if (this.tokenService.getUserDetails().role === "5") {
       this.filterCategory.type = "Procuiment";
     }
 
@@ -135,7 +139,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
     if (this.dropdown) {
-      this.dropdown.hide(); 
+      this.dropdown.hide();
     }
   }
 
@@ -197,10 +201,10 @@ export class CollectionCenterViewComplainComponent implements OnInit {
             icon: "success",
             title: "Success",
             text: "Reply sent successfully!",
-              customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
           });
           this.fetchAllComplain(this.page, this.itemsPerPage);
         },

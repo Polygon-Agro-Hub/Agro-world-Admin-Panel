@@ -7,6 +7,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface FieldAuditHistory {
   jobId: string;
@@ -97,7 +99,9 @@ export class ViewJobHistoryComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private goviLinkService: GoviLinkService
+    private goviLinkService: GoviLinkService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   ngOnInit() {

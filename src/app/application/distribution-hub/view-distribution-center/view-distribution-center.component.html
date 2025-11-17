@@ -1,10 +1,17 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" (click)="backnavigation()">
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  (click)="backnavigation()"
+>
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
 <button
+  *ngIf="
+    permissionService.hasPermission('Distribution Hub add new centre') ||
+    tokenService.getUserDetails().role === '1'
+  "
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="add()"
 >
@@ -153,10 +160,9 @@
             (input)="trimLeadingSpaces($event)"
           />
           <div
-            class="absolute top-full mt-2 
-                   bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 
-                   group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                   Search by Company, Centre Name, City
+            class="absolute top-full mt-2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10"
+          >
+            Search by Company, Centre Name, City
           </div>
           <button
             type="button"

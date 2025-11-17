@@ -12,6 +12,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { CalendarModule } from 'primeng/calendar';
+
 interface PurchaseReport {
   id: number;
   regCode: string;
@@ -70,39 +71,40 @@ export class CollectionReportComponent {
     this.maxDate = today.toISOString().split('T')[0];
   }
 
- fetchAllCollectionReport(page: number = 1, limit: number = this.itemsPerPage) {
-  this.isLoading = true;
-  const centerId = this.selectedCenter?.id || '';
-  const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
-  const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
+  fetchAllCollectionReport(page: number = 1, limit: number = this.itemsPerPage) {
+    this.isLoading = true;
+    const centerId = this.selectedCenter?.id || '';
+    const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
+    const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
 
-  this.collectionoOfficer
-    .fetchAllCollectionReport(
-      page,
-      limit,
-      centerId,
-      formattedFromDate,
-      formattedToDate,
-      this.search
-    )
-    .subscribe(
-      (response) => {
-        this.purchaseReport = response.items;
-        this.totalItems = response.total;
-        this.purchaseReport.forEach((head) => {
-          head.createdAtFormatted = this.datePipe.transform(
-            head.createdAt,
-            "yyyy/MM/dd 'at' hh.mm a"
-          );
-        });
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching report:', error);
-        this.isLoading = false;
-      }
-    );
-}
+    this.collectionoOfficer
+      .fetchAllCollectionReport(
+        page,
+        limit,
+        centerId,
+        formattedFromDate,
+        formattedToDate,
+        this.search
+      )
+      .subscribe(
+        (response) => {
+          this.purchaseReport = response.items;
+          this.totalItems = response.total;
+          this.purchaseReport.forEach((head) => {
+            head.createdAtFormatted = this.datePipe.transform(
+              head.createdAt,
+              "yyyy/MM/dd 'at' hh.mm a"
+            );
+          });
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching report:', error);
+          this.isLoading = false;
+        }
+      );
+  }
+
   getAllCenters() {
     this.collectionoOfficer.getAllCenters().subscribe(
       (res) => {
@@ -115,14 +117,14 @@ export class CollectionReportComponent {
   }
 
   preventLeadingSpace(event: KeyboardEvent): void {
-  if (event.key === ' ' && this.search.length === 0) {
-    event.preventDefault();
+    if (event.key === ' ' && this.search.length === 0) {
+      event.preventDefault();
+    }
   }
-}
 
-    get hasData(): boolean {
-  return this.purchaseReport && this.purchaseReport.length > 0;
-}
+  get hasData(): boolean {
+    return this.purchaseReport && this.purchaseReport.length > 0;
+  }
 
   applyFiltersCrop() {
     this.fetchAllCollectionReport();
@@ -212,6 +214,19 @@ export class CollectionReportComponent {
         });
         this.isDownloading = false;
       });
+  }
+
+  // Method to handle from date selection
+  onFromDateChange() {
+    // If from date is cleared, also clear to date
+    if (!this.fromDate) {
+      this.toDate = '';
+    }
+  }
+
+  // Getter to check if from date is selected
+  get isFromDateSelected(): boolean {
+    return !!this.fromDate;
   }
 }
 

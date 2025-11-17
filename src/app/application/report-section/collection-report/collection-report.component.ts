@@ -45,9 +45,10 @@ interface PurchaseReport {
 })
 export class CollectionReportComponent {
   isLoading = false;
-  fromDate: string = '';
-  toDate: string = '';
-  maxDate: string = '';
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
+  maxDate: Date = new Date();
+  minToDate: Date | null = null;
   itemsPerPage: number = 10;
   centers!: Centers[];
   selectedCenter: Centers | null = null;
@@ -67,13 +68,14 @@ export class CollectionReportComponent {
 
   ngOnInit() {
     this.getAllCenters();
-    const today = new Date();
-    this.maxDate = today.toISOString().split('T')[0];
+    this.maxDate = new Date(); // Today's date
   }
 
   fetchAllCollectionReport(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
     const centerId = this.selectedCenter?.id || '';
+    
+    // Convert Date objects to formatted strings
     const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
     const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
 
@@ -152,12 +154,16 @@ export class CollectionReportComponent {
       queryParams.push(`centerId=${this.selectedCenter.id}`);
     }
 
-    if (this.fromDate) {
-      queryParams.push(`startDate=${this.fromDate}`);
+    // Convert Date objects to formatted strings for download
+    const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
+    const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
+
+    if (formattedFromDate) {
+      queryParams.push(`startDate=${formattedFromDate}`);
     }
 
-    if (this.toDate) {
-      queryParams.push(`endDate=${this.toDate}`);
+    if (formattedToDate) {
+      queryParams.push(`endDate=${formattedToDate}`);
     }
 
     if (this.search) {
@@ -184,11 +190,11 @@ export class CollectionReportComponent {
         a.href = url;
 
         let filename = 'Collection_Report';
-        if (this.fromDate) {
-          filename += `_${this.fromDate}`;
+        if (formattedFromDate) {
+          filename += `_${formattedFromDate}`;
         }
-        if (this.toDate) {
-          filename += `_${this.toDate}`;
+        if (formattedToDate) {
+          filename += `_${formattedToDate}`;
         }
         if (this.selectedCenter) {
           filename += `_${this.selectedCenter.regCode}`;
@@ -218,9 +224,19 @@ export class CollectionReportComponent {
 
   // Method to handle from date selection
   onFromDateChange() {
-    // If from date is cleared, also clear to date
-    if (!this.fromDate) {
-      this.toDate = '';
+    if (this.fromDate) {
+      // Set minimum date for toDate as today (to disable previous dates)
+      // This ensures only today and future dates can be selected in toDate
+      this.minToDate = new Date();
+      
+      // If toDate exists and is before today, reset toDate
+      if (this.toDate && this.toDate < this.minToDate) {
+        this.toDate = null;
+      }
+    } else {
+      // If fromDate is cleared, also clear toDate and reset minToDate
+      this.toDate = null;
+      this.minToDate = null;
     }
   }
 

@@ -22,6 +22,7 @@
           [showIcon]="true"
           [showClear]="false"
           [showButtonBar]="true"
+          [maxDate]="maxDate"
           iconDisplay="input"
           [style]="{ width: '25rem', height: '2rem' }"
           panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
@@ -45,6 +46,7 @@
           [showIcon]="true"
           [showClear]="false"
           [showButtonBar]="true"
+          [minDate]="minToDate"
           iconDisplay="input"
           [style]="{ width: '25rem', height: '2rem' }"
           [disabled]="!isFromDateSelected"

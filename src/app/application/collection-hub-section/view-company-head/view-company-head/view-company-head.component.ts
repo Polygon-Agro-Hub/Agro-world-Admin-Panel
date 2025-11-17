@@ -201,7 +201,7 @@ export class ViewCompanyHeadComponent implements OnInit {
     <div class="px-10 py-8 rounded-md bg-white dark:bg-gray-800">
       <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Officer Name : ${item.firstNameEnglish}</h1>
       <div>
-        <p class="text-center dark:text-white">Are you sure you want to approve or reject this collection officer?</p>
+        <p class="text-center dark:text-white">Are you sure you want to reject this collection Centre Head ?</p>
       </div>
       <div class="flex justify-center mt-4">
         ${showRejectButton ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>' : ''}
@@ -228,76 +228,58 @@ export class ViewCompanyHeadComponent implements OnInit {
         document
           .getElementById('approveButton')
           ?.addEventListener('click', () => {
-            // Show confirmation alert for approval
-            Swal.fire({
-              title: 'Are you sure?',
-              text: 'Do you want to approve this Collection Centre Head?',
-              icon: 'question',
-              showCancelButton: true,
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Yes, approve it!',
-              cancelButtonText: 'Cancel',
-              customClass: {
-                popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                title: 'font-semibold text-lg',
+            // Close the original popup and directly approve
+            Swal.close();
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            
+            // Directly proceed with approval without confirmation
+            this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
+              (res) => {
+                this.isLoading = false;
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Approved!',
+                    text: 'The Collection Centre Head was approved successfully.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                      htmlContainer: 'text-left',
+                    },
+                  });
+                  this.fetchAllCompanyHeads();
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                      popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                      title: 'font-semibold text-lg',
+                    },
+                  });
+                }
               },
-            }).then((result) => {
-              if (result.isConfirmed) {
-                // Close the original popup
-                Swal.close();
-                this.isPopupVisible = false;
-                this.isLoading = true;
-                
-                // Proceed with approval
-                this.collectionService.ChangeStatus(item.id, 'Approved').subscribe(
-                  (res) => {
-                    this.isLoading = false;
-                    if (res.status) {
-                      Swal.fire({
-                        icon: 'success',
-                        title: 'Approved!',
-                        text: 'The Collection Centre Head was approved successfully.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        customClass: {
-                          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                          title: 'font-semibold text-lg',
-                          htmlContainer: 'text-left',
-                        },
-                      });
-                      this.fetchAllCompanyHeads();
-                    } else {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Something went wrong. Please try again.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        customClass: {
-                          popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                          title: 'font-semibold text-lg',
-                        },
-                      });
-                    }
+              () => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while approving. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                    title: 'font-semibold text-lg',
                   },
-                  () => {
-                    this.isLoading = false;
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Error!',
-                      text: 'An error occurred while approving. Please try again.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                      customClass: {
-                        popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                        title: 'font-semibold text-lg',
-                      },
-                    });
-                  }
-                );
+                });
               }
-            });
+            );
           });
       }
 
@@ -305,76 +287,58 @@ export class ViewCompanyHeadComponent implements OnInit {
         document
           .getElementById('rejectButton')
           ?.addEventListener('click', () => {
-            // Show confirmation alert for rejection
-            Swal.fire({
-              title: 'Are you sure?',
-              text: 'Do you want to reject this Collection Centre Head?',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#d33',
-              cancelButtonColor: '#3085d6',
-              confirmButtonText: 'Yes, reject it!',
-              cancelButtonText: 'Cancel',
-              customClass: {
-                popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                title: 'font-semibold text-lg',
+            // Close the original popup and directly reject
+            Swal.close();
+            this.isPopupVisible = false;
+            this.isLoading = true;
+            
+            // Directly proceed with rejection without confirmation
+            this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
+              (res) => {
+                this.isLoading = false;
+                if (res.status) {
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Rejected!',
+                    text: 'The Collection Centre Head was rejected successfully.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                      htmlContainer: 'text-left',
+                    },
+                  });
+                  this.fetchAllCompanyHeads();
+                } else {
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Something went wrong. Please try again.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                      popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                      title: 'font-semibold text-lg',
+                    },
+                  });
+                }
               },
-            }).then((result) => {
-              if (result.isConfirmed) {
-                // Close the original popup
-                Swal.close();
-                this.isPopupVisible = false;
-                this.isLoading = true;
-                
-                // Proceed with rejection
-                this.collectionService.ChangeStatus(item.id, 'Rejected').subscribe(
-                  (res) => {
-                    this.isLoading = false;
-                    if (res.status) {
-                      Swal.fire({
-                        icon: 'success',
-                        title: 'Rejected!',
-                        text: 'The Collection Centre Head was rejected successfully.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        customClass: {
-                          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                          title: 'font-semibold text-lg',
-                          htmlContainer: 'text-left',
-                        },
-                      });
-                      this.fetchAllCompanyHeads();
-                    } else {
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Something went wrong. Please try again.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        customClass: {
-                          popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                          title: 'font-semibold text-lg',
-                        },
-                      });
-                    }
+              () => {
+                this.isLoading = false;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'An error occurred while rejecting. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                    title: 'font-semibold text-lg',
                   },
-                  () => {
-                    this.isLoading = false;
-                    Swal.fire({
-                      icon: 'error',
-                      title: 'Error!',
-                      text: 'An error occurred while rejecting. Please try again.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                      customClass: {
-                        popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
-                        title: 'font-semibold text-lg',
-                      },
-                    });
-                  }
-                );
+                });
               }
-            });
+            );
           });
       }
     },

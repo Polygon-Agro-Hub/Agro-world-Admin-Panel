@@ -443,7 +443,7 @@
 
       <div class="pb-6">
   <label for="comAmount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    Commission Amount *
+    Commission Amount (%) *
   </label>
   <div class="flex items-center mt-1">
     <input 
@@ -459,7 +459,6 @@
       class="flex-1 p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
       placeholder="0.00"
     />
-    <span class="ml-2 text-gray-700 dark:text-gray-300 font-medium">%</span>
   </div>
   <span *ngIf="isFieldInvalid('comAmount')" class="text-red-600 text-sm">
     Commission Amount is a required field
@@ -540,7 +539,7 @@
       </button>
     </div>
   </div>
-  <div *ngIf="selectedPage === 'pageThree'">
+<div *ngIf="selectedPage === 'pageThree'">
   <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
     Required Documents
   </h2>
@@ -560,9 +559,12 @@
         <div *ngIf="personalData.frontNic" class="mt-2 text-sm flex items-center justify-between">
           <div>
             <span class="text-gray-600 dark:text-textDark">Attached : </span>
-            <a href="#" class="text-blue-600 hover:underline">{{
-              personalData.frontNic
-              }}</a>
+            <a [href]="isValidUrl(personalData.frontNic) ? personalData.frontNic : '#'" 
+               [target]="isValidUrl(personalData.frontNic) ? '_blank' : '_self'"
+               class="text-blue-600 hover:underline"
+               [class.pointer-events-none]="!isValidUrl(personalData.frontNic)">
+              {{ getFileName(personalData.frontNic) }}
+            </a>
           </div>
           <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('frontNic')">
             <i class="fa-solid fa-trash"></i>
@@ -587,9 +589,12 @@
         <div *ngIf="personalData.backNic" class="mt-2 text-sm flex items-center justify-between">
           <div>
             <span class="text-gray-600 dark:text-textDark">Attached : </span>
-            <a href="#" class="text-blue-600 hover:underline">{{
-              personalData.backNic
-              }}</a>
+            <a [href]="isValidUrl(personalData.backNic) ? personalData.backNic : '#'" 
+               [target]="isValidUrl(personalData.backNic) ? '_blank' : '_self'"
+               class="text-blue-600 hover:underline"
+               [class.pointer-events-none]="!isValidUrl(personalData.backNic)">
+              {{ getFileName(personalData.backNic) }}
+            </a>
           </div>
           <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('backNic')">
             <i class="fa-solid fa-trash"></i>
@@ -614,9 +619,12 @@
         <div *ngIf="personalData.backPassbook" class="mt-2 text-sm flex items-center justify-between">
           <div>
             <span class="text-gray-600 dark:text-textDark">Attached : </span>
-            <a href="#" class="text-blue-600 hover:underline">{{
-              personalData.backPassbook
-              }}</a>
+            <a [href]="isValidUrl(personalData.backPassbook) ? personalData.backPassbook : '#'" 
+               [target]="isValidUrl(personalData.backPassbook) ? '_blank' : '_self'"
+               class="text-blue-600 hover:underline"
+               [class.pointer-events-none]="!isValidUrl(personalData.backPassbook)">
+              {{ getFileName(personalData.backPassbook) }}
+            </a>
           </div>
           <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('passbook')">
             <i class="fa-solid fa-trash"></i>
@@ -641,9 +649,12 @@
         <div *ngIf="personalData.contract" class="mt-2 text-sm flex items-center justify-between">
           <div>
             <span class="text-gray-600 dark:text-textDark">Attached : </span>
-            <a href="#" class="text-blue-600 hover:underline">{{
-              personalData.contract
-              }}</a>
+            <a [href]="isValidUrl(personalData.contract) ? personalData.contract : '#'" 
+               [target]="isValidUrl(personalData.contract) ? '_blank' : '_self'"
+               class="text-blue-600 hover:underline"
+               [class.pointer-events-none]="!isValidUrl(personalData.contract)">
+              {{ getFileName(personalData.contract) }}
+            </a>
           </div>
           <button type="button" class="text-red-500 hover:text-red-700 ml-2" (click)="removeUploadedFile('contract')">
             <i class="fa-solid fa-trash"></i>
@@ -665,5 +676,4 @@
       {{ itemId ? "Update" : "Send to Approve" }}
     </button>
   </div>
-</div>
 </div>

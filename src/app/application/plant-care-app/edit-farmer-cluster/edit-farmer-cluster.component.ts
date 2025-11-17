@@ -411,7 +411,7 @@ export class EditFarmerClusterComponent implements OnInit {
       title: 'Are you sure?',
       text: 'You may lose the added data after going back!',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
+      confirmButtonText: 'Yes, Go Back',
       cancelButtonText: 'No, Keep Editing',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

@@ -140,12 +140,13 @@
           *</label>
         <input id="noOfVisit" type="number" (input)="trimLeadingSpaces($event, 'noOfVisit')"
           (keydown)="preventDecimalInput($event)" formControlName="noOfVisit" min="0"
+          placeholder="Enter number of visits"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
       'border-red-500':
         certificateForm.get('noOfVisit')?.invalid &&
         certificateForm.get('noOfVisit')?.touched
-    }" placeholder="Enter number of visits" />
+    }" />
 
         <!-- Required error -->
         <div *ngIf="
@@ -162,8 +163,15 @@
     " class="text-red-500 text-sm mt-1">
           Number of visits cannot be negative
         </div>
-      </div>
 
+        <!-- Pattern error if needed -->
+        <div *ngIf="
+      certificateForm.get('noOfVisit')?.errors?.['pattern'] &&
+      certificateForm.get('noOfVisit')?.touched
+    " class="text-red-500 text-sm mt-1">
+          Please enter a valid whole number
+        </div>
+      </div>
       <!-- Applicable For Dropdown -->
       <div class="my-3">
         <label for="applicable" class="block text-sm font-medium text-textLight dark:text-textDark">Applicable For
@@ -217,52 +225,52 @@
       <div class="my-3">
         <label for="price" class="block text-sm font-medium text-textLight dark:text-textDark">Price (Rs.) *</label>
         <input id="price" type="number" formControlName="price" (input)="trimLeadingSpaces($event, 'price')"
+          (keydown)="preventDecimalInput($event)" min="0"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-            'border-red-500':
-              certificateForm.get('price')?.invalid &&
-              certificateForm.get('price')?.touched
-          }" />
+      'border-red-500':
+        certificateForm.get('price')?.invalid &&
+        certificateForm.get('price')?.touched
+    }" />
         <div *ngIf="
-            certificateForm.get('price')?.invalid &&
-            certificateForm.get('price')?.touched
-          " class="text-red-500 text-sm mt-1">
-          Price is required
+      certificateForm.get('price')?.invalid &&
+      certificateForm.get('price')?.touched
+    " class="text-red-500 text-sm mt-1">
+          Price is required and must be a positive number
         </div>
       </div>
-
-      <!-- Timeline -->
+      <!-- Timeline (Months) - Already has preventDecimalInput, ensure it's there -->
       <div class="my-3">
         <label for="timeLine" class="block text-sm font-medium text-textLight dark:text-textDark">Timeline (Months)
           *</label>
-        <input id="timeLine" type="number" formControlName="timeLine" (keydown)="preventDecimalInput($event)"
-          (input)="trimLeadingSpaces($event, 'timelineMonths')"
+        <input id="timeLine" type="number" formControlName="timeLine" step="1" min="1"
+          (keydown)="preventDecimalInput($event)" (input)="trimLeadingSpaces($event, 'timelineMonths')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-            'border-red-500':
-              certificateForm.get('timeLine')?.invalid &&
-              certificateForm.get('timeLine')?.touched
-          }" />
+      'border-red-500':
+        certificateForm.get('timeLine')?.invalid &&
+        certificateForm.get('timeLine')?.touched
+    }" />
         <div *ngIf="
-            certificateForm.get('timeLine')?.invalid &&
-            certificateForm.get('timeLine')?.touched
-          " class="text-red-500 text-sm mt-1">
+      certificateForm.get('timeLine')?.invalid &&
+      certificateForm.get('timeLine')?.touched
+    " class="text-red-500 text-sm mt-1">
           Timeline (Months) is required
         </div>
       </div>
 
-      <!-- Commission -->
+      <!-- Agreed Commission (%) - Updated -->
       <div class="my-3">
         <label for="commission" class="block text-sm font-medium text-textLight dark:text-textDark">Agreed Commission
           (%) *</label>
-        <input id="commission" type="number" formControlName="commission"
-          (input)="trimLeadingSpaces($event, 'agreedCommission')"
+        <input id="commission" type="text" formControlName="commission"
+          (input)="trimLeadingSpaces($event, 'agreedCommission')" (keypress)="allowDecimalInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-            'border-red-500':
-              certificateForm.get('commission')?.invalid &&
-              certificateForm.get('commission')?.touched
-          }" />
+      'border-red-500':
+        certificateForm.get('commission')?.invalid &&
+        certificateForm.get('commission')?.touched
+    }" />
 
         <!-- Negative value error -->
         <div *ngIf="
@@ -287,8 +295,15 @@
     " class="text-red-500 text-sm mt-1">
           Commission is required
         </div>
-      </div>
 
+        <!-- Decimal format error -->
+        <div *ngIf="
+      certificateForm.get('commission')?.errors?.['pattern'] &&
+      certificateForm.get('commission')?.touched
+    " class="text-red-500 text-sm mt-1">
+          Please enter a valid decimal number (e.g., 12.5)
+        </div>
+      </div>
       <!-- Payment Terms -->
       <div class="my-3">
         <label for="tearmsFile" class="block text-sm font-medium text-textLight dark:text-textDark">

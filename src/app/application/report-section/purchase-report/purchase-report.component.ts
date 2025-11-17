@@ -304,6 +304,17 @@ preventLeadingSpace(event: KeyboardEvent): void {
       queryParams: { id, userId, QRcode },
     });
   }
+
+  onFromDateSelect() {
+  // This method will be called when a from date is selected
+  // The template will automatically enable/disable based on the fromDate value
+  console.log('From date selected:', this.fromDate);
+  
+  // Optional: If you want to automatically clear the toDate when fromDate is cleared
+  if (!this.fromDate) {
+    this.toDate = '';
+  }
+}
 }
 
 class Centers {

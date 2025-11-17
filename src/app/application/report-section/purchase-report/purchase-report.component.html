@@ -134,6 +134,7 @@
               placeholder="Search by GRN No / Farmer NIC..."
               class="bg-transparent outline-none w-full text-gray-600"
               [(ngModel)]="search"
+              (input)="onSearchInput($event)"
               (keydown.enter)="applysearch()"
               (keydown)="preventLeadingSpace($event)"
             />

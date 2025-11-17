@@ -101,9 +101,21 @@ export class PurchaseReportComponent {
   }
 
   preventLeadingSpace(event: KeyboardEvent): void {
-    if (event.key === ' ' && this.search.length === 0) {
+    const input = event.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart;
+    
+    // Prevent space if:
+    // 1. Search is completely empty, OR
+    // 2. Cursor is at position 0 and pressing space
+    if (event.key === ' ' && (this.search.length === 0 || cursorPosition === 0)) {
       event.preventDefault();
     }
+  }
+
+  onSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    // Remove any leading spaces that might have been pasted
+    this.search = input.value.replace(/^\s+/, '');
   }
 
   fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
@@ -168,6 +180,8 @@ export class PurchaseReportComponent {
   }
 
   applysearch() {
+    // Trim the search string before applying
+    this.search = this.search.trim();
     this.selectedMonth = null;
     this.createdDate = '';
     this.fetchAllPurchaseReport();

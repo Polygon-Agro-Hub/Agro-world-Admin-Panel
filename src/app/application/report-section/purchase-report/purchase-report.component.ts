@@ -12,6 +12,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
 import { CalendarModule } from 'primeng/calendar';
+
 interface PurchaseReport {
   id: number;
   grnNumber: string;
@@ -37,7 +38,7 @@ interface PurchaseReport {
     DropdownModule,
     FormsModule,
     LoadingSpinnerComponent,
-        CalendarModule,
+    CalendarModule,
   ],
   templateUrl: './purchase-report.component.html',
   styleUrl: './purchase-report.component.css',
@@ -51,9 +52,9 @@ export class PurchaseReportComponent {
   itemsPerPage: number = 10;
   grandTotal: number = 0;
   isDownloading = false;
-  fromDate: string = '';
-  toDate: string = '';
-  maxDate: string = '';
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
+  maxDate: Date;
 
   centers!: Centers[];
   months: Months[] = [
@@ -74,7 +75,7 @@ export class PurchaseReportComponent {
   selectedMonth: Months | null = null;
   createdDate: string = new Date().toISOString().split('T')[0];
   search: string = '';
-dateFilter: any;
+  dateFilter: any;
 
   constructor(
     private collectionoOfficer: CollectionService,
@@ -82,102 +83,71 @@ dateFilter: any;
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private datePipe: DatePipe
-  ) {}
+  ) {
+    // Initialize maxDate to today
+    this.maxDate = new Date();
+    this.maxDate.setHours(23, 59, 59, 999);
+  }
 
   ngOnInit() {
     this.getAllCenters();
-    const today = new Date();
-    this.maxDate = today.toISOString().split('T')[0];
-    
+    // Refresh maxDate on init to ensure it's current
+    this.maxDate = new Date();
+    this.maxDate.setHours(23, 59, 59, 999);
   }
 
   get hasData(): boolean {
-  return this.purchaseReport && this.purchaseReport.length > 0;
-}
-
-preventLeadingSpace(event: KeyboardEvent): void {
-  if (event.key === ' ' && this.search.length === 0) {
-    event.preventDefault();
+    return this.purchaseReport && this.purchaseReport.length > 0;
   }
-}
 
-  // fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
-  //   this.isLoading = true;
-
-  //   const centerId = this.selectedCenter?.id || '';
-  //   const monthNumber = this.selectedMonth?.id || '';
-
-  //   if (this.createdDate === '' && this.selectedMonth == null) {
-  //     this.createdDate = new Date().toISOString().split('T')[0];
-  //   }
-
-  //   this.collectionoOfficer
-  //     .fetchAllPurchaseReport(
-  //       page,
-  //       limit,
-  //       centerId,
-  //       this.fromDate,
-  //       this.toDate,
-  //       this.search
-  //     )
-  //     .subscribe(
-  //       (response) => {
-  //         this.purchaseReport = response.items;
-  //         this.totalItems = response.total;
-  //         this.grandTotal = response.grandTotal;
-  //         this.purchaseReport.forEach((head) => {
-  //           head.createdAtFormatted = this.datePipe.transform(
-  //             head.createdAt,
-  //             "yyyy/MM/dd 'at' hh.mm a"
-  //           );
-  //         });
-  //         this.isLoading = false;
-  //       },
-  //       (error) => {
-  //         if (error.status === 401) {
-  //         }
-  //         this.isLoading = false;
-  //       }
-  //     );
-  // }
+  preventLeadingSpace(event: KeyboardEvent): void {
+    if (event.key === ' ' && this.search.length === 0) {
+      event.preventDefault();
+    }
+  }
 
   fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
-  this.isLoading = true;
-  const centerId = this.selectedCenter?.id || '';
-  const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
-  const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
+    this.isLoading = true;
+    const centerId = this.selectedCenter?.id || '';
+    
+    const formattedFromDate = this.fromDate 
+      ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') 
+      : '';
+    const formattedToDate = this.toDate 
+      ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') 
+      : '';
 
-  this.collectionoOfficer
-    .fetchAllPurchaseReport(
-      page,
-      limit,
-      centerId,
-      formattedFromDate,
-      formattedToDate,
-      this.search
-    )
-    .subscribe(
-      (response) => {
-        this.purchaseReport = response.items;
-        this.totalItems = response.total;
-        this.grandTotal = response.grandTotal;
-        this.purchaseReport.forEach((head) => {
-          head.createdAtFormatted = this.datePipe.transform(
-            head.createdAt,
-            "yyyy/MM/dd 'at' hh.mm a"
-          );
-        });
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching report:', error);
-        if (error.status === 401) {
-          // Handle unauthorized
+    this.collectionoOfficer
+      .fetchAllPurchaseReport(
+        page,
+        limit,
+        centerId,
+        formattedFromDate,
+        formattedToDate,
+        this.search
+      )
+      .subscribe(
+        (response) => {
+          this.purchaseReport = response.items;
+          this.totalItems = response.total;
+          this.grandTotal = response.grandTotal;
+          this.purchaseReport.forEach((head) => {
+            head.createdAtFormatted = this.datePipe.transform(
+              head.createdAt,
+              "yyyy/MM/dd 'at' hh.mm a"
+            );
+          });
+          this.isLoading = false;
+        },
+        (error) => {
+          console.error('Error fetching report:', error);
+          if (error.status === 401) {
+            // Handle unauthorized access
+          }
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      }
-    );
-}
+      );
+  }
 
   onPageChange(event: number) {
     this.page = event;
@@ -220,7 +190,7 @@ preventLeadingSpace(event: KeyboardEvent): void {
         this.centers = res;
       },
       (error) => {
-        Swal.fire('Error!', 'There was an error fetching crops.', 'error');
+        Swal.fire('Error!', 'There was an error fetching centers.', 'error');
       }
     );
   }
@@ -235,19 +205,20 @@ preventLeadingSpace(event: KeyboardEvent): void {
     }
 
     if (this.fromDate) {
-      queryParams.push(`startDate=${this.fromDate}`);
+      const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
+      queryParams.push(`startDate=${formattedFromDate}`);
     }
 
     if (this.toDate) {
-      queryParams.push(`endDate=${this.toDate}`);
+      const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+      queryParams.push(`endDate=${formattedToDate}`);
     }
 
     if (this.search) {
       queryParams.push(`search=${this.search}`);
     }
 
-    const queryString =
-      queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+    const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
 
     const apiUrl = `${environment.API_URL}auth/download-purchase-report${queryString}`;
 
@@ -268,10 +239,12 @@ preventLeadingSpace(event: KeyboardEvent): void {
 
         let filename = 'Purchase_Report';
         if (this.fromDate) {
-          filename += `_${this.fromDate}`;
+          const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
+          filename += `_${formattedFromDate}`;
         }
         if (this.toDate) {
-          filename += `_${this.toDate}`;
+          const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+          filename += `_${formattedToDate}`;
         }
         if (this.selectedCenter) {
           filename += `_${this.selectedCenter.regCode}`;
@@ -306,15 +279,61 @@ preventLeadingSpace(event: KeyboardEvent): void {
   }
 
   onFromDateSelect() {
-  // This method will be called when a from date is selected
-  // The template will automatically enable/disable based on the fromDate value
-  console.log('From date selected:', this.fromDate);
-  
-  // Optional: If you want to automatically clear the toDate when fromDate is cleared
-  if (!this.fromDate) {
-    this.toDate = '';
+    // Reset toDate if it's before the newly selected fromDate
+    if (this.fromDate && this.toDate && this.toDate < this.fromDate) {
+      this.toDate = null;
+    }
+    
+    // Additional validation to ensure toDate doesn't exceed maxDate
+    if (this.toDate && this.toDate > this.maxDate) {
+      this.toDate = this.maxDate;
+    }
+    
+    console.log('From date selected:', this.fromDate);
   }
-}
+
+  onToDateSelect() {
+    // Validate that toDate is not in the future
+    this.validateToDate();
+  }
+
+  validateToDate(): void {
+    if (this.toDate && this.toDate > this.maxDate) {
+      this.toDate = this.maxDate;
+      Swal.fire({
+        icon: 'warning',
+        title: 'Date Adjusted',
+        text: 'The "To" date cannot be in the future. It has been set to today.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+    
+    // Also validate that toDate is not before fromDate
+    if (this.fromDate && this.toDate && this.toDate < this.fromDate) {
+      this.toDate = this.fromDate;
+      Swal.fire({
+        icon: 'warning',
+        title: 'Date Adjusted',
+        text: 'The "To" date cannot be before the "From" date. It has been adjusted.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+  }
+
+  // Utility method to get today's date without time component
+  getTodayDate(): Date {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today;
+  }
+
+  // Utility method to check if a date is in the future
+  isFutureDate(date: Date): boolean {
+    const today = this.getTodayDate();
+    return date > today;
+  }
 }
 
 class Centers {

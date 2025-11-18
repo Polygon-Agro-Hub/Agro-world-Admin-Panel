@@ -522,18 +522,26 @@ export const routes: Routes = [
               {
                 path: 'add-farmer-clusters',
                 component: AddFarmerClustersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add farmer clusters' }
               },
               {
                 path: 'view-farmer-clusters',
                 component: ViewFarmerClustersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Manage farmer clusters' }
               },
               {
                 path: 'view-cluster-users/:clusterId',
                 component: ViewClusterUsersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View cluster member' }
               },
               {
                 path: 'edit-farmer-cluster/:clusterId',
                 component: EditFarmerClusterComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit farmer clusters' }
               },
               {
                 path: 'individual-farmers-list',

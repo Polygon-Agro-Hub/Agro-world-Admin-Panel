@@ -42,6 +42,8 @@ export class MonthlyReportComponent implements OnInit {
   hasData: boolean = false;
   go: boolean = false;
   todayDate: any;
+  isToDateDisabled: boolean = true;
+  isGoButtonDisabled: boolean = true;
 
   constructor(
     private collectionoOfficer: CollectionCenterService,
@@ -57,6 +59,23 @@ export class MonthlyReportComponent implements OnInit {
     this.maxDate = today.toISOString().split('T')[0];
     this.visible = false;
     this.todayDate = new Date();
+    
+    // Initialize with disabled state
+    this.isToDateDisabled = true;
+    this.isGoButtonDisabled = true;
+  }
+
+  onFromDateChange() {
+    // Enable To date field when From date is selected
+    this.isToDateDisabled = !this.fromDate;
+    
+    // Enable Go button only when both dates are selected
+    this.isGoButtonDisabled = !(this.fromDate && this.toDate);
+  }
+
+  onToDateChange() {
+    // Enable Go button only when both dates are selected
+    this.isGoButtonDisabled = !(this.fromDate && this.toDate);
   }
 
   async downloadReport(): Promise<void> {
@@ -241,8 +260,6 @@ export class MonthlyReportComponent implements OnInit {
     }, 0);
   }
 
-
-
   back(): void {
     this.router.navigate(['/reports/collective-officer-report']);
   }
@@ -271,25 +288,25 @@ export class MonthlyReportComponent implements OnInit {
   }
 
   formatDateForDisplay(date: any): string {
-  if (!date) return '';
+    if (!date) return '';
 
-  let dateObj: Date;
+    let dateObj: Date;
 
-  if (date instanceof Date) {
-    dateObj = date;
-  } else if (typeof date === 'string') {
-    // Handle string dates (from PrimeNG calendar)
-    dateObj = new Date(date);
-    if (isNaN(dateObj.getTime())) return '';
-  } else {
-    return '';
+    if (date instanceof Date) {
+      dateObj = date;
+    } else if (typeof date === 'string') {
+      // Handle string dates (from PrimeNG calendar)
+      dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) return '';
+    } else {
+      return '';
+    }
+
+    // Format as MM/DD/YYYY for display (as per your requirement)
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+
+    return `${month}/${day}/${year}`;
   }
-
-  // Format as MM/DD/YYYY for display (as per your requirement)
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const day = String(dateObj.getDate()).padStart(2, '0');
-
-  return `${month}/${day}/${year}`;
-}
 }

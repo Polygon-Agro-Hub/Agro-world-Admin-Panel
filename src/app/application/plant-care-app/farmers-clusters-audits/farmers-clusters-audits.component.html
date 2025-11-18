@@ -149,14 +149,14 @@
               </span>
             </td>
             <td class="px-4 py-3 text-center">
-              <span
+              <button [disabled]="!permissionService.hasPermission('Audit farm cluster assign officers') && tokenService.getUserDetails().role !== '1'"
                 [class]="getAssignClass(audit.officerFirstName ?? null)"
                 class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
                 (click)="onAssignStatusClick(audit)"
                 title="Click to assign or view officer"
               >
                 {{ getAssignText(audit.officerFirstName ?? null) }}
-              </span>
+              </button>
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ audit.userName || "-" }}

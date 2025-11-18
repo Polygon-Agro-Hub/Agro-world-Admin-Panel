@@ -12,6 +12,7 @@ import {
   CertificateCompanyService,
   ClusterMember,
 } from '../../../services/plant-care/certificate-company.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-cluster-users',
@@ -48,7 +49,9 @@ export class ViewClusterUsersComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    public tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
   ) { }
 
   ngOnInit() {

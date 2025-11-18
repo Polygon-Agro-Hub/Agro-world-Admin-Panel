@@ -52,7 +52,7 @@ export const navbarData = [
     icon: 'fas fa-leaf',
     label: 'Govi Care',
     expanded: false,
-    Permission: 'Govi Care Tab',
+    Permission: 'GoviCare Tab',
     children: [
       {
         RouterLink: '/plant-care/dashboard',

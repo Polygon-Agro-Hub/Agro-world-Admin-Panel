@@ -7,7 +7,7 @@
   Back
 </button>
 <div class="mb-5 flex justify-between">
-  <button
+  <button *ngIf="permissionService.hasPermission('Add certificate') || tokenService.getUserDetails().role === '1'" 
     (click)="addNew()"
     class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center"
   >
@@ -142,7 +142,7 @@
             >
               Questions
             </th>
-            <th
+            <th *ngIf="permissionService.hasPermission('View all questionnaire') || tokenService.getUserDetails().role === '1'" 
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Questionaire
@@ -216,7 +216,8 @@
               </p>
             </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('View all questionnaire') || tokenService.getUserDetails().role === '1'" 
+            class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 [ngClass]="
                   item.qCount === 0
@@ -273,7 +274,7 @@
               </button>
 
               <!-- EDIT -->
-              <button
+              <button *ngIf="permissionService.hasPermission('Edit certificate') || tokenService.getUserDetails().role === '1'" 
                 class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6"
                 [disabled]="isLoading"
                 title="Edit Certificate"
@@ -294,7 +295,7 @@
               </button>
 
               <!-- DELETE -->
-              <button
+              <button *ngIf="permissionService.hasPermission('Delete certificate') || tokenService.getUserDetails().role === '1'" 
                 class="text-red-500 hover:text-red-700 flex items-center justify-center w-6 h-6"
                 [disabled]="isLoading"
                 title="Delete Certificate"

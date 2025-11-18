@@ -259,7 +259,10 @@ export const routes: Routes = [
       {
         path: 'plant-care',
         children: [
-          { path: 'dashboard', component: PlatCareDashbordComponent },
+          {
+            path: 'dashboard',
+            component: PlatCareDashbordComponent
+          },
           {
             path: 'action',
             children: [
@@ -465,10 +468,14 @@ export const routes: Routes = [
               {
                 path: 'add-company-details',
                 component: AddCompanyDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add certificate company' },
               },
               {
                 path: 'add-certificate-details',
                 component: AddCertificateDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add certificate' },
               },
               {
                 path: 'view-certificate-details/:certificateId',
@@ -477,14 +484,20 @@ export const routes: Routes = [
               {
                 path: 'edit-certificate-details/:certificateId',
                 component: EditCertificateDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit certificate' }
               },
               {
                 path: 'add-questionnaire-details/:certificateId',
                 component: AddQuestionnaireDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all questionnaire' }
               },
               {
                 path: 'edit-questionnaire-details/:certificateId',
                 component: EditQuestionnaireDetailsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all questionnaire' }
               },
               {
                 path: 'edit-company-details/:id',
@@ -497,34 +510,50 @@ export const routes: Routes = [
               {
                 path: 'view-company-list',
                 component: ViewCompanyListComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View certificate company' }
               },
               {
                 path: 'view-certificate-list',
                 component: ViewAllCertificatesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View certificate' }
               },
               {
                 path: 'add-farmer-clusters',
                 component: AddFarmerClustersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add farmer clusters' }
               },
               {
                 path: 'view-farmer-clusters',
                 component: ViewFarmerClustersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Manage farmer clusters' }
               },
               {
                 path: 'view-cluster-users/:clusterId',
                 component: ViewClusterUsersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View cluster member' }
               },
               {
                 path: 'edit-farmer-cluster/:clusterId',
                 component: EditFarmerClusterComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit farmer clusters' }
               },
               {
                 path: 'individual-farmers-list',
                 component: IndividualFarmersAuditsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View audit individual farmers' }
               },
               {
                 path: 'farmers-clusters-list',
                 component: FarmersClustersAuditsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View audit farm cluster' }
               },
             ],
           },

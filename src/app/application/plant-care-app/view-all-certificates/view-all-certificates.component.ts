@@ -6,6 +6,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { DropdownModule } from 'primeng/dropdown';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-all-certificates',
@@ -63,8 +65,10 @@ export class ViewAllCertificatesComponent implements OnInit {
 
   constructor(
     private certificateSrv: CertificateCompanyService,
-    private router: Router // private location: Location,
-  ) {}
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.fetchCompany();
@@ -106,7 +110,7 @@ export class ViewAllCertificatesComponent implements OnInit {
     this.fetchData();
   }
 
-  applyFilters() {}
+  applyFilters() { }
 
   editCertificate(item: CertificateData) {
     this.router.navigate([
@@ -185,19 +189,19 @@ export class ViewAllCertificatesComponent implements OnInit {
   }
 
   getFormattedCommission(value: any): string {
-  const num = parseFloat(value);
-  if (isNaN(num)) return '-';
-  
-  // Convert to string to preserve all decimal places
-  const numStr = num.toString();
-  
-  // Check if it has decimal places
-  if (numStr.includes('.')) {
-    return `${numStr}%`;
-  } else {
-    return `${num}%`;
+    const num = parseFloat(value);
+    if (isNaN(num)) return '-';
+
+    // Convert to string to preserve all decimal places
+    const numStr = num.toString();
+
+    // Check if it has decimal places
+    if (numStr.includes('.')) {
+      return `${numStr}%`;
+    } else {
+      return `${num}%`;
+    }
   }
-}
 
   onBack(): void {
     this.router.navigate([`/plant-care/action/`]);

@@ -12,6 +12,7 @@ import {
   CertificateCompanyService,
   FarmerCluster,
 } from '../../../services/plant-care/certificate-company.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-farmer-clusters',
@@ -43,6 +44,7 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
     private farmerClusterService: CertificateCompanyService,
     private router: Router,
     private location: Location,
+    public permissionService: PermissionService,
     public tokenService: TokenService
   ) { }
 
@@ -71,7 +73,7 @@ export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
         let fetchedClusters = response.data as FarmerCluster[];
 
         this.clusters = fetchedClusters.sort((a, b) => {
- 
+
           const statusA = a.status === 'Started' ? 1 : 0;
           const statusB = b.status === 'Started' ? 1 : 0;
 

@@ -11,6 +11,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
 import { CertificateCompanyService } from '../../../services/plant-care/certificate-company.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-add-questionnaires',
@@ -28,8 +30,10 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
     private certificateCompanyService: CertificateCompanyService,
     private router: Router,
     private location: Location,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -202,7 +206,7 @@ export class AddQuestionnaireDetailsComponent implements OnInit {
     this.location.back();
   }
 
-onCancel(): void {
+  onCancel(): void {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',

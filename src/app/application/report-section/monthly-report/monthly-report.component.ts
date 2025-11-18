@@ -26,8 +26,8 @@ import { CalendarModule } from 'primeng/calendar';
 export class MonthlyReportComponent implements OnInit {
   @ViewChild('contentToConvert', { static: false })
   contentToConvert!: ElementRef;
-  fromDate: string = '';
-  toDate: string = '';
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
   officerId!: number;
   officerData: any;
   dailyReports: any[] = [];
@@ -41,7 +41,7 @@ export class MonthlyReportComponent implements OnInit {
   maxDate: string = '';
   hasData: boolean = false;
   go: boolean = false;
-  todayDate: any;
+  todayDate: Date;
   isToDateDisabled: boolean = true;
   isGoButtonDisabled: boolean = true;
 
@@ -50,7 +50,9 @@ export class MonthlyReportComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) { 
+    this.todayDate = new Date();
+  }
 
   ngOnInit() {
     this.officerId = this.route.snapshot.params['id'];
@@ -58,7 +60,6 @@ export class MonthlyReportComponent implements OnInit {
     const today = new Date();
     this.maxDate = today.toISOString().split('T')[0];
     this.visible = false;
-    this.todayDate = new Date();
     
     // Initialize with disabled state
     this.isToDateDisabled = true;
@@ -221,6 +222,10 @@ export class MonthlyReportComponent implements OnInit {
   }
 
   getCollectionReport(): void {
+    if (!this.fromDate || !this.toDate) {
+      return;
+    }
+
     this.isLoading = true;
     this.collectionoOfficer
       .getCollectionReportByOfficerId(

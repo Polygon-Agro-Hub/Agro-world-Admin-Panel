@@ -26,6 +26,7 @@
           [showButtonBar]="true"
           iconDisplay="input"
           appendTo="body"
+          [maxDate]="todayDate"
           [style]="{ width: '100%', height: '2rem' }"
           panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
@@ -53,7 +54,7 @@
           [showButtonBar]="true"
           iconDisplay="input"
           appendTo="body"
-          [maxDate]="todayDate"
+          [minDate]="todayDate"
           [disabled]="isToDateDisabled"
           [style]="{ width: '100%', height: '2rem' }"
           panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 

@@ -21,6 +21,8 @@ interface DashboardData {
   grainCultivation: number;
   fruitCultivation: number;
   mushCultivation: number;
+  leLegumesCultivation: number;
+  spicesCultivation: number;
   allusers: number;
   qrUsers: number;
   farmerRegistrationCounts: any;
@@ -62,6 +64,8 @@ export class PlatCareDashbordComponent implements OnInit {
     this.dashbordService.getDashboardData(district).subscribe(
       (data: any) => {
         if (data && data.data) {
+          console.log("this is the data", data);
+          
           this.dashboardData = data.data;
           // Ensure percentages are numbers
           this.dashboardData.user_increase_percentage =
@@ -90,6 +94,8 @@ export class PlatCareDashbordComponent implements OnInit {
       this.dashboardData.vegCultivation +
       this.dashboardData.grainCultivation +
       this.dashboardData.fruitCultivation +
+      this.dashboardData.leLegumesCultivation +
+      this.dashboardData.spicesCultivation +
       this.dashboardData.mushCultivation;
   }
 
@@ -128,6 +134,11 @@ export class PlatCareDashbordComponent implements OnInit {
           subValue: this.dashboardData.vegCultivation,
         },
         {
+          title: 'Legumes',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.leLegumesCultivation,
+        },
+        {
           title: 'Fruits',
           value: 'Total Enrollments',
           subValue: this.dashboardData.fruitCultivation,
@@ -136,6 +147,11 @@ export class PlatCareDashbordComponent implements OnInit {
           title: 'Grains',
           value: 'Total Enrollments',
           subValue: this.dashboardData.grainCultivation,
+        },
+        {
+          title: 'Spices',
+          value: 'Total Enrollments',
+          subValue: this.dashboardData.spicesCultivation,
         },
         {
           title: 'Mushrooms',
@@ -347,6 +363,7 @@ export class PlatCareDashbordComponent implements OnInit {
               label: 'Crop Enrollments',
               data: [
                 this.dashboardData.vegCultivation,
+                this.dashboardData.leLegumesCultivation,
                 this.dashboardData.fruitCultivation,
                 this.dashboardData.grainCultivation,
                 this.dashboardData.mushCultivation,

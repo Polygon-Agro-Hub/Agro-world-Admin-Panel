@@ -302,114 +302,205 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
   // }
 
   async exportToPDF(): Promise<void> {
-    this.isDownloading = true;
+  this.isDownloading = true;
 
-    setTimeout(() => {
-      const doc = new jsPDF('p', 'mm', 'a4');
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const startX = 30;
-      const startY = 30;
-      const barHeight = 10;
-      const gap = 15;
-      const chartWidth = 140;
-      const titleFontSize = 14;
-      const contentFontSize = 10;
-      const colors = {
-        gradeA: '#FF9263',
-        gradeB: '#5F75E9',
-        gradeC: '#3DE188',
-      };
+  setTimeout(() => {
+    const doc = new jsPDF('p', 'mm', 'a4'); // Portrait
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
+    const margin = 20;
+    const chartStartX = 50;
+    const chartStartY = 60;
+    const barHeight = 8;
+    const gap = 2;
+    const chartWidth = 130;
+    
+    const colors = {
+      gradeA: '#FF9263',
+      gradeB: '#5F75E9',
+      gradeC: '#3DE188',
+    };
 
-      doc.setFontSize(titleFontSize);
-      doc.text(
-        `${this.selectedProvince.name} - Crop Grade Report`,
-        pageWidth / 2,
-        20,
-        { align: 'center' }
-      );
+    // Title
+    doc.setFontSize(18);
+    doc.setTextColor(0, 0, 0);
+    doc.text(
+      `${this.selectedProvince.name} - Crop Grade Report`,
+      pageWidth / 2,
+      20,
+      { align: 'center' }
+    );
 
-      if (!this.reportDetails || this.reportDetails.length === 0) {
-        doc.setFontSize(contentFontSize);
-        doc.text('No data available to display.', startX, startY);
-        doc.save(`${this.selectedProvince.name}_Report.pdf`);
-        this.isDownloading = false;
-        return;
+    if (!this.reportDetails || this.reportDetails.length === 0) {
+      doc.setFontSize(11);
+      doc.text('No data available to display.', chartStartX, chartStartY);
+      doc.save(`${this.selectedProvince.name}_Report.pdf`);
+      this.isDownloading = false;
+      return;
+    }
+
+    // Draw Color Legend - Centered with smaller squares
+    const legendY = 35;
+    const legendSquareSize = 4;
+    const legendItemSpacing = 18;
+    const totalLegendWidth = (legendSquareSize * 3) + (legendItemSpacing * 2) + (3 * 2); // squares + spacing + text spacing
+    const legendStartX = (pageWidth - totalLegendWidth) / 2;
+
+    doc.setFontSize(10);
+    
+    // Grade A
+    doc.setFillColor(255, 146, 99);
+    doc.rect(legendStartX, legendY, legendSquareSize, legendSquareSize, 'F');
+    doc.setTextColor(0, 0, 0);
+    doc.text('A', legendStartX + legendSquareSize + 2, legendY + 3.5);
+
+    // Grade B
+    const legendBX = legendStartX + legendSquareSize + 2 + 3 + legendItemSpacing;
+    doc.setFillColor(95, 117, 233);
+    doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
+    doc.text('B', legendBX + legendSquareSize + 2, legendY + 3.5);
+
+    // Grade C
+    const legendCX = legendBX + legendSquareSize + 2 + 3 + legendItemSpacing;
+    doc.setFillColor(61, 225, 136);
+    doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
+    doc.text('C', legendCX + legendSquareSize + 2, legendY + 3.5);
+
+    const groupedData = this.reportDetails.map((crop) => ({
+      cropName: crop.cropName,
+      gradeA: crop.qtyA || 0,
+      gradeB: crop.qtyB || 0,
+      gradeC: crop.qtyC || 0,
+      totalWeight: (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0),
+    }));
+
+    const maxWeight = Math.max(...groupedData.map((crop) => crop.totalWeight));
+    const chartHeight = groupedData.length * (barHeight + gap);
+    const chartEndY = chartStartY + chartHeight;
+
+    // Y-axis
+    const yAxisX = chartStartX;
+    const yAxisTop = chartStartY - 10;
+    const yAxisBottom = chartEndY + 5;
+    
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.line(yAxisX, yAxisBottom, yAxisX, yAxisTop);
+    
+    // Y-axis arrow
+    doc.line(yAxisX, yAxisTop, yAxisX - 2, yAxisTop + 3);
+    doc.line(yAxisX, yAxisTop, yAxisX + 2, yAxisTop + 3);
+    
+    // Y-axis label - aligned with arrow end
+    doc.setFontSize(10);
+    doc.setTextColor(60, 60, 60);
+    doc.text('Crop Variety', 20, yAxisTop + 1, { align: 'left' });
+
+    // Draw bars
+    let currentY = chartStartY;
+    doc.setFontSize(10);
+    
+    groupedData.forEach((crop) => {
+      // Crop name on left - aligned at x=20
+      doc.setTextColor(50, 50, 50);
+      doc.text(crop.cropName, 20, currentY + barHeight / 2 + 1.5, { align: 'left' });
+
+      let currentX = chartStartX;
+      
+      // Grade A bar
+      if (crop.gradeA > 0) {
+        const barWidth = (crop.gradeA / maxWeight) * chartWidth;
+        doc.setFillColor(255, 146, 99);
+        doc.rect(currentX, currentY, barWidth, barHeight, 'F');
+        currentX += barWidth;
+      }
+      
+      // Grade B bar
+      if (crop.gradeB > 0) {
+        const barWidth = (crop.gradeB / maxWeight) * chartWidth;
+        doc.setFillColor(95, 117, 233);
+        doc.rect(currentX, currentY, barWidth, barHeight, 'F');
+        currentX += barWidth;
+      }
+      
+      // Grade C bar
+      if (crop.gradeC > 0) {
+        const barWidth = (crop.gradeC / maxWeight) * chartWidth;
+        doc.setFillColor(61, 225, 136);
+        doc.rect(currentX, currentY, barWidth, barHeight, 'F');
+        currentX += barWidth;
       }
 
-      const groupedData = this.reportDetails.map((crop) => ({
-        cropName: crop.cropName,
-        gradeA: crop.qtyA || 0,
-        gradeB: crop.qtyB || 0,
-        gradeC: crop.qtyC || 0,
-        totalWeight: (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0),
-      }));
+      currentY += barHeight + gap;
+    });
 
-      const maxWeight = Math.max(
-        ...groupedData.map((crop) => crop.totalWeight)
-      );
+    // X-axis
+    const xAxisY = chartEndY + 5;
+    const xAxisEnd = chartStartX + chartWidth + 8;
+    
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.line(chartStartX, xAxisY, xAxisEnd, xAxisY);
+    
+    // X-axis arrow
+    doc.line(xAxisEnd, xAxisY, xAxisEnd - 3, xAxisY - 2);
+    doc.line(xAxisEnd, xAxisY, xAxisEnd - 3, xAxisY + 2);
+    
+    // X-axis label
+    doc.setFontSize(10);
+    doc.setTextColor(60, 60, 60);
+    doc.text('kg', xAxisEnd + 3, xAxisY + 1);
 
-      let currentY = startY;
-      groupedData.forEach((crop) => {
-        let currentX = startX;
-        const labelYOffset = currentY + barHeight / 2 + 3;
+    // Summary Table
+    const tableStartY = chartEndY + 20;
+    const cellHeight = 10;
+    // Table width should match the x-axis length (from chartStartX to xAxisEnd)
+    const tableWidth = xAxisEnd - chartStartX;
+    const tableColWidths = [tableWidth * 0.25, tableWidth * 0.1875, tableWidth * 0.1875, tableWidth * 0.1875, tableWidth * 0.1875];
+    const tableStartX = chartStartX;
+    let rowY = tableStartY;
 
-        doc.setFontSize(contentFontSize);
-        doc.setTextColor(0, 0, 0);
-        doc.text(crop.cropName, startX - 20, labelYOffset);
-
-        (['A', 'B', 'C'] as const).forEach((grade) => {
-          const gradeKey = `grade${grade}` as 'gradeA' | 'gradeB' | 'gradeC';
-          const gradeWeight = crop[gradeKey];
-          if (gradeWeight > 0) {
-            const barWidth = (gradeWeight / maxWeight) * chartWidth;
-            doc.setFillColor(colors[gradeKey]);
-            doc.rect(currentX, currentY, barWidth, barHeight, 'F');
-            currentX += barWidth;
-          }
-        });
-
-        currentY += gap;
-      });
-
-      const tableStartY = currentY + 20;
-      const cellPadding = 5;
-      const cellHeight = 8;
-      const tableColWidths = [50, 30, 30, 30, 30];
-      let rowY = tableStartY;
-
-      const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
-      doc.setFontSize(contentFontSize);
+    const headers = ['Crop Variety', 'Grade A', 'Grade B', 'Grade C', 'Total'];
+    doc.setFontSize(9);
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    
+    // Draw header row
+    let cellX = tableStartX;
+    headers.forEach((header, index) => {
+      doc.setFillColor(255, 255, 255);
       doc.setTextColor(0, 0, 0);
-      headers.forEach((header, index) => {
-        const cellX =
-          startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-        doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
-        doc.text(header, cellX + cellPadding, rowY + cellHeight / 2 + 3);
+      doc.rect(cellX, rowY, tableColWidths[index], cellHeight, 'S');
+      doc.text(header, cellX + tableColWidths[index] / 2, rowY + 6.5, { align: 'center' });
+      cellX += tableColWidths[index];
+    });
+
+    rowY += cellHeight;
+
+    // Draw data rows
+    groupedData.forEach((crop) => {
+      const values = [
+        crop.cropName,
+        crop.gradeA ? `${crop.gradeA}kg` : '-',
+        crop.gradeB ? `${crop.gradeB}kg` : '-',
+        crop.gradeC ? `${crop.gradeC}kg` : '-',
+        `${crop.totalWeight}kg`,
+      ];
+
+      cellX = tableStartX;
+      values.forEach((value, index) => {
+        doc.setTextColor(0, 0, 0);
+        doc.rect(cellX, rowY, tableColWidths[index], cellHeight, 'S');
+        doc.text(value, cellX + tableColWidths[index] / 2, rowY + 6.5, { align: 'center' });
+        cellX += tableColWidths[index];
       });
 
       rowY += cellHeight;
+    });
 
-      groupedData.forEach((crop) => {
-        const cropValues = [
-          crop.cropName,
-          crop.gradeA ? `${crop.gradeA} kg` : '-',
-          crop.gradeB ? `${crop.gradeB} kg` : '-',
-          crop.gradeC ? `${crop.gradeC} kg` : '-',
-          `${crop.totalWeight} kg`,
-        ];
-
-        cropValues.forEach((value, index) => {
-          const cellX =
-            startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-          doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
-          doc.text(value, cellX + cellPadding, rowY + cellHeight / 2 + 3);
-        });
-
-        rowY += cellHeight;
-      });
-
-      doc.save(`${this.selectedProvince.name}_CropGradeReport.pdf`);
-      this.isDownloading = false;
-    }, 0);
-  }
+    doc.save(`${this.selectedProvince.name}_CropGradeReport.pdf`);
+    this.isDownloading = false;
+  }, 0);
+}
 }

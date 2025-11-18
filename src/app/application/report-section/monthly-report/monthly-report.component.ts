@@ -92,7 +92,7 @@ export class MonthlyReportComponent implements OnInit {
         { label: 'To', value: this.formatDateForDisplay(this.toDate) },
         { label: 'Role', value: this.officerData.jobRole },
         { label: 'Last Name', value: this.officerData.lastNameEnglish },
-        { label: 'Farmers', value: this.finalTotalFarmers },
+        { label: 'Collections', value: this.finalTotalFarmers },
       ];
 
       // Render details in two columns
@@ -116,7 +116,7 @@ export class MonthlyReportComponent implements OnInit {
       pdf.setFontSize(12);
 
       // Table Section
-      const tableHeaders = ['Date', 'Total Weight', 'Total Farmers'];
+      const tableHeaders = ['Date', 'Total Weight', 'Total Collections'];
       const tableData = this.dailyReports.map((report) => [
         this.formatDateForDisplay(report.date),
         report.totalWeight + 'Kg',

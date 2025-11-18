@@ -57,7 +57,7 @@ export class AddCompanyDetailsComponent implements OnInit {
     private companyService: CertificateCompanyService,
     private location: Location,
     private router: Router
-  ) {}
+  ) { }
 
   onBack(): void {
     Swal.fire({
@@ -93,10 +93,23 @@ export class AddCompanyDetailsComponent implements OnInit {
     // Dynamic phone validation for phone1
     this.companyForm.get('phoneCode1')?.valueChanges.subscribe((code) => {
       this.setPhoneValidators('phone1', code, true);
+      this.validateContactNumbers(); // Add real-time validation
     });
+
     // Dynamic phone validation for phone2
     this.companyForm.get('phoneCode2')?.valueChanges.subscribe((code) => {
       this.setPhoneValidators('phone2', code, false);
+      this.validateContactNumbers(); // Add real-time validation
+    });
+
+    // Add real-time validation on phone1 input
+    this.companyForm.get('phone1')?.valueChanges.subscribe(() => {
+      this.validateContactNumbers();
+    });
+
+    // Add real-time validation on phone2 input
+    this.companyForm.get('phone2')?.valueChanges.subscribe(() => {
+      this.validateContactNumbers();
     });
 
     // Initialize validators
@@ -127,7 +140,8 @@ export class AddCompanyDetailsComponent implements OnInit {
     }
 
     if (dialCode === '+94') {
-      validators.push(Validators.pattern(/^[0-9]{9}$/)); // exactly 9 digits
+      // Must be exactly 9 digits AND start with 7
+      validators.push(Validators.pattern(/^7[0-9]{8}$/));
     } else {
       validators.push(Validators.pattern(/^[0-9]*$/)); // only numbers, any length
     }
@@ -165,18 +179,13 @@ export class AddCompanyDetailsComponent implements OnInit {
     this.contactNumberError2 = false;
     this.sameNumberError = false;
 
-    // Step 1: Validate phone number formats first
-    if (phoneCode1 === '+94' && phone1 && phone1.length !== 9) {
-      this.contactNumberError1 = true;
+    // Step 1: Check Sri Lanka number validation FIRST
+    if (phoneCode1 === '+94' && phone1) {
+      this.contactNumberError1 = phone1.length !== 9 || !phone1.startsWith('7');
     }
 
-    if (
-      phoneCode2 === '+94' &&
-      phone2 &&
-      phone2.length > 0 &&
-      phone2.length !== 9
-    ) {
-      this.contactNumberError2 = true;
+    if (phoneCode2 === '+94' && phone2 && phone2.length > 0) {
+      this.contactNumberError2 = phone2.length !== 9 || !phone2.startsWith('7');
     }
 
     // Step 2: Only check for duplicate numbers if both numbers have valid formats
@@ -336,7 +345,7 @@ export class AddCompanyDetailsComponent implements OnInit {
     if (this.contactNumberError1) {
       errors.push({
         field: 'Phone Number - 1',
-        message: 'Phone Number must be exactly 9 digits for Sri Lanka (+94)',
+        message: 'Phone Number must be exactly 9 digits and start with 7 for Sri Lanka (+94)',
       });
     }
 
@@ -358,7 +367,7 @@ export class AddCompanyDetailsComponent implements OnInit {
     if (this.contactNumberError2) {
       errors.push({
         field: 'Phone Number - 2',
-        message: 'Phone Number must be exactly 9 digits for Sri Lanka (+94)',
+        message: 'Phone Number must be exactly 9 digits and start with 7 for Sri Lanka (+94)',
       });
     }
 

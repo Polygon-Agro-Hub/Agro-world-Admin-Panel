@@ -202,6 +202,10 @@ export class ViewPackageListComponent implements OnInit {
     );
   }
 
+  get hasFilteredData() {
+    return this.filteredPackages.length > 0;
+  }
+
   onSearch() {
     this.searchtext = this.searchtext.trim(); // Trim leading/trailing spaces
     if (!this.searchtext) {

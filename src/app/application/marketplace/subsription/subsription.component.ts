@@ -193,7 +193,12 @@ export class SubsriptionComponent implements OnInit {
       type: 'application/octet-stream',
     });
 
-    FileSaver.saveAs(blobData, 'Subscriptions.xlsx');
+    // Dynamic file name based on active tab
+    const fileName = this.activeTab === 'retail'
+      ? 'Retail Buyer Subscriptions.xlsx'
+      : 'Wholesale Buyer Subscriptions.xlsx';
+
+    FileSaver.saveAs(blobData, fileName);
   }
 }
 

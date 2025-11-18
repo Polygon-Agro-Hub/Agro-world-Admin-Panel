@@ -96,7 +96,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     private router: Router,
     private cropCalendarService: CropCalendarService,
     private certificateCompanyService: CertificateCompanyService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
@@ -455,8 +455,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Service areas as JSON string
     const serviceAreas = Array.isArray(formValue.serviceAreas)
       ? formValue.serviceAreas.map((area: any) =>
-          typeof area === 'object' ? area.value : area
-        )
+        typeof area === 'object' ? area.value : area
+      )
       : [];
     formData.append('serviceAreas', JSON.stringify(serviceAreas));
 
@@ -505,12 +505,11 @@ export class AddCertificateDetailsComponent implements OnInit {
             this.router.navigate(['/plant-care/action/view-certificate-list']);
           });
         } else {
+          // Show backend validation error
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text:
-              res.message ||
-              'Failed to add certificate details. Please try again.',
+            title: 'Validation Error',
+            text: res.message || 'Failed to add certificate details. Please try again.',
             customClass: {
               popup:
                 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -522,12 +521,16 @@ export class AddCertificateDetailsComponent implements OnInit {
       error: (err) => {
         this.isLoading = false;
         console.error('Error creating certificate:', err);
+
+        // Handle backend validation errors
+        const errorMessage = err.error?.message ||
+          err.message ||
+          'Failed to add certificate details. Please try again.';
+
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text:
-            err.error?.message ||
-            'Failed to add certificate details. Please try again.',
+          text: errorMessage,
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',
@@ -535,6 +538,15 @@ export class AddCertificateDetailsComponent implements OnInit {
         });
       },
     });
+  }
+
+  // Update the preventDecimalInput method to also block hyphen
+  preventDecimalInput(event: KeyboardEvent) {
+    // Prevent decimal point, comma, hyphen, and 'e' for exponential notation
+    const forbiddenKeys = ['.', ',', 'e', 'E', '-'];
+    if (forbiddenKeys.includes(event.key)) {
+      event.preventDefault();
+    }
   }
 
   allowDecimalInput(event: KeyboardEvent): void {
@@ -552,6 +564,12 @@ export class AddCertificateDetailsComponent implements OnInit {
       event.ctrlKey &&
       ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())
     ) {
+      return;
+    }
+
+    // Block hyphen
+    if (charCode === '-') {
+      event.preventDefault();
       return;
     }
 
@@ -574,11 +592,5 @@ export class AddCertificateDetailsComponent implements OnInit {
     input.value = input.value.replace(/^\s+/, '');
     this.certificateForm.get(varibleName)?.setValue(input.value);
   }
-  preventDecimalInput(event: KeyboardEvent) {
-    // Prevent decimal point, comma, and 'e' for exponential notation
-    const forbiddenKeys = ['.', ',', 'e', 'E'];
-    if (forbiddenKeys.includes(event.key)) {
-      event.preventDefault();
-    }
-  }
+
 }

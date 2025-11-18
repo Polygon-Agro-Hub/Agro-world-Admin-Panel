@@ -150,7 +150,7 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <ng-container *ngIf="item.discount > 0; else noDiscount">
-                {{ ((item.discount / item.normalPrice) * 100).toFixed(2) }}
+                {{ formatDiscountPercentage(item.discount, item.normalPrice) }}
               </ng-container>
               <ng-template #noDiscount>No</ng-template>
             </td>

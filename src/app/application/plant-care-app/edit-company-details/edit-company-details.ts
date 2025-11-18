@@ -58,7 +58,7 @@ export class EditCompanyDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyForm = this.fb.group({
@@ -75,10 +75,23 @@ export class EditCompanyDetailsComponent implements OnInit {
     // Dynamic phone validation for phone1
     this.companyForm.get('phoneCode1')?.valueChanges.subscribe((code) => {
       this.setPhoneValidators('phone1', code, true);
+      this.validateContactNumbers(); // Add real-time validation
     });
+
     // Dynamic phone validation for phone2
     this.companyForm.get('phoneCode2')?.valueChanges.subscribe((code) => {
       this.setPhoneValidators('phone2', code, false);
+      this.validateContactNumbers(); // Add real-time validation
+    });
+
+    // Add real-time validation on phone1 input
+    this.companyForm.get('phone1')?.valueChanges.subscribe(() => {
+      this.validateContactNumbers();
+    });
+
+    // Add real-time validation on phone2 input
+    this.companyForm.get('phone2')?.valueChanges.subscribe(() => {
+      this.validateContactNumbers();
     });
 
     this.route.params.subscribe((params) => {
@@ -100,6 +113,21 @@ export class EditCompanyDetailsComponent implements OnInit {
       this.companyForm.get('phoneCode2')?.value,
       false
     );
+  }
+
+  onPhoneInput(event: Event, field: 'phone1' | 'phone2'): void {
+    const input = event.target as HTMLInputElement;
+    const phoneCodeField = field === 'phone1' ? 'phoneCode1' : 'phoneCode2';
+    const dialCode = this.companyForm.get(phoneCodeField)?.value;
+
+    // Limit to 9 digits for Sri Lanka
+    if (dialCode === '+94' && input.value.length > 9) {
+      input.value = input.value.slice(0, 9);
+      this.companyForm.get(field)?.setValue(input.value);
+    }
+
+    // Trigger real-time validation
+    this.validateContactNumbers();
   }
 
   private loadCompanyDetails(): void {
@@ -219,7 +247,7 @@ export class EditCompanyDetailsComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  // Get all validation errors for the popup - EXACTLY LIKE REFERENCE
+  // Get all validation errors for the popup - UPDATED VERSION
   private getAllValidationErrors(): { field: string; message: string }[] {
     const errors: { field: string; message: string }[] = [];
 
@@ -272,7 +300,7 @@ export class EditCompanyDetailsComponent implements OnInit {
     if (this.contactNumberError1) {
       errors.push({
         field: 'Phone Number - 1',
-        message: 'Phone Number must be exactly 9 digits for Sri Lanka (+94)',
+        message: 'Phone Number must be exactly 9 digits and start with 7 for Sri Lanka (+94)',
       });
     }
 
@@ -294,7 +322,7 @@ export class EditCompanyDetailsComponent implements OnInit {
     if (this.contactNumberError2) {
       errors.push({
         field: 'Phone Number - 2',
-        message: 'Phone Number must be exactly 9 digits for Sri Lanka (+94)',
+        message: 'Phone Number must be exactly 9 digits and start with 7 for Sri Lanka (+94)',
       });
     }
 
@@ -459,7 +487,6 @@ export class EditCompanyDetailsComponent implements OnInit {
     });
   }
 
-  // Apply validators dynamically
   private setPhoneValidators(
     field: 'phone1' | 'phone2',
     dialCode: string,
@@ -474,9 +501,10 @@ export class EditCompanyDetailsComponent implements OnInit {
     }
 
     if (dialCode === '+94') {
-      validators.push(Validators.pattern(/^[0-9]{9}$/)); // exactly 9 digits
+      // Must be exactly 9 digits AND start with 7
+      validators.push(Validators.pattern(/^7[0-9]{8}$/));
     } else {
-      validators.push(Validators.pattern(/^[0-9]*$/)); // only numbers, any length
+      validators.push(Validators.pattern(/^[0-9]*$/));
     }
 
     control.setValidators(validators);
@@ -493,8 +521,6 @@ export class EditCompanyDetailsComponent implements OnInit {
   getFlagUrl(code: string): string {
     return `https://flagcdn.com/w20/${code.toLowerCase()}.png`;
   }
-
-  // FIXED VALIDATION LOGIC - NO OVERLAP
   validateContactNumbers(): void {
     const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
     const phone1 = this.companyForm.get('phone1')?.value;
@@ -508,11 +534,11 @@ export class EditCompanyDetailsComponent implements OnInit {
 
     // Step 1: Check Sri Lanka number validation FIRST
     if (phoneCode1 === '+94' && phone1) {
-      this.contactNumberError1 = phone1.length !== 9;
+      this.contactNumberError1 = phone1.length !== 9 || !phone1.startsWith('7');
     }
 
     if (phoneCode2 === '+94' && phone2 && phone2.length > 0) {
-      this.contactNumberError2 = phone2.length !== 9;
+      this.contactNumberError2 = phone2.length !== 9 || !phone2.startsWith('7');
     }
 
     // Step 2: Only check for same number if both numbers have valid formats

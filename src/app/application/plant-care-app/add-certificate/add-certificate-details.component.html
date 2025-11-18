@@ -236,17 +236,18 @@
       <div class="my-3">
         <label for="price" class="block text-sm font-medium text-textLight dark:text-textDark">Price (Rs.) *</label>
         <input id="price" type="number" formControlName="price" (input)="trimLeadingSpaces($event, 'price')"
+          (keydown)="preventDecimalInput($event)" min="0"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-            'border-red-500':
-              certificateForm.get('price')?.invalid &&
-              certificateForm.get('price')?.touched
-          }" />
+      'border-red-500':
+        certificateForm.get('price')?.invalid &&
+        certificateForm.get('price')?.touched
+    }" />
         <div *ngIf="
-            certificateForm.get('price')?.invalid &&
-            certificateForm.get('price')?.touched
-          " class="text-red-500 text-sm mt-1">
-          Price is required
+      certificateForm.get('price')?.invalid &&
+      certificateForm.get('price')?.touched
+    " class="text-red-500 text-sm mt-1">
+          Price is required and must be a positive number
         </div>
       </div>
 
@@ -258,10 +259,10 @@
           (keydown)="preventDecimalInput($event)" (input)="trimLeadingSpaces($event, 'timelineMonths')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-            'border-red-500':
-              certificateForm.get('timeLine')?.invalid &&
-              certificateForm.get('timeLine')?.touched
-          }" />
+      'border-red-500':
+        certificateForm.get('timeLine')?.invalid &&
+        certificateForm.get('timeLine')?.touched
+    }" />
         <div *ngIf="
             certificateForm.get('timeLine')?.invalid &&
             certificateForm.get('timeLine')?.touched
@@ -279,10 +280,10 @@
           (input)="trimLeadingSpaces($event, 'commission')" (keypress)="allowDecimalInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-            'border-red-500':
-              certificateForm.get('commission')?.invalid &&
-              certificateForm.get('commission')?.touched
-          }" />
+      'border-red-500':
+        certificateForm.get('commission')?.invalid &&
+        certificateForm.get('commission')?.touched
+    }" />
 
         <!-- Negative value error -->
         <div *ngIf="

@@ -12,6 +12,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { CertificateCompanyService } from '../../../services/plant-care/certificate-company.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-edit-questionnaire-details',
@@ -31,8 +33,10 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private certificateCompanyService: CertificateCompanyService
-  ) {}
+    private certificateCompanyService: CertificateCompanyService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -439,8 +443,8 @@ export class EditQuestionnaireDetailsComponent implements OnInit {
     const createPromise =
       newQuestions.length > 0
         ? this.certificateCompanyService
-            .createQuestionnaire(newQuestionsPayload)
-            .toPromise()
+          .createQuestionnaire(newQuestionsPayload)
+          .toPromise()
         : Promise.resolve();
 
     // Execute all operations

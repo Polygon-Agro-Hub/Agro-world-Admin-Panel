@@ -18,6 +18,8 @@ import {
   CertificateCompanyService,
   CertificateCompany,
 } from '../../../services/plant-care/certificate-company.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-edit-certificate-details',
@@ -97,7 +99,9 @@ export class EditCertificateDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
-    private certificateCompanyService: CertificateCompanyService
+    private certificateCompanyService: CertificateCompanyService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   ngOnInit(): void {
@@ -670,7 +674,7 @@ export class EditCertificateDetailsComponent implements OnInit {
               ]);
             });
           } else {
-  
+
             Swal.fire({
               icon: 'error',
               title: 'Validation Error',

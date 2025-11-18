@@ -546,10 +546,14 @@ export const routes: Routes = [
               {
                 path: 'individual-farmers-list',
                 component: IndividualFarmersAuditsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View audit individual farmers' }
               },
               {
                 path: 'farmers-clusters-list',
                 component: FarmersClustersAuditsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View audit farm cluster' }
               },
             ],
           },

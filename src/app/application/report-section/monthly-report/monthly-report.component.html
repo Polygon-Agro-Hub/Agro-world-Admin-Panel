@@ -87,17 +87,16 @@
     <div class="w-full text-center pb-5 px-4">
       <button (click)="downloadReport()" 
         class="bg-[#3980C0] text-white px-6 py-2 rounded-md w-full sm:w-auto"
-        [disabled]="isDownloading">
+        [disabled]="isDownloading || dailyReports.length === 0">
         <i class="fas fa-download" *ngIf="!isDownloading"></i>
         <i class="fas fa-spinner fa-spin" *ngIf="isDownloading"></i>
         {{ isDownloading ? ' Downloading...' : ' Download Report' }}
       </button>
     </div>
   </div>
-  
 
   <!-- Report Content -->
-  <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto" *ngIf="go">
+  <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto" *ngIf="go && dailyReports.length > 0">
     <div #contentToConvert class="p-4 sm:p-6">
       <!-- Report Header -->
       <div class="text-center mb-6">
@@ -133,7 +132,7 @@
         </div>
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">Weight</p>
-          <p class="dark:text-textDark text-gray-800">: {{finalTotalWeight }} Kg</p>
+          <p class="dark:text-textDark text-gray-800">: {{ finalTotalWeight }} Kg</p>
         </div>
         <div class="flex items-center gap-2">
           <p class="text-sm dark:text-textDark text-gray-600 w-24">Collections</p>
@@ -168,9 +167,9 @@
   </div>
 
   <!-- Empty State -->
-  <div *ngIf="!go"
+  <div *ngIf="!go || dailyReports.length === 0"
     class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg p-8 sm:p-16 flex flex-col items-center justify-center text-center">
-    <p class="text-sm dark:text-textDark text-gray-600">-- No Data Available --</p>
+    <p class="text-sm dark:text-textDark text-gray-600 mb-4">-- No Data Available --</p>
     <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
   </div>
 </div>

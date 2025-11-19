@@ -19,7 +19,7 @@ import { CalendarModule } from 'primeng/calendar';
 @Component({
   selector: 'app-monthly-report',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, CalendarModule,],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, CalendarModule],
   templateUrl: './monthly-report.component.html',
   styleUrl: './monthly-report.component.css',
 })
@@ -66,142 +66,164 @@ export class MonthlyReportComponent implements OnInit {
     this.isGoButtonDisabled = true;
   }
 
+  clearReportData(): void {
+    this.dailyReports = [];
+    this.finalTotalWeight = 0;
+    this.finalTotalFarmers = 0;
+    this.generatedTime = '';
+    this.generatedDate = '';
+    this.go = false;
+  }
+
   onFromDateChange() {
     // Enable To date field when From date is selected
     this.isToDateDisabled = !this.fromDate;
     
     // Enable Go button only when both dates are selected
     this.isGoButtonDisabled = !(this.fromDate && this.toDate);
+    
+    // Clear data if From date is cleared
+    if (!this.fromDate) {
+      this.clearReportData();
+    }
   }
 
   onToDateChange() {
     // Enable Go button only when both dates are selected
     this.isGoButtonDisabled = !(this.fromDate && this.toDate);
+    
+    // Clear data if To date is cleared
+    if (!this.toDate) {
+      this.clearReportData();
+    }
   }
 
   async downloadReport(): Promise<void> {
-    this.isDownloading = true; // Show spinner and disable button
+    if (this.dailyReports.length === 0) {
+      return;
+    }
 
-    // Use setTimeout to allow Angular to update the UI
+    this.isDownloading = true;
+
     setTimeout(async () => {
-      const pdf = new jsPDF('p', 'mm', 'a4'); // Initialize jsPDF with A4 page size
-      const margin = 10; // Margin for the content
-      let y = margin; // Vertical offset
+      try {
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const margin = 10;
+        let y = margin;
 
-      // Title Section
-      pdf.setFontSize(16);
-      pdf.setTextColor(0, 0, 0);
-      pdf.text('Collection Officer Report', 105, y, { align: 'center' });
+        // Title Section
+        pdf.setFontSize(16);
+        pdf.setTextColor(0, 0, 0);
+        pdf.text('Collection Officer Report', 105, y, { align: 'center' });
 
-      y += 8; // Slight spacing below the title
-      pdf.setFontSize(12);
-      pdf.text(`ID NO : ${this.officerData.empId}`, 105, y, { align: 'center' });
+        y += 8;
+        pdf.setFontSize(12);
+        pdf.text(`ID NO : ${this.officerData.empId}`, 105, y, { align: 'center' });
 
-      y += 15; // Space before the details section
+        y += 15;
 
-      // Info Section
-      pdf.setFontSize(10); // Reduce the font size for the info section
-      const leftDetails = [
-        { label: 'From', value: this.formatDateForDisplay(this.fromDate) },
-        { label: 'EMP ID', value: this.officerData.empId },
-        { label: 'First Name', value: this.officerData.firstNameEnglish },
-        { label: 'Weight', value: this.finalTotalWeight + 'Kg'},
-      ];
+        // Info Section
+        pdf.setFontSize(10);
+        const leftDetails = [
+          { label: 'From', value: this.formatDateForDisplay(this.fromDate) },
+          { label: 'EMP ID', value: this.officerData.empId },
+          { label: 'First Name', value: this.officerData.firstNameEnglish },
+          { label: 'Weight', value: this.finalTotalWeight + ' Kg' },
+        ];
 
-      const rightDetails = [
-        { label: 'To', value: this.formatDateForDisplay(this.toDate) },
-        { label: 'Role', value: this.officerData.jobRole },
-        { label: 'Last Name', value: this.officerData.lastNameEnglish },
-        { label: 'Collections', value: this.finalTotalFarmers },
-      ];
+        const rightDetails = [
+          { label: 'To', value: this.formatDateForDisplay(this.toDate) },
+          { label: 'Role', value: this.officerData.jobRole },
+          { label: 'Last Name', value: this.officerData.lastNameEnglish },
+          { label: 'Collections', value: this.finalTotalFarmers.toString() },
+        ];
 
-      // Render details in two columns
-      const leftColumnX = margin;
-      const rightColumnX = pdf.internal.pageSize.getWidth() - margin - 80; // Adjust as needed
+        const leftColumnX = margin;
+        const rightColumnX = pdf.internal.pageSize.getWidth() - margin - 80;
 
-      leftDetails.forEach((detail) => {
-        pdf.text(`${detail.label} : ${detail.value}`, leftColumnX, y);
-        y += 7;
-      });
-
-      y = margin + 23; // Align with the left column
-      rightDetails.forEach((detail) => {
-        pdf.text(`${detail.label} : ${detail.value}`, rightColumnX, y);
-        y += 7;
-      });
-
-      y += 10; // Space before the table
-
-      // Reset font size for other sections
-      pdf.setFontSize(12);
-
-      // Table Section
-      const tableHeaders = ['Date', 'Total Weight', 'Total Collections'];
-      const tableData = this.dailyReports.map((report) => [
-        this.formatDateForDisplay(report.date),
-        report.totalWeight + 'Kg',
-        report.totalPayments,
-      ]);
-
-      const columnWidths = [60, 65, 65]; // Width for each column
-      const tableX = margin; // Starting X position for the table
-      const cellHeight = 10; // Height of each row
-
-      // Draw Table Headers
-      pdf.setFillColor(230, 230, 230);
-      pdf.rect(
-        tableX,
-        y,
-        columnWidths.reduce((a, b) => a + b),
-        cellHeight,
-        'F'
-      ); // Outer border for header
-      tableHeaders.forEach((header, i) => {
-        const cellX =
-          tableX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0); // X position of the cell
-        const headerWidth = pdf.getTextWidth(header); // Width of the text
-        const textX = cellX + (columnWidths[i] - headerWidth) / 2; // Center the text
-        pdf.text(header, textX, y + 7); // Draw centered text
-        pdf.rect(cellX, y, columnWidths[i], cellHeight); // Inner border for header cells
-      });
-
-      y += cellHeight; // Move to the next row
-
-      // Draw Table Data
-      tableData.forEach((row) => {
-        row.forEach((cell, i) => {
-          const cellX =
-            tableX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0); // X position of the cell
-          const cellContentWidth = pdf.getTextWidth(`${cell}`); // Width of the text
-          const textX = cellX + (columnWidths[i] - cellContentWidth) / 2; // Center the text
-          pdf.text(`${cell}`, textX, y + 7); // Cell text
-          pdf.rect(cellX, y, columnWidths[i], cellHeight); // Cell border
+        leftDetails.forEach((detail) => {
+          pdf.text(`${detail.label} : ${detail.value}`, leftColumnX, y);
+          y += 7;
         });
-        y += cellHeight; // Move to the next row
-      });
 
-      // Outer Border for the Table
-      pdf.rect(
-        tableX,
-        y - tableData.length * cellHeight - cellHeight, // Start Y
-        columnWidths.reduce((a, b) => a + b), // Total table width
-        (tableData.length + 1) * cellHeight // Total table height (including header)
-      );
+        y = margin + 23;
+        rightDetails.forEach((detail) => {
+          pdf.text(`${detail.label} : ${detail.value}`, rightColumnX, y);
+          y += 7;
+        });
 
-      // Footer
-      pdf.setFontSize(10);
-      pdf.setTextColor(100);
-      pdf.text(
-        `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
-        margin,
-        pdf.internal.pageSize.getHeight() - margin
-      );
+        y += 10;
 
-      // Save the PDF
-      pdf.save('Collection_Officer_Report.pdf');
+        // Table Section
+        pdf.setFontSize(12);
+        const tableHeaders = ['Date', 'Total Weight', 'Total Collections'];
+        const tableData = this.dailyReports.map((report) => [
+          this.formatDateForDisplay(report.date),
+          report.totalWeight + ' Kg',
+          report.totalPayments,
+        ]);
 
-      this.isDownloading = false; // Hide spinner and enable button
-    }, 0); // setTimeout with 0ms delay to allow UI update
+        const columnWidths = [60, 65, 65];
+        const tableX = margin;
+        const cellHeight = 10;
+
+        // Draw Table Headers
+        pdf.setFillColor(230, 230, 230);
+        pdf.rect(
+          tableX,
+          y,
+          columnWidths.reduce((a, b) => a + b),
+          cellHeight,
+          'F'
+        );
+
+        tableHeaders.forEach((header, i) => {
+          const cellX = tableX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0);
+          const headerWidth = pdf.getTextWidth(header);
+          const textX = cellX + (columnWidths[i] - headerWidth) / 2;
+          pdf.text(header, textX, y + 7);
+          pdf.rect(cellX, y, columnWidths[i], cellHeight);
+        });
+
+        y += cellHeight;
+
+        // Draw Table Data
+        tableData.forEach((row) => {
+          row.forEach((cell, i) => {
+            const cellX = tableX + columnWidths.slice(0, i).reduce((a, b) => a + b, 0);
+            const cellContentWidth = pdf.getTextWidth(`${cell}`);
+            const textX = cellX + (columnWidths[i] - cellContentWidth) / 2;
+            pdf.text(`${cell}`, textX, y + 7);
+            pdf.rect(cellX, y, columnWidths[i], cellHeight);
+          });
+          y += cellHeight;
+        });
+
+        // Outer Border for the Table
+        pdf.rect(
+          tableX,
+          y - tableData.length * cellHeight - cellHeight,
+          columnWidths.reduce((a, b) => a + b),
+          (tableData.length + 1) * cellHeight
+        );
+
+        // Footer
+        pdf.setFontSize(10);
+        pdf.setTextColor(100);
+        pdf.text(
+          `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
+          margin,
+          pdf.internal.pageSize.getHeight() - margin
+        );
+
+        // Save the PDF
+        pdf.save('Collection_Officer_Report.pdf');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      } finally {
+        this.isDownloading = false;
+      }
+    }, 0);
   }
 
   getOfficerDetails(id: number) {
@@ -247,6 +269,7 @@ export class MonthlyReportComponent implements OnInit {
         (error) => {
           console.error('Error fetching collection report:', error);
           this.isLoading = false;
+          this.clearReportData();
         }
       );
   }
@@ -260,7 +283,7 @@ export class MonthlyReportComponent implements OnInit {
 
   calculateTotalFarmers() {
     this.finalTotalFarmers = this.dailyReports.reduce((sum, report) => {
-      const farmers = parseInt(report.totalPayments); // Fixed key
+      const farmers = parseInt(report.totalPayments);
       return !isNaN(farmers) ? sum + farmers : sum;
     }, 0);
   }
@@ -271,7 +294,6 @@ export class MonthlyReportComponent implements OnInit {
 
   convertToISO(date: any): string {
     if (date instanceof Date) {
-      // Create UTC date with the same year, month, and day
       const utcDate = new Date(Date.UTC(
         date.getFullYear(),
         date.getMonth(),
@@ -300,14 +322,12 @@ export class MonthlyReportComponent implements OnInit {
     if (date instanceof Date) {
       dateObj = date;
     } else if (typeof date === 'string') {
-      // Handle string dates (from PrimeNG calendar)
       dateObj = new Date(date);
       if (isNaN(dateObj.getTime())) return '';
     } else {
       return '';
     }
 
-    // Format as MM/DD/YYYY for display (as per your requirement)
     const year = dateObj.getFullYear();
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const day = String(dateObj.getDate()).padStart(2, '0');

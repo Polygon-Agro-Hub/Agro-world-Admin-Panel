@@ -31,6 +31,7 @@ export class PaymentSlipReportComponent {
   lastName: string = '';
   QRcode: string = '';
   empId: string = '';
+  totalItems: number = 0;
 
   constructor(
     private paymentSlipReportService: PaymentSlipReportService,

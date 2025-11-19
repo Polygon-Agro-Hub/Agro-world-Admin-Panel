@@ -41,4 +41,8 @@ export class FinanceActionComponent {
   PaymentHistoryNavigation(): void {
     this.router.navigate(['/finance/action/viewAll-payments']);
   }
+
+  back(): void {
+    this.router.navigate(['finance/action']);
+  }
 }

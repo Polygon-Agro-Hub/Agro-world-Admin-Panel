@@ -74,57 +74,57 @@
           </div>
 
           <div
-  class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
->
-  <input
-    type="text"
-    placeholder="Search by Order ID"
-    [(ngModel)]="searchText"
-    name="searchText"
-    (keydown.enter)="onSearch()"
-    class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-  />
-  <button
-    type="button"
-    class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-    (click)="onSearch()"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="h-5 w-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-      />
-    </svg>
-  </button>
-  <button
-    type="button"
-    class="text-gray-500 hover:text-gray-700 focus:outline-none"
-    (click)="clearSearch()"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="h-5 w-5"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-  </button>
-</div>
+            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+          >
+            <input
+              type="text"
+              placeholder="Search by Order ID"
+              [(ngModel)]="searchText"
+              name="searchText"
+              (keydown.enter)="onSearch()"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            />
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="onSearch()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none"
+              (click)="clearSearch()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -173,29 +173,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.firstNameEnglish }} {{ item.lastNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              <!-- Dynamic schedule date display -->
-              <span *ngIf="isToday(item.sheduleDate)" class="text-[#FF0000]">
-                Today 8-12 AM
-              </span>
-              <span *ngIf="isTomorrow(item.sheduleDate)" class="text-[#415CFF]">
-                Tomorrow 8-12 AM
-              </span>
-              <span
-                *ngIf="isDayAfterTomorrow(item.sheduleDate)"
-                class="text-[#070707] dark:text-white"
-              >
-                Day after tomorrow 4-8 PM
-              </span>
-              <span
-                *ngIf="
-                  !isToday(item.sheduleDate) &&
-                  !isTomorrow(item.sheduleDate) &&
-                  !isDayAfterTomorrow(item.sheduleDate)
-                "
-                class="text-gray-500"
-              >
-                {{ item.sheduleDate | date : "mediumDate" }}
+            <td class="px-4 py-3 text-left">
+              <!-- Updated Delivery Time Slot with color function -->
+              <span [style.color]="getDateColor(item)">
+                {{ getDisplayDate(item.sheduleDate) }}
               </span>
             </td>
             <td class="px-4 py-3 text-center">
@@ -244,17 +225,6 @@
           </tr>
         </tbody>
       </table>
-      <!-- <div *ngIf="hasData" class="dark:bg-[#262f45]">
-        <pagination-controls
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        >
-        </pagination-controls>
-      </div> -->
 
       <div
         *ngIf="!hasData"

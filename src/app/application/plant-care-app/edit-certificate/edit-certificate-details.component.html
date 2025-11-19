@@ -221,24 +221,43 @@
         </div>
       </div>
 
-      <!-- Price -->
+      <!-- Price - Updated to allow decimals -->
       <div class="my-3">
         <label for="price" class="block text-sm font-medium text-textLight dark:text-textDark">Price (Rs.) *</label>
-        <input id="price" type="number" formControlName="price" (input)="trimLeadingSpaces($event, 'price')"
-          (keydown)="preventDecimalInput($event)" min="0"
+        <input id="price" type="text" formControlName="price" (input)="trimLeadingSpaces($event, 'price')"
+          (keypress)="allowDecimalInputForPrice($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
       'border-red-500':
         certificateForm.get('price')?.invalid &&
         certificateForm.get('price')?.touched
     }" />
+
+        <!-- Required error -->
         <div *ngIf="
-      certificateForm.get('price')?.invalid &&
+      certificateForm.get('price')?.errors?.['required'] &&
       certificateForm.get('price')?.touched
     " class="text-red-500 text-sm mt-1">
-          Price is required and must be a positive number
+          Price is required
+        </div>
+
+        <!-- Negative value error -->
+        <div *ngIf="
+      certificateForm.get('price')?.errors?.['min'] &&
+      certificateForm.get('price')?.touched
+    " class="text-red-500 text-sm mt-1">
+          Price must be greater than or equal to 0
+        </div>
+
+        <!-- Pattern error -->
+        <div *ngIf="
+      certificateForm.get('price')?.errors?.['pattern'] &&
+      certificateForm.get('price')?.touched
+    " class="text-red-500 text-sm mt-1">
+          Please enter a valid number (e.g., 1250.50)
         </div>
       </div>
+
       <!-- Timeline (Months) - Already has preventDecimalInput, ensure it's there -->
       <div class="my-3">
         <label for="timeLine" class="block text-sm font-medium text-textLight dark:text-textDark">Timeline (Months)

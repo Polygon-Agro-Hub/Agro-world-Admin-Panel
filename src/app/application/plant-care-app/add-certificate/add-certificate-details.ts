@@ -108,7 +108,14 @@ export class AddCertificateDetailsComponent implements OnInit {
       applicable: ['', Validators.required],
       accreditation: ['', Validators.required],
       serviceAreas: [[], Validators.required],
-      price: ['', [Validators.required, Validators.min(0)]],
+      price: [
+        '', 
+        [
+          Validators.required, 
+          Validators.min(0),
+          Validators.pattern(/^\d*\.?\d*$/)
+        ]
+      ],
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
         '',
@@ -120,7 +127,14 @@ export class AddCertificateDetailsComponent implements OnInit {
         ],
       ],
       scope: ['', Validators.required],
-      noOfVisit: ['', [Validators.required, Validators.min(0)]],
+      noOfVisit: [
+        '', 
+        [
+          Validators.required, 
+          Validators.min(0),
+          Validators.pattern(/^\d+$/)
+        ]
+      ],
       tearmsFile: [null, Validators.required],
       logo: [null, Validators.required],
     });

@@ -114,7 +114,11 @@ export class EditCertificateDetailsComponent implements OnInit {
       applicable: ['', Validators.required],
       accreditation: ['', Validators.required],
       serviceAreas: [[], Validators.required],
-      price: ['', [Validators.required, Validators.min(0)]],
+      price: ['', [
+        Validators.required, 
+        Validators.min(0),
+        Validators.pattern(/^\d*\.?\d*$/)
+      ]],
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
         '',
@@ -497,6 +501,8 @@ export class EditCertificateDetailsComponent implements OnInit {
       missingFields.push('Price');
     } else if (this.certificateForm.get('price')?.errors?.['min']) {
       missingFields.push('Price (must be greater than or equal to 0)');
+    } else if (this.certificateForm.get('price')?.errors?.['pattern']) {
+      missingFields.push('Price (must be a valid number)');
     }
 
     if (this.certificateForm.get('timeLine')?.errors?.['required']) {
@@ -511,6 +517,8 @@ export class EditCertificateDetailsComponent implements OnInit {
       missingFields.push('Commission (must be between 0% and 100%)');
     } else if (this.certificateForm.get('commission')?.errors?.['max']) {
       missingFields.push('Commission (must be between 0% and 100%)');
+    } else if (this.certificateForm.get('commission')?.errors?.['pattern']) {
+      missingFields.push('Commission (must be a valid number)');
     }
 
     if (this.certificateForm.get('scope')?.errors?.['required']) {
@@ -595,8 +603,6 @@ export class EditCertificateDetailsComponent implements OnInit {
       }
     });
   }
-
-
 
   private updateCertificate(): void {
     this.isLoading = true;
@@ -775,6 +781,45 @@ export class EditCertificateDetailsComponent implements OnInit {
     }
   }
 
+  // Allow decimal input for price field
+  allowDecimalInputForPrice(event: KeyboardEvent): void {
+    const charCode = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    // Allow: backspace, delete, tab, escape, enter
+    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
+      return;
+    }
+
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (
+      event.ctrlKey &&
+      ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())
+    ) {
+      return;
+    }
+
+    // Block hyphen
+    if (charCode === '-') {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow: numbers 0-9
+    if (charCode >= '0' && charCode <= '9') {
+      return;
+    }
+
+    // Allow: decimal point (only one)
+    if (charCode === '.' && !currentValue.includes('.')) {
+      return;
+    }
+
+    // Prevent any other key
+    event.preventDefault();
+  }
+
   // Add the allowDecimalInput method for commission field
   allowDecimalInput(event: KeyboardEvent): void {
     const charCode = event.key;
@@ -813,6 +858,4 @@ export class EditCertificateDetailsComponent implements OnInit {
     // Prevent any other key
     event.preventDefault();
   }
-
-
 }

@@ -22,7 +22,7 @@ export class PaymentSlipReportComponent {
   page: number = 1;
   itemsPerPage: number = 10;
   isLoading = false;
-  createdDate: string = new Date().toISOString().split('T')[0];
+  createdDate: Date = new Date(); // Changed to Date type
   isTableVisible: boolean = true;
   hasData: boolean = true;
   searchNIC: string = '';
@@ -103,6 +103,7 @@ export class PaymentSlipReportComponent {
 
 
   searchPlantCareUsers() {
+    this.searchNIC = this.searchNIC.trim(); 
     this.page = 1;
     this.loadPayments();
   }

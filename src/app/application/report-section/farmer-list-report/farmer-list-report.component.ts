@@ -36,7 +36,7 @@ export class FarmerListReportComponent {
     private route: ActivatedRoute,
     private http: HttpClient,
     private sanitizer: DomSanitizer
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     console.log(this.famerID);
@@ -100,7 +100,7 @@ export class FarmerListReportComponent {
   //     }));
   // }
 
-  async downloadPDF(inv : any) {
+  async downloadPDF(inv: any) {
     this.isLoadingButton = true;
     try {
       // console.log('Starting PDF generation...');
@@ -218,16 +218,26 @@ export class FarmerListReportComponent {
         'Phone Number',
         'Address',
       ];
-      const personalColWidths = [30, 30, 40, 40, 50];
+      const personalColWidths = [25, 25, 35, 35, 70];
 
       // Check if farmerList exists
       if (!this.farmerList) {
         throw new Error('Farmer data is not available');
       }
 
-      const address = `${safeText(this.farmerList.houseNo)}, ${safeText(
-        this.farmerList.streetName
-      )}, ${safeText(this.farmerList.city)}`;
+      // Handle address with proper null/empty checks
+      let address = '-';
+      const houseNo = this.farmerList.houseNo?.trim();
+      const streetName = this.farmerList.streetName?.trim();
+      const city = this.farmerList.city?.trim();
+
+      if (houseNo || streetName || city) {
+        const addressParts = [];
+        if (houseNo) addressParts.push(houseNo);
+        if (streetName) addressParts.push(streetName);
+        if (city) addressParts.push(city);
+        address = addressParts.join(', ');
+      }
 
       const personalRow = [
         safeText(this.farmerList.firstName),
@@ -314,6 +324,8 @@ export class FarmerListReportComponent {
 
       // Crop Details Table
       // console.log('Generating Crop Details section...');
+      // Crop Details Table
+      // console.log('Generating Crop Details section...');
       if (!this.cropList || !Array.isArray(this.cropList)) {
         throw new Error('Crop list is not available or not an array');
       }
@@ -334,8 +346,7 @@ export class FarmerListReportComponent {
         'Quantity (C)',
         'Total (Rs.)',
       ];
-      const cropColWidths = [20, 37, 19, 19, 19, 19, 19, 19, 19];
-
+      const cropColWidths = [30, 30, 18, 18, 18, 18, 18, 18, 22];
       // Draw Crop Headers
       drawGrid(doc, 10, yPosition, cropColWidths, 1);
       xPosition = 10;
@@ -388,7 +399,7 @@ export class FarmerListReportComponent {
       yPosition += 10;
       doc.setFontSize(12);
       const total = this.getTotal();
-      doc.text(`Full Total (Rs.): ${total.toFixed(2)}`, 10, yPosition);
+      doc.text(`Full Total (Rs.): ${this.formatNumberWithCommas(total)}`, 10, yPosition);
 
       // QR Codes Section
       // console.log('Processing QR codes...');
@@ -466,11 +477,11 @@ export class FarmerListReportComponent {
   }
 
   formatNumberWithCommas(number: number): string {
-  return number.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
+    return number.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
 }
 
 class FarmerList {

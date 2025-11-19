@@ -10,6 +10,8 @@ interface DashboardData {
   grainCultivation: number;
   fruitCultivation: number;
   mushCultivation: number;
+  leLegumesCultivation: number;
+  spicesCultivation: number
   allusers: number;
   qrUsers: number;
 }

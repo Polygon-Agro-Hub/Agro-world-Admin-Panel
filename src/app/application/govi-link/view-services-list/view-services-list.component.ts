@@ -21,7 +21,6 @@ export class ViewServicesListComponent implements OnInit {
   loading = true;
   isLoading = false;
   searchTerm: string = '';
-  hasData: boolean = true;
 
   constructor(
     private goviLinkService: GoviLinkService,
@@ -40,7 +39,7 @@ export class ViewServicesListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching services:', err);
-        this.loading = false;
+        this.isLoading = false;
       }
     });
   }

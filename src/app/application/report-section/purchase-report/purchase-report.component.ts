@@ -119,6 +119,12 @@ export class PurchaseReportComponent {
   }
 
   fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
+    // If either fromDate or toDate is null/cleared, clear the data
+    if (!this.fromDate || !this.toDate) {
+      this.clearData();
+      return;
+    }
+
     this.isLoading = true;
     const centerId = this.selectedCenter?.id || '';
     
@@ -161,6 +167,14 @@ export class PurchaseReportComponent {
       );
   }
 
+  // New method to clear data when dates are cleared
+  clearData(): void {
+    this.purchaseReport = [];
+    this.totalItems = 0;
+    this.grandTotal = 0;
+    this.page = 1;
+  }
+
   onPageChange(event: number) {
     this.page = event;
     this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
@@ -198,6 +212,19 @@ export class PurchaseReportComponent {
     this.fetchAllPurchaseReport();
   }
 
+  // New method to handle when fromDate is cleared
+  onFromDateClear(): void {
+    this.fromDate = null;
+    this.toDate = null; // Also clear toDate when fromDate is cleared
+    this.clearData();
+  }
+
+  // New method to handle when toDate is cleared
+  onToDateClear(): void {
+    this.toDate = null;
+    this.clearData();
+  }
+
   getAllCenters() {
     this.collectionoOfficer.getAllCenters().subscribe(
       (res) => {
@@ -210,118 +237,118 @@ export class PurchaseReportComponent {
   }
 
   downloadTemplate1() {
-  this.isDownloading = true;
+    this.isDownloading = true;
 
-  let queryParams = [];
+    let queryParams = [];
 
-  if (this.selectedCenter) {
-    queryParams.push(`centerId=${this.selectedCenter.id}`);
-  }
-
-  if (this.fromDate) {
-    const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
-    queryParams.push(`startDate=${formattedFromDate}`);
-  }
-
-  if (this.toDate) {
-    const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
-    queryParams.push(`endDate=${formattedToDate}`);
-  }
-
-  if (this.search) {
-    queryParams.push(`search=${this.search}`);
-  }
-
-  const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-
-  const apiUrl = `${environment.API_URL}auth/download-purchase-report${queryString}`;
-
-  fetch(apiUrl, {
-    method: 'GET',
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.blob();
-      } else {
-        throw new Error('Failed to download the file');
-      }
-    })
-    .then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-
-      // Generate filename according to requirements
-      const filename = this.generateFileName();
-      a.download = filename;
-
-      a.click();
-      window.URL.revokeObjectURL(url);
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Downloaded',
-        text: 'Please check your downloads folder',
-      });
-      this.isDownloading = false;
-    })
-    .catch((error) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Download Failed',
-        text: error.message,
-      });
-      this.isDownloading = false;
-    });
-}
-
-// Helper method to generate the filename
-private generateFileName(): string {
-  const now = new Date();
-  const generatedDate = this.datePipe.transform(now, 'MM/dd');
-  const generatedTime = this.datePipe.transform(now, 'hh.mm a');
-  
-  let fileName = 'Purchase Report';
-  
-  // Add center code if selected
-  if (this.selectedCenter) {
-    fileName += ` of ${this.selectedCenter.regCode}`;
-  }
-  
-  // Add date range
-  if (this.fromDate && this.toDate) {
-    const fromDateFormatted = this.formatDateForFilename(this.fromDate);
-    const toDateFormatted = this.formatDateForFilename(this.toDate);
-    fileName += ` on ${fromDateFormatted} to ${toDateFormatted}`;
-  } else if (this.fromDate) {
-    const fromDateFormatted = this.formatDateForFilename(this.fromDate);
-    fileName += ` on ${fromDateFormatted}`;
-  }
-  
-  // Add generated timestamp
-  fileName += ` Generated at ${generatedDate} ${generatedTime}`;
-  
-  return fileName + '.xlsx';
-}
-
-// Helper method to format date as "04th August"
-private formatDateForFilename(date: Date): string {
-  const day = date.getDate();
-  const month = this.datePipe.transform(date, 'MMMM');
-  
-  // Add ordinal suffix to day
-  const getOrdinalSuffix = (day: number): string => {
-    if (day > 3 && day < 21) return 'th';
-    switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+    if (this.selectedCenter) {
+      queryParams.push(`centerId=${this.selectedCenter.id}`);
     }
-  };
-  
-  return `${day}${getOrdinalSuffix(day)} ${month}`;
-}
+
+    if (this.fromDate) {
+      const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
+      queryParams.push(`startDate=${formattedFromDate}`);
+    }
+
+    if (this.toDate) {
+      const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+      queryParams.push(`endDate=${formattedToDate}`);
+    }
+
+    if (this.search) {
+      queryParams.push(`search=${this.search}`);
+    }
+
+    const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+
+    const apiUrl = `${environment.API_URL}auth/download-purchase-report${queryString}`;
+
+    fetch(apiUrl, {
+      method: 'GET',
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Failed to download the file');
+        }
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        // Generate filename according to requirements
+        const filename = this.generateFileName();
+        a.download = filename;
+
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Downloaded',
+          text: 'Please check your downloads folder',
+        });
+        this.isDownloading = false;
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Download Failed',
+          text: error.message,
+        });
+        this.isDownloading = false;
+      });
+  }
+
+  // Helper method to generate the filename
+  private generateFileName(): string {
+    const now = new Date();
+    const generatedDate = this.datePipe.transform(now, 'MM/dd');
+    const generatedTime = this.datePipe.transform(now, 'hh.mm a');
+    
+    let fileName = 'Purchase Report';
+    
+    // Add center code if selected
+    if (this.selectedCenter) {
+      fileName += ` of ${this.selectedCenter.regCode}`;
+    }
+    
+    // Add date range
+    if (this.fromDate && this.toDate) {
+      const fromDateFormatted = this.formatDateForFilename(this.fromDate);
+      const toDateFormatted = this.formatDateForFilename(this.toDate);
+      fileName += ` on ${fromDateFormatted} to ${toDateFormatted}`;
+    } else if (this.fromDate) {
+      const fromDateFormatted = this.formatDateForFilename(this.fromDate);
+      fileName += ` on ${fromDateFormatted}`;
+    }
+    
+    // Add generated timestamp
+    fileName += ` Generated at ${generatedDate} ${generatedTime}`;
+    
+    return fileName + '.xlsx';
+  }
+
+  // Helper method to format date as "04th August"
+  private formatDateForFilename(date: Date): string {
+    const day = date.getDate();
+    const month = this.datePipe.transform(date, 'MMMM');
+    
+    // Add ordinal suffix to day
+    const getOrdinalSuffix = (day: number): string => {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
+    
+    return `${day}${getOrdinalSuffix(day)} ${month}`;
+  }
 
   navigateToFamerListReport(id: number, userId: number, QRcode: string) {
     this.router.navigate(['/reports/farmer-list-report'], {

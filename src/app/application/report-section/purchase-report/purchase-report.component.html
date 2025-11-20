@@ -14,66 +14,69 @@
   >
     
     <!-- From Date -->
-    <div class="flex items-center gap-2 w-full">
-      <label
-        for="fromDate"
-        class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
-        >From:</label
-      >
-      <p-calendar
-        id="fromDate"
-        [(ngModel)]="fromDate"
-        placeholder="YYYY/MM/DD"
-        [showIcon]="true"
-        [showClear]="false"
-        [showButtonBar]="true"
-        iconDisplay="input"
-        [style]="{ width: '20rem', height: '2.5rem' }"
-        [maxDate]="maxDate"
-        [selectOtherMonths]="false"
-        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-               [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-               [&_.p-datepicker-header]:dark:text-white
-               [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-               [&_.p-button:hover]:dark:bg-[#6b7280]"
-        inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
-        (onSelect)="onFromDateSelect()" 
-      />
-    </div>
+    <!-- From Date -->
+<div class="flex items-center gap-2 w-full">
+  <label
+    for="fromDate"
+    class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
+    >From:</label
+  >
+  <p-calendar
+    id="fromDate"
+    [(ngModel)]="fromDate"
+    placeholder="YYYY/MM/DD"
+    [showIcon]="true"
+    [showClear]="true"
+    [showButtonBar]="true"
+    iconDisplay="input"
+    [style]="{ width: '20rem', height: '2.5rem' }"
+    [maxDate]="maxDate"
+    [selectOtherMonths]="false"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+           [&_.p-datepicker-header]:dark:text-white
+           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+           [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
+    (onSelect)="onFromDateSelect()" 
+    (onClear)="onFromDateClear()"
+  />
+</div>
 
-    <!-- To Date -->
-    <div class="flex items-center gap-2 w-full">
-      <label
-        for="toDate"
-        class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
-        >To:</label
-      >
-      <p-calendar
-        id="toDate"
-        [(ngModel)]="toDate"
-        placeholder="YYYY/MM/DD"
-        [showIcon]="true"
-        [showClear]="false"
-        [showButtonBar]="true"
-        iconDisplay="input"
-        [style]="{ width: '20rem', height: '2.5rem' }"
-        [minDate]="fromDate"
-        [maxDate]="maxDate"
-        [selectOtherMonths]="false"
-        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-               [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-               [&_.p-datepicker-header]:dark:text-white
-               [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-               [&_.p-button:hover]:dark:bg-[#6b7280]"
-        inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
-        [disabled]="!fromDate"
-        (onSelect)="onToDateSelect()"
-      />
-    </div>
+<!-- To Date -->
+<div class="flex items-center gap-2 w-full">
+  <label
+    for="toDate"
+    class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
+    >To:</label
+  >
+  <p-calendar
+    id="toDate"
+    [(ngModel)]="toDate"
+    placeholder="YYYY/MM/DD"
+    [showIcon]="true"
+    [showClear]="true"
+    [showButtonBar]="true"
+    iconDisplay="input"
+    [style]="{ width: '20rem', height: '2.5rem' }"
+    [minDate]="fromDate"
+    [maxDate]="maxDate"
+    [selectOtherMonths]="false"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+           [&_.p-datepicker-header]:dark:text-white
+           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+           [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
+    [disabled]="!fromDate"
+    (onSelect)="onToDateSelect()"
+    (onClear)="onToDateClear()"
+  />
+</div>
 
     <!-- Go Button -->
     <div class="flex items-center">

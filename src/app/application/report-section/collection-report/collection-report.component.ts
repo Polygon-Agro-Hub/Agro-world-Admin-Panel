@@ -160,133 +160,133 @@ export class CollectionReportComponent {
   }
 
   downloadTemplate1() {
-  this.isDownloading = true;
+    this.isDownloading = true;
 
-  let queryParams = [];
+    let queryParams = [];
 
-  if (this.selectedCenter) {
-    queryParams.push(`centerId=${this.selectedCenter.id}`);
-  }
-
-  // Convert Date objects to formatted strings for download
-  const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
-  const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
-
-  if (formattedFromDate) {
-    queryParams.push(`startDate=${formattedFromDate}`);
-  }
-
-  if (formattedToDate) {
-    queryParams.push(`endDate=${formattedToDate}`);
-  }
-
-  if (this.search) {
-    queryParams.push(`search=${this.search}`);
-  }
-
-  const queryString =
-    queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-  const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
-
-  fetch(apiUrl, {
-    method: 'GET',
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.blob();
-      } else {
-        throw new Error('Failed to download the file');
-      }
-    })
-    .then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-
-      // Generate filename according to requirements
-      let filename = 'Collection Report';
-      
-      // Add centre code if selected
-      if (this.selectedCenter) {
-        filename += ` of ${this.selectedCenter.regCode}`;
-      }
-      
-      // Add date range if both dates are selected
-      if (formattedFromDate && formattedToDate) {
-        const fromDateObj = new Date(this.fromDate!);
-        const toDateObj = new Date(this.toDate!);
-        
-        const fromDateFormatted = this.formatDateForFilename(fromDateObj);
-        const toDateFormatted = this.formatDateForFilename(toDateObj);
-        
-        filename += ` on ${fromDateFormatted} to ${toDateFormatted}`;
-      } else if (formattedFromDate) {
-        // If only from date is selected
-        const fromDateObj = new Date(this.fromDate!);
-        const fromDateFormatted = this.formatDateForFilename(fromDateObj);
-        filename += ` on ${fromDateFormatted}`;
-      }
-      
-      // Add generation timestamp
-      const now = new Date();
-      const generatedDate = this.formatDateForFilename(now, true);
-      const generatedTime = this.datePipe.transform(now, 'hh:mm a') || 'Unknown Time';
-      
-      filename += ` Generated at ${generatedDate} ${generatedTime}`;
-      
-      filename += '.xlsx';
-
-      a.download = filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Downloaded',
-        text: 'Please check your downloads folder',
-      });
-      this.isDownloading = false;
-    })
-    .catch((error) => {
-      Swal.fire({
-        icon: 'error',
-        title: 'Download Failed',
-        text: error.message,
-      });
-      this.isDownloading = false;
-    });
-}
-
-// Helper method to format dates for filename (04th August format)
-private formatDateForFilename(date: Date, forGeneration: boolean = false): string {
-  const day = date.getDate();
-  const month = date.toLocaleString('en-US', { month: 'long' });
-  const year = date.getFullYear();
-  
-  // Add ordinal suffix to day
-  const getOrdinalSuffix = (day: number): string => {
-    if (day > 3 && day < 21) return 'th';
-    switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+    if (this.selectedCenter) {
+      queryParams.push(`centerId=${this.selectedCenter.id}`);
     }
-  };
 
-  const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
-  
-  if (forGeneration) {
-    // For generation timestamp, use MM/DD format (08/04)
-    const monthNum = date.getMonth() + 1;
-    const formattedMonth = monthNum.toString().padStart(2, '0');
-    const formattedDay = date.getDate().toString().padStart(2, '0');
-    return `${formattedMonth}/${formattedDay}`;
-  } else {
-    // For date ranges, use "04th August" format
-    return `${dayWithSuffix} ${month}${year !== new Date().getFullYear() ? ' ' + year : ''}`;
+    // Convert Date objects to formatted strings for download
+    const formattedFromDate = this.fromDate ? this.datePipe.transform(this.fromDate, 'yyyy-MM-dd') : '';
+    const formattedToDate = this.toDate ? this.datePipe.transform(this.toDate, 'yyyy-MM-dd') : '';
+
+    if (formattedFromDate) {
+      queryParams.push(`startDate=${formattedFromDate}`);
+    }
+
+    if (formattedToDate) {
+      queryParams.push(`endDate=${formattedToDate}`);
+    }
+
+    if (this.search) {
+      queryParams.push(`search=${this.search}`);
+    }
+
+    const queryString =
+      queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+    const apiUrl = `${environment.API_URL}auth/download-collection-report${queryString}`;
+
+    fetch(apiUrl, {
+      method: 'GET',
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Failed to download the file');
+        }
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+
+        // Generate filename according to requirements
+        let filename = 'Collection Report';
+        
+        // Add centre code if selected
+        if (this.selectedCenter) {
+          filename += ` of ${this.selectedCenter.regCode}`;
+        }
+        
+        // Add date range if both dates are selected
+        if (formattedFromDate && formattedToDate) {
+          const fromDateObj = new Date(this.fromDate!);
+          const toDateObj = new Date(this.toDate!);
+          
+          const fromDateFormatted = this.formatDateForFilename(fromDateObj);
+          const toDateFormatted = this.formatDateForFilename(toDateObj);
+          
+          filename += ` on ${fromDateFormatted} to ${toDateFormatted}`;
+        } else if (formattedFromDate) {
+          // If only from date is selected
+          const fromDateObj = new Date(this.fromDate!);
+          const fromDateFormatted = this.formatDateForFilename(fromDateObj);
+          filename += ` on ${fromDateFormatted}`;
+        }
+        
+        // Add generation timestamp
+        const now = new Date();
+        const generatedDate = this.formatDateForFilename(now, true);
+        const generatedTime = this.datePipe.transform(now, 'hh:mm a') || 'Unknown Time';
+        
+        filename += ` Generated at ${generatedDate} ${generatedTime}`;
+        
+        filename += '.xlsx';
+
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Downloaded',
+          text: 'Please check your downloads folder',
+        });
+        this.isDownloading = false;
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Download Failed',
+          text: error.message,
+        });
+        this.isDownloading = false;
+      });
   }
-}
+
+  // Helper method to format dates for filename (04th August format)
+  private formatDateForFilename(date: Date, forGeneration: boolean = false): string {
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const year = date.getFullYear();
+    
+    // Add ordinal suffix to day
+    const getOrdinalSuffix = (day: number): string => {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
+
+    const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
+    
+    if (forGeneration) {
+      // For generation timestamp, use MM/DD format (08/04)
+      const monthNum = date.getMonth() + 1;
+      const formattedMonth = monthNum.toString().padStart(2, '0');
+      const formattedDay = date.getDate().toString().padStart(2, '0');
+      return `${formattedMonth}/${formattedDay}`;
+    } else {
+      // For date ranges, use "04th August" format
+      return `${dayWithSuffix} ${month}${year !== new Date().getFullYear() ? ' ' + year : ''}`;
+    }
+  }
 
   // Method to handle from date selection
   onFromDateChange() {
@@ -309,6 +309,31 @@ private formatDateForFilename(date: Date, forGeneration: boolean = false): strin
   // Getter to check if from date is selected
   get isFromDateSelected(): boolean {
     return !!this.fromDate;
+  }
+
+  // New method to clear data when dates are cleared
+  clearData(): void {
+    this.purchaseReport = [];
+    this.totalItems = 0;
+    this.page = 1;
+  }
+
+  // New method to handle when fromDate is cleared
+  onFromDateClear(): void {
+    this.fromDate = null;
+    this.toDate = null; // Also clear toDate when fromDate is cleared
+    this.clearData();
+  }
+
+  // New method to handle when toDate is cleared
+  onToDateClear(): void {
+    this.toDate = null;
+    this.clearData();
+  }
+
+  onPageChange(event: number) {
+    this.page = event;
+    this.fetchAllCollectionReport(this.page, this.itemsPerPage);
   }
 }
 

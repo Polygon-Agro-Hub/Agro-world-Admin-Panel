@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -89,6 +89,37 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   // Set minimum date for date picker
   setMinDate(): void {
     this.minDate = new Date();
+  }
+
+  // Handle search input to prevent spaces at the beginning
+  handleSearchInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    
+    // Remove spaces at the beginning
+    const newValue = value.replace(/^\s+/, '');
+    
+    if (value !== newValue) {
+      this.searchTerm = newValue;
+      // Force update the input value
+      setTimeout(() => {
+        input.value = newValue;
+      });
+    }
+  }
+
+  // Prevent space key when cursor is at the beginning of search input
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    const target = event.target as HTMLInputElement;
+    
+    // Check if the event target is our search input
+    if (target && target.type === 'text' && target.placeholder === 'Search by Farmer Name/Phone') {
+      // Prevent space when cursor is at the beginning
+      if (event.key === ' ' && target.selectionStart === 0) {
+        event.preventDefault();
+      }
+    }
   }
 
   onSearch() {
@@ -262,11 +293,8 @@ export class IndividualFarmersAuditsComponent implements OnInit {
                 activeJobCount: officer.jobCount || 0,
               })
             );
-            // console.log(this.availableOfficers);
             
             // If there's a currently assigned officer, try to pre-select them
-            console.log(this.currentAssignedOfficer);
-            
             if (
               this.currentAssignedOfficer &&
               this.availableOfficers.length > 0
@@ -274,7 +302,6 @@ export class IndividualFarmersAuditsComponent implements OnInit {
               const currentOfficer = this.availableOfficers.find(
                 (officer) => officer.empId === this.currentAssignedOfficer.empId
               );
-              console.log("CURRENToFFICER ",currentOfficer);
               
               if (currentOfficer) {
                 this.selectedOfficerId = currentOfficer.empId;

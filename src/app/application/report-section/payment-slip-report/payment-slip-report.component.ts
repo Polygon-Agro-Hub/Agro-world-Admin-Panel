@@ -22,7 +22,7 @@ export class PaymentSlipReportComponent {
   page: number = 1;
   itemsPerPage: number = 10;
   isLoading = false;
-  createdDate: Date = new Date(); // Changed to Date type
+  createdDate: Date = new Date(); 
   isTableVisible: boolean = true;
   hasData: boolean = true;
   searchNIC: string = '';
@@ -31,6 +31,7 @@ export class PaymentSlipReportComponent {
   lastName: string = '';
   QRcode: string = '';
   empId: string = '';
+  totalItems: number = 0;
 
   constructor(
     private paymentSlipReportService: PaymentSlipReportService,
@@ -54,7 +55,7 @@ export class PaymentSlipReportComponent {
 
   loadPayments(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    this.payments = []; // Reset payments array
+    this.payments = []; 
     this.total = 0;
     this.isTableVisible = false;
 
@@ -88,7 +89,7 @@ export class PaymentSlipReportComponent {
 
   onPageChange(event: number) {
     this.page = event;
-    this.loadPayments(this.page, this.itemsPerPage); // Include itemsPerPage
+    this.loadPayments(this.page, this.itemsPerPage);
   }
 
   onDateChange(): void {

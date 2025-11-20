@@ -219,7 +219,7 @@ export class CollectionReportComponent {
           const fromDateFormatted = this.formatDateForFilename(fromDateObj);
           const toDateFormatted = this.formatDateForFilename(toDateObj);
           
-          filename += ` on ${fromDateFormatted} to ${toDateFormatted}`;
+          filename += ` from ${fromDateFormatted} to ${toDateFormatted}`;
         } else if (formattedFromDate) {
           // If only from date is selected
           const fromDateObj = new Date(this.fromDate!);
@@ -229,8 +229,8 @@ export class CollectionReportComponent {
         
         // Add generation timestamp
         const now = new Date();
-        const generatedDate = this.formatDateForFilename(now, true);
-        const generatedTime = this.datePipe.transform(now, 'hh:mm a') || 'Unknown Time';
+        const generatedDate = this.formatDateForGeneration(now);
+        const generatedTime = this.formatTimeForFilename(now);
         
         filename += ` Generated at ${generatedDate} ${generatedTime}`;
         
@@ -257,8 +257,8 @@ export class CollectionReportComponent {
       });
   }
 
-  // Helper method to format dates for filename (04th August format)
-  private formatDateForFilename(date: Date, forGeneration: boolean = false): string {
+  // Format date for filename (removes underscores and uses proper formatting)
+  private formatDateForFilename(date: Date): string {
     const day = date.getDate();
     const month = date.toLocaleString('en-US', { month: 'long' });
     const year = date.getFullYear();
@@ -276,16 +276,30 @@ export class CollectionReportComponent {
 
     const dayWithSuffix = `${day}${getOrdinalSuffix(day)}`;
     
-    if (forGeneration) {
-      // For generation timestamp, use MM/DD format (08/04)
-      const monthNum = date.getMonth() + 1;
-      const formattedMonth = monthNum.toString().padStart(2, '0');
-      const formattedDay = date.getDate().toString().padStart(2, '0');
-      return `${formattedMonth}/${formattedDay}`;
-    } else {
-      // For date ranges, use "04th August" format
-      return `${dayWithSuffix} ${month}${year !== new Date().getFullYear() ? ' ' + year : ''}`;
-    }
+    // Return format: "04th August 2023" (no underscores)
+    return `${dayWithSuffix} ${month} ${year}`;
+  }
+
+  // Format date for generation timestamp (MM.DD format)
+  private formatDateForGeneration(date: Date): string {
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    
+    // Return format: "08.04" (month.day)
+    return `${month}.${day}`;
+  }
+
+  // Format time for filename (removes special characters)
+  private formatTimeForFilename(date: Date): string {
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    
+    // Format: HH.MM AM/PM (using dots instead of colons)
+    return `${hours.toString().padStart(2, '0')}.${minutes} ${ampm}`;
   }
 
   // Method to handle from date selection

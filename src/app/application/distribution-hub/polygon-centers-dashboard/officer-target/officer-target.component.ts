@@ -51,8 +51,8 @@ export class OfficerTargetComponent implements OnChanges {
     )
   }
 
-  selectOfficer(id: number) {
-    this.router.navigate([`/distribution-hub/action/view-polygon-centers/selected-officer-target`], { queryParams: { targetId: id } })
+  selectOfficer(targetId: number) {
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/selected-officer-target`], { queryParams: { targetId: targetId } })
   }
 
   private formatDateForAPI(date: Date | null): string {
@@ -79,4 +79,5 @@ class Orders {
   empId!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
+  targetId!: number;
 }

@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe, Location  } from '@angular/common';
+import { CommonModule, DatePipe, Location } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
@@ -26,26 +26,29 @@ export class SelectedOfficerTargetComponent implements OnInit {
 
   officerId: number = 66;
 
-  date:  string = '';
+  date: string = '';
 
   page: number = 1;
   totalItems: number = 0;
   itemsPerPage: number = 10;
   hasData: boolean = true;
 
-  isLoading:boolean = true;
+  isLoading: boolean = true;
 
   selectedOfficerId: number | '' = '';
 
-  selectedOrderIds: number[] = []; 
+  selectedOrderIds: number[] = [];
   allChecked: boolean = false;
-  
-  filteredOrdersArr!: orders[] 
+
+  filteredOrdersArr!: orders[]
 
   isPassTarget = false;
 
   isStatusDropdownOpen = false;
   statusDropdownOptions = ['Pending', 'Completed', 'Opened'];
+  selectCompletingStatus: string = '';
+  isCompletingStatusDropdownOpen = false;
+  completingStatusDropdownOptions = ['On Time', 'Late', 'Not Complete'];
 
   toggleStatusDropdown() {
     this.isStatusDropdownOpen = !this.isStatusDropdownOpen;
@@ -69,79 +72,109 @@ export class SelectedOfficerTargetComponent implements OnInit {
   ngOnInit(): void {
     this.officerId = this.route.snapshot.queryParams['targetId'];;
     this.fetchSelectedOfficerTargets();
-    
+
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const statusDropdownElement = document.querySelector('.custom-status-dropdown-container');
-    const statusDropdownClickedInside = statusDropdownElement?.contains(event.target as Node);
+  // 2. Add new methods
+toggleCompletingStatusDropdown() {
+  this.isCompletingStatusDropdownOpen = !this.isCompletingStatusDropdownOpen;
+}
 
-    if (!statusDropdownClickedInside && this.isStatusDropdownOpen) {
-      this.isStatusDropdownOpen = false;
+selectCompletingStatusOption(option: string) {
+  this.selectCompletingStatus = option;
+  this.isCompletingStatusDropdownOpen = false;
+  this.filterCompletingStatus();
+}
+
+filterCompletingStatus() {
+  this.fetchSelectedOfficerTargets();
+}
+
+cancelCompletingStatus(event?: MouseEvent) {
+  if (event) {
+    event.stopPropagation();
+  }
+  this.selectCompletingStatus = '';
+  this.fetchSelectedOfficerTargets();
+}
+
+// 3. Update @HostListener to include new dropdown
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  const statusDropdownElement = document.querySelector('.custom-status-dropdown-container');
+  const statusDropdownClickedInside = statusDropdownElement?.contains(event.target as Node);
+
+  const completingStatusDropdownElement = document.querySelector('.custom-completing-status-dropdown-container');
+  const completingStatusDropdownClickedInside = completingStatusDropdownElement?.contains(event.target as Node);
+
+  if (!statusDropdownClickedInside && this.isStatusDropdownOpen) {
+    this.isStatusDropdownOpen = false;
+  }
+
+  if (!completingStatusDropdownClickedInside && this.isCompletingStatusDropdownOpen) {
+    this.isCompletingStatusDropdownOpen = false;
+  }
+}
+
+// 4. Update fetchSelectedOfficerTargets method signature
+fetchSelectedOfficerTargets(
+  officerId: number = this.officerId, 
+  search: string = this.searchText, 
+  status: string = this.selectStatus,
+  completingStatus: string = this.selectCompletingStatus
+) {
+  this.isLoading = true;
+  this.DestributionSrv.getSelectedOfficerTargets(officerId, search, status, completingStatus).subscribe(
+    (res) => {
+      this.ordersArr = res.items.map((item: any) => {
+        let status = '';
+      
+        if (item.packageStatus === 'Pending' && (item.additionalItemsStatus === 'Unknown' || item.additionalItemsStatus === 'Pending')) {
+          status = 'Pending';
+        }
+        else if (item.packageStatus === 'Pending' && (item.additionalItemsStatus === 'Opened' || item.additionalItemsStatus === 'Completed')) {
+          status = 'Opened';
+        }
+        else if (item.packageStatus === 'Opened') {
+          status = 'Opened';
+        }
+        else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Unknown') {
+          status = 'Completed';
+        }
+        else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Pending') {
+          status = 'Pending';
+        }
+        else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Opened') {
+          status = 'Opened';
+        }
+        else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Completed') {
+          status = 'Completed';
+        }
+        else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Pending') {
+          status = 'Pending';
+        }
+        else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Opened') {
+          status = 'Opened';
+        }
+        else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Completed') {
+          status = 'Completed';
+        }
+        else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Unknown') {
+          status = 'Unknown';
+        }
+      
+        return {
+          ...item,
+          combinedStatus: status
+        };
+      });
+
+      this.totalItems = res.total;
+      this.hasData = this.ordersArr.length > 0;
+      this.isLoading = false;
     }
-
-  }
-
-  fetchSelectedOfficerTargets(
-    officerId: number = this.officerId, 
-    search: string = this.searchText, 
-    status: string = this.selectStatus
-  ) {
-    this.isLoading = true;
-    this.DestributionSrv.getSelectedOfficerTargets(officerId, search, status).subscribe(
-      (res) => {
-        this.ordersArr = res.items.map((item: any) => {
-          let status = '';
-        
-          if (item.packageStatus === 'Pending' && (item.additionalItemsStatus === 'Unknown' || item.additionalItemsStatus === 'Pending')) {
-            status = 'Pending';
-          }
-          else if (item.packageStatus === 'Pending' && (item.additionalItemsStatus === 'Opened' || item.additionalItemsStatus === 'Completed')) {
-            status = 'Opened';
-          }
-          else if (item.packageStatus === 'Opened') {
-            status = 'Opened';
-          }
-          else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Unknown') {
-            status = 'Completed';
-          }
-          else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Pending') {
-            status = 'Pending';
-          }
-          else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Opened') {
-            status = 'Opened';
-          }
-          else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Completed') {
-            status = 'Completed';
-          }
-          else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Pending') {
-            status = 'Pending';
-          }
-          else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Opened') {
-            status = 'Opened';
-          }
-          else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Completed') {
-            status = 'Completed';
-          }
-          else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Unknown') {
-            status = 'Unknown';
-          }
-        
-          return {
-            ...item,
-            combinedStatus: status
-          };
-        });
-        
-  
-        this.totalItems = res.total;
-  
-        this.hasData = this.ordersArr.length > 0;
-        this.isLoading = false;
-      }
-    );
-  }
+  );
+}
 
   onSearch() {
     this.fetchSelectedOfficerTargets();
@@ -157,13 +190,13 @@ export class SelectedOfficerTargetComponent implements OnInit {
   getDisplayDate(scheduleDate: string | Date): string {
     const today = new Date();
     const schedule = new Date(scheduleDate);
-  
+
     // Normalize times to midnight for accurate date-only comparison
     today.setHours(0, 0, 0, 0);
     schedule.setHours(0, 0, 0, 0);
-  
+
     const diffDays = Math.floor((schedule.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  
+
     if (diffDays === 0) {
       return 'Today';
     } else if (diffDays === 1) {
@@ -172,10 +205,10 @@ export class SelectedOfficerTargetComponent implements OnInit {
       return 'Day after tomorrow';
     } else {
       const day = schedule.getDate();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const month = monthNames[schedule.getMonth()];
-  
+
       // Get ordinal for the day
       const ordinal = (n: number) => {
         if (n > 3 && n < 21) return 'th';
@@ -186,32 +219,32 @@ export class SelectedOfficerTargetComponent implements OnInit {
           default: return 'th';
         }
       }
-  
+
       return `${day}${ordinal(day)} ${month}`;
     }
   }
-  
-  
+
+
 
   removeWithin(time: string): string {
     return time ? time.replace('Within ', '') : time;
   }
 
-filterStatus() {
-  this.fetchSelectedOfficerTargets();
-}
-
-cancelStatus(event?: MouseEvent) {
-  if (event) {
-    event.stopPropagation(); // Prevent triggering the dropdown toggle
+  filterStatus() {
+    this.fetchSelectedOfficerTargets();
   }
-  this.selectStatus = '';
-  this.fetchSelectedOfficerTargets();
-}
 
-goBack() {
-  this.location.back();
-}
+  cancelStatus(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation(); // Prevent triggering the dropdown toggle
+    }
+    this.selectStatus = '';
+    this.fetchSelectedOfficerTargets();
+  }
+
+  goBack() {
+    this.location.back();
+  }
 
 
 
@@ -233,4 +266,5 @@ class orders {
   outDlvrDateLocal!: string
   distributedTargetId!: number
   combinedStatus!: string
+  completeTimeStatus!: string
 }

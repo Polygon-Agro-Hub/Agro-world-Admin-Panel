@@ -443,17 +443,27 @@ getFileName(value: string): string {
   }
 
   getAllCollectionManagers() {
-    this.stakeHolderSrv
-      .getAllManagerList()
-      .subscribe((res) => {
-        this.fiealdManagerData = res;
-        // Convert to dropdown options format
-        this.managerOptions = this.fiealdManagerData.map((manager) => ({
-          label: manager.firstName + ' ' + manager.lastName,
-          value: manager.id,
-        }));
-      });
-  }
+  this.stakeHolderSrv
+    .getAllManagerList()
+    .subscribe((res) => {
+      this.fiealdManagerData = res;
+      // Convert to dropdown options format
+      this.managerOptions = this.fiealdManagerData.map((manager) => ({
+        label: manager.firstName + ' ' + manager.lastName,
+        value: manager.id,
+      }));
+
+      // Debug log to verify managers are loaded
+      console.log('Loaded managers:', this.managerOptions);
+      console.log('Selected irmId:', this.personalData.irmId);
+      
+      // Check if the selected manager exists in the options
+      if (this.personalData.irmId) {
+        const selectedManager = this.managerOptions.find(option => option.value == this.personalData.irmId);
+        console.log('Found selected manager:', selectedManager);
+      }
+    });
+}
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -1132,6 +1142,12 @@ getFileName(value: string): string {
         
         if (officerData) {
           this.populateFormData(officerData);
+          
+          // Small delay to ensure dropdown is properly initialized
+          setTimeout(() => {
+            console.log('Final personalData:', this.personalData);
+            console.log('Final managerOptions:', this.managerOptions);
+          }, 500);
         } else {
           this.showErrorAndRedirect('Field officer data not found in response');
         }
@@ -1159,7 +1175,8 @@ private showErrorAndRedirect(message: string): void {
 }
 
   // Add this method to populate form with existing data
-  populateFormData(officerData: any): void {
+  // Add this method to populate form with existing data
+populateFormData(officerData: any): void {
   // Personal Details
   this.personalData.id = officerData.id;
   this.personalData.firstName = officerData.firstName;
@@ -1167,17 +1184,12 @@ private showErrorAndRedirect(message: string): void {
   this.personalData.status = officerData.status;
   
   // FIXED: Check for different possible field names for Sinhala and Tamil names
-  // Try multiple possible field name variations from the API
   this.personalData.firstNameSinhala = officerData.firstNameSinhala || officerData.firstnameSinhala || officerData.first_name_sinhala || '';
   this.personalData.lastNameSinhala = officerData.lastNameSinhala || officerData.lastnameSinhala || officerData.last_name_sinhala || '';
   this.personalData.firstNameTamil = officerData.firstNameTamil || officerData.firstnameTamil || officerData.first_name_tamil || '';
   this.personalData.lastNameTamil = officerData.lastNameTamil || officerData.lastnameTamil || officerData.last_name_tamil || '';
   
-  // Debug log to see what's actually coming from the API
-  console.log('Officer Data from API:', officerData);
-  console.log('Sinhala Names - First:', this.personalData.firstNameSinhala, 'Last:', this.personalData.lastNameSinhala);
-  console.log('Tamil Names - First:', this.personalData.firstNameTamil, 'Last:', this.personalData.lastNameTamil);
-  
+  // Contact Details
   this.personalData.phoneNumber1 = officerData.phoneNumber01 || officerData.phoneNumber1;
   this.personalData.phoneNumber2 = officerData.phoneNumber02 || officerData.phoneNumber2;
   this.personalData.phoneCode1 = officerData.phoneCode01 || officerData.phoneCode1 || '+94';
@@ -1190,6 +1202,9 @@ private showErrorAndRedirect(message: string): void {
   this.personalData.empType = officerData.employeeType || officerData.empType;
   this.personalData.jobRole = officerData.jobRole;
   this.personalData.empId = officerData.empId;
+  
+  // FIXED: Set Chief Field Officer ID - Check multiple possible field names
+  this.personalData.irmId = officerData.irmId || officerData.chiefFieldOfficerId || officerData.managerId || null;
   
   // Languages
   if (officerData.language) {
@@ -1204,26 +1219,24 @@ private showErrorAndRedirect(message: string): void {
   this.personalData.province = officerData.province;
   this.personalData.country = officerData.country || 'Sri Lanka';
   
-  // Bank Details - FIXED: Handle decimal numbers properly
+  // Bank Details
   this.personalData.comAmount = officerData.comAmount ? parseFloat(officerData.comAmount) : 0;
   this.personalData.accName = officerData.accHolderName || officerData.accName;
   this.personalData.accNumber = officerData.accNumber;
   this.personalData.bank = officerData.bankName || officerData.bank;
   this.personalData.branch = officerData.branchName || officerData.branch;
   
-  // Assign Districts - FIXED: Convert district names to district objects
+  // Assign Districts
   if (officerData.assignDistricts || officerData.assignDistrict) {
     const districtsData = officerData.assignDistricts || officerData.assignDistrict;
     
     if (Array.isArray(districtsData)) {
-      // If it's already an array of district names, map to district objects
       this.personalData.assignDistrict = districtsData
         .map((districtName: string) => 
           this.districts.find(d => d.name === districtName)
         )
-        .filter((d: any) => d !== undefined); // Remove undefined values
+        .filter((d: any) => d !== undefined);
     } else if (typeof districtsData === 'string') {
-      // If it's a comma-separated string, split and map to district objects
       this.personalData.assignDistrict = districtsData
         .split(',')
         .map((districtName: string) => districtName.trim())
@@ -1231,7 +1244,7 @@ private showErrorAndRedirect(message: string): void {
         .map((districtName: string) => 
           this.districts.find(d => d.name === districtName)
         )
-        .filter((d: any) => d !== undefined); // Remove undefined values
+        .filter((d: any) => d !== undefined);
     } else {
       this.personalData.assignDistrict = [];
     }
@@ -1248,12 +1261,9 @@ private showErrorAndRedirect(message: string): void {
     officerData.branchName || officerData.branch
   );
   
-  // Load manager if needed
-  if (officerData.irmId) {
-    this.personalData.irmId = officerData.irmId;
-    this.getAllCollectionManagers();
-  }
-
+  // FIXED: Load managers first, then set the selected value
+  this.getAllCollectionManagers();
+  
   // Set profile image if available
   if (officerData.image || officerData.profile) {
     this.selectedImage = officerData.image || officerData.profile;
@@ -1265,6 +1275,10 @@ private showErrorAndRedirect(message: string): void {
       this.filterDistrictsByProvince(this.personalData.province);
     }
   }, 100);
+
+  // Debug log to verify data
+  console.log('Populated Chief Field Officer ID:', this.personalData.irmId);
+  console.log('Full populated data:', this.personalData);
 }
 
   // Add method to load existing images

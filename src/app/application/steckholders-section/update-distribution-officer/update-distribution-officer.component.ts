@@ -280,9 +280,9 @@ fetchData() {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
+      text: 'You may lose the added data after going canceling!',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
+      confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Stay Here',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

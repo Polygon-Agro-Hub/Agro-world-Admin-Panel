@@ -1,5 +1,5 @@
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,7 +21,8 @@ export class AddComplainCategoriesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private complaintSrv: ComplaintsService
+    private complaintSrv: ComplaintsService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -152,7 +153,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/complaints']);
+        this.location.back();
       }
     });
   }

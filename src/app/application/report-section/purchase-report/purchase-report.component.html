@@ -14,66 +14,69 @@
   >
     
     <!-- From Date -->
-    <div class="flex items-center gap-2 w-full">
-      <label
-        for="fromDate"
-        class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
-        >From:</label
-      >
-      <p-calendar
-        id="fromDate"
-        [(ngModel)]="fromDate"
-        placeholder="YYYY/MM/DD"
-        [showIcon]="true"
-        [showClear]="false"
-        [showButtonBar]="true"
-        iconDisplay="input"
-        [style]="{ width: '20rem', height: '2.5rem' }"
-        [maxDate]="maxDate"
-        [selectOtherMonths]="false"
-        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-               [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-               [&_.p-datepicker-header]:dark:text-white
-               [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-               [&_.p-button:hover]:dark:bg-[#6b7280]"
-        inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
-        (onSelect)="onFromDateSelect()" 
-      />
-    </div>
+    <!-- From Date -->
+<div class="flex items-center gap-2 w-full">
+  <label
+    for="fromDate"
+    class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
+    >From:</label
+  >
+  <p-calendar
+    id="fromDate"
+    [(ngModel)]="fromDate"
+    placeholder="YYYY/MM/DD"
+    [showIcon]="true"
+    [showClear]="true"
+    [showButtonBar]="true"
+    iconDisplay="input"
+    [style]="{ width: '20rem', height: '2.5rem' }"
+    [maxDate]="maxDate"
+    [selectOtherMonths]="false"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+           [&_.p-datepicker-header]:dark:text-white
+           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+           [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
+    (onSelect)="onFromDateSelect()" 
+    (onClear)="onFromDateClear()"
+  />
+</div>
 
-    <!-- To Date -->
-    <div class="flex items-center gap-2 w-full">
-      <label
-        for="toDate"
-        class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
-        >To:</label
-      >
-      <p-calendar
-        id="toDate"
-        [(ngModel)]="toDate"
-        placeholder="YYYY/MM/DD"
-        [showIcon]="true"
-        [showClear]="false"
-        [showButtonBar]="true"
-        iconDisplay="input"
-        [style]="{ width: '20rem', height: '2.5rem' }"
-        [minDate]="fromDate"
-        [maxDate]="maxDate"
-        [selectOtherMonths]="false"
-        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-               [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-               [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-               [&_.p-datepicker-header]:dark:text-white
-               [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-               [&_.p-button:hover]:dark:bg-[#6b7280]"
-        inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
-        [disabled]="!fromDate"
-        (onSelect)="onToDateSelect()"
-      />
-    </div>
+<!-- To Date -->
+<div class="flex items-center gap-2 w-full">
+  <label
+    for="toDate"
+    class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
+    >To:</label
+  >
+  <p-calendar
+    id="toDate"
+    [(ngModel)]="toDate"
+    placeholder="YYYY/MM/DD"
+    [showIcon]="true"
+    [showClear]="true"
+    [showButtonBar]="true"
+    iconDisplay="input"
+    [style]="{ width: '20rem', height: '2.5rem' }"
+    [minDate]="fromDate"
+    [maxDate]="maxDate"
+    [selectOtherMonths]="false"
+    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+           [&_.p-datepicker-header]:dark:text-white
+           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+           [&_.p-button:hover]:dark:bg-[#6b7280]"
+    inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
+    [disabled]="!fromDate"
+    (onSelect)="onToDateSelect()"
+    (onClear)="onToDateClear()"
+  />
+</div>
 
     <!-- Go Button -->
     <div class="flex items-center">
@@ -98,7 +101,8 @@
     <div
       class="pt-5 pr-12 pl-12 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg"
     >
-      <div class="flex justify-between items-center mb-8">
+      <!-- Header Section - Only show when there's data -->
+      <div *ngIf="hasData" class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
             All Transactions ({{ this.totalItems }})
@@ -108,7 +112,7 @@
           <i class="mr-6 w-6 h-6 fill-current text-gray-500">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <path
-                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3-48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
               />
             </svg>
           </i>
@@ -181,7 +185,8 @@
         </div>
       </div>
 
-      <div class="flex justify-between items-center mb-5">
+      <!-- Total and Download Button - Only show when there's data -->
+      <div *ngIf="hasData" class="flex justify-between items-center mb-5">
         <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
           Total : Rs. {{ this.grandTotal | number : "1.2-2" }}
         </h4>
@@ -196,7 +201,8 @@
         </button>
       </div>
 
-      <div>
+      <!-- Data Table Section - Only show when there's data -->
+      <div *ngIf="hasData">
         <table class="min-w-full divide-y divide-gray-200 table-auto">
           <thead>
             <tr>
@@ -299,28 +305,9 @@
             </tr>
           </tbody>
         </table>
-        <div
-          *ngIf="purchaseReport.length === 0"
-          class="text-center py-4 text-gray-500 dark:text-textDark"
-        >
-          <div *ngIf="!hasData" class="text-center py-8">
-            <!-- Table Section -->
-            <div
-            *ngIf="!hasData"
-              class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
-            >
-              <p class="text-[#494949] my-6 dark:text-textDark">
-                --No Data Available--
-              </p>
-              <img
-                src="assets/images/NoData.png"
-                alt="No Data"
-                class="w-20 h-20"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="dark:bg-[#262f45]">
+
+        <!-- Pagination - Only show when there's data -->
+        <div class="dark:bg-[#262f45] mt-4">
           <pagination-controls
             (pageChange)="onPageChange($event)"
             [responsive]="true"
@@ -332,6 +319,18 @@
           >
           </pagination-controls>
         </div>
+      </div>
+
+      <!-- No Data Section - Show when there's no data and not loading -->
+      <div *ngIf="!hasData && !isLoading" class="flex flex-col items-center justify-center w-full py-16">
+        <p class="text-[#494949] my-6 dark:text-textDark text-lg">
+          -- No Data Available --
+        </p>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20"
+        />
       </div>
     </div>
   </div>

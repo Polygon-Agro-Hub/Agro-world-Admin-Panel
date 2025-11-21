@@ -121,7 +121,6 @@ export class EditFarmerClusterComponent implements OnInit {
     });
   }
 
-
   fetchClusterUsers() {
     this.isLoading = true;
     this.farmerClusterService.getClusterMembers(this.clusterId).subscribe(
@@ -197,6 +196,50 @@ export class EditFarmerClusterComponent implements OnInit {
     );
   }
 
+  // New method to handle cluster name keydown events
+  onClusterNameKeydown(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart || 0;
+    
+    // Block space if it's at the beginning or if the field is empty
+    if (event.key === ' ') {
+      // Block space if:
+      // 1. Cursor is at position 0 (beginning)
+      // 2. OR the field is empty
+      // 3. OR there's only whitespace content
+      if (cursorPosition === 0 || !this.clusterName.trim()) {
+        event.preventDefault();
+        return;
+      }
+      
+      // Optional: Block consecutive spaces
+      // You can remove this if you want to allow spaces in the middle
+      const previousChar = this.clusterName.charAt(cursorPosition - 1);
+      if (previousChar === ' ') {
+        event.preventDefault();
+        return;
+      }
+    }
+  }
+
+  // Updated cluster name input handler
+  onClusterNameInput(): void {
+    // Trim leading and trailing spaces
+    const trimmedName = this.clusterName.trim();
+    
+    // If the original value has leading spaces, update the model
+    if (this.clusterName !== trimmedName) {
+      this.clusterName = trimmedName;
+    }
+    
+    // Validation
+    if (trimmedName.length === 0) {
+      this.nameError = 'Cluster name is required';
+    } else {
+      this.nameError = '';
+    }
+  }
+
   updateCluster() {
     this.formSubmitted = true;
     this.nameError = '';
@@ -267,14 +310,6 @@ export class EditFarmerClusterComponent implements OnInit {
                   title: 'font-semibold text-lg',
                 },
               }).then(() => {
-                // Update original values
-                // this.originalClusterName = this.clusterName;
-                // this.originalDistrict = this.selectedDistrict;
-                // this.originalCertificateId = this.selectedCertificateId;
-                // this.formSubmitted = false;
-
-                // // Refresh cluster data
-                // this.fetchClusterUsers();
                 this.goBack();
               });
             },
@@ -439,17 +474,6 @@ export class EditFarmerClusterComponent implements OnInit {
     this.farmIdError = '';
   }
 
-  onClusterNameInput(): void {
-    const trimmedName = this.clusterName.trim();
-
-    if (trimmedName.length === 0) {
-      this.nameError = 'Cluster name is required';
-    } else {
-      this.nameError = '';
-    }
-  }
-
-
   restrictNICInput(event: KeyboardEvent): void {
     const allowedKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'];
     const char = event.key;
@@ -487,7 +511,6 @@ export class EditFarmerClusterComponent implements OnInit {
     // Block everything else
     event.preventDefault();
   }
-
 
   onNICInput(): void {
     const trimmedNIC = this.newFarmerNIC.trim();
@@ -597,7 +620,6 @@ export class EditFarmerClusterComponent implements OnInit {
         }
       );
   }
-
 
   isAddFarmerFormValid(): boolean {
     const trimmedNIC = this.newFarmerNIC.trim();

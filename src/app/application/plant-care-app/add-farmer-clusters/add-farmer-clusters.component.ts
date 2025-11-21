@@ -52,6 +52,7 @@ export class AddFarmerClustersComponent implements OnInit {
   selectedCertificateId: number | null = null;
   certificates: Certificate[] = [];
   formSubmitted = false;
+  hasLeadingOrTrailingSpaces: boolean = false;
 
   districts: District[] = [
     { name: 'Ampara', value: 'Ampara' },
@@ -89,6 +90,41 @@ export class AddFarmerClustersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCertificates();
+  }
+
+  // Space handling methods for cluster name
+  onClusterNameKeydown(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    
+    // Prevent space if cursor is at the beginning or if the field is empty
+    if (event.key === ' ' && (input.selectionStart === 0 || !this.clusterName)) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  onClusterNameInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    // Remove leading spaces immediately
+    if (value.startsWith(' ')) {
+      value = value.trimStart();
+    }
+    
+    // Update the model with the cleaned value
+    this.clusterName = value;
+    
+    // Check for leading or trailing spaces for validation message
+    this.hasLeadingOrTrailingSpaces = value !== value.trim();
+  }
+
+  onClusterNameBlur(): void {
+    if (this.clusterName) {
+      // Trim the final value on blur
+      this.clusterName = this.clusterName.trim();
+      this.hasLeadingOrTrailingSpaces = false;
+    }
   }
 
   private loadCertificates(): void {
@@ -253,6 +289,12 @@ export class AddFarmerClustersComponent implements OnInit {
   onUpload(): void {
     this.formSubmitted = true;
 
+    // Ensure cluster name is trimmed before validation
+    if (this.clusterName) {
+      this.clusterName = this.clusterName.trim();
+      this.hasLeadingOrTrailingSpaces = false;
+    }
+
     // Validate all required fields
     if (
       !this.selectedFile ||
@@ -278,6 +320,15 @@ export class AddFarmerClustersComponent implements OnInit {
       if (!this.selectedFile) {
         this.showErrorPopup('File Required', 'Please select a file to upload.');
       }
+      return;
+    }
+
+    // Additional validation for leading/trailing spaces
+    if (this.hasLeadingOrTrailingSpaces) {
+      this.showErrorPopup(
+        'Invalid Cluster Name',
+        'Cluster name should not have leading or trailing spaces.'
+      );
       return;
     }
 
@@ -446,6 +497,7 @@ export class AddFarmerClustersComponent implements OnInit {
     this.selectedDistrict = '';
     this.selectedCertificateId = null;
     this.formSubmitted = false;
+    this.hasLeadingOrTrailingSpaces = false;
     this.fileInput.nativeElement.value = '';
   }
 

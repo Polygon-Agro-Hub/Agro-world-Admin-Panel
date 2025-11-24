@@ -231,6 +231,7 @@ import { PaymentHistoryAddNewComponent } from './application/finance/payment-his
 import { PaymentHistoryUpdateComponent } from './application/finance/payment-history-update/payment-history-update.component';
 import { ViewAllPaymentHistoryComponent } from './application/finance/view-all-payment-history/view-all-payment-history.component';
 import { FinanceActionMainComponent } from './application/finance/finance-action-main/finance-action-main.component';
+import { ViewAllGovicareRequestsComponent } from './application/finance/view-all-govicare-requests/view-all-govicare-requests.component';
 
 export const routes: Routes = [
   {
@@ -614,6 +615,11 @@ export const routes: Routes = [
                 path: 'viewAll-payments',
                 component: ViewAllPaymentHistoryComponent,
               },
+              {
+                path: 'viewAll-Govicare-requests',
+                component: ViewAllGovicareRequestsComponent,
+              },
+
             ],
           },
         ],

@@ -739,6 +739,8 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: ViewPlantcareUsersComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: ['View all plant care users'] }
                   },
                   {
                     path: 'edit-plantcare-users',
@@ -769,6 +771,8 @@ export const routes: Routes = [
                   {
                     path: 'view-farmer-staff/:id',
                     component: ViewFarmerStaffComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'View staff members' }
                   },
                   {
                     path: 'view-farmer-owner/:id',
@@ -777,6 +781,8 @@ export const routes: Routes = [
                   {
                     path: 'edit-user-staff/:id',
                     component: EditUserStaffComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Edit staff member' }
                   },
                 ],
               },

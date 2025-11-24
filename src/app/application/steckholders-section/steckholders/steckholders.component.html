@@ -35,7 +35,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf=" permissionService.hasPermission('View field officers') || tokenService.getUserDetails().role === '1'">
       <button
         type="button"
         (click)="navigateToViewFieldInspectors()"
@@ -51,7 +51,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center" *ngIf=" permissionService.hasPermission('View all collection officers') || tokenService.getUserDetails().role === '1'">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View all collection officers') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewCoOfficers()"
         type="button"
@@ -97,7 +97,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View collection centers') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewCollectionCenter()"
         type="button"
@@ -113,7 +113,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View salses agent') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewSalesAgents()"
         type="button"

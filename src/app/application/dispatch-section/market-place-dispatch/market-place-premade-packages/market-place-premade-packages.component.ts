@@ -144,4 +144,5 @@ interface PremadePackages {
   packageStatus: string,
   adminPackBy: string | null;
   packBy: string | null;
+  finalStatus: string | null;
 }

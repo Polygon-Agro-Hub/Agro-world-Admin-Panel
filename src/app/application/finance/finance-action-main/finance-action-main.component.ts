@@ -55,4 +55,8 @@ export class FinanceActionMainComponent {
       this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
     }
   }
+
+  invesmentRequest(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests']);
+  }
 }

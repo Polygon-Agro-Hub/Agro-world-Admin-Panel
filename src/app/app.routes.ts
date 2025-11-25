@@ -236,6 +236,7 @@ import { ViewAllGovicareRequestsComponent } from './application/finance/view-all
 import { GovicapitalFinanceComponent } from './application/finance/govicapital-finance/govicapital-finance.component';
 import { ProjectInvestmentsComponent } from './application/finance/project-investments/project-investments.component';
 import { ProjectInvestmentsTransactionsComponent } from './application/finance/project-investments-transactions/project-investments-transactions.component';
+import { PublishedProjectsComponent } from './application/finance/published-projects/published-projects.component';
 
 export const routes: Routes = [
   {
@@ -637,6 +638,11 @@ export const routes: Routes = [
                   {
                     path: 'project-investments-transactions',
                     component: ProjectInvestmentsTransactionsComponent,
+                  },
+
+                  {
+                    path: 'published-projects',
+                    component: PublishedProjectsComponent,
                   },
                 ],
               },

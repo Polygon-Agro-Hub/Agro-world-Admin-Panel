@@ -233,6 +233,7 @@ import { ViewAllPaymentHistoryComponent } from './application/finance/view-all-p
 import { FinanceActionMainComponent } from './application/finance/finance-action-main/finance-action-main.component';
 import { InvestmentRequestsComponent } from './application/finance/investment-requests/investment-requests.component';
 import { ViewAllGovicareRequestsComponent } from './application/finance/view-all-govicare-requests/view-all-govicare-requests.component';
+import { PublishedProjectsComponent } from './application/finance/published-projects/published-projects.component';
 
 export const routes: Routes = [
   {
@@ -622,6 +623,11 @@ export const routes: Routes = [
                   {
                     path: 'ivesment-requests',
                     component: InvestmentRequestsComponent,
+                  },
+
+                  {
+                    path: 'published-projects',
+                    component: PublishedProjectsComponent,
                   },
                 ],
               },

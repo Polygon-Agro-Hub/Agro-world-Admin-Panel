@@ -59,4 +59,8 @@ export class FinanceActionMainComponent {
   invesmentRequest(): void {
     this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests']);
   }
+
+  publishedProjects() {
+    this.router.navigate(['/finance/action/finance-govicapital/published-projects']);
+  }
 }

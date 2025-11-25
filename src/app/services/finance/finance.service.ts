@@ -698,4 +698,21 @@ getOfficerDetailsById(empId: string): Observable<any> {
 }
 
 
+getAllPublishedProjects(
+  searchText: string = '',
+ 
+): Observable<any> {
+  console.log('searchText', searchText)
+  
+  let url = `${this.apiUrl}finance/get-all-published-projects?page=${1}`;
+
+  if (searchText) {
+    url += `&searchText=${searchText}`;
+  }
+
+  return this.http.get<any>(url, {
+    headers: this.getHeaders(),
+  });
+}
+
 }

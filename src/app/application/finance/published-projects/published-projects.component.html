@@ -1,0 +1,225 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="Back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-full w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <!-- Header and Filters Section -->
+    <div class="mb-8">
+      <div class="flex justify-between items-center mb-5">
+        <div>
+          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+            Published Projects ({{ totalItems > 10 ? totalItems : '0'+ totalItems }})
+          </h2>
+        </div>
+        <div class="flex items-center gap-3">
+          
+          <div
+            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
+            <input type="text" placeholder="Search By ID, Phone Number.." [(ngModel)]="searchText" (keydown.enter)="onSearch()"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="onSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+              </svg>
+            </button>
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
+
+    <div *ngIf="hasData">
+      <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
+        <thead>
+          <tr>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+              No
+            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Request_ID
+            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                Progress
+            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                Farmer Name
+            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                Phone number
+            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                Published By
+            </th>
+
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+                Published Time
+            </th>
+
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+                NIC
+                Front Image
+            </th>
+
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+                NIC
+                Back Image
+            </th>
+
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+                Details
+            </th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="
+              let item of publishedProjectsArr
+              let i = index
+            " class="border-b border-gray-200 dark:border-[#4B555A]">
+
+            <td class="px-3 py-3 text-textLight dark:text-textDark text-left">
+                {{ ('000' + (i + 1)).slice(-3) }}
+            </td>
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.jobId }}
+            </td>
+
+            <td class="px-3 py-3 text-textLight dark:text-textDark text-left">
+                
+            </td>
+
+            <td class="px-3 py-3 text-textLight dark:text-textDark text-left">
+              {{ item.firstName + " " + item.lastName }}
+            </td>
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.phoneNumber }}
+            </td>
+
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+                {{item.publishedBy}}
+            </td>
+
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.publishDate | date:'hh:mm a \'on\' MMMM dd, yyyy' }}
+            </td>
+
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                <button (click)="viewNicFront(item.nicFront)">
+                    <i class="text-lg fa-solid fa-image text-[#3980C0]"></i>
+                </button>
+            </td>
+
+            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+                <button (click)="viewNicBack(item.nicBack)">
+                    <i class="text-lg fa-solid fa-image text-[#3980C0]"></i>
+                </button> 
+            </td>
+
+            <td class="px-3 py-3 text-center ">
+                <!-- VIEW -->
+                <button
+                  class="w-6 h-6 mt-2 text-[#3980C0] hover:text-[#3980C0]"
+                  title="View Job"
+                  [disabled]="isLoading"
+                  (click)="viewDetails(item)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </td>
+
+           
+          </tr>
+        </tbody>
+      </table>
+      
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="isPopupVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closePopUp()">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-[500px] max-w-md mx-4 max-h-[90vh] flex flex-col">
+    <!-- Modal Header -->
+    <div class="px-6 py-4 text-center shrink-0 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
+        Request ID : {{itemDetailsToViewObj.jobId}}
+      </h3>
+    </div>
+
+    <div class="ml-10 grid grid-cols-2 gap-y-2 w-fit gap-x-4 mt-4">
+
+        <div class="">Farmer Name</div>
+        <div>: {{ itemDetailsToViewObj.firstName }} {{ itemDetailsToViewObj.lastName }}</div>
+      
+        <div class="">NIC Number</div>
+        <div>: {{ itemDetailsToViewObj.farmerNic }}</div>
+      
+        <div class="">Phone Number</div>
+        <div>: {{ itemDetailsToViewObj.phoneNumber }}</div>
+      
+        <div class="">Crop</div>
+        <div>: {{ itemDetailsToViewObj.cropNameEnglish }}</div>
+      
+        <div class="">Variety</div>
+        <div>: {{ itemDetailsToViewObj.varietyNameEnglish }}</div>
+      
+        <div class="">Certificate</div>
+        <div>: {{ itemDetailsToViewObj.srtName }}</div>
+      
+        <div class="">Extent</div>
+        <div>: {{ itemDetailsToViewObj.extentac }} Acres</div>
+      
+        <div class="">Expected Investment</div>
+        <div>: Rs. {{ itemDetailsToViewObj.investment | number:'1.2-2' }}</div>
+      
+        <div class="">Expected Yield</div>
+        <div>: {{ itemDetailsToViewObj.expectedYield | number:'1.2-2' }}kg</div>
+      
+        <div class="">Expected Start Date</div>
+        <div>: {{ itemDetailsToViewObj.startDate | date: 'MMMM dd, yyyy' }}</div>
+      
+      </div>
+      
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-center shrink-0">
+      <button type="button"
+        class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm font-medium transition-colors"
+        (click)="closePopUp()">
+        close
+      </button>
+    </div>
+  </div>
+</div>

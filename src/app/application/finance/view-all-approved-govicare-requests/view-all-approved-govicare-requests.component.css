@@ -1,0 +1,15 @@
+::ng-deep .request-id-text {
+  color: #1f2937;
+}
+
+::ng-deep .dark .request-id-text {
+  color: white !important;
+}
+
+::ng-deep .description-text {
+  color: #374151;
+}
+
+::ng-deep .dark .description-text {
+  color: white !important;
+}

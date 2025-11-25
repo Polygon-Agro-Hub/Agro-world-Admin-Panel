@@ -15,4 +15,12 @@ export class InvestmentRequestsComponent {
   goBack() {
     this.router.navigate(['/finance/action']);
   }
+  
+    ViewAllGovicareRequests(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests/viewAll-Govicare-requests']);
+  }
+  
+    ViewApprovedGovicareRequests(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests/viewAll-Govicare-ApprovedRequests']);
+  }
 }

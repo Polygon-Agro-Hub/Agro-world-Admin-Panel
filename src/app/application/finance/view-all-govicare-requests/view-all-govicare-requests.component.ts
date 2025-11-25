@@ -57,7 +57,7 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   constructor(
     private FinanceService: FinanceService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadGovicareRequests();
@@ -138,13 +138,8 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
   // Officer Assignment Methods
   onAssignStatusClick(request: GoviCareRequest): void {
-    // If already assigned, show officer details popup
-    if (request.Status === 'Assigned' && request.Officer_ID !== '--') {
-      this.officerPopUpOpen(request);
-    } else {
-      // For Not Assigned status, open assign popup
-      this.openAssignPopup(request);
-    }
+    // Open assign popup for both Assigned and Not Assigned status
+    this.openAssignPopup(request);
   }
 
   // Open assign popup
@@ -156,6 +151,22 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     this.selectedOfficerInfo = null;
     this.currentAssignedOfficer = null;
     this.assignError = '';
+
+    // If already assigned, pre-populate the officer role and load officers
+    if (request.Status === 'Assigned' && request.empId && request.empId !== '--') {
+      // Determine officer role from empId prefix
+      if (request.empId.startsWith('FIO')) {
+        this.selectedOfficerRole = 'Field Officer';
+      } else if (request.empId.startsWith('CFO')) {
+        this.selectedOfficerRole = 'Chief Field Officer';
+      }
+
+      // Load officers for the district and role
+      if (this.selectedOfficerRole) {
+        const district = request.district;
+        this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, request.empId);
+      }
+    }
 
     this.isAssignPopup = true;
   }
@@ -179,15 +190,18 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     this.availableOfficers = [];
 
     if (this.selectedOfficerRole && this.selectedGovicareRequest) {
-      // Need to extract district from the request - you may need to add this field
-      // For now, using a placeholder - update based on your data structure
-      const district = 'Colombo'; // TODO: Get from request data
-      this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole);
+      // Get district from the selected request
+      const district = this.selectedGovicareRequest.district;
+      // Get currently assigned empId if exists
+      const currentEmpId = this.selectedGovicareRequest.Status === 'Assigned'
+        ? this.selectedGovicareRequest.empId
+        : undefined;
+      this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, currentEmpId);
     }
   }
 
   // Load officers by district and role
-  loadOfficersByDistrictAndRole(district: string, role: string): void {
+  loadOfficersByDistrictAndRole(district: string, role: string, currentEmpId?: string): void {
     this.isLoadingOfficers = true;
     this.assignError = '';
 
@@ -200,12 +214,22 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
             this.availableOfficers = response.data.map(
               (officer: InvestmentOfficer) => ({
                 ...officer,
-                displayName: `${officer.firstName} ${officer.lastName} - ${
-                  officer.empId
-                } (Jobs: ${officer.jobCount || 0})`,
-                activeJobCount: officer.jobCount || 0,
+                displayName: `${officer.empId
+                  } - ${officer.firstName} ${officer.lastName}`,
               })
             );
+
+            // If there's a currently assigned officer, select them
+            if (currentEmpId) {
+              const currentOfficer = this.availableOfficers.find(
+                (officer) => officer.empId === currentEmpId
+              );
+              if (currentOfficer) {
+                this.selectedOfficerId = currentOfficer.empId;
+                this.selectedOfficerInfo = currentOfficer;
+                this.currentAssignedOfficer = currentOfficer;
+              }
+            }
 
             if (this.availableOfficers.length === 0) {
               this.assignError = `No ${role}s available in ${district} district`;
@@ -248,6 +272,13 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       return;
     }
 
+    // Check if trying to assign the same officer
+    if (this.selectedGovicareRequest.Status === 'Assigned' &&
+      this.selectedGovicareRequest.empId === this.selectedOfficerId) {
+      this.assignError = 'This officer is already assigned to this request';
+      return;
+    }
+
     this.isAssigning = true;
     this.assignError = '';
 
@@ -263,9 +294,13 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
             this.assignPopupClose();
             this.loadGovicareRequests(); // Refresh the list
 
+            const actionText = this.selectedGovicareRequest?.Status === 'Assigned'
+              ? 'updated'
+              : 'assigned';
+
             Swal.fire({
               title: 'Success',
-              text: response.message || 'Officer assigned successfully',
+              text: response.message || `Officer ${actionText} successfully`,
               icon: 'success',
               customClass: {
                 popup:
@@ -332,8 +367,8 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
   // Get status class for styling
   getStatusClass(status: string): string {
-    return status === 'Assigned' 
-      ? 'bg-[#BBFFC6] text-green-800 dark:bg-bg-[#BBFFC6] dark:text-green-800' 
+    return status === 'Assigned'
+      ? 'bg-[#BBFFC6] text-green-800 dark:bg-bg-[#BBFFC6] dark:text-green-800'
       : 'bg-[#F8FFA6] text-yellow-800 dark:bg-bg-[#F8FFA6] dark:text-yellow-800';
   }
 

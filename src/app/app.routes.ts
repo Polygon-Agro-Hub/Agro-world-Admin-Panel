@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth-guard.service';
 import { LoginComponent } from './application/main-components/login/login.component';
@@ -233,6 +233,7 @@ import { ViewAllPaymentHistoryComponent } from './application/finance/view-all-p
 import { FinanceActionMainComponent } from './application/finance/finance-action-main/finance-action-main.component';
 import { InvestmentRequestsComponent } from './application/finance/investment-requests/investment-requests.component';
 import { ViewAllGovicareRequestsComponent } from './application/finance/view-all-govicare-requests/view-all-govicare-requests.component';
+import { ViewAllApprovedGovicareRequestsComponent } from './application/finance/view-all-approved-govicare-requests/view-all-approved-govicare-requests.component';
 
 export const routes: Routes = [
   {
@@ -621,14 +622,14 @@ export const routes: Routes = [
                 children: [
                   {
                     path: 'ivesment-requests',
-                    component: InvestmentRequestsComponent,
+                    children: [
+                      { path: '', component: InvestmentRequestsComponent },
+                      { path: 'viewAll-Govicare-requests', component: ViewAllGovicareRequestsComponent },
+                      { path: 'viewAll-Govicare-ApprovedRequests', component: ViewAllApprovedGovicareRequestsComponent }
+                    ]
                   },
                 ],
-              },
-              {
-                path: 'viewAll-Govicare-requests',
-                component: ViewAllGovicareRequestsComponent,
-              },
+              }
 
             ],
           },
@@ -1616,4 +1617,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

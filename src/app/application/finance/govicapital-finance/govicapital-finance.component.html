@@ -1,0 +1,208 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  class="mb-5 text-textLight dark:text-textDark"
+  (click)="back()"
+  class="mb-5 text-textLight dark:text-textDark"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1850px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          Rejected Requests ({{ this.total }})
+        </h2>
+      </div>
+
+      <div class="mr-8">
+        <div
+          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
+        >
+          <!-- Popover -->
+          <div
+            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          >
+            Search by Company Name or Email
+          </div>
+
+          <!-- Input field -->
+          <input
+            type="text"
+            placeholder="Search by Company Name or Email"
+            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+          />
+
+          <!-- Search button -->
+          <button
+            type="button"
+            class="voorbeeld text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Clear button -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <!-- <div
+        class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6"
+      >
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          --No Data Availabale--
+        </p>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 dark:text-textDark"
+        />
+      </div> -->
+      <table class="min-w-full divide-y divide-gray-200 table-auto">
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Request_ID
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Farmer Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Phone number
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Rejected By
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Rejected Date
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              NIC Front Image
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              NIC Back Image
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Details
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              View
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

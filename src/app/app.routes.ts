@@ -232,7 +232,7 @@ import { PaymentHistoryUpdateComponent } from './application/finance/payment-his
 import { ViewAllPaymentHistoryComponent } from './application/finance/view-all-payment-history/view-all-payment-history.component';
 import { FinanceActionMainComponent } from './application/finance/finance-action-main/finance-action-main.component';
 import { InvestmentRequestsComponent } from './application/finance/investment-requests/investment-requests.component';
-import { GovicareRequestsComponent } from './application/finance/govicare-requests/govicare-requests.component';
+import { GovicapitalFinanceComponent } from './application/finance/govicapital-finance/govicapital-finance.component';
 
 export const routes: Routes = [
   {
@@ -624,8 +624,8 @@ export const routes: Routes = [
                     component: InvestmentRequestsComponent,
                   },
                   {
-                    path: 'govicare-requests',
-                    component: GovicareRequestsComponent
+                    path: 'govicapital-finance',
+                    component: GovicapitalFinanceComponent
                   }
                 ],
               },

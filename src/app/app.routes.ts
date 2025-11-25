@@ -235,6 +235,7 @@ import { InvestmentRequestsComponent } from './application/finance/investment-re
 import { ViewAllGovicareRequestsComponent } from './application/finance/view-all-govicare-requests/view-all-govicare-requests.component';
 import { GovicapitalFinanceComponent } from './application/finance/govicapital-finance/govicapital-finance.component';
 import { ProjectInvestmentsComponent } from './application/finance/project-investments/project-investments.component';
+import { ProjectInvestmentsTransactionsComponent } from './application/finance/project-investments-transactions/project-investments-transactions.component';
 
 export const routes: Routes = [
   {
@@ -627,19 +628,22 @@ export const routes: Routes = [
                   },
                   {
                     path: 'reject-requests',
-                    component: GovicapitalFinanceComponent
+                    component: GovicapitalFinanceComponent,
                   },
                   {
                     path: 'project-investments',
                     component: ProjectInvestmentsComponent,
-                  }
+                  },
+                  {
+                    path: 'project-investments-transactions',
+                    component: ProjectInvestmentsTransactionsComponent,
+                  },
                 ],
               },
               {
                 path: 'viewAll-Govicare-requests',
                 component: ViewAllGovicareRequestsComponent,
               },
-
             ],
           },
         ],
@@ -754,7 +758,7 @@ export const routes: Routes = [
                 path: 'add-fieald-officer',
                 component: AddFiealdOfficerComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: ['Add field officers'] }
+                data: { permission: ['Add field officers'] },
               },
               {
                 path: 'add-distribution-0fficer',
@@ -768,7 +772,7 @@ export const routes: Routes = [
                     path: '',
                     component: ViewPlantcareUsersComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: ['View all plant care users'] }
+                    data: { permission: ['View all plant care users'] },
                   },
                   {
                     path: 'edit-plantcare-users',
@@ -800,7 +804,7 @@ export const routes: Routes = [
                     path: 'view-farmer-staff/:id',
                     component: ViewFarmerStaffComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'View staff members' }
+                    data: { permission: 'View staff members' },
                   },
                   {
                     path: 'view-farmer-owner/:id',
@@ -810,7 +814,7 @@ export const routes: Routes = [
                     path: 'edit-user-staff/:id',
                     component: EditUserStaffComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Edit staff member' }
+                    data: { permission: 'Edit staff member' },
                   },
                 ],
               },
@@ -838,7 +842,7 @@ export const routes: Routes = [
                     path: '',
                     component: ViewSalesAgentsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'View salses agent' }
+                    data: { permission: 'View salses agent' },
                   },
                   {
                     path: 'create-sales-agents',
@@ -850,7 +854,7 @@ export const routes: Routes = [
                     path: 'edit-sales-agents/:id',
                     component: EditSalesAgentComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Edit sales agent' }
+                    data: { permission: 'Edit sales agent' },
                   },
 
                   {
@@ -908,14 +912,14 @@ export const routes: Routes = [
                 path: 'field-inspectors',
                 component: ViewFieldInspectorsComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View field officers' }
+                data: { permission: 'View field officers' },
               },
 
               {
                 path: 'field-officer-profile/:id',
                 component: FieldOfficerProfileComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View feild officer profile' }
+                data: { permission: 'View feild officer profile' },
               },
               {
                 path: 'edit-field-officer/:id',
@@ -925,7 +929,7 @@ export const routes: Routes = [
                 path: 'stakholder-collection-centers',
                 component: CollectionAllViewComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View collection centers' }
+                data: { permission: 'View collection centers' },
               },
               {
                 path: 'stakholder-distributed-centers',

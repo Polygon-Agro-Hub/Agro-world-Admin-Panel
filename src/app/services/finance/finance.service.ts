@@ -274,6 +274,60 @@ export interface PaymentHistoryListResponse {
   data: PaymentHistoryListItem[];
 }
 
+
+
+export interface GoviCareRequest {
+  No: number;
+  Request_ID: string;
+  Farmer_Name: string;
+  Phone_number: string;
+  Status: string;
+  Officer_ID: string;
+  NIC_Front_Image: string;
+  NIC_Back_Image: string;
+  Requested_On: string;
+  Assigned_By: string;
+  distrct: string;
+}
+
+export interface GoviCareRequestsResponse {
+  count: number;
+  data: GoviCareRequest[];
+}
+
+export interface GoviCareRequestDetail {
+  Request_ID: string;
+  Farmer_Name: string;
+  NIC_Number: string;
+  Phone_number: string;
+  Crop: string;
+  Variety: string;
+  Certificate: string;
+  Extent: string;
+  Expected_Investment: number;
+  Expected_Yield: string;
+  Expected_Start_Date: string;
+  Request_Date_Time: string;
+}
+
+export interface GoviCareRequestDetailResponse {
+  status: boolean;
+  data: GoviCareRequestDetail;
+}
+
+export interface InvestmentOfficer {
+  id: number;
+  empId: string;
+  firstName: string;
+  lastName: string;
+  JobRole: string;
+  district: string;
+  jobCount: number;
+  displayName?: string;
+  activeJobCount?: number;
+  distrct?: any;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -580,6 +634,69 @@ export class FinanceService {
       headers: this.getHeaders(),
     });
   }
+
+
+getAllGoviCareRequests(
+  status?: string,
+  search?: string
+): Observable<GoviCareRequestsResponse> {
+  let params = new HttpParams();
+
+  if (status && status.trim()) {
+    params = params.set('status', status.trim());
+  }
+
+  if (search && search.trim()) {
+    params = params.set('search', search.trim());
+  }
+
+  const url = `${this.apiUrl}finance/govicare-requests`;
+  return this.http.get<GoviCareRequestsResponse>(url, {
+    headers: this.getHeaders(),
+    params: params,
+  });
+}
+
+getGoviCareRequestById(requestId: string): Observable<GoviCareRequestDetailResponse> {
+  const url = `${this.apiUrl}finance/govicare-requests/${requestId}`;
+  return this.http.get<GoviCareRequestDetailResponse>(url, {
+    headers: this.getHeaders(),
+  });
+}
+
+getOfficersByDistrictAndRoleForInvestment(
+  distrct: string,
+  role: string
+): Observable<any> {
+  return this.http.get<any>(
+    `${this.apiUrl}finance/officers`,
+    {
+      params: {
+        district: distrct,
+        jobRole: role
+      }
+    }
+  );
+}
+
+
+assignOfficerToInvestmentRequest(
+  requestId: number,
+  officerId: number
+): Observable<any> {
+  return this.http.post<any>(
+    `${this.apiUrl}finance/assign-officer`,
+    {
+      requestId: requestId,
+      officerId: officerId
+    }
+  );
+}
+
+getOfficerDetailsById(empId: string): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}finance/officer-details/${empId}`);
+}
+
 
   getGoviCapitalRequests(filters?: {
     status?: string;

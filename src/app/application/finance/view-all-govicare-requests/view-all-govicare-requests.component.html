@@ -1,0 +1,453 @@
+<!-- Loading Spinner -->
+<div *ngIf="isLoading" class="flex items-center justify-center min-h-screen">
+  <div class="text-center">
+    <i class="fa-solid fa-spinner fa-spin text-5xl text-blue-500 mb-4"></i>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div *ngIf="!isLoading" class="p-6">
+  <!-- Back Button -->
+  <button class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
+    onclick="history.back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back</span>
+  </button>
+
+  <!-- Main Card with Horizontal Scroll -->
+  <div
+    class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6 min-w-[1400px]">
+
+      <!-- Header Section - Title and Filters in Same Line -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Title with count -->
+        <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
+          GoViCare Requests ({{ totalItems }})
+        </h1>
+
+        <!-- Filters Container -->
+        <div class="flex items-center gap-3">
+          <!-- Filter By Label -->
+          <div class="flex items-center gap-2">
+            <i class="mr-3 w-6 h-6 fill-current text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                  d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
+              </svg>
+            </i>
+            <span class="text-sm text-[#828282]">Filter By</span>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="relative w-52 custom-status-dropdown-container">
+            <!-- Hidden native select -->
+            <select [(ngModel)]="selectStatus" class="hidden" (change)="filterStatus()">
+              <option value="" selected disabled>Status</option>
+              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300" value="Assigned">
+                Assigned
+              </option>
+              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300"
+                value="Not Assigned">
+                Not Assigned
+              </option>
+            </select>
+
+            <!-- Custom dropdown trigger -->
+            <div
+              class="border-[1.8px] border-[#828282] rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+              (click)="toggleStatusDropdown()">
+              <div class="flex flex-row justify-between items-center px-3 py-1.5 cursor-pointer">
+                <span class="text-sm">{{ selectStatus || 'Status' }}</span>
+                <div class="flex items-center">
+                  <!-- X icon (shown ONLY when option is selected) -->
+                  <i *ngIf="selectStatus" (click)="cancelStatus($event)"
+                    class="fa-solid fa-xmark text-sm text-[#828282] mr-2 hover:text-[#555] dark:hover:text-[#aaa] cursor-pointer"></i>
+                  <!-- Arrow icon -->
+                  <i *ngIf="isStatusDropdownOpen || !selectStatus"
+                    class="fa-solid text-sm text-[#828282] transition-transform duration-200"
+                    [class.fa-angle-down]="!isStatusDropdownOpen" [class.fa-angle-up]="isStatusDropdownOpen"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Custom dropdown options -->
+            <div *ngIf="isStatusDropdownOpen"
+              class="absolute z-10 w-full mt-1 bg-[#F1F1F1] dark:bg-[#272F45] rounded-xl shadow-lg border border-[#828282]">
+              <div class="py-1">
+                <div *ngFor="let option of statusDropdownOptions" (click)="selectStatusOption(option)"
+                  class="px-3 py-1.5 hover:bg-gray-300 dark:text-textDark dark:hover:bg-gray-600 cursor-pointer flex items-center">
+                  <span class="flex-grow text-sm">{{ option }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative w-64">
+            <input type="text" [(ngModel)]="search" (keyup.enter)="applySearch()" placeholder="Search..."  title="Search By Request ID, Phone Number, EMP ID.."
+              class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] border-[1.8px] border-[#828282] rounded-xl text-textLight dark:text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <!-- Clear/Search Icon -->
+            <button *ngIf="search" (click)="clearSearch()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-gray-600 dark:hover:text-gray-400">
+              <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            <button *ngIf="!search" (click)="applySearch()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-blue-500">
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-200 dark:border-gray-700">
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">No
+              </th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Request_ID</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Farmer Name</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Phone number</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Status</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Officer ID</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                NIC Front Image</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                NIC Back Image</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Requested On</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Details</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Assigned By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of govicareRequests; let i = index"
+              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+
+              <!-- No -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ formatNumber(request.No) }}
+              </td>
+
+              <!-- Request ID -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Request_ID }}
+              </td>
+
+              <!-- Farmer Name -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Farmer_Name }}
+              </td>
+
+              <!-- Phone Number -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Phone_number }}
+              </td>
+
+              <!-- Status -->
+              <td class="px-4 py-4 text-center">
+                <button [class]="getAssignClass(request.Status)"
+                  class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
+                  (click)="onAssignStatusClick(request)" title="Click to assign or view officer">
+                  {{ getAssignText(request.Status) }}
+                </button>
+              </td>
+              <!-- Officer ID -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Officer_ID }}
+              </td>
+
+              <!-- NIC Front Image -->
+              <td class="px-4 py-4 text-center">
+                <button (click)="openImage(request.NIC_Front_Image)"
+                  class="text-blue-500 hover:text-blue-600 transition">
+                  <i class="fa-regular fa-image text-2xl"></i>
+                </button>
+              </td>
+
+              <!-- NIC Back Image -->
+              <td class="px-4 py-4 text-center">
+                <button (click)="openImage(request.NIC_Back_Image)"
+                  class="text-blue-500 hover:text-blue-600 transition">
+                  <i class="fa-regular fa-image text-2xl"></i>
+                </button>
+              </td>
+
+              <!-- Requested On -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Requested_On }}
+              </td>
+
+              <!-- Details (Eye Icon) -->
+              <!-- Details (Eye Icon) -->
+              <td class="px-4 py-4 text-center">
+                <button (click)="viewDetails(request.Request_ID)"
+                  class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </td>
+
+              <!-- Assigned By -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Assigned_By }}
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="govicareRequests.length === 0">
+              <td colspan="11" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                <i class="fa-solid fa-inbox text-4xl mb-2"></i>
+                <p>No GoViCare requests found</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Details Modal -->
+<div *ngIf="showDetailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="closeDetailsModal()">
+
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-md mx-4" (click)="$event.stopPropagation()">
+
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-lg font-semibold text-center text-textLight dark:text-textDark">
+        Request ID : {{ selectedRequest?.Request_ID }}
+      </h2>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+
+      <!-- Farmer Name -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer Name</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Farmer_Name }}
+        </span>
+      </div>
+
+      <!-- NIC Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">NIC Number</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.NIC_Number }}
+        </span>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Phone Number</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Phone_number }}
+        </span>
+      </div>
+
+      <!-- Crop -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Crop</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Crop }}
+        </span>
+      </div>
+
+      <!-- Variety -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Variety</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Variety }}
+        </span>
+      </div>
+
+      <!-- Certificate -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Certificate</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Certificate }}
+        </span>
+      </div>
+
+      <!-- Extent -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Extent</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Extent }}
+        </span>
+      </div>
+
+      <!-- Expected Investment -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Investment</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ formatCurrency(selectedRequest?.Expected_Investment || 0) }}
+        </span>
+      </div>
+
+      <!-- Expected Yield -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Yield</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Expected_Yield }}
+        </span>
+      </div>
+
+      <!-- Expected Start Date -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Start Date</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Expected_Start_Date }}
+        </span>
+      </div>
+
+      <!-- Request Date & Time -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Request Date & Time</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Request_Date_Time }}
+        </span>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-center">
+      <button (click)="closeDetailsModal()"
+        class="px-12 py-2 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium text-sm">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Assigned Officer Popup -->
+<div *ngIf="isOfficerPopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="officerPopUpClose()">
+  <div
+    class="flex flex-col justify-center items-center gap-y-6 bg-[#FFFFFF] dark:bg-tileBlack px-12 py-4 rounded-lg shadow-md"
+    (click)="$event.stopPropagation()">
+    <p class="text-lg font-semibold dark:text-white">Assigned Officer</p>
+
+    <div *ngIf="!assignedOfficerArray.length" class="text-gray-500">
+      No officer assigned
+    </div>
+
+    <div *ngIf="assignedOfficerArray.length"
+      class="flex flex-col max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+      <div *ngFor="let officer of assignedOfficerArray; let i = index" class="py-1 px-2">
+        <span class="text-gray-700 dark:text-gray-300">{{ officer }}</span>
+      </div>
+    </div>
+
+    <button class="text-white bg-[#74788D] px-4 py-1 rounded-lg" (click)="officerPopUpClose()">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- Assign Inspector Popup -->
+<div *ngIf="isAssignPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="assignPopupClose()">
+  <div
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
+    (click)="$event.stopPropagation()">
+    <!-- Popup Header -->
+    <div class="flex justify-center items-center mb-4 px-10">
+      <h3 class="text-lg font-semibold dark:text-white">Assign Inspectors</h3>
+    </div>
+
+    <!-- Officer Role Selection -->
+    <div class="flex flex-col mb-4 w-full">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
+        Officer Role
+      </label>
+      <p-dropdown [options]="officerRoleOptions" [(ngModel)]="selectedOfficerRole" optionLabel="label"
+        optionValue="value" placeholder="-- Select Officer Role --" [showClear]="false"
+        (onChange)="onOfficerRoleChange()" styleClass="w-full border border-2 rounded-lg h-12">
+      </p-dropdown>
+    </div>
+
+    <!-- Officer Selection -->
+    <div class="flex flex-col mb-4 w-full">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
+        Officer
+      </label>
+      <p-dropdown [options]="availableOfficers" [(ngModel)]="selectedOfficerId" optionLabel="displayName"
+        optionValue="empId" placeholder="--Select officer--" [showClear]="true"
+        [disabled]="!selectedOfficerRole || isLoadingOfficers" (onChange)="onOfficerSelected()"
+        styleClass="w-full border border-2 rounded-lg h-12">
+        <ng-template pTemplate="empty">
+          <div class="p-2 text-center text-gray-500">
+            {{ selectedOfficerRole ? "No officers available" : "Please select a role first" }}
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <div *ngIf="isLoadingOfficers" class="text-sm text-gray-500 mt-1">
+        Loading officers...
+      </div>
+    </div>
+
+    <!-- Selected Officer Info -->
+    <div *ngIf="selectedOfficerInfo" class="mb-4 p-5 text-center rounded-lg border border-blue-500 w-full mt-2">
+      <p class="text-md font-semibold text-textLight dark:text-textDark">
+        {{ selectedOfficerInfo.empId }} - {{ selectedOfficerInfo.firstName }}
+        {{ selectedOfficerInfo.lastName }}
+      </p>
+      <p class="text-sm text-textLight dark:text-textDark">
+        District: {{ selectedOfficerInfo.district }}
+      </p>
+      <p class="text-sm text-textLight dark:text-textDark">
+        Count:
+        <span class="text-blue-500">{{ selectedOfficerInfo.activeJobCount }}</span>
+      </p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="assignError" class="mt-3 p-2 text-red-700 rounded text-sm">
+      {{ assignError }}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-center gap-3 mt-4">
+      <div class="flex gap-3 ml-auto">
+        <button (click)="assignPopupClose()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
+          Cancel
+        </button>
+        <button (click)="assignOfficer()" [disabled]="!selectedOfficerId || isAssigning"
+          class="px-4 py-2 text-sm font-medium text-white bg-[#3980C0] rounded-lg hover:bg-[#2c6da3] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2">
+          <i *ngIf="isAssigning" class="fa-solid fa-spinner fa-spin"></i>
+          Assign
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -624,32 +624,26 @@ export const routes: Routes = [
               {
                 path: 'finance-govicapital',
                 children: [
+                  { path: 'ivesment-requests', component: InvestmentRequestsComponent },
+                  { path: 'viewAll-Govicare-requests', component: ViewAllGovicareRequestsComponent },
+                  { path: 'viewAll-Govicare-ApprovedRequests', component: ViewAllApprovedGovicareRequestsComponent },
                   {
-                    path: 'ivesment-requests',
-                    children: [
-                      { path: '', component: InvestmentRequestsComponent },
-                      { path: 'viewAll-Govicare-requests', component: ViewAllGovicareRequestsComponent },
-                      { path: 'viewAll-Govicare-ApprovedRequests', component: ViewAllApprovedGovicareRequestsComponent },
-                  {
-                        path: 'reject-requests',
-                        component: GovicapitalFinanceComponent,
-                      },
-                      {
-                        path: 'project-investments',
-                        component: ProjectInvestmentsComponent,
-                      },
-                      {
-                        path: 'project-investments-transactions',
-                        component: ProjectInvestmentsTransactionsComponent,
-                      },
-
-                      {
-                        path: 'published-projects',
-                        component: PublishedProjectsComponent,
-                      }
-                    ]
+                    path: 'reject-requests',
+                    component: GovicapitalFinanceComponent,
                   },
-                ],
+                  {
+                    path: 'project-investments',
+                    component: ProjectInvestmentsComponent,
+                  },
+                  {
+                    path: 'project-investments-transactions',
+                    component: ProjectInvestmentsTransactionsComponent,
+                  },
+                  {
+                    path: 'published-projects',
+                    component: PublishedProjectsComponent,
+                  }
+                ]
               }
             ],
           },

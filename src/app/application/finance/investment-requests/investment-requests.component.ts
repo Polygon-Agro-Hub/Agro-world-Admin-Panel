@@ -19,17 +19,20 @@ export class InvestmentRequestsComponent {
   goBack() {
     this.router.navigate(['/finance/action']);
   }
-
+  
+   govicareRequest(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/reject-requests']);
+  }
 
   projectInvestments(): void {
     this.router.navigate(['/finance/action/finance-govicapital/project-investments']);
   }
   
     ViewAllGovicareRequests(): void {
-    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests/viewAll-Govicare-requests']);
+    this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-requests']);
   }
   
     ViewApprovedGovicareRequests(): void {
-    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests/viewAll-Govicare-ApprovedRequests']);
+    this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-ApprovedRequests']);
   }
 }

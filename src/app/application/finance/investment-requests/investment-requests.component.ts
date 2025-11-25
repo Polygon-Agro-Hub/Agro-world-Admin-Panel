@@ -20,9 +20,6 @@ export class InvestmentRequestsComponent {
     this.router.navigate(['/finance/action']);
   }
 
-  govicareRequest(): void {
-    this.router.navigate(['/finance/action/finance-govicapital/reject-requests']);
-  }
 
   projectInvestments(): void {
     this.router.navigate(['/finance/action/finance-govicapital/project-investments']);

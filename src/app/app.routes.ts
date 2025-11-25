@@ -628,25 +628,25 @@ export const routes: Routes = [
                     path: 'ivesment-requests',
                     children: [
                       { path: '', component: InvestmentRequestsComponent },
-                  {
-                    path: 'reject-requests',
-                    component: GovicapitalFinanceComponent,
-                  },
-                  {
-                    path: 'project-investments',
-                    component: ProjectInvestmentsComponent,
-                  },
-                  {
-                    path: 'project-investments-transactions',
-                    component: ProjectInvestmentsTransactionsComponent,
-                  },
-
-                  {
-                    path: 'published-projects',
-                    component: PublishedProjectsComponent,
-                  },
                       { path: 'viewAll-Govicare-requests', component: ViewAllGovicareRequestsComponent },
-                      { path: 'viewAll-Govicare-ApprovedRequests', component: ViewAllApprovedGovicareRequestsComponent }
+                      { path: 'viewAll-Govicare-ApprovedRequests', component: ViewAllApprovedGovicareRequestsComponent },
+                  {
+                        path: 'reject-requests',
+                        component: GovicapitalFinanceComponent,
+                      },
+                      {
+                        path: 'project-investments',
+                        component: ProjectInvestmentsComponent,
+                      },
+                      {
+                        path: 'project-investments-transactions',
+                        component: ProjectInvestmentsTransactionsComponent,
+                      },
+
+                      {
+                        path: 'published-projects',
+                        component: PublishedProjectsComponent,
+                      }
                     ]
                   },
                 ],

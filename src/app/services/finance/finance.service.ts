@@ -676,6 +676,27 @@ export class FinanceService {
       params: params,
     });
   }
+  
+    getAllApprovedGoviCareRequests(
+    status?: string,
+    search?: string
+  ): Observable<ApprovedGoviCareRequestsResponse> {
+    let params = new HttpParams();
+
+    if (status && status.trim()) {
+      params = params.set('status', status.trim());
+    }
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/approved-govicare-requests`;
+    return this.http.get<ApprovedGoviCareRequestsResponse>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
+  }
 
   getGoviCareRequestById(requestId: string): Observable<GoviCareRequestDetailResponse> {
     const url = `${this.apiUrl}finance/govicare-requests/${requestId}`;
@@ -722,6 +743,19 @@ export class FinanceService {
 
   getOfficerDetailsById(empId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}finance/officer-details/${empId}`);
+  }
+  
+   updateGoviCareRequestPublishStatus(
+    requestId: number
+  ): Observable<UpdatePublishStatusResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    const url = `${this.apiUrl}finance/govicare-requests/${requestId}/publish`;
+    return this.http.put<UpdatePublishStatusResponse>(url, {}, {
+      headers,
+    });
   }
 
 

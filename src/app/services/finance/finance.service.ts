@@ -698,31 +698,19 @@ getOfficerDetailsById(empId: string): Observable<any> {
 }
 
 
-  getGoviCapitalRequests(filters?: {
-    status?: string;
-    search?: string;
-  }): Observable<any> {
-    let params = new HttpParams();
+  getAllRejectedInvestmentRequests(
+  search?: string
+): Observable<any> {
+  let params = new HttpParams();
 
-    if (filters?.status) {
-      params = params.set('status', filters.status);
-    }
-
-    if (filters?.search) {
-      params = params.set('search', filters.search);
-    }
-
-    const url = `${this.apiUrl}/finance/govi-capital-requests`;
-    return this.http.get(url, {
-      headers: this.getHeaders(),
-      params: params,
-    });
+  if (search && search.trim()) {
+    params = params.set('search', search.trim());
   }
 
-  getGoviCapitalRequestById(id: string): Observable<any> {
-    const url = `${this.apiUrl}/finance/govi-capital-requests/${id}`;
-    return this.http.get(url, {
-      headers: this.getHeaders(),
-    });
-  }
+  const url = `${this.apiUrl}finance/rejected-investment-requests`;
+  return this.http.get<any>(url, {
+    headers: this.getHeaders(),
+    params: params,
+  });
+}
 }

@@ -625,7 +625,7 @@ export const routes: Routes = [
                     component: InvestmentRequestsComponent,
                   },
                   {
-                    path: 'govicapital-finance',
+                    path: 'reject-requests',
                     component: GovicapitalFinanceComponent
                   }
                 ],

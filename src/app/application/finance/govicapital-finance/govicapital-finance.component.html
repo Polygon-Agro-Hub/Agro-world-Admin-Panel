@@ -1,9 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button
-  class="mb-5 text-textLight dark:text-textDark"
-  (click)="back()"
-  class="mb-5 text-textLight dark:text-textDark"
->
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -17,7 +13,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Rejected Requests ({{ this.total }})
+          Rejected Requests ({{ total ?? 0 }})
         </h2>
       </div>
 
@@ -27,22 +23,25 @@
         >
           <!-- Popover -->
           <div
-            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
           >
-            Search by Company Name or Email
+            Search by Request ID or Phone Number
           </div>
 
           <!-- Input field -->
           <input
             type="text"
-            placeholder="Search by Company Name or Email"
+            placeholder="Search by Request ID or Phone Number"
             class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
           />
 
           <!-- Search button -->
           <button
             type="button"
             class="voorbeeld text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +63,8 @@
           <button
             type="button"
             class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="onClearSearch()"
+            *ngIf="searchTerm"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -83,20 +84,28 @@
         </div>
       </div>
     </div>
+
     <div>
-      <!-- <div
+      <!-- No Data State -->
+      <div
+        *ngIf="rejectedRequests.length === 0 && !isLoading"
         class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6"
       >
         <p class="text-[#494949] my-6 dark:text-textDark">
-          --No Data Availabale--
+          {{ searchTerm ? "No matching records found" : "No Data Available" }}
         </p>
         <img
           src="assets/images/NoData.png"
           alt="No Data"
           class="w-20 h-20 dark:text-textDark"
         />
-      </div> -->
-      <table class="min-w-full divide-y divide-gray-200 table-auto">
+      </div>
+
+      <!-- Data Table -->
+      <table
+        *ngIf="rejectedRequests.length > 0"
+        class="min-w-full divide-y divide-gray-200 table-auto"
+      >
         <thead>
           <tr>
             <th
@@ -122,7 +131,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Rejected By
+              Rejection Reason
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -144,47 +153,58 @@
             >
               Details
             </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
-              View
-            </th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
+        <tbody class="divide-y divide-gray-200">
+          <tr
+            *ngFor="let request of rejectedRequests; let i = index"
+            class="hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ i + 1 }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ request.id }}
+            </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+              {{ getFullName(request.firstName, request.lastName) || "N/A" }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ request.phoneNumber || "N/A" }}
+            </td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark max-w-xs truncate"
+            >
+              {{ request.rejectionReason || "N/A" }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ formatDate(request.rejectedAt) }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                *ngIf="request.nicFront"
+                class="text-blue-600 hover:text-blue-800 underline"
+                (click)="viewNicImage(request.nicFront, 'NIC Front')"
+              >
+                <i class="fa-solid fa-image"></i>
+              </button>
+              <span *ngIf="!request.nicFront">N/A</span>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                *ngIf="request.nicBack"
+                class="text-blue-600 hover:text-blue-800 underline"
+                (click)="viewNicImage(request.nicBack, 'NIC Back')"
+              >
+                <i class="fa-solid fa-image"></i>
+              </button>
+              <span *ngIf="!request.nicBack">N/A</span>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="viewDetails(request)"
+              >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"

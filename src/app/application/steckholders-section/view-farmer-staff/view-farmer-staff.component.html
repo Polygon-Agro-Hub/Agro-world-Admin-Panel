@@ -29,33 +29,33 @@
 
 
 
-                <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
-    <!-- Input field -->
-    <input 
-    type="text" 
-    placeholder="Search..." 
-    title="Search by NIC/Name" 
-    [(ngModel)]="searchText" 
-    name="searchText"
-    class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" 
-    (keydown.enter)="onSearchEnter()"
-    (keydown)="onKeydown($event)"
-/>
+                <div
+                    class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group">
+                    <!-- Input field -->
+                    <input type="text" placeholder="Search..." title="Search by NIC/Name" [(ngModel)]="searchText"
+                        name="searchText" class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+                        (keydown.enter)="onSearchEnter()" (keydown)="onKeydown($event)" />
 
-    <!-- Search button -->
-    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="fetchData()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
-        </svg>
-    </button>
+                    <!-- Search button -->
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                        (click)="fetchData()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                        </svg>
+                    </button>
 
-    <!-- Clear button -->
-    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-    </button>
-</div>
+                    <!-- Clear button -->
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                        (click)="offSearch()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -152,13 +152,13 @@
 
 
 
-                        <td class="px-3 py-3 text-center dark:text-white">{{ item.modifiedByUserName || '--' }}</td>
+                        <td class="px-3 py-3 text-center dark:text-white" >{{ item.modifiedByUserName || '--' }}</td>
                         <td class="px-3 py-3 text-center">
                             <!-- Reduced px-4 to px-3 -->
                             <div class="flex justify-center space-x-4">
 
 
-                                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" *ngIf="permissionService.hasPermission('Edit staff member') || tokenService.getUserDetails().role === '1'"
                                     (click)="editFarmerStaff(item.id)">
 
                                     <svg fill="currentColor" viewBox="0 0 32 32" version="1.1"
@@ -170,7 +170,8 @@
                                     </svg>
                                 </button>
 
-                                <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteFarmStaff(item.id)">
+                                <button class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]" *ngIf="permissionService.hasPermission('Delete staff member') || tokenService.getUserDetails().role === '1'"
+                                    (click)="deleteFarmStaff(item.id)">
                                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         fill="none" viewBox="0 0 24 24">
                                         <title>Delete</title>

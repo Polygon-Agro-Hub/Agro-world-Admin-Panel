@@ -30,7 +30,7 @@
       </div>
 
       <div class="flex flex-row gap-4 justify-between">
-        <div class="flex flex-row justify-center min-w-24">
+        <div class="flex flex-row justify-center min-w-24" *ngIf=" permissionService.hasPermission('Delete field officers') || tokenService.getUserDetails().role === '1'">
           <button
             class="flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#6c2d3180] bg-[#FFDBDC80] dark:text-[#db4848] text-[#FF0000] border-2 dark:border-[#FF0000] border-[#FF0000] text-lg rounded-xl shadow-md"
             (click)="deleteFieldOfficer(officerObj.id)">
@@ -39,7 +39,7 @@
           </button>
         </div>
 
-        <div class="flex flex-row justify-center ">
+        <div class="flex flex-row justify-center " *ngIf=" permissionService.hasPermission('Edit field officers') || tokenService.getUserDetails().role === '1'">
           <button
             class="min-w-24 flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#38608480] bg-[#DBEEFF80] dark:text-[#3980C0] text-[#3980C0] border-2 border-[#3980C0] dark:border-[#3980C0] text-lg rounded-xl shadow-md"
             (click)="editFieldOfficer(officerObj.id)">
@@ -56,7 +56,7 @@
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <div class="flex flex-row justify-between">
         <p class="text-[#030308] text-lg dark:text-[#ffffff]">Personal Information</p>
-        <button class="bg-[#3980C0] text-white px-6 py-1 text-xl rounded-lg shadow-lg" [disabled]="isGeneratingPDF"
+        <button class="bg-[#3980C0] text-white px-6 py-1 text-xl rounded-lg shadow-lg" [disabled]="isGeneratingPDF" *ngIf=" permissionService.hasPermission('Download field officers') || tokenService.getUserDetails().role === '1'"
           (click)="generatePDF()">
           <i class="fa-solid fa-download" [ngClass]="{ hidden: isGeneratingPDF }"></i>
           <i class="fa-solid fa-spinner fa-spin" [ngClass]="{ hidden: !isGeneratingPDF }"></i>

@@ -140,7 +140,7 @@
     </h2>
 
     <!-- Modal Body -->
-    <div class="p-6 overflow-y-auto max-h-[60vh]">
+    <div class="p-6 overflow-y-auto max-h-[50vh]">
       <app-loading-spinner *ngIf="isLoadingCrops"></app-loading-spinner>
 
       <div *ngIf="!isLoadingCrops">
@@ -153,7 +153,7 @@
         <div *ngIf="selectedAuditCrops.length > 0" class="grid grid-cols-1 gap-3">
           <div *ngFor="let crop of selectedAuditCrops">
             <div class="flex items-center ml-40">
-              <span class="text-textLight dark:text-textDark font-medium">
+              <span class="text-textLight dark:text-textDark font-thin">
                 <i class="fa-solid fa-circle text-xs mr-2"></i>
                 {{ crop.cropNameEnglish }}
               </span>

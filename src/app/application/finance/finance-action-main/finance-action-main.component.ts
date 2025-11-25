@@ -12,6 +12,9 @@ import { PermissionService } from '../../../services/roles-permission/permission
   styleUrl: './finance-action-main.component.css'
 })
 export class FinanceActionMainComponent {
+  popupVisibleCropCalender = false;
+  popupVisibleNews = false;
+  popupVisibleMarketPrice = false;
 
   constructor(
       private router: Router,
@@ -41,5 +44,19 @@ export class FinanceActionMainComponent {
 
   PaymentHistoryNavigation(): void {
     this.router.navigate(['/finance/action/viewAll-payments']);
+  }
+
+  togglePopupCropCalender() {
+    this.popupVisibleCropCalender = !this.popupVisibleCropCalender;
+    if ((this.popupVisibleNews = true)) {
+      this.popupVisibleNews = !this.popupVisibleNews;
+    }
+    if ((this.popupVisibleMarketPrice = true)) {
+      this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
+    }
+  }
+
+  invesmentRequest(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests']);
   }
 }

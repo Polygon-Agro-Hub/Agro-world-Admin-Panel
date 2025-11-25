@@ -929,7 +929,7 @@ export class CreateCenterHeadComponent implements OnInit {
     if (!this.personalData.lastNameTamil) missingFields.push('Last Name (Tamil) is Required');
 
     if (!this.personalData.phoneNumber01) {
-      missingFields.push('Phone Number 01 is Required');
+      missingFields.push('Mobile Number 01 is Required');
     } else if (this.isPhoneInvalidMap['phone01'] || !phonePattern.test(this.personalData.phoneNumber01)) {
       missingFields.push('Phone Number 01 (format: +947XXXXXXXX, 9 digits)');
     }

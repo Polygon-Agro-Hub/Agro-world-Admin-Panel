@@ -303,7 +303,7 @@
               "
               class="px-3 py-3 text-center text-textLight dark:text-textDark"
             >
-              <button
+              <button *ngIf="permissionService.hasPermission('Edit sales agent') ||tokenService.getUserDetails().role === '1'"
                 class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCompanyHead(item.id)"
               >

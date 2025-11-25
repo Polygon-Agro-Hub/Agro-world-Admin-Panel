@@ -41,6 +41,7 @@
     tokenService.getUserDetails().role === '1'
   "
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <!-- <div> -->
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -146,7 +147,7 @@
               <!-- Reduced px-4 to px-3 -->
               Register Status
             </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View staff members') || tokenService.getUserDetails().role === '1'">
               <!-- Reduced px-4 to px-3 -->
               Staff
             </th>
@@ -222,7 +223,7 @@
                 Unregistered
               </span>
             </td>
-            <td class="px-3 py-3 text-center">
+            <td class="px-3 py-3 text-center" *ngIf="permissionService.hasPermission('View staff members') || tokenService.getUserDetails().role === '1'">
               <!-- Reduced px-4 to px-3 -->
               <button (click)="viewFarmerStaff(item.id, item.firstName + ' ' + item.lastName, item.phoneNumber)"><i
                   class="fa-solid fa-users text-[#3980C0] text-xl"></i></button>

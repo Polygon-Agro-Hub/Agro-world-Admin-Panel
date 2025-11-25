@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 import { PlantcareUsersService } from '../../../services/plant-care/plantcare-users.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-field-officer-profile',
@@ -39,7 +40,8 @@ export class FieldOfficerProfileComponent {
     private plantcareService: PlantcareUsersService,
     private router: Router,
     private location: Location,
-    private tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {

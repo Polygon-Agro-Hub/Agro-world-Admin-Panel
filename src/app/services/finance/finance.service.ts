@@ -335,7 +335,7 @@ export class FinanceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -546,94 +546,94 @@ export class FinanceService {
 
     return this.http.get<any>(url, { headers: headers });
   }
-  
+
   createPaymentHistory(
-  receivers: string,
-  amount: string,
-  paymentReference: string,
-  file: File
-): Observable<CreatePaymentHistoryResponse> {
-  const formData = new FormData();
-  formData.append('receivers', receivers);
-  formData.append('amount', amount);
-  formData.append('paymentReference', paymentReference);
-  formData.append('file', file);
-
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.tokenService.getToken()}`,
-  });
-
-  const url = `${this.apiUrl}finance/payment-history`;
-  return this.http.post<CreatePaymentHistoryResponse>(url, formData, {
-    headers,
-  });
-}
-
-getPaymentHistoryById(id: number): Observable<any> {
-  const url = `${this.apiUrl}finance/payment-history/${id}`;
-  return this.http.get<any>(url, {
-    headers: this.getHeaders(),
-  });
-}
-
-updatePaymentHistory(
-  id: number,
-  receivers: string,
-  amount: string,
-  paymentReference: string,
-  file?: File
-): Observable<UpdatePaymentHistoryResponse> {
-  const formData = new FormData();
-  formData.append('receivers', receivers);
-  formData.append('amount', amount);
-  formData.append('paymentReference', paymentReference);
-  
-  if (file) {
+    receivers: string,
+    amount: string,
+    paymentReference: string,
+    file: File
+  ): Observable<CreatePaymentHistoryResponse> {
+    const formData = new FormData();
+    formData.append('receivers', receivers);
+    formData.append('amount', amount);
+    formData.append('paymentReference', paymentReference);
     formData.append('file', file);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    const url = `${this.apiUrl}finance/payment-history`;
+    return this.http.post<CreatePaymentHistoryResponse>(url, formData, {
+      headers,
+    });
   }
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.tokenService.getToken()}`,
-  });
-
-  const url = `${this.apiUrl}finance/payment-history/${id}`;
-  return this.http.put<UpdatePaymentHistoryResponse>(url, formData, {
-    headers,
-  });
-}
-
-getAllPaymentHistory(
-  receivers?: string,
-  issuedDate?: string,
-  search?: string
-): Observable<PaymentHistoryListResponse> {
-  let params = new HttpParams();
-
-  if (receivers && receivers.trim()) {
-    params = params.set('receivers', receivers.trim());
+  getPaymentHistoryById(id: number): Observable<any> {
+    const url = `${this.apiUrl}finance/payment-history/${id}`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
   }
 
-  if (issuedDate) {
-    params = params.set('issuedDate', issuedDate);
+  updatePaymentHistory(
+    id: number,
+    receivers: string,
+    amount: string,
+    paymentReference: string,
+    file?: File
+  ): Observable<UpdatePaymentHistoryResponse> {
+    const formData = new FormData();
+    formData.append('receivers', receivers);
+    formData.append('amount', amount);
+    formData.append('paymentReference', paymentReference);
+
+    if (file) {
+      formData.append('file', file);
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    const url = `${this.apiUrl}finance/payment-history/${id}`;
+    return this.http.put<UpdatePaymentHistoryResponse>(url, formData, {
+      headers,
+    });
   }
 
-  if (search && search.trim()) {
-    params = params.set('search', search.trim());
+  getAllPaymentHistory(
+    receivers?: string,
+    issuedDate?: string,
+    search?: string
+  ): Observable<PaymentHistoryListResponse> {
+    let params = new HttpParams();
+
+    if (receivers && receivers.trim()) {
+      params = params.set('receivers', receivers.trim());
+    }
+
+    if (issuedDate) {
+      params = params.set('issuedDate', issuedDate);
+    }
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/payment-history`;
+    return this.http.get<PaymentHistoryListResponse>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
   }
 
-  const url = `${this.apiUrl}finance/payment-history`;
-  return this.http.get<PaymentHistoryListResponse>(url, {
-    headers: this.getHeaders(),
-    params: params,
-  });
-}
-
-deletePaymentHistory(id: number): Observable<any> {
-  const url = `${this.apiUrl}finance/payment-history/${id}`;
-  return this.http.delete(url, {
-    headers: this.getHeaders(),
-  });
-}
+  deletePaymentHistory(id: number): Observable<any> {
+    const url = `${this.apiUrl}finance/payment-history/${id}`;
+    return this.http.delete(url, {
+      headers: this.getHeaders(),
+    });
+  }
 
 
 getAllGoviCareRequests(
@@ -698,4 +698,19 @@ getOfficerDetailsById(empId: string): Observable<any> {
 }
 
 
+  getAllRejectedInvestmentRequests(
+  search?: string
+): Observable<any> {
+  let params = new HttpParams();
+
+  if (search && search.trim()) {
+    params = params.set('search', search.trim());
+  }
+
+  const url = `${this.apiUrl}finance/rejected-investment-requests`;
+  return this.http.get<any>(url, {
+    headers: this.getHeaders(),
+    params: params,
+  });
+}
 }

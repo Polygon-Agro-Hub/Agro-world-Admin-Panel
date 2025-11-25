@@ -1,0 +1,425 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1850px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          Rejected Requests ({{ total ?? 0 }})
+        </h2>
+      </div>
+
+      <div class="mr-8">
+        <div
+          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
+        >
+          <!-- Popover -->
+          <div
+            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+          >
+            Search by Request ID or Phone Number
+          </div>
+
+          <!-- Input field -->
+          <input
+            type="text"
+            placeholder="Search by Request ID or Phone Number"
+            class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+          />
+
+          <!-- Search button -->
+          <button
+            type="button"
+            class="voorbeeld text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+
+          <!-- Clear button -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="onClearSearch()"
+            *ngIf="searchTerm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- No Data State -->
+      <div
+        *ngIf="rejectedRequests.length === 0 && !isLoading"
+        class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6"
+      >
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          {{ searchTerm ? "No matching records found" : "No Data Available" }}
+        </p>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 dark:text-textDark"
+        />
+      </div>
+
+      <!-- Data Table -->
+      <table
+        *ngIf="rejectedRequests.length > 0"
+        class="min-w-full divide-y divide-gray-200 table-auto"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Request_ID
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Farmer Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Phone number
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Rejection Reason
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Rejected Date
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              NIC Front Image
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              NIC Back Image
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Details
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr
+            *ngFor="let request of rejectedRequests; let i = index"
+            class="hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ i + 1 }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ request.id }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ getFullName(request.firstName, request.lastName) || "N/A" }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ request.phoneNumber || "N/A" }}
+            </td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark max-w-xs truncate"
+            >
+              {{ request.rejectionReason || "N/A" }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ formatDate(request.rejectedAt) }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                *ngIf="request.nicFront"
+                class="text-blue-600 hover:text-blue-800 underline"
+                (click)="viewNicImage(request.nicFront, 'NIC Front')"
+              >
+                <i class="fa-solid fa-image"></i>
+              </button>
+              <span *ngIf="!request.nicFront">N/A</span>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                *ngIf="request.nicBack"
+                class="text-blue-600 hover:text-blue-800 underline"
+                (click)="viewNicImage(request.nicBack, 'NIC Back')"
+              >
+                <i class="fa-solid fa-image"></i>
+              </button>
+              <span *ngIf="!request.nicBack">N/A</span>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="viewDetails(request)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Popup -->
+<div
+  *ngIf="showModal && selectedRequest"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div
+      class="flex justify-center items-center p-6 border-b border-gray-200 dark:border-gray-700"
+    >
+      <h3 class="text-xl font-semibold text-textLight dark:text-textDark">
+        Request ID - {{ selectedRequest.id }}
+      </h3>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 flex justify-center">
+      <div class="space-y-4">
+        <!-- Request ID -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Request ID
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.id }}
+          </div>
+        </div>
+
+        <!-- Farmer Name -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Farmer Name
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              getFullName(
+                selectedRequest.firstName,
+                selectedRequest.lastName
+              ) || "N/A"
+            }}
+          </div>
+        </div>
+
+        <!-- NIC Number -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            NIC Number
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{ selectedRequest.NICnumber }}
+          </div>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Phone Number
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.phoneNumber }}
+          </div>
+        </div>
+
+        <!-- Crop -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Crop
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.cropNameEnglish }}
+          </div>
+        </div>
+
+        <!-- Variety -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Variety
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.varietyNameEnglish }}
+          </div>
+        </div>
+
+        <!-- Certificate -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Certificate
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.certificateName }}
+          </div>
+        </div>
+
+        <!-- Extent -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Extent
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.extentac }} Acres
+          </div>
+        </div>
+
+        <!-- Expected Investment -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Expected Investment
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              formatCurrency(
+                selectedRequest.expectedInvestment || selectedRequest.investment
+              )
+            }}
+          </div>
+        </div>
+
+        <!-- Expected Yield -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Expected Yield
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              selectedRequest.expectedYield
+                ? selectedRequest.expectedYield + "kg"
+                : "2,000kg"
+            }}
+          </div>
+        </div>
+
+        <!-- Expected Start Date -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Expected Start Date
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              formatDate(
+                selectedRequest.expectedStartDate || selectedRequest.startDate
+              ) || "November 1, 2026"
+            }}
+          </div>
+        </div>
+
+        <!-- Request Date & Time -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Request Date & Time
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              formatDate(
+                selectedRequest.requestDateTime || selectedRequest.createdAt
+              ) || "At 11.00AM on October 1, 2026"
+            }}
+          </div>
+        </div>
+
+        <!-- Rejection Reason -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Rejected Reason
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              selectedRequest.rejectionReason ||
+                "The farmer currently does not possess such a land to cultivate and new as a farmer to have such a large investment."
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex justify-center p-6">
+      <button
+        class="px-6 py-2 bg-[#74788D] text-[#D3D3D3] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        (click)="closeModal()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

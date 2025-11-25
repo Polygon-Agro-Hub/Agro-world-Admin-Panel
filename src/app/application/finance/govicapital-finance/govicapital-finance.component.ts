@@ -31,6 +31,13 @@ interface RejectedInvestmentRequest {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+  cropNameEnglish: string;
+  varietyNameEnglish: string;
+  certificateName: string;
+  expectedInvestment?: number;
+  expectedStartDate?: string;
+  requestDateTime?: string;
+  NICnumber: string;
 }
 
 @Component({
@@ -45,6 +52,10 @@ export class GovicapitalFinanceComponent implements OnInit {
   total: number | null = null;
   searchTerm: string = '';
   rejectedRequests: RejectedInvestmentRequest[] = [];
+
+  // Modal properties
+  showModal = false;
+  selectedRequest: RejectedInvestmentRequest | null = null;
 
   constructor(
     private location: Location,
@@ -87,9 +98,13 @@ export class GovicapitalFinanceComponent implements OnInit {
   }
 
   viewDetails(request: RejectedInvestmentRequest): void {
-    // Implement view details functionality
-    console.log('View details for request:', request);
-    // You can navigate to a details page or open a modal
+    this.selectedRequest = request;
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.selectedRequest = null;
   }
 
   getFullName(firstName: string, lastName: string): string {
@@ -99,6 +114,14 @@ export class GovicapitalFinanceComponent implements OnInit {
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString();
+  }
+
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-LK', {
+      style: 'currency',
+      currency: 'LKR',
+      minimumFractionDigits: 2,
+    }).format(amount);
   }
 
   viewNicImage(imageUrl: string, imageType: string): void {

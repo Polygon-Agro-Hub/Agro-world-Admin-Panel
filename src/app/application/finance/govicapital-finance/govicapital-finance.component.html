@@ -226,3 +226,200 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Popup -->
+<div
+  *ngIf="showModal && selectedRequest"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-xl"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div
+      class="flex justify-center items-center p-6 border-b border-gray-200 dark:border-gray-700"
+    >
+      <h3 class="text-xl font-semibold text-textLight dark:text-textDark">
+        Request ID - {{ selectedRequest.id }}
+      </h3>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 flex justify-center">
+      <div class="space-y-4">
+        <!-- Request ID -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Request ID
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.id }}
+          </div>
+        </div>
+
+        <!-- Farmer Name -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Farmer Name
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              getFullName(
+                selectedRequest.firstName,
+                selectedRequest.lastName
+              ) || "N/A"
+            }}
+          </div>
+        </div>
+
+        <!-- NIC Number -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            NIC Number
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{ selectedRequest.NICnumber }}
+          </div>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Phone Number
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.phoneNumber }}
+          </div>
+        </div>
+
+        <!-- Crop -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Crop
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.cropNameEnglish }}
+          </div>
+        </div>
+
+        <!-- Variety -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Variety
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.varietyNameEnglish }}
+          </div>
+        </div>
+
+        <!-- Certificate -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Certificate
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.certificateName }}
+          </div>
+        </div>
+
+        <!-- Extent -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Extent
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            : {{ selectedRequest.extentac }} Acres
+          </div>
+        </div>
+
+        <!-- Expected Investment -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Expected Investment
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              formatCurrency(
+                selectedRequest.expectedInvestment || selectedRequest.investment
+              )
+            }}
+          </div>
+        </div>
+
+        <!-- Expected Yield -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Expected Yield
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              selectedRequest.expectedYield
+                ? selectedRequest.expectedYield + "kg"
+                : "2,000kg"
+            }}
+          </div>
+        </div>
+
+        <!-- Expected Start Date -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Expected Start Date
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              formatDate(
+                selectedRequest.expectedStartDate || selectedRequest.startDate
+              ) || "November 1, 2026"
+            }}
+          </div>
+        </div>
+
+        <!-- Request Date & Time -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Request Date & Time
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              formatDate(
+                selectedRequest.requestDateTime || selectedRequest.createdAt
+              ) || "At 11.00AM on October 1, 2026"
+            }}
+          </div>
+        </div>
+
+        <!-- Rejection Reason -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="text-sm font-medium text-textLight dark:text-textDark">
+            Rejected Reason
+          </div>
+          <div class="text-sm text-textLight dark:text-textDark">
+            :
+            {{
+              selectedRequest.rejectionReason ||
+                "The farmer currently does not possess such a land to cultivate and new as a farmer to have such a large investment."
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex justify-center p-6">
+      <button
+        class="px-6 py-2 bg-[#74788D] text-[#D3D3D3] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        (click)="closeModal()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

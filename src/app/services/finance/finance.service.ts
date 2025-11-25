@@ -287,7 +287,10 @@ export interface GoviCareRequest {
   NIC_Back_Image: string;
   Requested_On: string;
   Assigned_By: string;
-  distrct: string;
+  district: string;
+  empId: string;
+  publishStatus: string;
+  Request_Date_Time: string;
 }
 
 export interface GoviCareRequestsResponse {
@@ -308,6 +311,7 @@ export interface GoviCareRequestDetail {
   Expected_Yield: string;
   Expected_Start_Date: string;
   Request_Date_Time: string;
+
 }
 
 export interface GoviCareRequestDetailResponse {
@@ -327,6 +331,21 @@ export interface InvestmentOfficer {
   activeJobCount?: number;
   distrct?: any;
 }
+
+export interface ApprovedGoviCareRequest extends GoviCareRequest {
+  publishStatus: string;
+}
+
+export interface ApprovedGoviCareRequestsResponse {
+  count: number;
+  data: ApprovedGoviCareRequest[];
+}
+
+export interface UpdatePublishStatusResponse {
+  status: boolean;
+  message: string;
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -547,6 +566,7 @@ export class FinanceService {
     return this.http.get<any>(url, { headers: headers });
   }
 
+
   createPaymentHistory(
     receivers: string,
     amount: string,
@@ -636,66 +656,73 @@ export class FinanceService {
   }
 
 
-getAllGoviCareRequests(
-  status?: string,
-  search?: string
-): Observable<GoviCareRequestsResponse> {
-  let params = new HttpParams();
+  getAllGoviCareRequests(
+    status?: string,
+    search?: string
+  ): Observable<GoviCareRequestsResponse> {
+    let params = new HttpParams();
 
-  if (status && status.trim()) {
-    params = params.set('status', status.trim());
+    if (status && status.trim()) {
+      params = params.set('status', status.trim());
+    }
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/govicare-requests`;
+    return this.http.get<GoviCareRequestsResponse>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
   }
 
-  if (search && search.trim()) {
-    params = params.set('search', search.trim());
+  getGoviCareRequestById(requestId: string): Observable<GoviCareRequestDetailResponse> {
+    const url = `${this.apiUrl}finance/govicare-requests/${requestId}`;
+    return this.http.get<GoviCareRequestDetailResponse>(url, {
+      headers: this.getHeaders(),
+    });
   }
 
-  const url = `${this.apiUrl}finance/govicare-requests`;
-  return this.http.get<GoviCareRequestsResponse>(url, {
-    headers: this.getHeaders(),
-    params: params,
-  });
-}
-
-getGoviCareRequestById(requestId: string): Observable<GoviCareRequestDetailResponse> {
-  const url = `${this.apiUrl}finance/govicare-requests/${requestId}`;
-  return this.http.get<GoviCareRequestDetailResponse>(url, {
-    headers: this.getHeaders(),
-  });
-}
-
-getOfficersByDistrictAndRoleForInvestment(
-  distrct: string,
-  role: string
-): Observable<any> {
-  return this.http.get<any>(
-    `${this.apiUrl}finance/officers`,
-    {
-      params: {
-        district: distrct,
-        jobRole: role
+  getOfficersByDistrictAndRoleForInvestment(
+    distrct: string,
+    role: string
+  ): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}finance/officers`,
+      {
+        params: {
+          district: distrct,
+          jobRole: role
+        }
       }
-    }
-  );
-}
+    );
+  }
 
 
-assignOfficerToInvestmentRequest(
-  requestId: number,
-  officerId: number
-): Observable<any> {
-  return this.http.post<any>(
-    `${this.apiUrl}finance/assign-officer`,
-    {
-      requestId: requestId,
-      officerId: officerId
-    }
-  );
-}
+  assignOfficerToInvestmentRequest(
+    requestId: number,
+    officerId: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
 
-getOfficerDetailsById(empId: string): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}finance/officer-details/${empId}`);
-}
+    return this.http.post<any>(
+      `${this.apiUrl}finance/assign-officer`,
+      {
+        requestId: requestId,
+        officerId: officerId
+      },
+      {
+        headers
+      }
+    );
+  }
+
+  getOfficerDetailsById(empId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}finance/officer-details/${empId}`);
+  }
 
 
 getAllPublishedProjects(

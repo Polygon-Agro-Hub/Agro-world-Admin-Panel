@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth-guard.service';
 import { LoginComponent } from './application/main-components/login/login.component';
@@ -237,6 +237,7 @@ import { GovicapitalFinanceComponent } from './application/finance/govicapital-f
 import { ProjectInvestmentsComponent } from './application/finance/project-investments/project-investments.component';
 import { ProjectInvestmentsTransactionsComponent } from './application/finance/project-investments-transactions/project-investments-transactions.component';
 import { PublishedProjectsComponent } from './application/finance/published-projects/published-projects.component';
+import { ViewAllApprovedGovicareRequestsComponent } from './application/finance/view-all-approved-govicare-requests/view-all-approved-govicare-requests.component';
 
 export const routes: Routes = [
   {
@@ -625,8 +626,8 @@ export const routes: Routes = [
                 children: [
                   {
                     path: 'ivesment-requests',
-                    component: InvestmentRequestsComponent,
-                  },
+                    children: [
+                      { path: '', component: InvestmentRequestsComponent },
                   {
                     path: 'reject-requests',
                     component: GovicapitalFinanceComponent,
@@ -644,12 +645,12 @@ export const routes: Routes = [
                     path: 'published-projects',
                     component: PublishedProjectsComponent,
                   },
+                      { path: 'viewAll-Govicare-requests', component: ViewAllGovicareRequestsComponent },
+                      { path: 'viewAll-Govicare-ApprovedRequests', component: ViewAllApprovedGovicareRequestsComponent }
+                    ]
+                  },
                 ],
-              },
-              {
-                path: 'viewAll-Govicare-requests',
-                component: ViewAllGovicareRequestsComponent,
-              },
+              }
             ],
           },
         ],
@@ -1642,4 +1643,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

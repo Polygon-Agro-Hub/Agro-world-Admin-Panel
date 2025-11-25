@@ -23,7 +23,7 @@
       <div class="flex justify-between items-center mb-6">
         <!-- Title with count -->
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
-          GoViCare Requests ({{ totalItems }})
+          Approved Requests ({{ totalItems }})
         </h1>
 
         <!-- Filters Container -->
@@ -44,12 +44,11 @@
             <!-- Hidden native select -->
             <select [(ngModel)]="selectStatus" class="hidden" (change)="filterStatus()">
               <option value="" selected disabled>Status</option>
-              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300" value="Assigned">
-                Assigned
+              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300" value="Draft">
+                Draft
               </option>
-              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300"
-                value="Not Assigned">
-                Not Assigned
+              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300" value="Published">
+                Published
               </option>
             </select>
 
@@ -86,7 +85,7 @@
           <!-- Search Input -->
           <div class="relative w-64">
             <input type="text" [(ngModel)]="search" (keyup.enter)="applySearch()" placeholder="Search..."
-              title="Search By Request ID, Phone Number, EMP ID.."
+              title="Search By Request ID, Phone Number..."
               class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] border-[1.8px] border-[#828282] rounded-xl text-textLight dark:text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
             <!-- Clear/Search Icon -->
@@ -118,17 +117,15 @@
               <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Status</th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                Officer ID</th>
+                Approved By</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Approved Time</th>
               <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 NIC Front Image</th>
               <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 NIC Back Image</th>
-              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                Requested On</th>
               <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Details</th>
-              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                Assigned By</th>
             </tr>
           </thead>
           <tbody>
@@ -157,15 +154,22 @@
 
               <!-- Status -->
               <td class="px-4 py-4 text-center">
-                <button [class]="getAssignClass(request.Status)"
+                <button [class]="getStatusClass(request.publishStatus)"
                   class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
-                  (click)="onAssignStatusClick(request)" title="Click to assign or view officer">
-                  {{ getAssignText(request.Status) }}
+                  (click)="onStatusClick(request)"
+                  [title]="request.publishStatus === 'Published' ? 'Cannot change published status' : 'Click to publish to GoViCapital'">
+                  {{ request.publishStatus }}
                 </button>
               </td>
-              <!-- Officer ID -->
+
+              <!-- Approved By -->
               <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                {{ request.Officer_ID }}
+                {{ request.empId }}
+              </td>
+
+              <!-- Approved Time -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Request_Date_Time }}
               </td>
 
               <!-- NIC Front Image -->
@@ -184,12 +188,6 @@
                 </button>
               </td>
 
-              <!-- Requested On -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                {{ request.Requested_On }}
-              </td>
-
-              <!-- Details (Eye Icon) -->
               <!-- Details (Eye Icon) -->
               <td class="px-4 py-4 text-center">
                 <button (click)="viewDetails(request.Request_ID)"
@@ -201,16 +199,11 @@
                   </svg>
                 </button>
               </td>
-
-              <!-- Assigned By -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                {{ request.Assigned_By }}
-              </td>
             </tr>
 
             <!-- Empty State -->
             <tr *ngIf="govicareRequests.length === 0">
-              <td colspan="11" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+              <td colspan="10" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                 <div class="flex flex-col items-center w-full px-10 py-7 mt-6">
                   <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
                   <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
@@ -330,15 +323,6 @@
         </span>
       </div>
 
-      <!-- Request Date & Time -->
-      <div class="flex items-start">
-        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Request Date & Time</span>
-        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
-          {{ selectedRequest?.Request_Date_Time }}
-        </span>
-      </div>
-
     </div>
 
     <!-- Modal Footer -->
@@ -351,105 +335,30 @@
   </div>
 </div>
 
-<!-- Assigned Officer Popup -->
-<div *ngIf="isOfficerPopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  (click)="officerPopUpClose()">
-  <div
-    class="flex flex-col justify-center items-center gap-y-6 bg-[#FFFFFF] dark:bg-tileBlack px-12 py-4 rounded-lg shadow-md"
+<!-- Publish Confirmation Popup -->
+<div *ngIf="isPublishPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closePublishPopup()">
+  <div class="bg-white dark:bg-tileBlack px-12 py-8 rounded-lg shadow-2xl max-w-lg text-center"
     (click)="$event.stopPropagation()">
-    <p class="text-lg font-semibold dark:text-white">Assigned Officer</p>
 
-    <div *ngIf="!assignedOfficerArray.length" class="text-gray-500">
-      No officer assigned
-    </div>
+    <h2 class="text-xl font-semibold text-textLight dark:text-textDark mb-6">
+      Request ID : {{ selectedRequestForPublish?.Request_ID }}
+    </h2>
 
-    <div *ngIf="assignedOfficerArray.length"
-      class="flex flex-col max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-      <div *ngFor="let officer of assignedOfficerArray; let i = index" class="py-1 px-2">
-        <span class="text-gray-700 dark:text-gray-300">{{ officer }}</span>
-      </div>
-    </div>
+    <p class="text-base text-textLight dark:text-textDark mb-8 leading-relaxed">
+      Are you sure you want to Publish this Project to the GoViCapital? This action cannot be undone.
+    </p>
 
-    <button class="text-white bg-[#74788D] px-4 py-1 rounded-lg" (click)="officerPopUpClose()">
-      Close
-    </button>
-  </div>
-</div>
-
-<!-- Assign Inspector Popup -->
-<div *ngIf="isAssignPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  (click)="assignPopupClose()">
-  <div
-    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
-    (click)="$event.stopPropagation()">
-    <!-- Popup Header -->
-    <div class="flex justify-center items-center mb-4 px-10">
-      <h3 class="text-lg font-semibold dark:text-white">
-        {{ selectedGovicareRequest?.Status === 'Assigned' ? 'Update Inspector Assignment' : 'Assign Inspectors' }}
-      </h3>
-    </div>
-    <!-- Officer Role Selection -->
-    <div class="flex flex-col mb-4 w-full">
-      <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
-        Officer Role
-      </label>
-      <p-dropdown [options]="officerRoleOptions" [(ngModel)]="selectedOfficerRole" optionLabel="label"
-        optionValue="value" placeholder="-- Select Officer Role --" [showClear]="false"
-        (onChange)="onOfficerRoleChange()" styleClass="w-full border border-2 rounded-lg h-12">
-      </p-dropdown>
-    </div>
-
-    <!-- Officer Selection -->
-    <div class="flex flex-col mb-4 w-full">
-      <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
-        Officer
-      </label>
-      <p-dropdown [options]="availableOfficers" [(ngModel)]="selectedOfficerId" optionLabel="displayName"
-        optionValue="empId" placeholder="--Select officer--" [showClear]="true"
-        [disabled]="!selectedOfficerRole || isLoadingOfficers" (onChange)="onOfficerSelected()"
-        styleClass="w-full border border-2 rounded-lg h-12">
-        <ng-template pTemplate="empty">
-          <div class="p-2 text-center text-gray-500">
-            {{ selectedOfficerRole ? "No officers available" : "Please select a role first" }}
-          </div>
-        </ng-template>
-      </p-dropdown>
-      <div *ngIf="isLoadingOfficers" class="text-sm text-gray-500 mt-1">
-        Loading officers...
-      </div>
-    </div>
-
-    <!-- Selected Officer Info -->
-    <div *ngIf="selectedOfficerInfo" class="mb-4 p-5 text-center rounded-lg border border-blue-500 w-full mt-2">
-      <p class="text-md font-semibold text-textLight dark:text-textDark">
-        {{ selectedOfficerInfo.empId }} - {{ selectedOfficerInfo.firstName }}
-        {{ selectedOfficerInfo.lastName }}
-      </p>
-      <p class="text-sm text-textLight dark:text-textDark">
-        District: {{ selectedOfficerInfo.district }}
-      </p>
-      <p class="text-sm text-textLight dark:text-textDark">
-        Count:
-        <span class="text-blue-500">{{ selectedOfficerInfo.activeJobCount }}</span>
-      </p>
-    </div>
-
-    <div *ngIf="assignError" class="mt-3 p-2 text-red-700 rounded text-sm">
-      {{ assignError }}
-    </div>
-
-    <div class="flex justify-center gap-3 mt-4">
-      <div class="flex gap-3 ml-auto">
-        <button (click)="assignPopupClose()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
-          Cancel
-        </button>
-        <button (click)="assignOfficer()" [disabled]="!selectedOfficerId || isAssigning"
-          class="px-4 py-2 text-sm font-medium text-white bg-[#3980C0] rounded-lg hover:bg-[#2c6da3] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2">
-          <i *ngIf="isAssigning" class="fa-solid fa-spinner fa-spin"></i>
-          {{ selectedGovicareRequest?.Status === 'Assigned' ? 'Update' : 'Assign' }}
-        </button>
-      </div>
+    <div class="flex justify-center gap-4">
+      <button (click)="closePublishPopup()" [disabled]="isPublishing"
+        class="px-8 py-2.5 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+        No, Go Back
+      </button>
+      <button (click)="confirmPublish()" [disabled]="isPublishing"
+        class="px-8 py-2.5 bg-[#3980C0] hover:bg-[#2c6da3] text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+        <i *ngIf="isPublishing" class="fa-solid fa-spinner fa-spin"></i>
+        {{ isPublishing ? 'Publishing...' : 'Yes, Publish' }}
+      </button>
     </div>
   </div>
 </div>

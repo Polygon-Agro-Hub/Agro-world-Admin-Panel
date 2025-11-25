@@ -27,4 +27,12 @@ export class InvestmentRequestsComponent {
   projectInvestments(): void {
     this.router.navigate(['/finance/action/finance-govicapital/project-investments']);
   }
+  
+    ViewAllGovicareRequests(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests/viewAll-Govicare-requests']);
+  }
+  
+    ViewApprovedGovicareRequests(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests/viewAll-Govicare-ApprovedRequests']);
+  }
 }

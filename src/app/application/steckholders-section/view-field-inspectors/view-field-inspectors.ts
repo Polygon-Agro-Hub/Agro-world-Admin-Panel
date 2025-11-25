@@ -6,6 +6,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { StakeholderService } from '../../../services/stakeholder/stakeholder.service';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 // Define FieldInspector interface
 interface FieldInspector {
@@ -20,7 +22,7 @@ interface FieldInspector {
   phone: string;
   nic: string;
   modifiedBy: string;
-  assignDistrict:string;
+  assignDistrict: string;
   modifyBy: null | string;
 }
 
@@ -93,7 +95,9 @@ export class ViewFieldInspectorsComponent implements OnInit {
   constructor(
     private router: Router,
     private location: Location,
-    private stakeholderService: StakeholderService
+    private stakeholderService: StakeholderService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) { }
 
   ngOnInit() {

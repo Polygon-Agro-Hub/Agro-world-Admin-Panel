@@ -159,7 +159,7 @@
               {{ formatNumber(i) }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ request.id }}
+              {{ request.jobId }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ getFullName(request.firstName, request.lastName) || "N/A" }}
@@ -232,7 +232,7 @@
       class="flex justify-center items-center p-6 border-b border-gray-200 dark:border-gray-700"
     >
       <h3 class="text-xl font-semibold text-textLight dark:text-textDark">
-        Request ID - {{ selectedRequest.id }}
+        Request ID - {{ selectedRequest.jobId }}
       </h3>
     </div>
 
@@ -245,7 +245,7 @@
             Request ID
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.id }}
+            : {{ selectedRequest.jobId }}
           </div>
         </div>
 

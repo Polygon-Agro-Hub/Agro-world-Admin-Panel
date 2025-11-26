@@ -131,11 +131,6 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Rejection Reason
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-            >
               Rejected Date
             </th>
             <th
@@ -171,11 +166,6 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ request.phoneNumber || "N/A" }}
-            </td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark max-w-xs truncate"
-            >
-              {{ request.rejectionReason || "N/A" }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ formatDate(request.rejectedAt) }}

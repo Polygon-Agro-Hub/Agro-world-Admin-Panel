@@ -262,20 +262,14 @@
             </th>
 
             <th
+            *ngIf="
+            permissionService.hasPermission('Distribution Hub view location') ||
+            tokenService.getUserDetails().role === '1'
+          "
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Location
             </th>
-
-            <th
-              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
-            ></th>
-            <th
-              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
-            ></th>
-            <th
-              class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
-            ></th>
           </tr>
         </thead>
         <tbody>

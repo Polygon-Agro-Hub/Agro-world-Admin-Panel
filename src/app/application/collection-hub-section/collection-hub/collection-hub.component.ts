@@ -119,15 +119,15 @@ export class CollectionHubComponent {
   }
 
   viewPrice(): void {
-    this.router.navigate(['/market-place/view-current-price']);
+    this.router.navigate(['/collection-hub/view-current-price']);
   }
 
   addPrice(): void {
-    this.router.navigate(['/market-place/price-bulk-upload']);
+    this.router.navigate(['/collection-hub/price-bulk-upload']);
   }
 
   deletePrice(): void {
-    this.router.navigate(['/market-place/delete-bulk-price']);
+    this.router.navigate(['/collection-hub/delete-bulk-price']);
   }
 
   addCom(): void {

@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Calendar, CalendarModule } from 'primeng/calendar';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-center-collection-expence',
@@ -51,6 +53,8 @@ export class CenterCollectionExpenceComponent implements OnInit {
     private TargetSrv: CollectionCenterService,
     private route: ActivatedRoute,
     private location: Location,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {

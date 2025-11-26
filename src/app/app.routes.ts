@@ -987,16 +987,20 @@ export const routes: Routes = [
           {
             path: 'view-collection-centers',
             component: CollectionAllViewComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Collection Centres' },
           },
           {
             path: 'view-current-centre-target/:centerId',
             component: ViewCurrentCenterTargetComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Current Centre Target' },
           },
           {
             path: 'collection-center-dashboard/:id/:comid/:centerName',
             component: CollectionCenterDashboardComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'View Collection Center' },
+            data: { permission: 'View Polygon Centre Dashboard' },
           },
           {
             path: 'update-collection-center/:id',
@@ -1013,6 +1017,8 @@ export const routes: Routes = [
           {
             path: 'manage-company',
             component: ManageCompanyComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Company List' },
           },
           {
             path: 'add-collection-center',
@@ -1024,51 +1030,86 @@ export const routes: Routes = [
             path: 'add-daily-target/:id/:name/:regCode',
             component: AddDailyTargetComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Assign Center Target' },
+            data: { permission: 'Add Polygon Centre Target' },
           },
           {
             path: 'view-company-head',
             component: ViewCompanyHeadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Company Head Portals' },
           },
           {
             path: 'create-center-head',
             component: CreateCenterHeadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Create Company Head' },
           },
           {
             path: 'edit-center-head/:id',
             component: EditCenterHeadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Edit Company Head' },
           },
-          // {
-          //   path: 'agro-world-centers',
-          //   component: TestingComponent,
-          // },
           {
             path: 'agro-world-centers',
             component: AgroWorldCentersComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Polygon Centres' },
           },
           {
             path: 'agro-world-center-price/:centerId/:companyId/:centerName',
             component: ViewCenterPriceComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Polygon Centre Price' },
           },
           {
             path: 'preview-collection-center/:id',
             component: PreviewCollectionCenterComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Collection Center' },
           },
           {
             path: 'view-center-head/:id',
             component: ViewCenterHeadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Company Head' },
           },
           {
             path: 'center-collection-expense/:id',
             component: CenterCollectionExpenceComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Total Centre Collection Expenses' },
           },
           {
             path: 'view-center-officers',
             component: ViewCollectiveOfficerComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Polygon Centre Officers' },
           },
           {
             path: 'farmer-report-invoice/:invNo',
             component: ViewExpencesFarmerReportComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Navigate To Farmer Report Invoice' },
+          },
+
+          {
+            path: 'view-current-price',
+            component: ViewCurrentMarketPriceComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Hub View Current Market Prices' },
+          },
+          {
+            path: 'delete-bulk-price',
+            component: MarketPriceBulkDeleteComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Hub Delete Market Prices' },
+          },
+          {
+            path: 'price-bulk-upload',
+            component: MarketPriceBulkUploadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Hub Add Market Prices' },
           },
         ],
       },

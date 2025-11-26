@@ -18,6 +18,10 @@
 
     <!-- Market Price Card -->
     <div
+        *ngIf="
+          permissionService.hasPermission('View Polygon Centre Price') ||
+          tokenService.getUserDetails().role === '1'
+        "
       class="flex flex-row items-center justify-between p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
       (click)="navigateToMarketPrice()">
       <div class="flex flex-col justify-center items-center">
@@ -28,6 +32,10 @@
 
     <!-- Assign Target Card -->
     <div class="flex flex-row items-center justify-center p-4 bg-[#415CFF] shadow-lg rounded-lg cursor-pointer"
+    *ngIf="
+          permissionService.hasPermission('Add Polygon Centre Target') ||
+          tokenService.getUserDetails().role === '1'
+        "
       (click)="navigateAddTarget()">
       <p class="font-bold text-tileLight text-lg text-center">Assign Centre Target</p>
     </div>
@@ -37,6 +45,10 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 mb-6">
     <!-- Current Target Card -->
     <div
+    *ngIf="
+          permissionService.hasPermission('View Current Centre Target') ||
+          tokenService.getUserDetails().role === '1'
+        "
       class="flex flex-col justify-center items-center gap-y-3 p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
       (click)="navigateToTarget()">
       <i class="fa-solid fa-bullseye text-[#415CFF] text-5xl"></i>
@@ -65,6 +77,10 @@
     <div class="grid grid-cols-2 gap-2 md:gap-4">
       <!-- Expense Card -->
       <div
+      *ngIf="
+          permissionService.hasPermission('Total Centre Collection Expenses') ||
+          tokenService.getUserDetails().role === '1'
+        "
         class="flex flex-col gap-y-1 items-center justify-between p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
         (click)="navigateCollectionExpenses()">
         <div class="flex flex-row justify-end items-center self-end">
@@ -92,6 +108,10 @@
 
       <!-- Officers Card -->
       <div
+      *ngIf="
+          permissionService.hasPermission('Polygon Centre Officers') ||
+          tokenService.getUserDetails().role === '1'
+        "
         class="flex flex-col gap-y-1 items-center justify-center p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"(click)="viewCenterOfficers()">
       <div class="text-center mt-10" >
 
@@ -115,17 +135,31 @@
     <div class="flex flex-row items-center gap-4 md:gap-7 overflow-x-auto pb-2">
       <div class="py-1 font-semibold text-[#627189] cursor-pointer whitespace-nowrap" [ngClass]="{
           'border-b-2 border-[#415CFF] text-black dark:text-white': selectTable === 'collection'
-        }" (click)="chooseTable('collection')">
+        }" 
+        *ngIf="
+        permissionService.hasPermission('Recent Collections') ||
+        tokenService.getUserDetails().role === '1'
+      "
+        (click)="chooseTable('collection')">
         <p>Recent Collections</p>
       </div>
       <div class="py-1 font-semibold text-[#627189] cursor-pointer whitespace-nowrap" [ngClass]="{
           'border-b-2 border-[#415CFF] text-black dark:text-white': selectTable === 'sale'
-        }" (click)="chooseTable('sale')">
+        }" 
+        *ngIf="
+        permissionService.hasPermission('Recent Sales') ||
+        tokenService.getUserDetails().role === '1'
+      "
+        (click)="chooseTable('sale')">
         <p>Recent Sales</p>
       </div>
     </div>
 
-<div *ngIf="selectTable === 'collection'"
+<div 
+*ngIf="
+(permissionService.hasPermission('Recent Collections') ||
+tokenService.getUserDetails().role === '1') && selectTable === 'collection'
+"
   class="overflow-x-auto mt-4 md:mt-6 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
 
   <div class="min-w-[800px]">

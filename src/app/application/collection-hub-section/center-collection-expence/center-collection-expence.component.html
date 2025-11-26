@@ -74,6 +74,10 @@
         </div>
 
         <button
+        *ngIf="
+          permissionService.hasPermission('Go Button') ||
+          tokenService.getUserDetails().role === '1'
+        "
           (click)="goBtn()"
           class="bg-[#415CFF] text-lg text-white font-semibold px-6 py-2 rounded-lg shadow-lg ml-5 dark:text-textDark"
         >
@@ -167,6 +171,10 @@
       </div>
 
       <button
+      *ngIf="
+          permissionService.hasPermission('Download Centre Collection Expenses') ||
+          tokenService.getUserDetails().role === '1'
+        "
         class="bg-[#415CFF] text-white shadow-md font-medium rounded-lg py-2 px-5 mr-5 text-lg flex items-center"
         (click)="downloadTemplate1()"
       >
@@ -244,6 +252,10 @@
               <span class="block">{{ item.createdAt | date : "h:mm a" }}</span>
             </td>
             <td
+            *ngIf="
+              permissionService.hasPermission('Navigate To Farmer Report Invoice') ||
+              tokenService.getUserDetails().role === '1'
+            "
               (click)="navigateToFarmerReport(item.invNo)"
               class="px-3 py-4 text-center dark:text-gray-300 cursor-pointer"
             >

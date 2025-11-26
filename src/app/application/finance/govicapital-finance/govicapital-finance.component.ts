@@ -134,4 +134,9 @@ export class GovicapitalFinanceComponent implements OnInit {
       window.open(imageUrl, '_blank');
     }
   }
+
+  formatNumber(index: number): string {
+    // Format as 3-digit number with leading zeros (001, 002, etc.)
+    return (index + 1).toString().padStart(3, '0');
+  }
 }

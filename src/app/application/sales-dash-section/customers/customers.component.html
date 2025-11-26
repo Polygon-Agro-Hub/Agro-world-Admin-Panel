@@ -274,11 +274,13 @@ class="text-textLight dark:text-textDark mb-5">
               No. of Orders
             </th>
             <th
+            *ngIf="permissionService.hasPermission('Dash customers view customers details') || tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Customer Details
             </th>
             <th
+            *ngIf="permissionService.hasPermission('Dash customers view order details') || tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Orders Details
@@ -316,7 +318,9 @@ class="text-textLight dark:text-textDark mb-5">
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ customer.totOrders }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            *ngIf="permissionService.hasPermission('Dash customers view customers details') || tokenService.getUserDetails().role === '1'"
+            class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 (click)="openPopup(customer)"
                 class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"
@@ -336,7 +340,9 @@ class="text-textLight dark:text-textDark mb-5">
                 </svg>
               </button>
             </td>
-            <td class="py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            *ngIf="permissionService.hasPermission('Dash customers view order details') || tokenService.getUserDetails().role === '1'"
+            class="py-3 text-center text-textLight dark:text-textDark">
               <button
                 (click)="viewOrderDetails(customer.id)"
                 class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd]"

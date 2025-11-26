@@ -38,6 +38,7 @@ interface RejectedInvestmentRequest {
   expectedStartDate?: string;
   requestDateTime?: string;
   NICnumber: string;
+  officerEmpId: string;
 }
 
 @Component({
@@ -113,7 +114,15 @@ export class GovicapitalFinanceComponent implements OnInit {
 
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString();
+
+    const date = new Date(dateString);
+
+    // Format as "June 01, 2026"
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit',
+    });
   }
 
   formatCurrency(amount: number): string {
@@ -133,5 +142,10 @@ export class GovicapitalFinanceComponent implements OnInit {
     if (imageUrl) {
       window.open(imageUrl, '_blank');
     }
+  }
+
+  formatNumber(index: number): string {
+    // Format as 3-digit number with leading zeros (001, 002, etc.)
+    return (index + 1).toString().padStart(3, '0');
   }
 }

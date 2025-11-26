@@ -234,7 +234,12 @@
         </div>
 
         <div class="flex items-center justify-center mt-10">
-            <button (click)="downloadReport()" class="bg-[#415CFF] text-lg text-white px-6 py-2 rounded-lg shadow-lg">
+            <button 
+            *ngIf="
+              permissionService.hasPermission('Download Farmer Report Invoice') ||
+              tokenService.getUserDetails().role === '1'
+            "
+            (click)="downloadReport()" class="bg-[#415CFF] text-lg text-white px-6 py-2 rounded-lg shadow-lg">
                 Download
             </button>
 

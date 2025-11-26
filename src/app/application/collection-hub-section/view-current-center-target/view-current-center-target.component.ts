@@ -6,6 +6,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-current-center-target',
@@ -57,6 +59,8 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private collectionCenterSrv: CollectionCenterService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
 
   ) { }
 

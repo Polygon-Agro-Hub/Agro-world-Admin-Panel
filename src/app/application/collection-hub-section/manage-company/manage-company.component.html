@@ -239,6 +239,10 @@
               class="pt-1 pr-2 py-3 text-center text-textLight dark:text-textDark"
             >
               <button
+              *ngIf="
+                  permissionService.hasPermission('View Company Head Portals') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="viewCompanyHeadPortals(item.id, item.companyName)"
               >
@@ -248,6 +252,10 @@
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                *ngIf="
+                  permissionService.hasPermission('Add And Edit Company') ||
+                  tokenService.getUserDetails().role === '1'
+                "
                 (click)="viewCompany(item.id, true)"
               >
                 <svg

@@ -39,6 +39,7 @@ interface NewsItem {
   completedTasks: number;
   extentac: number;
   startedAt: Date;
+  planType: string;
 }
 
 @Component({
@@ -123,11 +124,11 @@ export class SlaveCropCalendarComponent implements OnInit {
   fetchAllNews(cultivationId: number, userId: number) {
     this.isLoading = true;
     this.ongoingCultivationService.getOngoingCultivationById(cultivationId, userId).subscribe(
-      (data: { userFirstName: string; userLastName: string; cultivations: NewsItem[] }) => {
+      (data: { userFirstName: string; userLastName: string; farmName:string; cultivations: NewsItem[] }) => {
         console.log('Fetched data:', data);
         this.newsItems = data.cultivations || [];
         this.hasData = this.newsItems.length > 0;
-        this.userName = `${data.userFirstName || ''} ${data.userLastName || ''}`.trim() || 'Unknown User';
+        this.userName = `${data.userFirstName || ''} ${data.userLastName || ''} - ${data.farmName}`.trim() || 'Unknown User';
         this.isLoading = false;
       },
       (error) => {

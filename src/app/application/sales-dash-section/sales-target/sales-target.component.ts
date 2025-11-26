@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 import { Calendar, CalendarModule } from 'primeng/calendar';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-sales-target',
@@ -58,7 +60,9 @@ export class SalesTargetComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private salesDashSrv: SalesDashService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
 
@@ -349,6 +353,11 @@ export class SalesTargetComponent implements OnInit {
   if (this.newTargetValue < 1) {
     this.newTargetValue = '';
   }
+}
+
+hasTargetPermission(): boolean {
+  return this.permissionService.hasPermission('Dash sales targets set new target') || 
+         this.tokenService.getUserDetails().role === '1';
 }
 
   // get formControls(): { [key: string]: any } {

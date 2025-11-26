@@ -8,19 +8,9 @@
   Back
 </button>
 
-<div class="mb-5 flex justify-between">
-  <button
-    (click)="addNew()"
-    class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex items-center"
-  >
-    <i class="fa-solid fa-plus mr-2"></i>
-    Add New Job
-  </button>
-</div>
-
 <div class="overflow-x-auto">
   <div
-    class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
+    class="min-w-[1600px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5"
   >
     <!-- Always show filters section -->
     <div class="flex items-center justify-between">
@@ -71,14 +61,31 @@
         >
         </p-dropdown>
 
-        <!-- Date Filter -->
-        <input
-          type="date"
-          [(ngModel)]="dateFilter"
-          (change)="fetchJobs()"
-          class="mb-5 border border-2 rounded-xl h-8 px-3 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
-          placeholder="Select Date"
-        />
+        <!-- Date Filter with p-calendar -->
+
+        <div class="mr-5 mb-5">
+          <p-calendar
+            id="toDate"
+            [(ngModel)]="dateFilter"
+            (onSelect)="onDateSelect()"
+            (onClear)="clearDateFilter()"
+            placeholder="Select Date"
+            [showIcon]="true"
+            [showClear]="true"
+            [showButtonBar]="true"
+            iconDisplay="input"
+            [style]="{ width: '16rem', height: '2rem' }"
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                           [&_.p-datepicker-header]:dark:text-white
+                           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                           [&_.p-button:hover]:dark:bg-[#6b7280]"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+            [appendTo]="'body'"
+          />
+        </div>
 
         <!-- Search bar -->
         <div
@@ -143,18 +150,12 @@
     <!-- Show different messages based on state -->
     <div *ngIf="!hasData && !isLoading" class="text-center py-8">
       <div *ngIf="hasActiveFilters" class="space-y-4">
-        <p class="text-[#494949] dark:text-textDark text-lg font-medium">
-          No jobs found matching your search criteria
-        </p>
-        <p class="text-gray-500 dark:text-gray-400 text-sm">
-          Try adjusting your filters or search terms
-        </p>
-        <button
-          (click)="clearAllFilters()"
-          class="bg-[#3980C0] text-white font-medium py-2 px-4 rounded text-sm hover:bg-[#2c6da3] transition-colors"
-        >
-          Clear All Filters
-        </button>
+        <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 mx-auto"
+        />
       </div>
       <div *ngIf="!hasActiveFilters" class="space-y-4">
         <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
@@ -205,7 +206,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Assign Status
+              Assign
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -256,16 +257,16 @@
                   'bg-gray-200 text-gray-800': !job.status
                 }"
               >
-                {{ job.status || "N/A" }}
+                {{ job.status || "--" }}
               </span>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <span
                 class="px-2 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
                 [ngClass]="{
-                  'bg-green-100 text-green-800 cursor-pointer hover:bg-green-200':
+                  'bg-[#BBFFC6] text-[#308233] cursor-pointer hover:bg-green-200':
                     job.assignStatus === 'Assigned',
-                  'bg-yellow-100 text-yellow-800 cursor-pointer hover:bg-yellow-200':
+                  'bg-[#F8FFA6] text-[#A8A100] cursor-pointer hover:bg-yellow-200':
                     job.assignStatus === 'Not Assigned'
                 }"
                 (click)="onAssignStatusClick(job)"
@@ -275,13 +276,13 @@
               </span>
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ job.scheduledDate | date : "dd/MM/yyyy" }}
+              {{ (job.scheduledDate | date : "dd/MM/yyyy") || "--" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ job.createdAt | date : "dd/MM/yyyy HH:mm" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ job.assignedBy }}
+              {{ job.assignedBy || "--" }}
             </td>
             <td class="text-center flex justify-center mt-3 space-x-3">
               <!-- VIEW -->
@@ -358,61 +359,50 @@
   (click)="assignPopupClose()"
 >
   <div
-    class="bg-[#FFFFFF] dark:bg-tileBlack p-6 rounded-lg shadow-md w-96 max-h-[90vh] overflow-y-auto flex flex-col justify-center items-center"
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
     (click)="$event.stopPropagation()"
   >
     <!-- Popup Header -->
-    <div class="flex justify-center items-center mb-4 px-10">
-      <h3 class="text-lg font-semibold dark:text-white">
-        {{
-          currentAssignedOfficer
-            ? "Change Assigned Inspector"
-            : "Assign Inspector"
-        }}
-      </h3>
+    <div class="flex justify-center items-center mb-4 px-10 min-w-96">
+      <h3 class="text-lg font-semibold dark:text-white">Assign Inspectors</h3>
     </div>
 
     <!-- Officer Role Selection -->
-    <div class="mb-4 w-80">
+    <div class="flex flex-col mb-4 w-full">
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
       >
-        Officer Role *
+        Officer Role
       </label>
       <p-dropdown
         [options]="officerRoleOptions"
         [(ngModel)]="selectedOfficerRole"
         optionLabel="label"
         optionValue="value"
-        placeholder="-- Select Officer Role --"
-        [showClear]="false"
+        placeholder="-- Select Role --"
+        styleClass="w-full border border-2 rounded-lg h-12"
         (onChange)="onOfficerRoleChange()"
-        styleClass="w-full border border-2 rounded-lg h-10 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] h-12"
-      >
-      </p-dropdown>
+      ></p-dropdown>
     </div>
 
     <!-- Officer Selection -->
-    <div class="mb-4 w-80">
+    <div class="flex flex-col mb-4 w-full">
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
       >
-        Officer *
+        Officer
       </label>
       <p-dropdown
         [options]="availableOfficers"
         [(ngModel)]="selectedOfficerId"
         optionLabel="displayName"
         optionValue="empId"
-        placeholder="{{
-          currentAssignedOfficer
-            ? '--Select new officer--'
-            : '--Select officer--'
-        }}"
+        placeholder="--Select Officer--"
         [showClear]="true"
+        appendTo="body"
         [disabled]="!selectedOfficerRole || isLoadingOfficers"
         (onChange)="onOfficerSelected()"
-        styleClass="w-full border border-2 rounded-lg h-10 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] h-12"
+        styleClass="w-96 border border-2 rounded-lg h-12"
       >
         <ng-template pTemplate="empty">
           <div class="p-2 text-center text-gray-500">
@@ -432,7 +422,7 @@
     <!-- Selected Officer Info -->
     <div
       *ngIf="selectedOfficerInfo"
-      class="mb-4 p-5 text-center rounded-lg border border-blue-500 w-80"
+      class="mb-4 p-5 text-center rounded-lg border border-blue-500 w-full mt-2"
     >
       <p class="text-md font-semibold text-textLight dark:text-textDark">
         {{ selectedOfficerInfo.empId }} - {{ selectedOfficerInfo.firstName }}
@@ -442,7 +432,10 @@
         Distrct: {{ selectedOfficerInfo.distrct }}
       </p>
       <p class="text-sm text-textLight dark:text-textDark">
-        Count: <span class="text-blue-500">{{ selectedOfficerInfo.activeJobCount }}</span>
+        Count:
+        <span class="text-blue-500">{{
+          selectedOfficerInfo.activeJobCount
+        }}</span>
       </p>
     </div>
 
@@ -451,24 +444,17 @@
       <div class="flex gap-3 ml-auto">
         <button
           (click)="assignPopupClose()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
+          class="px-4 py-2 text-sm font-medium text-[#D3D3D3] dark:text-gray-300 bg-[#74788D] dark:bg-[#74788D] rounded-lg transition-colors"
         >
           Cancel
         </button>
         <button
           (click)="assignOfficer()"
           [disabled]="!selectedOfficerId || isAssigning"
-          class="px-4 py-2 text-sm font-medium text-white bg-[#3980C0] rounded-lg hover:bg-[#2c6da3] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          class="px-4 py-2 text-sm font-medium text-white bg-[#3980C0] rounded-lg hover:bg-[#2c6da3] disabled:bg-[#C1C1C1] disabled:cursor-not-allowed transition-colors flex items-center gap-2"
         >
           <i *ngIf="isAssigning" class="fa-solid fa-spinner fa-spin"></i>
-          {{
-            currentAssignedOfficer &&
-            selectedOfficerId === currentAssignedOfficer.empId
-              ? "Keep"
-              : currentAssignedOfficer
-              ? "Change"
-              : "Assign"
-          }}
+          Assign
         </button>
       </div>
     </div>
@@ -496,7 +482,7 @@
     <!-- Warning Message -->
     <div class="mb-6">
       <p class="text-center text-textLight dark:text-textDark">
-        You can’t assign an officer to the task because the task has already
+        You can't assign an officer to the task because the task has already
         been completed.
       </p>
     </div>
@@ -566,7 +552,7 @@
     <div class="flex justify-center gap-3 p-6">
       <button
         (click)="closeViewJobPopup()"
-        class="px-6 py-2 text-sm font-medium text-gray-500 bg-gray-200 rounded-lg hover:bg-[#2c6da3] hover:text-white transition-colors"
+        class="px-6 py-2 text-sm font-medium text-white bg-[#74788D] rounded-lg hover:bg-[#2c6da3] hover:text-white transition-colors"
       >
         Cancel
       </button>

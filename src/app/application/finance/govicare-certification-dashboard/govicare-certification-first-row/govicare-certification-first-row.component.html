@@ -1,0 +1,70 @@
+<div class="flex flex-nowrap justify-between items-center gap-2">
+  <div class="flex gap-8">
+    <div
+      class="bg-white rounded-xl shadow-md p-6 flex items-center justify-between w-96 dark:bg-[#061E2C]"
+    >
+      <div class="flex items-center gap-4">
+        <div
+          class="bg-[#FFCCFA] p-7 flex items-center justify-center rounded-full h-6 w-6"
+        >
+          <i class="fa-solid fa-bookmark text-purple-500 text-3xl"></i>
+        </div>
+        <div>
+          <h2 class="text-[#4B5563] dark:text-[#ABB0B8] text-sm font-medium">Total Income</h2>
+          <p class="text-3xl font-bold text-[#4B5563] dark:text-[#ABB0B8]">
+            {{
+              dashboardData
+                ? formatCurrency(dashboardData.statistics.monthlyIncome)
+                : "Rs.0"
+            }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-center flex-col items-end">
+        <div class="flex gap-2">
+          <ng-container
+            *ngIf="
+              dashboardData?.statistics?.incomeStatus === 'increased' ||
+              dashboardData?.statistics?.incomeStatus === 'stable'
+            "
+          >
+            <i class="fa-solid fa-arrow-trend-up text-xl text-teal-600"></i>
+            <p class="text-teal-600 text-lg font-semibold">
+              {{ dashboardData?.statistics?.relativeIncomeValue || 0 }}%
+            </p>
+          </ng-container>
+          <ng-container
+            *ngIf="dashboardData?.statistics?.incomeStatus === 'decreased'"
+          >
+            <i class="fa-solid fa-arrow-trend-down text-xl text-red-600"></i>
+            <p class="text-red-600 text-lg font-semibold">
+              {{ dashboardData?.statistics?.relativeIncomeValue || 0 }}%
+            </p>
+          </ng-container>
+        </div>
+        <p class="text-gray-400 text-sm mt-3 dark:text-gray-400">This Month</p>
+      </div>
+    </div>
+
+    <div
+      class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center justify-center w-60 dark:bg-[#061E2C]"
+    >
+      <h2 class="text-[#4B5563] dark:text-[#ABB0B8] text-sm font-medium">Certifications</h2>
+      <p class="text-[#4B5563] dark:text-[#ABB0B8] text-sm">Total</p>
+      <p class="text-3xl font-bold dark:text-white">
+        {{ dashboardData?.statistics?.totalCertificates || 0 }}
+      </p>
+    </div>
+
+    <div
+      class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center justify-center w-60 dark:bg-[#061E2C]"
+    >
+      <h2 class="text-[#4B5563] dark:text-[#ABB0B8] text-sm font-medium">Active Enrollments</h2>
+      <p class="text-[#4B5563] dark:text-[#ABB0B8] text-sm">Total</p>
+      <p class="text-3xl font-bold dark:text-white">
+        {{ dashboardData?.statistics?.activeEnrollments || 0 }}
+      </p>
+    </div>
+  </div>
+</div>

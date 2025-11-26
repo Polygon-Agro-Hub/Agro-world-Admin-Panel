@@ -42,32 +42,34 @@
 
           <div>
             <div>
-              <p-calendar
-                id="deliveryDate"
-                placeholder="Delivery Time Slot"
-                [showIcon]="true"
-                [showClear]="true"
-                [showButtonBar]="true"
-                dateFormat="yy-mm-dd"
-                [monthNavigator]="true"
-                [yearNavigator]="true"
-                yearRange="1900:2030"
-                [(ngModel)]="selectedDate"
-                (onSelect)="fetchData()"
-                (onClearClick)="clearDate()"
-                iconDisplay="input"
-                [style]="{ width: '16rem', height: '2rem' }"
-                panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                   [&_.p-datepicker-header]:dark:text-white
-                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                   [&_.p-button:hover]:dark:bg-[#6b7280]"
-                inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-                [appendTo]="'body'"
-              >
-              </p-calendar>
+              <div>
+                <p-calendar
+                  id="deliveryDate"
+                  placeholder="Delivery Date"
+                  [showIcon]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  dateFormat="yy-mm-dd"
+                  [monthNavigator]="true"
+                  [yearNavigator]="true"
+                  yearRange="1900:2030"
+                  [(ngModel)]="selectedDate"
+                  (onSelect)="fetchData()"
+                  (onClear)="clearDate()"
+                  iconDisplay="input"
+                  [style]="{ width: '16rem', height: '2rem' }"
+                  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+       [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+       [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+       [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+       [&_.p-datepicker-header]:dark:text-white
+       [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+       [&_.p-button:hover]:dark:bg-[#6b7280]"
+                  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                  [appendTo]="'body'"
+                >
+                </p-calendar>
+              </div>
             </div>
           </div>
 
@@ -79,6 +81,7 @@
               placeholder="Search by Order ID"
               [(ngModel)]="searchText"
               name="searchText"
+              (keydown.enter)="onSearch()"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             />
             <button
@@ -126,7 +129,7 @@
       </div>
     </div>
     <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
-      <table class="min-w-full divide-y divide-gray-200">
+      <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             <th
@@ -170,29 +173,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.firstNameEnglish }} {{ item.lastNameEnglish }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              <!-- Dynamic schedule date display -->
-              <span *ngIf="isToday(item.sheduleDate)" class="text-[#FF0000]">
-                Today 8-12 AM
-              </span>
-              <span *ngIf="isTomorrow(item.sheduleDate)" class="text-[#415CFF]">
-                Tomorrow 8-12 AM
-              </span>
-              <span
-                *ngIf="isDayAfterTomorrow(item.sheduleDate)"
-                class="text-[#070707]"
-              >
-                Day after tomorrow 4-8 PM
-              </span>
-              <span
-                *ngIf="
-                  !isToday(item.sheduleDate) &&
-                  !isTomorrow(item.sheduleDate) &&
-                  !isDayAfterTomorrow(item.sheduleDate)
-                "
-                class="text-gray-500"
-              >
-                {{ item.sheduleDate | date : "mediumDate" }}
+            <td class="px-4 py-3 text-left">
+              <!-- Updated Delivery Time Slot with color function -->
+              <span [style.color]="getDateColor(item)">
+                {{ getDisplayDate(item.sheduleDate) }}
               </span>
             </td>
             <td class="px-4 py-3 text-center">
@@ -205,7 +189,7 @@
                   (item.packageStatus === 'Pending' &&
                     item.additionalItemsStatus === 'Pending')
                 "
-                class="inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-4 py-2 text-xs text-center w-32"
+                class="inline-block bg-[#FFD4D4] text-[#FF0000] font-medium rounded-md px-4 py-2 text-xs text-center w-32"
               >
                 Pending
               </span>
@@ -241,20 +225,9 @@
           </tr>
         </tbody>
       </table>
-      <div *ngIf="hasData" class="dark:bg-[#262f45]">
-        <pagination-controls
-          [responsive]="true"
-          [previousLabel]="'Previous'"
-          [nextLabel]="'Next'"
-          [screenReaderPaginationLabel]="'Pagination'"
-          [screenReaderPageLabel]="'page'"
-          [screenReaderCurrentLabel]="'Youre on page'"
-        >
-        </pagination-controls>
-      </div>
 
       <div
-        *ngIf="hasData"
+        *ngIf="!hasData"
         class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
       >
         <p class="text-[#494949] my-6 dark:text-textDark">

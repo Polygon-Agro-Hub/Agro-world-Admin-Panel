@@ -32,7 +32,7 @@
         </p-dropdown>
 
         <div *ngIf="centerValidationError" class="text-red-500 text-sm mt-1">
-          Center selection is required.
+          Centre selection is required.
         </div>
 
       </div>
@@ -40,14 +40,15 @@
 
 
     <!-- Manager Dropdown -->
-    <div class="flex mt-4 align-middle justify-center items-center" *ngIf="selectedOfficer?.jobRole !== 'Distribution Centre Manager'">
+    <div class="flex mt-4 align-middle justify-center items-center"
+      *ngIf="selectedOfficer?.jobRole !== 'Distribution Centre Manager'">
       <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Manager</label>
 
       <div class="flex flex-col w-full ml-4">
         <p-dropdown name="selectedIrmId" [(ngModel)]="selectedIrmId" [options]="collectionCenterManagerNames"
-          optionLabel="labelName" optionValue="id" placeholder="Select a manager" [showClear]="false"
-          [required]="true" [filter]="true" filterBy="firstNameEnglish,lastNameEnglish"
-          filterPlaceholder="Search managers..." class="w-full" (onChange)="irmValidationError = false"
+          optionLabel="labelName" optionValue="id" placeholder="Select a manager" [showClear]="false" [required]="true"
+          [filter]="true" filterBy="firstNameEnglish,lastNameEnglish" filterPlaceholder="Search managers..."
+          class="w-full" (onChange)="irmValidationError = false"
           [ngClass]="{'border-red-500': irmValidationError, 'border-gray-300': !irmValidationError}">
         </p-dropdown>
 
@@ -147,6 +148,7 @@
         <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
         <div class="mr-5">
           <p-dropdown
+          #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="selectStatus != null && selectStatus !== ''" placeholder="Status" [(ngModel)]="selectStatus"
@@ -155,6 +157,7 @@
 
         <div class="mr-5">
           <p-dropdown
+          #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="centerStatusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="selectCenterStatus != null && selectCenterStatus !== ''" placeholder="Centre Status"
@@ -163,6 +166,7 @@
 
         <div class="mr-5">
           <p-dropdown
+          #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="role != null && role !== ''"
             placeholder="Role" [(ngModel)]="role" (onChange)="applyFilters()"></p-dropdown>
@@ -235,7 +239,7 @@
               Role
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Centre
+              Centre Reg Code
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
                 permissionService.hasPermission('Claim collection officer') ||
@@ -254,6 +258,9 @@
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               NIC
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
+              Last Modified By
             </th>
             <th *ngIf="
                 permissionService.hasPermission('View individual collection officer') ||
@@ -303,8 +310,8 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.jobRole }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.centerName ? item.centerName : "---" }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
+              {{ item.regCode || '--'}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
@@ -356,8 +363,11 @@
             <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               {{ item.phoneNumber01 }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.nic }}
+            </td>
+             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.adminModify !== null ?  item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
             </td>
 
             <td *ngIf="

@@ -28,13 +28,18 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
   page: number = 1;
 
   selectedStatus: any = '';
-  date: Date = new Date();
+  date: Date | null = new Date();
   status = ['Pending', 'Completed', 'Opened'];
 
 
 
   hasData = false;
   hasDataCustom = false;
+
+  clearDate() {
+    this.date = null; 
+    this.getPreMadePackages(); 
+  }
 
   ngOnInit(): void {
     this.getPreMadePackages();
@@ -55,24 +60,22 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
         page,
         limit,
         this.selectedStatus,
-        this.formatDateForAPI(this.date), // Convert Date to string
+        this.formatDateForAPI(this.date), 
         this.search.trim()
       )
       .subscribe(
         (response) => {
-          // Add fullTotal to each item
           this.premadePackages = response.items
           this.totalItems = response.total;
 
-          this.hasData = response.items && response.items.length > 0;
-          console.log(this.premadePackages);
+          this.hasData = response.total > 0;
           this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching ongoing cultivations:', error);
           if (error.status === 401) {
           }
-          this.hasData = false; // Set to false on error
+          this.hasData = false;
           this.isLoading = false;
         }
       );
@@ -80,13 +83,12 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
 
   private formatDateForAPI(date: Date | null): string {
     if (!date) return '';
-  
-    // Convert using local time instead of UTC
+
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
-  
-    return `${year}-${month}-${day}`; // Local YYYY-MM-DD
+
+    return `${year}-${month}-${day}`;
   }
 
   applysearch() {
@@ -95,6 +97,8 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
   }
   clearSearch() {
     this.search = '';
+    this.date = null; 
+    this.selectedStatus = ''; 
     this.getPreMadePackages();
   }
 
@@ -117,7 +121,6 @@ export class MarketPlacePremadePackagesComponent implements OnInit {
   }
 
   navigateToAdditionalItemView(id: number, invNo: string, total: number, name: string, fullTotal: number | string) {
-    console.log(id, invNo, name, total);
     this.router.navigate(['/dispatch/additional-items'], {
       queryParams: { id, invNo, name, total, fullTotal },
     });
@@ -138,5 +141,8 @@ interface PremadePackages {
   packedAdditionalItems: number;
   packingStatus: string;
   additionalItemsStatus: string;
-  packageStatus:string
+  packageStatus: string,
+  adminPackBy: string | null;
+  packBy: string | null;
+  finalStatus: string | null;
 }

@@ -1,5 +1,5 @@
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -21,7 +21,8 @@ export class AddComplainCategoriesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private complaintSrv: ComplaintsService
+    private complaintSrv: ComplaintsService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +32,6 @@ export class AddComplainCategoriesComponent implements OnInit {
   fetchComplainCategory() {
     this.complaintSrv.getAdminComplainCategoryForCreate().subscribe(
       (res) => {
-        console.log(res);
         this.roleArr = res.adminRoles;
         this.appsArr = res.systemApps;
       }
@@ -95,7 +95,7 @@ export class AddComplainCategoriesComponent implements OnInit {
               confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
             }
           });
-          this.router.navigate(['/complaints/manage-applications']);
+          window.history.back()
         } else {
           if (res.message === 'Category already added') {
             Swal.fire({
@@ -153,7 +153,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/complaints']);
+        this.location.back();
       }
     });
   }
@@ -174,7 +174,7 @@ export class AddComplainCategoriesComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(["/complaints"]);
+        window.history.back()
       }
     });
   }

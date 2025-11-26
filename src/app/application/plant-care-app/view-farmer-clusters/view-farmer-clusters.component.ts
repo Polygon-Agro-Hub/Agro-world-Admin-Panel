@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -8,7 +8,11 @@ import { Location } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '../../../services/token/services/token.service';
-import { CertificateCompanyService, FarmerCluster } from '../../../services/plant-care/certificate-company.service';
+import {
+  CertificateCompanyService,
+  FarmerCluster,
+} from '../../../services/plant-care/certificate-company.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-farmer-clusters',
@@ -23,21 +27,33 @@ import { CertificateCompanyService, FarmerCluster } from '../../../services/plan
   templateUrl: './view-farmer-clusters.component.html',
   styleUrls: ['./view-farmer-clusters.component.css'],
 })
-export class ViewFarmerClustersComponent implements OnInit {
+export class ViewFarmerClustersComponent implements OnInit, OnDestroy {
   clusters: FarmerCluster[] = [];
   isLoading = false;
   hasData: boolean = true;
   searchTerm: string = '';
 
+  // Status modal properties
+  showStatusModal: boolean = false;
+  selectedCluster: FarmerCluster | null = null;
+  countdown: number = 30;
+  countdownInterval: any;
+  isCountdownCompleted: boolean = false;
+
   constructor(
     private farmerClusterService: CertificateCompanyService,
     private router: Router,
     private location: Location,
+    public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchClusters();
+  }
+
+  ngOnDestroy() {
+    this.clearCountdown();
   }
 
   onSearch() {
@@ -54,8 +70,21 @@ export class ViewFarmerClustersComponent implements OnInit {
     this.farmerClusterService.getAllFarmerClusters(this.searchTerm).subscribe(
       (response) => {
         this.isLoading = false;
-        // Access the data array from the response
-        this.clusters = response.data as FarmerCluster[];
+        let fetchedClusters = response.data as FarmerCluster[];
+
+        this.clusters = fetchedClusters.sort((a, b) => {
+
+          const statusA = a.status === 'Started' ? 1 : 0;
+          const statusB = b.status === 'Started' ? 1 : 0;
+
+          if (statusA !== statusB) {
+            return statusA - statusB;
+          }
+
+          // If same status, sort alphabetically by cluster name
+          return (a.clusterName || '').localeCompare(b.clusterName || '');
+        });
+
         this.hasData = this.clusters.length > 0;
       },
       (error) => {
@@ -72,6 +101,94 @@ export class ViewFarmerClustersComponent implements OnInit {
         });
       }
     );
+  }
+
+  openStatusConfirmation(cluster: FarmerCluster) {
+    this.selectedCluster = cluster;
+    this.showStatusModal = true;
+    this.countdown = 30;
+    this.isCountdownCompleted = false;
+
+    this.clearCountdown();
+    this.countdownInterval = setInterval(() => {
+      this.countdown--;
+
+      if (this.countdown <= 0) {
+        this.isCountdownCompleted = true;
+        this.autoCancelStatusUpdate();
+      }
+    }, 1000);
+  }
+
+  cancelStatusUpdate() {
+    this.clearCountdown();
+    this.showStatusModal = false;
+    this.selectedCluster = null;
+    this.isCountdownCompleted = false;
+  }
+
+  autoCancelStatusUpdate() {
+    this.clearCountdown();
+    this.showStatusModal = false;
+
+    Swal.fire({
+      title: 'Time Expired',
+      text: 'Status update was automatically cancelled due to inactivity.',
+      icon: 'warning',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+
+    this.selectedCluster = null;
+    this.isCountdownCompleted = false;
+  }
+
+  confirmStatusUpdate() {
+    this.clearCountdown();
+    this.showStatusModal = false;
+    this.isCountdownCompleted = false;
+
+    if (this.selectedCluster) {
+      this.isLoading = true;
+      // Call your API to update the cluster status to "Started"
+      this.farmerClusterService.updateClusterStatus(this.selectedCluster.clusterId!, 'Started').subscribe(
+        (response) => {
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Success!',
+            text: 'Cluster status updated to Started.',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+          // Refresh the clusters list
+          this.fetchClusters();
+        },
+        (error) => {
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Error',
+            text: 'Failed to update cluster status.',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      );
+    }
+  }
+
+  private clearCountdown() {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
+    }
   }
 
   viewMembers(clusterId: number) {

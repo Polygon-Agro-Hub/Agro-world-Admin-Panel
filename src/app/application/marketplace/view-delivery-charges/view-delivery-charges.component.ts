@@ -7,6 +7,8 @@ import { MarketPlaceService } from '../../../services/market-place/market-place.
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface DeliveryCharge {
   id: number;
@@ -14,14 +16,13 @@ interface DeliveryCharge {
   district: string;
   province: string;
   charge: number;
-  userName:string;
+  userName: string;
 }
 
 interface ApiResponse {
   success?: boolean;
   data?: DeliveryCharge[];
   message?: string;
-  // Add other possible properties your API might return
   result?: DeliveryCharge[];
   items?: DeliveryCharge[];
 }
@@ -50,30 +51,30 @@ export class ViewDeliveryChargesComponent implements OnInit {
   editData: any = {
     city: '',
     charge: null,
-    id: null, // assuming you have an ID field
+    id: null,
   };
 
   constructor(
     private router: Router,
-    private deliveryChargeService: MarketPlaceService
-  ) {}
+    private deliveryChargeService: MarketPlaceService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.loadDeliveryCharges();
   }
 
-  // In your component.ts
+
   loadDeliveryCharges(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    this.deliveryCharges = []; // Clear previous data
+    this.deliveryCharges = [];
 
-    // Make sure we're passing the correct values
     this.deliveryChargeService
       .getAllDeliveryCharges(this.searchCity, this.exactCity)
       .subscribe({
         next: (response: DeliveryCharge[]) => {
-          console.log('Delivery charges loaded successfully:', response);
           this.deliveryCharges = response;
           this.isLoading = false;
         },
@@ -108,9 +109,8 @@ export class ViewDeliveryChargesComponent implements OnInit {
           const wb: XLSX.WorkBook = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, 'Delivery Charges Template');
 
-          const fileName = `Delivery_Charges_Template_${
-            new Date().toISOString().split('T')[0]
-          }.xlsx`;
+          const fileName = `Delivery_Charges_Template_${new Date().toISOString().split('T')[0]
+            }.xlsx`;
 
           XLSX.writeFile(wb, fileName);
 
@@ -123,7 +123,7 @@ export class ViewDeliveryChargesComponent implements OnInit {
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
-              confirmButton: 'bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700',
+              confirmButton: 'bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700',
             },
           });
         },
@@ -162,7 +162,7 @@ export class ViewDeliveryChargesComponent implements OnInit {
     this.editData = {
       city: data.city,
       charge: data.charge,
-      id: data.id, // or whatever unique identifier you use
+      id: data.id,
     };
     this.showEditModal = true;
   }
@@ -175,51 +175,49 @@ export class ViewDeliveryChargesComponent implements OnInit {
       id: null,
     };
   }
-onChargeInput(event: Event) {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
-  const selectionStart = input.selectionStart ?? 0;
-  const selectionEnd = input.selectionEnd ?? 0;
+  onChargeInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    const selectionStart = input.selectionStart ?? 0;
+    const selectionEnd = input.selectionEnd ?? 0;
 
-  // Remove invalid characters except digits and dot
-  value = value.replace(/[^0-9.]/g, '');
 
-  // Prevent multiple dots
-  const parts = value.split('.');
-  if (parts.length > 2) {
-    value = parts[0] + '.' + parts[1];
-  }
+    value = value.replace(/[^0-9.]/g, '');
 
-  // Limit to 2 digits after decimal
-  if (parts[1]?.length > 2) {
-    parts[1] = parts[1].substring(0, 2);
-    value = parts[0] + '.' + parts[1];
-  }
 
-  // Only update if changed
-  if (input.value !== value) {
-    input.value = value;
-
-    // Restore caret position intelligently:
-    let newPos = selectionStart;
-
-    // If user just typed a dot at the end, keep cursor after the dot
-    if (value.endsWith('.') && selectionStart === value.length - 1) {
-      newPos = value.length;
-    } else if (selectionStart > value.length) {
-      newPos = value.length;
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = parts[0] + '.' + parts[1];
     }
 
-    input.setSelectionRange(newPos, newPos);
+
+    if (parts[1]?.length > 2) {
+      parts[1] = parts[1].substring(0, 2);
+      value = parts[0] + '.' + parts[1];
+    }
+
+
+    if (input.value !== value) {
+      input.value = value;
+
+      let newPos = selectionStart;
+
+
+      if (value.endsWith('.') && selectionStart === value.length - 1) {
+        newPos = value.length;
+      } else if (selectionStart > value.length) {
+        newPos = value.length;
+      }
+
+      input.setSelectionRange(newPos, newPos);
+    }
+
+    this.editData.charge = value ? parseFloat(parseFloat(value).toFixed(2)) : null;
+
   }
 
-  // Update bound model
- this.editData.charge = value ? parseFloat(parseFloat(value).toFixed(2)) : null;
-
-}
 
 
-  
   updateDeliveryCharge(): void {
     if (!this.editData.id || this.editData.charge === null) {
       Swal.fire({
@@ -238,7 +236,6 @@ onChargeInput(event: Event) {
 
     this.isLoading = true;
 
-    // Prepare the data to send (only include necessary fields)
     const updateData = {
       city: this.editData.city,
       charge: this.editData.charge,
@@ -262,13 +259,12 @@ onChargeInput(event: Event) {
             },
           });
 
-          // Update the local data
           const index = this.deliveryCharges.findIndex(
             (item) => item.id === this.editData.id
           );
           if (index !== -1) {
             this.deliveryCharges[index].charge = this.editData.charge;
-            // Update city too if it's editable (currently your input is readonly)
+
             this.deliveryCharges[index].city = this.editData.city;
           }
 
@@ -296,7 +292,7 @@ onChargeInput(event: Event) {
     const input = event.target as HTMLInputElement;
     const currentValue = input.value;
 
-    // If the input is empty and user presses space, prevent it
+
     if (currentValue.length === 0 && event.key === ' ') {
       event.preventDefault();
     }
@@ -306,10 +302,9 @@ onChargeInput(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = input.value;
 
-    // Remove leading spaces
     if (value.startsWith(' ')) {
       this.searchCity = value.trimStart();
-      // Update the input value to reflect the change
+
       input.value = this.searchCity;
     }
   }
@@ -318,10 +313,9 @@ onChargeInput(event: Event) {
     const input = event.target as HTMLInputElement;
     let value = input.value;
 
-    // Remove leading spaces
+
     value = value.trimStart();
 
-    // Update both the model and input value
     this.searchCity = value;
     input.value = value;
   }

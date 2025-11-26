@@ -1,0 +1,265 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<!-- Edit Farmer Cluster Section -->
+<div class="mb-6 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-6">
+  <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-2">
+    Edit Farmer Cluster
+  </h2>
+
+  <!-- Update Form Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-4">
+    <!-- Cluster Name -->
+    <div>
+      <label class="block text-md font-medium text-textLight dark:text-textDark mb-2">
+        Farm Cluster Name *
+      </label>
+      <input type="text" [(ngModel)]="clusterName" placeholder="Enter cluster name"
+        (keydown)="onClusterNameKeydown($event)"
+        (input)="onClusterNameInput()"
+        class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [class.border-red-500]="nameError" />
+      <div *ngIf="nameError" class="text-red-500 text-sm mt-1">
+        {{ nameError }}
+      </div>
+    </div>
+
+    <!-- District Dropdown -->
+    <div>
+      <label class="block text-md font-medium text-textLight dark:text-textDark mb-2">
+        District *
+      </label>
+      <p-dropdown [(ngModel)]="selectedDistrict" [options]="districts" optionLabel="name" optionValue="value"
+        placeholder="--Select District here--" filterBy="name" [filter]="true"
+        styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
+        class="w-full" name="district" required>
+      </p-dropdown>
+      <div *ngIf="!selectedDistrict && formSubmitted" class="text-red-500 text-sm mt-1">
+        District is required
+      </div>
+    </div>
+  </div>
+
+  <!-- Certificate Dropdown -->
+  <div>
+    <label class="block text-md font-medium text-textLight dark:text-textDark mb-2">
+      Certificate *
+    </label>
+    <p-dropdown [(ngModel)]="selectedCertificateId" [options]="certificates" optionLabel="srtName" optionValue="id"
+      placeholder="--Select Certificate here--" [filter]="true" filterBy="srtName"
+      styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
+      class="w-full" name="certificate" required>
+      <ng-template pTemplate="selectedItem">
+        <div *ngIf="selectedCertificateId" class="flex items-center">
+          <span>{{ getSelectedCertificateName() }}</span>
+        </div>
+      </ng-template>
+      <ng-template let-certificate pTemplate="item">
+        <div class="flex items-center">
+          <span>{{ certificate.srtName }} ({{ certificate.srtNumber }})</span>
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div *ngIf="!selectedCertificateId && formSubmitted" class="text-red-500 text-sm mt-1">
+      Certificate selection is required
+    </div>
+  </div>
+
+  <h2 class="text-lg font-normal text-textLight dark:text-textDark mb-2 mt-6">
+    Farm Members *
+  </h2>
+
+  <!-- Add Farmer Button -->
+  <div class="mt-4 mb-6">
+    <button (click)="addNew()"
+      class="bg-white hover:bg-[#3980C0] text-[#3980C0] border border-[#3980C0] hover:text-white dark:bg-tileBlack font-medium py-2 px-4 rounded-lg text-lg flex items-center">
+      <i class="fa-solid fa-plus mr-2"></i>
+      Add More
+    </button>
+  </div>
+
+  <!-- Members Table -->
+  <div *ngIf="hasData || isLoading">
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg border">
+      <table class="w-full">
+        <thead class="bg-white dark:bg-gray-700 border-b">
+          <tr>
+            <th class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider">
+              ID
+            </th>
+
+            <th class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider">
+              Farm ID
+            </th>
+            <th class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider">
+              NIC
+            </th>
+            <th class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider">
+              Phone Number
+            </th>
+            <th class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"></th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <tr *ngFor="let user of filteredUsers; let i = index"
+            class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100">
+              {{ user.no }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100">
+              {{ user.farmRegCode }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100">
+              {{ user.nic }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100">
+              {{ user.phoneNumber || "--" }}
+            </td>
+            <td class="px-4 py-3 text-left">
+              <div class="flex space-x-3">
+                <!-- DELETE -->
+                <button *ngIf="tokenService.getUserDetails().role === '1'"
+                  class="text-red-500 hover:text-red-700 transition-colors" (click)="removeUser(user)"
+                  title="Remove User from Cluster" [disabled]="isLoading">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                    viewBox="0 0 24 24">
+                    <title>Delete</title>
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- No results for search -->
+    <div *ngIf="hasData && searchTerm && filteredUsers.length === 0" class="text-center py-8">
+      <p class="text-[#494949] dark:text-textDark">
+        No users found for "{{ searchTerm }}"
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-end mt-6 gap-2">
+      <button (click)="onCancel()" [disabled]="isLoading"
+        class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+        Cancel
+      </button>
+      <button (click)="updateCluster()" [disabled]="isLoading || !hasChanges()"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-[#2d6ca3] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+        Update
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="overflow-x-auto">
+  <div *ngIf="!hasData && !isLoading"
+    class="min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5">
+    <div class="text-center py-8">
+      <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mx-auto" />
+    </div>
+  </div>
+</div>
+
+<!-- Add Farmer Modal -->
+<div *ngIf="isAddFarmerModalOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-10 rounded-md">
+  <div class="bg-white dark:bg-tileBlack rounded-2xl shadow-2xl w-full max-w-md p-8 text-center">
+    <h2 class="text-lg font-semibold text-textLight dark:text-textDark mb-4 text-center">
+      Add Farmer to Cluster
+    </h2>
+
+    <!-- NIC Input -->
+    <input type="text" maxlength="12" [(ngModel)]="newFarmerNIC" (keydown)="restrictNICInput($event)"
+      (input)="onNICInput()" placeholder="--Enter the NIC of the farmer--" [class.border-red-500]="nicError"
+      class="text-center px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#272F45] text-textLight dark:text-textDark mb-1 w-96" />
+
+    <!-- Inline error -->
+    <div *ngIf="nicError" class="text-red-500 text-sm mb-2 text-center">
+      {{ nicError }}
+    </div>
+
+    <!-- Farm ID Input -->
+    <div class="my-6">
+      <input type="text" [(ngModel)]="newFarmerFarmId" (input)="onFarmIdInput()" placeholder="--Enter the Farm ID--"
+        [class.border-red-500]="farmIdError"
+        class="text-center px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-[#272F45] text-textLight dark:text-textDark mb-1 w-96" />
+      <!-- Farm ID Error -->
+      <div *ngIf="farmIdError" class="text-red-500 text-sm mb-2 text-center">
+        {{ farmIdError }}
+      </div>
+    </div>
+
+    <div class="flex justify-center space-x-3 mt-6">
+      <button
+        class="px-4 py-2 bg-gray-300 text-gray-500 hover:text-white dark:bg-gray-700 rounded hover:bg-gray-400 dark:hover:bg-gray-600 w-36"
+        (click)="closeAddFarmerModal()">
+        Cancel
+      </button>
+
+      <button
+        class="px-4 py-2 bg-[#3980C0] hover:bg-[#2d6ca3] text-white rounded w-36 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="isLoading" (click)="submitAddFarmer()">
+        Add
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div *ngIf="isDeleteModalOpen && farmerToDelete"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-tileLight dark:bg-tileBlack rounded-lg px-20 py-10 shadow-lg max-w-md w-full mx-4">
+    <!-- Confirmation Message -->
+    <div class="text-center mb-8">
+      <p class="font-medium dark:text-textDark mb-6">
+        Are you sure you want to remove the following farmer from this cluster?
+      </p>
+
+      <!-- Farmer Details -->
+      <div class="flex gap-2">
+        <span class="text-textLight dark:text-textDark font-medium">Farmer Name :
+        </span>
+        <span class="text-black dark:text-textDark font-semibold">{{
+          farmerToDelete.farmerName
+          }}</span>
+      </div>
+      <div class="flex gap-2">
+        <span class="text-textLight dark:text-textDark font-medium">Farmer NIC :
+        </span>
+        <span class="text-black dark:text-textDark font-semibold">{{
+          farmerToDelete.nic
+          }}</span>
+      </div>
+      <div class="flex gap-2">
+        <span class="text-textLight dark:text-textDark font-medium">Farme ID :
+        </span>
+        <span class="text-black dark:text-textDark font-semibold">{{
+          farmerToDelete.farmRegCode
+          }}</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-center space-x-4">
+      <button
+        class="px-3 py-1 bg-gray-300 text-gray-700 hover:text-white dark:bg-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 w-24 transition-colors"
+        (click)="closeDeleteModal()" [disabled]="isLoading">
+        No, <br />Cancel
+      </button>
+
+      <button
+        class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 w-24 transition-colors disabled:bg-red-400 disabled:cursor-not-allowed"
+        (click)="confirmDelete()" [disabled]="isLoading">
+        Yes, <br />Remove
+      </button>
+    </div>
+  </div>
+</div>

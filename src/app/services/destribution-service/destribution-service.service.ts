@@ -219,7 +219,7 @@ export class DestributionService {
     );
   }
 
-  getCenterTargetDetails(id:number, status: string = '', date: string = '', searchText: string = ''): Observable<ApiResponse> {
+  getCenterTargetDetails(id: number, status: string = '', date: string = '', searchText: string = ''): Observable<ApiResponse> {
     let url = `${this.apiUrl}distribution/get-center-target?id=${id}`;
     if (status) {
       url += `&status=${status}`;
@@ -240,7 +240,7 @@ export class DestributionService {
   }
 
 
-  getDistributedCenterOfficers(id:number, role: string = '', status: string = '', searchText: string = ''): Observable<ApiResponse> {
+  getDistributedCenterOfficers(id: number, role: string = '', status: string = '', searchText: string = ''): Observable<ApiResponse> {
     let url = `${this.apiUrl}distribution/get-distribution-officers?id=${id}`;
     if (status) {
       url += `&status=${status}`;
@@ -260,7 +260,7 @@ export class DestributionService {
   }
 
 
-  getCenterOutForDlvryOrders(id:number, date: string = '', status: string = '', searchText: string = ''): Observable<ApiResponse> {
+  getCenterOutForDlvryOrders(id: number, date: string = '', status: string = '', searchText: string = ''): Observable<ApiResponse> {
     let url = `${this.apiUrl}distribution/get-center-out-for-dlvry-orders?id=${id}`;
     if (status) {
       url += `&status=${status}`;
@@ -280,31 +280,38 @@ export class DestributionService {
     });
   }
 
-  getDailyOfficerDistributedTarget(id:number): Observable<any> {
-    let url = `${this.apiUrl}distribution/officer-daily-distribution-target/${id}`;
-    
+  getDailyOfficerDistributedTarget(id: number, selectDate: string): Observable<any> {
+    let url = `${this.apiUrl}distribution/officer-daily-distribution-target/${id}/${selectDate}`;
+
     return this.http.get<any>(url, {
       headers: this.getHeaders(),
     });
   }
 
-  getSelectedOfficerTargets(officerId: number, searchText: string = '', status: string = ''): Observable<any> {
+  getSelectedOfficerTargets(
+    officerId: number,
+    searchText: string = '',
+    status: string = '',
+    completingStatus: string = ''
+  ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`
     });
-  
-    console.log('officerId', officerId )
-    let url = `${this.apiUrl}distribution/get-selected-officer-targets?officerId=${officerId}`;
-  
+
+    let url = `${this.apiUrl}distribution/get-selected-officer-targets?targetId=${officerId}`;
+
     if (searchText) {
-      url += `&searchText=${searchText}`
-  
+      url += `&searchText=${searchText}`;
     }
-  
+
     if (status) {
-      url += `&status=${status}`
+      url += `&status=${status}`;
     }
-  
+
+    if (completingStatus) {
+      url += `&completingStatus=${completingStatus}`;
+    }
+
     return this.http.get<any>(url, { headers });
   }
 }

@@ -34,6 +34,9 @@
               <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">
                 Variety
               </th>
+              <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+                Type
+              </th>
               <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left">
                 Cultivation Method
               </th>
@@ -73,6 +76,14 @@
               <td class="py-3 dark:text-textDark">{{ item.cropName }}</td>
               <td class="px-4 py-3 dark:text-textDark text-left">
                 {{ item.variety }}
+              </td>
+               <td class="px-4 py-3 dark:text-textDark text-center">
+                <span *ngIf="item.planType === 'Basic'" class="bg-[#D7EEFF] text-[#002AFF] px-4 py-2 rounded-lg shadow-md">
+                  BASIC
+                </span>
+                <span *ngIf="item.planType === 'Pro'" class="bg-[#FFFF9F] text-[#D8B800] px-6 py-2 rounded-lg shadow-md">
+                  PRO
+                </span>
               </td>
               <td class="px-4 py-3 dark:text-textDark text-left">
                 {{ item.cultivationMethod }}

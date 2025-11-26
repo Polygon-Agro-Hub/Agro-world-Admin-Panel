@@ -49,6 +49,11 @@
                     <div *ngIf="item.status ==='Delivered'" class="bg-[#BBFFC6] px-3 py-2 text-[#308233] rounded-xl">
                         {{item.status}}
                     </div>
+
+                    <div *ngIf="item.status ==='Out For Delivery'" class="bg-[#BBFFC6] px-3 py-2 text-[#308233] rounded-xl">
+                        {{item.status}}
+                    </div>
+
                     <div *ngIf="item.status ==='Processing'" class="bg-[#CFE1FF] px-3 py-2 text-[#3B82F6] rounded-xl">
                         {{item.status}}
                     </div>
@@ -57,7 +62,18 @@
                     </div>
                 </td>
                 <td class="px-6 py-4 text-center dark:text-[#C8C8C8]">
-                    <i class="fa-solid fa-file-invoice-dollar text-3xl text-center"></i>
+                    <button 
+                        (click)="downloadInvoice(item.id, item.invNo)"
+                        [disabled]="isDownloading(item.id)"
+                        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        [class.opacity-50]="isDownloading(item.id)"
+                        [class.cursor-not-allowed]="isDownloading(item.id)"
+                        title="Download Invoice">
+                        <i class="fa-solid fa-file-invoice-dollar text-xl text-center" 
+                           [class.text-blue-500]="!isDownloading(item.id)"
+                           [class.text-gray-400]="isDownloading(item.id)"></i>
+                        <span *ngIf="isDownloading(item.id)" class="ml-2 text-xs">Downloading...</span>
+                    </button>
                 </td>
 
             </tr>

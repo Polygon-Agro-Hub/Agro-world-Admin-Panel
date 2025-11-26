@@ -1,0 +1,251 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center min-w-[200px]">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          Complaint List ({{
+          totalItems === 0
+          ? "0"
+          : totalItems < 10 ? "0" + totalItems : totalItems }}) </h2>
+      </div>
+      <div class="flex items-center">
+        <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
+          </svg>
+        </i>
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="comCategories"
+            [(ngModel)]="filterComCategory" (onChange)="applyFilters()" [checkmark]="false"
+            optionLabel="categoryEnglish" [showClear]="!!filterComCategory" placeholder="Category"></p-dropdown>
+        </div>
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="status" [(ngModel)]="filterStatus"
+            (onChange)="applyFilters()" [checkmark]="false" optionLabel="type" [showClear]="!!filterStatus"
+            placeholder="Status"></p-dropdown>
+        </div>
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="replyStatus" [checkmark]="false" optionLabel="status" optionValue="value" [showClear]="!!rpst"
+            placeholder="Reply" [(ngModel)]="rpst" (onChange)="applyFilters()" />
+        </div>
+        <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+          <input type="text" placeholder="Search By EMP ID, Company, Centre Code..." [(ngModel)]="searchText"
+            (keyup.enter)="searchComplain()"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="searchComplain()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            </svg>
+          </button>
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!hasData"
+      class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-tileBlack dark:text-textDark mt-6">
+      <p class="text-[#494949] my-6 dark:text-textDark">
+        --No Data Availabale--
+      </p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
+    </div>
+    <div *ngIf="hasData">
+      <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
+        <thead>
+          <tr>
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+              Ref No.
+            </th>
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+              Category
+            </th>
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+              EMP ID
+            </th>
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+              Received At
+            </th>
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+              Status
+            </th>
+            <th
+              *ngIf="permissionService.hasPermission('Reply GoviLink complaint') || tokenService.getUserDetails().role === '1'"
+              class="py-3 font-normal text-textLight dark:text-textDark text-center">
+              View
+            </th>
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+              Reply
+            </th>
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+              View Reply
+            </th>
+            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+              Replied By
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-200 dark:border-[#4B555A]" *ngFor="
+              let item of complainsData
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    }
+            ">
+            <td class="py-3 dark:text-textDark text-left">{{ item.refNo }}</td>
+            <td class="py-3 dark:text-textDark text-left">
+              {{ item.complainCategory }}
+            </td>
+            <td class="py-3 dark:text-textDark text-left">{{ item.empId }}</td>
+            <td class="py-3 dark:text-textDark text-center">
+              {{ item.createdAt | date : "yyyy/MM/dd" : "Asia/Colombo" }}<br />
+              {{ item.createdAt | date : "hh.mm a" : "Asia/Colombo" }}
+            </td>
+            <td class="py-3 dark:text-textDark text-center">
+              <span class="w-32 h-8 inline-block font-medium rounded-md px-3 py-1 text-sm"
+                [ngClass]="getStatusClass(item.status)">{{ item.status === 'Opened' ? 'Assigned': item.status }}</span>
+            </td>
+            <td
+              *ngIf="permissionService.hasPermission('Reply GoviLink complaint') || tokenService.getUserDetails().role === '1'"
+              class="py-3 dark:text-textDark text-center">
+              <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewComplainDetails(item.id)">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </td>
+            <td class="py-3 dark:text-textDark text-center">
+              <span *ngIf="item.reply === null"
+                class="px-4 py-3 text-center text-textLight dark:text-textDark italic opacity-60">No</span>
+              <span *ngIf="item.reply != null"
+                class="px-4 py-3 text-center text-textLight dark:text-textDark underline">Yes</span>
+            </td>
+            <td class="py-3 dark:text-textDark text-center">
+              <div *ngIf="item.reply === null">
+                <button disabled class="w-5 h-5 text-blue-100">
+                  <img src="assets/icons/viewreply.png" alt="View Reply"
+                    class="w-6 h-6 inline-block opacity-50 grayscale" />
+                </button>
+              </div>
+
+              <div *ngIf="item.reply != null">
+                <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
+                  (click)="fetchComplainDetails(item.id, getOfficerName(item), item.language)">
+                  <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
+                </button>
+              </div>
+            </td>
+            <td class="py-3 dark:text-textDark text-left">
+              {{ item.adminReplyByName || '--'}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="dark:bg-[#262f45] mt-4">
+      <pagination-controls (pageChange)="onPageChange($event)" previousLabel="Previous" nextLabel="Next"
+        [responsive]="true"></pagination-controls>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isPopUpVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeReplyPopUp()">
+  <div class="bg-white dark:bg-[#262f45] rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4 relative"
+    (click)="$event.stopPropagation()">
+    <!-- Close button -->
+    <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
+      (click)="closeReplyPopUp()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <div class="flex justify-center items-center">
+      <span class="rounded-full px-4 py-3 bg-[#F6F6F6] dark:bg-gray-400">
+        <i class="fa-regular fa-envelope text-2xl text-[#2D2D2D] 0"></i>
+      </span>
+    </div>
+    <h2 class="text-xl font-semibold text-center mb-4 dark:text-white">
+      Reply as Polygon
+    </h2>
+    <div class="text-left border rounded-lg px-3 py-5 text-[#2D2D2D] dark:text-gray-200">
+      <p *ngIf="selectedLanguage === 'Sinhala'">
+        හිතවත් <strong>{{ selectedOfficerName }}</strong>,
+      </p>
+      <p *ngIf="selectedLanguage === 'Tamil'">
+        அன்புள்ள <strong>{{ selectedOfficerName }}</strong>,
+      </p>
+      <p *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
+        Dear <strong>{{ selectedOfficerName }}</strong>,
+      </p>
+      <!-- second part -->
+      <p class="mt-5" *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
+        We are pleased to inform you that your complaint has been resolved
+      </p>
+      <p class="mt-5" *ngIf="selectedLanguage === 'Tamil'">
+        நாங்கள் உங்கள் புகாரை தீர்க்கப்பட்டதாக தெரிவித்ததில் மகிழ்ச்சி அடைகிறோம்
+      </p>
+      <p class="mt-5" *ngIf="selectedLanguage === 'Sinhala'">
+        අපි ඔබට කාරුණිකව දැනුම් දෙන්න කැමතියි ඔබගේ පැමිණිල්ල විසඳා ගෙන ඇත.
+      </p>
+
+      <textarea
+        class="w-full py-2 mt-3 mb-3 bg-white dark:bg-[#262f45] dark:border-gray-600 dark:text-white border-none outline-none"
+        rows="5" placeholder="Add your message here..." [(ngModel)]="complain.reply" name="reply" disabled></textarea>
+      <p *ngIf="selectedLanguage === 'Sinhala'">
+        ඔබට තවත් ගැටළු හෝ ප්‍රශ්න තිබේ නම්, කරුණාකර අප හා සම්බන්ධ වන්න. ඔබේ
+        ඉවසීම සහ අවබෝධය වෙනුවෙන් ස්තූතියි.
+      </p>
+      <p *ngIf="selectedLanguage === 'Tamil'">
+        உங்களுக்கு மேலும் ஏதேனும் சிக்கல்கள் அல்லது கேள்விகள் இருந்தால்,
+        தயவுசெய்து எங்களைத் தொடர்பு கொள்ளவும். உங்கள் பொறுமைக்கும் புரிதலுக்கும்
+        நன்றி.
+      </p>
+      <p *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
+        If you have any further concerns or questions, feel free to reach out.
+        Thank you for your patience and understanding.
+      </p>
+
+      <p class="mt-3">
+        {{
+        selectedLanguage === "Tamil"
+        ? "இதற்கு"
+        : selectedLanguage === "Sinhala"
+        ? "මෙයට"
+        : "Sincerely"
+        }},
+        <br />
+        <span *ngIf="selectedLanguage === 'English'">Polygon Customer Support Team</span>
+        <span *ngIf="selectedLanguage === 'Sinhala'">Polygon පාරිභෝගික සහාය කණ්ඩායම</span>
+        <span *ngIf="selectedLanguage === 'Tamil'">Polygon வாடிக்கையாளர் ஆதரவு குழு</span>
+      </p>
+    </div>
+  </div>
+</div>

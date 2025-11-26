@@ -1,0 +1,188 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="flex space-x-4">
+  <button *ngIf="permissionService.hasPermission('GoVi Link jobs view add job') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center">
+    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </svg>
+    Add New
+  </button>
+</div>
+
+<div
+  class="overflow-x-auto scrollbar-thin scrollbar-thumb-yellow-300 scrollbar-track-transparent dark:scrollbar-thumb-yellow-300 scrollbar-thumb-rounded-lg">
+  <div class="min-w-[2000px] bg-white dark:bg-tileBlack shadow-lg rounded-lg relative p-8">
+
+    <!-- Header with Count and Filters on Same Line -->
+    <div class="flex justify-between items-center mb-8 gap-4">
+      <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap">
+        GoVi Link Job History ({{ totalItems | number: '2.0' }})
+      </h4>
+
+      <div class="flex items-center gap-4 flex-shrink-0">
+        <!-- Status Dropdown -->
+        <div>
+          <p-dropdown
+            styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] h-8 w-48"
+            [(ngModel)]="selectedStatus" [options]="statusOptions" optionLabel="label" optionValue="value"
+            [showClear]="!!selectedStatus" placeholder="Status" (onChange)="applyFilters()" />
+        </div>
+
+        <!-- District Dropdown -->
+        <div>
+          <p-dropdown
+            styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight  dark:text-textDark border-gray-300 dark:border-[#AFAFAF] h-8 w-48"
+            [(ngModel)]="selectedDistrict" [options]="districtOptions" optionLabel="label" optionValue="value"
+            [showClear]="!!selectedDistrict" [filter]="true" filterPlaceholder="Search district" placeholder="District"
+            (onChange)="applyFilters()" />
+        </div>
+
+        <!-- Completed Date -->
+        <div class="flex items-center gap-2 h-8">
+          <p-calendar [(ngModel)]="completedDateFrom" (onSelect)="onCompletedDateChange()"
+            (onClear)="onCompletedDateClear()" placeholder="Completed Date" [showIcon]="true" [showClear]="true"
+            [showButtonBar]="true" iconDisplay="input" [maxDate]="maxDate" [style]="{ width: '16rem', height: '2rem' }"
+            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+               [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+               [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+               [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+               [&_.p-datepicker-header]:dark:text-white
+               [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+               [&_.p-button:hover]:dark:bg-[#6b7280]"
+            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12" />
+        </div>
+
+        <!-- Search Box -->
+        <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">
+          <input type="text" placeholder="Search.."
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchTerm"
+            (keydown.enter)="onSearch()" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            </svg>
+          </button>
+          <button *ngIf="searchTerm && searchTerm.trim() !== ''" type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div>
+      <div *ngIf="hasData">
+        <table class="min-w-full divide-y divide-gray-200 table-auto">
+          <thead>
+            <tr>
+              <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">No</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Job ID
+              </th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">EMP ID
+              </th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Farm ID
+              </th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Visit
+                Purpose</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Farmer
+                NIC</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">District
+              </th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
+                Scheduled Date</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
+                Completed Date</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">On
+                Screen Time</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Status
+              </th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Assigned
+                On</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Assigned
+                By
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                let item of jobHistory
+                  | paginate
+                    : {
+                        itemsPerPage: itemsPerPage,
+                        currentPage: page,
+                        totalItems: totalItems
+                      };
+                let i = index
+              ">
+              <td class="py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
+                {{ (page - 1) * itemsPerPage + i + 1 }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+                {{ item.jobId }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+                {{ item.empId }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+                {{ item.regCode }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+                {{ item.visitPurpose }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.farmerNIC }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.district }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.scheduledDate }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.completedDate }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.onScreenTime }}
+              </td>
+              <td class="px-6 py-3 text-center text-sm font-medium whitespace-nowrap" [ngClass]="getStatusClass(item.status)">
+                {{ item.status }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap" >
+                {{ item.assignedOn }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+                {{ item.assignedByName }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- No Data Message -->
+      <div *ngIf="!hasData && !isLoading" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
+
+      <!-- Pagination -->
+      <div *ngIf="hasData" class="dark:bg-[#262f45] mt-4">
+        <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+          [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+          [screenReaderCurrentLabel]="'You are on page'">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>

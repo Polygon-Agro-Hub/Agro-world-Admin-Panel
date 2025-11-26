@@ -19,47 +19,47 @@ export class AddCoupenComponent {
   checkPrecentageValueMessage: string = '';
   checkfixAmountValueMessage: string = '';
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
+  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
 
 
 
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-     customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['market/action']);
-    }
-  });
-}
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['market/action']);
+      }
+    });
+  }
 
-onCancel() {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after canceling!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-     customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['market/action']);
-    }
-  });
-}
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['market/action']);
+      }
+    });
+  }
 
 
   clearValidationMessages(): void {
@@ -112,157 +112,152 @@ onCancel() {
     }
   }
 
-onSubmit() {
-  this.clearValidationMessages();
+  onSubmit() {
+    this.clearValidationMessages();
 
-  // Collect missing required fields
-  const missingFields: string[] = [];
 
-  if (!this.coupenObj.code) missingFields.push('Code is Required');
-  if (!this.coupenObj.startDate) missingFields.push('Start Date is Required');
-  if (!this.coupenObj.endDate) missingFields.push('Expire Date is Required');
-  if (!this.coupenObj.type) missingFields.push('Type is Required');
+    const missingFields: string[] = [];
 
-  // Type-specific validations
-  if (this.coupenObj.type === 'Percentage') {
-    if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
-      missingFields.push('Discount Percentage is Required');
-      this.checkPrecentageValueMessage = 'Discount Percentage is required';
+    if (!this.coupenObj.code) missingFields.push('Code is Required');
+    if (!this.coupenObj.startDate) missingFields.push('Start Date is Required');
+    if (!this.coupenObj.endDate) missingFields.push('Expire Date is Required');
+    if (!this.coupenObj.type) missingFields.push('Type is Required');
+
+
+    if (this.coupenObj.type === 'Percentage') {
+      if (this.coupenObj.percentage === null || isNaN(this.coupenObj.percentage)) {
+        missingFields.push('Discount Percentage is Required');
+        this.checkPrecentageValueMessage = 'Discount Percentage is required';
+      }
+    } else if (this.coupenObj.type === 'Fixed Amount') {
+      if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
+        missingFields.push('Discount Amount is Required');
+        this.checkfixAmountValueMessage = 'Discount Amount is required';
+      }
     }
-  } else if (this.coupenObj.type === 'Fixed Amount') {
-    if (this.coupenObj.fixDiscount === null || isNaN(this.coupenObj.fixDiscount)) {
-      missingFields.push('Discount Amount is Required');
-      this.checkfixAmountValueMessage = 'Discount Amount is required';
+
+    if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
+      missingFields.push('Price Limit is Required');
     }
-  }
 
-  if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-    missingFields.push('Price Limit is Required');
-  }
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
 
-  // If there are validation errors, show them and stop the submission
-  if (missingFields.length > 0) {
-    let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-    missingFields.forEach((field) => {
-      errorMessage += `<li>${field}</li>`;
-    });
-    errorMessage += '</ul></div>';
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
 
     Swal.fire({
-      icon: 'error',
-      title: 'Missing or Invalid Information',
-      html: errorMessage,
-      confirmButtonText: 'OK',
+      title: 'Are you sure?',
+      text: 'Do you want to create this coupon?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Create it!',
+      cancelButtonText: 'No, Cancel',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
       },
-    });
-    return;
-  }
+    }).then((result) => {
+      if (result.isConfirmed) {
 
-  // If validation passes, proceed with confirmation
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to create this coupon?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Create it!',
-    cancelButtonText: 'No, Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Save the coupon
-      this.marketSrv.createCoupen(this.coupenObj).subscribe({
-        next: (res) => {
-          if (res.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'The coupon was created successfully!',
-              timer: 2000,
-              showConfirmButton: false,
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              },
-            }).then(() => {
-              this.coupenObj = new Coupen();
-              this.router.navigate(['market/action/view-coupen']);
-            });
-          } else {
+        this.marketSrv.createCoupen(this.coupenObj).subscribe({
+          next: (res) => {
+            if (res.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'The coupon was created successfully!',
+                timer: 2000,
+                showConfirmButton: false,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              }).then(() => {
+                this.coupenObj = new Coupen();
+                this.router.navigate(['market/action/view-coupen']);
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Submission Failed',
+                text: res.error || 'Failed to create coupon',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+            }
+          },
+          error: (err) => {
+            let errorMessage = 'An unexpected error occurred.';
+
+            if (err.error && err.error.error) {
+              errorMessage = err.error.error;
+            } else if (err.status === 400) {
+              errorMessage = 'Invalid data. Please check your inputs.';
+            } else if (err.status === 401) {
+              errorMessage = 'Unauthorized. Please log in again.';
+            } else if (err.status === 409) {
+              errorMessage = 'A coupon with this code already exists.';
+            } else if (err.status === 500) {
+              errorMessage = 'Server error. Please try again later.';
+            }
+
+            this.checkPrecentageValueMessage = '';
+            this.checkfixAmountValueMessage = '';
+
             Swal.fire({
               icon: 'error',
               title: 'Submission Failed',
-              text: res.error || 'Failed to create coupon',
+              text: errorMessage,
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
           }
-        },
-        error: (err) => {
-          let errorMessage = 'An unexpected error occurred.';
-
-          if (err.error && err.error.error) {
-            // Use the specific error message from the backend
-            errorMessage = err.error.error;
-          } else if (err.status === 400) {
-            errorMessage = 'Invalid data. Please check your inputs.';
-          } else if (err.status === 401) {
-            errorMessage = 'Unauthorized. Please log in again.';
-          } else if (err.status === 409) {
-            errorMessage = 'A coupon with this code already exists.';
-          } else if (err.status === 500) {
-            errorMessage = 'Server error. Please try again later.';
-          }
-
-          // Clear validation messages
-          this.checkPrecentageValueMessage = '';
-          this.checkfixAmountValueMessage = '';
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Submission Failed',
-            text: errorMessage,
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        }
-      });
-    }
-  });
-}
-
-
-validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
-
-  // Regex to match numbers with up to 2 decimal places
-  const regex = /^\d+(\.\d{0,2})?$/;
-
-  if (value === '') {
-    this.coupenObj[field] = null!;
-    return;
+        });
+      }
+    });
   }
 
-  if (!regex.test(value)) {
-    while (value.length > 0 && !regex.test(value)) {
-      value = value.slice(0, -1);
-    }
-    input.value = value;
-  }
 
-  this.coupenObj[field] = value ? parseFloat(value) : null!;
-}
+  validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percentage') {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    const regex = /^\d+(\.\d{0,2})?$/;
+
+    if (value === '') {
+      this.coupenObj[field] = null!;
+      return;
+    }
+
+    if (!regex.test(value)) {
+      while (value.length > 0 && !regex.test(value)) {
+        value = value.slice(0, -1);
+      }
+      input.value = value;
+    }
+
+    this.coupenObj[field] = value ? parseFloat(value) : null!;
+  }
 
 
   checkPrecentageValue(num: number) {
@@ -297,12 +292,11 @@ validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percen
   }
 
   preventNegative(e: KeyboardEvent) {
-    // Prevent minus key, comma, and period (for negative numbers in some locales)
-    if (e.key === '-' || e.key === ',' ) {
+    if (e.key === '-' || e.key === ',') {
       e.preventDefault();
     }
 
-    // Prevent pasting negative numbers
+
     if (e.ctrlKey && e.key === 'v') {
       setTimeout(() => {
         if (this.coupenObj.percentage < 0) {
@@ -315,7 +309,7 @@ validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percen
   onCodeInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const trimmedValue = input.value.trimStart();
-    
+
     if (input.value !== trimmedValue) {
       input.value = trimmedValue;
       this.coupenObj.code = trimmedValue;

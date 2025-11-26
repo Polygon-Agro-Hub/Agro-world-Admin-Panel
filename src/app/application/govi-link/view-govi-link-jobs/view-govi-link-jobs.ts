@@ -4,12 +4,20 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-view-govi-link-jobs',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, DropdownModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+    DropdownModule,
+    CalendarModule,
+  ],
   templateUrl: './view-govi-link-jobs.component.html',
+  styleUrls: ['./view-govi-link-jobs.component.css'],
 })
 export class ViewGoviLinkJobsComponent implements OnInit {
   isLoading = false;
@@ -20,7 +28,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   districtFilter = '';
   statusFilter = '';
   assignStatusFilter = '';
-  dateFilter = '';
+  dateFilter: Date | null = null;
 
   // Dropdown options
   districtOptions: any[] = [];
@@ -48,7 +56,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   assignedOfficerArray: string[] = [];
 
   // Assign popup state
-  selectedOfficerRole: string = '';
+  selectedOfficerRole: string | null = null;
   selectedOfficerId: string = '';
   availableOfficers: any[] = [];
   selectedOfficerInfo: any = null;
@@ -65,6 +73,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   constructor(private goviLinkService: GoviLinkService) {}
 
   ngOnInit(): void {
+    this.dateFilter = new Date();
     this.fetchJobs();
     this.loadDistrictOptions();
   }
@@ -72,12 +81,17 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   fetchJobs(): void {
     this.isLoading = true;
 
+    // Format date to YYYY-MM-DD if exists
+    const formattedDate = this.dateFilter
+      ? this.formatDateForBackend(this.dateFilter)
+      : '';
+
     const filters = {
       searchTerm: this.searchText,
       district: this.districtFilter,
       status: this.statusFilter,
       assignStatus: this.assignStatusFilter,
-      date: this.dateFilter,
+      date: formattedDate, // Send formatted date
     };
 
     this.goviLinkService.getAllGoviLinkJobs(filters).subscribe({
@@ -91,6 +105,19 @@ export class ViewGoviLinkJobsComponent implements OnInit {
         this.jobs = [];
       },
     });
+  }
+
+  // Format date to YYYY-MM-DD for backend
+  formatDateForBackend(date: Date): string {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+  // Handle date selection
+  onDateSelect(): void {
+    this.fetchJobs();
   }
 
   loadDistrictOptions(): void {
@@ -156,13 +183,17 @@ export class ViewGoviLinkJobsComponent implements OnInit {
       this.currentAssignedOfficer = {
         name: job.assignedOfficerName,
         empId: job.officerEmpId,
-        role: job.assignedOfficerRole, // You might need to add this field to your backend query
+        role: job.assignedOfficerRole,
       };
-
-      this.selectedOfficerRole = 'Field Officer'; // Default, adjust based on your data
     }
 
     this.isAssignPopup = true;
+  }
+
+  // Clear date filter
+  clearDateFilter(): void {
+    this.dateFilter = null;
+    this.fetchJobs();
   }
 
   // Close assign popup
@@ -198,7 +229,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   loadOfficersByRole(role: string): void {
     this.isLoadingOfficers = true;
 
-    // Use the job’s scheduled date when fetching available officers
+    // Use the job's scheduled date when fetching available officers
     const scheduleDate = this.selectedJob?.scheduledDate;
 
     this.goviLinkService.getOfficersByJobRole(role, scheduleDate).subscribe({
@@ -279,8 +310,6 @@ export class ViewGoviLinkJobsComponent implements OnInit {
         if (response.success) {
           this.assignPopupClose();
           this.fetchJobs(); // Refresh the job list
-          // You can show a success toast/message here
-          console.log('Officer assigned successfully');
         } else {
           this.assignError = response.message || 'Failed to assign officer';
         }
@@ -338,7 +367,6 @@ export class ViewGoviLinkJobsComponent implements OnInit {
 
   addNew(): void {
     // Navigate to add new job page
-    console.log('Add new job');
   }
 
   clearAllFilters(): void {
@@ -346,7 +374,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     this.districtFilter = '';
     this.statusFilter = '';
     this.assignStatusFilter = '';
-    this.dateFilter = '';
+    this.dateFilter = null;
     this.fetchJobs();
   }
 
@@ -384,7 +412,7 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     return this.jobs.length > 0;
   }
 
-  // Helper method to format date
+  // Helper method to format date for display
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);

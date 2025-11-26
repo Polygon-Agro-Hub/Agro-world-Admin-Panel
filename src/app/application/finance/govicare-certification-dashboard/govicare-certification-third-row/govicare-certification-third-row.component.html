@@ -1,0 +1,72 @@
+<div>
+  <div class="flex items-center justify-between mb-4 mt-6">
+    <h2 class="text-gray-800 font-semibold text-lg dark:text-white">
+      Recent Certificate Payments
+    </h2>
+    <button  (click)="ViewAll()"
+      class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
+    >
+      View All
+      <i class="fa-solid fa-arrow-up-right-from-square text-[#415cff] ml-2"></i>
+    </button>
+  </div>
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead
+        class="bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2"
+      >
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Transaction ID
+          </th>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Farmer Name
+          </th>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Validity Period
+          </th>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Amount (Rs.)
+          </th>
+          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+            Date & Time
+          </th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr
+          *ngFor="let payment of recentPayments"
+          class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        >
+          <th
+            scope="row"
+            class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
+          >
+            {{ payment.transactionId }}
+          </th>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            {{ payment.farmerName }}
+          </td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            {{ payment.validityPeriod }}
+          </td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            {{ payment.amount }}
+          </td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            {{ payment.dateTime }}
+          </td>
+
+        </tr>
+        <tr *ngIf="recentPayments.length === 0">
+          <td
+            colspan="7"
+            class="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
+          >
+            No recent payments found
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

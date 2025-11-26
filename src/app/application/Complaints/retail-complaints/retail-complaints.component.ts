@@ -9,6 +9,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { ComplaintsService } from '../../../services/complaints/complaints.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface Complaint {
   id: string;
@@ -26,7 +28,7 @@ interface Complaint {
 interface DropdownOption {
   label: string;
   value: string;
-  isExcluded?: boolean; // Added to support exclusion styling
+  isExcluded?: boolean;
 }
 
 interface ApiResponse {
@@ -61,7 +63,6 @@ export class RetailComplaintsComponent implements OnInit {
   messageContent = '';
   selectedComplaint = {} as Complaint;
 
-  // Filters + pagination
   searchText = '';
   rpst: string | null = null;
   filterComCategory: string | null = null;
@@ -72,7 +73,6 @@ export class RetailComplaintsComponent implements OnInit {
 
   hasData: boolean = false;
 
-  // Dropdown data
   replyStatus: DropdownOption[] = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
@@ -83,8 +83,10 @@ export class RetailComplaintsComponent implements OnInit {
   constructor(
     private router: Router,
     private datePipe: DatePipe,
-    private complaintsService: ComplaintsService
-  ) {}
+    private complaintsService: ComplaintsService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.fetchComplaints();
@@ -96,7 +98,6 @@ export class RetailComplaintsComponent implements OnInit {
 
     this.complaintsService.fetchComplaints().subscribe({
       next: (resp: ApiResponse) => {
-        console.log('ApiResponse', resp);
         if (resp.data.length === 0) {
           this.hasData = false;
         }
@@ -114,7 +115,7 @@ export class RetailComplaintsComponent implements OnInit {
             reply: item.reply || undefined,
             complain: item.complain,
           }))
-          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort by latest date
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.filteredComplaints = [...this.complaints];
         this.totalItems = this.filteredComplaints.length;
         this.comCategories = Array.from(
@@ -189,8 +190,8 @@ export class RetailComplaintsComponent implements OnInit {
 
         const matchesReply =
           this.rpst === 'Yes' ? !!item.reply :
-          this.rpst === 'No' ? !item.reply :
-          true;
+            this.rpst === 'No' ? !item.reply :
+              true;
 
         const matchesCat =
           !this.filterComCategory || item.complainCategory === this.filterComCategory;
@@ -200,7 +201,7 @@ export class RetailComplaintsComponent implements OnInit {
 
         return matchesSearch && matchesReply && matchesCat && matchesStat;
       })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); // Sort by latest date
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     this.totalItems = this.filteredComplaints.length;
     this.page = 1;
@@ -208,7 +209,6 @@ export class RetailComplaintsComponent implements OnInit {
   }
 
   searchComplain(): void {
-    console.log('[searchComplain] searchText =', this.searchText);
     this.applyFilters();
   }
 
@@ -218,7 +218,6 @@ export class RetailComplaintsComponent implements OnInit {
   }
 
   regStatusFil(): void {
-    console.log('replyStatus', this.rpst);
     this.applyFilters();
   }
 
@@ -252,6 +251,6 @@ export class RetailComplaintsComponent implements OnInit {
 
 
   submitReply(): void {
-    // your existing POST logic…
+
   }
 }

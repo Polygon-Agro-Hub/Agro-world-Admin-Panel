@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-govilink',
@@ -17,7 +19,11 @@ export class GovilinkComponent {
   popupVisibleCompanys = false;
   popupVisibleAG = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) {}
 
   togglePopupCollectionCenter() {
     this.popupVisibleCollectionCenter = !this.popupVisibleCollectionCenter;
@@ -61,10 +67,6 @@ export class GovilinkComponent {
     this.popupVisibleCompanys = false;
   }
 
-  addCompany(): void {
-    this.router.navigate(['/govi-link/action/add-a-company']);
-  }
-
   addService(): void {
     this.router.navigate(['/govi-link/action/add-services']);
   }
@@ -72,11 +74,12 @@ export class GovilinkComponent {
   addviewService(): void {
     this.router.navigate(['/govi-link/action/view-services-list']);
   }
-  viewCompanyList(): void {
-    this.router.navigate(['/govi-link/action/view-company-list']);
-  }
 
   assignGoViLinkJobs(): void {
     this.router.navigate(['/govi-link/action/view-govi-link-jobs']);
+  }
+
+  viewjobHistory(): void {
+    this.router.navigate(['/govi-link/action/view-job-history']);
   }
 }

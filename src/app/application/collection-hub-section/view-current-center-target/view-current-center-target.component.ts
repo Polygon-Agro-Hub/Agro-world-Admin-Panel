@@ -41,7 +41,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   isLoading: boolean = false;
 
   isStatusDropdownOpen = false;
-  statusDropdownOptions = ['Pending', 'Completed', 'Exceeded'];
+  statusDropdownOptions = ['Pending', 'Completed', 'Exceeded', 'Extra'];
 
   toggleStatusDropdown() {
     this.isStatusDropdownOpen = !this.isStatusDropdownOpen;
@@ -85,16 +85,11 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
 
   fetchAllTarget(centerId: number = this.centerId, page: number = 1, limit: number = this.itemsPerPage, status: string = this.selectStatus, search: string = this.searchText) {
     this.isLoading = true;
-    console.log('fetching')
-    console.log(this.hasData);
     this.collectionCenterSrv.getAllCenterDailyTarget(centerId, page, limit, status, search).subscribe(
       (res) => {
         this.targetArr = res.items;
-        console.log(res.items)
         if (res.items.length > 0) {
           this.hasData = true;
-          console.log('fetched')
-          console.log(this.hasData);
         } else {
           this.hasData = false;
         }
@@ -119,14 +114,9 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
     this.fetchAllTarget();
   }
 
-  // cancelStatus() {
-  //   this.selectStatus = '';
-  //   this.fetchAllTarget();
-  // }
-
   cancelStatus(event?: MouseEvent) {
     if (event) {
-      event.stopPropagation(); // Prevent triggering the dropdown toggle
+      event.stopPropagation(); 
     }
     this.selectStatus = '';
     this.fetchAllTarget();
@@ -134,26 +124,21 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
 
 
   getTimeRemaining(toDate: string, toTime: string): string {
-    // Split date into parts and create a Date object in YYYY-MM-DD format (which is unambiguous)
     const [day, month, year] = toDate.split('/').map(Number);
     const targetDateTime = new Date(`${year}-${month}-${day} ${toTime}`);
 
     const currentDate = new Date();
 
-    // If target date is invalid or in the past, return 'Expired'
     if (isNaN(targetDateTime.getTime()) || targetDateTime < currentDate) {
       return 'Expired';
     }
 
-    // Calculate time difference in milliseconds
     const timeDiff = targetDateTime.getTime() - currentDate.getTime();
 
-    // Convert to days, hours, and minutes
     const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
     const hoursDiff = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutesDiff = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
 
-    // Only handle the first three conditions
     if (daysDiff > 0) {
       return `Expires in ${daysDiff} day${daysDiff > 1 ? 's' : ''}`;
     }
@@ -164,7 +149,6 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
       return `Expires in ${minutesDiff} minute${minutesDiff > 1 ? 's' : ''}`;
     }
 
-    // Default return 'Expired'
     return 'Expired';
   }
 
@@ -196,14 +180,14 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   formatTime(time: string): string {
     const [hoursStr, minutesStr] = time.split(':');
     let hours = parseInt(hoursStr, 10);
-    const minutes = minutesStr; // use as is, assuming it's already 2-digit
+    const minutes = minutesStr; 
     const period = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; // convert '0' to 12 for midnight and adjust hours >12
+    hours = hours % 12 || 12; 
     return `${hours}:${minutes} ${period}`;
   }
 
   navigateToCenters() {
-    this.router.navigate(['/centers']); // Change '/reports' to your desired route
+    this.router.navigate(['/centers']); 
   }
 
   downloadTemplate1() {
@@ -222,9 +206,9 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
             title: "Downloaded",
             text: "Please check your downloads folder",
             customClass: {
-              popup: 'bg-white dark:bg-[#363636]', // Light mode: white, Dark mode: gray-800
-              title: 'text-gray-800 dark:text-textDark', // Title text (dark: almost white)
-              htmlContainer: 'text-gray-600 dark:text-white', // Body text (dark: light gray)
+              popup: 'bg-white dark:bg-[#363636]', 
+              title: 'text-gray-800 dark:text-textDark', 
+              htmlContainer: 'text-gray-600 dark:text-white', 
             }
           });
 

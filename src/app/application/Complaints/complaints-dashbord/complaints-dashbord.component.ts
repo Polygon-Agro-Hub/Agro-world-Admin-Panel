@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-complaints-dashbord',
@@ -18,9 +20,14 @@ export class ComplaintsDashbordComponent {
   popupVisibleSalesAgents = false;
   popupVisibleMPRetail = false;
   popupVisibleMPWholesale = false;
-  popupVisibleDistributedcenter = false
+  popupVisibleDistributedcenter = false;
+  popupGoviLink = false;
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   closeAllPopups() {
     this.popupVisibleCategories = false;
@@ -64,9 +71,14 @@ export class ComplaintsDashbordComponent {
     this.popupVisibleMPWholesale = !this.popupVisibleMPWholesale;
   }
 
-  togglePopupDistributedCenters(){
+  togglePopupDistributedCenters() {
     this.closeAllPopups();
     this.popupVisibleDistributedcenter = !this.popupVisibleDistributedcenter;
+  }
+
+  togglePopupGovilink() {
+    this.closeAllPopups();
+    this.popupGoviLink = !this.popupGoviLink;
   }
 
 

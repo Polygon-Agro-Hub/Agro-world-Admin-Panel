@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -61,13 +61,15 @@ getFlagUrl(countryCode: string): string {
   constructor(
     private collectionCenterService: CollectionCenterService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.collectionCenterID = this.route.snapshot.params['id'];
   }
 
   back(): void {
-    this.router.navigate(['collection-hub/view-collection-centers']);
+    // this.router.navigate(['collection-hub/view-collection-centers']);
+    this.location.back();
   }
 
   ngOnInit(): void {
@@ -191,7 +193,6 @@ getFlagUrl(countryCode: string): string {
       (res) => {
         this.CompanyData = res;
 
-        // Update selected companies once the CompanyData is available
         this.updateSelectedCompanies();
       },
       (error) => console.error('Error fetching companies:', error)
@@ -207,7 +208,7 @@ getFlagUrl(countryCode: string): string {
           if (res?.status) {
             this.centerFetchData = res.results;
             this.selectProvince = this.centerFetchData.province;
-            this.existRegCode = this.centerFetchData.regCode; // Store initial reg code
+            this.existRegCode = this.centerFetchData.regCode; 
 
             this.updateSelectedCompanies();
             this.onProvinceChange();
@@ -234,8 +235,6 @@ getFlagUrl(countryCode: string): string {
       ).map((company) => company.id);
     }
   }
-
-  // Update toggleSelection to synchronize selectedCompaniesIds and companies string
   toggleSelection(company: any) {
     const index = this.selectedCompaniesIds.indexOf(company.id);
     if (index === -1) {
@@ -244,15 +243,12 @@ getFlagUrl(countryCode: string): string {
       this.selectedCompaniesIds.splice(index, 1);
     }
 
-    // Update the companies string
     this.centerFetchData.companies = this.CompanyData.filter((c) =>
       this.selectedCompaniesIds.includes(c.id)
     )
       .map((c) => c.companyNameEnglish)
       .join(',');
 
-    console.log('Selected IDs:', this.selectedCompaniesIds);
-    console.log('Selected Companies:', this.centerFetchData.companies);
   }
 
   onCancel() {
@@ -268,9 +264,9 @@ getFlagUrl(countryCode: string): string {
   }
 
   updateRegCode() {
-    const provinceCode = this.selectProvince.slice(0, 3).toUpperCase(); // First 3 letters of province
-    const districtCode = this.selectDistrict.slice(0, 3).toUpperCase(); // First 3 letters of district
-    const cityCode = this.city.slice(0, 3).toUpperCase(); // First 3 letters of city
+    const provinceCode = this.selectProvince.slice(0, 3).toUpperCase(); 
+    const districtCode = this.selectDistrict.slice(0, 3).toUpperCase(); 
+    const cityCode = this.city.slice(0, 3).toUpperCase(); 
 
     if (provinceCode && districtCode && cityCode) {
       this.centerFetchData.regCode = `${provinceCode}-${districtCode}-${cityCode}`;
@@ -282,7 +278,6 @@ getFlagUrl(countryCode: string): string {
     const selectedDistrict = this.centerFetchData.district;
     const selectedCity = this.centerFetchData.city;
 
-    // Call the original province change logic
     const filteredProvince = this.ProvinceData.filter(
       (item) => item.province === this.selectProvince
     );
@@ -294,14 +289,12 @@ getFlagUrl(countryCode: string): string {
       this.selectedDistrict = [];
     }
 
-    // Add reg code generation logic
     if (selectedProvince && selectedDistrict && selectedCity) {
       this.collectionCenterService
         .generateRegCode(selectedProvince, selectedDistrict, selectedCity)
         .subscribe(
           (response) => {
             this.centerFetchData.regCode = response.regCode;
-            console.log('New RegCode:', response.regCode);
           },
           (error) => {
             console.error('Error fetching regCode:', error);
@@ -310,7 +303,6 @@ getFlagUrl(countryCode: string): string {
     }
   }
 
-  // Add new methods for district and city changes
   onDistrictChange() {
     const selectedProvince = this.centerFetchData.province;
     const selectedDistrict = this.centerFetchData.district;
@@ -322,7 +314,6 @@ getFlagUrl(countryCode: string): string {
         .subscribe(
           (response) => {
             this.centerFetchData.regCode = response.regCode;
-            console.log('New RegCode:', response.regCode);
           },
           (error) => {
             console.error('Error fetching regCode:', error);
@@ -342,7 +333,6 @@ getFlagUrl(countryCode: string): string {
         .subscribe(
           (response) => {
             this.centerFetchData.regCode = response.regCode;
-            console.log('New RegCode:', response.regCode);
           },
           (error) => {
             console.error('Error fetching regCode:', error);
@@ -352,7 +342,6 @@ getFlagUrl(countryCode: string): string {
   }
 
   formatContactNumber(value: number | null): string {
-  // Handle null, undefined, 0, and NaN cases
   if (value === null || value === undefined || value === 0 || isNaN(value)) {
     return '-';
   }

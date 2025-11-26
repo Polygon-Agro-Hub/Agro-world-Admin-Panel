@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
 import Swal from 'sweetalert2';
 import { environment } from '../../../environment/environment';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-collection-center-view-complain',
@@ -58,9 +59,9 @@ export class CollectionCenterViewComplainComponent implements OnInit {
     private complainSrv: CollectionCenterService,
     private datePipe: DatePipe,
     private router: Router,
-    // private tokenService: TokenService,
     private http: HttpClient,
     public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
 
@@ -86,13 +87,14 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       this.filterCategory.type = "Agriculture";
     } else if (this.tokenService.getUserDetails().role === "3") {
       this.filterCategory.type = "Finance";
-    } else if (this.tokenService.getUserDetails().role === "4") {
+    }
+    else if (this.tokenService.getUserDetails().role === "4") {
       this.filterCategory.type = "Call Center";
-    } else if (this.tokenService.getUserDetails().role === "5") {
+    } 
+    else if (this.tokenService.getUserDetails().role === "5") {
       this.filterCategory.type = "Procuiment";
     }
 
-    console.log(this.filterCategory);
     this.fetchAllComplain(this.page, this.itemsPerPage);
     this.getAllComplainCategories();
     this.getAllCompanyForOfficerComplain();
@@ -113,9 +115,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          console.log('results', res.results);
-
-          // Map response data to ensure createdAt is in a readable date format
 
           this.complainsData = res.results;
           this.totalItems = res.total;
@@ -123,7 +122,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
           this.hasData = this.complainsData.length > 0;
         },
         (error) => {
-          console.log("Error: ", error);
           this.isLoading = false;
         },
       );
@@ -141,7 +139,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
     if (this.dropdown) {
-      this.dropdown.hide(); // Close the dropdown after selection
+      this.dropdown.hide();
     }
   }
 
@@ -168,9 +166,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       res.createdAt =
         this.datePipe.transform(res.createdAt, "yyyy-MM-dd hh:mm:ss a");
       this.complain = res;
-      console.log(res);
       this.isLoading = false;
-      // this.showReplyDialog(id, farmerName);
       this.showReplyPopUp(farmerName, language);
     });
   }
@@ -194,25 +190,21 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    console.log(id);
-    console.log(this.messageContent);
-
     const body = { reply: this.messageContent };
 
     this.http
       .put(`${environment.API_URL}auth/reply-center-complain/${id}`, body, { headers })
       .subscribe(
         (res: any) => {
-          console.log("Reply sent successfully", res);
 
           Swal.fire({
             icon: "success",
             title: "Success",
             text: "Reply sent successfully!",
-              customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
           });
           this.fetchAllComplain(this.page, this.itemsPerPage);
         },
@@ -254,7 +246,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
         .subscribe(
           (response) => {
             this.comCategories = response;
-            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -278,7 +269,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
         .subscribe(
           (response) => {
             this.comCategories = response;
-            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -307,7 +297,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
       .subscribe(
         (response) => {
           this.company = response;
-          console.log('Complain Categories:', this.company);
         },
         (error) => {
           console.error('Error fetching news:', error);
@@ -326,10 +315,6 @@ export class CollectionCenterViewComplainComponent implements OnInit {
     this.selectedLanguage = '';
 
   }
-
-
-
-
 
 }
 

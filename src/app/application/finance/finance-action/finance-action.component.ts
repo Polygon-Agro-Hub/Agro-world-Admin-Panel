@@ -16,9 +16,33 @@ export class FinanceActionComponent {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
+
+  farmerPayments(): void {
+    this.router.navigate(['/finance/action/farmer-payments']);
+  }
 
   govicarePackages(): void {
     this.router.navigate(['/finance/action/govicare-packages']);
+  }
+
+  govilinkServices(): void {
+    this.router.navigate(['/finance/action/govilink-services-dashboard']);
+  }
+
+  govicareCertificates(): void {
+    this.router.navigate(['/finance/action/govicare-certifications-dashboard']);
+  }
+
+  commissionRangeNavigation(): void {
+    this.router.navigate(['/finance/action/commission-range']);
+  }
+
+  PaymentHistoryNavigation(): void {
+    this.router.navigate(['/finance/action/viewAll-payments']);
+  }
+
+  back(): void {
+    this.router.navigate(['finance/action']);
   }
 }

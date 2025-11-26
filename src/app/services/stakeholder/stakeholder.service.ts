@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
@@ -23,48 +23,78 @@ export class StakeholderService {
     });
   }
 
-  getAllFieldInspectors(): Observable<any[]> {
+  getAllFieldInspectors(filters?: any): Observable<any[]> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
+    // Build query parameters
+    let params = new HttpParams();
+
+    if (filters) {
+      if (filters.status) params = params.set('status', filters.status);
+      if (filters.language) params = params.set('language', filters.language);
+      if (filters.district) params = params.set('district', filters.district);
+      if (filters.role) params = params.set('role', filters.role);
+      if (filters.search) params = params.set('search', filters.search);
+    }
+
     return this.http
-      .get<any>(`${this.apiUrl}stakeholder/get-all-field-officers`, { headers })
+      .get<any>(`${this.apiUrl}stakeholder/get-all-field-officers`, {
+        headers,
+        params,
+      })
       .pipe(
-        map((res) =>
-          res.data.map((item: any) => ({
+        map((res) => {
+          if (!res.status) {
+            throw new Error(res.error || 'Failed to fetch field officers');
+          }
+          return res.data.map((item: any) => ({
             id: item.id,
             empId: item.empId,
             firstName: item.firstName,
             lastName: item.lastName,
             role: item.JobRole?.trim() || 'N/A',
-            district: item.distrct || 'N/A', // backend typo
-            language: item.language
-              ? item.language
-                .split(',')
-                .map((lang: string) => {
-                  switch (lang.trim()) {
-                    case 'Eng': return 'English';
-                    case 'Sin': return 'Sinhala';
-                    case 'Tam': return 'Tamil';
-                    default: return lang.trim();
-                  }
-                })
-                .join(', ')
-              : '',
-            status: item.status || 'Pending',
+            district: item.distrct || 'N/A',
+            language: this.mapLanguage(item.language),
+            status: item.status || 'Not Approved',
             phone: item.phoneNumber1
               ? `${item.phoneCode1} ${item.phoneNumber1}`
-              : null,
-            nic: item.nic,
-            modifiedBy: item.modifyBy || 'System',
-          }))
-        )
+              : 'N/A',
+            nic: item.nic || 'N/A',
+            modifyBy: item.modifyBy || '--',
+            assignDistrict: (item.assignDistrict)
+              ? item.assignDistrict.split(',')
+              : ['--']
+          }));
+        }),
+        catchError((error) => {
+          console.error('API Error:', error);
+          throw error;
+        })
       );
   }
 
+  private mapLanguage(langString: string): string {
+    if (!langString) return 'N/A';
 
+    return langString
+      .split(',')
+      .map((lang: string) => {
+        switch (lang.trim()) {
+          case 'Eng':
+            return 'English';
+          case 'Sin':
+            return 'Sinhala';
+          case 'Tam':
+            return 'Tamil';
+          default:
+            return lang.trim();
+        }
+      })
+      .join(', ');
+  }
 
   getAllCompanies(): Observable<any> {
     const headers = new HttpHeaders({
@@ -77,14 +107,14 @@ export class StakeholderService {
     });
   }
 
-  getAllManagerList(companyId: any): Observable<any> {
+  getAllManagerList(): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    console.log('This is company Id', companyId);
+
     return this.http.get(
-      `${this.apiUrl}auth/get-all-manager-list/${companyId}`,
+      `${this.apiUrl}auth/get-all-manager-list`,
       {
         headers,
       }
@@ -110,7 +140,7 @@ export class StakeholderService {
     contract?: File | null
   ): Observable<any> {
     const formData = new FormData();
-    formData.append("officerData", JSON.stringify(person));
+    formData.append('officerData', JSON.stringify(person));
 
     // Append files only if they are not null
     if (profileImage) {
@@ -133,11 +163,9 @@ export class StakeholderService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(
-      `${this.apiUrl}auth/create-field-officer`,
-      formData,
-      { headers }
-    );
+    return this.http.post(`${this.apiUrl}auth/create-field-officer`, formData, {
+      headers,
+    });
   }
 
   getFiealdOfficerById(id: number) {
@@ -189,5 +217,16 @@ export class StakeholderService {
       formData,
       { headers }
     );
+  }
+
+  // Change inspector status
+  changeInspectorStatus(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}stakeholder/update-status-send-password/${id}/${status}`;
+    return this.http.put<any>(url, {}, { headers });
   }
 }

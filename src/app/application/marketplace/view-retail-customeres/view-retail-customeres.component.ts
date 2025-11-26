@@ -5,6 +5,8 @@ import { MarketPlaceService } from '../../../services/market-place/market-place.
 import { Router } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-retail-customeres',
@@ -32,7 +34,12 @@ export class ViewRetailCustomeresComponent implements OnInit {
   copiedEmail = false;
   showToast: boolean = false; // New property for toast visibility
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
+  constructor(
+    private marketSrv: MarketPlaceService,
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.fetchRetailCustomers();
@@ -82,7 +89,6 @@ export class ViewRetailCustomeresComponent implements OnInit {
   }
 
   detailsPop(Obj: Customers) {
-    console.log('customer popup');
     this.isPopupOpen = true;
     this.cusObjDetails = Obj;
   }
@@ -108,10 +114,18 @@ export class ViewRetailCustomeresComponent implements OnInit {
       this.searchText = this.searchText.trimStart();
     }
   }
+  checkLeadingSpace(event: any): boolean {
+    if (!this.searchText || this.searchText.length === 0) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
 }
 
 class Customers {
   id!: string;
+  title!: string;
   firstName!: string;
   lastName!: string;
   phoneCode!: string;

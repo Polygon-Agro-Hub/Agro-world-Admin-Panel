@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { RecentPayment } from '../../../../services/plant-care/plantcare-users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-govicare-thurd-row',
@@ -9,5 +11,28 @@ import { Component } from '@angular/core';
   styleUrl: './govicare-thurd-row.component.css'
 })
 export class GovicareThurdRowComponent {
+  @Input() recentPayments: RecentPayment[] = [];
+  constructor(private router: Router) {}
 
+  formatDate(dateTime: string): string {
+    const date = new Date(dateTime);
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  }
+
+  formatTime(dateTime: string): string {
+    const date = new Date(dateTime);
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  }
+  
+    ViewAll(): void {
+    this.router.navigate(['/finance/action/view-all-package-payments']);
+  }
 }

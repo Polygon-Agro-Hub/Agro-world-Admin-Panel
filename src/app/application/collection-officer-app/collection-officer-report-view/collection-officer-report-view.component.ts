@@ -24,6 +24,7 @@ import { FloatLabelModule } from "primeng/floatlabel";
 import Swal from "sweetalert2";
 import { environment } from "../../../environment/environment";
 import { TokenService } from "../../../services/token/services/token.service";
+import { ThemeService } from "../../../services/theme.service";
 
 declare var html2pdf: any;
 
@@ -70,6 +71,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private tokenService: TokenService,
     private router: Router,
+    private themeService: ThemeService
   ) { }
 
   ngOnInit(): void {
@@ -105,7 +107,6 @@ export class CollectionOfficerReportViewComponent implements OnInit {
           this.reportData = data;
           this.loadingTable = false;
           this.updateChartOptions();
-          console.log("Report data:", this.reportData);
         },
         (error) => {
           console.error("Error fetching report:", error);
@@ -115,12 +116,8 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   }
 
   updateChartOptions(): void {
-    // Clear the chartData array
     let chartData: any[] = [];
 
-    console.log("Updating chart options. Current reportData:", this.reportData);
-
-    // Only proceed if reportData is not empty
     if (Object.keys(this.reportData).length > 0) {
       chartData = Object.entries(this.reportData).map(([crop, grades]) => ({
         label: crop,
@@ -131,22 +128,22 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       }));
     }
 
-    console.log("Processed chartData:", chartData);
+
+    const isDarkMode = this.themeService.isDarkTheme();
 
     this.chartOptions = {
       animationEnabled: true,
       exportEnabled: true,
+      backgroundColor: "transparent",
       title: {
         text: `Crop Report by Grade ${this.formatDateForDisplay(this.createdDate)}`,
+        fontColor: isDarkMode ? '#ffffff' : '#000000',
       },
       axisY: {
         title: "Weight (Kg)",
-        includeZero: true,
+        fontColor: isDarkMode ? '#ffffff' : '#000000',
+        includeZero: true
       },
-      // toolTip: {
-      //   shared: true,
-      //   content: "<strong>{label}</strong><br/>Total: {y} Kg<br/>Grade A: {gradeA} Kg<br/>Grade B: {gradeB} Kg<br/>Grade C: {gradeC} Kg"
-      // },
       legend: {
         verticalAlign: "top",
       },
@@ -187,15 +184,12 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       ],
     };
 
-    console.log("Updated chartOptions:", this.chartOptions);
     this.loadingChart = false;
 
-    // Trigger change detection
     this.cdr.detectChanges();
   }
 
   onDateChange(): void {
-    console.log(this.createdDate);
     if (this.createdDate === "") {
       Swal.fire({
         title: "Error!",
@@ -203,9 +197,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
         icon: "error",
         confirmButtonText: "OK",
       }).then(() => {
-        // Set today's date to createdDate after the user presses OK
         this.createdDate = new Date().toISOString().split("T")[0];
-        // Call fetchReport after setting the date
         this.fetchReport();
       });
     } else {
@@ -221,16 +213,14 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    // This will ensure the element is available after the view is fully initialized
     if (!this.contentToConvert) {
       console.error("contentToConvert is undefined");
     }
   }
 
   async downloadPDF(): Promise<void> {
-    this.isDownloading = true; // Show spinner and disable button
+    this.isDownloading = true; 
 
-    // Use setTimeout to allow Angular to update the UI
     setTimeout(() => {
       const doc = new jsPDF('p', 'mm', 'a4');
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -247,20 +237,17 @@ export class CollectionOfficerReportViewComponent implements OnInit {
         gradeC: '#3DE188',
       };
 
-      // Title
       doc.setFontSize(titleFontSize);
       doc.text(`${this.name}'s Report`, pageWidth / 2, 20, { align: 'center' });
 
-      // Check if report data exists
       if (Object.keys(this.reportData).length === 0) {
         doc.setFontSize(contentFontSize);
         doc.text('No data available to display.', startX, startY);
         doc.save(`${this.createdDate}_Report.pdf`);
-        this.isDownloading = false; // Hide spinner and enable button
+        this.isDownloading = false; 
         return;
       }
 
-      // Transform report data into the format needed for visualization
       const groupedData = Object.entries(this.reportData).map(
         ([cropName, grades]) => ({
           cropName,
@@ -273,18 +260,15 @@ export class CollectionOfficerReportViewComponent implements OnInit {
 
       const maxWeight = Math.max(...groupedData.map((crop) => crop.totalWeight));
 
-      // Draw chart bars for each crop
       let currentY = startY;
       groupedData.forEach((crop) => {
         let currentX = startX;
         const labelYOffset = currentY + barHeight / 2 + 3;
 
-        // Crop Name Label
         doc.setFontSize(contentFontSize);
         doc.setTextColor(0, 0, 0);
         doc.text(crop.cropName, startX - 20, labelYOffset);
 
-        // Draw bars for each grade
         const grades = [
           { key: 'gradeA', color: colors.gradeA },
           { key: 'gradeB', color: colors.gradeB },
@@ -298,7 +282,6 @@ export class CollectionOfficerReportViewComponent implements OnInit {
             doc.setFillColor(color);
             doc.rect(currentX, currentY, barWidth, barHeight, 'F');
 
-            // Display weight inside the bar
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(8);
             doc.text(
@@ -314,7 +297,6 @@ export class CollectionOfficerReportViewComponent implements OnInit {
         currentY += gap;
       });
 
-      // Draw table header
       const tableStartY = currentY + 20;
       const cellPadding = 5;
       const cellHeight = 8;
@@ -333,7 +315,6 @@ export class CollectionOfficerReportViewComponent implements OnInit {
 
       rowY += cellHeight;
 
-      // Draw table rows
       groupedData.forEach((crop) => {
         const cropValues = [
           crop.cropName,
@@ -353,11 +334,10 @@ export class CollectionOfficerReportViewComponent implements OnInit {
         rowY += cellHeight;
       });
 
-      // Save the PDF
       doc.save(`${this.createdDate}_CropGradeReport.pdf`);
 
-      this.isDownloading = false; // Hide spinner and enable button
-    }, 0); // setTimeout with 0ms delay to allow UI update
+      this.isDownloading = false; 
+    }, 0); 
   }
 
   back(): void {
@@ -366,7 +346,6 @@ export class CollectionOfficerReportViewComponent implements OnInit {
 
   convertToISO(date: any): string {
     if (date instanceof Date) {
-      // Create UTC date with the same year, month, and day
       const utcDate = new Date(Date.UTC(
         date.getFullYear(),
         date.getMonth(),
@@ -401,7 +380,6 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       return '';
     }
 
-    // Format as YYYY-MM-DD for display
     const year = dateObj.getFullYear();
     const month = String(dateObj.getMonth() + 1).padStart(2, '0');
     const day = String(dateObj.getDate()).padStart(2, '0');

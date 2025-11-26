@@ -12,6 +12,17 @@
     </div>
 
     <div
+      class="flex flex-col justify-center items-center bg-[#648885] py-4 w-1/6 min-w-[120px] rounded-lg shadow-lg"
+    >
+      <i class="fa-solid fa-layer-group text-white text-lg md:text-xl mb-1"></i>
+      <h2 class="text-white text-xs md:text-sm">Legumes</h2>
+      <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
+      <h2 class="text-white text-lg md:text-xl font-bold">
+        {{ dashboardData.leLegumesCultivation }}
+      </h2>
+    </div>
+
+    <div
       class="flex flex-col justify-center items-center bg-[#DA6200] py-4 w-1/6 min-w-[120px] rounded-lg shadow-lg"
     >
       <i class="fa-solid fa-layer-group text-white text-lg md:text-xl mb-1"></i>
@@ -26,10 +37,21 @@
       class="flex flex-col justify-center items-center bg-[#3B82F6] py-4 w-1/6 min-w-[120px] rounded-lg shadow-lg"
     >
       <i class="fa-solid fa-layer-group text-white text-lg md:text-xl mb-1"></i>
-      <h2 class="text-white text-xs md:text-sm">Grains</h2>
+      <h2 class="text-white text-xs md:text-sm">Cereals</h2>
       <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
       <h2 class="text-white text-lg md:text-xl font-bold">
         {{ dashboardData.grainCultivation }}
+      </h2>
+    </div>
+
+    <div
+      class="flex flex-col justify-center items-center bg-[#A54D00] py-4 w-1/6 min-w-[120px] rounded-lg shadow-lg"
+    >
+      <i class="fa-solid fa-layer-group text-white text-lg md:text-xl mb-1"></i>
+      <h2 class="text-white text-xs md:text-sm">Spices</h2>
+      <h5 class="text-white text-[10px] md:text-xs">Total Enrollments</h5>
+      <h2 class="text-white text-lg md:text-xl font-bold">
+        {{ dashboardData.spicesCultivation }}
       </h2>
     </div>
 
@@ -44,7 +66,7 @@
       </h2>
     </div>
 
-    <div
+    <!-- <div
       class="flex flex-col justify-center items-center py-4 w-1/6 min-w-[120px] rounded-lg shadow-lg dark:bg-[#061E2C]"
     >
       <h2 class="text-xs md:text-sm text-[#4B5563] dark:text-white">
@@ -56,13 +78,13 @@
       <h2 class="text-lg md:text-2xl my-1 dark:text-white">
         {{ dashboardData.active_users }}
       </h2>
-    </div>
+    </div> -->
 
     <div
       class="flex flex-col justify-center items-center py-4 w-1/6 min-w-[120px] rounded-lg shadow-lg dark:bg-[#061E2C]"
     >
       <h2 class="text-xs md:text-sm text-[#4B5563] dark:text-white">
-        New Users
+        New Farm Owners
       </h2>
       <h2 class="text-[#4B5563] my-2 text-[10px] md:text-xs dark:text-white">
         Today

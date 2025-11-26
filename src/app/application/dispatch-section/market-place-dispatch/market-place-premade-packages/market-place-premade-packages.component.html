@@ -22,25 +22,33 @@
             </div>
 
             <div class="flex items-center gap-2 h-8">
-                <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="applyStatus()" (onClear)="applyStatus()"
-                    placeholder="Delivery Date" [showIcon]="true" [showClear]="false" [showButtonBar]="true"
-                    iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                     [&_.p-datepicker-header]:dark:text-white
-                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                     
-                     [&_.p-button:hover]:dark:bg-[#6b7280]"
-                    inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-                    [appendTo]="'body'" />
-            </div>
+    <p-calendar 
+        id="toDate" 
+        [(ngModel)]="date" 
+        (onSelect)="applyStatus()" 
+        (onClear)="clearDate()" 
+        placeholder="Delivery Date" 
+        [showIcon]="true" 
+        [showClear]="true" 
+        [showButtonBar]="true"
+        iconDisplay="input" 
+        [style]="{ width: '16rem', height: '2rem' }" 
+        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                 [&_.p-datepicker-header]:dark:text-white
+                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                 [&_.p-button:hover]:dark:bg-[#6b7280]"
+        inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+        [appendTo]="'body'" />
+</div>
 
             <div class="w-5"></div>
             <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96"
                 >
                 <input type="text" placeholder="Search by Invoice No..."
-                    class="bg-transparent outline-none w-full text-gray-600" [(ngModel)]="search"
+                    class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-200" [(ngModel)]="search"
                     (keydown.enter)="applysearch()" />
                 <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
                     (click)="applysearch()">
@@ -69,12 +77,12 @@
     </div>
 
     <div>
-        <!-- <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
             <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-        </div> -->
+        </div>
 
-        <table class="min-w-full divide-y divide-gray-200 table-auto">
+        <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200 table-auto">
             <thead>
                 <tr>
                     <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
@@ -133,8 +141,7 @@
                     <td class="px-4 py-3 text-center">
                         <ng-container 
                         *ngIf="
-                            (item.packageStatus === 'Pending' && item.additionalItemsStatus === 'Pending') ||
-                            (item.packageStatus === 'Pending' && item.additionalItemsStatus === 'Unknown')
+                            item.finalStatus === 'Pending'
                             ">
 
                             <span
@@ -143,7 +150,7 @@
                             </span>
                         </ng-container>
 
-                        <ng-container *ngIf="item.packageStatus === 'Opened' || item.additionalItemsStatus === 'Opened'">
+                        <ng-container *ngIf="item.finalStatus === 'Opened'">
                             <span
                                 class="w-24 h-7 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">
                                 Opened
@@ -152,8 +159,7 @@
 
                         <ng-container 
                         *ngIf="
-                            (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Completed') ||
-                            (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Unknown') 
+                            item.finalStatus === 'Completed'
                             ">
                             <span
                                 class="w-24 h-7 inline-block bg-[#BBFFC6] text-[#308233] font-medium rounded-md px-3 py-1 text-sm">
@@ -191,15 +197,14 @@
 
                     
                     <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center">
-                        <!-- {{ calculateTotPrice(item.additionalPrice, item.productPrice) | number: '1.2-2' }} -->
-                          --
+                          {{item.adminPackBy !== null ? item.adminPackBy : item.packBy !== null ? item.packBy : '--'}}
                     </td>
 
 
                 </tr>
             </tbody>
         </table>
-        <div class="dark:bg-[#262f45]">
+        <div *ngIf="hasData" class="dark:bg-[#262f45]">
             <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
                 [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
                 [screenReaderCurrentLabel]="'Youre on page'">

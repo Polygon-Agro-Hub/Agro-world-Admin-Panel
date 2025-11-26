@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
@@ -26,7 +26,8 @@ export class ViewCompaniesComponent implements OnInit {
     private distributionHubService: DistributionHubService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -38,7 +39,6 @@ export class ViewCompaniesComponent implements OnInit {
     this.distributionHubService.getAllCompanyDetails(this.search.trim())
       .subscribe(
         (response: any) => {
-          console.log('API Response:', response);
           this.isLoading = false;
           this.companies = response.results || [];
           this.total = response.total || 0;
@@ -53,7 +53,6 @@ export class ViewCompaniesComponent implements OnInit {
   }
 
   searchPlantCareUsers() {
-    console.log('Search triggered:', this.search);
     this.fetchAllCompanys();
   }
 
@@ -75,7 +74,6 @@ export class ViewCompaniesComponent implements OnInit {
   }
 
   viewCompanyHeadPortals(id: number, companyName: string) {
-    console.log('id', id, 'companyName', companyName);
     this.router.navigate(
       ['/distribution-hub/action/view-distribution-company'],
       {
@@ -147,8 +145,8 @@ export class ViewCompaniesComponent implements OnInit {
 }
 
   back(): void {
-    this.router.navigate(['/distribution-hub/action']);
-  }
+  this.location.back();
+}
 
   add(): void {
     this.router

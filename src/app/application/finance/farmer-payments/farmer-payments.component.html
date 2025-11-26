@@ -1,0 +1,268 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1500px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center whitespace-nowrap">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          Farmer Payments
+        </h2>
+        <span class="ml-2 mr-5 text-xl dark:text-white">
+          ({{ getTotalRecords() }})
+        </span>
+      </div>
+      <div class="flex items-center">
+        <i class="mr-6 w-6 h-6 fill-current text-gray-500">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path
+              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+            />
+          </svg>
+        </i>
+        <p
+          class="md:text-2xl lg:text-lg dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5"
+        >
+          Filter By
+        </p>
+        <div class="mr-5">
+          <p-dropdown
+            [options]="bankOptions"
+            [(ngModel)]="selectedBank"
+            (onChange)="onBankChange($event)"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [showClear]="!!selectedBank"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Bank Name"
+          ></p-dropdown>
+        </div>
+        <div class="mr-5 flex items-center">
+          <p-calendar
+            [(ngModel)]="selectedDate"
+            (onSelect)="onDateChange($event)"
+            (onClear)="clearDate()"
+            [showIcon]="true"
+            [showButtonBar]="true"
+            dateFormat="yy-mm-dd"
+            placeholder="Select Date"
+            styleClass="border border-2 rounded-xl h-8 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            inputStyleClass="bg-transparent border-none text-textLight dark:text-textDark"
+            [readonlyInput]="true"
+          ></p-calendar>
+        </div>
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+        >
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+            placeholder="Search By Name, NIC & Phone number"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          />
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="clearSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button
+      class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+      (click)="downloadData()"
+      [disabled]="filteredPayments.length === 0 || isDownloading"
+      [class.opacity-50]="filteredPayments.length === 0 || isDownloading"
+      [class.cursor-not-allowed]="
+        filteredPayments.length === 0 || isDownloading
+      "
+    >
+      <i class="fa-solid fa-download mr-3" [class.fa-spin]="isDownloading"></i>
+      {{ isDownloading ? "Downloading..." : "Download" }}
+    </button>
+    <div>
+      <table
+        class="min-w-full divide-y divide-gray-200 table-auto"
+        *ngIf="hasData"
+      >
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Full Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              NIC
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              style="white-space: nowrap"
+            >
+              Phone number
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Amount (Rs.)
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Date
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Account Number
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Bank Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Branch Name
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
+              Payment Reference
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let payment of filteredPayments; let i = index"
+            class="hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ i + 1 | number:'3.0' }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.farmerName }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.NICnumber }}
+            </td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.phoneNumber }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ formatCurrency(payment.totalPayment) }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ formatDate(payment.createdAt) }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.accNumber }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.bankName }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.branchName }}
+            </td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
+            >
+              {{ payment.invNo }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div
+        *ngIf="!hasData && !isLoading"
+        class="flex flex-col justify-center items-center py-20 shadow-lg"
+      >
+        <p class="text-[#494949] dark:text-textDark mb-4">
+          -- No Data Available --
+        </p>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 mb-4"
+        />
+      </div>
+    </div>
+  </div>
+</div>

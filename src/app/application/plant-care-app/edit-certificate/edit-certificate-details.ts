@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,6 +18,8 @@ import {
   CertificateCompanyService,
   CertificateCompany,
 } from '../../../services/plant-care/certificate-company.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-edit-certificate-details',
@@ -38,14 +40,20 @@ export class EditCertificateDetailsComponent implements OnInit {
   isLoading = false;
   isInitializing = true;
   uploadedFile: File | null = null;
+  uploadedLogo: File | null = null;
+  logoPreview: string | ArrayBuffer | null = null;
+  logoError: string = '';
   existingFileName: string = '';
   certificateId!: number;
+
+  @ViewChild('logoInput', { static: false })
+  logoInput!: ElementRef<HTMLInputElement>;
 
   companies: { label: string; value: number }[] = [];
   applicableOptions = [
     { label: 'For Selected Crops', value: 'For Selected Crops' },
     { label: 'For Farm', value: 'For Farm' },
-    { label: 'For Farm Cluster', value: 'For Farm Cluster' },
+    { label: 'For Farmer Cluster', value: 'For Farmer Cluster' },
   ];
 
   serviceAreasOptions = [
@@ -78,6 +86,7 @@ export class EditCertificateDetailsComponent implements OnInit {
 
   cropDropdownOptions: { label: string; value: number }[] = [];
   selectedCrop: number | null = null;
+  filteredCropOptions: { label: string; value: number }[] = [];
   selectedCrops: { id: number; cropNameEnglish: string }[] = [];
 
   // New properties for conditional logic
@@ -90,24 +99,38 @@ export class EditCertificateDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private cropCalendarService: CropCalendarService,
-    private certificateCompanyService: CertificateCompanyService
-  ) {}
+    private certificateCompanyService: CertificateCompanyService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
+  ) { }
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
       srtName: ['', Validators.required],
+      srtNameSinhala: ['', Validators.required],
+      srtNameTamil: ['', Validators.required],
       srtNumber: ['', Validators.required],
       srtcomapnyId: ['', Validators.required],
       applicable: ['', Validators.required],
       accreditation: ['', Validators.required],
       serviceAreas: [[], Validators.required],
-      price: ['', [Validators.required, Validators.min(0)]],
+      price: ['', [
+        Validators.required, 
+        Validators.min(0),
+        Validators.pattern(/^\d*\.?\d*$/)
+      ]],
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
         '',
-        [Validators.required, Validators.min(0), Validators.max(100)],
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.max(100),
+          Validators.pattern(/^\d*\.?\d*$/),
+        ],
       ],
       scope: ['', Validators.required],
+      noOfVisit: ['', [Validators.required, Validators.min(0)]],
       tearmsFile: [null], // Not required for edit
     });
 
@@ -190,6 +213,11 @@ export class EditCertificateDetailsComponent implements OnInit {
       this.existingFileName = this.extractFileName(certificate.tearms);
     }
 
+    // Set logo preview if exists
+    if (certificate.logo) {
+      this.logoPreview = certificate.logo;
+    }
+
     let serviceAreasArray: string[] = [];
 
     // Handle various formats gracefully
@@ -217,6 +245,8 @@ export class EditCertificateDetailsComponent implements OnInit {
 
     this.certificateForm.patchValue({
       srtName: certificate.srtName || '',
+      srtNameSinhala: certificate.srtNameSinhala || '',
+      srtNameTamil: certificate.srtNameTamil || '',
       srtNumber: certificate.srtNumber || '',
       srtcomapnyId: certificate.srtcomapnyId || '',
       applicable: certificate.applicable || '',
@@ -226,6 +256,7 @@ export class EditCertificateDetailsComponent implements OnInit {
       timeLine: certificate.timeLine || '',
       commission: certificate.commission || '',
       scope: certificate.scope || '',
+      noOfVisit: certificate.noOfVisit || '',
     });
 
     if (
@@ -236,6 +267,68 @@ export class EditCertificateDetailsComponent implements OnInit {
     }
 
     this.onApplicableChange();
+  }
+
+  // Logo file picker methods
+  openLogoFilePicker(): void {
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.click();
+    } else {
+      const el = document.getElementById('logo') as HTMLInputElement | null;
+      if (el) el.click();
+    }
+  }
+
+  onLogoChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input || !input.files || input.files.length === 0) {
+      this.logoError = 'Please select a valid image file.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    const file = input.files[0];
+
+    // Validate file type (image only)
+    if (!file.type.startsWith('image/')) {
+      this.logoError =
+        'Please select a valid image file (JPEG, JPG, PNG, WebP).';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    // Check file size (5MB limit)
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.logoError = 'Logo must be smaller than 5 MB.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      return;
+    }
+
+    // All good
+    this.logoError = '';
+    this.uploadedLogo = file;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.logoPreview = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeLogo(): void {
+    this.uploadedLogo = null;
+    this.logoPreview = null;
+    this.logoError = '';
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.value = '';
+    } else {
+      const el = document.getElementById('logo') as HTMLInputElement | null;
+      if (el) el.value = '';
+    }
   }
 
   extractFileName(url: string): string {
@@ -360,45 +453,158 @@ export class EditCertificateDetailsComponent implements OnInit {
     this.location.back();
   }
 
-  onCancel(): void {
-    this.router.navigate(['/plant-care/action/view-certificate-list']);
+  // Enhanced crop search functionality
+  onCropFilter(event: any): void {
+    // PrimeNG handles the filtering automatically when filter=true
+  }
+
+  onCropSearchInput(event: any): void {
+    const searchTerm = event.target.value.toLowerCase();
+    if (searchTerm) {
+      this.filteredCropOptions = this.cropDropdownOptions.filter((option) =>
+        option.label.toLowerCase().includes(searchTerm)
+      );
+    } else {
+      this.filteredCropOptions = [...this.cropDropdownOptions];
+    }
+  }
+
+  // Get missing field names for the alert
+  private getMissingFields(): string[] {
+    const missingFields: string[] = [];
+
+    if (this.certificateForm.get('srtName')?.errors?.['required']) {
+      missingFields.push('Certificate Name (English)');
+    }
+
+    if (this.certificateForm.get('srtNumber')?.errors?.['required']) {
+      missingFields.push('Certificate Number');
+    }
+
+    if (this.certificateForm.get('srtcomapnyId')?.errors?.['required']) {
+      missingFields.push('Company');
+    }
+
+    if (this.certificateForm.get('applicable')?.errors?.['required']) {
+      missingFields.push('Applicable For');
+    }
+
+    if (this.certificateForm.get('accreditation')?.errors?.['required']) {
+      missingFields.push('Accreditation');
+    }
+
+    if (this.certificateForm.get('serviceAreas')?.errors?.['required']) {
+      missingFields.push('Service Areas');
+    }
+
+    if (this.certificateForm.get('price')?.errors?.['required']) {
+      missingFields.push('Price');
+    } else if (this.certificateForm.get('price')?.errors?.['min']) {
+      missingFields.push('Price (must be greater than or equal to 0)');
+    } else if (this.certificateForm.get('price')?.errors?.['pattern']) {
+      missingFields.push('Price (must be a valid number)');
+    }
+
+    if (this.certificateForm.get('timeLine')?.errors?.['required']) {
+      missingFields.push('Timeline');
+    } else if (this.certificateForm.get('timeLine')?.errors?.['min']) {
+      missingFields.push('Timeline (must be at least 1 day)');
+    }
+
+    if (this.certificateForm.get('commission')?.errors?.['required']) {
+      missingFields.push('Commission');
+    } else if (this.certificateForm.get('commission')?.errors?.['min']) {
+      missingFields.push('Commission (must be between 0% and 100%)');
+    } else if (this.certificateForm.get('commission')?.errors?.['max']) {
+      missingFields.push('Commission (must be between 0% and 100%)');
+    } else if (this.certificateForm.get('commission')?.errors?.['pattern']) {
+      missingFields.push('Commission (must be a valid number)');
+    }
+
+    if (this.certificateForm.get('scope')?.errors?.['required']) {
+      missingFields.push('Scope');
+    }
+
+    if (this.certificateForm.get('noOfVisit')?.errors?.['required']) {
+      missingFields.push('Number of Visits');
+    } else if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
+      missingFields.push('Number of Visits (cannot be negative)');
+    }
+
+    return missingFields;
+  }
+
+  // Get validation errors for the alert
+  private getValidationErrors(): string[] {
+    const errors: string[] = [];
+    const applicable = this.certificateForm.get('applicable')?.value;
+
+    // Check for target crops validation
+    if (
+      applicable === 'For Selected Crops' &&
+      this.selectedCrops.length === 0
+    ) {
+      errors.push(
+        'Please select at least one target crop for "For Selected Crops" option.'
+      );
+    }
+
+    return errors;
   }
 
   onSubmit(): void {
     this.certificateForm.markAllAsTouched();
 
-    // Validate target crops based on applicable selection
-    const applicable = this.certificateForm.get('applicable')?.value;
+    const missingFields = this.getMissingFields();
+    const validationErrors = this.getValidationErrors();
 
-    if (
-      applicable === 'For Selected Crops' &&
-      this.selectedCrops.length === 0
-    ) {
+    // If there are any missing fields or validation errors, show the warning
+    if (missingFields.length > 0 || validationErrors.length > 0) {
+      // Scroll to first error
+      this.scrollToFirstError();
+
+      let errorMessage = '';
+
+      if (missingFields.length > 0) {
+        errorMessage += missingFields.map((field) => `${field}`).join('<br>');
+      }
+
       Swal.fire({
-        icon: 'error',
-        title: 'Invalid Input',
-        text: 'Please select at least one target crop for "For Selected Crops" option.',
+        icon: 'warning',
+        title: 'Missing Information',
+        html: errorMessage,
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
         },
+        confirmButtonText: 'OK',
       });
       return;
     }
 
-    if (this.certificateForm.invalid) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid Input',
-        text: 'Please fill all required fields correctly.',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
+    // Add confirmation dialog before updating
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to update this certificate?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Update',
+      cancelButtonText: 'No, Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.updateCertificate();
+      }
+    });
+  }
 
+  private updateCertificate(): void {
     this.isLoading = true;
 
     const formValue = this.certificateForm.value;
@@ -408,6 +614,8 @@ export class EditCertificateDetailsComponent implements OnInit {
     // Use exact database field names
     formData.append('srtcomapnyId', formValue.srtcomapnyId.toString());
     formData.append('srtName', formValue.srtName);
+    formData.append('srtNameSinhala', formValue.srtNameSinhala || '');
+    formData.append('srtNameTamil', formValue.srtNameTamil || '');
     formData.append('srtNumber', formValue.srtNumber);
     formData.append('applicable', formValue.applicable);
     formData.append('accreditation', formValue.accreditation);
@@ -423,7 +631,15 @@ export class EditCertificateDetailsComponent implements OnInit {
     formData.append('commission', formValue.commission.toString());
     formData.append('scope', formValue.scope);
 
+    // Add noOfVisit to formData
+    if (formValue.noOfVisit) {
+      formData.append('noOfVisit', formValue.noOfVisit.toString());
+    } else {
+      formData.append('noOfVisit', '');
+    }
+
     // Append cropIds only if "For Selected Crops" is selected
+    const applicable = formValue.applicable;
     if (applicable === 'For Selected Crops' && this.selectedCrops.length > 0) {
       const cropIds = this.selectedCrops.map((c) => c.id);
       formData.append('cropIds', JSON.stringify(cropIds));
@@ -434,6 +650,11 @@ export class EditCertificateDetailsComponent implements OnInit {
     // Append PDF file only if a new one is uploaded
     if (this.uploadedFile) {
       formData.append('tearmsFile', this.uploadedFile);
+    }
+
+    // Append logo file only if a new one is uploaded
+    if (this.uploadedLogo) {
+      formData.append('logo', this.uploadedLogo);
     }
 
     this.certificateCompanyService
@@ -459,9 +680,10 @@ export class EditCertificateDetailsComponent implements OnInit {
               ]);
             });
           } else {
+
             Swal.fire({
               icon: 'error',
-              title: 'Error',
+              title: 'Validation Error',
               text:
                 res.message ||
                 'Failed to update certificate details. Please try again.',
@@ -476,19 +698,164 @@ export class EditCertificateDetailsComponent implements OnInit {
         error: (err) => {
           this.isLoading = false;
           console.error('Error updating certificate:', err);
+
+
+          const errorMessage = err.error?.message ||
+            err.message ||
+            'Failed to update certificate details. Please try again.';
+
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text:
-              err.error?.message ||
-              'Failed to update certificate details. Please try again.',
+            text: errorMessage,
             customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
         },
       });
+  }
+
+  back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+  }
+
+  onCancel(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
+  }
+
+  // Helper method to scroll to first error
+  private scrollToFirstError(): void {
+    const firstErrorElement = document.querySelector('.border-red-500');
+    if (firstErrorElement) {
+      firstErrorElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }
+
+  trimLeadingSpaces(event: any, varibleName: string) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/^\s+/, '');
+    this.certificateForm.get(varibleName)?.setValue(input.value);
+  }
+
+  preventDecimalInput(event: KeyboardEvent) {
+    // Prevent decimal point, comma, hyphen, and 'e' for exponential notation
+    const forbiddenKeys = ['.', ',', 'e', 'E', '-'];
+    if (forbiddenKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  // Allow decimal input for price field
+  allowDecimalInputForPrice(event: KeyboardEvent): void {
+    const charCode = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    // Allow: backspace, delete, tab, escape, enter
+    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
+      return;
+    }
+
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (
+      event.ctrlKey &&
+      ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())
+    ) {
+      return;
+    }
+
+    // Block hyphen
+    if (charCode === '-') {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow: numbers 0-9
+    if (charCode >= '0' && charCode <= '9') {
+      return;
+    }
+
+    // Allow: decimal point (only one)
+    if (charCode === '.' && !currentValue.includes('.')) {
+      return;
+    }
+
+    // Prevent any other key
+    event.preventDefault();
+  }
+
+  // Add the allowDecimalInput method for commission field
+  allowDecimalInput(event: KeyboardEvent): void {
+    const charCode = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+
+    // Allow: backspace, delete, tab, escape, enter
+    if (['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'].includes(charCode)) {
+      return;
+    }
+
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if (
+      event.ctrlKey &&
+      ['a', 'c', 'v', 'x'].includes(charCode.toLowerCase())
+    ) {
+      return;
+    }
+
+    // Block hyphen
+    if (charCode === '-') {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow: numbers 0-9
+    if (charCode >= '0' && charCode <= '9') {
+      return;
+    }
+
+    // Allow: decimal point (only one)
+    if (charCode === '.' && !currentValue.includes('.')) {
+      return;
+    }
+
+    // Prevent any other key
+    event.preventDefault();
   }
 }

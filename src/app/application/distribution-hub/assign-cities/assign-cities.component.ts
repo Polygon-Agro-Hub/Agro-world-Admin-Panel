@@ -8,6 +8,8 @@ import Swal from 'sweetalert2';
 
 // PrimeNG imports
 import { DropdownModule } from 'primeng/dropdown';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-assign-cities',
@@ -28,6 +30,8 @@ export class AssignCitiesComponent implements OnInit {
   filteredDistricts: any[] = [];
   citiesArr: Cities[] = [];
   centersArr: Centers[] = [];
+
+  centersArrWithDups: Centers[] = [];
   
   // Store assignments (cityId -> centerId)
   assignments: Map<number, number> = new Map();
@@ -67,6 +71,8 @@ export class AssignCitiesComponent implements OnInit {
     private router: Router,
     private distributionHubSrv: DistributionHubService,
     private location: Location,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -90,8 +96,9 @@ export class AssignCitiesComponent implements OnInit {
     
     this.distributionHubSrv.getAssignForCityes(provinceName, districtName).subscribe(
       (res) => {
-        console.log(res);
         this.citiesArr = res.cities;
+
+        this.centersArrWithDups = (res.centers);
         
         // Filter out duplicate centers by id
         this.centersArr = this.removeDuplicateCenters(res.centers);
@@ -145,7 +152,7 @@ export class AssignCitiesComponent implements OnInit {
       this.assignments.set(city.id, -1);
     });
     
-    this.centersArr.forEach(center => {
+    this.centersArrWithDups.forEach(center => {
       if (center.ownCityId) {
         const cityId = parseInt(center.ownCityId, 10);
         if (!isNaN(cityId) && this.assignments.has(cityId)) {
@@ -154,7 +161,6 @@ export class AssignCitiesComponent implements OnInit {
       }
     });
     
-    console.log('Initialized assignments:', this.assignments);
   }
 
   isCityAssignedToCenter(cityId: number, centerId: number): boolean {
@@ -178,7 +184,6 @@ export class AssignCitiesComponent implements OnInit {
       this.removeAssignment(cityId, previousCenterId as any);
     }
     
-    console.log('Updated assignments:', this.assignments);
   }
 
   saveAssignment(cityId: number, centerId: number): void {
@@ -186,7 +191,6 @@ export class AssignCitiesComponent implements OnInit {
     
     const assignmentToSave = { cityId, centerId };
     
-    console.log('Saving assignment:', assignmentToSave);
     
     this.distributionHubSrv.AssigCityToDistributedCenter(assignmentToSave).subscribe(
       (res) => {
@@ -222,7 +226,6 @@ export class AssignCitiesComponent implements OnInit {
     
     const assignmentToRemove = { cityId, centerId };
     
-    console.log('Removing assignment:', assignmentToRemove);
     
     this.distributionHubSrv.removeAssigCityToDistributedCenter(assignmentToRemove).subscribe(
       (res) => {

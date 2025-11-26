@@ -1,0 +1,188 @@
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<button class="mb-5 bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-base flex items-center"
+  (click)="addNew()">
+  <i class="fa-solid fa-plus px-2"></i>
+  Add New
+</button>
+
+<div
+  class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1600px] bg-white dark:bg-tileBlack shadow-lg rounded-lg relative">
+
+    <!-- Header Section with Filters in Same Line -->
+    <div class="flex justify-between items-center mb-8">
+      <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark">
+        Payment History ({{ totalItems < 10 ? '0' + totalItems : totalItems }}) </h4>
+
+          <!-- Filter and Search Section -->
+          <div class="flex items-center">
+            <i class="mr-3 w-6 h-6 fill-current text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                  d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
+              </svg>
+            </i>
+
+            <span class="mr-6 text-gray-700 dark:text-gray-300 font-medium">Filter By</span>
+
+            <!-- Receivers Dropdown -->
+            <div class="mx-6">
+              <p-dropdown
+                styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D5DB] dark:border-[#AFAFAF] h-8 w-60"
+                [options]="receiverOptions" [(ngModel)]="selectedReceiver" optionLabel="label"
+                [showClear]="!!selectedReceiver" placeholder="Receivers" (onChange)="onReceiverChange()" />
+            </div>
+
+            <!-- Issued Date Calendar -->
+            <div class="flex items-center gap-2 h-8 relative mx-6">
+              <p-calendar id="issuedDate" [(ngModel)]="selectedIssuedDate" (onSelect)="onIssuedDateChange()"
+                (onClear)="onIssuedDateChange()" placeholder="Issued Date" [showIcon]="true" [showClear]="false"
+                [showButtonBar]="true" iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+              [&_.p-datepicker-header]:dark:text-white
+              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+              [&_.p-button:hover]:dark:bg-[#6b7280]"
+                inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                [appendTo]="'body'" />
+
+              <!-- Clear Date Button -->
+              <button *ngIf="selectedIssuedDate" type="button"
+                class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none z-10"
+                (click)="clearIssuedDateFilter()" title="Clear date filter">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="w-5"></div>
+
+            <!-- Search Box -->
+            <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-96">
+              <input type="text" placeholder="Search By Issued By Name & Payment Reference"
+                class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-200" [(ngModel)]="search"
+                (keydown.enter)="applySearch()" />
+              <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                (click)="applySearch()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                </svg>
+              </button>
+              <button (click)="clearSearch()" type="button"
+                class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-10">
+      <i class="fa-solid fa-spinner fa-spin text-3xl text-[#3980C0]"></i>
+    </div>
+
+    <!-- Table -->
+    <div *ngIf="!isLoading">
+      <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="paymentHistory.length > 0">
+        <thead>
+          <tr>
+            <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-center">No</th>
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">Receivers</th>
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">Issued By</th>
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">Issued Time</th>
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">Full Amount (Rs.)</th>
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">Payment Reference</th>
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">Uploaded File</th>
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">Last Modified By</th>
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of paymentHistory; let i = index">
+            <td class="py-3 text-[#000000] dark:text-textDark text-center">
+              {{ i < 9 ? '00' + (i + 1) : i < 99 ? '0' + (i + 1) : (i + 1) }} </td>
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-start">
+              {{ item.receivers }}
+            </td>
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-start">
+              {{ item.issuerName || 'N/A' }}
+            </td>
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-start">
+              {{ formatDateTime(item.createdAt) }}
+            </td>
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-start">
+              {{ formatAmount(item.amount) }}
+            </td>
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-start">
+              {{ item.payRef }}
+            </td>
+            <td class="px-4 py-3 text-center">
+              <button *ngIf="item.xlLink" (click)="downloadFile(item.xlLink)"
+                class="text-[#3980C0] hover:text-[#2d5f8d]" title="Download file">
+                <i class="fa-solid fa-download text-xl"></i>
+              </button>
+              <span *ngIf="!item.xlLink" class="text-gray-400">-</span>
+            </td>
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center">
+              {{ item.modifierName || '--' }}
+            </td>
+            <td class="px-4 py-3 text-center">
+              <div class="flex justify-center gap-3">
+                <button (click)="editPayment(item.id)" class="text-[#3980C0] hover:text-[#2d5f8d]" title="Edit">
+                  <i class="fa-solid fa-pen-to-square text-xl"></i>
+                </button>
+                <button (click)="deletePayment(item.id, item.payRef)" class="text-red-500 hover:text-red-700"
+                  title="Delete">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- No Data Message -->
+      <div *ngIf="paymentHistory.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <!-- Delete Confirmation Modal -->
+      <div *ngIf="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-[#1a1f2e] rounded-3xl shadow-2xl p-8 max-w-md w-full mx-4">
+          <h3 class="text-xl text-center text-gray-800 dark:text-textDark mb-6 font-normal">
+            Are you sure you want to delete the<br>payment history record?
+          </h3>
+          <div class="flex justify-center gap-4">
+            <button (click)="cancelDelete()"
+              class="px-8 py-2 bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 rounded-lg text-base font-medium hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors">
+              Cancel
+            </button>
+            <button (click)="confirmDelete()"
+              class="px-8 py-2 bg-[#D16D6A] text-white rounded-lg  text-base font-medium hover:bg-[#b34545] transition-colors">
+              Yes, Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -66,7 +66,6 @@ export class SelectedRetailComplaintsComponent implements OnInit {
 
   ngOnInit(): void {
     this.complainId = this.route.snapshot.params['id'];
-    console.log('Complain ID:', this.complainId);
     this.fetchComplain();
   }
 
@@ -87,7 +86,7 @@ export class SelectedRetailComplaintsComponent implements OnInit {
 
     this.complainService.fetchComplain(this.complainId).subscribe({
       next: (res: any) => {
-        console.log('API Response:', res);
+        
 
         if (!res || !res.data) {
           throw new Error('Invalid response structure: Missing data');
@@ -117,7 +116,6 @@ export class SelectedRetailComplaintsComponent implements OnInit {
 
         this.farmerName = this.complain.fullName;
         this.isLoading = false;
-        console.log('Mapped Complaint:', this.complain);
       },
       error: (err) => {
         console.error('Error fetching complaint:', err);

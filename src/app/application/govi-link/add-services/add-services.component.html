@@ -15,8 +15,9 @@
         type="text"
         class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [(ngModel)]="serviceData.englishName"
-        (ngModelChange)="formatEnglishName()"
-         (keydown)="blockFirstSpace($event)"
+        (keydown)="blockFirstSpace($event)"
+        (blur)="onFieldBlur('englishName')"
+        (input)="onInputField($event, 'englishName')"
         name="englishName"
         #englishName="ngModel"
         required
@@ -33,8 +34,9 @@
         type="text"
         class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [(ngModel)]="serviceData.sinhalaName"
-                (ngModelChange)="formatEnglishName()"
-         (keydown)="blockFirstSpace($event)"
+        (keydown)="blockFirstSpace($event)"
+        (blur)="onFieldBlur('sinhalaName')"
+        (input)="onInputField($event, 'sinhalaName')"
         name="sinhalaName"
         #sinhalaName="ngModel"
         required
@@ -51,8 +53,9 @@
         type="text"
         class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [(ngModel)]="serviceData.tamilName"
-                (ngModelChange)="formatEnglishName()"
-         (keydown)="blockFirstSpace($event)"
+        (keydown)="blockFirstSpace($event)"
+        (blur)="onFieldBlur('tamilName')"
+        (input)="onInputField($event, 'tamilName')"
         name="tamilName"
         #tamilName="ngModel"
         required
@@ -64,25 +67,24 @@
 
     <!-- Service Fee -->
     <div class="mb-6">
-      <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">Service Fee (Rs.) *</label>
-<input
-  type="number"
-  class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-  [(ngModel)]="serviceData.srvFee"
-  name="srvFee"
-  #srvFee="ngModel"
-  required
-  min="0"
- (input)="formatSrvFee()"
-  (input)="blockAfterTwoDecimals($event)"
-   
-/>
-
-      <div *ngIf="srvFee.invalid && srvFee.touched" class="text-red-600 text-sm mt-1">
-        <div *ngIf="srvFee.errors?.['required']">Service fee is required.</div>
-        <div *ngIf="srvFee.errors?.['min']">Service fee cannot be negative.</div>
-      </div>
-    </div>
+  <label class="block text-sm font-medium mb-2 text-[#534E4E] dark:text-textDark">Service Fee (Rs.) *</label>
+  <input
+    type="text"
+    class="w-full p-2 border rounded-md border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+    [(ngModel)]="serviceData.srvFee"
+    name="srvFee"
+    #srvFee="ngModel"
+    required
+    (keydown)="onFeeKeyDown($event)"
+    (input)="onFeeInput($event)"
+    (blur)="formatFeeOnBlur()"
+  />
+  <div *ngIf="srvFee.invalid && srvFee.touched" class="text-red-600 text-sm mt-1">
+    <div *ngIf="srvFee.errors?.['required']">Service fee is required.</div>
+    <div *ngIf="srvFee.errors?.['min']">Service fee cannot be negative.</div>
+    <div *ngIf="srvFee.errors?.['pattern']">Please enter a valid amount (e.g., 100.50)</div>
+  </div>
+</div>
 
     <!-- Loading Spinner -->
     <div *ngIf="isLoading" class="mb-6">

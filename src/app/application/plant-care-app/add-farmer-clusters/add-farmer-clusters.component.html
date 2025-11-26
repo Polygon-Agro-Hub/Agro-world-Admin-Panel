@@ -14,28 +14,114 @@
   </h2>
 
   <form (ngSubmit)="onUpload()">
-    <!-- Cluster Name Input -->
+    <!-- First Row: Cluster Name and District -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <!-- Cluster Name Input -->
+      <div>
+        <label
+          for="clusterName"
+          class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+        >
+          Farm Cluster Name *
+        </label>
+        <input
+          type="text"
+          id="clusterName"
+          [(ngModel)]="clusterName"
+          (input)="onClusterNameInput($event)"
+          (keydown)="onClusterNameKeydown($event)"
+          (blur)="onClusterNameBlur()"
+          name="clusterName"
+          class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+          placeholder="--Enter cluster name here--"
+          required
+        />
+        <div
+          *ngIf="!clusterName && formSubmitted"
+          class="text-red-500 text-sm mt-1"
+        >
+          Cluster name is required
+        </div>
+        <div
+          *ngIf="clusterName && hasLeadingOrTrailingSpaces && formSubmitted"
+          class="text-red-500 text-sm mt-1"
+        >
+          Cluster name should not have leading or trailing spaces
+        </div>
+      </div>
+
+      <!-- District Dropdown -->
+      <div>
+        <label
+          for="district"
+          class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+        >
+          District *
+        </label>
+        <p-dropdown
+          id="district"
+          [(ngModel)]="selectedDistrict"
+          [options]="districts"
+          optionLabel="name"
+          optionValue="value"
+          placeholder="--Select District here--"
+          [showClear]="!!selectedDistrict"
+          [filter]="true"
+          filterBy="name"
+          styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
+          class="w-full"
+          name="district"
+          required
+        >
+        </p-dropdown>
+        <div
+          *ngIf="!selectedDistrict && formSubmitted"
+          class="text-red-500 text-sm mt-1"
+        >
+          District is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row: Certificate Dropdown -->
     <div class="mb-6">
       <label
-        for="clusterName"
+        for="certificate"
         class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
       >
-        Cluster Name *
+        Certificate *
       </label>
-      <input
-        type="text"
-        id="clusterName"
-        [(ngModel)]="clusterName"
-        name="clusterName"
-        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-        placeholder="Enter cluster name"
+      <p-dropdown
+        id="certificate"
+        [(ngModel)]="selectedCertificateId"
+        [options]="certificates"
+        optionLabel="srtName"
+        optionValue="id"
+        placeholder="--Select Certificate here--"
+        [showClear]="true"
+        [filter]="true"
+        filterBy="srtName"
+        styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
+        class="w-full"
+        name="certificate"
         required
-      />
+      >
+        <ng-template pTemplate="selectedItem">
+          <div *ngIf="selectedCertificateId" class="flex items-center">
+            <span>{{ getSelectedCertificateName() }}</span>
+          </div>
+        </ng-template>
+        <ng-template let-certificate pTemplate="item">
+          <div class="flex items-center">
+            <span>{{ certificate.srtName }} ({{ certificate.srtNumber }})</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
       <div
-        *ngIf="!clusterName && formSubmitted"
+        *ngIf="!selectedCertificateId && formSubmitted"
         class="text-red-500 text-sm mt-1"
       >
-        Cluster name is required
+        Certificate selection is required
       </div>
     </div>
 
@@ -48,7 +134,7 @@
       </label>
 
       <div
-        class="bg-[#EBF5FF] flex flex-col justify-center items-center py-10 px-8 border-[2px] border-[#0090FF] rounded-lg border-dashed cursor-pointer"
+        class="bg-[#EBF5FF] flex flex-col justify-center items-center py-10 px-8 border-[2px] border-[#0090FF] rounded-lg border-dashed cursor-pointer dark:bg-tileBlack"
         (click)="fileInput.click()"
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
@@ -99,6 +185,7 @@
       >
         Please select a file to upload
       </div>
+      
       <!-- Simple file name display -->
       <div *ngIf="selectedFile" class="mt-2 text-left">
         <p class="text-sm text-black dark:text-gray-400">
@@ -106,21 +193,22 @@
           <span class="font-medium text-blue-500">{{ selectedFile.name }}</span>
         </p>
       </div>
+
     </div>
 
     <!-- Buttons -->
     <div class="flex justify-end gap-3">
       <button
         type="button"
-        class="px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 transition-colors"
+        class="px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 transition-colors w-40"
         (click)="onCancel()"
       >
         Cancel
       </button>
       <button
         type="submit"
-        class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-[#2d6ca3] transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
-        [disabled]="isLoading || !selectedFile || !clusterName.trim()"
+        class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-[#2d6ca3] transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed w-40"
+        [disabled]="isLoading || !selectedFile || !clusterName.trim() || !selectedDistrict || !selectedCertificateId || hasLeadingOrTrailingSpaces"
       >
         <span *ngIf="!isLoading">Save</span>
         <span *ngIf="isLoading">Processing...</span>

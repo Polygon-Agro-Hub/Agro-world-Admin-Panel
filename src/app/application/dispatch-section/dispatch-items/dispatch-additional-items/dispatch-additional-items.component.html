@@ -43,7 +43,8 @@
                             </th>
                             <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                                 TOTAL</th>
-                            <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase"
+                                *ngIf="!isShouldAllblock && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')">
                                 PACKED</th>
                         </tr>
                     </thead>
@@ -73,7 +74,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 text-left ">
                                 Rs. {{ item.price != null ? (item.price | number:'1.2-2') : '0.00' }}
                             </td>
-                            <td
+                            <td *ngIf="!isShouldAllblock && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')"
                                 class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 cursor-pointer">
                                 <input type="checkbox" [checked]="item.isPacked === 1"
                                     (change)="onCheckboxChange(item, $event)"
@@ -99,7 +100,7 @@
                     class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
                     Cancel
                 </button>
-                <button (click)="saveCheckedItems()"
+                <button (click)="saveCheckedItems()" *ngIf="!isShouldAllblock && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')"
                     class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
                     Save
                 </button>

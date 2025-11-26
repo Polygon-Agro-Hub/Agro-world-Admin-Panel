@@ -27,6 +27,9 @@ interface CollectionOfficers {
   jobRole: string;
   created_at: string;
   centerName: string;
+  officerModiyBy: string;
+  adminModifyBy:string;
+  regCode: string;
 }
 
 interface JobRole {
@@ -78,6 +81,7 @@ export class ViewCollectiveOfficerComponent {
   selectedIrmId: string | null = null;
   selectCenterStatus: string = '';
   selectStatus: string = '';
+  isSteckholdersRoute: boolean = false;
 
   hasData: boolean = false;
 
@@ -232,6 +236,7 @@ export class ViewCollectiveOfficerComponent {
   }
 
   ngOnInit() {
+    this.isSteckholdersRoute = this.router.url.includes('/steckholders/action/collective-officer');
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchCenterNames();
@@ -687,6 +692,10 @@ export class ViewCollectiveOfficerComponent {
     this.selectStatus = '';
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
   }
+
+  getModifiedBy(item: CollectionOfficers): string {
+  return item.officerModiyBy || item.adminModifyBy || '--';
+}
 }
 
 class Company {

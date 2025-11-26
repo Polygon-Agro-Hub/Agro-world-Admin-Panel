@@ -39,7 +39,6 @@ export class EditComplainCagegoriesComponent implements OnInit {
     this.isLoading = true;
     this.complaintSrv.getAdminComplainCategoryForCreate().subscribe(
       (res) => {
-        console.log(res);
         this.roleArr = res.adminRoles;
         this.appsArr = res.systemApps;
         this.isLoading = false;
@@ -63,7 +62,6 @@ export class EditComplainCagegoriesComponent implements OnInit {
     this.isLoading = true;
     this.complaintSrv.getCategoieDetailsById(this.categorieId).subscribe(
       (res) => {
-        console.log(res);
         this.complainObj = res;
         this.isLoading = false;
       },
@@ -141,7 +139,7 @@ export class EditComplainCagegoriesComponent implements OnInit {
               confirmButton: 'bg-[#3980C0] text-white px-4 py-2 rounded-lg'
             }
           });
-          this.router.navigate(['/complaints/manage-applications']);
+          window.history.back()
         } else {
           Swal.fire({
             icon: 'error',
@@ -186,7 +184,6 @@ export class EditComplainCagegoriesComponent implements OnInit {
         cancelButton: 'bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-lg'
       }
     }).then((result) => {
-    // Inside your Swal confirmation
 if (result.isConfirmed) {
   this.location.back();
 }

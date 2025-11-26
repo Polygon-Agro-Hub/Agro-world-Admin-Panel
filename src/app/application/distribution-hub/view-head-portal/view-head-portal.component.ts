@@ -147,7 +147,6 @@ getFlagUrl(countryCode: string): string {
       this.headId = params.get('id') ? +params.get('id')! : null;
       this.route.queryParams.subscribe((queryParams) => {
         this.isView = queryParams['isView'] === 'true';
-        console.log('Head ID:', this.headId, 'Is View:', this.isView);
         if (this.headId) {
           this.loadData(this.headId);
         } else {
@@ -171,10 +170,7 @@ getFlagUrl(countryCode: string): string {
     }).subscribe({
       next: ({ companies, headData }) => {
         this.companyList = companies;
-        console.log('Loaded Companies:', this.companyList);
-        console.log('Raw API Response:', headData);
         const data = headData.data; // Access the nested 'data' field
-        console.log('Fetched Distribution Head Data:', data);
         if (!data) {
           console.error('No data in API response');
           Swal.fire('Error', 'No distribution head data found.', 'error');
@@ -208,7 +204,6 @@ getFlagUrl(countryCode: string): string {
           branchName: data.branchName || '',
           status: data.status || '',
         });
-        console.log('Form Values After Patch:', this.headForm.value);
         if (this.isView) {
           this.headForm.disable();
         }
@@ -250,7 +245,6 @@ getFlagUrl(countryCode: string): string {
 
   updateDistributionHead(): void {
     if (this.headForm.invalid || !this.headId) {
-      console.log('Form Invalid or No Head ID:', this.headForm.errors, this.headId);
       Swal.fire('Error', 'Please fill all required fields correctly.', 'error');
       return;
     }
@@ -261,7 +255,6 @@ getFlagUrl(countryCode: string): string {
       empType: this.headForm.get('staffEmployeeType')?.value,
       languages: this.headForm.get('preferredLanguages')?.value.join(','),
     };
-    console.log('Update Payload:', formValue);
     this.distributionHubService.updateDistributionHeadDetails(this.headId, formValue).subscribe({
       next: () => {
         this.isLoading = false;

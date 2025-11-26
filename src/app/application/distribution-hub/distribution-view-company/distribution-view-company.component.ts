@@ -8,6 +8,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import Swal from 'sweetalert2';
 import { CollectionService } from '../../../services/collection.service';
+import { title } from 'process';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-distribution-view-company',
@@ -42,6 +45,8 @@ export class DistributionViewCompanyComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private distributionHubService: DistributionHubService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
     private collectionService: CollectionService
   ) { }
 
@@ -50,11 +55,9 @@ export class DistributionViewCompanyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('ngonitni')
     this.route.queryParams.subscribe((params) => {
       this.companyId = params['id'] ? +params['id'] : null;
       this.companyName = params['companyName'] ? params['companyName'] : null;
-      console.log('companyId', this.companyId);
     });
     this.fetchAllCompanyHeads();
   }
@@ -70,7 +73,6 @@ export class DistributionViewCompanyComponent implements OnInit {
       .getAllDistributionCompanyHeads(companyId, page, limit, search)
       .subscribe(
         (data) => {
-          console.log('API Response:', data);
           this.isLoading = false;
           this.distributionCompanyHeads = data.items;
           this.distributionCompanyHeads.forEach((head) => {
@@ -123,29 +125,45 @@ export class DistributionViewCompanyComponent implements OnInit {
   deleteDistributionHead(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: "Do you really want to delete this centre head?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
         this.distributionHubService.deleteDistributionHead(id).subscribe({
           next: (response) => {
             this.isLoading = false;
-            Swal.fire(
-              'Deleted!',
-              'Distribution head has been deleted.',
-              'success'
-            );
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Distribution head has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
             this.fetchAllCompanyHeads();
           },
           error: (error) => {
             this.isLoading = false;
             console.error('Error deleting distribution head:', error);
-            Swal.fire('Error!', 'Failed to delete distribution head.', 'error');
+            Swal.fire({
+              title: 'Error!',
+              text: 'Failed to delete distribution head.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
           },
         });
       }
@@ -158,6 +176,10 @@ export class DistributionViewCompanyComponent implements OnInit {
         icon: 'error',
         title: 'Invalid Input',
         text: 'Officer ID is missing.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
       });
       return;
     }
@@ -201,6 +223,10 @@ export class DistributionViewCompanyComponent implements OnInit {
       grow: 'row',
       showClass: { popup: 'animate__animated animate__fadeIn' },
       hideClass: { popup: 'animate__animated animate__fadeOut' },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
       didOpen: () => {
         if (showApproveButton) {
           document
@@ -219,6 +245,10 @@ export class DistributionViewCompanyComponent implements OnInit {
                       text: 'The Distributed Center Head was approved successfully.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold text-lg',
+                      },
                     });
                     this.fetchAllCompanyHeads();
                   } else {
@@ -228,6 +258,10 @@ export class DistributionViewCompanyComponent implements OnInit {
                       text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold text-lg',
+                      },
                     });
                   }
                 },
@@ -239,6 +273,10 @@ export class DistributionViewCompanyComponent implements OnInit {
                     text: 'An error occurred while approving. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                    },
                   });
                 }
               );
@@ -262,6 +300,10 @@ export class DistributionViewCompanyComponent implements OnInit {
                       text: 'The Distributed Center Head was rejected successfully.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold text-lg',
+                      },
                     });
                     this.fetchAllCompanyHeads();
                   } else {
@@ -271,6 +313,10 @@ export class DistributionViewCompanyComponent implements OnInit {
                       text: 'Something went wrong. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
+                      customClass: {
+                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                        title: 'font-semibold text-lg',
+                      },
                     });
                   }
                 },
@@ -282,6 +328,10 @@ export class DistributionViewCompanyComponent implements OnInit {
                     text: 'An error occurred while rejecting. Please try again.',
                     showConfirmButton: false,
                     timer: 3000,
+                    customClass: {
+                      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                      title: 'font-semibold text-lg',
+                    },
                   });
                 }
               );
@@ -311,4 +361,6 @@ class DistributionCompanyHead {
   createdAt!: Date;
   status!: string;
   createdAtFormatted!: string | null;
+  officeModify: string | null = null;
+  adminModify: string | null = null;
 }

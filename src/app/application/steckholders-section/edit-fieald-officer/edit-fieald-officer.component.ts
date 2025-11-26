@@ -48,10 +48,8 @@ export class EditFiealdOfficerComponent implements OnInit {
   selectedImage: string | ArrayBuffer | null = null;
   empType!: string;
   languagesRequired: boolean = false;
-  companyOptions: any[] = [];
   loaded = true;
   managerOptions: any[] = [];
-  companyData: Company[] = [];
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberRequired: boolean = false;
   confirmAccountNumberError: boolean = false;
@@ -77,6 +75,37 @@ export class EditFiealdOfficerComponent implements OnInit {
   selectedBackNicImage: string | ArrayBuffer | null = null;
   selectedPassbookImage: string | ArrayBuffer | null = null;
   selectedContractImage: string | ArrayBuffer | null = null;
+
+  // Add these properties for province-district functionality
+  provinces: any[] = [];
+  filteredDistricts: any[] = [];
+  allDistricts = [
+    { name: 'Ampara', province: 'Eastern' },
+    { name: 'Anuradhapura', province: 'North Central' },
+    { name: 'Badulla', province: 'Uva' },
+    { name: 'Batticaloa', province: 'Eastern' },
+    { name: 'Colombo', province: 'Western' },
+    { name: 'Galle', province: 'Southern' },
+    { name: 'Gampaha', province: 'Western' },
+    { name: 'Hambantota', province: 'Southern' },
+    { name: 'Jaffna', province: 'Northern' },
+    { name: 'Kalutara', province: 'Western' },
+    { name: 'Kandy', province: 'Central' },
+    { name: 'Kegalle', province: 'Sabaragamuwa' },
+    { name: 'Kilinochchi', province: 'Northern' },
+    { name: 'Kurunegala', province: 'North Western' },
+    { name: 'Mannar', province: 'Northern' },
+    { name: 'Matale', province: 'Central' },
+    { name: 'Matara', province: 'Southern' },
+    { name: 'Monaragala', province: 'Uva' },
+    { name: 'Mullaitivu', province: 'Northern' },
+    { name: 'Nuwara Eliya', province: 'Central' },
+    { name: 'Polonnaruwa', province: 'North Central' },
+    { name: 'Puttalam', province: 'North Western' },
+    { name: 'Rathnapura', province: 'Sabaragamuwa' },
+    { name: 'Trincomalee', province: 'Eastern' },
+    { name: 'Vavuniya', province: 'Northern' },
+  ];
 
   constructor(
     private router: Router,
@@ -126,6 +155,143 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
+  }
+
+  // Initialize provinces
+  initializeProvinces(): void {
+    const uniqueProvinces = [...new Set(this.allDistricts.map(district => district.province))];
+    this.provinces = uniqueProvinces.map(province => ({ name: province }));
+    
+    // If editing, filter districts based on existing province
+    if (this.personalData.province) {
+      this.filterDistrictsByProvince(this.personalData.province);
+    }
+  }
+  
+  isValidUrl(value: string): boolean {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+getFileName(value: string): string {
+  if (!value) return '';
+  
+  // If it's a URL, extract the filename
+  if (this.isValidUrl(value)) {
+    try {
+      const url = new URL(value);
+      const pathname = url.pathname;
+      const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+    
+      return decodeURIComponent(filename);
+    } catch {
+      return value;
+    }
+  }
+  
+  // If it's just a filename, return it as-is
+  return value;
+}
+
+  // Handle province change
+  onProvinceChange(event: DropdownChangeEvent): void {
+    const selectedProvince = event.value;
+    this.personalData.province = selectedProvince;
+    
+    // Filter districts based on selected province
+    this.filterDistrictsByProvince(selectedProvince);
+    
+    // Clear district selection when province changes
+    this.personalData.distrct = '';
+  }
+
+  // Filter districts by province
+  filterDistrictsByProvince(province: string): void {
+    if (province) {
+      this.filteredDistricts = this.allDistricts.filter(district => district.province === province);
+    } else {
+      this.filteredDistricts = [];
+    }
+  }
+
+  // Handle district change
+  onDistrictChange(event: DropdownChangeEvent): void {
+    const selectedDistrict = event.value;
+    this.personalData.distrct = selectedDistrict;
+  }
+
+  // Add this method to handle commission amount input
+  onCommissionAmountInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    // Ensure proper decimal formatting
+    if (value.includes('.')) {
+      const parts = value.split('.');
+      if (parts[1].length > 2) {
+        // Limit to 2 decimal places
+        value = parts[0] + '.' + parts[1].substring(0, 2);
+        input.value = value;
+        this.personalData.comAmount = parseFloat(value);
+      }
+    }
+  }
+
+  // Replace the existing formatAmount method with this one
+  allowDecimalNumbers(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+    const currentValue = input.value;
+    
+    // Allow control keys: backspace, delete, tab, escape, enter
+    if ([8, 9, 27, 13, 46].indexOf(event.keyCode) !== -1 ||
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (event.keyCode === 65 && event.ctrlKey === true) ||
+      (event.keyCode === 67 && event.ctrlKey === true) ||
+      (event.keyCode === 86 && event.ctrlKey === true) ||
+      (event.keyCode === 88 && event.ctrlKey === true) ||
+      // Allow: home, end, left, right
+      (event.keyCode >= 35 && event.keyCode <= 39)) {
+      return;
+    }
+
+    // Allow numbers (0-9)
+    if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+        (event.keyCode >= 96 && event.keyCode <= 105)) {
+      return;
+    }
+
+    // Allow decimal point (.) but only one
+    if (event.keyCode === 190 || event.keyCode === 110) {
+      // Check if decimal point already exists
+      if (currentValue.includes('.')) {
+        event.preventDefault();
+        return;
+      }
+      // Don't allow decimal point at the beginning
+      if (currentValue.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      return;
+    }
+
+    // Prevent any other key
+    event.preventDefault();
+  }
+
+  // Update the validation method for commission amount
+  isValidCommissionAmount(): boolean {
+    const amount = this.personalData.comAmount;
+    return amount !== null && 
+           amount !== undefined && 
+           amount >= 0 && 
+           amount <= 100;
   }
 
   back(): void {
@@ -231,16 +397,6 @@ export class EditFiealdOfficerComponent implements OnInit {
     );
   }
 
-  getAllCompanies() {
-    this.stakeHolderSrv.getAllCompanies().subscribe((res) => {
-      this.companyData = res;
-      this.companyOptions = this.companyData.map(company => ({
-        label: company.companyName,
-        value: company.id
-      }));
-    });
-  }
-
   isFieldInvalid(fieldName: keyof Personal): boolean {
     const value = this.personalData[fieldName];
     
@@ -257,23 +413,14 @@ export class EditFiealdOfficerComponent implements OnInit {
   }
 
   selectjobRole(role: string) {
-    if (role === 'Collection Centre Manager') {
-      this.personalData.jobRole = 'Collection Centre Manager';
-      this.toggleDropdown();
-      console.log('dropdownOpen', this.dropdownOpen);
-    } else {
-      this.personalData.jobRole = role;
-      this.toggleDropdown();
-      console.log('dropdownOpen', this.dropdownOpen);
-    }
+    this.personalData.jobRole = role;
+    this.toggleDropdown();
     console.log('personalData', this.personalData);
 
     this.EpmloyeIdCreate(); // call your method
   }
 
   EpmloyeIdCreate() {
-    const currentCompanyId = this.personalData.companyId;
-
     this.getAllCollectionManagers();
     let rolePrefix: string | undefined;
 
@@ -293,21 +440,30 @@ export class EditFiealdOfficerComponent implements OnInit {
         this.personalData.empId = rolePrefix + lastID;
       })
       .catch((error) => { });
-    this.personalData.companyId = currentCompanyId;
   }
 
   getAllCollectionManagers() {
-    this.stakeHolderSrv
-      .getAllManagerList(this.personalData.companyId)
-      .subscribe((res) => {
-        this.fiealdManagerData = res;
-        // Convert to dropdown options format
-        this.managerOptions = this.fiealdManagerData.map((manager) => ({
-          label: manager.firstName + ' ' + manager.lastName,
-          value: manager.id,
-        }));
-      });
-  }
+  this.stakeHolderSrv
+    .getAllManagerList()
+    .subscribe((res) => {
+      this.fiealdManagerData = res;
+      // Convert to dropdown options format
+      this.managerOptions = this.fiealdManagerData.map((manager) => ({
+        label: manager.firstName + ' ' + manager.lastName,
+        value: manager.id,
+      }));
+
+      // Debug log to verify managers are loaded
+      console.log('Loaded managers:', this.managerOptions);
+      console.log('Selected irmId:', this.personalData.irmId);
+      
+      // Check if the selected manager exists in the options
+      if (this.personalData.irmId) {
+        const selectedManager = this.managerOptions.find(option => option.value == this.personalData.irmId);
+        console.log('Found selected manager:', selectedManager);
+      }
+    });
+}
 
   getLastID(role: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -351,6 +507,42 @@ export class EditFiealdOfficerComponent implements OnInit {
     // if (!/[a-zA-Z\s]/.test(char)) {
     //   event.preventDefault();
     // }
+  }
+
+  // New method for Sinhala character validation
+  allowSinhalaCharacters(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+
+    // Block space if it's at the start (cursor at position 0)
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow Sinhala Unicode range: \u0D80-\u0DFF
+    // Also allow spaces and basic punctuation
+    if (!/[\u0D80-\u0DFF\s]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+
+  // New method for Tamil character validation
+  allowTamilCharacters(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const char = String.fromCharCode(event.which);
+
+    // Block space if it's at the start (cursor at position 0)
+    if (char === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    // Allow Tamil Unicode range: \u0B80-\u0BFF
+    // Also allow spaces and basic punctuation
+    if (!/[\u0B80-\u0BFF\s]/.test(char)) {
+      event.preventDefault();
+    }
   }
 
   isValidPhoneNumber(phone: string): boolean {
@@ -577,34 +769,38 @@ export class EditFiealdOfficerComponent implements OnInit {
         missingFields.push('Preferred Language is Required');
       }
 
-      if (!this.personalData.companyId) {
-        missingFields.push('Company Name is Required');
-      }
-
-      if (
-        !this.personalData.irmId &&
-        this.personalData.jobRole === 'Collection Officer'
-      ) {
-        missingFields.push('Collection Centre Manager is Required');
-      }
-
       if (!this.personalData.jobRole) {
         missingFields.push('Job Role is Required');
       }
 
-      if (
-        this.personalData.jobRole === 'Collection Officer' &&
-        !this.personalData.irmId
-      ) {
-        missingFields.push('Manager Name is Required');
+      if (this.personalData.jobRole === 'Field Officer' && !this.personalData.irmId) {
+        missingFields.push('Chief Field Officer is Required');
       }
 
       if (!this.personalData.firstName) {
-        missingFields.push('First Name is Required');
+        missingFields.push('First Name in English is Required');
       }
 
       if (!this.personalData.lastName) {
-        missingFields.push('Last Name is Required');
+        missingFields.push('Last Name in English is Required');
+      }
+
+      // Validate Sinhala names
+      if (!this.personalData.firstNameSinhala) {
+        missingFields.push('First Name in Sinhala is Required');
+      }
+
+      if (!this.personalData.lastNameSinhala) {
+        missingFields.push('Last Name in Sinhala is Required');
+      }
+
+      // Validate Tamil names
+      if (!this.personalData.firstNameTamil) {
+        missingFields.push('First Name in Tamil is Required');
+      }
+
+      if (!this.personalData.lastNameTamil) {
+        missingFields.push('Last Name in Tamil is Required');
       }
 
       if (!this.personalData.phoneNumber1) {
@@ -729,13 +925,14 @@ export class EditFiealdOfficerComponent implements OnInit {
     const pageOneFields: (keyof Personal)[] = [
       'firstName',
       'lastName',
-      'firstName',
-      'lastName',
+      'firstNameSinhala',
+      'lastNameSinhala',
+      'firstNameTamil',
+      'lastNameTamil',
       'phoneNumber1',
       'phoneNumber2',
       'nic',
       'email',
-      'companyId',
       'jobRole',
       'irmId',
       'assignDistrict'
@@ -800,22 +997,6 @@ export class EditFiealdOfficerComponent implements OnInit {
     return true;
   }
 
-  updateProvince(event: DropdownChangeEvent): void {
-    const selectedDistrict = event.value;
-
-    const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
-    );
-
-    if (this.itemId === null) {
-      if (selected) {
-        this.personalData.province = selected.province;
-      } else {
-        this.personalData.province = '';
-      }
-    }
-  }
-
   preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
     // Handle space restrictions first
     if (!this.handleSpaceRestrictions(event)) {
@@ -826,51 +1007,6 @@ export class EditFiealdOfficerComponent implements OnInit {
     // Allow only letters (a-z, A-Z) and space
     if (!/[a-zA-Z\s]/.test(char)) {
       event.preventDefault();
-    }
-  }
-
-  formatAmount(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value;
-
-    // Allow control keys
-    if ([8, 9, 46, 37, 39, 116].includes(event.which)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-
-    // Allow only numbers and decimal point
-    if (!/[0-9.]/.test(char)) {
-      event.preventDefault();
-      return;
-    }
-
-    // Prevent multiple decimal points
-    if (char === '.' && value.includes('.')) {
-      event.preventDefault();
-      return;
-    }
-
-    // If adding decimal point, automatically add .00
-    if (char === '.' && !value.includes('.')) {
-      // Let the decimal point be added naturally, then format
-      setTimeout(() => {
-        if (!value.endsWith('.00')) {
-          input.value = value + '00';
-          // Move cursor before the zeros
-          const position = value.length + 1;
-          input.setSelectionRange(position, position);
-        }
-      }, 0);
-    }
-
-    // Limit to 2 decimal places
-    if (value.includes('.')) {
-      const decimalPart = value.split('.')[1];
-      if (decimalPart && decimalPart.length >= 2) {
-        event.preventDefault();
-      }
     }
   }
 
@@ -975,7 +1111,7 @@ export class EditFiealdOfficerComponent implements OnInit {
   ngOnInit(): void {
     this.loadBanks();
     this.loadBranches();
-    this.getAllCompanies();
+    this.initializeProvinces();
     
     // Get the ID from route parameters
     this.route.params.subscribe(params => {
@@ -994,123 +1130,156 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   // Add this method to load field officer data
   loadFieldOfficerData(id: number): void {
-    this.isLoading = true;
-    this.stakeHolderSrv.getFiealdOfficerById(id).subscribe(
-      (response: any) => {
-        this.isLoading = false;
-        if (response && response.officerData && response.officerData.fieldOfficer) {
-          this.populateFormData(response.officerData.fieldOfficer);
+  this.isLoading = true;
+  this.stakeHolderSrv.getFiealdOfficerById(id).subscribe(
+    (response: any) => {
+      this.isLoading = false;
+      console.log('Full API Response:', response); // Debug log
+      
+      if (response && response.officerData) {
+        // Try different possible response structures
+        const officerData = response.officerData.fieldOfficer || response.officerData;
+        
+        if (officerData) {
+          this.populateFormData(officerData);
+          
+          // Small delay to ensure dropdown is properly initialized
+          setTimeout(() => {
+            console.log('Final personalData:', this.personalData);
+            console.log('Final managerOptions:', this.managerOptions);
+          }, 500);
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Field officer not found',
-            confirmButtonText: 'OK',
-          });
-          this.router.navigate(['/steckholders/action/field-inspectors']);
+          this.showErrorAndRedirect('Field officer data not found in response');
         }
-      },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to load field officer data',
-          confirmButtonText: 'OK',
-        });
-        console.error('Error loading field officer:', error);
+      } else {
+        this.showErrorAndRedirect('Invalid response structure');
       }
-    );
-  }
+    },
+    (error) => {
+      this.isLoading = false;
+      this.showErrorAndRedirect('Failed to load field officer data');
+      console.error('Error loading field officer:', error);
+    }
+  );
+}
+
+// Helper method for error handling
+private showErrorAndRedirect(message: string): void {
+  Swal.fire({
+    icon: 'error',
+    title: 'Error',
+    text: message,
+    confirmButtonText: 'OK',
+  });
+  this.router.navigate(['/steckholders/action/field-inspectors']);
+}
 
   // Add this method to populate form with existing data
-  populateFormData(officerData: any): void {
-    // Personal Details
-    this.personalData.id = officerData.id;
-    this.personalData.firstName = officerData.firstName;
-    this.personalData.lastName = officerData.lastName;
-    this.personalData.phoneNumber1 = officerData.phoneNumber01;
-    this.personalData.phoneNumber2 = officerData.phoneNumber02;
-    this.personalData.phoneCode1 = officerData.phoneCode01 || '+94';
-    this.personalData.phoneCode2 = officerData.phoneCode02 || '+94';
-    this.personalData.nic = officerData.nic;
-    this.personalData.email = officerData.email;
+  // Add this method to populate form with existing data
+populateFormData(officerData: any): void {
+  // Personal Details
+  this.personalData.id = officerData.id;
+  this.personalData.firstName = officerData.firstName;
+  this.personalData.lastName = officerData.lastName;
+  this.personalData.status = officerData.status;
+  
+  // FIXED: Check for different possible field names for Sinhala and Tamil names
+  this.personalData.firstNameSinhala = officerData.firstNameSinhala || officerData.firstnameSinhala || officerData.first_name_sinhala || '';
+  this.personalData.lastNameSinhala = officerData.lastNameSinhala || officerData.lastnameSinhala || officerData.last_name_sinhala || '';
+  this.personalData.firstNameTamil = officerData.firstNameTamil || officerData.firstnameTamil || officerData.first_name_tamil || '';
+  this.personalData.lastNameTamil = officerData.lastNameTamil || officerData.lastnameTamil || officerData.last_name_tamil || '';
+  
+  // Contact Details
+  this.personalData.phoneNumber1 = officerData.phoneNumber01 || officerData.phoneNumber1;
+  this.personalData.phoneNumber2 = officerData.phoneNumber02 || officerData.phoneNumber2;
+  this.personalData.phoneCode1 = officerData.phoneCode01 || officerData.phoneCode1 || '+94';
+  this.personalData.phoneCode2 = officerData.phoneCode02 || officerData.phoneCode2 || '+94';
+  this.personalData.nic = officerData.nic;
+  this.personalData.email = officerData.email;
+  
+  // Employment Details
+  this.empType = officerData.employeeType || officerData.empType;
+  this.personalData.empType = officerData.employeeType || officerData.empType;
+  this.personalData.jobRole = officerData.jobRole;
+  this.personalData.empId = officerData.empId;
+  
+  // FIXED: Set Chief Field Officer ID - Check multiple possible field names
+  this.personalData.irmId = officerData.irmId || officerData.chiefFieldOfficerId || officerData.managerId || null;
+  
+  // Languages
+  if (officerData.language) {
+    this.personalData.language = officerData.language;
+  }
+  
+  // Residential Details
+  this.personalData.house = officerData.houseNumber || officerData.house;
+  this.personalData.street = officerData.streetName || officerData.street;
+  this.personalData.city = officerData.city;
+  this.personalData.distrct = officerData.district || officerData.distrct;
+  this.personalData.province = officerData.province;
+  this.personalData.country = officerData.country || 'Sri Lanka';
+  
+  // Bank Details
+  this.personalData.comAmount = officerData.comAmount ? parseFloat(officerData.comAmount) : 0;
+  this.personalData.accName = officerData.accHolderName || officerData.accName;
+  this.personalData.accNumber = officerData.accNumber;
+  this.personalData.bank = officerData.bankName || officerData.bank;
+  this.personalData.branch = officerData.branchName || officerData.branch;
+  
+  // Assign Districts
+  if (officerData.assignDistricts || officerData.assignDistrict) {
+    const districtsData = officerData.assignDistricts || officerData.assignDistrict;
     
-    // Employment Details
-    this.empType = officerData.employeeType;
-    this.personalData.empType = officerData.employeeType;
-    this.personalData.jobRole = officerData.jobRole;
-    this.personalData.empId = officerData.empId;
-    this.personalData.companyId = officerData.companyId;
-    
-    // Languages
-    if (officerData.language) {
-      this.personalData.language = officerData.language;
-    }
-    
-    // Residential Details
-    this.personalData.house = officerData.houseNumber;
-    this.personalData.street = officerData.streetName;
-    this.personalData.city = officerData.city;
-    this.personalData.distrct = officerData.district;
-    this.personalData.province = officerData.province;
-    this.personalData.country = officerData.country || 'Sri Lanka';
-    
-    // Bank Details
-    this.personalData.comAmount = officerData.comAmount;
-    this.personalData.accName = officerData.accHolderName;
-    this.personalData.accNumber = officerData.accNumber;
-    this.personalData.bank = officerData.bankName;
-    this.personalData.branch = officerData.branchName;
-    
-    // Assign Districts - FIXED: Convert district names to district objects
-    if (officerData.assignDistricts) {
-      if (Array.isArray(officerData.assignDistricts)) {
-        // If it's already an array of district names, map to district objects
-        this.personalData.assignDistrict = officerData.assignDistricts
-          .map((districtName: string) => 
-            this.districts.find(d => d.name === districtName)
-          )
-          .filter((d: any) => d !== undefined); // Remove undefined values
-      } else if (typeof officerData.assignDistricts === 'string') {
-        // If it's a comma-separated string, split and map to district objects
-        this.personalData.assignDistrict = officerData.assignDistricts
-          .split(',')
-          .map((districtName: string) => districtName.trim())
-          .filter((districtName: string) => districtName.length > 0)
-          .map((districtName: string) => 
-            this.districts.find(d => d.name === districtName)
-          )
-          .filter((d: any) => d !== undefined); // Remove undefined values
-      } else {
-        this.personalData.assignDistrict = [];
-      }
+    if (Array.isArray(districtsData)) {
+      this.personalData.assignDistrict = districtsData
+        .map((districtName: string) => 
+          this.districts.find(d => d.name === districtName)
+        )
+        .filter((d: any) => d !== undefined);
+    } else if (typeof districtsData === 'string') {
+      this.personalData.assignDistrict = districtsData
+        .split(',')
+        .map((districtName: string) => districtName.trim())
+        .filter((districtName: string) => districtName.length > 0)
+        .map((districtName: string) => 
+          this.districts.find(d => d.name === districtName)
+        )
+        .filter((d: any) => d !== undefined);
     } else {
       this.personalData.assignDistrict = [];
     }
-    
-    // Load images if available
-    this.loadExistingImages(officerData);
-    
-    // Set bank and branch dropdowns
-    this.setBankAndBranch(officerData.bankName, officerData.branchName);
-    
-    // Load manager if needed
-    if (officerData.irmId) {
-      this.personalData.irmId = officerData.irmId;
-      this.getAllCollectionManagers();
-    }
-
-    // Set profile image if available
-    if (officerData.image) {
-      this.selectedImage = officerData.image;
-    }
-
-    // Mark fields as touched if needed (optional)
-    setTimeout(() => {
-      this.touchedFields['assignDistrict'] = true;
-    }, 0);
+  } else {
+    this.personalData.assignDistrict = [];
   }
+  
+  // Load images if available
+  this.loadExistingImages(officerData);
+  
+  // Set bank and branch dropdowns
+  this.setBankAndBranch(
+    officerData.bankName || officerData.bank, 
+    officerData.branchName || officerData.branch
+  );
+  
+  // FIXED: Load managers first, then set the selected value
+  this.getAllCollectionManagers();
+  
+  // Set profile image if available
+  if (officerData.image || officerData.profile) {
+    this.selectedImage = officerData.image || officerData.profile;
+  }
+
+  // Filter districts based on the loaded province
+  setTimeout(() => {
+    if (this.personalData.province) {
+      this.filterDistrictsByProvince(this.personalData.province);
+    }
+  }, 100);
+
+  // Debug log to verify data
+  console.log('Populated Chief Field Officer ID:', this.personalData.irmId);
+  console.log('Full populated data:', this.personalData);
+}
 
   // Add method to load existing images
   loadExistingImages(officerData: any): void {
@@ -1164,6 +1333,10 @@ export class EditFiealdOfficerComponent implements OnInit {
       errors.push('City is required');
     }
 
+    if (!this.personalData.province) {
+      errors.push('Province is required');
+    }
+
     if (!this.personalData.distrct) {
       errors.push('District is required');
     }
@@ -1174,8 +1347,10 @@ export class EditFiealdOfficerComponent implements OnInit {
   validateBankDetails(): string[] {
     const errors: string[] = [];
 
-    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      errors.push('Commission Amount is required and must be greater than 0');
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      errors.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      errors.push('Commission Amount must be between 0 and 100');
     }
 
     if (!this.personalData.accName) {
@@ -1210,17 +1385,13 @@ export class EditFiealdOfficerComponent implements OnInit {
     return accountRegex.test(accNumber);
   }
 
-  isValidCommissionAmount(): boolean {
-    const amount = this.personalData.comAmount;
-    return amount !== null && amount !== undefined && amount > 0;
-  }
-
   markPageTwoFieldsAsTouched(): void {
     const pageTwoFields: (keyof Personal)[] = [
       'house',
       'street',
       'city',
       'distrct',
+      'province',
       'comAmount',
       'accName',
       'accNumber',
@@ -1270,59 +1441,62 @@ export class EditFiealdOfficerComponent implements OnInit {
   }
 
   handleFileUpload(file: File, fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
-    // Validate file size (5MB limit)
-    if (file.size > 5000000) {
-      Swal.fire('Error', 'File size should not exceed 5MB', 'error');
-      return;
-    }
+  // Validate file size (5MB limit)
+  if (file.size > 5000000) {
+    Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+    return;
+  }
 
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    if (!allowedTypes.includes(file.type)) {
-      Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
-      return;
-    }
+  // Validate file type
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  if (!allowedTypes.includes(file.type)) {
+    Swal.fire('Error', 'Only JPEG, JPG and PNG files are allowed', 'error');
+    return;
+  }
 
-    // Set the file and file name based on type
+  // Mark field as touched
+  this.touchedDocumentFields[fileType] = true;
+
+  // Set the file and file name based on type
+  switch (fileType) {
+    case 'frontNic':
+      this.selectedFrontNicFile = file;
+      this.personalData.frontNic = file.name;
+      break;
+    case 'backNic':
+      this.selectedBackNicFile = file;
+      this.personalData.backNic = file.name;
+      break;
+    case 'passbook':
+      this.selectedPassbookFile = file;
+      this.personalData.backPassbook = file.name;
+      break;
+    case 'contract':
+      this.selectedContractFile = file;
+      this.personalData.contract = file.name;
+      break;
+  }
+
+  // Preview the image
+  const reader = new FileReader();
+  reader.onload = (e: any) => {
     switch (fileType) {
       case 'frontNic':
-        this.selectedFrontNicFile = file;
-        this.personalData.frontNic = file.name;
+        this.selectedFrontNicImage = e.target.result;
         break;
       case 'backNic':
-        this.selectedBackNicFile = file;
-        this.personalData.backNic = file.name;
+        this.selectedBackNicImage = e.target.result;
         break;
       case 'passbook':
-        this.selectedPassbookFile = file;
-        this.personalData.backPassbook = file.name;
+        this.selectedPassbookImage = e.target.result;
         break;
       case 'contract':
-        this.selectedContractFile = file;
-        this.personalData.contract = file.name;
+        this.selectedContractImage = e.target.result;
         break;
     }
-
-    // Preview the image
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      switch (fileType) {
-        case 'frontNic':
-          this.selectedFrontNicImage = e.target.result;
-          break;
-        case 'backNic':
-          this.selectedBackNicImage = e.target.result;
-          break;
-        case 'passbook':
-          this.selectedPassbookImage = e.target.result;
-          break;
-        case 'contract':
-          this.selectedContractImage = e.target.result;
-          break;
-      }
-    };
-    reader.readAsDataURL(file);
-  }
+  };
+  reader.readAsDataURL(file);
+}
 
   getFileTypeLabel(fileType: string): string {
     const labels: { [key: string]: string } = {
@@ -1335,54 +1509,66 @@ export class EditFiealdOfficerComponent implements OnInit {
   }
 
   removeUploadedFile(fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You will need to upload this file again',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Remove',
-      cancelButtonText: 'Cancel',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        switch (fileType) {
-          case 'frontNic':
-            this.selectedFrontNicFile = null;
-            this.selectedFrontNicImage = null;
-            this.personalData.frontNic = '';
-            break;
-          case 'backNic':
-            this.selectedBackNicFile = null;
-            this.selectedBackNicImage = null;
-            this.personalData.backNic = '';
-            break;
-          case 'passbook':
-            this.selectedPassbookFile = null;
-            this.selectedPassbookImage = null;
-            this.personalData.backPassbook = '';
-            break;
-          case 'contract':
-            this.selectedContractFile = null;
-            this.selectedContractImage = null;
-            this.personalData.contract = '';
-            break;
-        }
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'You will need to upload this file again',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Remove',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Mark field as touched
+      this.touchedDocumentFields[fileType] = true;
+
+      switch (fileType) {
+        case 'frontNic':
+          this.selectedFrontNicFile = null;
+          this.selectedFrontNicImage = null;
+          this.personalData.frontNic = '';
+          break;
+        case 'backNic':
+          this.selectedBackNicFile = null;
+          this.selectedBackNicImage = null;
+          this.personalData.backNic = '';
+          break;
+        case 'passbook':
+          this.selectedPassbookFile = null;
+          this.selectedPassbookImage = null;
+          this.personalData.backPassbook = '';
+          break;
+        case 'contract':
+          this.selectedContractFile = null;
+          this.selectedContractImage = null;
+          this.personalData.contract = '';
+          break;
       }
-    });
-  }
+    }
+  });
+}
+
 
   onSubmit() {
-    if (this.itemId) {
-      this.updateFieldOfficer();
-    } else {
-      this.createFieldOfficer();
-    }
+  this.markAllFieldsAsTouched();
+  
+  // For both create and update, ensure we're on pageThree and validate documents
+  if (this.selectedPage !== 'pageThree') {
+    this.selectedPage = 'pageThree';
+    return;
   }
 
-  // Add update method
+  if (this.itemId) {
+    this.updateFieldOfficer();
+  } else {
+    this.createFieldOfficer();
+  }
+}
+
+  // Updated update method with new fields
   updateFieldOfficer(): void {
   // Mark all fields as touched to show validation messages
   this.markAllFieldsAsTouched();
@@ -1396,10 +1582,6 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   if (!this.isAtLeastOneLanguageSelected()) {
     missingFields.push('Preferred Languages is Required');
-  }
-
-  if (!this.personalData.companyId) {
-    missingFields.push('Company Name is Required');
   }
 
   if (!this.personalData.jobRole) {
@@ -1416,6 +1598,24 @@ export class EditFiealdOfficerComponent implements OnInit {
 
   if (!this.personalData.lastName) {
     missingFields.push('Last Name (in English) is Required');
+  }
+
+  // Validate Sinhala names
+  if (!this.personalData.firstNameSinhala) {
+    missingFields.push('First Name in Sinhala is Required');
+  }
+
+  if (!this.personalData.lastNameSinhala) {
+    missingFields.push('Last Name in Sinhala is Required');
+  }
+
+  // Validate Tamil names
+  if (!this.personalData.firstNameTamil) {
+    missingFields.push('First Name in Tamil is Required');
+  }
+
+  if (!this.personalData.lastNameTamil) {
+    missingFields.push('Last Name in Tamil is Required');
   }
 
   if (!this.personalData.phoneNumber1) {
@@ -1457,12 +1657,12 @@ export class EditFiealdOfficerComponent implements OnInit {
     missingFields.push('City is Required');
   }
 
-  if (!this.personalData.distrct) {
-    missingFields.push('District is Required');
-  }
-
   if (!this.personalData.province) {
     missingFields.push('Province is Required');
+  }
+
+  if (!this.personalData.distrct) {
+    missingFields.push('District is Required');
   }
 
   if (!this.personalData.accName) {
@@ -1485,14 +1685,21 @@ export class EditFiealdOfficerComponent implements OnInit {
     missingFields.push('Branch Name is Required');
   }
 
-  if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-    missingFields.push('Commission Amount is required and must be greater than 0');
+  if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+    missingFields.push('Commission Amount is required');
+  } else if (!this.isValidCommissionAmount()) {
+    missingFields.push('Commission Amount must be between 0 and 100');
   }
 
   // Check assigned districts
   if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
     missingFields.push('At least one Assigned District is required');
   }
+
+  // ✅ ADDED: Check required documents for pageThree in UPDATE mode
+  // For update, check if documents exist (either existing files or newly uploaded files)
+  const documentErrors = this.validateDocumentFieldsForUpdate();
+  missingFields.push(...documentErrors);
 
   // If errors, show list and stop - validation messages will now be visible
   if (missingFields.length > 0) {
@@ -1532,11 +1739,15 @@ export class EditFiealdOfficerComponent implements OnInit {
     if (result.isConfirmed) {
       this.isLoading = true;
 
-      // Prepare the officer data object for the API with CORRECT field names
+      // Prepare the officer data object for the API with CORRECT field names including new fields
       const officerData = {
         // Personal Details - using correct field names that match backend
         firstName: this.personalData.firstName,
         lastName: this.personalData.lastName,
+        firstNameSinhala: this.personalData.firstNameSinhala,
+        lastNameSinhala: this.personalData.lastNameSinhala,
+        firstNameTamil: this.personalData.firstNameTamil,
+        lastNameTamil: this.personalData.lastNameTamil,
         phoneNumber1: this.personalData.phoneNumber1,
         phoneNumber2: this.personalData.phoneNumber2,
         phoneCode1: this.personalData.phoneCode1,
@@ -1548,7 +1759,6 @@ export class EditFiealdOfficerComponent implements OnInit {
         empType: this.personalData.empType,
         jobRole: this.personalData.jobRole,
         empId: this.personalData.empId,
-        companyId: this.personalData.companyId,
         irmId: this.personalData.irmId,
         
         // Languages
@@ -1573,7 +1783,7 @@ export class EditFiealdOfficerComponent implements OnInit {
         assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
         
         // Status
-        status: "Not Aproved"
+        status: "Not Approved"
       };
 
       console.log('Sending update data:', officerData);
@@ -1661,7 +1871,7 @@ export class EditFiealdOfficerComponent implements OnInit {
   });
 }
 
-  // Keep your existing createFieldOfficer logic
+  // Keep your existing createFieldOfficer logic (updated with new fields)
   createFieldOfficer(): void {
     // Mark all fields as touched to show validation messages
     this.markAllFieldsAsTouched();
@@ -1675,10 +1885,6 @@ export class EditFiealdOfficerComponent implements OnInit {
 
     if (!this.isAtLeastOneLanguageSelected()) {
       missingFields.push('Preferred Languages is Required');
-    }
-
-    if (!this.personalData.companyId) {
-      missingFields.push('Company Name is Required');
     }
 
     if (!this.personalData.jobRole) {
@@ -1695,6 +1901,24 @@ export class EditFiealdOfficerComponent implements OnInit {
 
     if (!this.personalData.lastName) {
       missingFields.push('Last Name (in English) is Required');
+    }
+
+    // Validate Sinhala names
+    if (!this.personalData.firstNameSinhala) {
+      missingFields.push('First Name in Sinhala is Required');
+    }
+
+    if (!this.personalData.lastNameSinhala) {
+      missingFields.push('Last Name in Sinhala is Required');
+    }
+
+    // Validate Tamil names
+    if (!this.personalData.firstNameTamil) {
+      missingFields.push('First Name in Tamil is Required');
+    }
+
+    if (!this.personalData.lastNameTamil) {
+      missingFields.push('Last Name in Tamil is Required');
     }
 
     if (!this.personalData.phoneNumber1) {
@@ -1736,12 +1960,12 @@ export class EditFiealdOfficerComponent implements OnInit {
       missingFields.push('City is Required');
     }
 
-    if (!this.personalData.distrct) {
-      missingFields.push('District is Required');
-    }
-
     if (!this.personalData.province) {
       missingFields.push('Province is Required');
+    }
+
+    if (!this.personalData.distrct) {
+      missingFields.push('District is Required');
     }
 
     if (!this.personalData.accName) {
@@ -1764,8 +1988,10 @@ export class EditFiealdOfficerComponent implements OnInit {
       missingFields.push('Branch Name is Required');
     }
 
-    if (!this.personalData.comAmount || this.personalData.comAmount <= 0) {
-      missingFields.push('Commission Amount is required and must be greater than 0');
+    if (!this.personalData.comAmount && this.personalData.comAmount !== 0) {
+      missingFields.push('Commission Amount is required');
+    } else if (!this.isValidCommissionAmount()) {
+      missingFields.push('Commission Amount must be between 0 and 100');
     }
 
     // Check assigned districts
@@ -1828,11 +2054,15 @@ export class EditFiealdOfficerComponent implements OnInit {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        // Prepare officer data for creation
+        // Prepare officer data for creation with new fields
         const officerData = {
           // Personal Details
           firstName: this.personalData.firstName,
           lastName: this.personalData.lastName,
+          firstNameSinhala: this.personalData.firstNameSinhala,
+          lastNameSinhala: this.personalData.lastNameSinhala,
+          firstNameTamil: this.personalData.firstNameTamil,
+          lastNameTamil: this.personalData.lastNameTamil,
           phoneNumber1: this.personalData.phoneNumber1,
           phoneNumber2: this.personalData.phoneNumber2,
           phoneCode1: this.personalData.phoneCode1,
@@ -1844,7 +2074,6 @@ export class EditFiealdOfficerComponent implements OnInit {
           empType: this.personalData.empType,
           jobRole: this.personalData.jobRole,
           empId: this.personalData.empId,
-          companyId: this.personalData.companyId,
           irmId: this.personalData.irmId,
           
           // Languages
@@ -1869,7 +2098,7 @@ export class EditFiealdOfficerComponent implements OnInit {
           assignDistrict: this.personalData.assignDistrict.map(d => d.name).join(','),
           
           // Status
-          status: "Not Aproved"
+          status: "Not Approved"
         };
 
         // Call the service method with all the files
@@ -1967,8 +2196,9 @@ export class EditFiealdOfficerComponent implements OnInit {
   markAllFieldsAsTouched(): void {
     // Mark page one fields
     const pageOneFields: (keyof Personal)[] = [
-      'empType', 'language', 'companyId', 'jobRole', 'irmId',
-      'firstName', 'lastName', 'phoneNumber1', 'phoneNumber2',
+      'empType', 'language', 'jobRole', 'irmId',
+      'firstName', 'lastName', 'firstNameSinhala', 'lastNameSinhala',
+      'firstNameTamil', 'lastNameTamil', 'phoneNumber1', 'phoneNumber2',
       'nic', 'email', 'distrct', 'assignDistrict'
     ];
 
@@ -1990,16 +2220,176 @@ export class EditFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
+    this.markAllDocumentFieldsAsTouched();
   }
+
+  resetPassword() {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to reset the Field Officer password. This action cannot be undone.',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, reset password!',
+        cancelButtonText: 'Cancel',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+          cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.isLoading = true;
+  
+          // Use the component's known id property (itemId) or fallback to personalData.id
+          this.stakeHolderSrv.changeInspectorStatus(this.itemId || this.personalData.id, 'Approved').subscribe(
+            (res) => {
+              this.isLoading = false;
+              if (res.status) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success!',
+                  text: 'The Field Officer password reset successfully.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+                // Reload the currently loaded field officer data
+                this.loadFieldOfficerData(this.itemId || this.personalData.id);
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'Something went wrong. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+              }
+            },
+            () => {
+              this.isLoading = false;
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while resetting password. Please try again.',
+                showConfirmButton: false,
+                timer: 3000,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              });
+            }
+          );
+        }
+      });
+    }
+
+  touchedDocumentFields: { [key: string]: boolean } = {
+  frontNic: false,
+  backNic: false,
+  passbook: false,
+  contract: false
+};
+
+    isDocumentFieldInvalid(fieldType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): boolean {
+  if (!this.touchedDocumentFields[fieldType]) {
+    return false;
+  }
+
+  switch (fieldType) {
+    case 'frontNic':
+      return !this.selectedFrontNicFile && !this.personalData.frontNic;
+    case 'backNic':
+      return !this.selectedBackNicFile && !this.personalData.backNic;
+    case 'passbook':
+      return !this.selectedPassbookFile && !this.personalData.backPassbook;
+    case 'contract':
+      return !this.selectedContractFile && !this.personalData.contract;
+    default:
+      return false;
+  }
+}
+
+markAllDocumentFieldsAsTouched(): void {
+  this.touchedDocumentFields = {
+    frontNic: true,
+    backNic: true,
+    passbook: true,
+    contract: true
+  };
+}
+
+validateDocumentFields(): string[] {
+  const errors: string[] = [];
+
+  if (!this.selectedFrontNicFile && !this.personalData.frontNic) {
+    errors.push('NIC Front Image is required');
+  }
+
+  if (!this.selectedBackNicFile && !this.personalData.backNic) {
+    errors.push('NIC Back Image is required');
+  }
+
+  if (!this.selectedPassbookFile && !this.personalData.backPassbook) {
+    errors.push('Bank Passbook is required');
+  }
+
+  if (!this.selectedContractFile && !this.personalData.contract) {
+    errors.push('Signed Contract is required');
+  }
+
+  return errors;
+}
+
+validateDocumentFieldsForUpdate(): string[] {
+  const errors: string[] = [];
+
+  // For update, we need to check if documents exist (either existing or newly uploaded)
+  
+  // Check NIC Front Image - must have either existing file or newly uploaded file
+  if (!this.selectedFrontNicFile && !this.personalData.frontNic) {
+    errors.push('NIC Front Image is required');
+  }
+
+  // Check NIC Back Image - must have either existing file or newly uploaded file
+  if (!this.selectedBackNicFile && !this.personalData.backNic) {
+    errors.push('NIC Back Image is required');
+  }
+
+  // Check Bank Passbook - must have either existing file or newly uploaded file
+  if (!this.selectedPassbookFile && !this.personalData.backPassbook) {
+    errors.push('Bank Passbook is required');
+  }
+
+  // Check Signed Contract - must have either existing file or newly uploaded file
+  if (!this.selectedContractFile && !this.personalData.contract) {
+    errors.push('Signed Contract is required');
+  }
+
+  return errors;
+}
 
 }
 
 class Personal {
   id!: number;
-  companyId!: number;
   irmId!: number | string;
   firstName!: string;
   lastName!: string;
+  firstNameSinhala!: string;
+  lastNameSinhala!: string;
+  firstNameTamil!: string;
+  lastNameTamil!: string;
   empType!: string;
   empId!: string;
   jobRole!: string;
@@ -2030,11 +2420,6 @@ class Personal {
   createdAt!: Date;
   language: string = '';
   email!: string;
-}
-
-class Company {
-  id!: number;
-  companyName!: string;
 }
 
 class fiealdManager {

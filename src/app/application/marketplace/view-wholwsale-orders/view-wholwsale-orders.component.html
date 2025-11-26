@@ -50,17 +50,17 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
-            [showClear]="!!selectStatus" placeholder="Status" [(ngModel)]="selectStatus"
-            (onChange)="applyStatusFilters()"></p-dropdown>
+            [options]="methodOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [showClear]="!!selectMethod" placeholder="Method" [(ngModel)]="selectMethod"
+            (onChange)="applyMethodFilters()"></p-dropdown>
         </div>
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="methodOptions" [checkmark]="true" optionLabel="label" optionValue="value"
-            [showClear]="!!selectMethod" placeholder="Method" [(ngModel)]="selectMethod"
-            (onChange)="applyMethodFilters()"></p-dropdown>
+            [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [showClear]="!!selectStatus" placeholder="Status" [(ngModel)]="selectStatus"
+            (onChange)="applyStatusFilters()"></p-dropdown>
         </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
@@ -110,7 +110,7 @@
             <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
               STATUS
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
               INVOICE
             </th>
           </tr>
@@ -181,14 +181,16 @@
                   'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]':
                     item.status === 'Failed', 
                   'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]':
-                    item.status === 'Cancelled'
+                    item.status === 'Cancelled',
+                  'text-[#00818A] bg-[#ACFBFF]':
+                    item.status === 'Ready to Pickup'
                     
                 }">
                 {{ item.status === 'Ordered' ? 'Assigned' : item.status }}
               </span>
             </td>
 
-            <td class="px-4 py-3 flex justify-center text-center dark:text-textDark">
+            <td class="px-4 py-3 flex justify-center text-center dark:text-textDark" *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
               <button class="text-textLight dark:text-textDark flex justify-center gap-1"
                 (click)="downloadInvoice(item.orderId, item.invNo)">
                 <i class="fa-solid fa-file-lines text-2xl"></i>

@@ -12,6 +12,7 @@ import {
   CertificateCompanyService,
   ClusterMember,
 } from '../../../services/plant-care/certificate-company.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-cluster-users',
@@ -35,16 +36,23 @@ export class ViewClusterUsersComponent implements OnInit {
   clusterName: string = 'Loading...';
   searchTerm: string = '';
   isAddFarmerModalOpen: boolean = false;
+  farmIdError: string = '';
+  newFarmerFarmId: string = '';
   newFarmerNIC: string = '';
   nicError: string = '';
+  isDeleteModalOpen: boolean = false;
+  farmerToDelete: ClusterMember | null = null;
+  clusterStatus: string = '';
 
   constructor(
     private farmerClusterService: CertificateCompanyService,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
-    public tokenService: TokenService
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -55,19 +63,22 @@ export class ViewClusterUsersComponent implements OnInit {
     });
   }
 
-  fetchClusterUsers() {
+  fetchClusterUsers(searchTerm: string = '') {
     this.isLoading = true;
-    this.farmerClusterService.getClusterMembers(this.clusterId).subscribe(
+    this.farmerClusterService.getClusterMembers(this.clusterId, searchTerm).subscribe(
       (response: any) => {
         this.isLoading = false;
 
-        // Set cluster name
-        this.clusterName = response.data?.clusterName || 'Unknown Cluster';
+        if (response.data) {
+          // Set cluster name and status
+          this.clusterName = response.data.clusterName || 'Unknown Cluster';
+          this.clusterStatus = response.data.clusterStatus || '';
 
-        // Set users list
-        this.users = response.data?.members || [];
-        this.filteredUsers = [...this.users];
-        this.hasData = this.users.length > 0;
+          // Set users list
+          this.users = response.data.members || [];
+          this.filteredUsers = [...this.users];
+          this.hasData = this.users.length > 0;
+        }
       },
       (error) => {
         this.isLoading = false;
@@ -85,46 +96,97 @@ export class ViewClusterUsersComponent implements OnInit {
     );
   }
 
-  onSearch() {
-    if (!this.searchTerm.trim()) {
-      this.filteredUsers = [...this.users];
-      return;
+  onNICInput(event: any): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // Remove all special characters, keep only alphanumeric
+    const sanitized = value.replace(/[^a-zA-Z0-9]/g, '');
+
+    if (value !== sanitized) {
+      this.newFarmerNIC = sanitized;
+      input.value = sanitized;
     }
 
-    const term = this.searchTerm.toLowerCase().trim();
-    this.filteredUsers = this.users.filter(
-      (user) =>
-        user.nic.toLowerCase().includes(term) ||
-        user.phoneNumber.toLowerCase().includes(term)
-    );
+    const trimmedNIC = this.newFarmerNIC.trim();
+
+    // Real-time validation
+    if (trimmedNIC.length === 0) {
+      this.nicError = 'NIC is required';
+    } else if (trimmedNIC.length < 10) {
+      this.nicError = 'NIC must be at least 10 characters';
+    } else if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
+    } else if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
+    } else if (trimmedNIC.length === 11) {
+      this.nicError = 'Invalid NIC length';
+    } else if (trimmedNIC.length > 12) {
+      this.nicError = 'NIC cannot exceed 12 characters';
+    } else {
+      this.nicError = '';
+    }
+  }
+
+
+  onNICPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const sanitized = pastedText.replace(/[^a-zA-Z0-9]/g, '');
+    this.newFarmerNIC = sanitized.substring(0, 12);
+
+    const trimmedNIC = this.newFarmerNIC.trim();
+
+    // Real-time validation
+    if (trimmedNIC.length === 0) {
+      this.nicError = 'NIC is required';
+    } else if (trimmedNIC.length < 10) {
+      this.nicError = 'NIC must be at least 10 characters';
+    } else if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
+    } else if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
+    } else if (trimmedNIC.length === 11) {
+      this.nicError = 'Invalid NIC length';
+    } else {
+      this.nicError = '';
+    }
+  }
+
+
+  onSearch() {
+    // Only search when search icon is clicked
+    this.fetchClusterUsers(this.searchTerm.trim());
   }
 
   offSearch() {
     this.searchTerm = '';
-    this.filteredUsers = [...this.users];
+    this.fetchClusterUsers(); // Fetch all users without search term
   }
 
+  // Open delete confirmation modal
+  openDeleteModal(user: ClusterMember) {
+    this.farmerToDelete = user;
+    this.isDeleteModalOpen = true;
+  }
+
+  // Close delete confirmation modal
+  closeDeleteModal() {
+    this.isDeleteModalOpen = false;
+    this.farmerToDelete = null;
+  }
+
+  // Confirm and execute deletion
+  confirmDelete() {
+    if (this.farmerToDelete) {
+      this.removeUserFromCluster(this.farmerToDelete);
+      this.closeDeleteModal();
+    }
+  }
+
+  // Remove user
   removeUser(user: ClusterMember) {
-    Swal.fire({
-      html: ` <br/>
-      Are you sure you want to remove the following farmer from this cluster? <br/><br/><br/>
-      <span>Farmer Name :</span> ${user.firstName} ${user.lastName} <br/>
-      <span>Farmer NIC :</span> ${user.nic} <br/>
-    `,
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      cancelButtonText: 'No, Cancel',
-      confirmButtonText: 'Yes, Remove',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.removeUserFromCluster(user);
-      }
-    });
+    this.openDeleteModal(user);
   }
 
   removeUserFromCluster(user: ClusterMember) {
@@ -144,12 +206,8 @@ export class ViewClusterUsersComponent implements OnInit {
               title: 'font-semibold text-lg',
             },
           });
-          // Remove user from local arrays
-          this.users = this.users.filter((u) => u.farmerId !== user.farmerId);
-          this.filteredUsers = this.filteredUsers.filter(
-            (u) => u.farmerId !== user.farmerId
-          );
-          this.hasData = this.users.length > 0;
+          // Refresh the user list after removal
+          this.fetchClusterUsers(this.searchTerm);
         },
         (error) => {
           this.isLoading = false;
@@ -172,31 +230,86 @@ export class ViewClusterUsersComponent implements OnInit {
     this.location.back();
   }
 
+  isNICValid(): boolean {
+    const trimmedNIC = this.newFarmerNIC.trim();
+    return (
+      (trimmedNIC.length === 10 && /^\d{9}[vVxX]$/i.test(trimmedNIC)) ||
+      (trimmedNIC.length === 12 && /^\d{12}$/.test(trimmedNIC))
+    );
+  }
+
   addNew() {
     this.newFarmerNIC = '';
+    this.newFarmerFarmId = '';
+    this.nicError = '';
+    this.farmIdError = '';
     this.isAddFarmerModalOpen = true;
+  }
+
+  onFarmIdInput(): void {
+    const trimmedFarmId = this.newFarmerFarmId.trim();
+
+    if (trimmedFarmId.length === 0) {
+      this.farmIdError = 'Farm ID is required';
+    } else {
+      this.farmIdError = '';
+    }
   }
 
   closeAddFarmerModal() {
     this.isAddFarmerModalOpen = false;
+    this.nicError = '';
+    this.farmIdError = '';
   }
 
   submitAddFarmer() {
     this.nicError = '';
+    this.farmIdError = '';
 
-    if (!this.newFarmerNIC.trim()) {
+    // Validate NIC
+    const trimmedNIC = this.newFarmerNIC.trim();
+    if (!trimmedNIC) {
       this.nicError = 'NIC is required';
       return;
     }
 
-    if (this.newFarmerNIC.trim().length < 9) {
-      this.nicError = 'NIC must be at least 9 characters';
+    if (trimmedNIC.length < 10) {
+      this.nicError = 'NIC must be at least 10 characters';
+      return;
+    }
+
+    if (trimmedNIC.length === 10 && !/^\d{9}[vVxX]$/i.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. Old NIC should be 9 digits followed by V';
+      return;
+    }
+
+    if (trimmedNIC.length === 12 && !/^\d{12}$/.test(trimmedNIC)) {
+      this.nicError = 'Invalid NIC format. New NIC should be 12 digits';
+      return;
+    }
+
+    if (trimmedNIC.length === 11 || trimmedNIC.length > 12) {
+      this.nicError = 'Invalid NIC format';
+      return;
+    }
+
+    // Validate Farm ID
+    const trimmedFarmId = this.newFarmerFarmId.trim();
+    if (!trimmedFarmId) {
+      this.farmIdError = 'Farm ID is required';
       return;
     }
 
     this.isLoading = true;
+
+    // Prepare data to send to backend
+    const addFarmerData = {
+      nic: trimmedNIC,
+      farmId: trimmedFarmId,
+    };
+
     this.farmerClusterService
-      .addFarmerToCluster(this.clusterId, this.newFarmerNIC.trim())
+      .addFarmerToCluster(this.clusterId, addFarmerData)
       .subscribe(
         (response: any) => {
           this.isLoading = false;
@@ -210,13 +323,26 @@ export class ViewClusterUsersComponent implements OnInit {
               title: 'font-semibold text-lg',
             },
           });
-          this.fetchClusterUsers();
+          // Refresh with current search term
+          this.fetchClusterUsers(this.searchTerm);
           this.closeAddFarmerModal();
         },
         (error) => {
           this.isLoading = false;
-          this.nicError = error.error?.message || 'Failed to add farmer';
+          const errorMessage = error.error?.message || 'Failed to add farmer';
+
+          // Check if error is specifically for NIC or Farm ID
+          if (errorMessage.toLowerCase().includes('nic')) {
+            this.nicError = errorMessage;
+          } else if (errorMessage.toLowerCase().includes('farm')) {
+            this.farmIdError = errorMessage;
+          } else {
+            this.nicError = errorMessage;
+          }
         }
       );
   }
+
+
+
 }

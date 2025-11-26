@@ -4,11 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import Swal from 'sweetalert2';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-services-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './view-services-list.component.html',
   styleUrls: ['./view-services-list.component.css']
 })
@@ -16,34 +19,37 @@ export class ViewServicesListComponent implements OnInit {
   officerServices: any[] = [];      // all services
   filteredServices: any[] = [];     // filtered services for display
   loading = true;
+  isLoading = false;
   searchTerm: string = '';
 
   constructor(
     private goviLinkService: GoviLinkService,
-    private router: Router
-  ) {}
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit() {
+    this.isLoading = true;
     this.goviLinkService.getAllOfficerServices().subscribe({
       next: (data) => {
         this.officerServices = data;
         this.filteredServices = data;   // initially show all
-        this.loading = false;
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching services:', err);
-        this.loading = false;
+        this.isLoading = false;
       }
     });
   }
 
-  // 🔍 Search by button or Enter
   onSearch() {
     if (!this.searchTerm.trim()) {
       this.filteredServices = this.officerServices;
       return;
     }
-    const term = this.searchTerm.toLowerCase();
+    const term = this.searchTerm.trim().toLowerCase();
     this.filteredServices = this.officerServices.filter(service =>
       service.englishName?.toLowerCase().includes(term) ||
       service.tamilName?.toLowerCase().includes(term) ||
@@ -81,7 +87,7 @@ export class ViewServicesListComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
-      text: `You are about to delete "${service.englishName}" service!`,
+      text: `Are you sure you want to delete this "${service.englishName}" Service? This action cannot be undone.`,
       showCancelButton: true,
       confirmButtonText: 'Yes, Delete',
       cancelButtonText: 'No, Cancel',

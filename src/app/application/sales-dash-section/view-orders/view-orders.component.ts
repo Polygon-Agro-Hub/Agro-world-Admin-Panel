@@ -14,6 +14,8 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
 import { finalize } from 'rxjs';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-orders',
@@ -57,7 +59,8 @@ export class ViewOrdersComponent implements OnInit {
   orderStatusArr = [
     { orderStatus: 'Assigned', value: 'Ordered' },
     { orderStatus: 'Processing', value: 'Processing' },
-    { orderStatus: 'On the way', value: 'On the way' },
+    { orderStatus: 'Out For Delivery', value: 'Out For Delivery' },
+    { orderStatus: 'Ready to Pickup', value: 'Ready to Pickup' },
     { orderStatus: 'Delivered', value: 'Delivered' },
     { orderStatus: 'Cancelled', value: 'Cancelled' },
   ];
@@ -78,7 +81,9 @@ export class ViewOrdersComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private finalInvoiceService: FinalinvoiceService,
-    private salesDashService: SalesDashService
+    private salesDashService: SalesDashService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   ngOnInit() {
@@ -225,6 +230,7 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   onSearch() {
+    this.searchText = this.searchText?.trim() || ''
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,

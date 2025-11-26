@@ -6,12 +6,13 @@ import Swal from 'sweetalert2';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-edit-services',
   standalone: true,
   imports: [FormsModule, CommonModule, LoadingSpinnerComponent],
   templateUrl: './edit-services.component.html',
-  styleUrls: ['./edit-services.component.css']
+  styleUrls: ['./edit-services.component.css'],
 })
 export class EditServicesComponent implements OnInit {
   serviceId!: number;
@@ -19,7 +20,7 @@ export class EditServicesComponent implements OnInit {
     englishName: '',
     sinhalaName: '',
     tamilName: '',
-    srvFee: 0
+    srvFee: 0,
   };
 
   isLoading = false;
@@ -33,13 +34,13 @@ export class EditServicesComponent implements OnInit {
     private route: ActivatedRoute,
     private goviLinkService: GoviLinkService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.serviceId = Number(this.route.snapshot.paramMap.get('id'));
 
     // Check query param for view mode
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.isView = params['view'] === 'true';
     });
 
@@ -52,7 +53,7 @@ export class EditServicesComponent implements OnInit {
           englishName: res.englishName,
           sinhalaName: res.sinhalaName,
           tamilName: res.tamilName,
-          srvFee: Number(res.srvFee)
+          srvFee: Number(res.srvFee),
         };
       },
       error: (err) => {
@@ -64,58 +65,56 @@ export class EditServicesComponent implements OnInit {
           confirmButtonText: 'OK',
           customClass: {
             popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
-            title: 'font-semibold text-lg'
-          }
+            title: 'font-semibold text-lg',
+          },
         });
         console.error('Error fetching service:', err);
-      }
+      },
     });
   }
 
   goBack() {
-  this.router.navigate(['/govi-link/action/view-services-list']); // replace with your list page route
-}
-
-
+    this.router.navigate(['/govi-link/action/view-services-list']); // replace with your list page route
+  }
 
   back(): void {
-  // Only show confirmation when not in view mode
-  if (!this.isView) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Stay Here',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-     this.router.navigate(['/govi-link/action/view-services-list']);
-      }
-    });
-  } else {
-    // If in view mode, just go back without confirmation
-  this.router.navigate(['/govi-link/action/view-services-list']);
+    // Only show confirmation when not in view mode
+    if (!this.isView) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the added data after going back!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Go Back',
+        cancelButtonText: 'No, Stay Here',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/govi-link/action/view-services-list']);
+        }
+      });
+    } else {
+      // If in view mode, just go back without confirmation
+      this.router.navigate(['/govi-link/action/view-services-list']);
+    }
   }
-}
 
   allowOnlyLetters(event: KeyboardEvent) {
-  const char = event.key;
-  // Use Unicode property escapes to allow all letters and spaces
-  // This works for English, Sinhala, Tamil, etc.
-  const regex = /^\p{L}$/u; // \p{L} matches any kind of letter from any language
+    const char = event.key;
+    // Use Unicode property escapes to allow all letters and spaces
+    // This works for English, Sinhala, Tamil, etc.
+    const regex = /^\p{L}$/u; // \p{L} matches any kind of letter from any language
 
-  if (!regex.test(char) && char !== ' ') {
-    event.preventDefault();
+    if (!regex.test(char) && char !== ' ') {
+      event.preventDefault();
+    }
   }
-}
-
 
   onUpdateService(form: NgForm) {
+    // First validate the form
     const missingFields: string[] = [];
 
     if (!this.serviceData.englishName?.trim()) {
@@ -127,7 +126,10 @@ export class EditServicesComponent implements OnInit {
     if (!this.serviceData.tamilName?.trim()) {
       missingFields.push('Service Name in Tamil is required');
     }
-    if (this.serviceData.srvFee === null || this.serviceData.srvFee === undefined) {
+    if (
+      this.serviceData.srvFee === null ||
+      this.serviceData.srvFee === undefined
+    ) {
       missingFields.push('Service Fee is required');
     } else if (this.serviceData.srvFee < 0) {
       missingFields.push('Service Fee cannot be negative');
@@ -148,38 +150,112 @@ export class EditServicesComponent implements OnInit {
         customClass: {
           popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
           title: 'font-semibold text-lg',
-          htmlContainer: 'text-left'
-        }
+          htmlContainer: 'text-left',
+        },
       });
       return;
     }
 
+    // Show confirmation popup before updating
+    Swal.fire({
+      icon: 'question',
+      title: 'Are you sure?',
+      text: 'Do you really want to update this service?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Update',
+      cancelButtonText: 'No, Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.performUpdate();
+      }
+      // If user clicked "No, Cancel", do nothing and stay on the page
+    });
+  }
+
+  private performUpdate() {
     this.isLoading = true;
     this.errorMessage = null;
     this.successMessage = null;
-this.goviLinkService.updateOfficerService(this.serviceId, this.serviceData).subscribe({
-  next: (response) => {
-    this.isLoading = false;
-    Swal.fire({
-      icon: 'success',
-      title: 'Success',
-      text: 'Service updated successfully!',
-      confirmButtonText: 'OK',
-    }).then(() => {
-      this.router.navigate(['/govi-link/action/view-services-list']);
-    });
-  },
-  error: (error) => {
-    this.isLoading = false;
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Failed to update service. Please try again.',
-      confirmButtonText: 'OK',
-    });
-  }
-});
 
+    this.goviLinkService
+      .updateOfficerService(this.serviceId, this.serviceData)
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Service updated successfully!',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          }).then(() => {
+            this.router.navigate(['/govi-link/action/view-services-list']);
+          });
+        },
+        error: (error) => {
+          this.isLoading = false;
+
+          // Check if it's a duplicate error (409 Conflict)
+          if (error.status === 409 && error.error?.duplicateDetails) {
+            const duplicateInfo = error.error.duplicateDetails;
+            Swal.fire({
+              icon: 'error',
+              title: 'Duplicate Service Name',
+              text: error.error.error,
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          } else {
+            // Generic error for other cases
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text:
+                error.error?.error ||
+                'Failed to update service. Please try again.',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-white dark:bg-gray-800 text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
+          }
+        },
+      });
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent) {
+    const char = event.key;
+    const input = (event.target as HTMLInputElement).value;
+
+    // Allow: numbers (0-9), one decimal point, backspace, delete, arrow keys, tab
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+
+    // Allow control keys
+    if (allowedKeys.includes(char)) {
+      return;
+    }
+
+    // Allow only one decimal point
+    if (char === '.' && !input.includes('.')) {
+      return;
+    }
+
+    // Allow only numbers
+    if (!/^\d$/.test(char)) {
+      event.preventDefault();
+    }
   }
 
   resetForm(form: NgForm) {
@@ -188,52 +264,58 @@ this.goviLinkService.updateOfficerService(this.serviceId, this.serviceData).subs
       englishName: '',
       sinhalaName: '',
       tamilName: '',
-      srvFee: 0
+      srvFee: 0,
     };
   }
 
-// Called on blur or after each keyup to format first letter
-formatEnglishName() {
-  if (this.serviceData.englishName) {
-    // Trim leading spaces
-    this.serviceData.englishName = this.serviceData.englishName.trimStart();
-    // Capitalize first letter
-    this.serviceData.englishName =
-      this.serviceData.englishName.charAt(0).toUpperCase() +
-      this.serviceData.englishName.slice(1);
+  // Called on blur or after each keyup to format first letter
+  formatEnglishName() {
+    if (this.serviceData.englishName) {
+      // Trim leading spaces
+      this.serviceData.englishName = this.serviceData.englishName.trimStart();
+      // Capitalize first letter
+      this.serviceData.englishName =
+        this.serviceData.englishName.charAt(0).toUpperCase() +
+        this.serviceData.englishName.slice(1);
+    }
   }
-}
 
-capitalizeFirstLetter() {
-  if (this.serviceData.englishName) {
-    const value = this.serviceData.englishName;
-    // Capitalize first letter, keep the rest as-is
-    this.serviceData.englishName = value.charAt(0).toUpperCase() + value.slice(1);
+  capitalizeFirstLetter() {
+    if (this.serviceData.englishName) {
+      const value = this.serviceData.englishName;
+      // Capitalize first letter, keep the rest as-is
+      this.serviceData.englishName =
+        value.charAt(0).toUpperCase() + value.slice(1);
+    }
   }
-}
 
-blockLeadingSpace(event: KeyboardEvent) {
-  const input = event.target as HTMLInputElement;
+  blockLeadingSpace(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
 
-  // If cursor is at the start and space is pressed, prevent it
-  if (input.selectionStart === 0 && event.code === 'Space') {
-    event.preventDefault();
+    // If cursor is at the start and space is pressed, prevent it
+    if (input.selectionStart === 0 && event.code === 'Space') {
+      event.preventDefault();
+    }
   }
-}
-// Called on keydown to block space at start
-blockFirstSpace(event: KeyboardEvent) {
-  const input = (event.target as HTMLInputElement).value;
-  if (input.length === 0 && event.code === 'Space') {
-    event.preventDefault();
+  // Called on keydown to block space at start
+  blockFirstSpace(event: KeyboardEvent) {
+    const input = (event.target as HTMLInputElement).value;
+    if (input.length === 0 && event.code === 'Space') {
+      event.preventDefault();
+    }
   }
-}
 
   formatSrvFee() {
-    if (this.serviceData.srvFee !== null && this.serviceData.srvFee !== undefined) {
+    if (
+      this.serviceData.srvFee !== null &&
+      this.serviceData.srvFee !== undefined
+    ) {
       let value = this.serviceData.srvFee.toString();
       if (value.includes('.')) {
         const [intPart, decimalPart] = value.split('.');
-        this.serviceData.srvFee = parseFloat(intPart + '.' + decimalPart.slice(0, 2));
+        this.serviceData.srvFee = parseFloat(
+          intPart + '.' + decimalPart.slice(0, 2)
+        );
       }
     }
   }
@@ -249,27 +331,26 @@ blockFirstSpace(event: KeyboardEvent) {
     }
   }
 
-onCancel(form: NgForm) {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the entered data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Cancel',
-    cancelButtonText: 'No, Keep Editing',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold'
-    }
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Reset form if needed
-      this.resetForm(form);
-      // Navigate to view services list
-      this.router.navigate(['/govi-link/action/view-services-list']);
-    }
-    // If user clicked "No", do nothing and stay on the page
-  });
-}
-
+  onCancel(form: NgForm) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after cancelling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Reset form if needed
+        this.resetForm(form);
+        // Navigate to view services list
+        this.router.navigate(['/govi-link/action/view-services-list']);
+      }
+      // If user clicked "No", do nothing and stay on the page
+    });
+  }
 }

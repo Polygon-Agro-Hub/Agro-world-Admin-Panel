@@ -36,10 +36,11 @@
       </div>
 
       <div class="h-[20px]"></div>
-      <!-- reset button -->
-      <button (click)="resetPassword()"
-        class="bg-[#FF0000] text-white font-semibold px-4 py-2 my-3 rounded-lg shadow-md">Reset Password</button>
-
+      <!-- reset button - Only show if status is Approved -->
+      <button *ngIf="isApproved" (click)="resetPassword()"
+        class="bg-[#FF0000] text-white font-semibold px-4 py-2 my-3 rounded-lg shadow-md">
+        Reset Password
+      </button>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
@@ -445,7 +446,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="personalData.companyId == 1">
+    <div>
       <h2 class="text-2xl mt-10 mb-6 text-textLight dark:text-textDark">
         Add Bank Details
       </h2>
@@ -526,17 +527,18 @@
           class="mt-1 block w-full p-dropdown-custom" (onChange)="onBranchChange($event)">
         </p-dropdown>
       </div>
-      <div class="flex justify-end my-10 ml-10">
-        
-        <button (click)="nextFormCreate('pageOne')" type="button"
-          class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
-          Back
-        </button>
 
-        <button type="submit" (click)="onSubmit()" class="px-4 py-2 bg-[#3980C0]  text-white rounded-md">
-          Submit
-        </button>
+    </div>
+    <div class="flex justify-end my-10 ml-10">
 
-      </div>
+      <button (click)="nextFormCreate('pageOne')" type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+        Back
+      </button>
+
+      <button type="submit" (click)="onSubmit()" class="px-4 py-2 bg-[#3980C0]  text-white rounded-md">
+        Send to Approve
+      </button>
+
     </div>
   </div>

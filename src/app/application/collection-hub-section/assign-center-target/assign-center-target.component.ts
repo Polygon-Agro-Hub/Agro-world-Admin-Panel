@@ -18,7 +18,6 @@ export class AssignCenterTargetComponent {
   assignCropsArr: AssignCrops[] = [];
   newTargetObj: NewTarget = new NewTarget();
   searchText: string = '';
-  // selectDate: string = new Date().toISOString().split('T')[0];
   isDateValid: boolean = true;
   countCrops: number = 0;
   isNew: boolean = true;
@@ -41,17 +40,15 @@ dateError: boolean = false;
 
 onDateChange(event: any) {
   if (!event) {
-    console.log('selectDate', this.selectDate)
-    this.selectDate = null; // Clear the date
+    
+    this.selectDate = null; 
     this.isDateSelected = false;
     this.dateError = true;
     this.fetchSavedCenterCrops();
   } else {
-    console.log('selectDate', this.selectDate)
     this.isDateSelected = true;
     this.dateError = false;
     this.fetchSavedCenterCrops();
-    // your existing logic for fetching data
   }
 }
 
@@ -66,47 +63,24 @@ checkDateSelection() {
   fetchSavedCenterCrops() {
     this.isLoading = true;
   
-    // if (!this.selectDate || !this.validateSelectDate(this.selectDate)) {
-    //   this.isDateValid = false;
-    //   console.log('isDateValid', this.isDateValid)
-    //   this.isLoading = false;
-    //   return;
-    // }
-  
     this.isDateValid = true;
     const formattedDate = this.formatDate(this.selectDate);
-    console.log('formatDate', formattedDate)
   
     this.TargetSrv.getSavedCenterCrops(
       this.centerDetails.centerId,
-      formattedDate,     // send string to service
+      formattedDate,
       this.searchText
     ).subscribe((res) => {
       this.isLoading = false;
   
       this.assignCropsArr = res.result.data;
       this.officerName = res.officerName;
-      console.log('officerName', this.officerName)
       this.countCrops = res.result.data.length;
       this.isNew = res.result.isNew;
       this.companyCenterId = res.companyCenterId;
       this.hasData = res.result.data.length > 0;
-      console.log('hasData', this.hasData)
     });
   }
-  
-
-  // validateSelectDate(date: Date): boolean {
-  //   const selectedDate = new Date(date);
-  //   const today = new Date();
-  
-  //   // Reset time portion for comparison
-  //   today.setHours(0, 0, 0, 0);
-  //   selectedDate.setHours(0, 0, 0, 0);
-  
-  //   return selectedDate >= today;
-  // }
-  
 
   private formatDate(date: Date | null | undefined): string {
     if (!date) {
@@ -114,7 +88,7 @@ checkDateSelection() {
     }
   
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // months are 0-based
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
@@ -241,8 +215,7 @@ checkDateSelection() {
 
   allowOnlyDigits(event: KeyboardEvent): void {
     const charCode = event.key.charCodeAt(0);
-  
-    // Allow only 0-9
+
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
     }
@@ -250,13 +223,12 @@ checkDateSelection() {
   
   removeLeadingZeros(item: any): void {
     if (item.targetB) {
-      item.targetB = item.targetB.replace(/^0+/, ''); // remove leading zeros
+      item.targetB = item.targetB.replace(/^0+/, ''); 
     }
   }
 
   validateForm() {
 
-    console.log('assignCropsArr', this.assignCropsArr)
     this.isFormValid = this.assignCropsArr.some(
       (crop) => crop.targetA > 0 || crop.targetB > 0 || crop.targetC > 0
     );

@@ -1,0 +1,167 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<!-- Header Section with Title and Filters -->
+<div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-8 mb-6">
+  <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-8">
+    Package Payments
+  </h2>
+
+  <!-- Date Filter Section -->
+  <div class="flex justify-center items-center gap-4">
+    <div class="flex items-center gap-3">
+      <label class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[45px]">From:</label>
+      <p-calendar 
+        id="fromDate" 
+        [(ngModel)]="fromDate" 
+        (ngModelChange)="onFromDateChange()" 
+        (onClear)="onDateClear()"
+        placeholder="YYYY/MM/DD"
+        [showIcon]="true" 
+        [showClear]="true" 
+        [showButtonBar]="true" 
+        iconDisplay="input" 
+        [maxDate]="maxDate"
+        [style]="{ width: '20rem', height: '2.5rem' }" 
+        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                 [&_.p-datepicker-header]:dark:text-white
+                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                 [&_.p-button:hover]:dark:bg-[#6b7280]"
+        inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10" />
+    </div>
+
+    <div class="flex items-center gap-3">
+      <label class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[30px]">To:</label>
+      <p-calendar 
+        id="toDate" 
+        [(ngModel)]="toDate" 
+        (onClear)="onDateClear()"
+        placeholder="YYYY/MM/DD" 
+        [showIcon]="true" 
+        [showClear]="true" 
+        [showButtonBar]="true" 
+        iconDisplay="input" 
+        [maxDate]="maxDate" 
+        [minDate]="minToDate" 
+        [disabled]="!fromDate"
+        [style]="{ width: '20rem', height: '2.5rem' }" 
+        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                 [&_.p-datepicker-header]:dark:text-white
+                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                 [&_.p-button:hover]:dark:bg-[#6b7280]"
+        inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10" />
+    </div>
+
+    <button (click)="applyDateFilter()"
+      class="bg-[#3980C0] text-white px-8 py-2 rounded-md hover:bg-[#2c6ba0] transition duration-200 h-10 ml-2">
+      Go
+    </button>
+  </div>
+</div>
+
+<!-- Table Section -->
+<div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-8">
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center">
+      <h3 class="text-lg font-normal text-textLight dark:text-textDark">
+        All ({{ this.totalItems }})
+      </h3>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="flex items-center rounded-full px-4 py-2 bg-[#F1F1F1] dark:bg-[#272F45]" style="width: 280px;">
+      <input type="text" placeholder="Search..." [(ngModel)]="searchTerm"
+        class="bg-transparent outline-none w-full text-textLight dark:text-textDark text-sm" (keyup.enter)="onSearch()"
+        (keyup.esc)="offSearch()" title="Search by T_ID, Farmer Name, Phone Number"/>
+      <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+        </svg>
+      </button>
+      <button *ngIf="searchTerm && searchTerm.trim() !== ''" type="button"
+        class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- No Data Message -->
+  <div *ngIf="!hasData && !isLoading" class="flex flex-col items-center w-full px-10 py-20">
+    <p class="text-[#494949] my-6 dark:text-textDark">
+      {{ !fromDate && !toDate ? 'Please select a date range first' : '--No Data Available--' }}
+    </p>
+    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+  </div>
+
+  <!-- Table -->
+  <div *ngIf="hasData" class="overflow-x-auto">
+    <table class="w-full divide-y divide-gray-200">
+      <thead>
+        <tr class="border-b border-gray-200 dark:border-gray-700">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">No</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">T_ID</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Farmer Name</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Phone number</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Package Period</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Amount (Rs.)</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Date & Time</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+        <tr *ngFor="
+            let item of packagePayments
+              | paginate
+                : {
+                    itemsPerPage: itemsPerPage,
+                    currentPage: page,
+                    totalItems: totalItems
+                  };
+            let i = index
+          ">
+          <td class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm">
+            {{ (page - 1) * itemsPerPage + i + 1 }}
+          </td>
+          <td class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm">
+            {{ item.transactionId }}
+          </td>
+          <td class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm">
+            {{ item.farmerName }}
+          </td>
+          <td class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm">
+            {{ item.phoneNumber }}
+          </td>
+          <td class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm">
+            {{ item.packagePeriod }}
+          </td>
+          <td class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm">
+            {{ item.amount }}
+          </td>
+          <td class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm">
+            {{ item.dateTime }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="mt-6">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'You are on page'">
+      </pagination-controls>
+    </div>
+  </div>
+</div>

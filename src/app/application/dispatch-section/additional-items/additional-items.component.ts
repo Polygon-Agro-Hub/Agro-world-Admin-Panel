@@ -38,7 +38,6 @@ export class AdditionalItemsComponent implements OnInit {
   name!: string;
   fullTotal!: number;
   additionalItemsArr: AdditionalItems[] = [];
-  // productItemsArr: ProductItems[] = [];
   totalAdditionalItems!: number;
 
   selectedProductId: number | null = null;
@@ -78,11 +77,9 @@ export class AdditionalItemsComponent implements OnInit {
       this.total = params['total'] ? +params['total'] : 0;
       this.name = params['name'] || '';
       this.fullTotal = params['fullTotal'] ? +params['fullTotal'] : 0;
-      console.log(this.id);
     });
 
     this.getAdditionalItemData(this.id!);
-    // this.getAllProducts();
 
   }
 
@@ -91,12 +88,10 @@ export class AdditionalItemsComponent implements OnInit {
   
     this.dispatchService.getAdditionalItems(id).subscribe(
       (response) => {
-        console.log(response);
   
         this.packedAll = response.items.every((item: AdditionalItems) => item.packedStatus === 1);
-        console.log('All Packed:', this.packedAll);
+        
 
-        // Map the full item objects
         this.additionalItemsArr = response.items.map((item: AdditionalItems) => {
           return {
             ...item,
@@ -117,12 +112,11 @@ export class AdditionalItemsComponent implements OnInit {
 
         this.isLoading = false;
 
-        console.log('Array:', this.additionalItemsArr);
+        
       },
       (error) => {
         console.error('Error fetching package items:', error);
         if (error.status === 401) {
-          // Handle unauthorized error if needed
         }
         this.isLoading = false;
       }
@@ -158,23 +152,22 @@ export class AdditionalItemsComponent implements OnInit {
       this.validationSuccessMessage = "All checked. Order will move to 'Completed' on save.";
       this.validationFailedMessage = '';
     }
-    console.log(this.additionalItemsArr);
+    
   }
 
   saveCheckedItems() {
     this.showCountdown = true;
   }
   
-  // Called when countdown finishes or user clicks "Mark as Completed"
+  
   onTimerCompleted() {
     this.showCountdown = false;
-    this.executeApiCall(); // Perform the API call
+    this.executeApiCall(); 
   }
   
-  // Called when user clicks "Go Back to Edit"
+  
   onTimerCancelled() {
     this.showCountdown = false;
-    // Optionally: reset form or show editing state again
   }
 
   private executeApiCall() {
@@ -187,11 +180,10 @@ export class AdditionalItemsComponent implements OnInit {
 
     }));
 
-    console.log('data', updatedData )
+    
     this.dispatchService.updateAdditionalItemData(updatedData, this.id!).subscribe(
       (res) => {
         this.isLoading = false;
-        console.log('Updated successfully:', res);
         Swal.fire('Success', 'Product Updated Successfully', 'success');
         this.router.navigate(['/dispatch/salesdash-orders']);
       },
@@ -201,31 +193,6 @@ export class AdditionalItemsComponent implements OnInit {
       }
     );
   }
-
-  // saveCheckedItems() {
-  //   this.isLoading = true;
-
-  //   const updatedData = this.additionalItemsArr.map(item => ({
-
-  //     productId: item.productId,
-  //     packedStatus: item.packedStatus,
-
-  //   }));
-
-  //   console.log('data', updatedData )
-  //   this.dispatchService.updateAdditionalItemData(updatedData, this.id!).subscribe(
-  //     (res) => {
-  //       this.isLoading = false;
-  //       console.log('Updated successfully:', res);
-  //       Swal.fire('Success', 'Product Updated Successfully', 'success');
-  //       this.router.navigate(['/dispatch/salesdash-orders']);
-  //     },
-  //     (err) => {
-  //       console.error('Update failed:', err);
-  //       Swal.fire('Error', 'Product Update Unsuccessfull', 'error');
-  //     }
-  //   );
-  // }
 
 }
 

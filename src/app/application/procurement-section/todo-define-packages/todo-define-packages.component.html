@@ -108,7 +108,7 @@
               (input)="trimLeadingSpaces()"
               (keyup.enter)="onSearch()"
               (keyup.esc)="onClearSearch()"
-              placeholder="Search..."
+              placeholder="Search by Invoice No..."
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             />
             <button
@@ -228,8 +228,8 @@
                 {{
                   order.orderApp === "Dash"
                     ? "SalesDash"
-                    : order.orderApp === "MarketPlace"
-                    ? "Marketplace"
+                    : order.orderApp === "Marketplace"
+                    ? "GoviMart"
                     : order.orderApp
                 }}
               </td>

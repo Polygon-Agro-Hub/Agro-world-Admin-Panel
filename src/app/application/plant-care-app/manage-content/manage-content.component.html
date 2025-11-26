@@ -71,7 +71,7 @@
     </div>
   </div>
 
-  <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -104,7 +104,7 @@
 
 
           <p-dropdown
-            styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="status" optionLabel="name" placeholder="Status" [(ngModel)]="statusFilter"
             [showClear]="!!statusFilter" [checkmark]="false" (onChange)="applyFilters()"></p-dropdown>
 

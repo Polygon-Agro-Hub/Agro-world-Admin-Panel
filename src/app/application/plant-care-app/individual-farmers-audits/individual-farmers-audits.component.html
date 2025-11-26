@@ -1,0 +1,329 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="overflow-x-auto">
+  <div class="min-w-[1450px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-5">
+    <div>
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-6">
+          Individual Farmers Audits ({{ audits.length | number : "2.0" }})
+        </h2>
+        <!-- Search bar -->
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark mb-5">
+          <input type="text" placeholder="Search by Farmer Name/Phone" [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" (input)="handleSearchInput($event)"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+
+          <!-- Search button -->
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            </svg>
+          </button>
+
+          <!-- Clear button -->
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!hasData" class="text-center py-8">
+        <p class="text-[#494949] dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mx-auto" />
+      </div>
+
+      <table *ngIf="hasData"
+        class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap gap-4">
+        <thead>
+          <tr>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              No
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Farmer Name
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              District
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Phone Number
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Certificate Name
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Application
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Crops
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Status
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+              Assign
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Assign By
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let audit of audits; let i = index" class="border-b border-gray-200 dark:border-[#4B555A]">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ ("0" + (i + 1)).slice(-2) }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ getFarmerName(audit) }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ audit.farmerDistrict || "--" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ audit.farmerPhoneNumber || "--" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ audit.certificateName || "--" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ audit.certificateApplicable || "--" }}
+            </td>
+
+            <td class="px-4 py-3 text-center">
+              <button (click)="openCropsModal(audit)" class="w-6 h-6 text-blue-500 hover:text-blue-700">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-left">
+              <span [class]="getStatusClass(audit.status)">
+                {{ audit.status || "--" }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <button [class]="getAssignClass(audit.officerFirstName ?? null)" [disabled]="!permissionService.hasPermission('Audit individual farmers assign officers') && tokenService.getUserDetails().role !== '1'"
+                class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
+                (click)="onAssignStatusClick(audit)" title="Click to assign or view officer">
+                {{ getAssignText(audit.officerFirstName ?? null) }}
+              </button>
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ audit.userName || "--" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Crops Modal -->
+<div *ngIf="showCropsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  (click)="closeCropsModal()">
+  <div class="bg-white dark:bg-tileBlack rounded-2xl shadow-xl w-full max-w-lg max-h-[80vh] overflow-hidden"
+    (click)="$event.stopPropagation()">
+    <h2 class="text-center text-xl font-semibold text-black dark:text-textDark my-6">
+      Crops included in the certification
+    </h2>
+
+    <!-- Modal Body -->
+    <div class="p-6 overflow-y-auto max-h-[50vh]">
+      <app-loading-spinner *ngIf="isLoadingCrops"></app-loading-spinner>
+
+      <div *ngIf="!isLoadingCrops">
+        <div *ngIf="selectedAuditCrops.length === 0" class="text-center py-8">
+          <p class="text-gray-500 dark:text-gray-400">
+            No crops found for this certificate
+          </p>
+        </div>
+
+        <div *ngIf="selectedAuditCrops.length > 0" class="grid grid-cols-1 gap-3">
+          <div *ngFor="let crop of selectedAuditCrops">
+            <div class="flex items-center ml-40">
+              <span class="text-textLight dark:text-textDark font-thin">
+                <i class="fa-solid fa-circle text-xs mr-2"></i>
+                {{ crop.cropNameEnglish }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex justify-center my-6">
+      <button (click)="closeCropsModal()"
+        class="bg-[#74788D] hover:bg-gray-600 text-[#D3D3D3] px-4 py-2 rounded-lg font-medium transition-colors">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Assigned Officer Popup -->
+<div *ngIf="isOfficerPopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="officerPopUpClose()">
+  <div
+    class="flex flex-col justify-center items-center gap-y-6 bg-[#FFFFFF] dark:bg-tileBlack px-12 py-4 rounded-lg shadow-md"
+    (click)="$event.stopPropagation()">
+    <p class="text-lg font-semibold dark:text-white">Assigned Officer</p>
+
+    <!-- Show message if no officer -->
+    <div *ngIf="!assignedOfficerArray?.length" class="text-gray-500">
+      No officer assigned
+    </div>
+
+    <div *ngIf="assignedOfficerArray?.length"
+      class="flex flex-col max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+      <div *ngFor="let officer of assignedOfficerArray; let i = index" class="py-1 px-2">
+        <span class="text-gray-700 dark:text-gray-300">{{ officer }}</span>
+      </div>
+    </div>
+
+    <button class="text-white bg-[#74788D] px-4 py-1 rounded-lg" (click)="officerPopUpClose()">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- Assign Inspector Popup -->
+<div *ngIf="isAssignPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="assignPopupClose()">
+  <div
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
+    (click)="$event.stopPropagation()">
+    <!-- Popup Header -->
+    <div class="flex justify-center items-center mb-4 px-10">
+      <h3 class="text-lg font-semibold dark:text-white">Assign Inspectors</h3>
+    </div>
+
+    <!-- Schedule Date Selection -->
+    <div class="flex flex-col mb-4 w-full">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
+        Schedule Date
+      </label>
+      <p-calendar id="scheduleDate" [(ngModel)]="selectedScheduleDate" (onSelect)="onScheduleDateChange()"
+        (onClear)="onScheduleDateClear()" placeholder="Select Schedule Date" [showIcon]="true" [showClear]="false"
+        [showButtonBar]="true" [minDate]="minDate" iconDisplay="input" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                   [&_.p-datepicker-header]:dark:text-white
+                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                   [&_.p-button:hover]:dark:bg-[#6b7280]"
+        inputStyleClass="p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-textLight dark:text-textDark w-full focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+        [appendTo]="'body'" />
+    </div>
+
+    <!-- Officer Role Selection -->
+    <div class="flex flex-col mb-4 w-full">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
+        Officer Role
+      </label>
+      <p-dropdown [options]="officerRoleOptions" [(ngModel)]="selectedOfficerRole" optionLabel="label"
+        optionValue="value" placeholder="-- Select Officer Role --" [showClear]="false"
+        (onChange)="onOfficerRoleChange()" styleClass="w-full border border-2 rounded-lg h-12">
+      </p-dropdown>
+    </div>
+
+    <!-- Officer Selection -->
+    <div class="flex flex-col mb-4 w-full">
+      <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
+        Officer
+      </label>
+      <p-dropdown [options]="availableOfficers" [(ngModel)]="selectedOfficerId" optionLabel="displayName"
+        optionValue="empId" placeholder="{{
+          currentAssignedOfficer
+            ? '--Select new officer--'
+            : '--Select officer--'
+        }}" [showClear]="true" [disabled]="!selectedOfficerRole || isLoadingOfficers" (onChange)="onOfficerSelected()"
+        styleClass="w-full border border-2 rounded-lg h-12">
+        <ng-template pTemplate="empty">
+          <div class="p-2 text-center text-gray-500">
+            {{
+            selectedOfficerRole
+            ? "No officers available"
+            : "Please select a role first"
+            }}
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <div *ngIf="isLoadingOfficers" class="text-sm text-gray-500 mt-1">
+        Loading officers...
+      </div>
+    </div>
+
+    <!-- Selected Officer Info -->
+    <div *ngIf="selectedOfficerInfo" class="mb-4 p-5 text-center rounded-lg border border-blue-500 w-full mt-2">
+      <p class="text-md font-semibold text-textLight dark:text-textDark">
+        {{ selectedOfficerInfo.empId }} - {{ selectedOfficerInfo.firstName }}
+        {{ selectedOfficerInfo.lastName }}
+      </p>
+      <p class="text-sm text-textLight dark:text-textDark">
+        District: {{ selectedOfficerInfo.district }}
+      </p>
+      <p class="text-sm text-textLight dark:text-textDark">
+        Count:
+        <span class="text-blue-500">{{
+          selectedOfficerInfo.activeJobCount
+          }}</span>
+      </p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="assignError" class="mt-3 p-2 text-red-700 rounded text-sm">
+      {{ assignError }}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-center gap-3 mt-4">
+      <div class="flex gap-3 ml-auto">
+        <button (click)="assignPopupClose()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-600 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
+          Cancel
+        </button>
+        <button (click)="assignOfficer()" [disabled]="!selectedOfficerId || isAssigning"
+          class="px-4 py-2 text-sm font-medium text-white bg-[#3980C0] rounded-lg hover:bg-[#2c6da3] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2">
+          <i *ngIf="isAssigning" class="fa-solid fa-spinner fa-spin"></i>
+          Assign
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Completed Job Warning Popup -->
+<div *ngIf="isCompletedJobPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="completedJobPopupClose()">
+  <div class="bg-[#FFFFFF] dark:bg-tileBlack px-20 py-10 rounded-lg shadow-md max-w-lg max-h-[90vh] overflow-y-auto"
+    (click)="$event.stopPropagation()">
+    <!-- Warning Message -->
+    <div class="mb-6">
+      <p class="text-center text-lg text-textLight dark:text-textDark">
+        You can't assign an officer to the task because the task has already
+        been completed.
+      </p>
+    </div>
+
+    <!-- Action Button -->
+    <div class="flex justify-center gap-3 mt-6">
+      <button (click)="completedJobPopupClose()"
+        class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg hover:bg-[#2c6da3] hover:text-white transition-colors">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

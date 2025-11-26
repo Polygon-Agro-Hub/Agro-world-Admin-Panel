@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { FinalinvoiceService } from '../../../../../services/invoice/finalinvoice.service';
 
 @Component({
   selector: 'app-dashbord-table',
@@ -10,8 +11,32 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class DashbordTableComponent{
   @Input() orders!: Order[];
+   downloadingInvoices: Set<number> = new Set();
   
-  
+   constructor(private invoiceService: FinalinvoiceService) {}
+
+   downloadInvoice(orderId: number, invoiceNo: string): void {
+    if (this.isDownloading(orderId)) {
+      return;
+    }
+
+    this.downloadingInvoices.add(orderId);
+
+    this.invoiceService.generateAndDownloadInvoice(orderId, invoiceNo)
+      .then(() => {
+        console.log('Invoice downloaded successfully');
+      })
+      .catch((error) => {
+        console.error('Failed to download invoice:', error);
+      })
+      .finally(() => {
+        this.downloadingInvoices.delete(orderId);
+      });
+  }
+
+  isDownloading(orderId: number): boolean {
+    return this.downloadingInvoices.has(orderId);
+  }
 
 }
 

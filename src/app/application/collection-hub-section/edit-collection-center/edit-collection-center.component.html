@@ -53,21 +53,24 @@
         >
           Companies *
         </label>
-        <input
-          #companiesInput="ngModel"
-          type="text"
-          id="companies"
-          name="companies"
-          [(ngModel)]="centerFetchData.companies"
-          readonly
-          class="mt-2 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer"
-          placeholder="Select companies"
-          (click)="toggleDropdown()"
-        />
+        <p-multiSelect
+  #companiesMultiSelect
+  [options]="CompanyData"
+  [(ngModel)]="selectedCompaniesIds"
+  (onChange)="onCompanyChange($event)"
+  optionLabel="companyNameEnglish"
+  optionValue="id"
+  [filter]="true"
+  filterPlaceholder="Search company..."
+  [showClear]="true"
+  placeholder="Select companies"
+  [styleClass]="'w-full mt-1 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800'"
+  [ngModelOptions]="{standalone: true}">
+</p-multiSelect>
 
         <!-- Dropdown -->
         <!-- Dropdown -->
-        <div
+        <!-- <div
           *ngIf="dropdownOpen"
           class="absolute left-0 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 max-h-60 overflow-auto"
           style="top: 100%; position: absolute"
@@ -90,7 +93,7 @@
           class="text-red-500 text-sm mt-1"
         >
           <div>Company Name is required</div>
-        </div>
+        </div> -->
       </div>
 
       

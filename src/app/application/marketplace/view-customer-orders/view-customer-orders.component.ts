@@ -49,9 +49,12 @@ export class ViewCustomerOrdersComponent implements OnInit {
     assigned: 'Assinged',
     processing: 'Processing',
     delivered: 'Delivered',
-    ontheway: 'On the way',
+    ontheway: 'Out For Delivery',
     cancelled: 'Cancelled',
     failed: 'Faild',
+    "Out For Delivery": "Out For Delivery",
+    "Ready to Pickup": "Ready to Pickup",
+    "Picked up" : "Picked up"
   };
 
   constructor(
@@ -59,7 +62,7 @@ export class ViewCustomerOrdersComponent implements OnInit {
     private route: ActivatedRoute,
     private marketplace: MarketPlaceService,
     private invoiceService: FinalinvoiceService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -101,7 +104,7 @@ export class ViewCustomerOrdersComponent implements OnInit {
         next: (response: ApiResponse) => {
           if (response.success) {
             console.log('Fetched orders:', response.data.orders);
-            
+
             this.orders = response.data.orders;
             this.totalItems = response.data.totalCount;
             this.hasData = response.data.orders.length > 0;
@@ -122,7 +125,7 @@ export class ViewCustomerOrdersComponent implements OnInit {
       Assinged: 'bg-[#E6F0FF] text-[#415CFF]',
       Processing: 'bg-[#FFF8E6] text-[#FFB800]',
       Delivered: 'bg-[#E6FFEE] text-[#00A441]',
-      'On the way': 'bg-[#F3E6FF] text-[#8A3FFC]',
+      'Out For Delivery': 'bg-[#F3E6FF] text-[#8A3FFC]',
       Cancelled: 'bg-[#FFE6E6] text-[#FF0000]',
       Faild: 'bg-[#FFE6E6] text-[#FF0000]',
     };

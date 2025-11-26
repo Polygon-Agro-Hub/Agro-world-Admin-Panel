@@ -184,7 +184,7 @@
           <label for="firstNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
             (in Sinhala) *</label>
           <input id="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala" name="firstNameSinhala"
-            #firstNameSinhalaInput="ngModel" required (input)="onNameInput($event, 'firstNameSinhala')"
+            #firstNameSinhalaInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'firstNameSinhala')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="firstNameSinhalaInput.touched ">
@@ -207,7 +207,7 @@
           <label for="lastNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Sinhala) *</label>
           <input id="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala" name="lastNameSinhala"
-            #lastNameSinhalaInput="ngModel" required (input)="onNameInput($event, 'lastNameSinhala')"
+            #lastNameSinhalaInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'lastNameSinhala')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="lastNameSinhalaInput.touched ">
@@ -230,7 +230,7 @@
           <label for="firstNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Tamil) *</label>
           <input id="firstNameTamil" [(ngModel)]="personalData.firstNameTamil" name="firstNameTamil"
-            #firstNameTamilInput="ngModel" required (input)="onNameInput($event, 'firstNameTamil')"
+            #firstNameTamilInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'firstNameTamil')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="firstNameTamilInput.touched ">
@@ -253,7 +253,7 @@
           <label for="lastNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Tamil) *</label>
           <input id="lastNameTamil" [(ngModel)]="personalData.lastNameTamil" name="lastNameTamil"
-            #lastNameTamilInput="ngModel" required (input)="onNameInput($event, 'lastNameTamil')"
+            #lastNameTamilInput="ngModel" required (input)="onTrimInputFirstCapital($event, personalData, 'lastNameTamil')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div *ngIf="lastNameTamilInput.touched ">

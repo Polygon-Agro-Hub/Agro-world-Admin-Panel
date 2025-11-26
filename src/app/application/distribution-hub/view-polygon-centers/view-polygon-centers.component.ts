@@ -146,7 +146,6 @@ export class ViewPolygonCentersComponent implements OnInit {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-        console.log('Companies fetched:', response);
 
         if (response.success && response.data) {
           this.companyOptions = response.data
@@ -204,7 +203,6 @@ export class ViewPolygonCentersComponent implements OnInit {
         this.distributionCentreObj = response.items;
         this.hasData = this.distributionCentreObj.length > 0;
         this.totalItems = response.total;
-        console.log('distributionCentreObj', this.distributionCentreObj)
       },
       (error) => {
         if (error.status === 401) {
@@ -220,7 +218,6 @@ export class ViewPolygonCentersComponent implements OnInit {
   }
 
   searchPlantCareUsers() {
-    console.log();
     this.page = 1;
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -257,7 +254,6 @@ export class ViewPolygonCentersComponent implements OnInit {
         .sort((a, b) => a.label.localeCompare(b.label));
     }
 
-    console.log(this.selectProvince);
 
     this.fetchAllCollectionCenter();
   }
@@ -278,7 +274,6 @@ export class ViewPolygonCentersComponent implements OnInit {
         }));
       }
     }
-    console.log(this.selectDistrict);
 
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -300,9 +295,6 @@ export class ViewPolygonCentersComponent implements OnInit {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
 
-  // navigateEdit(id: number) {
-  //   this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
-  // }
 
   add(): void {
     this.router.navigate(['/distribution-hub/action/add-destribition-center']);

@@ -40,6 +40,8 @@
                                 value="Completed">Completed</option>
                             <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
                                 value="Exceeded">Exceeded</option>
+                            <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
+                                value="Extra">Extra</option>
                     </select>
         
                     <!-- Custom dropdown trigger -->
@@ -135,20 +137,28 @@
                             number: '1.2-2' }}</td>
                         <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">{{item.complete |
                             number: '1.2-2'}}</td>
-                        <td class="px-6 py-4 text-gray-[#000000] font-medium dark:text-gray-300">
+                        <td class="px-6 py-4 text-gray-[#000000] dark:text-gray-300">
                             <div class="flex justify-center">
                               <span *ngIf="item.status === 'Pending'"
-                                class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-6 py-2 h-full flex items-center">
+                                class="bg-[#F8FFA6] text-[#A8A100] text-center rounded-lg px-8 py-1 h-full flex items-center">
                                 Pending
                               </span>
-                              <span *ngIf="item.status === 'Completed'"
-                                class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-4 py-2 h-full flex items-center">
-                                Completed
-                              </span>
                               <span *ngIf="item.status === 'Exceeded'"
-                                class="bg-[#c0f8ac] text-[#30911a] text-center rounded-lg px-4 py-2 h-full flex items-center">
+                                class="bg-[#C8E0FF] text-[#415CFF] text-center rounded-lg px-6 py-1 h-full flex items-center">
                                 Exceeded
                               </span>
+                              <span *ngIf="item.status === 'Completed'"
+                                class="bg-[#c0f8ac] text-[#30911a] text-center rounded-lg px-4 py-1 h-full flex items-center">
+                                Completed
+                              </span>
+
+                              <span *ngIf="item.status === 'Extra'"
+                                class="bg-[#FFE4C9] text-[#CD6700] text-center rounded-lg px-10 py-1 h-full flex items-center">
+                                Extra
+                              </span>
+
+                            
+
                             </div>
                           </td>
 

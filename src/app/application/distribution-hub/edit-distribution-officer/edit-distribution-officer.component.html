@@ -35,99 +35,8 @@
         Reset Password
       </button>
 
-      <!-- <div
-        *ngIf="isResetPasswordModalOpen"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        (click)="toggleResetPasswordModal()"
-      >
-        <div
-          class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96"
-          (click)="$event.stopPropagation()"
-        >
-          <h2 class="text-xl mb-4 text-center">Change Password</h2>
-          <form (ngSubmit)="saveNewPassword()">
-            <div class="space-y-4">
-              <input
-                type="password"
-                placeholder="Current Password"
-                [(ngModel)]="currentPassword"
-                name="currentPassword"
-                class="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white"
-                required
-              />
-              <input
-                type="password"
-                placeholder="New Password"
-                [(ngModel)]="newPassword"
-                name="newPassword"
-                class="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white"
-                required
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
-              />
-              <span
-                *ngIf="newPassword && !isValidPassword(newPassword)"
-                class="text-red-600 text-sm"
-              >
-                Password must be at least 8 characters, include uppercase, lowercase, and a number.
-              </span>
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                [(ngModel)]="confirmPassword"
-                name="confirmPassword"
-                class="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 dark:text-white"
-                required
-              />
-              <span
-                *ngIf="newPassword && confirmPassword && newPassword !== confirmPassword"
-                class="text-red-600 text-sm"
-              >
-                Passwords do not match.
-              </span>
-            </div>
-            <div class="flex justify-end mt-6 space-x-4">
-              <button
-                type="button"
-                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
-                (click)="toggleResetPasswordModal()"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="px-4 py-2 bg-blue-600 text-white rounded-md"
-                [disabled]="!isPasswordFormValid()"
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
-      </div> -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
-        <!-- <div>
-          <label
-            class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-            >EMP ID / User name*</label
-          >
-          <div class="flex mt-1">
-            <span
-              class="inline-flex items-center px-3 py-3 text-sm text-gray-900 bg-gray-200 border border-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
-            >
-              <p *ngIf="personalData.jobRole === 'Distribution Centre Head'">
-                DCH
-              </p>
-            </span>
-            <input
-              type="text"
-              [value]="itemId ? personalData.empId : lastID"
-              name="empId"
-              class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm pl-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              disabled
-            />
-          </div>
-        </div> -->
         <div>
           <label for="centerId" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             Company Name *
@@ -141,7 +50,6 @@
                 {{ company.companyNameEnglish }}
               </option>
             </select>
-
           </div>
           <span *ngIf="isFieldInvalid('companyId')" class="text-red-600 text-sm">Company Name is required.</span>
         </div>
@@ -221,9 +129,8 @@
             First Name *
           </label>
           <input id="firstNameEnglish" name="firstNameEnglish" required [(ngModel)]="personalData.firstNameEnglish"
-            #firstNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"
-            (input)="capitalizeWhileTyping('firstNameEnglish')"
-            (keypress)="blockInvalidNameInput($event, personalData.firstNameEnglish)" (input)="trimLeadingSpace($event)"
+            #firstNameEnglishRef="ngModel"
+            (input)="onTrimInput($event, personalData, 'firstNameEnglish')"
             (blur)="onBlur('firstNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="
@@ -231,18 +138,16 @@
       (firstNameEnglishRef.dirty || firstNameEnglishRef.touched)
     " class="text-red-600 text-sm">
             <ng-container *ngIf="firstNameEnglishRef.errors?.['required']">First Name is required.</ng-container>
-
           </span>
         </div>
-
 
         <div>
           <label for="lastNameEnglish" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             Last Name *
           </label>
           <input id="lastNameEnglish" name="lastNameEnglish" required [(ngModel)]="personalData.lastNameEnglish"
-            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$" (input)="capitalizeWhileTyping('lastNameEnglish')"
-            (keypress)="blockInvalidNameInput($event, personalData.lastNameEnglish)" (input)="trimLeadingSpace($event)"
+            #lastNameEnglishRef="ngModel"
+            (input)="onTrimInput($event, personalData, 'lastNameEnglish')"
             (blur)="onBlur('lastNameEnglish')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="
@@ -252,10 +157,8 @@
             <ng-container *ngIf="lastNameEnglishRef.errors?.['required']">
               Last Name is required.
             </ng-container>
-
           </span>
         </div>
-
 
         <!-- Mobile Number - 1 -->
         <div>
@@ -285,16 +188,6 @@
                 </div>
               </ng-template>
             </p-dropdown>
-            <!-- <select
-      [(ngModel)]="personalData.phoneCode01"
-      (change)="checkDuplicatePhoneNumbers()"
-      class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5"
-    >
-      <option value="+94">+94 (LK)</option>
-      <option value="+1">+1 (US)</option>
-      <option value="+44">+44 (UK)</option>
-      <option value="+91">+91 (India)</option>
-    </select> -->
 
             <input [(ngModel)]="personalData.phoneNumber01" (blur)="onBlur('phoneNumber01')"
               (input)="checkDuplicatePhoneNumbers()" maxlength="9" type="number" placeholder="Enter your phone number"
@@ -314,11 +207,6 @@
               class="text-red-600 text-sm">
               Please enter a valid mobile number (format: +947XXXXXXXX)
             </span>
-
-            <!-- Priority 3: Duplicate phone error (only if both numbers are valid format) -->
-            <!-- <span *ngIf="duplicatePhoneError && personalData.phoneNumber01 && personalData.phoneNumber02" class="text-red-600 text-sm">
-      Mobile Number - 01 and Mobile Number - 02 cannot be the same
-    </span> -->
           </div>
         </div>
 
@@ -352,19 +240,6 @@
               </ng-template>
             </p-dropdown>
 
-            <!-- <select
-      id="phoneNumber02Code"
-      name="phoneNumber02Code"
-      [(ngModel)]="personalData.phoneCode02"
-      class="block p-2 border border-gray-300 rounded-l-md bg-gray-50 mr-5 text-textLight dark:text-textDark dark:bg-tileBlack"
-      (change)="checkDuplicatePhoneNumbers()"
-    >
-      <option value="+94">+94 (LK)</option>
-      <option value="+1">+1 (US)</option>
-      <option value="+44">+44 (UK)</option>
-      <option value="+91">+91 (India)</option>
-    </select> -->
-
             <input id="phoneNumber02" name="phoneNumber02" type="number" [(ngModel)]="personalData.phoneNumber02"
               (input)="checkDuplicatePhoneNumbers()" maxlength="9"
               class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -391,7 +266,6 @@
           </div>
         </div>
 
-
         <div>
           <label for="nic" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             NIC Number *
@@ -411,7 +285,6 @@
           </span>
         </div>
 
-
         <div>
           <label for="email" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             Email *
@@ -419,8 +292,6 @@
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email" (blur)="onBlur('email')"
             (keydown)="blockLeadingSpace($event, 'email')" (input)="trimLeadingSpace($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-
-
 
           <!-- Show specific error message from service -->
           <span *ngIf="touchedFields.email && personalData.email && !isValidEmail(personalData.email)"
@@ -435,7 +306,7 @@
         </div>
       </div>
 
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end my-10">
         <button (click)="onCancel()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
@@ -466,7 +337,6 @@
             House Number is required.
           </span>
         </div>
-
 
         <div class="pb-6">
           <label for="street" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">Street Name *</label>
@@ -500,7 +370,6 @@
           </span>
         </div>
 
-
         <div class="pb-6">
           <label for="province" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
             Province *
@@ -528,9 +397,8 @@
         </label>
 
         <input id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-          #accHolderNameRef="ngModel" required pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$"
-          (input)="capitalizeWhileTyping('accHolderName')"
-          (keypress)="blockInvalidNameInput($event, personalData.accHolderName)" (input)="trimLeadingSpace($event)"
+          #accHolderNameRef="ngModel" required
+          (input)="onTrimInput($event, personalData, 'accHolderName')"
           (blur)="onBlur('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
@@ -541,11 +409,8 @@
           <ng-container *ngIf="accHolderNameRef.errors?.['required']">
             Account Holder's Name is required.
           </ng-container>
-
         </span>
       </div>
-
-
 
       <div class="pb-6">
         <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number
@@ -563,37 +428,6 @@
           <div>Account Number cannot contain special characters</div>
         </div>
       </div>
-      <!-- 
-      <div class="pb-6">
-        <label
-          for="confirmAccNumber"
-          class="block text-sm font-medium text-[#534E4E] dark:text-textDark"
-        >
-          Confirm Account Number*
-        </label>
-        <input
-          id="confirmAccNumber"
-          name="confirmAccNumber"
-          type="number"
-          [(ngModel)]="personalData.confirmAccNumber"
-          (keydown)="blockLeadingSpace($event, 'confirmAccNumber')"
-          (blur)="onBlur('confirmAccNumber')"
-          (input)="validateConfirmAccNumber()"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
-
-        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
-          Confirm Account Number is required.
-        </span>
-
-        <span
-          *ngIf="!confirmAccountNumberRequired && confirmAccountNumberError"
-          class="text-red-600 text-sm"
-        >
-          Account Numbers do not match.
-        </span>
-      </div> -->
-
 
       <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -619,7 +453,6 @@
         </span>
       </div>
 
-
       <div class="pb-6">
         <label for="bankDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Bank Name *
@@ -633,8 +466,6 @@
         </span>
       </div>
 
-
-
       <div class="pb-6">
         <label for="branchDropdown" class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Branch Name *
@@ -647,18 +478,15 @@
           Branch Name is required.
         </span>
       </div>
-
-
-
     </div>
 
-    <div class="flex justify-end m-10">
+    <div class="flex justify-end my-10">
       <button (click)="nextFormCreate('pageOne')" type="button"
         class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
         Back
       </button>
       <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
-        Update
+        Send to Approve
       </button>
     </div>
   </div>

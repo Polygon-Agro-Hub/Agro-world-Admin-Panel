@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './finance-dashboard.component.html',
-  styleUrl: './finance-dashboard.component.css'
+  styleUrl: './finance-dashboard.component.css',
 })
-export class FinanceDashboardComponent {
-
-}
+export class FinanceDashboardComponent {}

@@ -11,6 +11,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { TokenService } from '../../../services/token/services/token.service';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-products-list',
@@ -51,7 +52,9 @@ export class ViewProductsListComponent {
     private viewProductsList: ViewProductListService,
     private router: Router,
     private http: HttpClient,
-    private tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
   ) { }
 
   fetchAllProducts(
@@ -221,6 +224,22 @@ export class ViewProductsListComponent {
       this.selectedCategoryOption.value === 'WholeSale'
     );
   }
+
+  formatDiscountPercentage(discount: number, normalPrice: number): string {
+  if (discount <= 0 || normalPrice <= 0) {
+    return 'No';
+  }
+  
+  const percentage = (discount / normalPrice) * 100;
+  const percentageValue = Number(percentage.toFixed(2));
+  
+  // Check if the percentage is a whole number
+  if (percentageValue % 1 === 0) {
+    return `${percentageValue.toFixed(0)}%`; // Display as whole number
+  } else {
+    return `${percentageValue}%`; // Display with decimals
+  }
+}
 }
 
 class ProductList {

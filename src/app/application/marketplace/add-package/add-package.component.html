@@ -62,6 +62,7 @@
         <label class="text-[#534E4E] dark:text-textDark">Description*</label>
         <textarea rows="4" name="description" 
           [(ngModel)]="packageObj.description" 
+          (input)="onDescriptionChange($event)"
           (blur)="onDescriptionBlur()"
           placeholder="Enter Description"
           class="mt-1 block w-full p-2 border border-[#D9D9D9] dark:border-gray-600 rounded-md text-black dark:text-textDark bg-tileLight dark:bg-tileBlack placeholder-gray-400 dark:placeholder-gray-500"></textarea>

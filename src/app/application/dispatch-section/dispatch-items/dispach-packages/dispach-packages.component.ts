@@ -28,6 +28,7 @@ export class DispachPackagesComponent implements OnInit {
   price: number = 0;
   packageName: string = '';
   packgeQty: number = 1;
+  total: number = 0;
 
   isLoading: boolean = true;
   validationFailedMessage: string = '';
@@ -38,6 +39,10 @@ export class DispachPackagesComponent implements OnInit {
   isPopupOpen: boolean = false;
   isLastOrder: boolean = false;
   isAllPacked: boolean = false;
+
+  isInvalidPriceRange: boolean = false;
+
+  isShouldAllblock:boolean = true;
 
 
   ngOnInit(): void {
@@ -72,7 +77,10 @@ export class DispachPackagesComponent implements OnInit {
         // this.packageObj = res
         this.packageArr = res.packageData;
         this.productArr = res.marketplaceItems
-        this.isLoading = false
+        this.isLoading = false;
+        this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
+        this.total = this.packageArr.length;
+        
       }
     )
   }
@@ -192,6 +200,9 @@ export class DispachPackagesComponent implements OnInit {
   }
   onCancelPopup() {
     this.isPopupOpen = false;
+    // this.selectProduct = 
+    this.newProductObj = null;
+    this.isInvalidPriceRange = false;
   }
 
   // In your component class
@@ -249,6 +260,7 @@ export class DispachPackagesComponent implements OnInit {
   cangeReplacePrice() {
     if (this.newProductObj) {
       this.newProductObj.price = this.newProductObj.discountedPrice * (this.newProductObj.qty);
+      this.isInvalidPriceRange = this.selectProduct.price < this.newProductObj.price
     }
   }
 

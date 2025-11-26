@@ -84,6 +84,20 @@ export class ViewFarmerStaffComponent implements OnInit {
     );
   }
 
+  onKeydown(event: KeyboardEvent) {
+  // Check if the pressed key is space and cursor is at the beginning
+  if (event.key === ' ' || event.keyCode === 32) {
+    const input = event.target as HTMLInputElement;
+    
+    // Check if cursor is at the beginning or if input is empty
+    if (input.selectionStart === 0 && input.selectionEnd === 0) {
+      event.preventDefault();
+      return false;
+    }
+  }
+  return true;
+}
+
   viewFarmerStaff(id: number) {
     this.router.navigate(['/steckholders/action/farmers/view-farmer-owner', id]);
   }
@@ -92,10 +106,14 @@ export class ViewFarmerStaffComponent implements OnInit {
     this.router.navigate(['/steckholders/action/farmers/edit-user-staff', id]);
   }
 
+  onSearchEnter() {
+    this.fetchData();
+  }
+
   deleteFarmStaff(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You are about to delete this farm staff member. This action cannot be undone.',
+      text: 'Do you really want to delete this staff member? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -123,7 +141,7 @@ export class ViewFarmerStaffComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: res.message,
+            text: 'Staff member has been deleted.',
             confirmButtonText: 'OK',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

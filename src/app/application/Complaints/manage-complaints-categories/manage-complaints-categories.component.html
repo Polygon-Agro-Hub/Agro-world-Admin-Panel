@@ -7,7 +7,9 @@
 </button>
 
 <div class="flex space-x-4">
-    <button class="bg-[#3980C0] text-white font-medium py-2 dark:text-white px-5 rounded text-lg flex mb-5 items-center"
+    <button
+        *ngIf="permissionService.hasPermission('Add complaint categories') || tokenService.getUserDetails().role === '1'"
+        class="bg-[#3980C0] text-white font-medium py-2 dark:text-white px-5 rounded text-lg flex mb-5 items-center"
         (click)="navigationPath('complaints/add-complain-Categories')">
         <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -23,9 +25,9 @@
     <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="flex justify-between items-center mb-8">
             <div class="flex items-center">
- <h2 class="text-2xl font-normal text-textLight dark:text-textDark text-[22px]">
-  {{ selectedCategoryName }} : Manage Complaint Categories
-</h2>
+                <h2 class="text-2xl font-normal text-textLight dark:text-textDark text-[22px]">
+                    {{ selectedCategoryName }} : Manage Complaint Categories
+                </h2>
 
 
             </div>
@@ -42,8 +44,9 @@
                 <tr class="border-b-2 border-[#A4A4A4]" *ngFor="let item of categoriesArr; let i = index;">
                     <td class="px-6 py-2 dark:text-white text-[16px]">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
                     <td class="px-6 py-2 dark:text-white text-[16px]">{{item.categoryEnglish}}</td>
-                    <td class="px-6 py-2 dark:text-white text-[16px]">{{item.role}}</td>
-                    <td class="px-10 py-2">
+                    <td class="px-6 py-2 dark:text-white text-[16px]">{{item.modifyBy || '-'}}</td>
+                    <td *ngIf="permissionService.hasPermission('Edit complaint categories') || tokenService.getUserDetails().role === '1'"
+                        class="px-10 py-2">
                         <i class="fa-regular fa-pen-to-square text-xl text-[#3980C0] text-[16px] hover:text-[#87c6fd] cursor-pointer"
                             (click)="editComplain(item.id)"></i>
                     </td>

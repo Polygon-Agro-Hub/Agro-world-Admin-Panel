@@ -6,17 +6,17 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
-    <div class="text-gray-500 dark:text-textDark">
-      Date: {{ this.todayDate[0].createdAt.slice(0, 10) }}
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex flex-col">
+      <div class="text-gray-500 dark:text-textDark">
+        Inv No: {{ this.todayDate[0].invNo }}
+      </div>
+      <div class="text-gray-500 dark:text-textDark">
+        Date: {{ this.todayDate[0].createdAt.slice(0, 10) }}
+      </div>
     </div>
-    <div class="text-gray-500 dark:text-textDark">
-      Inv No: {{ this.todayDate[0].invNo }}
-    </div>
+
     <div class="flex justify-between items-center mb-8 mt-5">
       <div class="flex items-center">
         <h2 class="text-xl font-normal text-gray-500 dark:text-textDark">
@@ -25,71 +25,49 @@
       </div>
     </div>
     <div class="overflow-x-auto">
-      <table
-        class="min-w-full border-collapse border border-gray-200 table-auto"
-      >
+      <table class="min-w-full border-collapse border border-gray-200 table-auto">
         <thead>
           <tr>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               First Name
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Last Name
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               NIC Number
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Phone Number
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Address
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ farmerList.firstName }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ farmerList.lastName }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ farmerList.NICnumber }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ farmerList.phoneNumber }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{
-                farmerList.houseNo || farmerList.streetName || farmerList.city
-                  ? (farmerList.houseNo ? farmerList.houseNo + " , " : "") +
-                    (farmerList.streetName
-                      ? farmerList.streetName + " , "
-                      : "") +
-                    (farmerList.city || "")
-                  : "-"
+              farmerList.houseNo || farmerList.streetName || farmerList.city
+              ? (farmerList.houseNo ? farmerList.houseNo + " , " : "") +
+              (farmerList.streetName
+              ? farmerList.streetName + " , "
+              : "") +
+              (farmerList.city || "")
+              : "-"
               }}
             </td>
           </tr>
@@ -107,48 +85,32 @@
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Account Number
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Account Holder’s Name
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Bank Name
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Branch Name
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ farmerList.accNumber }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ farmerList.accHolderName }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ farmerList.bankName }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ farmerList.branchName }}
             </td>
           </tr>
@@ -166,102 +128,66 @@
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Crop Name
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Variety
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Unit Price (A)
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Quantity
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Unit Price (B)
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Quantity
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Unit Price (C)
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Quantity
             </th>
-            <th
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               Total (Rs.)
             </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let crop of this.cropList">
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ crop.cropNameEnglish }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ crop.varietyNameEnglish }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ crop.gradeAprice | number : "1.2-2" }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ crop.gradeAquan }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ crop.gradeBprice | number : "1.2-2" }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ crop.gradeBquan }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ crop.gradeCprice | number : "1.2-2" }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{ crop.gradeCquan }}
             </td>
-            <td
-              class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center"
-            >
+            <td class="py-3 font-normal border border-gray-200 text-gray-500 dark:text-textDark text-center">
               {{
-                crop.gradeAprice * crop.gradeAquan +
-                  crop.gradeBprice * crop.gradeBquan +
-                  crop.gradeCprice * crop.gradeCquan | number : "1.2-2"
+              crop.gradeAprice * crop.gradeAquan +
+              crop.gradeBprice * crop.gradeBquan +
+              crop.gradeCprice * crop.gradeCquan | number : "1.2-2"
               }}
             </td>
           </tr>
@@ -269,7 +195,7 @@
       </table>
     </div>
     <div class="text-gray-500 dark:text-textDark mt-8">
-      Full Total (Rs.) : {{ getTotal() }}
+      Full Total (Rs.) : {{ formatNumberWithCommas(getTotal()) }}
     </div>
     <div class="flex justify-center mt-8">
       <div class="flex flex-col justify-center mr-5">
@@ -289,19 +215,13 @@
 
   <div class="flex flex-col justify-center min-w-[1200px]">
     <div class="flex justify-center">
-      <button
-        (click)="downloadPDF(this.todayDate[0].invNo)"
-        type="submit"
+      <button (click)="downloadPDF(this.todayDate[0].invNo)" type="submit"
         class="px-6 py-2 mt-10 mb-10 bg-[#3980C0] text-white rounded-md flex items-center justify-center"
-        [disabled]="isLoadingButton"
-      >
-        <i
-          class="fa mr-2"
-          [ngClass]="{
+        [disabled]="isLoadingButton">
+        <i class="fa mr-2" [ngClass]="{
             'fa-solid fa-download': !isLoadingButton,
             'fa-spinner fa-spin': isLoadingButton
-          }"
-        ></i>
+          }"></i>
         {{ isLoadingButton ? "Downloading..." : "Download" }}
       </button>
       <!-- <button

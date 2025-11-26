@@ -279,6 +279,8 @@ updateTask() {
         imageLink: this.hasImageLink ? this.taskItems.imageLink : null,
       };
 
+      console.log('taskData', taskData)
+
       this.taskService.updateUserCropTask(this.id, taskData).subscribe({
         next: (res: any) => {
           Swal.fire({

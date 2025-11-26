@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { SalesAgentsService } from '../../../services/dash/sales-agents.service';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+
 interface Bank {
   ID: number;
   name: string;
@@ -71,6 +72,10 @@ export class CreateSalesAgentsComponent implements OnInit {
   errorMessage: string = '';
   isLeadingSpaceErrorMap: { [key: string]: boolean } = {};
   isSpecialCharErrorMap: { [key: string]: boolean } = {};
+
+  // New properties for duplicate validation
+  duplicateErrors: string[] = [];
+  isCheckingDuplicates: boolean = false;
 
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
@@ -143,8 +148,6 @@ export class CreateSalesAgentsComponent implements OnInit {
     );
   }
 
-
-
   back(): void {
     Swal.fire({
       icon: 'warning',
@@ -164,6 +167,7 @@ export class CreateSalesAgentsComponent implements OnInit {
       }
     });
   }
+
   onCancel() {
     Swal.fire({
       icon: 'warning',
@@ -183,7 +187,6 @@ export class CreateSalesAgentsComponent implements OnInit {
       }
     });
   }
-
 
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
@@ -225,13 +228,8 @@ export class CreateSalesAgentsComponent implements OnInit {
       this.personalData.image = file;
       this.selectedFileName = file.name;
 
-      // console.log(this.selectedFile);
-      // console.log(this.personalData.image);
-      // console.log(this.selectedFileName);
-
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        // console.log(e.target.result);
         this.selectedImage = e.target.result;
       };
       reader.readAsDataURL(file);
@@ -241,9 +239,10 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   updateEmployeeType(selectedType: string): void {
     this.empType = selectedType;
-    this.personalData.empType = selectedType; // Update personalData.empType dynamically
+    this.personalData.empType = selectedType;
     console.log('Selected Employee Type:', this.personalData.empType);
   }
+
   updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value;
     const selected = this.districts.find(
@@ -255,11 +254,8 @@ export class CreateSalesAgentsComponent implements OnInit {
     }
   }
 
-
   EpmloyeIdCreate() {
     let rolePrefix: string;
-
-
     rolePrefix = 'SA';
 
     this.getLastID()
@@ -288,7 +284,7 @@ export class CreateSalesAgentsComponent implements OnInit {
         (res) => {
           this.lastID = res.result.empId;
           const lastId = res.result.empId;
-          resolve(lastId); // Resolve the Promise with the empId
+          resolve(lastId);
         },
         (error) => {
           console.error('Error fetching last ID:', error);
@@ -380,8 +376,6 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   validateAccNumber(): void {
-
-
     // Check if account numbers match
     if (this.personalData.accNumber && this.personalData.confirmAccNumber) {
       this.confirmAccountNumberError =
@@ -392,12 +386,14 @@ export class CreateSalesAgentsComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    const phoneRegex = /^7\d{8}$/; // Allows only 9-digit numbers
+    const phoneRegex = /^7\d{8}$/;
     return phoneRegex.test(phone);
   }
+
   isFieldInvalid(fieldName: keyof Personal): boolean {
     return !!this.touchedFields[fieldName] && !this.personalData[fieldName];
   }
+
   isValidEmail(email: string): boolean {
     if (!email) {
       this.emailError = 'Email is required.';
@@ -471,12 +467,11 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   checkSubmitValidity(): boolean {
     // Regular expressions for validation
-    const phonePattern = /^7\d{8}$/; // 9 digits starting with 7
-    const accountPattern = /^[a-zA-Z0-9]+$/; // Only alphanumeric characters
-    const englishNamePattern = /^[A-Z][a-z]*$/; // First letter capitalized, rest lowercase
-    const namePattern = /^[A-Za-z\s'-]+$/; // For names with spaces, hyphens, apostrophes
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email pattern
-
+    const phonePattern = /^7\d{8}$/;
+    const accountPattern = /^[a-zA-Z0-9]+$/;
+    const englishNamePattern = /^[A-Z][a-z]*$/;
+    const namePattern = /^[A-Za-z\s'-]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     // Destructure personalData for easier access
     const {
@@ -504,7 +499,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     const isAccHolderNameValid =
       !!this.personalData.accHolderName &&
       this.isValidName(this.personalData.accHolderName) &&
-      !/\d/.test(this.personalData.accHolderName); // Ensure no numbers
+      !/\d/.test(this.personalData.accHolderName);
 
     // Contact validations
     const isPhoneNumber1Valid =
@@ -543,8 +538,6 @@ export class CreateSalesAgentsComponent implements OnInit {
       !!branchName &&
       isConfirmAccNumberValid;
 
-
-
     // Final validation combining all checks
     return (
       isFirstNameValid &&
@@ -559,7 +552,28 @@ export class CreateSalesAgentsComponent implements OnInit {
     );
   }
 
-  onSubmit() {
+  // New method to check for duplicates before submission
+  checkForDuplicates(): Promise<string[]> {
+    return new Promise((resolve) => {
+      this.isCheckingDuplicates = true;
+      
+      // Simulate API call to check duplicates
+      setTimeout(() => {
+        const duplicates: string[] = [];
+        
+        // In a real implementation, you would make API calls here
+        // For now, we'll rely on the backend validation
+        
+        this.isCheckingDuplicates = false;
+        resolve(duplicates);
+      }, 500);
+    });
+  }
+
+  async onSubmit() {
+    // Clear previous duplicate errors
+    this.duplicateErrors = [];
+
     // Mark all fields as touched
     this.touchedFields = {
       empType: true,
@@ -593,10 +607,8 @@ export class CreateSalesAgentsComponent implements OnInit {
     if (!this.personalData.empType) missingFields.push('Staff Employee Type is Required');
 
     if (!this.personalData.firstName) missingFields.push('First Name is Required');
-  
 
     if (!this.personalData.lastName) missingFields.push('Last Name is Required');
-  
 
     if (!this.personalData.phoneNumber1) missingFields.push('Contact Number 1 is Required');
     else if (!phonePattern.test(this.personalData.phoneNumber1))
@@ -639,9 +651,6 @@ export class CreateSalesAgentsComponent implements OnInit {
 
     if (!this.personalData.bankName) missingFields.push('Bank Name is Required');
     if (!this.personalData.branchName) missingFields.push('Branch Name is Required');
-
-
-
 
     // Show errors if any
     if (missingFields.length > 0) {
@@ -702,29 +711,60 @@ export class CreateSalesAgentsComponent implements OnInit {
             },
             (error: any) => {
               this.isLoading = false;
-              this.errorMessage = error.error.error || 'An unexpected error occurred';
-              Swal.fire({
-                title: 'Error',
-                text: this.errorMessage,
-                icon: 'error',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                  confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
-                },
-              });
+              
+              // Handle duplicate field errors from backend
+              if (error.error && error.error.errors && Array.isArray(error.error.errors)) {
+                this.duplicateErrors = error.error.errors;
+                this.showDuplicateErrors();
+              } else {
+                this.errorMessage = error.error.error || 'An unexpected error occurred';
+                Swal.fire({
+                  title: 'Error',
+                  text: this.errorMessage,
+                  icon: 'error',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                    confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+                  },
+                });
+              }
             }
           );
       }
     });
   }
 
+  // New method to display duplicate errors in a user-friendly way
+  showDuplicateErrors(): void {
+    if (this.duplicateErrors.length === 0) return;
 
+    let errorMessage = '<div class="text-left"><p class="mb-2">The following fields already exist in the system:</p><ul class="list-disc pl-5">';
+    
+    this.duplicateErrors.forEach(error => {
+      errorMessage += `<li>${error}</li>`;
+    });
+    
+    errorMessage += '</ul><p class="mt-2 text-sm">Please use different values for these fields.</p></div>';
 
+    Swal.fire({
+      icon: 'error',
+      title: 'Duplicate Information Found',
+      html: errorMessage,
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700',
+      },
+    });
+  }
 
   navigatePath(path: string) {
     this.router.navigate([path]);
   }
+
   onFieldTouched(field: keyof Personal) {
     this.touchedFields[field] = true;
   }
@@ -755,7 +795,6 @@ export class CreateSalesAgentsComponent implements OnInit {
     }
   }
 
-
   capitalizeFirstLetter(field: 'firstName' | 'lastName' | 'houseNumber' | 'streetName' | 'city' | 'accHolderName' | 'bankName' | 'branchName', event?: any) {
     let value = this.personalData[field];
     if (!value) return;
@@ -779,6 +818,7 @@ export class CreateSalesAgentsComponent implements OnInit {
       });
     }
   }
+
   blockLeadingSpace(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
 
@@ -788,10 +828,10 @@ export class CreateSalesAgentsComponent implements OnInit {
     }
   }
 
-
   onBranchTouched(field: keyof Personal) {
     this.touchedFields[field] = true;
   }
+
   validateNICInput(event: KeyboardEvent) {
     // Allow navigation keys
     const allowedKeys = [
@@ -805,7 +845,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     ];
 
     if (allowedKeys.includes(event.key)) {
-      return; // Allow these special keys
+      return;
     }
 
     // Allow only numbers or uppercase V (but not lowercase v)
@@ -861,8 +901,8 @@ export class CreateSalesAgentsComponent implements OnInit {
 
   isValidName(name: string): boolean {
     // Allows only English letters, spaces, and apostrophes (NO HYPHENS)
-    const namePattern = /^[A-Za-z\s']+$/; // Removed hyphen from pattern
-    return namePattern.test(name) && !/\d/.test(name); // Also check for numbers
+    const namePattern = /^[A-Za-z\s']+$/;
+    return namePattern.test(name) && !/\d/.test(name);
   }
 
   allowOnlyAlphanumeric(event: KeyboardEvent): void {
@@ -878,7 +918,7 @@ export class CreateSalesAgentsComponent implements OnInit {
     ];
 
     if (allowedKeys.includes(event.key)) {
-      return; // Allow these special keys
+      return;
     }
 
     // Allow only alphanumeric characters (A-Z, a-z, 0-9)
@@ -984,9 +1024,9 @@ export class CreateSalesAgentsComponent implements OnInit {
     if (this.personalData.accHolderName) {
       // Remove leading spaces and any non-English characters and hyphens
       let value = (this.personalData.accHolderName as string)
-        .replace(/^\s+/, '') // Remove leading spaces
-        .replace(/[^a-zA-Z\s']/g, '') // Remove non-English characters and hyphens
-        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+        .replace(/^\s+/, '')
+        .replace(/[^a-zA-Z\s']/g, '')
+        .replace(/\s+/g, ' ')
         .trim();
 
       // Capitalize first letter of each word

@@ -31,7 +31,6 @@ interface BranchesData {
   [key: string]: Branch[];
 }
 
-// Field configuration type
 interface FieldConfig {
   regex: RegExp;
   shouldCapitalize: boolean;
@@ -88,10 +87,7 @@ export class CreateCenterHeadComponent implements OnInit {
   countries: Country[] = COUNTRIES;
   selectedCountry1: Country | null = null;
   selectedCountry2: Country | null = null;
-  // leadingSpaceError: boolean = false;
-  // specialCharOrNumberError: boolean = false;
 
-  // Component class properties - Similar to your phone validation approach
   isLeadingSpaceErrorMap: { [key: string]: boolean } = {
     firstNameEnglish: false,
     lastNameEnglish: false,
@@ -176,7 +172,7 @@ export class CreateCenterHeadComponent implements OnInit {
 
   isDuplicatePhone(): boolean {
     return (
-      !!this.personalData.phoneNumber01 && // ensures it's truthy
+      !!this.personalData.phoneNumber01 &&
       !!this.personalData.phoneNumber02 &&
       this.personalData.phoneNumber01 === this.personalData.phoneNumber02
     );
@@ -205,11 +201,10 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
 
-  // Field configurations
   private fieldConfigs: { [key: string]: FieldConfig } = {
     firstNameEnglish: {
       dataProperty: 'firstNameEnglish',
-      regex: /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~`]/g, // remove only numbers & special chars
+      regex: /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~`]/g,
       shouldCapitalize: true
     },
     lastNameEnglish: {
@@ -219,7 +214,6 @@ export class CreateCenterHeadComponent implements OnInit {
     }
   };
 
-  // Single reusable method - similar to your validateSriLankanPhone approach
   validateNameInput(input: string, fieldName: string): void {
     if (!input) {
       this.isLeadingSpaceErrorMap[fieldName] = false;
@@ -233,24 +227,20 @@ export class CreateCenterHeadComponent implements OnInit {
       return;
     }
 
-    // Reset errors
     this.isLeadingSpaceErrorMap[fieldName] = false;
     this.isSpecialCharErrorMap[fieldName] = false;
 
-    // Check for leading space
     if (input.startsWith(' ')) {
       this.isLeadingSpaceErrorMap[fieldName] = true;
       return;
     }
 
-    // Check for invalid characters
     const validInput = input.replace(config.regex, '');
     if (input !== validInput) {
       this.isSpecialCharErrorMap[fieldName] = true;
       return;
     }
 
-    // If we reach here, input is valid
     this.isLeadingSpaceErrorMap[fieldName] = false;
     this.isSpecialCharErrorMap[fieldName] = false;
   }
@@ -258,18 +248,15 @@ export class CreateCenterHeadComponent implements OnInit {
   validateNIC(event: any) {
     let value: string = event.target.value.toUpperCase();
 
-    // Remove all characters except digits and 'V'
+   
     value = value.replace(/[^0-9V]/g, '');
 
-    // If more than 12 digits, truncate digits
     if (value.length > 12) {
-      // Keep last character if it's 'V'
       const lastChar = value[value.length - 1] === 'V' ? 'V' : '';
       const digitsOnly = value.replace(/V/g, '').slice(0, 12);
       value = digitsOnly + lastChar;
     }
 
-    // Ensure only one 'V' at the end
     if (value.includes('V') && value[value.length - 1] !== 'V') {
       value = value.replace(/V/g, '') + 'V';
     }
@@ -282,17 +269,14 @@ export class CreateCenterHeadComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     let value = input.value.toUpperCase();
 
-    // Remove all non-digit/V characters
     value = value.replace(/[^0-9V]/g, '');
 
     const hasV = value.includes('V');
 
     if (hasV) {
-      // Keep only 9 digits + V
       const digits = value.replace(/[^0-9]/g, '').slice(0, 9);
       value = digits + 'V';
     } else {
-      // If no V, limit to 12 digits
       value = value.slice(0, 12);
     }
 
@@ -310,18 +294,15 @@ export class CreateCenterHeadComponent implements OnInit {
     const currentValue = input.value;
     const inputChar = event.key.toUpperCase();
 
-    // Allow control keys
     if (event.ctrlKey || event.metaKey || event.key.length > 1) {
       return true;
     }
 
-    // Allow digits if total digits < 12
     const digitsCount = currentValue.replace(/[^0-9]/g, '').length;
     if (/[0-9]/.test(inputChar) && digitsCount < 12) {
       return true;
     }
 
-    // Allow 'V' only if not already present
     if (inputChar === 'V' && !currentValue.toUpperCase().includes('V')) {
       return true;
     }
@@ -331,10 +312,6 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
 
-  // Template validation
-
-
-  // Input handler method - similar to your phone input approach
   onNameInput(event: Event, fieldName: string): void {
     const inputElement = event.target as HTMLInputElement;
     let input = inputElement.value;
@@ -345,25 +322,18 @@ export class CreateCenterHeadComponent implements OnInit {
       return;
     }
 
-    // Remove leading spaces and filter invalid characters
     const trimmedInput = input.trimStart();
     const validInput = trimmedInput.replace(config.regex, '');
 
-    // Process the valid input
     let processedInput = validInput;
-
-    // Apply capitalization if needed (for English fields)
     if (config.shouldCapitalize && processedInput.length > 0) {
       processedInput = processedInput.charAt(0).toUpperCase() + processedInput.slice(1);
     }
 
-    // Update the data model
     (this.personalData as any)[config.dataProperty] = processedInput;
 
-    // Update input element value to reflect filtered result
     inputElement.value = processedInput;
 
-    // Validate the original input to set error flags
     this.validateNameInput(input, fieldName);
   }
 
@@ -371,7 +341,6 @@ export class CreateCenterHeadComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let value = inputElement.value.trimStart().replace(/\s+/g, ' ');
 
-    // Capitalize first letter
     if (value.length > 0) {
       value = value.charAt(0).toUpperCase() + value.slice(1);
     }
@@ -431,7 +400,6 @@ export class CreateCenterHeadComponent implements OnInit {
 
   allowOnlyNumbers(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
-    // Only allow 0-9
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
       return false;
@@ -446,29 +414,36 @@ export class CreateCenterHeadComponent implements OnInit {
     inputElement.value = trimmedValue;
   }
 
+  onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    let trimmedValue = inputElement.value.trimStart();
+  
+    if (trimmedValue.length > 0) {
+      trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
+    }
+  
+    modelRef[fieldName] = trimmedValue;
+    inputElement.value = trimmedValue;
+  }
+
   blockSpecialChars(event: KeyboardEvent) {
-    // Allow letters (A-Z, a-z), space, backspace, delete, arrow keys
     const allowedKeys = [
       'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '
     ];
 
-    // Regex: Only allow alphabets and spaces
     const regex = /^[a-zA-Z\s]*$/;
 
-    // Block if key is not allowed
     if (!allowedKeys.includes(event.key) && !regex.test(event.key)) {
       event.preventDefault();
     }
   }
 
   blockNonNumbers(event: KeyboardEvent) {
-    // Allow: numbers (0-9), backspace, delete, arrow keys, tab
     const allowedKeys = [
       '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
       'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'
     ];
 
-    // Block if key is not allowed
     if (!allowedKeys.includes(event.key)) {
       event.preventDefault();
     }
@@ -478,7 +453,6 @@ export class CreateCenterHeadComponent implements OnInit {
   getAllCompanies() {
     this.collectionCenterSrv.getAllCompanyList().subscribe({
       next: (res) => {
-        console.log('API Response:', res);
         this.CompanyData = res;
       },
       error: (error) => {
@@ -490,7 +464,6 @@ export class CreateCenterHeadComponent implements OnInit {
   loadBanks() {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe(
       (data) => {
-        // Sort by bank name (A-Z)
         this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
       },
       (error) => {
@@ -503,7 +476,7 @@ export class CreateCenterHeadComponent implements OnInit {
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       (data) => {
-        // Loop through each bank ID and sort its branch array
+        
         for (const bankId in data) {
           if (data.hasOwnProperty(bankId)) {
             data[bankId] = data[bankId].sort((a, b) =>
@@ -662,7 +635,6 @@ export class CreateCenterHeadComponent implements OnInit {
   onSubmit() {
     const missingFields: string[] = [];
 
-    // Validation for pageOne fields
     if (!this.personalData.empType) {
       missingFields.push('Staff Employee Type');
     }
@@ -729,7 +701,6 @@ export class CreateCenterHeadComponent implements OnInit {
       }
     }
 
-    // Validation for pageTwo fields
     if (!this.personalData.houseNumber) {
       missingFields.push('House Number');
     }
@@ -772,7 +743,6 @@ export class CreateCenterHeadComponent implements OnInit {
       missingFields.push('Branch Name');
     }
 
-    // Display errors if any
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
@@ -794,7 +764,6 @@ export class CreateCenterHeadComponent implements OnInit {
       return;
     }
 
-    // Confirmation dialog
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to create the collection centre head?',
@@ -943,18 +912,15 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   handleNextClick(): void {
-    console.log('phone', this.personalData.phoneCode01, this.personalData.phoneCode02);
     if (this.checkFormValidity()) {
       this.navigateToPage('pageTwo');
     }
   }
 
   checkFormValidity(): boolean {
-    console.log('personalData', this.personalData);
     const missingFields: string[] = [];
     const phonePattern = /^[0-9]{9}$/;
 
-    // Name validations
     if (!this.personalData.firstNameEnglish) missingFields.push('First Name (English) is Required');
     if (!this.personalData.firstNameSinhala) missingFields.push('First Name (Sinhala) is Required');
     if (!this.personalData.firstNameTamil) missingFields.push('First Name (Tamil) is Required');
@@ -962,9 +928,8 @@ export class CreateCenterHeadComponent implements OnInit {
     if (!this.personalData.lastNameSinhala) missingFields.push('Last Name (Sinhala) is Required');
     if (!this.personalData.lastNameTamil) missingFields.push('Last Name (Tamil) is Required');
 
-    // Phone validations
     if (!this.personalData.phoneNumber01) {
-      missingFields.push('Phone Number 01 is Required');
+      missingFields.push('Mobile Number 01 is Required');
     } else if (this.isPhoneInvalidMap['phone01'] || !phonePattern.test(this.personalData.phoneNumber01)) {
       missingFields.push('Phone Number 01 (format: +947XXXXXXXX, 9 digits)');
     }
@@ -977,7 +942,6 @@ export class CreateCenterHeadComponent implements OnInit {
       }
     }
 
-    // Email validations
     if (!this.personalData.email) {
       missingFields.push('Email is Required');
     } else {
@@ -987,24 +951,20 @@ export class CreateCenterHeadComponent implements OnInit {
       }
     }
 
-    // NIC validations
     if (!this.personalData.nic) {
       missingFields.push('NIC is Required');
     } else if (!this.isValidNIC(this.personalData.nic)) {
       missingFields.push('NIC (Must be 12 digits or 9 digits followed by V)');
     }
 
-    // Other required fields
     if (!this.empType) missingFields.push('Employment Type is Required');
     if (!this.isAtLeastOneLanguageSelected()) missingFields.push('Preferred Languages is Required');
     if (!this.personalData.companyId) missingFields.push('Company Name is Required');
-    // if (!this.personalData.centerId) missingFields.push('Collection Centre Name is Required');
     if (!this.personalData.jobRole) missingFields.push('Job Role is Required');
     if (this.personalData.jobRole === 'Collection Officer' && !this.personalData.irmId) {
       missingFields.push('Manager Name is Required');
     }
 
-    // Show SweetAlert if there are issues
     if (missingFields.length > 0) {
       Swal.fire({
         icon: 'error',

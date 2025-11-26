@@ -1,0 +1,62 @@
+<div class="w-full p-4">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- First Column: Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <!-- Total Distribution Officers Card -->
+      <div
+        class="bg-[#980775] text-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center h-full"
+      >
+        <i class="fa-regular fa-newspaper text-4xl mb-4"></i>
+        <h2 class="text-md font-semibold dark:text-white">Distribution Officers</h2>
+        <h2 class="text-sm font-semibold dark:text-white">Total</h2>
+        <p class="text-xl font-bold dark:text-white">{{ allOfficers }}</p>
+      </div>
+
+      <!-- Active Officers Card -->
+      <div
+        class="bg-white dark:bg-tileBlack p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center h-full"
+      >
+        <p class="text-lg font-thin text-gray-600 dark:text-white">Active Officers</p>
+        <p class="text-sm font-thin text-gray-600 dark:text-white">Just Now</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ activeOfficers }}</p>
+      </div>
+
+      <!-- New Officers Card -->
+      <div
+        class="bg-white dark:bg-tileBlack p-6 rounded-lg shadow-lg flex flex-col items-center justify-center text-center h-full"
+      >
+        <p class="text-lg font-thin text-gray-600 dark:text-white">New Officers</p>
+        <p class="text-sm font-thin text-gray-600 dark:text-white">Today</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ newOfficers }}</p>
+      </div>
+    </div>
+
+    <!-- Second Column: Position Breakdown -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Centre Head Officers -->
+      <div
+        class="bg-white p-8 dark:bg-tileBlack rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
+      >
+        <p class="text-lg font-thin text-gray-600 dark:text-white">Centre Head Officers</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ centerHeadOfficers }}</p>
+      </div>
+
+      <!-- Distribution Officers -->
+      <div
+        class="bg-white p-8 dark:bg-tileBlack rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
+      >
+        <p class="text-lg font-thin text-gray-600 dark:text-white">Distribution Officers</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ distributionOfficers }}</p>
+      </div>
+
+      <!-- Centre Managers -->
+      <div
+        class="bg-white p-8 dark:bg-tileBlack rounded-lg shadow-lg text-center flex flex-row justify-between items-center w-auto"
+      >
+        <p class="text-lg font-thin text-gray-600 dark:text-white">Centre Managers</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ centerManagers }}</p>
+      </div>
+
+    </div>
+  </div>
+</div>

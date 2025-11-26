@@ -1,0 +1,324 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="min-h-screen py-6">
+  <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+    <!-- Page Title and Last Modified -->
+    <div class="mb-6">
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-2">
+        {{ getPageTitle() }}
+      </h2>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex gap-3">
+        <!-- Edit Button - Show in default state -->
+        <button
+          *ngIf="!isEditing"
+          type="button"
+          (click)="onEdit()"
+          class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          <i class="fa-regular fa-pen-to-square mr-2"></i>
+          Edit
+        </button>
+
+        <!-- Add New Button - Show in edit state -->
+        <button
+          *ngIf="isEditing"
+          type="button"
+          (click)="onAddNew()"
+          class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-blue-700 transition-colors"
+        >
+          <i class="fa-solid fa-plus"></i>
+          Add New
+        </button>
+      </div>
+    </div>
+
+    <!-- Commission Ranges Table -->
+    <form [formGroup]="commissionForm">
+      <div
+        class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg max-w-4xl"
+      >
+        <table class="w-full">
+          <thead class="bg-white dark:bg-gray-700 border-b">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              >
+                No
+              </th>
+
+              <!-- NOT EDITING STATE - Show Range column -->
+              <th
+                *ngIf="!isEditing"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              >
+                Range
+              </th>
+
+              <!-- EDITING STATE - Show separate Min and Max columns -->
+              <th
+                *ngIf="isEditing"
+                class="px-6 py-3 text-center text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              >
+                Min (%)
+              </th>
+              <th
+                *ngIf="isEditing"
+                class="px-6 py-3 text-center text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              >
+                Max (%)
+              </th>
+
+              <th
+                *ngIf="!isEditing"
+                class="px-6 py-3 text-center text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              >
+                Value (Rs.)
+              </th>
+
+              <!-- Modified User Column -->
+              <th
+                *ngIf="!isEditing"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              >
+                Last Modified By
+              </th>
+
+              <th
+                *ngIf="isEditing"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              ></th>
+              <th
+                *ngIf="isEditing"
+                class="px-6 py-3 text-left text-md font-medium text-gray-500 dark:text-gray-300 tracking-wider"
+              ></th>
+            </tr>
+          </thead>
+          <tbody
+            class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+          >
+            <ng-container formArrayName="commissionRanges">
+              <tr
+                *ngFor="let range of commissionRanges.controls; let i = index"
+                [formGroupName]="i"
+                [id]="getRowId(i)"
+                [class.bg-red-50]="isRowInvalid(i)"
+                class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                <!-- No Column -->
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100"
+                >
+                  {{ (i + 1).toString().padStart(2, "0") }}
+                </td>
+
+                <!-- NOT EDITING STATE - Show combined Range -->
+                <td *ngIf="!isEditing" class="px-6 py-4 whitespace-nowrap">
+                  <span class="text-md text-gray-900 dark:text-gray-100">
+                    {{ range.value.minRange }} % - {{ range.value.maxRange }} %
+                  </span>
+                </td>
+
+                <!-- EDITING STATE - Show separate Min and Max inputs -->
+                <td *ngIf="isEditing" class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex justify-center">
+                    <input
+                      type="number"
+                      formControlName="minRange"
+                      class="w-24 px-3 py-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      [class.border-red-500]="
+                        range.get('minRange')?.invalid &&
+                        range.get('minRange')?.touched
+                      "
+                      placeholder="Min"
+                      min="0"
+                    />
+                    <div
+                      *ngIf="
+                        range.get('minRange')?.invalid &&
+                        range.get('minRange')?.touched
+                      "
+                      class="text-red-500 text-md mt-1"
+                    >
+                      <div *ngIf="range.get('minRange')?.errors?.['required']">
+                        Required
+                      </div>
+                      <div *ngIf="range.get('minRange')?.errors?.['min']">
+                        Must be ≥ 0
+                      </div>
+                      <div *ngIf="range.get('minRange')?.errors?.['pattern']">
+                        Must be a number
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <td *ngIf="isEditing" class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex justify-center">
+                    <input
+                      type="number"
+                      formControlName="maxRange"
+                      class="w-24 px-3 py-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      [class.border-red-500]="
+                        range.get('maxRange')?.invalid &&
+                        range.get('maxRange')?.touched
+                      "
+                      placeholder="Max"
+                      min="0"
+                    />
+                    <div
+                      *ngIf="
+                        range.get('maxRange')?.invalid &&
+                        range.get('maxRange')?.touched
+                      "
+                      class="text-red-500 text-md mt-1"
+                    >
+                      <div *ngIf="range.get('maxRange')?.errors?.['required']">
+                        Required
+                      </div>
+                      <div *ngIf="range.get('maxRange')?.errors?.['min']">
+                        Must be ≥ 0
+                      </div>
+                      <div *ngIf="range.get('maxRange')?.errors?.['pattern']">
+                        Must be a number
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Value Column - Different behavior based on state -->
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex justify-center">
+                    <!-- Default state: Show input for all rows -->
+                    <input
+                      *ngIf="!isEditing"
+                      type="number"
+                      formControlName="value"
+                      class="w-24 px-3 py-2 border rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      [class.border-red-500]="
+                        range.get('value')?.invalid &&
+                        range.get('value')?.touched
+                      "
+                      placeholder="Rs."
+                      step="0.01"
+                      min="0"
+                    />
+                    <div
+                      *ngIf="
+                        range.get('value')?.invalid &&
+                        range.get('value')?.touched
+                      "
+                      class="text-red-500 text-md mt-1"
+                    >
+                      <div *ngIf="range.get('value')?.errors?.['required']">
+                        Required
+                      </div>
+                      <div *ngIf="range.get('value')?.errors?.['min']">
+                        Must be ≥ 0
+                      </div>
+                      <div *ngIf="range.get('value')?.errors?.['pattern']">
+                        Invalid format
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- NEW: Modified User Column - Only show in non-edit mode -->
+                <td
+                  *ngIf="!isEditing"
+                  class="px-6 py-4 whitespace-nowrap text-md text-gray-900 dark:text-gray-100"
+                >
+                  {{ getModifiedUserDisplay(i) }}
+                </td>
+
+                <!-- Actions Column - Only show in edit mode -->
+                <td
+                  *ngIf="isEditing"
+                  class="px-6 py-4 whitespace-nowrap text-md font-medium"
+                >
+                  <button
+                    type="button"
+                    (click)="onDelete(i)"
+                    class="text-red-600 hover:text-red-900 dark:hover:text-red-400 transition-colors"
+                    [title]="isNewRow(i) ? 'Remove' : 'Delete'"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <title>Delete</title>
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z"
+                      />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+
+            <!-- Empty State -->
+            <tr *ngIf="commissionRanges.length === 0">
+              <td
+                [attr.colspan]="isEditing ? 5 : 4"
+                class="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
+              >
+                No commission ranges found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex justify-end gap-3 mt-6 max-w-4xl">
+        <!-- Cancel button only in edit mode -->
+        <button
+          type="button"
+          (click)="onCancel()"
+          class="px-6 py-2 bg-[#74788D] text-white rounded-lg hover:bg-gray-600 transition-colors w-32"
+        >
+          Cancel
+        </button>
+        <!-- Action button - changes based on context -->
+        <button
+          type="button"
+          (click)="onAction()"
+          class="px-6 py-2 rounded-lg transition-colors w-32 text-white"
+          [ngClass]="{
+            'bg-[#3980C0] hover:bg-blue-700': !(hasOnlyNewRows()
+              ? isCreateDisabled()
+              : isUpdateDisabled()),
+            'bg-gray-400 cursor-not-allowed opacity-60':
+              (hasOnlyNewRows() ? isCreateDisabled() : isUpdateDisabled()) ||
+              isLoading
+          }"
+          [disabled]="
+            (hasOnlyNewRows() ? isCreateDisabled() : isUpdateDisabled()) ||
+            isLoading
+          "
+        >
+          {{ getActionButtonText() }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

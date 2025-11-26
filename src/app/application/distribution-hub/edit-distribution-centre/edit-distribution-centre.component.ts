@@ -142,7 +142,6 @@ export class EditDistributionCentreComponent implements OnInit {
 
     // Add this for debugging - remove after fixing
     this.distributionForm.statusChanges.subscribe((status) => {
-      console.log('Form status:', status);
       if (status === 'INVALID') {
         this.checkFormValidity();
       }
@@ -245,13 +244,10 @@ export class EditDistributionCentreComponent implements OnInit {
   }
 
   checkFormValidity(): void {
-    console.log('Form valid:', this.distributionForm.valid);
-    console.log('Form errors:', this.distributionForm.errors);
 
     Object.keys(this.distributionForm.controls).forEach((key) => {
       const control = this.distributionForm.get(key);
       if (control && control.invalid) {
-        console.log(`${key} errors:`, control.errors);
       }
     });
   }
@@ -315,29 +311,35 @@ export class EditDistributionCentreComponent implements OnInit {
 
   // Update fetchAllCompanies method
   fetchAllCompanies() {
-    this.isLoading = true;
-    this.distributionService.getAllCompanies().subscribe(
-      (res) => {
-        this.companyList = res.data.map((company: any) => ({
-          id: company.id,
-          companyNameEnglish: company.companyNameEnglish,
-        }));
+  this.isLoading = true;
+  this.distributionService.getAllCompanies().subscribe(
+    (res) => {
+      this.companyList = res.data.map((company: any) => ({
+        id: company.id,
+        companyNameEnglish: company.companyNameEnglish,
+      }));
 
-        // Convert to dropdown options format
-        this.companyOptions = this.companyList.map((company) => ({
-          label: company.companyNameEnglish,
-          value: company.id,
-        }));
+      // Convert to dropdown options format
+      this.companyOptions = this.companyList.map((company) => ({
+        label: company.companyNameEnglish,
+        value: company.id,
+      }));
 
-        console.log('Company list loaded:', this.companyList);
-        this.isLoading = false;
-      },
-      (error) => {
-        console.error('Error fetching companies:', error);
-        this.showErrorAlert('Failed to load companies');
+      
+      // If distribution center details are already loaded, set the company value
+      if (this.distributionCenterDetails) {
+        this.setCompanyValue(this.distributionCenterDetails);
       }
-    );
-  }
+      
+      this.isLoading = false;
+    },
+    (error) => {
+      console.error('Error fetching companies:', error);
+      this.showErrorAlert('Failed to load companies');
+      this.isLoading = false;
+    }
+  );
+}
 
   // Update initializeForm with enhanced validations
   // In your component class, update the initializeForm method:
@@ -638,11 +640,9 @@ export class EditDistributionCentreComponent implements OnInit {
   }
 
   updateRegCode() {
-    console.log('update reg code');
     const province = this.distributionForm.get('province')?.value;
     const district = this.distributionForm.get('district')?.value;
     const city = this.distributionForm.get('city')?.value;
-    console.log('province', province, 'district', district, 'city', city);
 
     if (province && district && city && city.trim().length > 0) {
       this.isLoadingregcode = true;
@@ -658,7 +658,6 @@ export class EditDistributionCentreComponent implements OnInit {
             const regCode = `D-${province.slice(0, 2).toUpperCase()}${district
               .slice(0, 1)
               .toUpperCase()}${city.trim().slice(0, 1).toUpperCase()}`;
-            console.log('regCode fallback', regCode);
             this.distributionForm.patchValue({ regCode });
             this.isLoadingregcode = false;
           },
@@ -671,70 +670,91 @@ export class EditDistributionCentreComponent implements OnInit {
 
 
   fetchDistributionCenterById(id: number) {
-    console.log('Fetching distribution centre with ID:', id);
-    this.isLoading = true;
+  this.isLoading = true;
 
-    this.distributionService.getDistributionCentreById(id).subscribe(
-      (response: DistributionCenter) => {
-        console.log('Distribution centre details:', response);
-        this.isLoading = false;
-        this.distributionCenterDetails = response;
-        this.hasData = !!response;
-        this.populateForm(response);
-      },
-      (error) => {
-        console.error('API Error:', error);
-        this.isLoading = false;
+  this.distributionService.getDistributionCentreById(id).subscribe(
+    (response: DistributionCenter) => {
+      this.distributionCenterDetails = response;
+      this.hasData = !!response;
+      
+      // Populate form with the data
+      this.populateForm(response);
+      
+      this.isLoading = false;
+    },
+    (error) => {
+      console.error('API Error:', error);
+      this.isLoading = false;
 
-        if (error.status === 401) {
-          this.showErrorAlert('Unauthorized access');
-        } else if (error.status === 404) {
-          this.showErrorAlert('Distribution centre not found');
-          this.router.navigate([
-            '/distribution-hub/action/view-destribition-center',
-          ]);
-        } else {
-          this.showErrorAlert('Failed to load distribution centre details');
-        }
+      if (error.status === 401) {
+        this.showErrorAlert('Unauthorized access');
+      } else if (error.status === 404) {
+        this.showErrorAlert('Distribution centre not found');
+        this.router.navigate([
+          '/distribution-hub/action/view-destribition-center',
+        ]);
+      } else {
+        this.showErrorAlert('Failed to load distribution centre details');
       }
-    );
-  }
+    }
+  );
+}
 
   populateForm(data: DistributionCenter): void {
-    this.originalCenterName = data.centerName; // Store original name
+  this.originalCenterName = data.centerName;
 
-    const matchingCompany = this.companyList.find(
-      (company) => company.companyNameEnglish === data.company
-    );
-
-    // Update district options based on province
-    if (data.province) {
-      const districts = this.districtsMap[data.province] || [];
-      this.districtOptions = districts.sort().map((district) => ({
-        label: district,
-        value: district,
-      }));
-    }
-
-    this.distributionForm.patchValue({
-      name: data.centerName,
-      company: matchingCompany ? matchingCompany.id : null,
-      contact1Code: data.code1,
-      contact1: data.contact01,
-      contact2Code: data.code2,
-      contact2: data.contact02,
-      latitude: data.latitude,
-      longitude: data.longitude,
-      email: data.email,
-      country: data.country,
-      province: data.province,
-      district: data.district,
-      city: data.city,
-      regCode: data.regCode,
-    });
-
-    console.log('distributionForm', this.distributionForm);
+  // Wait for company list to be loaded before setting the value
+  if (this.companyList.length > 0) {
+    this.setCompanyValue(data);
+  } else {
+    // If company list isn't loaded yet, wait a bit and try again
+    setTimeout(() => {
+      if (this.companyList.length > 0) {
+        this.setCompanyValue(data);
+      }
+    }, 500);
   }
+
+  // Update district options based on province
+  if (data.province) {
+    const districts = this.districtsMap[data.province] || [];
+    this.districtOptions = districts.sort().map((district) => ({
+      label: district,
+      value: district,
+    }));
+  }
+
+  this.distributionForm.patchValue({
+    name: data.centerName,
+    contact1Code: data.code1,
+    contact1: data.contact01,
+    contact2Code: data.code2,
+    contact2: data.contact02,
+    latitude: data.latitude,
+    longitude: data.longitude,
+    email: data.email,
+    country: data.country,
+    province: data.province,
+    district: data.district,
+    city: data.city,
+    regCode: data.regCode,
+  });
+
+}
+
+private setCompanyValue(data: DistributionCenter): void {
+  const matchingCompany = this.companyList.find(
+    (company) => company.companyNameEnglish === data.company
+  );
+
+  if (matchingCompany) {
+    this.distributionForm.patchValue({
+      company: matchingCompany.id
+    });
+  } else {
+    console.warn('No matching company found for:', data.company);
+  }
+}
 
   getDistricts(): string[] {
     const selectedProvince = this.distributionForm.get('province')?.value;
@@ -815,9 +835,6 @@ export class EditDistributionCentreComponent implements OnInit {
       missingFields.push('Contact Number Code is Required');
     }
 
-    // if (!this.distributionForm.get('company')?.value) {
-    //   missingFields.push('Company is Required');
-    // }
 
     const contact1Control = this.distributionForm.get('contact1');
 
@@ -982,7 +999,6 @@ export class EditDistributionCentreComponent implements OnInit {
           .updateDistributionCentreDetails(id, updateData)
           .subscribe(
             (response) => {
-              console.log('response', response);
               this.isLoading = false;
               if (response.success) {
                 Swal.fire({

@@ -48,7 +48,7 @@
           <div class="flex items-center space-x-4 mt-3">
   <div class="flex items-center space-x-2">
     <input [disabled]="true" 
-           class="w-5 h-5 appearance-none rounded-full border-2 border-gray-300 checked:border-black checked:bg-black dark:border-gray-600 dark:checked:border-black dark:checked:bg-black" 
+           class="w-5 h-5 appearance-none rounded-full border-2 border-gray-300 checked:border-black checked:bg-blue-600 dark:border-gray-600 dark:checked:border-black dark:checked:bg-blue-600" 
            type="radio" id="permanent" name="empType" [value]="'Permanent'"
            [(ngModel)]="empType" #empTypeInput="ngModel" (ngModelChange)="updateEmployeeType($event)" required />
     <label for="permanent" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -57,7 +57,7 @@
   </div>
   <div class="flex items-center space-x-2">
     <input [disabled]="true" 
-           class="w-5 h-5 appearance-none rounded-full border-2 border-gray-300 checked:border-black checked:bg-black dark:border-gray-600 dark:checked:border-black dark:checked:bg-black" 
+           class="w-5 h-5 appearance-none rounded-full border-2 border-gray-300 checked:border-black checked:bg-blue-600 dark:border-gray-600 dark:checked:border-black dark:checked:bg-blue-600" 
            type="radio" id="temporary" name="empType" [value]="'Temporary'"
            [(ngModel)]="empType" (ngModelChange)="updateEmployeeType($event)" required />
     <label for="temporary" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -289,11 +289,11 @@
                 </div>
               </ng-template>
             </p-dropdown>
-            <input [disabled]="true" id="phoneNumber02" name="phoneNumber02" type="number"
-              [(ngModel)]="personalData.phoneNumber02"
-              class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-              placeholder="Enter your phone number" #phoneNumber02Input="ngModel" minlength="9" maxlength="9"
-              pattern="^[0-9]{9}$" />
+            <input [disabled]="true" id="phoneNumber02" name="phoneNumber02" type="text"
+       [ngModel]="personalData.phoneNumber02 || '--'"
+       class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+       placeholder="Enter your phone number" #phoneNumber02Input="ngModel" 
+       minlength="9" maxlength="9" pattern="^[0-9]{9}$" readonly />
           </div>
           <div *ngIf="phoneNumber02Input.touched && phoneNumber02Input.errors?.['maxlength']"
             class="text-red-500 text-sm mt-1">

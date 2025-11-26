@@ -62,7 +62,7 @@ export class ViewPremadePackagesComponent implements OnInit {
     let allPackagesCompleted = true;
     let additionalItemsCompleted = true;
 
-    // Filter out the package at arrayIndex and check all others
+
     allPackagesCompleted = this.packageObj.packageData
       .filter((pkg, index) => index !== arrayIndex)
       .every(pkg => pkg.packStatus === 'Completed');
@@ -71,15 +71,10 @@ export class ViewPremadePackagesComponent implements OnInit {
     if (this.packageObj.additionalData &&
       this.packageObj.additionalData.packStatus !== null) {
       additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
-      console.log("additional hit->", additionalItemsCompleted);
 
     }
 
     const finalStatus = allPackagesCompleted && additionalItemsCompleted;
-
-    console.log('All packages completed (excluding index', arrayIndex, '):', allPackagesCompleted);
-    console.log('Additional items completed:', additionalItemsCompleted);
-    console.log('Composite status:', finalStatus);
 
     this.navigateDispatchItems(id, finalStatus, price, packageName, packgeQty)
   }
@@ -88,21 +83,11 @@ export class ViewPremadePackagesComponent implements OnInit {
     let allPackagesCompleted = true;
     let additionalItemsCompleted = true;
 
-    // Filter out the package at arrayIndex and check all others
     allPackagesCompleted = this.packageObj.packageData
       .every(pkg => pkg.packStatus === 'Completed');
 
-    // if (this.packageObj.additionalData &&
-    //   this.packageObj.additionalData.packStatus !== null) {
-    //   additionalItemsCompleted = (this.packageObj.additionalData.packStatus === 'Completed');
-    //   console.log("additional hit->", additionalItemsCompleted);
-    // }
-
     const finalStatus = allPackagesCompleted && additionalItemsCompleted;
 
-    console.log('All packages completed (excluding index', '):', allPackagesCompleted);
-    console.log('Additional items completed:', additionalItemsCompleted);
-    console.log('Composite status:', finalStatus);
 
     this.navigateDispatchAdditionalItems(id, finalStatus)
   }

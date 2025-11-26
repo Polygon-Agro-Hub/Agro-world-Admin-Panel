@@ -6,6 +6,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { DropdownModule } from 'primeng/dropdown';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-all-certificates',
@@ -28,7 +30,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   isServicePopUp: boolean = false;
   serviceAreaArray: any = [];
 
-  QuactionFilter: any = [
+  QuestionsFilter: any = [
     { label: 'Yes', value: 'Yes' },
     { label: 'No', value: 'No' },
   ];
@@ -63,7 +65,9 @@ export class ViewAllCertificatesComponent implements OnInit {
 
   constructor(
     private certificateSrv: CertificateCompanyService,
-    private router: Router // private location: Location,
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   ngOnInit(): void {
@@ -123,7 +127,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   deleteCertificate(item: CertificateData) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'This action cannot be undone!',
+      text: 'Are you sure you want to delete this certificate? This action cannot be undone.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -184,6 +188,21 @@ export class ViewAllCertificatesComponent implements OnInit {
     });
   }
 
+  getFormattedCommission(value: any): string {
+    const num = parseFloat(value);
+    if (isNaN(num)) return '-';
+
+    // Convert to string to preserve all decimal places
+    const numStr = num.toString();
+
+    // Check if it has decimal places
+    if (numStr.includes('.')) {
+      return `${numStr}%`;
+    } else {
+      return `${num}%`;
+    }
+  }
+
   onBack(): void {
     this.router.navigate([`/plant-care/action/`]);
   }
@@ -202,7 +221,7 @@ export class ViewAllCertificatesComponent implements OnInit {
   }
 
   servicePopUpOpen(areas: string) {
-    this.serviceAreaArray = areas.split(',').map(area => area.trim());
+    this.serviceAreaArray = areas.split(',').map((area) => area.trim());
     this.isServicePopUp = true;
   }
 

@@ -2,7 +2,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
@@ -68,6 +68,7 @@ export class CollectiveofficersEditComponent {
   initiateId!: string;
   errorMessage: string = '';
   img!: string;
+  isApproved: boolean = false;
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -141,6 +142,7 @@ export class CollectiveofficersEditComponent {
     private collectionCenterSrv: CollectionCenterService,
     private collectionOfficerService: CollectionOfficerService,
     private collectionService: CollectionService,
+    private location: Location
 
   ) { }
 
@@ -154,7 +156,6 @@ export class CollectiveofficersEditComponent {
       this.fetchData();
     }
 
-    this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
@@ -163,7 +164,6 @@ export class CollectiveofficersEditComponent {
     this.isLoading = true;
     this.collectionCenterSrv.getOfficerReportById(this.itemId).subscribe({
       next: (response: any) => {
-        console.log('Officer Data Response:', response);
         const officerData = response.officerData[0];
 
         this.personalData.empId = officerData.empId || '';
@@ -187,7 +187,6 @@ export class CollectiveofficersEditComponent {
         this.personalData.province = officerData.province || '';
         this.personalData.languages = officerData.languages || '';
 
-        // Handle null values for IDs
         this.personalData.companyId = officerData.companyId || null;
         this.personalData.centerId = officerData.centerId || null;
         this.personalData.irmId = officerData.irmId || null;
@@ -199,6 +198,10 @@ export class CollectiveofficersEditComponent {
         this.personalData.confirmAccNumber = officerData.accNumber || '';
         this.personalData.empType = officerData.empType || '';
         this.personalData.image = officerData.image || '';
+        this.personalData.status = officerData.status || '';
+
+        // Check if status is "Approved"
+        this.isApproved = this.personalData.status === 'Approved';
 
         this.selectedLanguages = this.personalData.languages
           ? this.personalData.languages.split(',')
@@ -211,6 +214,7 @@ export class CollectiveofficersEditComponent {
         this.initiateId = officerData.empId.slice(-5);
 
         this.matchExistingBankToDropdown();
+        this.getAllCollectionCetnter();
         this.getAllCollectionManagers();
         this.isLoading = false;
       },
@@ -222,19 +226,17 @@ export class CollectiveofficersEditComponent {
   }
 
   onCompanyChange(event: any): void {
-    console.log('Company changed:', this.personalData.companyId);
 
-    // Reset collection center and manager
     this.personalData.centerId = null;
     this.personalData.irmId = null;
+    this.personalData.jobRole = '';
 
-    // Clear manager options
     this.managerOptions = [];
+    this.getAllCollectionCenters();
   }
 
   changeCenter(event: any): void {
-    console.log('Center changed:', this.personalData.centerId);
-    console.log('Center Manager:', this.personalData.irmId);
+
     this.personalData.irmId = null;
     this.getAllCollectionManagers();
   }
@@ -325,7 +327,7 @@ export class CollectiveofficersEditComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/collective-officer']);
+        this.location.back();
       }
     });
   }
@@ -342,14 +344,14 @@ export class CollectiveofficersEditComponent {
 
   onBankChange() {
     const selectedBankName = this.personalData.bankName;
-    console.log('Selected Bank Name:', selectedBankName);
+
     if (selectedBankName) {
       const selectedBank = this.banks.find((bank) => bank.name === selectedBankName);
-      console.log('Selected Bank:', selectedBank);
+
       if (selectedBank) {
         this.selectedBankId = selectedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-        console.log('Branches for Bank:', this.branches);
+
         this.branchOptions = this.branches.map(branch => ({
           label: branch.name,
           value: branch.name
@@ -385,7 +387,7 @@ export class CollectiveofficersEditComponent {
       const matchedBank = this.banks.find(
         (bank) => bank.name === this.personalData.bankName
       );
-      console.log('Matched Bank:', matchedBank);
+
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
@@ -393,7 +395,7 @@ export class CollectiveofficersEditComponent {
           label: branch.name,
           value: branch.name
         }));
-        console.log('Branch Options:', this.branchOptions);
+
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(
             (branch) => branch.name === this.personalData.branchName
@@ -869,7 +871,7 @@ export class CollectiveofficersEditComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/collective-officer');
+        this.location.back();
       }
     });
   }
@@ -985,6 +987,7 @@ export class CollectiveofficersEditComponent {
     }
 
     this.selectedPage = page;
+
   }
 
   updateProvince(event: DropdownChangeEvent): void {
@@ -1018,17 +1021,42 @@ export class CollectiveofficersEditComponent {
   }
 
   getAllCollectionCetnter() {
-    this.collectionCenterSrv.getAllCollectionCenter().subscribe((res) => {
-      this.collectionCenterData = res;
-      this.centerOptions = this.collectionCenterData.map(center => ({
-        label: center.centerName,
-        value: center.id
-      }));
-    });
+    this.collectionCenterSrv
+      .getAllCentreList(
+        this.personalData.companyId,
+
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.centerName,
+          value: center.id,
+        }));
+      });
   }
 
+  getAllCollectionCenters() {
+    this.collectionCenterData = []
+    this.personalData.centerId = null;
+    this.managerOptions = [];
+    this.personalData.irmId = null;
+    this.collectionCenterSrv
+      .getAllCentreList(
+        this.personalData.companyId,
+
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.centerName,
+          value: center.id,
+        }));
+      });
+  }
+
+
   getAllCollectionManagers() {
-    // Only call the API if both companyId and centerId are available
     if (this.personalData.companyId && this.personalData.centerId) {
       this.collectionCenterSrv
         .getAllManagerList(
@@ -1043,7 +1071,6 @@ export class CollectiveofficersEditComponent {
           }));
         });
     } else {
-      // Clear manager options if companyId or centerId is null
       this.managerOptions = [];
     }
   }
@@ -1066,12 +1093,7 @@ export class CollectiveofficersEditComponent {
   }
 
   onSubmit() {
-    console.log('personalData before submit:', {
-      contact1: this.personalData.contact1,
-      contact1Code: this.personalData.contact1Code,
-      contact2: this.personalData.contact2,
-      contact2Code: this.personalData.contact2Code
-    });
+
 
     const missingFields: string[] = [];
 
@@ -1169,25 +1191,25 @@ export class CollectiveofficersEditComponent {
       missingFields.push('Province is Required');
     }
 
-    if (!this.personalData.accHolderName) {
+    if (!this.personalData.accHolderName && this.personalData.companyId === 1) {
       missingFields.push("Account Holder's Name is Required");
     }
 
-    if (!this.personalData.accNumber) {
+    if (!this.personalData.accNumber && this.personalData.companyId === 1) {
       missingFields.push('Account Number is Required');
     }
 
-    if (!this.personalData.confirmAccNumber) {
+    if (!this.personalData.confirmAccNumber && this.personalData.companyId === 1) {
       missingFields.push('Confirm Account Number is Required');
     } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
       missingFields.push('Confirm Account Number - Must match Account Number');
     }
 
-    if (!this.selectedBankId) {
+    if (!this.selectedBankId && this.personalData.companyId === 1) {
       missingFields.push('Bank Name is Required');
     }
 
-    if (!this.selectedBranchId) {
+    if (!this.selectedBranchId && this.personalData.companyId === 1) {
       missingFields.push('Branch Name is Required');
     }
 
@@ -1234,18 +1256,13 @@ export class CollectiveofficersEditComponent {
 
         const payload = {
           ...this.personalData,
-          phoneNumber01: this.personalData.contact1 || '',
+          phoneNumber01: this.personalData.contact1,
           phoneCode01: this.personalData.contact1Code || '+94',
-          phoneNumber02: this.personalData.contact2 || '',
+          phoneNumber02: this.personalData.contact2,
           phoneCode02: this.personalData.contact2Code || this.personalData.contact1Code || '+94',
         };
 
-        console.log('Payload sent to backend:', {
-          phoneNumber01: payload.phoneNumber01,
-          phoneCode01: payload.phoneCode01,
-          phoneNumber02: payload.phoneNumber02,
-          phoneCode02: payload.phoneCode02,
-        });
+
 
         this.collectionOfficerService
           .editCollectiveOfficer(payload, this.itemId, this.selectedImage)
@@ -1477,6 +1494,7 @@ class Personal {
   bankName!: string;
   branchName!: string;
   confirmPassword!: string;
+  status!: string;
 }
 
 class CollectionCenter {

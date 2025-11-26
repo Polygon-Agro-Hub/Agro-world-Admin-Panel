@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { CustomersService } from '../../../services/dash/customers.service';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface Order {
   id: string;
@@ -51,9 +53,10 @@ export class CustomerOrdersComponent implements OnInit {
     assigned: 'Assinged',
     processing: 'Processing',
     delivered: 'Delivered',
-    ontheway: 'On the way',
+    ontheway: 'Out For Delivery',
     cancelled: 'Cancelled',
     failed: 'Faild',
+    "Out For Delivery" : "Out For Delivery"
   };
 
   constructor(
@@ -62,8 +65,10 @@ export class CustomerOrdersComponent implements OnInit {
     private dasService: CustomersService,
     private invoiceSrv: InvoiceService,
     private http: HttpClient,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
     private finalInvoiceService: FinalinvoiceService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -98,6 +103,8 @@ export class CustomerOrdersComponent implements OnInit {
     this.hasData = false;
 
     const apiStatus = this.statusMap[this.activeButton] || 'Ordered';
+    console.log(this.activeButton, apiStatus);
+
 
     this.dasService
       .fetchUserOrders(this.userId, apiStatus)

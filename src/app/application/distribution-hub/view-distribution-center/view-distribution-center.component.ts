@@ -145,8 +145,6 @@ export class ViewDistributionCenterComponent implements OnInit {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
       next: (response) => {
-        console.log('Raw API response:', response); // Add this line
-        console.log('Companies fetched:', response.data); // Check the data structure
 
         if (response.success && response.data) {
           this.companyOptions = response.data
@@ -297,7 +295,6 @@ export class ViewDistributionCenterComponent implements OnInit {
         }));
       }
     }
-    console.log(this.selectDistrict);
 
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
   }
@@ -340,7 +337,7 @@ export class ViewDistributionCenterComponent implements OnInit {
 deleteDistributionCenter(id: number): void {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You won't be able to revert this!",
+    text: "Do you really want to delete this Distribution Centre? This action cannot be undone.",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes, delete it!',

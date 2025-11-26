@@ -1,8 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button
-  (click)="onBack()"
-  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
->
+<button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -11,331 +8,224 @@
     Edit Company Details
   </h2>
 
-  <form
-    [formGroup]="companyForm"
-    (ngSubmit)="onSubmit()"
-    enctype="multipart/form-data"
-  >
-    <!-- Logo Upload -->
+  <form [formGroup]="companyForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
     <!-- Logo Upload -->
     <div class="mb-6 flex items-center gap-6">
       <span class="mt-2 text-sm text-textLight dark:text-textDark font-medium">
-        {{ logoPreview ? "Company Logo" : "No Logo Available" }}
+        {{ logoPreview ? "Company Logo *" : "No Logo Available" }}
       </span>
       <div class="flex items-center gap-4">
         <!-- Upload Button -->
-        <button
-          type="button"
+        <button type="button"
           class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-3 rounded-md border-2 border-[#3980C0] transition-colors duration-200"
-          (click)="openFilePicker()"
-        >
+          (click)="openFilePicker()">
           <i class="fa-solid fa-plus text-[#3980C0]"></i>
         </button>
 
         <!-- Logo Preview -->
         <div
-          class="w-12 h-12 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-md"
-        >
-          <img
-            *ngIf="logoPreview"
-            [src]="logoPreview"
-            alt="Company Logo"
-            class="object-cover w-full h-full"
-          />
-          <i
-            *ngIf="!logoPreview"
-            class="fa-solid fa-image text-gray-400 text-4xl"
-          ></i>
+          class="w-12 h-12 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-md">
+          <img *ngIf="logoPreview" [src]="logoPreview" alt="Company Logo" class="object-cover w-full h-full" />
+          <i *ngIf="!logoPreview" class="fa-solid fa-image text-gray-400 text-4xl"></i>
         </div>
       </div>
 
       <!-- Hidden File Input -->
-      <input
-        type="file"
-        #logoInput
-        id="logo"
-        accept="image/*"
-        (change)="onLogoChange($event)"
-        class="hidden"
-      />
+      <input type="file" #logoInput id="logo" accept="image/*" (change)="onLogoChange($event)" class="hidden" />
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <!-- Registration Number -->
       <div class="my-3">
-        <label
-          for="registrationNumber"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="registrationNumber" class="block text-sm font-medium text-textLight dark:text-textDark">
           Registration Number *
         </label>
-        <input
-          id="registrationNumber"
-          type="text"
+        <input id="registrationNumber" type="text" (keydown)="preventLeadingSpace($event)"
           formControlName="registrationNumber"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              companyForm.get('registrationNumber')?.invalid &&
-              companyForm.get('registrationNumber')?.touched
-          }"
-        />
+              (companyForm.get('registrationNumber')?.invalid &&
+              companyForm.get('registrationNumber')?.touched) ||
+              (companyForm.get('registrationNumber')?.errors?.['required'] && companyForm.get('registrationNumber')?.touched)
+          }" />
         <div
-          *ngIf="
-            companyForm.get('registrationNumber')?.invalid &&
-            companyForm.get('registrationNumber')?.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          Registration number is required
+          *ngIf="companyForm.get('registrationNumber')?.errors?.['required'] && companyForm.get('registrationNumber')?.touched"
+          class="text-red-500 text-sm mt-1">
+          Registration Number is Required
         </div>
       </div>
 
       <!-- Tax ID -->
       <div class="my-3">
-        <label
-          for="taxId"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="taxId" class="block text-sm font-medium text-textLight dark:text-textDark">
           TAX ID *
         </label>
-        <input
-          id="taxId"
-          type="text"
-          formControlName="taxId"
+        <input id="taxId" type="text" (keydown)="preventLeadingSpace($event)" formControlName="taxId"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              companyForm.get('taxId')?.invalid &&
-              companyForm.get('taxId')?.touched
-          }"
-        />
-        <div
-          *ngIf="
-            companyForm.get('taxId')?.invalid &&
-            companyForm.get('taxId')?.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          Tax ID is required
+              (companyForm.get('taxId')?.invalid &&
+              companyForm.get('taxId')?.touched) ||
+              (companyForm.get('taxId')?.errors?.['required'] && companyForm.get('taxId')?.touched)
+          }" />
+        <div *ngIf="companyForm.get('taxId')?.errors?.['required'] && companyForm.get('taxId')?.touched"
+          class="text-red-500 text-sm mt-1">
+          TAX ID is Required
         </div>
       </div>
 
       <!-- Company Name -->
       <div class="my-3 md:col-span-2">
-        <label
-          for="companyName"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="companyName" class="block text-sm font-medium text-textLight dark:text-textDark">
           Company Name *
         </label>
-        <input
-          id="companyName"
-          type="text"
-          formControlName="companyName"
+        <input id="companyName" type="text" (keydown)="preventLeadingSpace($event)" formControlName="companyName"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              companyForm.get('companyName')?.invalid &&
-              companyForm.get('companyName')?.touched
-          }"
-        />
-        <div
-          *ngIf="
-            companyForm.get('companyName')?.invalid &&
-            companyForm.get('companyName')?.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          Company name is required
+              (companyForm.get('companyName')?.invalid &&
+              companyForm.get('companyName')?.touched) ||
+              (companyForm.get('companyName')?.errors?.['required'] && companyForm.get('companyName')?.touched)
+          }" />
+        <div *ngIf="companyForm.get('companyName')?.errors?.['required'] && companyForm.get('companyName')?.touched"
+          class="text-red-500 text-sm mt-1">
+          Company Name is Required
         </div>
       </div>
 
       <!-- Phone Number 1 -->
+      <!-- Phone Number 1 -->
       <div class="my-3">
-        <label
-          for="phone1"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="phone1" class="block text-sm font-medium text-textLight dark:text-textDark">
           Phone Number - 1 *
         </label>
         <div class="flex">
-          <p-dropdown
-            formControlName="phoneCode1"
-            [options]="countries"
-            optionLabel="dialCode"
-            optionValue="dialCode"
+          <p-dropdown formControlName="phoneCode1" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
             styleClass="custom-dropdown 
-             bg-tileLight dark:bg-tileBlack 
-             text-textLight dark:text-textDark 
-             border-gray-300 dark:border-gray-600
-             rounded-l-md mr-2 flex-shrink-0"
-            [style]="{ width: '140px' }"
-            (onChange)="validateContactNumbers()"
-          >
+       bg-tileLight dark:bg-tileBlack 
+       text-textLight dark:text-textDark 
+       border-gray-300 dark:border-gray-600
+       rounded-l-md mr-2 flex-shrink-0" [style]="{ width: '140px' }">
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
-                <img
-                  [src]="getFlagUrl(country.code)"
-                  width="20"
-                  height="14"
-                  [alt]="country.name"
-                />
+                <img [src]="getFlagUrl(country.code)" width="20" height="14" [alt]="country.name" />
                 <span>{{ country.dialCode }}</span>
               </div>
             </ng-template>
             <ng-template let-country pTemplate="selectedItem">
               <div class="flex items-center gap-2" *ngIf="country">
-                <img
-                  [src]="getFlagUrl(country.code)"
-                  width="20"
-                  height="14"
-                  [alt]="country.name"
-                />
+                <img [src]="getFlagUrl(country.code)" width="20" height="14" [alt]="country.name" />
                 <span>{{ country.dialCode }}</span>
               </div>
             </ng-template>
           </p-dropdown>
-          <input
-            id="phone1"
-            type="tel"
-            formControlName="phone1"
-            (keypress)="allowOnlyNumbers($event)"
-            (blur)="validateContactNumbers()"
-            placeholder="Enter phone number"
+          <input id="phone1" type="tel" formControlName="phone1" (keypress)="allowOnlyNumbers($event)"
+            (input)="onPhoneInput($event, 'phone1')" maxlength="9" placeholder="Enter phone number"
             class="block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          />
+            [ngClass]="{
+        'border-red-500':
+          (companyForm.get('phone1')?.invalid &&
+            companyForm.get('phone1')?.touched) ||
+          contactNumberError1
+      }" />
         </div>
 
         <!-- Errors -->
         <div class="mt-1 text-red-500 text-sm">
-          <div
-            *ngIf="companyForm.get('phone1')?.errors?.['required'] && companyForm.get('phone1')?.touched"
-          >
-            Contact Number 1 is required.
+          <div *ngIf="companyForm.get('phone1')?.errors?.['required'] && companyForm.get('phone1')?.touched">
+            Phone Number - 1 is Required
           </div>
-          <div *ngIf="contactNumberError1">
+          <div *ngIf="contactNumberError1 && companyForm.get('phone1')?.value">
             <span *ngIf="companyForm.get('phoneCode1')?.value === '+94'">
-              Contact number must be exactly 9 digits for Sri Lanka (+94).
+              Phone Number must be exactly 9 digits and start with 7 for Sri Lanka (+94).
             </span>
+          </div>
+          <div
+            *ngIf="companyForm.get('phone1')?.errors?.['pattern'] && companyForm.get('phone1')?.touched && companyForm.get('phoneCode1')?.value !== '+94'">
+            Please enter a valid phone number containing only digits.
           </div>
         </div>
       </div>
 
       <!-- Phone Number 2 -->
       <div class="my-3">
-        <label
-          for="phone2"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="phone2" class="block text-sm font-medium text-textLight dark:text-textDark">
           Phone Number - 2
         </label>
         <div class="flex">
-          <p-dropdown
-            formControlName="phoneCode2"
-            [options]="countries"
-            optionLabel="dialCode"
-            optionValue="dialCode"
+          <p-dropdown formControlName="phoneCode2" [options]="countries" optionLabel="dialCode" optionValue="dialCode"
             styleClass="custom-dropdown 
-             bg-tileLight dark:bg-tileBlack 
-             text-textLight dark:text-textDark 
-             border-gray-300 dark:border-gray-600
-             rounded-l-md mr-2 flex-shrink-0"
-            [style]="{ width: '140px' }"
-            (onChange)="validateContactNumbers()"
-          >
+       bg-tileLight dark:bg-tileBlack 
+       text-textLight dark:text-textDark 
+       border-gray-300 dark:border-gray-600
+       rounded-l-md mr-2 flex-shrink-0" [style]="{ width: '140px' }">
             <ng-template let-country pTemplate="item">
               <div class="flex items-center gap-2">
-                <img
-                  [src]="getFlagUrl(country.code)"
-                  width="20"
-                  height="14"
-                  [alt]="country.name"
-                />
+                <img [src]="getFlagUrl(country.code)" width="20" height="14" [alt]="country.name" />
                 <span>{{ country.dialCode }}</span>
               </div>
             </ng-template>
             <ng-template let-country pTemplate="selectedItem">
               <div class="flex items-center gap-2" *ngIf="country">
-                <img
-                  [src]="getFlagUrl(country.code)"
-                  width="20"
-                  height="14"
-                  [alt]="country.name"
-                />
+                <img [src]="getFlagUrl(country.code)" width="20" height="14" [alt]="country.name" />
                 <span>{{ country.dialCode }}</span>
               </div>
             </ng-template>
           </p-dropdown>
-          <input
-            id="phone2"
-            type="tel"
-            formControlName="phone2"
-            (keypress)="allowOnlyNumbers($event)"
-            (blur)="validateContactNumbers()"
-            placeholder="Enter phone number"
+          <input id="phone2" type="tel" formControlName="phone2" (keypress)="allowOnlyNumbers($event)"
+            (input)="onPhoneInput($event, 'phone2')" maxlength="9" placeholder="Enter phone number"
             class="block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          />
+            [ngClass]="{
+        'border-red-500': contactNumberError2 || sameNumberError
+      }" />
         </div>
 
         <!-- Errors -->
         <div class="mt-1 text-red-500 text-sm">
-          <div *ngIf="contactNumberError2">
+          <div *ngIf="contactNumberError2 && companyForm.get('phone2')?.value">
             <span *ngIf="companyForm.get('phoneCode2')?.value === '+94'">
-              Contact number must be exactly 9 digits for Sri Lanka (+94).
+              Phone Number must be exactly 9 digits and start with 7 for Sri Lanka (+94).
             </span>
           </div>
+          <div
+            *ngIf="companyForm.get('phone2')?.errors?.['pattern'] && companyForm.get('phone2')?.touched && companyForm.get('phoneCode2')?.value !== '+94'">
+            Please enter a valid phone number containing only digits.
+          </div>
           <div *ngIf="sameNumberError">
-            Contact Number - 1 and Contact Number - 2 cannot be the same.
+            Phone Number - 1 and Phone Number - 2 cannot be the same.
           </div>
         </div>
       </div>
+
       <!-- Address -->
       <div class="my-3 md:col-span-2">
-        <label
-          for="address"
-          class="block text-sm font-medium text-textLight dark:text-textDark"
-        >
+        <label for="address" class="block text-sm font-medium text-textLight dark:text-textDark">
           Address *
         </label>
-        <textarea
-          id="address"
-          formControlName="address"
-          rows="3"
+        <textarea id="address" formControlName="address" rows="3" (keydown)="preventLeadingSpace($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
             'border-red-500':
-              companyForm.get('address')?.invalid &&
-              companyForm.get('address')?.touched
-          }"
-        ></textarea>
-        <div
-          *ngIf="
-            companyForm.get('address')?.invalid &&
-            companyForm.get('address')?.touched
-          "
-          class="text-red-500 text-sm mt-1"
-        >
-          Address is required
+              (companyForm.get('address')?.invalid &&
+              companyForm.get('address')?.touched) ||
+              (companyForm.get('address')?.errors?.['required'] && companyForm.get('address')?.touched)
+          }"></textarea>
+        <div *ngIf="companyForm.get('address')?.errors?.['required'] && companyForm.get('address')?.touched"
+          class="text-red-500 text-sm mt-1">
+          Address is Required
         </div>
       </div>
     </div>
 
     <!-- Buttons -->
     <div class="flex justify-end mt-6 gap-2">
-      <div
-        class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer"
-        (click)="onCancel()"
-      >
+      <div class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-40 text-center" (click)="onCancel()">
         Cancel
       </div>
-      <button
-        type="submit"
-        class="px-6 py-2 bg-[#3980C0] text-white rounded-md"
-        [disabled]="isLoading"
-        (click)="onSubmit()"
-      >
-        Save
+      <button type="submit" class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-40" [disabled]="isLoading"
+        (click)="onSubmit()">
+        Update
       </button>
     </div>
   </form>

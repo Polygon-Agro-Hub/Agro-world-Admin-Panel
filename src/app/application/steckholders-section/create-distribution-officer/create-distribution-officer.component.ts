@@ -618,6 +618,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   getAllCollectionCetnter(id: number) {
     this.loaded = false;
     this.personalData.centerId = '';
+    this.personalData.irmId = '';
     this.distributionOfficerServ.getAllDistributionCenterByCompany(id).subscribe(
       (res) => {
         this.distributionCenterData = res;
@@ -1041,6 +1042,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   // }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
+    
   const value = this.personalData[fieldName];
   
   // Check if field is touched

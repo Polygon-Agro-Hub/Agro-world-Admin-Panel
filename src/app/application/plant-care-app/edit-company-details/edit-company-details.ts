@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -38,6 +38,10 @@ export class EditCompanyDetailsComponent implements OnInit {
   sameNumberError = false;
   contactNumberError1 = false;
   contactNumberError2 = false;
+  logoRequiredError = false;
+
+  @ViewChild('logoInput', { static: false })
+  logoInput!: ElementRef<HTMLInputElement>;
 
   countries = [
     { name: 'Sri Lanka', code: 'LK', dialCode: '+94' },
@@ -54,27 +58,40 @@ export class EditCompanyDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.companyForm = this.fb.group({
-      registrationNumber: ['', Validators.required],
-      taxId: ['', Validators.required],
-      companyName: ['', Validators.required],
-      phoneCode1: ['+94', Validators.required],
-      phone1: ['', Validators.required],
+      registrationNumber: ['', [Validators.required]],
+      taxId: ['', [Validators.required]],
+      companyName: ['', [Validators.required]],
+      phoneCode1: ['+94', [Validators.required]],
+      phone1: ['', [Validators.required]],
       phoneCode2: ['+94'],
       phone2: [''],
-      address: ['', Validators.required],
+      address: ['', [Validators.required]],
     });
 
     // Dynamic phone validation for phone1
     this.companyForm.get('phoneCode1')?.valueChanges.subscribe((code) => {
       this.setPhoneValidators('phone1', code, true);
+      this.validateContactNumbers(); // Add real-time validation
     });
+
     // Dynamic phone validation for phone2
     this.companyForm.get('phoneCode2')?.valueChanges.subscribe((code) => {
       this.setPhoneValidators('phone2', code, false);
+      this.validateContactNumbers(); // Add real-time validation
+    });
+
+    // Add real-time validation on phone1 input
+    this.companyForm.get('phone1')?.valueChanges.subscribe(() => {
+      this.validateContactNumbers();
+    });
+
+    // Add real-time validation on phone2 input
+    this.companyForm.get('phone2')?.valueChanges.subscribe(() => {
+      this.validateContactNumbers();
     });
 
     this.route.params.subscribe((params) => {
@@ -84,6 +101,33 @@ export class EditCompanyDetailsComponent implements OnInit {
         this.loadCompanyDetails();
       }
     });
+
+    // Initialize validators
+    this.setPhoneValidators(
+      'phone1',
+      this.companyForm.get('phoneCode1')?.value,
+      true
+    );
+    this.setPhoneValidators(
+      'phone2',
+      this.companyForm.get('phoneCode2')?.value,
+      false
+    );
+  }
+
+  onPhoneInput(event: Event, field: 'phone1' | 'phone2'): void {
+    const input = event.target as HTMLInputElement;
+    const phoneCodeField = field === 'phone1' ? 'phoneCode1' : 'phoneCode2';
+    const dialCode = this.companyForm.get(phoneCodeField)?.value;
+
+    // Limit to 9 digits for Sri Lanka
+    if (dialCode === '+94' && input.value.length > 9) {
+      input.value = input.value.slice(0, 9);
+      this.companyForm.get(field)?.setValue(input.value);
+    }
+
+    // Trigger real-time validation
+    this.validateContactNumbers();
   }
 
   private loadCompanyDetails(): void {
@@ -129,21 +173,38 @@ export class EditCompanyDetailsComponent implements OnInit {
       },
       error: () => {
         this.isLoading = false;
-        Swal.fire('Error', 'Failed to load company details', 'error');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to load company details',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
         this.router.navigate(['/plant-care/action/view-company-list']);
       },
     });
   }
 
-  // Add this method to your component class
-  openFilePicker(): void {
-    const fileInput = document.getElementById('logo') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.click();
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
     }
   }
 
-  // Your existing onLogoChange method remains the same
+  openFilePicker(): void {
+    if (this.logoInput && this.logoInput.nativeElement) {
+      this.logoInput.nativeElement.click();
+    } else {
+      const fileInput = document.getElementById('logo') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.click();
+      }
+    }
+  }
+
   onLogoChange(event: any): void {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -162,23 +223,13 @@ export class EditCompanyDetailsComponent implements OnInit {
       return;
     }
 
-    this.logoFile = file;
-    const reader = new FileReader();
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      this.logoPreview = e.target?.result ?? null;
-    };
-    reader.readAsDataURL(file);
-  }
-
-  onSubmit(): void {
-    this.companyForm.markAllAsTouched();
-    this.validateContactNumbers();
-
-    if (this.companyForm.invalid || this.sameNumberError) {
+    // Check file size (5MB limit)
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
       Swal.fire({
         icon: 'error',
-        title: 'Invalid Input',
-        text: 'Please fix the errors before submitting.',
+        title: 'File Too Large',
+        text: 'Logo must be smaller than 5 MB.',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
@@ -187,6 +238,201 @@ export class EditCompanyDetailsComponent implements OnInit {
       return;
     }
 
+    this.logoFile = file;
+    this.logoRequiredError = false;
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      this.logoPreview = e.target?.result ?? null;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Get all validation errors for the popup - UPDATED VERSION
+  private getAllValidationErrors(): { field: string; message: string }[] {
+    const errors: { field: string; message: string }[] = [];
+
+    // Logo validation
+    if (!this.logoFile && !this.logoPreview) {
+      errors.push({
+        field: 'Company Logo',
+        message: 'Company logo is required',
+      });
+    }
+
+    // Registration Number
+    const regNumberControl = this.companyForm.get('registrationNumber');
+    if (regNumberControl?.errors?.['required'] && regNumberControl.touched) {
+      errors.push({
+        field: 'Registration Number',
+        message: 'Registration Number is required',
+      });
+    }
+
+    // Tax ID
+    const taxIdControl = this.companyForm.get('taxId');
+    if (taxIdControl?.errors?.['required'] && taxIdControl.touched) {
+      errors.push({ field: 'TAX ID', message: 'TAX ID is required' });
+    }
+
+    // Company Name
+    const companyNameControl = this.companyForm.get('companyName');
+    if (
+      companyNameControl?.errors?.['required'] &&
+      companyNameControl.touched
+    ) {
+      errors.push({
+        field: 'Company Name',
+        message: 'Company Name is required',
+      });
+    }
+
+    // Phone 1 - Format validation first
+    const phone1Control = this.companyForm.get('phone1');
+    const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
+
+    if (phone1Control?.errors?.['required'] && phone1Control.touched) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Phone Number - 1 is required',
+      });
+    }
+
+    if (this.contactNumberError1) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Phone Number must be exactly 9 digits and start with 7 for Sri Lanka (+94)',
+      });
+    }
+
+    if (
+      phone1Control?.errors?.['pattern'] &&
+      phone1Control.touched &&
+      phoneCode1 !== '+94'
+    ) {
+      errors.push({
+        field: 'Phone Number - 1',
+        message: 'Please enter a valid phone number containing only digits',
+      });
+    }
+
+    // Phone 2 - Format validation first
+    const phone2Control = this.companyForm.get('phone2');
+    const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
+
+    if (this.contactNumberError2) {
+      errors.push({
+        field: 'Phone Number - 2',
+        message: 'Phone Number must be exactly 9 digits and start with 7 for Sri Lanka (+94)',
+      });
+    }
+
+    if (
+      phone2Control?.errors?.['pattern'] &&
+      phone2Control.touched &&
+      phoneCode2 !== '+94'
+    ) {
+      errors.push({
+        field: 'Phone Number - 2',
+        message: 'Please enter a valid phone number containing only digits',
+      });
+    }
+
+    // Only check for duplicate numbers if both numbers have valid formats
+    if (
+      !this.contactNumberError1 &&
+      !this.contactNumberError2 &&
+      this.sameNumberError
+    ) {
+      errors.push({
+        field: 'Phone Numbers',
+        message: 'Phone Number - 1 and Phone Number - 2 cannot be the same',
+      });
+    }
+
+    // Address
+    const addressControl = this.companyForm.get('address');
+    if (addressControl?.errors?.['required'] && addressControl.touched) {
+      errors.push({ field: 'Address', message: 'Address is required' });
+    }
+
+    return errors;
+  }
+
+  // Show validation error popup with all errors - EXACTLY LIKE REFERENCE
+  private showValidationErrorPopup(
+    errors: { field: string; message: string }[]
+  ): void {
+    const errorsList = errors
+      .map((error) => `<li>${error.message}</li>`)
+      .join('');
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Missing or Invalid Information',
+      html: `
+        <div class="text-left">
+          <p class="mb-3">Please fix the following issues:</p>
+            <ul class="list-disc list-inside space-y-1 validation-errors max-h-60 overflow-y-auto">
+          ${errorsList}
+        </ul>
+        </div>
+      `,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+      confirmButtonText: 'OK',
+      width: '600px',
+    });
+  }
+
+  // FIXED VALIDATION FLOW
+  onSubmit(): void {
+    this.companyForm.markAllAsTouched();
+    this.validateContactNumbers();
+
+    // Check if logo is required (for new uploads, but keep existing logo)
+    if (!this.logoFile && !this.logoPreview) {
+      this.logoRequiredError = true;
+    }
+
+    const validationErrors = this.getAllValidationErrors();
+
+    if (validationErrors.length > 0) {
+      this.scrollToFirstError();
+      this.showValidationErrorPopup(validationErrors);
+      return;
+    }
+
+    // SHOW CONFIRMATION POPUP BEFORE UPDATE
+    this.showUpdateConfirmation();
+  }
+
+  // ADDED CONFIRMATION POPUP METHOD
+  private showUpdateConfirmation(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'Do you really want to update certificate company?',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, update it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+        title: 'dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.performUpdate();
+      }
+    });
+  }
+
+  // EXTRACTED UPDATE LOGIC
+  private performUpdate(): void {
     this.isLoading = true;
     const formData = new FormData();
     const val = this.companyForm.value;
@@ -215,7 +461,7 @@ export class EditCompanyDetailsComponent implements OnInit {
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          text: res.message || 'Company details updated successfully!',
+          text: res.message || 'Certificate Company Updated Successfully.',
           timer: 2000,
           showConfirmButton: false,
           customClass: {
@@ -241,7 +487,6 @@ export class EditCompanyDetailsComponent implements OnInit {
     });
   }
 
-  // Apply validators dynamically
   private setPhoneValidators(
     field: 'phone1' | 'phone2',
     dialCode: string,
@@ -256,9 +501,10 @@ export class EditCompanyDetailsComponent implements OnInit {
     }
 
     if (dialCode === '+94') {
-      validators.push(Validators.pattern(/^[0-9]{9}$/)); // exactly 9 digits
+      // Must be exactly 9 digits AND start with 7
+      validators.push(Validators.pattern(/^7[0-9]{8}$/));
     } else {
-      validators.push(Validators.pattern(/^[0-9]*$/)); // only numbers, any length
+      validators.push(Validators.pattern(/^[0-9]*$/));
     }
 
     control.setValidators(validators);
@@ -275,44 +521,79 @@ export class EditCompanyDetailsComponent implements OnInit {
   getFlagUrl(code: string): string {
     return `https://flagcdn.com/w20/${code.toLowerCase()}.png`;
   }
-
   validateContactNumbers(): void {
     const phoneCode1 = this.companyForm.get('phoneCode1')?.value;
     const phone1 = this.companyForm.get('phone1')?.value;
     const phoneCode2 = this.companyForm.get('phoneCode2')?.value;
     const phone2 = this.companyForm.get('phone2')?.value;
 
-    // Check if numbers are the same
-    this.sameNumberError = phone1 && phone2 && phone1 === phone2;
+    // Reset all errors first
+    this.contactNumberError1 = false;
+    this.contactNumberError2 = false;
+    this.sameNumberError = false;
 
-    // Check Sri Lanka number validation
-    this.contactNumberError1 =
-      phoneCode1 === '+94' && phone1 && phone1.length !== 9;
-    this.contactNumberError2 =
-      phoneCode2 === '+94' &&
-      phone2 &&
-      phone2.length > 0 &&
-      phone2.length !== 9;
+    // Step 1: Check Sri Lanka number validation FIRST
+    if (phoneCode1 === '+94' && phone1) {
+      this.contactNumberError1 = phone1.length !== 9 || !phone1.startsWith('7');
+    }
+
+    if (phoneCode2 === '+94' && phone2 && phone2.length > 0) {
+      this.contactNumberError2 = phone2.length !== 9 || !phone2.startsWith('7');
+    }
+
+    // Step 2: Only check for same number if both numbers have valid formats
+    if (!this.contactNumberError1 && !this.contactNumberError2) {
+      this.sameNumberError =
+        phone1 && phone2 && phone1 === phone2 && phoneCode1 === phoneCode2;
+    }
   }
 
-  isInvalidMobileNumber(field: 'phone1' | 'phone2'): boolean {
-    const control = this.companyForm.get(field);
-    const dialCode =
-      field === 'phone1'
-        ? this.companyForm.get('phoneCode1')?.value
-        : this.companyForm.get('phoneCode2')?.value;
-
-    if (dialCode === '+94') {
-      return !!(control?.value && !/^[0-9]{9}$/.test(control.value));
+  // Helper method to scroll to first error
+  private scrollToFirstError(): void {
+    const firstErrorElement = document.querySelector('.border-red-500');
+    if (firstErrorElement) {
+      firstErrorElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
     }
-    return !!(control?.value && !/^[0-9]*$/.test(control.value));
   }
 
   onCancel(): void {
-    this.location.back();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 
   onBack(): void {
-    this.location.back();
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.location.back();
+      }
+    });
   }
 }

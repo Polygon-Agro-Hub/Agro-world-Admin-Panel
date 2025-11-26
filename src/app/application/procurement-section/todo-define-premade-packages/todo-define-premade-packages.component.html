@@ -19,7 +19,7 @@
       <!-- Combined Product Price -->
       <div class="text-sm">
         <div class="text-gray-700 dark:text-gray-300">
-          Total Package Price :
+          Price of Products :
         </div>
         <div class="font-semibold text-gray-900 dark:text-gray-100">
           Rs.{{ this.totalPackagePrice | number : "1.2-2" }}
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <div class="flex space-x-2">
+    <div class="flex space-x-2" *ngIf="permissionService.hasPermission('Send to dispatch') || tokenService.getUserDetails().role === '1'">
       <button class="px-4 py-2 bg-[#74788D] text-white rounded text-sm" (click)="confirmClear()">
         Clear
       </button>
@@ -73,7 +73,7 @@
             Package : {{ package.displayName }} (Rs.{{ package.productPrice | number : "1.2-2"}}) <span
               class="text-[#3980C0] text-lg mx-3">(x{{package.packageQty}})</span>
           </span>
-          <button (click)="OpenAddNewItemPopUp(package.packageId)"
+          <button (click)="OpenAddNewItemPopUp(package.packageId)" *ngIf="permissionService.hasPermission('Send to dispatch') || tokenService.getUserDetails().role === '1'"
             class="w-6 h-6 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center">
             <span class="text-sm font-bold">+</span>
           </button>

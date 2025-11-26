@@ -4,7 +4,7 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+<button *ngIf="permissionService.hasPermission('Distribution Hub add new company') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="add(this.companyId!, this.companyName!)">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -22,9 +22,9 @@
       </div>
       <div
         class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
-        <input type="text" placeholder="Search by EMP ID, First / Last Name" [(ngModel)]="searchText"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (input)="trimLeadingSpaces()"
-          (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" />
+        <input type="text" placeholder="Search..." title="Search By EMP ID, First Name / Last Name & Email"
+          [(ngModel)]="searchText" class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          (input)="trimLeadingSpaces()" (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" />
         <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,24 +57,27 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Last Name
             </th>
-            <th class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-left">
               Email
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Status
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-              Mobile Number-1
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Mobile Number 01
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
-              Mobile Number-2
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Mobile Number 02
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+              Last Modified By
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Created At
             </th>
             <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
-            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
-            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th *ngIf="permissionService.hasPermission('Distribution Hub edit company') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th *ngIf="permissionService.hasPermission('Distribution Hub delete company') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
         </thead>
         <tbody>
@@ -100,17 +103,16 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.email }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center">
               <div>
                 <span [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] dark:text-[#A8A100] rounded-lg':
                       item.status === 'Not Approved',
-                    'font-bold px-3 py-1 text-sm bg-[#BBFFC6] text-[#308233] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-[#BBFFC6] text-[#308233] dark:text-[#308233] rounded-lg':
                       item.status === 'Approved',
-                    'font-bold px-3 py-1 text-sm bg-[#FFB9B7] text-[#D16D6A] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
-                  }"
-                  class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-textLight dark:text-textDark text-center"
+                  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-center"
                   (click)="openPopup(item)">
                   {{ item.status }}
                 </span>
@@ -128,6 +130,9 @@
                 class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneCode02 + "" +
                 item.phoneNumber02 }}</span>
             </td>
+            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.adminModify !== null ? item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
+            </td>
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.createdAtFormatted }}
             </td>
@@ -140,7 +145,7 @@
                 </svg>
               </button>
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('Distribution Hub edit company') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]" (click)="edit(item.id)">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>click to edit profile</title>
@@ -150,7 +155,8 @@
                 </svg>
               </button>
             </td>
-            <td class="px-3 Spy-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('Distribution Hub delete company') || tokenService.getUserDetails().role === '1'"
+ class="px-3 Spy-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteDistributionHead(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"

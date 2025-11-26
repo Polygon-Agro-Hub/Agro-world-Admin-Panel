@@ -588,6 +588,20 @@ resetPassword(id: number, data: any): Observable<any> {
 
     return this.http.get(url, { headers, responseType: 'blob' });
   }
+
+  getAllCentreList(companyId: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log('This is company Id', companyId);
+    return this.http.get(
+      `${this.apiUrl}auth/get-all-collection-center-list/${companyId}`,
+      {
+        headers,
+      }
+    );
+  }
 }
 
 

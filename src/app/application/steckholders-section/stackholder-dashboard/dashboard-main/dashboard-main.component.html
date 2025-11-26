@@ -1,6 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-
 <div class="p-4" *ngIf="!isLoading">
   <div class="flex justify-end mb-4">
     <button class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm" (click)="exportReport()"
@@ -11,27 +10,31 @@
     </button>
   </div>
 
-  <!-- First row -->
-
+  <!-- First row - Admin Users -->
   <app-admin-row [firstRow]="firstRow" (adminDataEmitted)="onAdminDataEmitted($event)"></app-admin-row>
 
   <div class="h-4"></div>
 
-
+  <!-- Second row - PlantCare Users -->
   <app-plantcare-users-row [secondRow]="secondRow"
     (plantCareDataEmitted)="onsPlantCareDataEmitted($event)"></app-plantcare-users-row>
 
   <div class="h-4"></div>
 
-
+  <!-- Third row - Collection Officers -->
   <app-collection-officer-users-row [thirdRow]="thirdRow"
     (collectionOfficerDataEmitted)="onCollectionOfficerDataEmitted($event)"></app-collection-officer-users-row>
 
+  <div class="h-4"></div>
 
+  <!-- Fifth row - Distribution Officers -->
+  <app-distribution-officer-users-row [fifthRow]="fifthRow"
+    (distributionOfficerDataEmitted)="onDistributionOfficerDataEmitted($event)"></app-distribution-officer-users-row>
 
+  <div class="h-4"></div>
+
+  <!-- Fourth row - Sales Agents -->
   <app-sales-agents-row [fourthRow]="fourthRow"
     (salesAgentDataEmitted)="onsalesAgentDataEmitted($event)"></app-sales-agents-row>
-
-
 
 </div>

@@ -22,7 +22,7 @@ import { DatePipe } from '@angular/common';
   ],
   templateUrl: './progress.component.html',
   styleUrl: './progress.component.css',
-  providers: [DatePipe] // Add DatePipe to providers
+  providers: [DatePipe]
 })
 export class ProgressComponent implements OnChanges {
   @Input() centerObj!: CenterDetails;
@@ -31,7 +31,7 @@ export class ProgressComponent implements OnChanges {
   targetArr!: Target[];
   targetCount: number = 0;
   selectedStatus: string = '';
-  selectedDate: Date | null = null; // Change type to Date | null
+  selectedDate: Date | null = null;
   searchText: string = '';
 
   statusOptions = [
@@ -43,77 +43,124 @@ export class ProgressComponent implements OnChanges {
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,
-    private datePipe: DatePipe // Inject DatePipe
-    // public tokenService: TokenService,
-    // public permissionService: PermissionService
+    private datePipe: DatePipe
   ) { }
 
-
   ngOnChanges(): void {
-    console.log("Center obj eka", this.centerObj);
     this.fetchData();
   }
 
   fetchData() {
-  console.log(this.selectedDate);
-  
-  // Format the date for the API call
-  let formattedDate = '';
-  if (this.selectedDate) {
-    // Use the same format as the backend expects (YYYY-MM-DD)
-    formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
-  }
-  
-  this.DestributionSrv.getCenterTargetDetails(
-    this.centerObj.centerId, 
-    this.selectedStatus, 
-    formattedDate, 
-    this.searchText
-  ).subscribe(
-    (res) => {
-      this.targetArr = res.data;
-      this.targetCount = res.data.length || 0;
-      this.hasData = this.targetCount === 0; // Update hasData based on results
+    this.isLoading = true;
+    let formattedDate = '';
+    if (this.selectedDate) {
+      formattedDate = this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd') || '';
     }
-  )
-}
+    
+    this.DestributionSrv.getCenterTargetDetails(
+      this.centerObj.centerId, 
+      this.selectedStatus, 
+      formattedDate, 
+      this.searchText
+    ).subscribe(
+      (res) => {
+        this.targetArr = res.data;
+        this.targetCount = res.data.length || 0;
+        this.hasData = this.targetCount > 0;
+        this.isLoading = false;
+      }
+    );
+  }
 
   clearDate() {
     this.selectedDate = null;
     this.fetchData();
   }
 
-  isToday(dateString: string): boolean {
+  getDateColor(item: any): string {
     const today = new Date();
-    const date = new Date(dateString);
-    return date.toDateString() === today.toDateString();
+    const schedule = new Date(item.sheduleDate);
+  
+    // Normalize both to midnight
+    today.setHours(0, 0, 0, 0);
+    schedule.setHours(0, 0, 0, 0);
+  
+    const diffDays = Math.floor((schedule.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    // Get combined status
+    const combinedStatus = this.getCombinedStatus(item);
+  
+    if (combinedStatus === 'Pending' || combinedStatus === 'Opened') {
+      if (diffDays > 0) {
+        // Future date
+        return '#606060';
+      } else if (diffDays < 0) {
+        // Past date
+        return '#AC0003';
+      } else {
+        // Today - check if it's late or not
+        const currentTime = new Date();
+        const scheduleTime = new Date(item.sheduleDate);
+        
+        // If current time is after 12 PM (noon), consider it late
+        if (currentTime.getHours() >= 12) {
+          return '#FF0000'; // Today (Late Orders)
+        } else {
+          return '#415CFF'; // Today (No Late Orders)
+        }
+      }
+    }
+  
+    // Default color for Completed or other statuses
+    return '#415CFF';
   }
 
-  isTomorrow(dateString: string): boolean {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const date = new Date(dateString);
-    return date.toDateString() === tomorrow.toDateString();
+  getDisplayDate(dateString: string): string {
+    const today = new Date();
+    const schedule = new Date(dateString);
+    
+    // Normalize both to midnight
+    today.setHours(0, 0, 0, 0);
+    schedule.setHours(0, 0, 0, 0);
+    
+    const diffDays = Math.floor((schedule.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      return 'Today 8-12 AM';
+    } else if (diffDays === 1) {
+      return 'Tomorrow 8-12 AM';
+    } else if (diffDays === 2) {
+      return 'Day after tomorrow 4-8 PM';
+    } else {
+      return this.datePipe.transform(dateString, 'mediumDate') || '';
+    }
   }
 
-  isDayAfterTomorrow(dateString: string): boolean {
-    const dayAfterTomorrow = new Date();
-    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
-    const date = new Date(dateString);
-    return date.toDateString() === dayAfterTomorrow.toDateString();
+  getCombinedStatus(item: any): string {
+    if ((item.packageStatus === 'Pending' && item.additionalItemsStatus === 'Unknown') ||
+        (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Pending') ||
+        (item.packageStatus === 'Pending' && item.additionalItemsStatus === 'Pending')) {
+      return 'Pending';
+    } else if (item.packageStatus === 'Opened' || item.additionalItemsStatus === 'Opened') {
+      return 'Opened';
+    } else if ((item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Unknown') ||
+               (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Completed') ||
+               (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Completed')) {
+      return 'Completed';
+    }
+    return 'Unknown';
   }
 
-  changeStatus(){
-    console.log(this.selectedStatus);
+  changeStatus() {
     this.fetchData();
   }
 
-  clearSearch(){
+  clearSearch() {
     this.searchText = '';
     this.fetchData();
   }
 
-  onSearch(){
+  onSearch() {
     this.fetchData();
   }
 }

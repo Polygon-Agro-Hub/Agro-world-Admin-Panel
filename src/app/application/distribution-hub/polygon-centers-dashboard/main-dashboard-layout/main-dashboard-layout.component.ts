@@ -49,7 +49,6 @@ export class MainDashboardLayoutComponent implements OnInit {
       this.centerObj.centerRegCode = params['regCode'] || '';
     });
 
-    console.log("Center Object:", this.centerObj);
   }
 
   setActiveTab(tab: string) {

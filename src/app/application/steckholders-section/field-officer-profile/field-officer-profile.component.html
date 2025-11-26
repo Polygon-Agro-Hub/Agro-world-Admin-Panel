@@ -1,28 +1,15 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button
-  (click)="goBack()"
-  class="mb-5 text-textLight dark:text-textDark"
->
+<button (click)="goBack()" class="mb-5 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<div
-  class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
->
+<div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
   <div class="flex flex-col gap-7 px-2 py-2" id="reportcontainer">
-    <div
-      class="flex flex-row justify-between items-center border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6"
-    >
+    <div class="flex flex-row justify-between items-center border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <div class="flex flex-row items-center">
-        <div
-          class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden"
-        >
+        <div class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden">
           <ng-container *ngIf="officerObj.image; else defaultIcon">
-            <img
-              [src]="officerObj.image"
-              alt="Officer Image"
-              class="w-full h-full object-cover"
-            />
+            <img [src]="officerObj.image" alt="Officer Image" class="w-full h-full object-cover" />
           </ng-container>
           <ng-template #defaultIcon>
             <i class="fa-regular fa-user text-5xl dark:text-textDark"></i>
@@ -34,55 +21,45 @@
             {{ officerObj.firstName }} {{ officerObj.lastName }}
           </p>
           <p class="dark:text-[#a6aebb] font-semibold text-[#627189]">
-              {{ officerObj.jobRole }} -
-              <span class="font-semibold text-[#030308] dark:text-textDark">{{ officerObj.empId }}</span>
+            {{ officerObj.jobRole }} -
+            <span class="font-semibold text-[#030308] dark:text-textDark">{{ officerObj.empId }}</span>
           </p>
-          
+
           <p class="dark:text-[#a6aebb] text-[#627189]">{{ officerObj.companyName }}</p>
         </div>
       </div>
 
       <div class="flex flex-row gap-4 justify-between">
-        <div class="flex flex-row justify-center min-w-24">
-          <button 
+        <div class="flex flex-row justify-center min-w-24" *ngIf=" permissionService.hasPermission('Delete field officers') || tokenService.getUserDetails().role === '1'">
+          <button
             class="flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#6c2d3180] bg-[#FFDBDC80] dark:text-[#db4848] text-[#FF0000] border-2 dark:border-[#FF0000] border-[#FF0000] text-lg rounded-xl shadow-md"
-            (click)="deleteFieldOfficer(officerObj.id)"
-          >
+            (click)="deleteFieldOfficer(officerObj.id)">
             <i class="fa-solid fa-trash text-base text-[#FF0000] dark:text-[#FF0000]"></i>
             <span class="">Delete</span>
           </button>
         </div>
-  
-        <div class="flex flex-row justify-center ">
-          <button 
+
+        <div class="flex flex-row justify-center " *ngIf=" permissionService.hasPermission('Edit field officers') || tokenService.getUserDetails().role === '1'">
+          <button
             class="min-w-24 flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#38608480] bg-[#DBEEFF80] dark:text-[#3980C0] text-[#3980C0] border-2 border-[#3980C0] dark:border-[#3980C0] text-lg rounded-xl shadow-md"
-            (click)="editFieldOfficer(officerObj.id)"
-            >
-  
+            (click)="editFieldOfficer(officerObj.id)">
+
             <i class="fa-solid fa-pen-to-square text-base text-[#3980C0] dark:text-[#3980C0]"></i>
             <span class="">Edit</span>
           </button>
         </div>
       </div>
-      
+
 
     </div>
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <div class="flex flex-row justify-between">
         <p class="text-[#030308] text-lg dark:text-[#ffffff]">Personal Information</p>
-        <button
-          class="bg-[#3980C0] text-white px-6 py-1 text-xl rounded-lg shadow-lg"
-          [disabled]="isGeneratingPDF" (click)="generatePDF()"
-        >
-          <i
-            class="fa-solid fa-download"
-            [ngClass]="{ hidden: isGeneratingPDF }"
-          ></i>
-          <i
-            class="fa-solid fa-spinner fa-spin"
-            [ngClass]="{ hidden: !isGeneratingPDF }"
-          ></i>
+        <button class="bg-[#3980C0] text-white px-6 py-1 text-xl rounded-lg shadow-lg" [disabled]="isGeneratingPDF" *ngIf=" permissionService.hasPermission('Download field officers') || tokenService.getUserDetails().role === '1'"
+          (click)="generatePDF()">
+          <i class="fa-solid fa-download" [ngClass]="{ hidden: isGeneratingPDF }"></i>
+          <i class="fa-solid fa-spinner fa-spin" [ngClass]="{ hidden: !isGeneratingPDF }"></i>
         </button>
       </div>
 
@@ -122,10 +99,7 @@
 
         <div>
           <p class="text-[#627189] text-lg">Mobile Number - 2</p>
-          <p
-            *ngIf="officerObj?.phoneNumber02; else noPhone"
-            class="text-[#030308] text-lg dark:text-[#ffffff]"
-          >
+          <p *ngIf="officerObj.phoneNumber02; else noPhone" class="text-[#030308] text-lg dark:text-[#ffffff]">
             {{ officerObj.phoneCode02 }} {{ officerObj.phoneNumber02 }}
           </p>
           <ng-template #noPhone>
@@ -148,7 +122,7 @@
             {{ officerObj.language }}
           </p>
         </div>
-        
+
       </div>
     </div>
 
@@ -235,11 +209,11 @@
         <div>
           <p class="text-[#627189] text-lg">Commission Amount</p>
           <p class="text-[#030308] text-lg dark:text-[#ffffff]">
-            {{ officerObj.comAmount }}
+            {{ officerObj.comAmount }}%
           </p>
         </div>
 
-        
+
       </div>
     </div>
 
@@ -248,35 +222,31 @@
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div class="flex flex-col items-left gap-2">
-          <i class="fa-solid fa-image text-lg text-black cursor-pointer"
-             (click)="openImage(officerObj.frontNic)"></i>
+          <i class="fa-solid fa-image text-lg text-black dark:text-white cursor-pointer"
+            (click)="openImage(officerObj.frontNic)"></i>
 
-          <p class="text-[#627189] text-lg">NIC’s Front Image</p>
+          <p class="text-[#627189]  text-lg">NIC's Front Image</p>
         </div>
 
         <div class="flex flex-col items-left gap-2">
-          <i class="fa-solid fa-image text-lg text-black cursor-pointer"
-             (click)="openImage(officerObj.backNic)"></i>
-          <p class="text-[#627189] text-lg">NIC’s Back Image</p>
-      
+          <i class="fa-solid fa-image text-lg text-black dark:text-white cursor-pointer"
+            (click)="openImage(officerObj.backNic)"></i>
+          <p class="text-[#627189] text-lg">NIC's Back Image</p>
         </div>
 
         <div class="flex flex-col items-left gap-2">
-          <i class="fa-solid fa-image text-lg text-black  cursor-pointer"
-             (click)="openImage(officerObj.backPassbook)"></i>
+          <i class="fa-solid fa-image text-lg text-black dark:text-white cursor-pointer"
+            (click)="openImage(officerObj.backPassbook)"></i>
 
-          <p class="text-[#627189] text-lg">Bank Passbook</p>
+          <p class="text-[#627189]  text-lg">Bank Passbook</p>
         </div>
 
         <div class="flex flex-col items-left gap-2">
-                  
-          <i class="fa-solid fa-image text-lg text-black  cursor-pointer"
-             (click)="openImage(officerObj.contract)"></i>
+          <i class="fa-solid fa-image text-lg text-black dark:text-white cursor-pointer"
+            (click)="openImage(officerObj.contract)"></i>
 
           <p class="text-[#627189] text-lg">Signed Contract</p>
         </div>
-
-        
       </div>
     </div>
   </div>

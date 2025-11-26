@@ -9,7 +9,7 @@
     class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <div class="pt-5 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
-            <button [ngClass]="
+            <button *ngIf="permissionService.hasPermission('Dash customers order assigned tab') || tokenService.getUserDetails().role === '1'" [ngClass]="
           activeButton === 'assigned'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -17,7 +17,7 @@
                 <i *ngIf="activeButton === 'assigned'" class="fa fa-check"></i>
                 Assigned
             </button>
-            <button [ngClass]="
+            <button *ngIf="permissionService.hasPermission('Dash customers order processing tab') || tokenService.getUserDetails().role === '1'" [ngClass]="
           activeButton === 'processing'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -25,7 +25,16 @@
                 <i *ngIf="activeButton === 'processing'" class="fa fa-check"></i>
                 Processing
             </button>
-            <button [ngClass]="
+            <button *ngIf="permissionService.hasPermission('Dash customers order out for delivery tab') || tokenService.getUserDetails().role === '1'" [ngClass]="
+          activeButton === 'On the way'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+                (click)="onStatusChange('Out For Delivery')">
+                <i *ngIf="activeButton === 'Out For Delivery'" class="fa fa-check"></i>
+                Out For Delivery
+            </button>
+            <button *ngIf="permissionService.hasPermission('Dash customers order delivered tab') || tokenService.getUserDetails().role === '1'" [ngClass]="
           activeButton === 'delivered'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -33,15 +42,7 @@
                 <i *ngIf="activeButton === 'delivered'" class="fa fa-check"></i>
                 Delivered
             </button>
-            <button [ngClass]="
-          activeButton === 'On the way'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2" (click)="onStatusChange('On the way')">
-                <i *ngIf="activeButton === 'On the way'" class="fa fa-check"></i>
-                On the way
-            </button>
-            <button [ngClass]="
+            <button *ngIf="permissionService.hasPermission('Dash customers order cancelled tab') || tokenService.getUserDetails().role === '1'" [ngClass]="
           activeButton === 'cancelled'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -49,7 +50,7 @@
                 <i *ngIf="activeButton === 'cancelled'" class="fa fa-check"></i>
                 Cancelled
             </button>
-            <button [ngClass]="
+            <button *ngIf="permissionService.hasPermission('Dash customers order failed tab') || tokenService.getUserDetails().role === '1'" [ngClass]="
           activeButton === 'failed'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -71,7 +72,7 @@
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>
 
-        <div class="px-5" *ngIf="!isLoading && !errorMessage && hasData">
+        <div class="px-5" *ngIf="!isLoading && !errorMessage && hasData && permissionService.hasPermission('Dash customers order') || tokenService.getUserDetails().role === '1'">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
                 <thead>
                     <tr>
@@ -99,7 +100,7 @@
                         <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
                             Order Status
                         </th>
-                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th *ngIf="permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
                             Invoice
                         </th>
                     </tr>
@@ -138,15 +139,15 @@
                                     class="bg-[#CFE1FF] text-[#3B82F6] rounded-xl px-5 py-2">Processing</span>
                                 <span *ngIf="activeButton === 'delivered'"
                                     class="bg-[#BBFFC6] text-[#308233] rounded-xl px-5 py-2">Delivered</span>
-                                <span *ngIf="activeButton === 'On the way'"
-                                    class="bg-[#af7ce3] text-[#481c56] rounded-xl px-5 py-2">On the way</span>
+                                <span *ngIf="activeButton === 'Out For Delivery'"
+                                    class="bg-[#af7ce3] text-[#481c56] rounded-xl px-5 py-2">Out For Delivery</span>
                                 <span *ngIf="activeButton === 'cancelled'"
                                     class="bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-5 py-2">Cancelled</span>
                                 <span *ngIf="activeButton === 'failed'"
                                     class="bg-[#FFDCDA] text-[#FF1100] rounded-xl px-5 py-2">Failed</span>
                             </td>
                             <td class="px-3 py-3 flex justify-center">
-                                <button class="text-textLight dark:text-textDark flex justify-center gap-1"
+                                <button *ngIf="permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1'" class="text-textLight dark:text-textDark flex justify-center gap-1"
                                     (click)="downloadInvoice(order.id, order.invNo)">
                                     <i class="fa-solid fa-file-lines text-2xl"></i>
                                 </button>

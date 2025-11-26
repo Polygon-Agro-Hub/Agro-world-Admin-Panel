@@ -178,7 +178,7 @@
             >
               Reply
             </th>
-            <th
+            <th *ngIf="permissionService.hasPermission('View Sales complaint') || tokenService.getUserDetails().role === '1'" class="px-4 py-3 text-center"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap"
             >
               View Reply
@@ -277,7 +277,7 @@
               >
             </td>
 
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('View Sales complaint') || tokenService.getUserDetails().role === '1'" class="px-4 py-3 text-center" class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div *ngIf="item.reply === null">
                 <button
                   disabled

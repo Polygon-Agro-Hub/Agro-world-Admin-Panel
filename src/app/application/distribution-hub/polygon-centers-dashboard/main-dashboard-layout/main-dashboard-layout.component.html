@@ -57,15 +57,10 @@
     </div>
     <div class="h-5"></div>
     <div class="tab-content">
-      <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress' && permissionService.hasPermission('Polygon centres view dashboard progress tab') ||
-        tokenService.getUserDetails().role === '1'
-      " />
-      <app-out-of-delivery [centerObj]="centerObj"  *ngIf="activeTab === 'Out for Delivery' && permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') ||
-        tokenService.getUserDetails().role === '1'"></app-out-of-delivery>
-      <app-officers [centerObj]="centerObj" *ngIf="activeTab === 'Officers'  && permissionService.hasPermission('Polygon centres view dashboard officers tab') ||
-        tokenService.getUserDetails().role === '1'"></app-officers>
-      <app-officer-target [centerObj]="centerObj" *ngIf="activeTab === 'Officer Target' && permissionService.hasPermission('Polygon centres view dashboard officer target tab') ||
-        tokenService.getUserDetails().role === '1'"></app-officer-target>
+      <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress' && (permissionService.hasPermission('Polygon centres view dashboard progress tab') || tokenService.getUserDetails().role === '1')"></app-progress>
+      <app-out-of-delivery [centerObj]="centerObj" *ngIf="activeTab === 'Out for Delivery' && (permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') || tokenService.getUserDetails().role === '1')"></app-out-of-delivery>
+      <app-officers [centerObj]="centerObj" *ngIf="activeTab === 'Officers' && (permissionService.hasPermission('Polygon centres view dashboard officers tab') || tokenService.getUserDetails().role === '1')"></app-officers>
+      <app-officer-target [centerObj]="centerObj" *ngIf="activeTab === 'Officer Target' && (permissionService.hasPermission('Polygon centres view dashboard officer target tab') || tokenService.getUserDetails().role === '1')"></app-officer-target>
     </div>
   </div>
 </div>

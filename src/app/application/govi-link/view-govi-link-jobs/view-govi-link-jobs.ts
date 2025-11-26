@@ -5,6 +5,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import { CalendarModule } from 'primeng/calendar';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-govi-link-jobs',
@@ -70,7 +72,8 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   jobDetails: any = null;
   isLoadingJobDetails = false;
 
-  constructor(private goviLinkService: GoviLinkService) {}
+  constructor(private goviLinkService: GoviLinkService, public tokenService: TokenService,
+      public permissionService: PermissionService) {}
 
   ngOnInit(): void {
     this.dateFilter = new Date();

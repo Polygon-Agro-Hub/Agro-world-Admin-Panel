@@ -624,9 +624,18 @@ export const routes: Routes = [
               {
                 path: 'finance-govicapital',
                 children: [
-                  { path: 'ivesment-requests', component: InvestmentRequestsComponent },
-                  { path: 'viewAll-Govicare-requests', component: ViewAllGovicareRequestsComponent },
-                  { path: 'viewAll-Govicare-ApprovedRequests', component: ViewAllApprovedGovicareRequestsComponent },
+                  { 
+                    path: 'ivesment-requests', 
+                    component: InvestmentRequestsComponent 
+                  },
+                  { 
+                    path: 'viewAll-Govicare-requests', 
+                    component: ViewAllGovicareRequestsComponent 
+                  },
+                  { 
+                    path: 'viewAll-Govicare-ApprovedRequests', 
+                    component: ViewAllApprovedGovicareRequestsComponent 
+                  },
                   {
                     path: 'reject-requests',
                     component: GovicapitalFinanceComponent,

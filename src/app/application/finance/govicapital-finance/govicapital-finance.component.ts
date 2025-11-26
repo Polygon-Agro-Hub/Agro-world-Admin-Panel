@@ -38,6 +38,7 @@ interface RejectedInvestmentRequest {
   expectedStartDate?: string;
   requestDateTime?: string;
   NICnumber: string;
+  officerEmpId: string;
 }
 
 @Component({

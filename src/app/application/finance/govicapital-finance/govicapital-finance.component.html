@@ -31,7 +31,7 @@
           <!-- Input field -->
           <input
             type="text"
-            placeholder="Search by Request ID or Phone Number"
+            placeholder="Search By ID, Phone Number.."
             class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
             [(ngModel)]="searchTerm"
             (keyup.enter)="onSearch()"
@@ -114,27 +114,27 @@
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Request_ID
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Farmer Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Phone number
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Officer Emp ID
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Rejected Date
             </th>
@@ -163,19 +163,19 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ formatNumber(i) }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ request.jobId }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ getFullName(request.firstName, request.lastName) || "N/A" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ request.phoneNumber || "N/A" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ request.officerEmpId || "N/A" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ formatDate(request.rejectedAt) }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">

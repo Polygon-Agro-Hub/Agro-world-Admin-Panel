@@ -114,7 +114,15 @@ export class GovicapitalFinanceComponent implements OnInit {
 
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString();
+
+    const date = new Date(dateString);
+
+    // Format as "June 01, 2026"
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit',
+    });
   }
 
   formatCurrency(amount: number): string {

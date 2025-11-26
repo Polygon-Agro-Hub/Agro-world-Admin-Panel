@@ -9,6 +9,8 @@ import { DestributionService } from '../../../../services/destribution-service/d
 import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-out-of-delivery',
@@ -43,6 +45,8 @@ export class OutOfDeliveryComponent implements OnChanges {
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {

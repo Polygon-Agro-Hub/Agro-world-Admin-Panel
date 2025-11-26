@@ -105,7 +105,10 @@
     </div>
     
     <!-- Download Button -->
-    <div class="flex justify-between items-center mb-5">
+    <div *ngIf="
+        permissionService.hasPermission('Polygon centres out for delivery download pdf') ||
+        tokenService.getUserDetails().role === '1'
+      " class="flex justify-between items-center mb-5">
       <button (click)="downloadPDF()" 
         class="bg-[#415CFF] px-5 py-2 rounded-lg text-white text-lg hover:bg-[#3347cc] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
         Download PDF

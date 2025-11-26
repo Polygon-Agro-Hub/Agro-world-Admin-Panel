@@ -175,6 +175,7 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
+              *ngIf="permissionService.hasPermission('Distribution Hub view center head') || tokenService.getUserDetails().role === '1'"
                 (click)="viewCompanyHeadPortals(item.companyId, item.companyNameEnglish)">
                 <i class="fa-regular fa-square-plus text-2xl"></i>
               </button>

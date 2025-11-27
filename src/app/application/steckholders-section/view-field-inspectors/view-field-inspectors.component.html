@@ -180,8 +180,9 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ inspector.modifyBy || '--' }}
             </td>
-            <td class="text-center flex justify-center mt-3 space-x-3" *ngIf=" permissionService.hasPermission('View field officer profile') || tokenService.getUserDetails().role === '1'">
-              <button class="w-6 h-6 text-blue-500 hover:text-blue-700" (click)="viewInspector(inspector.id)"
+            <td class="text-center mt-3 space-x-3" *ngIf=" permissionService.hasPermission('View field officer profile') || tokenService.getUserDetails().role === '1'">
+              <div class=" flex justify-center items-center">
+                <button class="w-6 h-6 text-blue-500 hover:text-blue-700" (click)="viewInspector(inspector.id)"
                 title="View Company">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -189,6 +190,7 @@
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
+              </div>
             </td>
           </tr>
         </tbody>

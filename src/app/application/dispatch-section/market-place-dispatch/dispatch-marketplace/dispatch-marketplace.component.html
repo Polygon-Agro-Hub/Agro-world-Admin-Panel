@@ -30,6 +30,6 @@
     </div>
 
     <div *ngIf="!isPremade">
-       <app-marketplace-custome-package *ngIf="permissionService.hasPermission('View GoviMart custome') || tokenService.getUserDetails().role === '1'"/>
+       <app-marketplace-custome-package *ngIf="permissionService.hasPermission('View GoviMart custom') || tokenService.getUserDetails().role === '1'"/>
   </div>
 </div>

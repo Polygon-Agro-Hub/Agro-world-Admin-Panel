@@ -204,6 +204,7 @@
               Status
             </th>
             <th
+            *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Assign
@@ -248,7 +249,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ job.district }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'" class="px-4 py-3 text-left text-textLight dark:text-textDark">
               <span
                 class="px-2 py-1 rounded-full text-xs font-medium"
                 [ngClass]="{
@@ -284,7 +285,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ job.assignedBy || "--" }}
             </td>
-            <td class="text-center flex justify-center mt-3 space-x-3">
+            <td *ngIf="permissionService.hasPermission('Assign govi link jobs view request') || tokenService.getUserDetails().role === '1'" class="text-center flex justify-center mt-3 space-x-3">
               <!-- VIEW -->
               <button
                 class="w-6 h-6 text-blue-500 hover:text-blue-700"

@@ -4,7 +4,7 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button *ngIf="permissionService.hasPermission('Distribution Hub add new company') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+<button *ngIf="permissionService.hasPermission('Distribution Hub add cch') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="add(this.companyId!, this.companyName!)">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -60,7 +60,10 @@
             <th class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-left">
               Email
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th *ngIf="
+            permissionService.hasPermission('Distribution Hub approved/not approved cch') ||
+            tokenService.getUserDetails().role === '1'
+          " class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Status
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -103,7 +106,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.email }}
             </td>
-            <td class="px-4 py-3 text-center">
+            <td class="px-4 py-3 text-center" *ngIf="
+            permissionService.hasPermission('Distribution Hub approved/not approved cch') ||
+            tokenService.getUserDetails().role === '1'
+          ">
               <div>
                 <span [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] dark:text-[#A8A100] rounded-lg':
@@ -136,7 +142,10 @@
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               {{ item.createdAtFormatted }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="
+            permissionService.hasPermission('Distribution Hub view a cch') ||
+            tokenService.getUserDetails().role === '1'
+          " class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="view(item.id, true)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -145,7 +154,7 @@
                 </svg>
               </button>
             </td>
-            <td *ngIf="permissionService.hasPermission('Distribution Hub edit company') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="permissionService.hasPermission('Distribution Hub edit a cch') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]" (click)="edit(item.id)">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>click to edit profile</title>
@@ -155,7 +164,7 @@
                 </svg>
               </button>
             </td>
-            <td *ngIf="permissionService.hasPermission('Distribution Hub delete company') || tokenService.getUserDetails().role === '1'"
+            <td *ngIf="permissionService.hasPermission('Distribution Hub delete a cch') || tokenService.getUserDetails().role === '1'"
  class="px-3 Spy-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteDistributionHead(item.id)">

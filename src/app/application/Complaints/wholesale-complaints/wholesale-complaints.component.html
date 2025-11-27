@@ -99,7 +99,7 @@
             <th
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               Reply</th>
-            <th
+            <th *ngIf="permissionService.hasPermission('View Wholesale complaint') || tokenService.getUserDetails().role === '1'" class="px-3 py-2 whitespace-nowrap text-center"
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               View Reply</th>
           </tr>
@@ -168,7 +168,7 @@
               <span *ngIf="!item.reply && item.status !== 'Closed'" class="italic opacity-60 ">No</span>
               <span *ngIf="item.reply && item.status === 'Closed'" class="underline">Yes</span>
             </td>
-            <td class="px-3 py-2 whitespace-nowrap text-center">
+            <td *ngIf="permissionService.hasPermission('View Wholesale complaint') || tokenService.getUserDetails().role === '1'" class="px-3 py-2 whitespace-nowrap text-center">
               <button (click)="item.reply && showReplyDialog(item)" [disabled]="!item.reply"
                 [ngClass]="{'opacity-40 cursor-not-allowed': !item.reply}" class="text-blue-600 hover:text-blue-900"
                 aria-label="View complaint reply">

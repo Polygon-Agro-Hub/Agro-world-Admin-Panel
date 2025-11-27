@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { debounceTime, Subject } from 'rxjs';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface Customers {
   id: number;
@@ -68,7 +70,9 @@ export class CustomersComponent implements OnInit {
   constructor(
     private customerService: CustomersService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) {
     this.searchSubject.pipe(debounceTime(300)).subscribe((searchText) => {
       this.filterCustomers(searchText);

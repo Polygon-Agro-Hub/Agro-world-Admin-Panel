@@ -32,32 +32,32 @@ export class AddPackageComponent implements OnInit {
     image: false,
     quantities: false
   };
-  
+
   submitAttempted = false;
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) {}
+  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
 
 
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-     customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-      cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.router.navigate(['/market/action']);
-    }
-  });
-}
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/market/action']);
+      }
+    });
+  }
 
 
   ngOnInit(): void {
@@ -91,39 +91,39 @@ export class AddPackageComponent implements OnInit {
 
   // Validation getter methods
   get shouldShowDisplayNameError(): boolean {
-    return (this.fieldTouched.displayName || this.submitAttempted) && 
-           !this.packageObj.displayName?.trim();
+    return (this.fieldTouched.displayName || this.submitAttempted) &&
+      !this.packageObj.displayName?.trim();
   }
 
   get shouldShowDescriptionError(): boolean {
-    return (this.fieldTouched.description || this.submitAttempted) && 
-           !this.packageObj.description?.trim();
+    return (this.fieldTouched.description || this.submitAttempted) &&
+      !this.packageObj.description?.trim();
   }
 
   get shouldShowProductPriceError(): boolean {
-    return (this.fieldTouched.productPrice || this.submitAttempted) && 
-           (!this.packageObj.productPrice || this.packageObj.productPrice <= 0);
+    return (this.fieldTouched.productPrice || this.submitAttempted) &&
+      (!this.packageObj.productPrice || this.packageObj.productPrice <= 0);
   }
 
   get shouldShowPackageFeeError(): boolean {
-    return (this.fieldTouched.packageFee || this.submitAttempted) && 
-           (this.packageObj.packageFee < 0);
+    return (this.fieldTouched.packageFee || this.submitAttempted) &&
+      (this.packageObj.packageFee < 0);
   }
 
   get shouldShowServiceFeeError(): boolean {
-    return (this.fieldTouched.serviceFee || this.submitAttempted) && 
-           (this.packageObj.serviceFee < 0);
+    return (this.fieldTouched.serviceFee || this.submitAttempted) &&
+      (this.packageObj.serviceFee < 0);
   }
 
   get shouldShowImageError(): boolean {
-    return (this.fieldTouched.image || this.submitAttempted) && 
-           !this.selectedImage;
+    return (this.fieldTouched.image || this.submitAttempted) &&
+      !this.selectedImage;
   }
 
   get shouldShowQuantityError(): boolean {
-    return (this.fieldTouched.quantities || this.submitAttempted) && 
-           this.productTypeObj.length > 0 && 
-           !Object.values(this.packageObj.quantities).some(qty => qty > 0);
+    return (this.fieldTouched.quantities || this.submitAttempted) &&
+      this.productTypeObj.length > 0 &&
+      !Object.values(this.packageObj.quantities).some(qty => qty > 0);
   }
 
   onDisplayNameChange(event: any): void {
@@ -135,8 +135,8 @@ export class AddPackageComponent implements OnInit {
     this.packageObj.displayName = value;
     event.target.value = value;
   }
-  
-    onDescriptionChange(event: any): void {
+
+  onDescriptionChange(event: any): void {
     let value = event.target.value;
     value = value.replace(/^\s+/, '');
     if (value.length > 0) {
@@ -145,9 +145,9 @@ export class AddPackageComponent implements OnInit {
     this.packageObj.description = value;
     event.target.value = value;
   }
-  
-  
-  
+
+
+
 
   preventNegative(event: any): void {
     const value = parseFloat(event.target.value);
@@ -189,70 +189,47 @@ export class AddPackageComponent implements OnInit {
   }
 
   async onSubmit() {
-  this.submitAttempted = true;
+    this.submitAttempted = true;
 
-  // Mark all fields as touched
-  Object.keys(this.fieldTouched).forEach(key => {
-    this.fieldTouched[key as keyof typeof this.fieldTouched] = true;
-  });
-
-  // Validation with specific error messages
-  let errorMessages: string[] = [];
-
-  // Required field validations
-  if (!this.packageObj.displayName?.trim()) {
-    errorMessages.push('Display Package Name is required');
-  }
-  if (!this.packageObj.description?.trim()) {
-    errorMessages.push('Description is required');
-  }
-  if (!this.packageObj.productPrice) {
-    errorMessages.push('Total Package Price is required');
-  }
-  if (this.packageObj.packageFee === undefined) {
-    errorMessages.push('Packaging Fee is required');
-  }
-  if (this.packageObj.serviceFee === undefined) {
-    errorMessages.push('Service Fee is required');
-  }
-  if (!this.selectedImage) {
-    errorMessages.push('Package Image is required');
-  }
-
-  // ✅ Product type validation: At least one product must be added
-  if (!this.productTypeObj || this.productTypeObj.length === 0 ||
-      !Object.values(this.packageObj.quantities || {}).some(qty => qty > 0)) {
-    errorMessages.push('At least one product type with quantity greater than 0 is required');
-  }
-
-  if (errorMessages.length > 0) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Validation Error',
-      html: errorMessages.join('<br>'),
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-      },
+    // Mark all fields as touched
+    Object.keys(this.fieldTouched).forEach(key => {
+      this.fieldTouched[key as keyof typeof this.fieldTouched] = true;
     });
-    return;
-  }
 
-  this.isLoading = true;
+    // Validation with specific error messages
+    let errorMessages: string[] = [];
 
-  try {
-    // Check if display name exists
-    const nameCheck = await this.marketSrv
-      .checkPackageDisplayName(this.packageObj.displayName)
-      .toPromise();
+    // Required field validations
+    if (!this.packageObj.displayName?.trim()) {
+      errorMessages.push('Display Package Name is required');
+    }
+    if (!this.packageObj.description?.trim()) {
+      errorMessages.push('Description is required');
+    }
+    if (!this.packageObj.productPrice) {
+      errorMessages.push('Total Package Price is required');
+    }
+    if (this.packageObj.packageFee === undefined) {
+      errorMessages.push('Packaging Fee is required');
+    }
+    if (this.packageObj.serviceFee === undefined) {
+      errorMessages.push('Service Fee is required');
+    }
+    if (!this.selectedImage) {
+      errorMessages.push('Package Image is required');
+    }
 
-    if (nameCheck.exists) {
+    // ✅ Product type validation: At least one product must be added
+    if (!this.productTypeObj || this.productTypeObj.length === 0 ||
+      !Object.values(this.packageObj.quantities || {}).some(qty => qty > 0)) {
+      errorMessages.push('At least one product type with quantity greater than 0 is required');
+    }
+
+    if (errorMessages.length > 0) {
       Swal.fire({
         icon: 'error',
-        title: 'Package Name Exists',
-        text: 'A package with this display name already exists. Please choose a different name.',
+        title: 'Validation Error',
+        html: errorMessages.join('<br>'),
         confirmButtonText: 'OK',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -260,34 +237,73 @@ export class AddPackageComponent implements OnInit {
           confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
-      this.isLoading = false;
       return;
     }
 
-    // Proceed with package creation
-    this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
-      (res) => {
+    this.isLoading = true;
+
+    try {
+      // Check if display name exists
+      const nameCheck = await this.marketSrv
+        .checkPackageDisplayName(this.packageObj.displayName)
+        .toPromise();
+
+      if (nameCheck.exists) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Package Name Exists',
+          text: 'A package with this display name already exists. Please choose a different name.',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
+        });
         this.isLoading = false;
-        if (res.status) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Package Created',
-            text: 'The package was created successfully!',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-            },
-          }).then(() => {
-            this.packageObj = new Package();
-            this.router.navigate(['/market/action/view-packages-list']);
-          });
-        } else {
+        return;
+      }
+
+      // Proceed with package creation
+      this.marketSrv.createPackage(this.packageObj, this.selectedImage).subscribe(
+        (res) => {
+          this.isLoading = false;
+          if (res.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Package Created',
+              text: 'The package was created successfully!',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            }).then(() => {
+              this.packageObj = new Package();
+              if (res.packageId) this.router.navigate(['/market/action/define-package-view'], { queryParams: { id: res.packageId } });
+              else this.router.navigate(['/market/action/view-packages-list']);
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Package Not Created',
+              text: 'The package could not be created. Please try again.',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            });
+          }
+        },
+        (error) => {
+          this.isLoading = false;
           Swal.fire({
             icon: 'error',
-            title: 'Package Not Created',
-            text: 'The package could not be created. Please try again.',
+            title: 'An Error Occurred',
+            text: 'There was an error while creating the package. Please try again later.',
             confirmButtonText: 'OK',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -296,37 +312,22 @@ export class AddPackageComponent implements OnInit {
             },
           });
         }
-      },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'An Error Occurred',
-          text: 'There was an error while creating the package. Please try again later.',
-          confirmButtonText: 'OK',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-          },
-        });
-      }
-    );
-  } catch (error) {
-    this.isLoading = false;
-    Swal.fire({
-      icon: 'error',
-      title: 'An Error Occurred',
-      text: 'There was an error checking the package name. Please try again later.',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-      },
-    });
+      );
+    } catch (error) {
+      this.isLoading = false;
+      Swal.fire({
+        icon: 'error',
+        title: 'An Error Occurred',
+        text: 'There was an error checking the package name. Please try again later.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        },
+      });
+    }
   }
-}
 
   onCancel() {
     Swal.fire({
@@ -336,12 +337,12 @@ export class AddPackageComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
-       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-      cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
-    },
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton: 'bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-black dark:text-white',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.packageObj = new Package();
@@ -352,7 +353,7 @@ export class AddPackageComponent implements OnInit {
 
   onFileSelected(event: any): void {
     this.fieldTouched.image = true; // Mark image as touched when file is selected
-    
+
     const file: File = event.target.files[0];
     if (file) {
       if (file.size > 5000000) {
@@ -424,71 +425,71 @@ export class AddPackageComponent implements OnInit {
   }
 
   allowDecimalNumbers(event: KeyboardEvent) {
-  const input = event.target as HTMLInputElement;
-  const value = input.value;
-  const charCode = event.which ? event.which : event.keyCode;
-  
-  // Allow numbers 0-9
-  if (charCode >= 48 && charCode <= 57) {
-    // Check if we're adding to the decimal part and if it already has 2 digits
-    if (value.includes('.') && value.split('.')[1].length >= 2) {
-      event.preventDefault();
-      return false;
-    }
-    return true;
-  }
-  
-  // Allow decimal point only if not already present and not at the start
-  if (charCode === 46) {
-    if (value.indexOf('.') !== -1 || value.length === 0) {
-      event.preventDefault();
-      return false;
-    }
-    return true;
-  }
-  
-  // Allow backspace, tab, enter, arrows
-  if ([8, 9, 13, 37, 39].includes(charCode)) {
-    return true;
-  }
-  
-  // Prevent all other key presses
-  event.preventDefault();
-  return false;
-}
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    const charCode = event.which ? event.which : event.keyCode;
 
-validateDecimalInput(event: Event, fieldName: 'productPrice' | 'packageFee' | 'serviceFee') {
-  const target = event.target as HTMLInputElement;
-  const value = target.value;
-  
-  if (value === '') {
-    // If empty, set to 0
-    this.packageObj[fieldName] = 0;
-    target.value = '0';
-    this.calculateApproximatedPrice();
-    return;
+    // Allow numbers 0-9
+    if (charCode >= 48 && charCode <= 57) {
+      // Check if we're adding to the decimal part and if it already has 2 digits
+      if (value.includes('.') && value.split('.')[1].length >= 2) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+
+    // Allow decimal point only if not already present and not at the start
+    if (charCode === 46) {
+      if (value.indexOf('.') !== -1 || value.length === 0) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    }
+
+    // Allow backspace, tab, enter, arrows
+    if ([8, 9, 13, 37, 39].includes(charCode)) {
+      return true;
+    }
+
+    // Prevent all other key presses
+    event.preventDefault();
+    return false;
   }
-  
-  // Check for valid number format with up to 2 decimal places
-  if (!/^\d*\.?\d{0,2}$/.test(value)) {
-    // If invalid, reset to previous valid value or 0
-    target.value = this.packageObj[fieldName]?.toFixed(2) || '0.00';
-    this.packageObj[fieldName] = parseFloat(target.value) || 0;
-    this.calculateApproximatedPrice();
-    return;
-  }
-  
-  // Round to 2 decimal places if needed
-  const numValue = parseFloat(value);
-  if (!isNaN(numValue)) {
-    const roundedValue = Math.round(numValue * 100) / 100;
-    if (roundedValue !== numValue) {
-      target.value = roundedValue.toFixed(2);
-      this.packageObj[fieldName] = roundedValue;
+
+  validateDecimalInput(event: Event, fieldName: 'productPrice' | 'packageFee' | 'serviceFee') {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    if (value === '') {
+      // If empty, set to 0
+      this.packageObj[fieldName] = 0;
+      target.value = '0';
       this.calculateApproximatedPrice();
+      return;
+    }
+
+    // Check for valid number format with up to 2 decimal places
+    if (!/^\d*\.?\d{0,2}$/.test(value)) {
+      // If invalid, reset to previous valid value or 0
+      target.value = this.packageObj[fieldName]?.toFixed(2) || '0.00';
+      this.packageObj[fieldName] = parseFloat(target.value) || 0;
+      this.calculateApproximatedPrice();
+      return;
+    }
+
+    // Round to 2 decimal places if needed
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      const roundedValue = Math.round(numValue * 100) / 100;
+      if (roundedValue !== numValue) {
+        target.value = roundedValue.toFixed(2);
+        this.packageObj[fieldName] = roundedValue;
+        this.calculateApproximatedPrice();
+      }
     }
   }
-}
 
 }
 

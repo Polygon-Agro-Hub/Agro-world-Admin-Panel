@@ -6,6 +6,8 @@ import { ProgressComponent } from '../progress/progress.component';
 import { OutOfDeliveryComponent } from '../out-of-delivery/out-of-delivery.component';
 import { OfficersComponent } from '../officers/officers.component';
 import { OfficerTargetComponent } from "../officer-target/officer-target.component";
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-main-dashboard-layout',
@@ -29,7 +31,8 @@ export class MainDashboardLayoutComponent implements OnInit {
     centerRegCode: ''
   };
 
-  constructor(private router: Router, private route: ActivatedRoute) { }
+  constructor(private router: Router, private route: ActivatedRoute, public tokenService: TokenService,
+      public permissionService: PermissionService) { }
 
   ngOnInit(): void {
     // Get route parameters and query parameters

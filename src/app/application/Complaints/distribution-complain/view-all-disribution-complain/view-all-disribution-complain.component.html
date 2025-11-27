@@ -116,7 +116,7 @@
                         <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
                             Reply
                         </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th *ngIf="permissionService.hasPermission('View Distribution complaint') || tokenService.getUserDetails().role === '1'" class="py-3 font-normal text-textLight dark:text-textDark text-center">
                             View Reply
                         </th>
                     </tr>
@@ -185,7 +185,7 @@
                             <span *ngIf="item.reply != null"
                                 class="px-4 py-3 text-center text-textLight dark:text-textDark underline">Yes</span>
                         </td>
-                        <td class="py-3 dark:text-textDark text-center">
+                        <td class="py-3 dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View Distribution complaint') || tokenService.getUserDetails().role === '1'">
                             <div *ngIf="item.reply === null">
                                 <button disabled class="w-5 h-5 text-blue-100">
                                     <img src="assets/icons/viewreply.png" alt="View Reply"

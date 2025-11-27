@@ -1,0 +1,364 @@
+<!-- Loading Spinner -->
+<div *ngIf="isLoading" class="flex items-center justify-center min-h-screen">
+  <div class="text-center">
+    <i class="fa-solid fa-spinner fa-spin text-5xl text-blue-500 mb-4"></i>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div *ngIf="!isLoading" class="p-6">
+  <!-- Back Button -->
+  <button class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
+    onclick="history.back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back</span>
+  </button>
+
+  <!-- Main Card with Horizontal Scroll -->
+  <div
+    class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6 min-w-[1400px]">
+
+      <!-- Header Section - Title and Filters in Same Line -->
+      <div class="flex justify-between items-center mb-6">
+        <!-- Title with count -->
+        <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
+          Approved Requests ({{ totalItems }})
+        </h1>
+
+        <!-- Filters Container -->
+        <div class="flex items-center gap-3">
+          <!-- Filter By Label -->
+          <div class="flex items-center gap-2">
+            <i class="mr-3 w-6 h-6 fill-current text-gray-500">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                <path
+                  d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
+              </svg>
+            </i>
+            <span class="text-sm text-[#828282]">Filter By</span>
+          </div>
+
+          <!-- Status Filter -->
+          <div class="relative w-52 custom-status-dropdown-container">
+            <!-- Hidden native select -->
+            <select [(ngModel)]="selectStatus" class="hidden" (change)="filterStatus()">
+              <option value="" selected disabled>Status</option>
+              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300" value="Draft">
+                Draft
+              </option>
+              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300" value="Published">
+                Published
+              </option>
+            </select>
+
+            <!-- Custom dropdown trigger -->
+            <div
+              class="border-[1.8px] border-[#828282] rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+              (click)="toggleStatusDropdown()">
+              <div class="flex flex-row justify-between items-center px-3 py-1.5 cursor-pointer">
+                <span class="text-sm">{{ selectStatus || 'Status' }}</span>
+                <div class="flex items-center">
+                  <!-- X icon (shown ONLY when option is selected) -->
+                  <i *ngIf="selectStatus" (click)="cancelStatus($event)"
+                    class="fa-solid fa-xmark text-sm text-[#828282] mr-2 hover:text-[#555] dark:hover:text-[#aaa] cursor-pointer"></i>
+                  <!-- Arrow icon -->
+                  <i *ngIf="isStatusDropdownOpen || !selectStatus"
+                    class="fa-solid text-sm text-[#828282] transition-transform duration-200"
+                    [class.fa-angle-down]="!isStatusDropdownOpen" [class.fa-angle-up]="isStatusDropdownOpen"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Custom dropdown options -->
+            <div *ngIf="isStatusDropdownOpen"
+              class="absolute z-10 w-full mt-1 bg-[#F1F1F1] dark:bg-[#272F45] rounded-xl shadow-lg border border-[#828282]">
+              <div class="py-1">
+                <div *ngFor="let option of statusDropdownOptions" (click)="selectStatusOption(option)"
+                  class="px-3 py-1.5 hover:bg-gray-300 dark:text-textDark dark:hover:bg-gray-600 cursor-pointer flex items-center">
+                  <span class="flex-grow text-sm">{{ option }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative w-64">
+            <input type="text" [(ngModel)]="search" (keyup.enter)="applySearch()" placeholder="Search..."
+              title="Search By Request ID, Phone Number..."
+              class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] border-[1.8px] border-[#828282] rounded-xl text-textLight dark:text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+            <!-- Clear/Search Icon -->
+            <button *ngIf="search" (click)="clearSearch()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-gray-600 dark:hover:text-gray-400">
+              <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            <button *ngIf="!search" (click)="applySearch()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-blue-500">
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b border-gray-200 dark:border-gray-700">
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">No
+              </th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Request_ID</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Farmer Name</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Phone number</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Status</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Approved By</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Approved Time</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                NIC Front Image</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                NIC Back Image</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of govicareRequests; let i = index"
+              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+
+              <!-- No -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ formatNumber(request.No) }}
+              </td>
+
+              <!-- Request ID -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Request_ID }}
+              </td>
+
+              <!-- Farmer Name -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Farmer_Name }}
+              </td>
+
+              <!-- Phone Number -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Phone_number }}
+              </td>
+
+              <!-- Status -->
+              <td class="px-4 py-4 text-center">
+                <button [class]="getStatusClass(request.publishStatus)"
+                  class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
+                  (click)="onStatusClick(request)"
+                  [title]="request.publishStatus === 'Published' ? 'Cannot change published status' : 'Click to publish to GoViCapital'">
+                  {{ request.publishStatus }}
+                </button>
+              </td>
+
+              <!-- Approved By -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.empId }}
+              </td>
+
+              <!-- Approved Time -->
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.Request_Date_Time }}
+              </td>
+
+              <!-- NIC Front Image -->
+              <td class="px-4 py-4 text-center">
+                <button (click)="openImage(request.NIC_Front_Image)"
+                  class="text-blue-500 hover:text-blue-600 transition">
+                  <i class="fa-regular fa-image text-2xl"></i>
+                </button>
+              </td>
+
+              <!-- NIC Back Image -->
+              <td class="px-4 py-4 text-center">
+                <button (click)="openImage(request.NIC_Back_Image)"
+                  class="text-blue-500 hover:text-blue-600 transition">
+                  <i class="fa-regular fa-image text-2xl"></i>
+                </button>
+              </td>
+
+              <!-- Details (Eye Icon) -->
+              <td class="px-4 py-4 text-center">
+                <button (click)="viewDetails(request.Request_ID)"
+                  class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="govicareRequests.length === 0">
+              <td colspan="10" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                <div class="flex flex-col items-center w-full px-10 py-7 mt-6">
+                  <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+                  <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Details Modal -->
+<div *ngIf="showDetailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="closeDetailsModal()">
+
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-md mx-4" (click)="$event.stopPropagation()">
+
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-lg font-semibold text-center text-textLight dark:text-textDark">
+        Request ID : {{ selectedRequest?.Request_ID }}
+      </h2>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+
+      <!-- Farmer Name -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer Name</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Farmer_Name }}
+        </span>
+      </div>
+
+      <!-- NIC Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">NIC Number</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.NIC_Number }}
+        </span>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Phone Number</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Phone_number }}
+        </span>
+      </div>
+
+      <!-- Crop -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Crop</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Crop }}
+        </span>
+      </div>
+
+      <!-- Variety -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Variety</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Variety }}
+        </span>
+      </div>
+
+      <!-- Certificate -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Certificate</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Certificate }}
+        </span>
+      </div>
+
+      <!-- Extent -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Extent</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Extent }}
+        </span>
+      </div>
+
+      <!-- Expected Investment -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Investment</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ formatCurrency(selectedRequest?.Expected_Investment || 0) }}
+        </span>
+      </div>
+
+      <!-- Expected Yield -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Yield</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Expected_Yield }}
+        </span>
+      </div>
+
+      <!-- Expected Start Date -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Start Date</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ selectedRequest?.Expected_Start_Date }}
+        </span>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-center">
+      <button (click)="closeDetailsModal()"
+        class="px-12 py-2 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium text-sm">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Publish Confirmation Popup -->
+<div *ngIf="isPublishPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closePublishPopup()">
+  <div class="bg-white dark:bg-tileBlack px-12 py-8 rounded-lg shadow-2xl max-w-lg text-center"
+    (click)="$event.stopPropagation()">
+
+    <h2 class="text-xl font-semibold text-textLight dark:text-textDark mb-6">
+      Request ID : {{ selectedRequestForPublish?.Request_ID }}
+    </h2>
+
+    <p class="text-base text-textLight dark:text-textDark mb-8 leading-relaxed">
+      Are you sure you want to Publish this Project to the GoViCapital? This action cannot be undone.
+    </p>
+
+    <div class="flex justify-center gap-4">
+      <button (click)="closePublishPopup()" [disabled]="isPublishing"
+        class="px-8 py-2.5 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+        No, Go Back
+      </button>
+      <button (click)="confirmPublish()" [disabled]="isPublishing"
+        class="px-8 py-2.5 bg-[#3980C0] hover:bg-[#2c6da3] text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+        <i *ngIf="isPublishing" class="fa-solid fa-spinner fa-spin"></i>
+        {{ isPublishing ? 'Publishing...' : 'Yes, Publish' }}
+      </button>
+    </div>
+  </div>
+</div>

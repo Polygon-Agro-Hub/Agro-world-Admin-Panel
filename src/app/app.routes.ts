@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth-guard.service';
 import { LoginComponent } from './application/main-components/login/login.component';
@@ -234,6 +234,10 @@ import { FinanceActionMainComponent } from './application/finance/finance-action
 import { InvestmentRequestsComponent } from './application/finance/investment-requests/investment-requests.component';
 import { ViewAllGovicareRequestsComponent } from './application/finance/view-all-govicare-requests/view-all-govicare-requests.component';
 import { GovicapitalFinanceComponent } from './application/finance/govicapital-finance/govicapital-finance.component';
+import { ProjectInvestmentsComponent } from './application/finance/project-investments/project-investments.component';
+import { ProjectInvestmentsTransactionsComponent } from './application/finance/project-investments-transactions/project-investments-transactions.component';
+import { PublishedProjectsComponent } from './application/finance/published-projects/published-projects.component';
+import { ViewAllApprovedGovicareRequestsComponent } from './application/finance/view-all-approved-govicare-requests/view-all-approved-govicare-requests.component';
 
 export const routes: Routes = [
   {
@@ -620,21 +624,36 @@ export const routes: Routes = [
               {
                 path: 'finance-govicapital',
                 children: [
-                  {
-                    path: 'ivesment-requests',
-                    component: InvestmentRequestsComponent,
+                  { 
+                    path: 'ivesment-requests', 
+                    component: InvestmentRequestsComponent 
+                  },
+                  { 
+                    path: 'viewAll-Govicare-requests', 
+                    component: ViewAllGovicareRequestsComponent 
+                  },
+                  { 
+                    path: 'viewAll-Govicare-ApprovedRequests', 
+                    component: ViewAllApprovedGovicareRequestsComponent 
                   },
                   {
                     path: 'reject-requests',
-                    component: GovicapitalFinanceComponent
+                    component: GovicapitalFinanceComponent,
+                  },
+                  {
+                    path: 'project-investments',
+                    component: ProjectInvestmentsComponent,
+                  },
+                  {
+                    path: 'project-investments-transactions',
+                    component: ProjectInvestmentsTransactionsComponent,
+                  },
+                  {
+                    path: 'published-projects',
+                    component: PublishedProjectsComponent,
                   }
-                ],
-              },
-              {
-                path: 'viewAll-Govicare-requests',
-                component: ViewAllGovicareRequestsComponent,
-              },
-
+                ]
+              }
             ],
           },
         ],
@@ -749,7 +768,7 @@ export const routes: Routes = [
                 path: 'add-fieald-officer',
                 component: AddFiealdOfficerComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: ['Add field officers'] }
+                data: { permission: ['Add field officers'] },
               },
               {
                 path: 'add-distribution-0fficer',
@@ -763,7 +782,7 @@ export const routes: Routes = [
                     path: '',
                     component: ViewPlantcareUsersComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: ['View all plant care users'] }
+                    data: { permission: ['View all plant care users'] },
                   },
                   {
                     path: 'edit-plantcare-users',
@@ -795,7 +814,7 @@ export const routes: Routes = [
                     path: 'view-farmer-staff/:id',
                     component: ViewFarmerStaffComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'View staff members' }
+                    data: { permission: 'View staff members' },
                   },
                   {
                     path: 'view-farmer-owner/:id',
@@ -805,7 +824,7 @@ export const routes: Routes = [
                     path: 'edit-user-staff/:id',
                     component: EditUserStaffComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Edit staff member' }
+                    data: { permission: 'Edit staff member' },
                   },
                 ],
               },
@@ -833,7 +852,7 @@ export const routes: Routes = [
                     path: '',
                     component: ViewSalesAgentsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'View salses agent' }
+                    data: { permission: 'View salses agent' },
                   },
                   {
                     path: 'create-sales-agents',
@@ -845,7 +864,7 @@ export const routes: Routes = [
                     path: 'edit-sales-agents/:id',
                     component: EditSalesAgentComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Edit sales agent' }
+                    data: { permission: 'Edit sales agent' },
                   },
 
                   {
@@ -903,14 +922,14 @@ export const routes: Routes = [
                 path: 'field-inspectors',
                 component: ViewFieldInspectorsComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View field officers' }
+                data: { permission: 'View field officers' },
               },
 
               {
                 path: 'field-officer-profile/:id',
                 component: FieldOfficerProfileComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View feild officer profile' }
+                data: { permission: 'View feild officer profile' },
               },
               {
                 path: 'edit-field-officer/:id',
@@ -920,7 +939,7 @@ export const routes: Routes = [
                 path: 'stakholder-collection-centers',
                 component: CollectionAllViewComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View collection centers' }
+                data: { permission: 'View collection centers' },
               },
               {
                 path: 'stakholder-distributed-centers',
@@ -977,16 +996,20 @@ export const routes: Routes = [
           {
             path: 'view-collection-centers',
             component: CollectionAllViewComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Collection Centres' },
           },
           {
             path: 'view-current-centre-target/:centerId',
             component: ViewCurrentCenterTargetComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Current Centre Target' },
           },
           {
             path: 'collection-center-dashboard/:id/:comid/:centerName',
             component: CollectionCenterDashboardComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'View Collection Center' },
+            data: { permission: 'View Polygon Centre Dashboard' },
           },
           {
             path: 'update-collection-center/:id',
@@ -1003,6 +1026,8 @@ export const routes: Routes = [
           {
             path: 'manage-company',
             component: ManageCompanyComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Company List' },
           },
           {
             path: 'add-collection-center',
@@ -1014,51 +1039,86 @@ export const routes: Routes = [
             path: 'add-daily-target/:id/:name/:regCode',
             component: AddDailyTargetComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Assign Center Target' },
+            data: { permission: 'Add Polygon Centre Target' },
           },
           {
             path: 'view-company-head',
             component: ViewCompanyHeadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Company Head Portals' },
           },
           {
             path: 'create-center-head',
             component: CreateCenterHeadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Create Company Head' },
           },
           {
             path: 'edit-center-head/:id',
             component: EditCenterHeadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Edit Company Head' },
           },
-          // {
-          //   path: 'agro-world-centers',
-          //   component: TestingComponent,
-          // },
           {
             path: 'agro-world-centers',
             component: AgroWorldCentersComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Polygon Centres' },
           },
           {
             path: 'agro-world-center-price/:centerId/:companyId/:centerName',
             component: ViewCenterPriceComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Polygon Centre Price' },
           },
           {
             path: 'preview-collection-center/:id',
             component: PreviewCollectionCenterComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Collection Center' },
           },
           {
             path: 'view-center-head/:id',
             component: ViewCenterHeadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'View Company Head' },
           },
           {
             path: 'center-collection-expense/:id',
             component: CenterCollectionExpenceComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Total Centre Collection Expenses' },
           },
           {
             path: 'view-center-officers',
             component: ViewCollectiveOfficerComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Polygon Centre Officers' },
           },
           {
             path: 'farmer-report-invoice/:invNo',
             component: ViewExpencesFarmerReportComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Navigate To Farmer Report Invoice' },
+          },
+
+          {
+            path: 'view-current-price',
+            component: ViewCurrentMarketPriceComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Hub View Current Market Prices' },
+          },
+          {
+            path: 'delete-bulk-price',
+            component: MarketPriceBulkDeleteComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Hub Delete Market Prices' },
+          },
+          {
+            path: 'price-bulk-upload',
+            component: MarketPriceBulkUploadComponent,
+            canActivate: [PermissionGuard],
+            data: { permission: 'Collection Hub Add Market Prices' },
           },
         ],
       },
@@ -1627,4 +1687,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

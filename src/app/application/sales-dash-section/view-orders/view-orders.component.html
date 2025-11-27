@@ -166,7 +166,7 @@
             <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
               Order Status
             </th>
-            <th *ngIf="permissionService.hasPermission('Dash view orders invoice heading') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
+            <th *ngIf="permissionService.hasPermission('Dash view orders download invoice') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
               Invoice
             </th>
             <!-- <th

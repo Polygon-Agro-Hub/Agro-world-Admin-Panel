@@ -1,0 +1,130 @@
+<!-- project-investments.component.html -->
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button class="mb-5 text-textLight dark:text-textDark" (click)="Back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          Project Investments ({{ projectInvestments.length }})
+        </h2>
+      </div>
+
+      <div>
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+        >
+          <input
+            type="text"
+            placeholder="Search by Crop / Variety name / Method ..."
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            [(ngModel)]="searchTerm"
+            (input)="filterProjects()"
+          />
+
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="clearSearch()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Investments Grid -->
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+    >
+      <div
+        *ngFor="let project of filteredProjects"
+        class="bg-white dark:bg-cardDark rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
+      >
+        <div class="border-b border-gray-200 dark:border-gray-700">
+          <div class="flex justify-center items-center p-5">
+            <img src="assets/placeholder-image.png" alt="{{ project.name }}" />
+          </div>
+          <!-- Project Header -->
+          <div class="flex flex-col justify-center items-center p-4">
+            <h3 class="text-lg font-medium text-textLight dark:text-textDark">
+              {{ project.name }}
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              {{ project.code }}
+            </p>
+            <div class="flex items-center my-2">
+              <span class="text-sm text-[#668EC9] mr-1">Invested:</span>
+              <span class="text-sm font-medium text-[#668EC9]"
+                >{{ project.invested }}%</span
+              >
+            </div>
+          </div>
+          <div class="px-4 pb-2">
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+              <div
+                class="bg-[#0B6BFE] h-2.5 rounded-full"
+                [style.width.%]="project.invested"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <!-- Contact Numbers -->
+        <div
+          class="space-y-2 flex justify-center py-2"
+          *ngIf="project.contacts && project.contacts.length > 0"
+        >
+          <div
+            *ngFor="let contact of project.contacts"
+            class="flex items-center"
+          >
+            <i class="fa-solid fa-phone mr-2 text-sm"></i>
+            <span class="text-sm text-textLight dark:text-textDark">{{
+              contact
+            }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

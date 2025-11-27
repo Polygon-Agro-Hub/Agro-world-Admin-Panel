@@ -4,6 +4,8 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-collection-center-dashboard',
@@ -30,7 +32,9 @@ export class CollectionCenterDashboardComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private TargetSrv: CollectionCenterService
+    private TargetSrv: CollectionCenterService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {

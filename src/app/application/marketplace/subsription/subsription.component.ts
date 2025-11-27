@@ -47,6 +47,8 @@ export class SubsriptionComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAllSubscriptions();
+    if(this.permissionService.hasPermission('Retail subscriptions') || this.tokenService.getUserDetails().role === '1') this.activeTab = 'retail';
+    else if(this.permissionService.hasPermission('Wholesale subscriptions')) this.activeTab = 'wholesale';
   }
 
   back(): void {

@@ -34,7 +34,7 @@
           </button>
         </div>
         <div class="px-10">
-          <div class="flex justify-between items-center p-4" *ngIf="(permissionService.hasPermission('Wholesale subscriptions') || permissionService.hasPermission('Wholesale subscriptions') || tokenService.getUserDetails().role === '1')">
+          <div class="flex justify-between items-center p-4" *ngIf="(permissionService.hasPermission('Retail subscriptions') || permissionService.hasPermission('Wholesale subscriptions') || tokenService.getUserDetails().role === '1')">
             <span class="font-semibold text-textLight dark:text-textDark" >All ({{ totalItems }})</span>
             <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-80">
               <input type="text" placeholder="Search by Customer Name / Email"

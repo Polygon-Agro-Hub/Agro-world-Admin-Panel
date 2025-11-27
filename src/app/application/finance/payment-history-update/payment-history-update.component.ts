@@ -42,7 +42,7 @@ export class PaymentHistoryUpdateComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private financeService: FinanceService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -62,13 +62,13 @@ export class PaymentHistoryUpdateComponent implements OnInit {
     this.financeService.getPaymentHistoryById(this.paymentId).subscribe({
       next: (response) => {
         this.isLoading = false;
-        
+
         // Populate form fields
         this.receivers = response.receivers;
         this.amount = this.formatAmountValue(response.amount);
         this.paymentReference = response.payRef;
         this.existingFileLink = response.xlLink;
-        
+
         // Extract filename from link
         if (response.xlLink) {
           const urlParts = response.xlLink.split('/');
@@ -86,9 +86,9 @@ export class PaymentHistoryUpdateComponent implements OnInit {
       error: (error) => {
         this.isLoading = false;
         console.error('Load error:', error);
-        
+
         let errorMessage = 'Failed to load payment history. Please try again.';
-        
+
         if (error.error && error.error.error) {
           errorMessage = error.error.error;
         }
@@ -154,7 +154,7 @@ export class PaymentHistoryUpdateComponent implements OnInit {
     // Validate file type
     const validExtensions = ['.xlsx', '.xls', '.csv'];
     const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-    
+
     if (!validExtensions.includes(fileExtension)) {
       Swal.fire({
         icon: 'error',
@@ -331,9 +331,9 @@ export class PaymentHistoryUpdateComponent implements OnInit {
       error: (error) => {
         this.isUploading = false;
         console.error('Update error:', error);
-        
+
         let errorMessage = 'Failed to update payment record. Please try again.';
-        
+
         if (error.error && error.error.error) {
           errorMessage = error.error.error;
         }
@@ -383,16 +383,14 @@ export class PaymentHistoryUpdateComponent implements OnInit {
   formatAmount(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/,/g, '');
-    
+
     if (value && !isNaN(Number(value))) {
-      value = Number(value).toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-      this.amount = value;
+      // Format with commas for thousands
+      const parts = value.split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      this.amount = parts.join('.');
     }
   }
-
   removeNewFile(): void {
     Swal.fire({
       icon: 'question',
@@ -414,7 +412,7 @@ export class PaymentHistoryUpdateComponent implements OnInit {
         this.uploadedFile = null;
         this.uploadedFileName = '';
         this.fileChanged = false;
-        
+
         const fileInput = document.getElementById('csvFileInput') as HTMLInputElement;
         if (fileInput) {
           fileInput.value = '';

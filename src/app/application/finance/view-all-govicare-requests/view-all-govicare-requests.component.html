@@ -23,7 +23,7 @@
       <div class="flex justify-between items-center mb-6">
         <!-- Title with count -->
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
-          GoViCare Requests ({{ totalItems }})
+          GoViCare Requests ({{ formatTwoDigits(totalItems) }})
         </h1>
 
         <!-- Filters Container -->
@@ -102,8 +102,8 @@
         </div>
       </div>
 
-      <!-- Table Section -->
-      <div class="overflow-x-auto">
+      <!-- Table Section - Only show if there's data -->
+      <div *ngIf="govicareRequests.length > 0" class="overflow-x-auto">
         <table class="w-full">
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700">
@@ -137,7 +137,7 @@
 
               <!-- No -->
               <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                {{ formatNumber(request.No) }}
+                {{ formatThreeDigits(request.No) }}
               </td>
 
               <!-- Request ID -->
@@ -190,7 +190,6 @@
               </td>
 
               <!-- Details (Eye Icon) -->
-              <!-- Details (Eye Icon) -->
               <td class="px-4 py-4 text-center">
                 <button (click)="viewDetails(request.Request_ID)"
                   class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
@@ -207,18 +206,14 @@
                 {{ request.Assigned_By }}
               </td>
             </tr>
-
-            <!-- Empty State -->
-            <tr *ngIf="govicareRequests.length === 0">
-              <td colspan="11" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                <div class="flex flex-col items-center w-full px-10 py-7 mt-6">
-                  <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-                  <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-                </div>
-              </td>
-            </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Empty State - Show when no data -->
+      <div *ngIf="govicareRequests.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
     </div>
   </div>

@@ -34,8 +34,9 @@
           </button>
         </div>
         <div class="px-10">
-          <div class="flex justify-between items-center p-4" *ngIf="(permissionService.hasPermission('Retail subscriptions') || permissionService.hasPermission('Wholesale subscriptions') || tokenService.getUserDetails().role === '1')">
-            <span class="font-semibold text-textLight dark:text-textDark" >All ({{ totalItems }})</span>
+          <div class="flex justify-between items-center p-4"
+            *ngIf="(permissionService.hasPermission('Retail subscriptions') || permissionService.hasPermission('Wholesale subscriptions') || tokenService.getUserDetails().role === '1')">
+            <span class="font-semibold text-textLight dark:text-textDark">All ({{ totalItems }})</span>
             <div class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-80">
               <input type="text" placeholder="Search by Customer Name / Email"
                 class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-200 text-sm"
@@ -65,7 +66,8 @@
           </div>
 
           <!-- Download Section -->
-          <div class="px-2" *ngIf="permissionService.hasPermission('Download subscriptions') || tokenService.getUserDetails().role === '1'">
+          <div class="px-2"
+            *ngIf="(permissionService.hasPermission('Retail subscriptions') && permissionService.hasPermission('Download retail subscriptions'))  || ( permissionService.hasPermission('Wholesale subscriptions') && permissionService.hasPermission('Download wholesale scriptions') )|| tokenService.getUserDetails().role === '1'">
             <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
               (click)="downloadExcel()">
               <i class="fa-solid fa-download pr-4"></i>
@@ -75,14 +77,17 @@
 
           <ng-container *ngIf="!isLoading; else loading">
             <div class="overflow-y-auto max-h-[80vh] flex-1">
-              <table *ngIf="hasData && (permissionService.hasPermission('Wholesale subscriptions') || permissionService.hasPermission('Wholesale subscriptions') || tokenService.getUserDetails().role === '1'); else noData"
+              <table
+                *ngIf="hasData && (permissionService.hasPermission('Wholesale subscriptions') || permissionService.hasPermission('Wholesale subscriptions') || tokenService.getUserDetails().role === '1'); else noData"
                 class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
                 <thead>
                   <tr>
                     <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Customer Name</th>
                     <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Email</th>
                     <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Time</th>
-                    <th class="p-3" *ngIf="permissionService.hasPermission('Delete subscriptions') || tokenService.getUserDetails().role === '1'"></th>
+                    <th class="p-3"
+                      *ngIf="permissionService.hasPermission('Delete subscriptions') || tokenService.getUserDetails().role === '1'">
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -91,7 +96,8 @@
                     <td class="p-3 text-textLight dark:text-textDark">{{ user.customerName }}</td>
                     <td class="p-3 text-textLight dark:text-textDark">{{ user.email }}</td>
                     <td class="p-3 text-textLight dark:text-textDark">{{ user.time }}</td>
-                    <td class="p-3" *ngIf="permissionService.hasPermission('Delete subscriptions') || tokenService.getUserDetails().role === '1'">
+                    <td class="p-3"
+                      *ngIf="permissionService.hasPermission('Delete subscriptions') || tokenService.getUserDetails().role === '1'">
                       <img class="w-5 h-5 cursor-pointer hover:opacity-80 transition-opacity duration-200"
                         src="./assets/icons/dlt.png" alt="Delete user" aria-label="Delete user"
                         (click)="deleteUser(user.id)" />

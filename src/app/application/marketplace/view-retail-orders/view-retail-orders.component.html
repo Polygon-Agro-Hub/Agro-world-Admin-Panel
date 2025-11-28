@@ -175,9 +175,15 @@
               </span>
             </td>
 
-            <td class="px-4 py-3 flex justify-center text-center dark:text-textDark" *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
-              <button class="text-textLight dark:text-textDark flex justify-center gap-1"
+            <td class="px-4 py-3 text-center dark:text-textDark" *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
+              <button class="text-textLight dark:text-textDark gap-1"
                 (click)="downloadInvoice(item.orderId, item.invNo)">
+                <i class="fa-solid fa-file-lines text-2xl"></i>
+              </button>
+            </td>
+            <td class="px-4 py-3 text-center dark:text-textDark" *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
+              <button class="text-textLight dark:text-textDark gap-1"
+                (click)="downloadPostInvoice(item.orderId, item.invNo)">
                 <i class="fa-solid fa-file-lines text-2xl"></i>
               </button>
             </td>

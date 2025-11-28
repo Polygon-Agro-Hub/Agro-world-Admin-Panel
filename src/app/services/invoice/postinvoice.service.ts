@@ -85,7 +85,15 @@ export class PostinvoiceService {
         throw new Error(response.error || 'Failed to fetch invoice details');
       }
 
-      const apiInvoiceNo = response.data?.invoice?.invoiceNumber;
+      // Extract data from the API response with proper mapping
+      const invoiceDetails = response.data?.invoice || {};
+      const billingDetails = response.data?.billing || {};
+      const familyPacks = response.data?.items?.familyPacks || [];
+      const additionalItems = response.data?.items?.additionalItems || [];
+      const pickupCenter = response.data?.pickupCenter || null;
+      const deliveryCharge = response.data?.deliveryCharge || null;
+
+      const apiInvoiceNo = invoiceDetails.invoiceNumber;
       console.log(
         'API InvoiceNo:',
         apiInvoiceNo,
@@ -107,14 +115,26 @@ export class PostinvoiceService {
         return;
       }
 
-      const invoiceDetails = response.data?.invoice || {};
-      const billingDetails = response.data?.billing || {};
+      // Calculate delivery fee based on delivery method
+      let deliveryFee = '0.00';
+      if (invoiceDetails.deliveryMethod === 'Pickup') {
+        deliveryFee = '0.00';
+      } else if (deliveryCharge) {
+        deliveryFee = deliveryCharge.charge || '0.00';
+      }
 
-      const deliveryFee =
-        response.data?.deliveryCharge?.charge ||
-        invoiceDetails.deliveryFee ||
-        '0.00';
+      // Calculate totals
+      const familyPackTotal = familyPacks.reduce(
+        (sum: number, pack: any) => sum + parseFloat(pack.amount || '0'),
+        0
+      );
 
+      const additionalItemsTotal = additionalItems.reduce(
+        (sum: number, item: any) => sum + parseFloat(item.amount || '0'),
+        0
+      );
+
+      // Map the data to match the InvoiceData interface
       const invoiceData: InvoiceData = {
         invoiceNumber: finalInvoiceNo,
         orderApp: invoiceDetails.orderApp || 'N/A',
@@ -124,16 +144,19 @@ export class PostinvoiceService {
         paymentMethod: invoiceDetails.paymentMethod || 'N/A',
         grandTotal: invoiceDetails.grandTotal || '0.00',
         buildingType: invoiceDetails.buildingType || 'House',
-        familyPackItems: response.data?.items?.familyPacks || [],
-        additionalItems: response.data?.items?.additionalItems || [],
+        familyPackItems: familyPacks,
+        additionalItems: additionalItems,
+        deliveryCharge: deliveryCharge,
+        deliveryFee: deliveryFee,
+        discount: invoiceDetails.orderDiscount || '0.00',
         billingInfo: {
-          title: invoiceDetails.title || '',
-          fullName: invoiceDetails.fullName || 'N/A',
-          houseNo: invoiceDetails.houseNo || 'N/A',
-          street: invoiceDetails.streetName || 'N/A',
-          city: invoiceDetails.city || 'N/A',
-          phonecode1: invoiceDetails.phonecode1 || 'N/A',
-          phone1: invoiceDetails.phone1 || 'N/A',
+          title: billingDetails.title || invoiceDetails.title || '',
+          fullName: billingDetails.fullName || invoiceDetails.fullName || 'N/A',
+          houseNo: billingDetails.houseNo || invoiceDetails.houseNo || 'N/A',
+          street: billingDetails.street || invoiceDetails.streetName || 'N/A',
+          city: billingDetails.city || invoiceDetails.city || 'N/A',
+          phonecode1: billingDetails.phoneCode1 || invoiceDetails.phonecode1 || 'N/A',
+          phone1: billingDetails.phone1 || invoiceDetails.phone1 || 'N/A',
           userEmail: invoiceDetails.userEmail || 'N/A',
           buildingNo: invoiceDetails.buildingNo || '',
           buildingName: invoiceDetails.buildingName || '',
@@ -141,34 +164,17 @@ export class PostinvoiceService {
           floorNo: invoiceDetails.floorNo || '',
           couponValue: billingDetails.couponValue || '0.00',
         },
-        pickupInfo: response.data?.pickupCenter
-          ? {
-              centerName: response.data.pickupCenter.centerName || 'N/A',
-              address: {
-                city: response.data.pickupCenter.city || '',
-                district: response.data.pickupCenter.district || '',
-                province: response.data.pickupCenter.province || '',
-                country: response.data.pickupCenter.country || '',
-              },
-            }
-          : undefined,
-        familyPackTotal:
-          response.data?.items?.familyPacks
-            ?.reduce(
-              (sum: number, pack: any) => sum + parseFloat(pack.amount || '0'),
-              0
-            )
-            .toFixed(2) || '0.00',
-        additionalItemsTotal:
-          response.data?.items?.additionalItems
-            ?.reduce(
-              (sum: number, item: any) => sum + parseFloat(item.amount || '0'),
-              0
-            )
-            .toFixed(2) || '0.00',
-        deliveryFee: deliveryFee,
-        deliveryCharge: response.data?.deliveryCharge || null,
-        discount: invoiceDetails.orderDiscount || '0.00',
+        pickupInfo: pickupCenter ? {
+          centerName: pickupCenter.centerName || 'N/A',
+          address: {
+            city: pickupCenter.city || '',
+            district: pickupCenter.district || '',
+            province: pickupCenter.province || '',
+            country: pickupCenter.country || '',
+          },
+        } : undefined,
+        familyPackTotal: familyPackTotal.toFixed(2),
+        additionalItemsTotal: additionalItemsTotal.toFixed(2),
       };
 
       console.log('Final Invoice Data:', invoiceData);
@@ -458,7 +464,7 @@ export class PostinvoiceService {
     doc.setFont('helvetica', 'normal');
     doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 50);
 
-    // Family Pack Items
+    // Family Pack Items - UPDATED SECTION
     yPosition = Math.max(yPosition, rightYStart + 60);
     if (invoice.familyPackItems && invoice.familyPackItems.length > 0) {
       for (const pack of invoice.familyPackItems) {
@@ -486,6 +492,7 @@ export class PostinvoiceService {
         doc.line(15, yPosition, 195, yPosition);
         yPosition += 5;
 
+        // UPDATED: Package details table with correct column mapping
         const packDetailsBody = [
           [
             {
@@ -493,18 +500,33 @@ export class PostinvoiceService {
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             },
             {
+              content: 'Category',
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+            },
+            {
               content: 'Item Description',
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+            },
+            {
+              content: 'Unit Price (Rs.)',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             },
             {
               content: 'QTY',
               styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
             },
+            {
+              content: 'Amount (Rs.)',
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+            },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => [
             `${i + 1}.`,
-            detail.typeName || 'N/A',
+            detail.typeName || 'N/A', // Category column
+            detail.productName || 'N/A', // Item Description column
+            `Rs. ${formatNumberWithCommas((detail.price || 0).toFixed(2))}`,
             detail.qty || '0',
+            `Rs. ${formatNumberWithCommas(((detail.qty || 0) * (detail.price || 0)).toFixed(2))}`,
           ]) || []),
         ];
 
@@ -529,6 +551,14 @@ export class PostinvoiceService {
           tableLineWidth: 0.5,
           showHorizontalLines: false,
           showVerticalLines: false,
+          columnStyles: {
+            0: { cellWidth: 15 }, // Index
+            1: { cellWidth: 35 }, // Category
+            2: { cellWidth: 50 }, // Item Description
+            3: { cellWidth: 30 }, // Unit Price
+            4: { cellWidth: 20 }, // QTY
+            5: { cellWidth: 30 }, // Amount
+          },
         });
 
         yPosition = (doc as any).lastAutoTable.finalY + 10;
@@ -550,7 +580,7 @@ export class PostinvoiceService {
       // Calculate total amount for additional items
       const additionalItemsTotalAmount = invoice.additionalItems.reduce(
         (total, item) => {
-          return total + parseFloat(item.normalPrice || '0');
+          return total + parseFloat(item.amount || '0');
         },
         0
       );
@@ -620,8 +650,8 @@ export class PostinvoiceService {
           const quantity = parseFloat(
             it.quantity === '0.00' ? '1' : it.quantity || '1'
           );
-          const amount = parseFloat(it.normalPrice);
-          const unitPriceDisplay = parseFloat(it.normalPrice) / quantity;
+          const amount = parseFloat(it.amount);
+          const unitPriceDisplay = unitPrice;
 
           return [
             `${i + 1}.`,
@@ -706,7 +736,7 @@ export class PostinvoiceService {
     if (invoice.additionalItems && invoice.additionalItems.length > 0) {
       const additionalItemsTotal = invoice.additionalItems.reduce(
         (total, item) => {
-          return total + parseFloat(item.normalPrice || '0');
+          return total + parseFloat(item.amount || '0');
         },
         0
       );
@@ -716,13 +746,13 @@ export class PostinvoiceService {
 
       // MODIFIED: Determine label based on orderApp
       let label: string;
-if (invoice.orderApp === 'Marketplace') {
-    label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
-} else if (invoice.orderApp === 'Dash') {
-    label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
-} else {
-    label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
-}
+      if (invoice.orderApp === 'Marketplace') {
+        label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
+      } else if (invoice.orderApp === 'Dash') {
+        label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
+      } else {
+        label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
+      }
 
       grandTotalBody.push([
         label,
@@ -748,9 +778,8 @@ if (invoice.orderApp === 'Marketplace') {
     invoice.additionalItems && 
     invoice.additionalItems.length > 0 && 
     (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
-  grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
-}
-
+      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
+    }
 
     // Add coupon discount only if it has a value greater than 0
     const couponValue = parseNum(invoice.billingInfo.couponValue);
@@ -770,7 +799,7 @@ if (invoice.orderApp === 'Marketplace') {
 
     const additionalItemsTotal =
       invoice.additionalItems?.reduce(
-        (total, item) => total + parseFloat(item.normalPrice || '0'),
+        (total, item) => total + parseFloat(item.amount || '0'),
         0
       ) || 0;
 
@@ -782,12 +811,12 @@ if (invoice.orderApp === 'Marketplace') {
       parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
 
     const serviceFee =
-  invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
-  invoice.additionalItems &&
-  invoice.additionalItems.length > 0 &&
-  (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
-    ? 180
-    : 0;
+      invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
+      invoice.additionalItems &&
+      invoice.additionalItems.length > 0 &&
+      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+        ? 180
+        : 0;
 
     const finalGrandTotal =
       familyPackTotal +

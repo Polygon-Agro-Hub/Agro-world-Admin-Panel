@@ -34,7 +34,7 @@
 
     <div *ngIf="isRetail">
       <div class="flex items-center mb-5 gap-4" >
-        <button [disabled]="maxBannersReached" *ngIf="permissionService.hasPermission('Add web slider') || tokenService.getUserDetails().role === '1'"
+        <button [disabled]="maxBannersReached" *ngIf="permissionService.hasPermission('Add retail web slider') || tokenService.getUserDetails().role === '1'"
           [ngClass]="maxBannersReached ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#3980C0]'"
           class="text-white font-medium py-2 px-5 rounded text-lg flex items-center"
           (click)="!maxBannersReached && addBannerRetail()">
@@ -76,7 +76,7 @@
             </div>
 
             <!-- Delete Button -->
-            <button (click)="deletebannerRetail(feedback.id)" *ngIf="permissionService.hasPermission('Delete web slider') || tokenService.getUserDetails().role === '1'"
+            <button (click)="deletebannerRetail(feedback.id)" *ngIf="permissionService.hasPermission('Delete retail web slider') || tokenService.getUserDetails().role === '1'"
               class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2">
               <i class="fa-solid fa-trash"></i>
             </button>
@@ -91,7 +91,7 @@
 
     <div *ngIf="!isRetail">
       <div class="flex items-center mb-5 gap-4">
-        <button [disabled]="maxBannersReachedWholesale" *ngIf="permissionService.hasPermission('Add web slider') || tokenService.getUserDetails().role === '1'"
+        <button [disabled]="maxBannersReachedWholesale" *ngIf="permissionService.hasPermission('Add wholesale web slider') || tokenService.getUserDetails().role === '1'"
           [ngClass]="maxBannersReachedWholesale ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#3980C0]'"
           class="text-white font-medium py-2 px-5 rounded text-lg flex items-center"
           (click)="!maxBannersReachedWholesale && addBannerWholesale()">
@@ -133,7 +133,7 @@
             </div>
 
             <!-- Delete Button -->
-            <button (click)="deletebannerWhole(feedback.id)" (click)="deletebannerRetail(feedback.id)" *ngIf="permissionService.hasPermission('Delete web slider') || tokenService.getUserDetails().role === '1'"
+            <button (click)="deletebannerWhole(feedback.id)" (click)="deletebannerRetail(feedback.id)" *ngIf="permissionService.hasPermission('Delete wholesale web slider') || tokenService.getUserDetails().role === '1'"
               class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 p-2">
               <i class="fa-solid fa-trash"></i>
             </button>

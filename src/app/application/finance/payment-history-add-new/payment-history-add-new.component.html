@@ -18,7 +18,7 @@
       <!-- Receivers Dropdown -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-          Receivers <span class="text-red-500">*</span>
+          Receivers <span class="text-gray-700 dark:text-textDark">*</span>
         </label>
         <div class="relative">
           <select [(ngModel)]="receivers" [disabled]="isUploading"
@@ -35,28 +35,28 @@
       <!-- Amount Input -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-          Amount (Rs.) <span class="text-red-500">*</span>
+          Total Amount (Rs.) <span class="text-gray-700 dark:text-textDark">*</span>
         </label>
         <input type="text" [(ngModel)]="amount" (blur)="formatAmount($event)" [disabled]="isUploading"
           placeholder="--Enter Total Amount--"
-          class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-textLight dark:text-textDark focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" />
+          class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-textLight dark:text-textDark placeholder:italic focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" />
       </div>
     </div>
 
     <!-- Payment Reference -->
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-        Payment Reference <span class="text-red-500">*</span>
+        Payment Reference <span class="text-gray-700 dark:text-textDark">*</span>
       </label>
       <input type="text" [(ngModel)]="paymentReference" [disabled]="isUploading"
         placeholder="--Enter Payment Reference here--"
-        class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-textLight dark:text-textDark focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" />
+        class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-textLight dark:text-textDark placeholder:italic focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" />
     </div>
 
     <!-- CSV File Upload -->
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-        CSV File <span class="text-red-500">*</span>
+        CSV File <span class="text-gray-700 dark:text-textDark">*</span>
       </label>
 
       <!-- File Input (Hidden) -->
@@ -116,12 +116,10 @@
     <div class="flex justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
       <button (click)="onCancel()" [disabled]="isUploading"
         class="px-6 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-
         <span>Cancel</span>
       </button>
-      <button (click)="onUpload()" [disabled]="isUploading"
+      <button (click)="onUpload()" [disabled]="isUploading || !isFormValid()"
         class="px-6 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-
         <span>{{ isUploading ? 'Uploading...' : 'Upload' }}</span>
       </button>
     </div>

@@ -206,8 +206,9 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
     return `${day} ${month}, ${year}\n${formattedHours}:${minutes} ${ampm}`;
   }
 
-  formatAmount(amount: number): string {
-    return amount.toLocaleString('en-US', {
+  formatAmount(amount: number | string): string {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return numAmount.toLocaleString('en-IN', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });

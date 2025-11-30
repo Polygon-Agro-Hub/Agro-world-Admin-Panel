@@ -109,9 +109,9 @@ export class AddCertificateDetailsComponent implements OnInit {
       accreditation: ['', Validators.required],
       serviceAreas: [[], Validators.required],
       price: [
-        '', 
+        '',
         [
-          Validators.required, 
+          Validators.required,
           Validators.min(0),
           Validators.pattern(/^\d*\.?\d*$/)
         ]
@@ -128,9 +128,9 @@ export class AddCertificateDetailsComponent implements OnInit {
       ],
       scope: ['', Validators.required],
       noOfVisit: [
-        '', 
+        '',
         [
-          Validators.required, 
+          Validators.required,
           Validators.min(0),
           Validators.pattern(/^\d+$/)
         ]
@@ -139,15 +139,26 @@ export class AddCertificateDetailsComponent implements OnInit {
       logo: [null, Validators.required],
     });
 
-    // Load crop groups for dropdown
-    this.loadCropGroups();
+    // Enable realtime validation
+    this.enableRealtimeValidation();
 
-    // Load certificate companies for dropdown
+    this.loadCropGroups();
     this.loadCompanies();
 
-    // Watch for applicable changes
     this.certificateForm.get('applicable')?.valueChanges.subscribe((value) => {
       this.onApplicableChange();
+    });
+  }
+
+  // Add this new method for realtime validation
+  enableRealtimeValidation(): void {
+    Object.keys(this.certificateForm.controls).forEach(key => {
+      const control = this.certificateForm.get(key);
+      control?.valueChanges.subscribe(() => {
+        if (control.touched || control.dirty) {
+          control.updateValueAndValidity({ emitEvent: false });
+        }
+      });
     });
   }
 
@@ -600,11 +611,12 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Prevent any other key
     event.preventDefault();
   }
-
-  trimLeadingSpaces(event: any, varibleName: string) {
+  
+  trimLeadingSpaces(event: any, fieldName: string) {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(/^\s+/, '');
-    this.certificateForm.get(varibleName)?.setValue(input.value);
+    const control = this.certificateForm.get(fieldName);
+    control?.setValue(input.value);
+    control?.markAsTouched();
   }
-
 }

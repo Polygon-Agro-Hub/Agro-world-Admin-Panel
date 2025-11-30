@@ -23,7 +23,7 @@
       <div class="flex justify-between items-center mb-6">
         <!-- Title with count -->
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
-          Approved Requests ({{ totalItems }})
+          Approved Requests ({{ formatTotalItems(totalItems) }})
         </h1>
 
         <!-- Filters Container -->
@@ -89,11 +89,11 @@
               class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] border-[1.8px] border-[#828282] rounded-xl text-textLight dark:text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
             <!-- Clear/Search Icon -->
-            <button *ngIf="search" (click)="clearSearch()"
+            <button *ngIf="hasSearched" (click)="clearSearch()"
               class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-gray-600 dark:hover:text-gray-400">
               <i class="fa-solid fa-xmark text-sm"></i>
             </button>
-            <button *ngIf="!search" (click)="applySearch()"
+            <button *ngIf="!hasSearched" (click)="applySearch()"
               class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-blue-500">
               <i class="fa-solid fa-magnifying-glass text-sm"></i>
             </button>
@@ -103,7 +103,7 @@
 
       <!-- Table Section -->
       <div class="overflow-x-auto">
-        <table class="w-full">
+        <table class="w-full" *ngIf="govicareRequests.length > 0">
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700">
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">No
@@ -200,18 +200,16 @@
                 </button>
               </td>
             </tr>
-
-            <!-- Empty State -->
-            <tr *ngIf="govicareRequests.length === 0">
-              <td colspan="10" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                <div class="flex flex-col items-center w-full px-10 py-7 mt-6">
-                  <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-                  <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-                </div>
-              </td>
-            </tr>
           </tbody>
         </table>
+
+        <!-- Empty State -->
+        <div *ngIf="govicareRequests.length === 0">
+          <div class="flex flex-col items-center w-full px-10 py-7 mt-6">
+            <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+          </div>
+        </div>
       </div>
     </div>
   </div>

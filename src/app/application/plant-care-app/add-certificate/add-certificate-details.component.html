@@ -43,10 +43,8 @@
         <div *ngIf="logoError" class="text-red-500 text-sm mt-2">
           {{ logoError }}
         </div>
-        <div *ngIf="
-            certificateForm.get('logo')?.invalid &&
-            certificateForm.get('logo')?.touched
-          " class="text-red-500 text-sm mt-2">
+        <div *ngIf="certificateForm.get('logo')?.invalid && (certificateForm.get('logo')?.touched || certificateForm.get('logo')?.dirty)"
+          class="text-red-500 text-sm mt-2">
           Logo is required
         </div>
       </div>
@@ -57,11 +55,10 @@
         <label for="srtcomapnyId" class="block text-sm font-medium text-textLight dark:text-textDark">Company *</label>
         <p-dropdown formControlName="srtcomapnyId" [options]="companies" optionLabel="label" optionValue="value"
           placeholder="--Select Company--" [filter]="true" filterBy="label"
+          (onChange)="certificateForm.get('srtcomapnyId')?.markAsTouched()"
           styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></p-dropdown>
-        <div *ngIf="
-            certificateForm.get('srtcomapnyId')?.invalid &&
-            certificateForm.get('srtcomapnyId')?.touched
-          " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('srtcomapnyId')?.invalid && (certificateForm.get('srtcomapnyId')?.touched || certificateForm.get('srtcomapnyId')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Company is required
         </div>
       </div>
@@ -75,16 +72,15 @@
           [ngClass]="{
             'border-red-500':
               certificateForm.get('srtNumber')?.invalid &&
-              certificateForm.get('srtNumber')?.touched
+              (certificateForm.get('srtNumber')?.touched || certificateForm.get('srtNumber')?.dirty)
           }" />
-        <div *ngIf="
-            certificateForm.get('srtNumber')?.invalid &&
-            certificateForm.get('srtNumber')?.touched
-          " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('srtNumber')?.invalid && (certificateForm.get('srtNumber')?.touched || certificateForm.get('srtNumber')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Certificate Number is required
         </div>
       </div>
     </div>
+
     <div class="grid grid-cols-1 gap-4 mb-4">
       <!-- Certificate Name -->
       <div class="my-3">
@@ -95,12 +91,10 @@
           [ngClass]="{
             'border-red-500':
               certificateForm.get('srtName')?.invalid &&
-              certificateForm.get('srtName')?.touched
+              (certificateForm.get('srtName')?.touched || certificateForm.get('srtName')?.dirty)
           }" />
-        <div *ngIf="
-            certificateForm.get('srtName')?.invalid &&
-            certificateForm.get('srtName')?.touched
-          " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('srtName')?.invalid && (certificateForm.get('srtName')?.touched || certificateForm.get('srtName')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Certificate Name (in English) is required
         </div>
       </div>
@@ -115,12 +109,10 @@
           [ngClass]="{
             'border-red-500':
               certificateForm.get('srtNameSinhala')?.invalid &&
-              certificateForm.get('srtNameSinhala')?.touched
+              (certificateForm.get('srtNameSinhala')?.touched || certificateForm.get('srtNameSinhala')?.dirty)
           }" />
-        <div *ngIf="
-            certificateForm.get('srtNameSinhala')?.invalid &&
-            certificateForm.get('srtNameSinhala')?.touched
-          " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('srtNameSinhala')?.invalid && (certificateForm.get('srtNameSinhala')?.touched || certificateForm.get('srtNameSinhala')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Certificate Name (in Sinhala) is required
         </div>
       </div>
@@ -135,16 +127,15 @@
           [ngClass]="{
             'border-red-500':
               certificateForm.get('srtNameTamil')?.invalid &&
-              certificateForm.get('srtNameTamil')?.touched
+              (certificateForm.get('srtNameTamil')?.touched || certificateForm.get('srtNameTamil')?.dirty)
           }" />
-        <div *ngIf="
-            certificateForm.get('srtNameTamil')?.invalid &&
-            certificateForm.get('srtNameTamil')?.touched
-          " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('srtNameTamil')?.invalid && (certificateForm.get('srtNameTamil')?.touched || certificateForm.get('srtNameTamil')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Certificate Name (in Tamil) is required
         </div>
       </div>
     </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <!-- No of Visit -->
       <div class="my-3">
@@ -154,30 +145,24 @@
           (keydown)="preventDecimalInput($event)" formControlName="noOfVisit" min="0"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-      'border-red-500':
-        certificateForm.get('noOfVisit')?.invalid &&
-        certificateForm.get('noOfVisit')?.touched
-    }" />
+            'border-red-500':
+              certificateForm.get('noOfVisit')?.invalid &&
+              (certificateForm.get('noOfVisit')?.touched || certificateForm.get('noOfVisit')?.dirty)
+          }" />
 
         <!-- Validation Messages -->
-        <div *ngIf="
-      certificateForm.get('noOfVisit')?.errors?.['required'] &&
-      certificateForm.get('noOfVisit')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('noOfVisit')?.errors?.['required'] && (certificateForm.get('noOfVisit')?.touched || certificateForm.get('noOfVisit')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Number of visits is required
         </div>
 
-        <div *ngIf="
-      certificateForm.get('noOfVisit')?.errors?.['min'] &&
-      certificateForm.get('noOfVisit')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('noOfVisit')?.errors?.['min'] && (certificateForm.get('noOfVisit')?.touched || certificateForm.get('noOfVisit')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Number of visits cannot be negative
         </div>
 
-        <div *ngIf="
-      certificateForm.get('noOfVisit')?.errors?.['pattern'] &&
-      certificateForm.get('noOfVisit')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('noOfVisit')?.errors?.['pattern'] && (certificateForm.get('noOfVisit')?.touched || certificateForm.get('noOfVisit')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Please enter a valid whole number
         </div>
       </div>
@@ -188,11 +173,9 @@
           *</label>
         <p-dropdown formControlName="applicable" [options]="applicableOptions" placeholder="--Select from here--"
           styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-          (onChange)="onApplicableChange()"></p-dropdown>
-        <div *ngIf="
-            certificateForm.get('applicable')?.invalid &&
-            certificateForm.get('applicable')?.touched
-          " class="text-red-500 text-sm mt-1">
+          (onChange)="onApplicableChange(); certificateForm.get('applicable')?.markAsTouched()"></p-dropdown>
+        <div *ngIf="certificateForm.get('applicable')?.invalid && (certificateForm.get('applicable')?.touched || certificateForm.get('applicable')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Applicable For is required
         </div>
       </div>
@@ -207,12 +190,10 @@
           [ngClass]="{
             'border-red-500':
               certificateForm.get('accreditation')?.invalid &&
-              certificateForm.get('accreditation')?.touched
+              (certificateForm.get('accreditation')?.touched || certificateForm.get('accreditation')?.dirty)
           }" />
-        <div *ngIf="
-            certificateForm.get('accreditation')?.invalid &&
-            certificateForm.get('accreditation')?.touched
-          " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('accreditation')?.invalid && (certificateForm.get('accreditation')?.touched || certificateForm.get('accreditation')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Accreditation Body is required
         </div>
       </div>
@@ -223,11 +204,10 @@
           *</label>
         <p-multiSelect formControlName="serviceAreas" [options]="serviceAreasOptions" optionLabel="name"
           placeholder="--Select Districts--"
+          (onChange)="certificateForm.get('serviceAreas')?.markAsTouched()"
           styleClass="custom-dropdown w-full border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"></p-multiSelect>
-        <div *ngIf="
-            certificateForm.get('serviceAreas')?.invalid &&
-            certificateForm.get('serviceAreas')?.touched
-          " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('serviceAreas')?.invalid && (certificateForm.get('serviceAreas')?.touched || certificateForm.get('serviceAreas')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Service Areas are required
         </div>
       </div>
@@ -239,30 +219,24 @@
           (keypress)="allowDecimalInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-      'border-red-500':
-        certificateForm.get('price')?.invalid &&
-        certificateForm.get('price')?.touched
-    }" />
+            'border-red-500':
+              certificateForm.get('price')?.invalid &&
+              (certificateForm.get('price')?.touched || certificateForm.get('price')?.dirty)
+          }" />
 
         <!-- Validation Messages -->
-        <div *ngIf="
-      certificateForm.get('price')?.errors?.['required'] &&
-      certificateForm.get('price')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('price')?.errors?.['required'] && (certificateForm.get('price')?.touched || certificateForm.get('price')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Price is required
         </div>
 
-        <div *ngIf="
-      certificateForm.get('price')?.errors?.['min'] &&
-      certificateForm.get('price')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('price')?.errors?.['min'] && (certificateForm.get('price')?.touched || certificateForm.get('price')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Price cannot be negative
         </div>
 
-        <div *ngIf="
-      certificateForm.get('price')?.errors?.['pattern'] &&
-      certificateForm.get('price')?.touched
-    " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('price')?.errors?.['pattern'] && (certificateForm.get('price')?.touched || certificateForm.get('price')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Please enter a valid decimal number (e.g., 1500.50)
         </div>
       </div>
@@ -272,18 +246,16 @@
         <label for="timeLine" class="block text-sm font-medium text-textLight dark:text-textDark">Timeline (Months)
           *</label>
         <input id="timeLine" type="number" formControlName="timeLine" step="1" min="1"
-          (keydown)="preventDecimalInput($event)" (input)="trimLeadingSpaces($event, 'timelineMonths')"
+          (keydown)="preventDecimalInput($event)" (input)="trimLeadingSpaces($event, 'timeLine')"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-      'border-red-500':
-        certificateForm.get('timeLine')?.invalid &&
-        certificateForm.get('timeLine')?.touched
-    }" />
-        <div *ngIf="
-            certificateForm.get('timeLine')?.invalid &&
-            certificateForm.get('timeLine')?.touched
-          " class="text-red-500 text-sm mt-1">
-          Timeline (Months) is required
+            'border-red-500':
+              certificateForm.get('timeLine')?.invalid &&
+              (certificateForm.get('timeLine')?.touched || certificateForm.get('timeLine')?.dirty)
+          }" />
+        <div *ngIf="certificateForm.get('timeLine')?.invalid && (certificateForm.get('timeLine')?.touched || certificateForm.get('timeLine')?.dirty)"
+          class="text-red-500 text-sm mt-1">
+          Timeline (Months) is required and must be at least 1
         </div>
       </div>
 
@@ -296,40 +268,32 @@
           (input)="trimLeadingSpaces($event, 'commission')" (keypress)="allowDecimalInput($event)"
           class="mt-1 block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
           [ngClass]="{
-      'border-red-500':
-        certificateForm.get('commission')?.invalid &&
-        certificateForm.get('commission')?.touched
-    }" />
+            'border-red-500':
+              certificateForm.get('commission')?.invalid &&
+              (certificateForm.get('commission')?.touched || certificateForm.get('commission')?.dirty)
+          }" />
 
         <!-- Negative value error -->
-        <div *ngIf="
-    certificateForm.get('commission')?.errors?.['min'] &&
-    certificateForm.get('commission')?.touched
-  " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('commission')?.errors?.['min'] && (certificateForm.get('commission')?.touched || certificateForm.get('commission')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Negative values are not allowed
         </div>
 
         <!-- Above 100 error -->
-        <div *ngIf="
-    certificateForm.get('commission')?.errors?.['max'] &&
-    certificateForm.get('commission')?.touched
-  " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('commission')?.errors?.['max'] && (certificateForm.get('commission')?.touched || certificateForm.get('commission')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Enter a valid commission between 0 and 100
         </div>
 
         <!-- Required error -->
-        <div *ngIf="
-    certificateForm.get('commission')?.errors?.['required'] &&
-    certificateForm.get('commission')?.touched
-  " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('commission')?.errors?.['required'] && (certificateForm.get('commission')?.touched || certificateForm.get('commission')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Commission is required
         </div>
 
         <!-- Decimal format error -->
-        <div *ngIf="
-    certificateForm.get('commission')?.errors?.['pattern'] &&
-    certificateForm.get('commission')?.touched
-  " class="text-red-500 text-sm mt-1">
+        <div *ngIf="certificateForm.get('commission')?.errors?.['pattern'] && (certificateForm.get('commission')?.touched || certificateForm.get('commission')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Please enter a valid decimal number (e.g., 12.5)
         </div>
       </div>
@@ -355,7 +319,8 @@
         </div>
 
         <!-- Validation error -->
-        <div *ngIf="!uploadedFile && certificateForm.get('tearmsFile')?.touched" class="text-red-500 text-sm mt-1">
+        <div *ngIf="!uploadedFile && (certificateForm.get('tearmsFile')?.touched || certificateForm.get('tearmsFile')?.dirty)"
+          class="text-red-500 text-sm mt-1">
           Payment Terms File is required
         </div>
       </div>
@@ -369,12 +334,10 @@
         [ngClass]="{
           'border-red-500':
             certificateForm.get('scope')?.invalid &&
-            certificateForm.get('scope')?.touched
+            (certificateForm.get('scope')?.touched || certificateForm.get('scope')?.dirty)
         }"></textarea>
-      <div *ngIf="
-          certificateForm.get('scope')?.invalid &&
-          certificateForm.get('scope')?.touched
-        " class="text-red-500 text-sm mt-1">
+      <div *ngIf="certificateForm.get('scope')?.invalid && (certificateForm.get('scope')?.touched || certificateForm.get('scope')?.dirty)"
+        class="text-red-500 text-sm mt-1">
         Scope is required
       </div>
     </div>
@@ -432,11 +395,8 @@
       </div>
 
       <!-- Selected crops count and validation -->
-      <div *ngIf="
-          isForSelectedCrops &&
-          selectedCrops.length === 0 &&
-          certificateForm.get('applicable')?.touched
-        " class="text-red-500 text-sm mt-1">
+      <div *ngIf="isForSelectedCrops && selectedCrops.length === 0 && (certificateForm.get('applicable')?.touched || certificateForm.get('applicable')?.dirty)"
+        class="text-red-500 text-sm mt-1">
         -- Please add at least 1 crop for "For Selected Crops" option --
       </div>
     </div>

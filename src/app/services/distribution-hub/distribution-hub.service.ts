@@ -63,39 +63,39 @@ export class DistributionHubService {
   }
 
   createDistributionHead(person: any, selectedImage: any): Observable<any> {
-  const formData = new FormData();
-  formData.append('officerData', JSON.stringify(person));
+    const formData = new FormData();
+    formData.append('officerData', JSON.stringify(person));
 
-  if (selectedImage) {
-    formData.append('file', selectedImage);
+    if (selectedImage) {
+      formData.append('file', selectedImage);
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.post(
+      `${this.apiUrl}distribution/create-distribution-head`,
+      formData,
+      { headers }
+    ).pipe(
+      catchError((error: any) => {
+        // Handle the new error format from backend
+        let errorMessage = 'An unexpected error occurred';
+
+        if (error.error && error.error.error) {
+          errorMessage = error.error.error;
+        } else if (error.status === 400) {
+          errorMessage = error.error?.error || 'Validation failed';
+        }
+
+        return throwError(() => ({
+          error: errorMessage,
+          duplicateFields: error.error?.duplicateFields || []
+        }));
+      })
+    );
   }
-
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
-
-  return this.http.post(
-    `${this.apiUrl}distribution/create-distribution-head`,
-    formData,
-    { headers }
-  ).pipe(
-    catchError((error: any) => {
-      // Handle the new error format from backend
-      let errorMessage = 'An unexpected error occurred';
-      
-      if (error.error && error.error.error) {
-        errorMessage = error.error.error;
-      } else if (error.status === 400) {
-        errorMessage = error.error?.error || 'Validation failed';
-      }
-      
-      return throwError(() => ({ 
-        error: errorMessage,
-        duplicateFields: error.error?.duplicateFields || []
-      }));
-    })
-  );
-}
 
   getAllCompanyList(): Observable<any> {
     const headers = new HttpHeaders({
@@ -303,16 +303,40 @@ export class DistributionHubService {
     return this.http.get<any>(url, { headers });
   }
 
-  createDistributionOfficer(person: any, selectedImage: any): Observable<any> {
+  createDistributionOfficer(
+    person: any,
+    selectedImage: any,
+    driver?: any,
+    licFront?: any,
+    licBack?: any,
+    insFront?: any,
+    insBack?: any,
+    vehiFront?: any,
+    vehiBack?: any,
+    vehiSideA?: any,
+    vehiSideB?: any
+  ): Observable<any> {
     const formData = new FormData();
-    formData.append("officerData", JSON.stringify(person)); // Attach officer data as a string
 
-    if (selectedImage) {
-      formData.append('file', selectedImage); // Attach the file (ensure the key matches the expected field name on the backend)
+    // Add driver data if jobRole is Driver
+    if (person.jobRole === 'Driver' && driver) {
+      formData.append('driverData', JSON.stringify(driver));
+      if (licFront) formData.append('licFront', licFront);
+      if (licBack) formData.append('licBack', licBack);
+      if (insFront) formData.append('insFront', insFront);
+      if (insBack) formData.append('insBack', insBack);
+      if (vehiFront) formData.append('vehiFront', vehiFront);
+      if (vehiBack) formData.append('vehiBack', vehiBack);
+      if (vehiSideA) formData.append('vehiSideA', vehiSideA);
+      if (vehiSideB) formData.append('vehiSideB', vehiSideB);
     }
 
+    formData.append("officerData", JSON.stringify(person));
 
-    // No need to set Content-Type headers manually; Angular will handle it for FormData
+    if (selectedImage) {
+      formData.append('file', selectedImage);
+    }
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
@@ -320,9 +344,7 @@ export class DistributionHubService {
     return this.http.post(
       `${this.apiUrl}distribution/create-distribution-officer`,
       formData,
-      {
-        headers,
-      }
+      { headers }
     );
   }
 
@@ -413,7 +435,7 @@ export class DistributionHubService {
     );
   }
 
-   claimDistributedOfficer(data:any): Observable<any> {
+  claimDistributedOfficer(data: any): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

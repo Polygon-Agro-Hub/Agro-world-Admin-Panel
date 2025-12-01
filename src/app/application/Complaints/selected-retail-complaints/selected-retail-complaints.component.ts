@@ -109,6 +109,7 @@ export class SelectedRetailComplaintsComponent implements OnInit {
           reply: data.reply || '',
           imageUrls: this.parseImageUrls(data.imageUrls),
         };
+        this.messageContent = data.reply || '';
 
         this.sanitizedImageUrls = this.complain.imageUrls.map(url =>
           this.sanitizer.bypassSecurityTrustUrl(url)

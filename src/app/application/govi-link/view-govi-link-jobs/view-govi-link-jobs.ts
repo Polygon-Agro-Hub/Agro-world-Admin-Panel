@@ -228,47 +228,48 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     }
   }
 
-  // Load officers by role
-  loadOfficersByRole(role: string): void {
-    this.isLoadingOfficers = true;
+// Load officers by role - updated method
+loadOfficersByRole(role: string): void {
+  this.isLoadingOfficers = true;
 
-    // Use the job's scheduled date when fetching available officers
-    const scheduleDate = this.selectedJob?.scheduledDate;
+  // Use the job's scheduled date and jobId when fetching available officers
+  const scheduleDate = this.selectedJob?.scheduledDate;
+  const jobId = this.selectedJob?.jobId;
 
-    this.goviLinkService.getOfficersByJobRole(role, scheduleDate).subscribe({
-      next: (response) => {
-        this.isLoadingOfficers = false;
-        if (response.success && response.data) {
-          this.availableOfficers = response.data.map((officer: any) => ({
-            ...officer,
-            displayName: `${officer.firstName} ${officer.lastName} (${officer.empId}) - Jobs: ${officer.activeJobCount}`,
-          }));
+  this.goviLinkService.getOfficersByJobRole(role, scheduleDate, jobId).subscribe({
+    next: (response) => {
+      this.isLoadingOfficers = false;
+      if (response.success && response.data) {
+        this.availableOfficers = response.data.map((officer: any) => ({
+          ...officer,
+          displayName: `${officer.firstName} ${officer.lastName} (${officer.empId}) - Jobs: ${officer.activeJobCount}`,
+        }));
 
-          // If there's a currently assigned officer, try to pre-select them
-          if (
-            this.currentAssignedOfficer &&
-            this.availableOfficers.length > 0
-          ) {
-            const currentOfficer = this.availableOfficers.find(
-              (officer) => officer.empId === this.currentAssignedOfficer.empId
-            );
-            if (currentOfficer) {
-              this.selectedOfficerId = currentOfficer.empId;
-              this.selectedOfficerInfo = currentOfficer;
-            }
+        // If there's a currently assigned officer, try to pre-select them
+        if (
+          this.currentAssignedOfficer &&
+          this.availableOfficers.length > 0
+        ) {
+          const currentOfficer = this.availableOfficers.find(
+            (officer) => officer.empId === this.currentAssignedOfficer.empId
+          );
+          if (currentOfficer) {
+            this.selectedOfficerId = currentOfficer.empId;
+            this.selectedOfficerInfo = currentOfficer;
           }
-        } else {
-          this.availableOfficers = [];
         }
-      },
-      error: (err) => {
-        console.error('Error loading officers:', err);
-        this.isLoadingOfficers = false;
+      } else {
         this.availableOfficers = [];
-        this.assignError = 'Failed to load officers';
-      },
-    });
-  }
+      }
+    },
+    error: (err) => {
+      console.error('Error loading officers:', err);
+      this.isLoadingOfficers = false;
+      this.availableOfficers = [];
+      this.assignError = 'Failed to load officers';
+    },
+  });
+}
 
   // When officer is selected
   onOfficerSelected(): void {

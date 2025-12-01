@@ -11,8 +11,8 @@ export class GoviLinkService {
   private apiUrl = `${environment.API_URL}govi-link/`;
   private authUrl = `${environment.API_URL}auth/`;
   private token = this.tokenService.getToken();
-  
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   saveOfficerService(data: {
     englishName: string;
@@ -122,7 +122,7 @@ export class GoviLinkService {
     });
   }
 
-  getOfficersByJobRole(jobRole: string, scheduleDate: string) {
+  getOfficersByJobRole(jobRole: string, scheduleDate: string, jobId: number) {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -131,7 +131,8 @@ export class GoviLinkService {
 
     let params = new HttpParams()
       .set('jobRole', jobRole)
-      .set('scheduleDate', scheduleDate);
+      .set('scheduleDate', scheduleDate)
+      .set('jobId', jobId.toString());
 
     return this.http.get<any>(`${this.apiUrl}get-officers-by-jobrole`, {
       headers,

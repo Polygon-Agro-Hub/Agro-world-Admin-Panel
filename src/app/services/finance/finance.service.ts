@@ -696,6 +696,10 @@ export class FinanceService {
     status?: string,
     search?: string
   ): Observable<ApprovedGoviCareRequestsResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
     let params = new HttpParams();
 
     if (status && status.trim()) {
@@ -708,7 +712,7 @@ export class FinanceService {
 
     const url = `${this.apiUrl}finance/approved-govicare-requests`;
     return this.http.get<ApprovedGoviCareRequestsResponse>(url, {
-      headers: this.getHeaders(),
+      headers: headers,
       params: params,
     });
   }

@@ -25,6 +25,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
 
   // Search
   search: string = '';
+  hasSearched: boolean = false;
 
   // Details Modal
   showDetailsModal: boolean = false;
@@ -83,16 +84,21 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     event.stopPropagation();
     this.selectStatus = '';
     this.isStatusDropdownOpen = false;
+    this.hasSearched = false;
     this.loadGovicareRequests();
   }
 
   // Search functionality
   applySearch(): void {
+    if (this.search.trim()) {
+      this.hasSearched = true;
+    }
     this.loadGovicareRequests();
   }
 
   clearSearch(): void {
     this.search = '';
+    this.hasSearched = false;
     this.loadGovicareRequests();
   }
 
@@ -120,10 +126,8 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   // Status Click Handler
   onStatusClick(request: GoviCareRequest): void {
     if (request.publishStatus === 'Published') {
-      // Show "cannot change" popup
       this.showCannotChangePopup(request);
     } else if (request.publishStatus === 'Draft') {
-      // Show publish confirmation popup
       this.openPublishPopup(request);
     }
   }
@@ -154,19 +158,16 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     });
   }
 
-  // Open publish confirmation popup
   openPublishPopup(request: GoviCareRequest): void {
     this.selectedRequestForPublish = request;
     this.isPublishPopup = true;
   }
 
-  // Close publish popup
   closePublishPopup(): void {
     this.isPublishPopup = false;
     this.selectedRequestForPublish = null;
   }
 
-  // Confirm and publish
   confirmPublish(): void {
     if (!this.selectedRequestForPublish) return;
 
@@ -218,14 +219,12 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       });
   }
 
-  // Open image in new window
   openImage(imageUrl: string): void {
     if (imageUrl) {
       window.open(imageUrl, '_blank', 'width=800,height=600,resizable=yes,scrollbars=yes');
     }
   }
 
-  // Format currency
   formatCurrency(amount: number): string {
     return 'Rs. ' + amount.toLocaleString('en-US', {
       minimumFractionDigits: 2,
@@ -233,7 +232,6 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     });
   }
 
-  // Close dropdown when clicking outside
   @HostListener('document:click', ['$event'])
   closeDropdowns(event: Event): void {
     const target = event.target as HTMLElement;
@@ -242,15 +240,18 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     }
   }
 
-  // Get status class for styling
   getStatusClass(status: string): string {
     return status === 'Published'
       ? 'bg-[#BBFFC6] text-[#308233]'
       : 'bg-[#D1D5DB] text-[#4B5563]';
   }
 
-  // Format number
+  // Updated format methods with leading zeros
   formatNumber(num: number): string {
-    return num.toString();
+    return num.toString().padStart(3, '0');
+  }
+
+  formatTotalItems(count: number): string {
+    return count.toString().padStart(2, '0');
   }
 }

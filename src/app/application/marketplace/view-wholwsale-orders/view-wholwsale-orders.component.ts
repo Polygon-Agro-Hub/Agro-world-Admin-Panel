@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CalendarModule } from 'primeng/calendar';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
+import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
 
 @Component({
   selector: 'app-view-wholwsale-orders',
@@ -74,7 +75,8 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private finalInvoiceService: FinalinvoiceService, // Updated service
-    private http: HttpClient
+    private http: HttpClient,
+    private postInvoiceService: PostinvoiceService,
   ) {}
 
   ngOnInit(): void {
@@ -189,6 +191,41 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
         text: 'Failed to download invoice. Please try again.',
         confirmButtonColor: '#3085d6',
       });
+    });
+}
+
+isPostInvoiceEnabled(status: string): boolean {
+  // Define the statuses that allow post-invoice download
+  const enabledStatuses = [
+    'Out For Delivery', 
+    'Delivered', 
+    'Picked Up', 
+    'On the way', 
+    'Failed'
+  ];
+  
+  return enabledStatuses.includes(status);
+}
+
+downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+  this.isLoading = true;
+
+  this.postInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
+    .then(() => {
+      // Success case - no action needed unless you want to show a success message
+    })
+    .catch((error) => {
+      console.error('Error generating invoice:', error);
+      this.errorMessage = 'Failed to download invoice';
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to download invoice. Please try again.',
+        confirmButtonColor: '#3085d6',
+      });
+    })
+    .finally(() => {
+      this.isLoading = false;
     });
 }
 }

@@ -29,29 +29,29 @@ export class MarketEditPackagesComponent {
     private marketSrv: MarketPlaceService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
- 
+
 
   back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
- this.router.navigate(['market/action/view-packages-list']);
-  }
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['market/action/view-packages-list']);
+      }
 
-  });
-}
+    });
+  }
 
 
   ngOnInit(): void {
@@ -96,13 +96,13 @@ export class MarketEditPackagesComponent {
     });
   }
 
-preventNegative(event: any): void {
-  const value = parseFloat(event.target.value);
-  if (value < 0) {
-    event.target.value = 0;
-    event.target.dispatchEvent(new Event('input'));
+  preventNegative(event: any): void {
+    const value = parseFloat(event.target.value);
+    if (value < 0) {
+      event.target.value = 0;
+      event.target.dispatchEvent(new Event('input'));
+    }
   }
-}
 
   async onSubmit() {
     console.log('selected image', this.selectedImage);
@@ -130,36 +130,36 @@ preventNegative(event: any): void {
         errorMessage += 'Service fee is required.<br>';
       if (!this.selectedImage) errorMessage += 'Package Image is required.<br>';
 
-   Swal.fire({
-  icon: 'error',
-  title: 'Missing Required Fields',
-  html: errorMessage,
-  confirmButtonText: 'OK',
-  customClass: {
-    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    title: 'font-semibold',
-    confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-    htmlContainer: 'text-left', // keeps multiline HTML aligned nicely
-  },
-});
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing Required Fields',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          htmlContainer: 'text-left', // keeps multiline HTML aligned nicely
+        },
+      });
 
       this.isLoading = false;
       return;
     }
-     const hasValidQty = this.packageObj.packageItems.some(
-    (item) => item.qty !== null && item.qty > 0
-  );
+    const hasValidQty = this.packageObj.packageItems.some(
+      (item) => item.qty !== null && item.qty > 0
+    );
 
-  if (!hasValidQty) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Invalid Input',
-      text: 'At least one quantity field must be greater than 0.',
-      confirmButtonText: 'OK',
-    });
-    this.isLoading = false;
-    return;
-  }
+    if (!hasValidQty) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid Input',
+        text: 'At least one quantity field must be greater than 0.',
+        confirmButtonText: 'OK',
+      });
+      this.isLoading = false;
+      return;
+    }
 
 
     try {
@@ -168,33 +168,35 @@ preventNegative(event: any): void {
         .subscribe(
           (res) => {
             if (res.status) {
-             Swal.fire({
-              icon: 'success',
-              title: 'Package Updated',
-              text: 'The package was updated successfully!',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-                confirmButton:
-                  'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-              },
-            }).then(() => {
-              this.packageObj = new Package();
-              this.router.navigate(['/market/action/view-packages-list']);
-            });
+              Swal.fire({
+                icon: 'success',
+                title: 'Package Updated',
+                text: 'The package was updated successfully!',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton:
+                    'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              }).then(() => {
+                this.packageObj = new Package();
+                if (res.packageId) this.router.navigate(['/market/action/define-package-view'], { queryParams: { id: res.packageId } });
+                else this.router.navigate(['/market/action/view-packages-list']);
+                ;
+              });
             } else {
-       Swal.fire({
-  icon: 'error',
-  title: 'Package Name Exists',
-  text: res.message,
-  confirmButtonText: 'OK',
-  customClass: {
-    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    title: 'font-semibold',
-    confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-  },
-});
+              Swal.fire({
+                icon: 'error',
+                title: 'Package Name Exists',
+                text: res.message,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                },
+              });
 
             }
             this.isLoading = false;
@@ -229,13 +231,13 @@ preventNegative(event: any): void {
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
       customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.packageObj = new Package();
-         this.router.navigate(['market/action/view-packages-list']);
+        this.router.navigate(['market/action/view-packages-list']);
       }
     });
   }
@@ -293,85 +295,85 @@ preventNegative(event: any): void {
   }
 
   allowDecimalNumbers(event: KeyboardEvent): boolean {
-  const input = event.target as HTMLInputElement;
-  const value = input.value;
-  const key = event.key;
-  
-  // Allow: backspace, delete, tab, escape, enter
-  if ([8, 9, 13, 27].includes(event.keyCode)) {
-    return true;
-  }
-  
-  // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-  if ((event.ctrlKey || event.metaKey) && [65, 67, 86, 88].includes(event.keyCode)) {
-    return true;
-  }
-  
-  // Allow: left arrow, right arrow, home, end
-  if ([37, 39, 36, 35].includes(event.keyCode)) {
-    return true;
-  }
-  
-  // Only allow numbers and one decimal point
-  if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode !== 46) {
-    event.preventDefault();
-    return false;
-  }
-  
-  // Check for existing decimal point
-  if (event.key === '.' && value.includes('.')) {
-    event.preventDefault();
-    return false;
-  }
-  
-  // If there's already a decimal point, limit to 2 decimal places
-  if (value.includes('.')) {
-    const decimalParts = value.split('.');
-    if (decimalParts[1].length >= 2) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    const key = event.key;
+
+    // Allow: backspace, delete, tab, escape, enter
+    if ([8, 9, 13, 27].includes(event.keyCode)) {
+      return true;
+    }
+
+    // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+    if ((event.ctrlKey || event.metaKey) && [65, 67, 86, 88].includes(event.keyCode)) {
+      return true;
+    }
+
+    // Allow: left arrow, right arrow, home, end
+    if ([37, 39, 36, 35].includes(event.keyCode)) {
+      return true;
+    }
+
+    // Only allow numbers and one decimal point
+    if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode !== 46) {
       event.preventDefault();
       return false;
     }
+
+    // Check for existing decimal point
+    if (event.key === '.' && value.includes('.')) {
+      event.preventDefault();
+      return false;
+    }
+
+    // If there's already a decimal point, limit to 2 decimal places
+    if (value.includes('.')) {
+      const decimalParts = value.split('.');
+      if (decimalParts[1].length >= 2) {
+        event.preventDefault();
+        return false;
+      }
+    }
+
+    return true;
   }
-  
-  return true;
-}
 
   trackByFn(index: number, item: any): any {
     return item.productTypeId;
   }
 
   validateDecimalInput(event: any): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value;
-  
-  // Remove any invalid characters
-  value = value.replace(/[^0-9.]/g, '');
-  
-  // Handle cases with multiple decimal points
-  const decimalParts = value.split('.');
-  if (decimalParts.length > 2) {
-    value = decimalParts[0] + '.' + decimalParts.slice(1).join('');
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    // Remove any invalid characters
+    value = value.replace(/[^0-9.]/g, '');
+
+    // Handle cases with multiple decimal points
+    const decimalParts = value.split('.');
+    if (decimalParts.length > 2) {
+      value = decimalParts[0] + '.' + decimalParts.slice(1).join('');
+    }
+
+    // Ensure maximum of 2 decimal places
+    if (decimalParts.length === 2) {
+      value = decimalParts[0] + '.' + decimalParts[1].slice(0, 2);
+    }
+
+    // Update the input value
+    input.value = value;
+
+    // Update the model if needed
+    if (input.name === 'productPrice') {
+      this.packageObj.productPrice = value ? parseFloat(value) : 0;
+    } else if (input.name === 'serviceFee') {
+      this.packageObj.serviceFee = value ? parseFloat(value) : 0;
+    } else if (input.name === 'packageFee') {
+      this.packageObj.packageFee = value ? parseFloat(value) : 0;
+    }
+
+    this.calculateApproximatedPrice();
   }
-  
-  // Ensure maximum of 2 decimal places
-  if (decimalParts.length === 2) {
-    value = decimalParts[0] + '.' + decimalParts[1].slice(0, 2);
-  }
-  
-  // Update the input value
-  input.value = value;
-  
-  // Update the model if needed
-  if (input.name === 'productPrice') {
-    this.packageObj.productPrice = value ? parseFloat(value) : 0;
-  } else if (input.name === 'serviceFee') {
-    this.packageObj.serviceFee = value ? parseFloat(value) : 0;
-  } else if (input.name === 'packageFee') {
-    this.packageObj.packageFee = value ? parseFloat(value) : 0;
-  }
-  
-  this.calculateApproximatedPrice();
-}
 
 }
 

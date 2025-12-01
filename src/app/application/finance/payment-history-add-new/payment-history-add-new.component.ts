@@ -20,6 +20,7 @@ export class PaymentHistoryAddNewComponent {
   uploadedFileName: string = '';
   isDragging: boolean = false;
   isUploading: boolean = false;
+  uploadedFileNames: Set<string> = new Set(); // Track uploaded file names
 
   receiverOptions = [
     { label: 'Farmers', value: 'Farmers' }
@@ -29,6 +30,17 @@ export class PaymentHistoryAddNewComponent {
     private router: Router,
     private financeService: FinanceService
   ) {}
+
+  // Check if form is valid for enabling upload button
+  isFormValid(): boolean {
+    return !!(
+      this.receivers &&
+      this.amount &&
+      parseFloat(this.amount.replace(/,/g, '')) > 0 &&
+      this.paymentReference.trim() &&
+      this.uploadedFile
+    );
+  }
 
   back(): void {
     this.router.navigate(['/finance/action/viewAll-payments']);
@@ -64,6 +76,22 @@ export class PaymentHistoryAddNewComponent {
   }
 
   handleFile(file: File): void {
+    // Check if file with same name already uploaded
+    if (this.uploadedFileNames.has(file.name)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Duplicate File',
+        text: 'A file with this name has already been uploaded. Please rename the file or select a different one.',
+        confirmButtonColor: '#3B82F6',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 hover:bg-blue-600',
+        },
+      });
+      return;
+    }
+
     // Validate file type (Excel files)
     const validExtensions = ['.xlsx', '.xls', '.csv'];
     const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
@@ -118,61 +146,47 @@ export class PaymentHistoryAddNewComponent {
   }
 
   triggerFileInput(): void {
-    const fileInput = document.getElementById('csvFileInput') as HTMLInputElement;
-    fileInput?.click();
+    if (!this.isUploading) {
+      const fileInput = document.getElementById('csvFileInput') as HTMLInputElement;
+      fileInput?.click();
+    }
   }
 
-  validateForm(): boolean {
+  validateForm(): { isValid: boolean; missingFields: string[] } {
+    const missingFields: string[] = [];
+
     if (!this.receivers) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Validation Error',
-        text: 'Please select receivers',
-        confirmButtonColor: '#3B82F6',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-          confirmButton: 'bg-blue-500 hover:bg-blue-600',
-        },
-      });
-      return false;
+      missingFields.push('Receivers');
     }
 
     if (!this.amount || parseFloat(this.amount.replace(/,/g, '')) <= 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Validation Error',
-        text: 'Please enter a valid amount',
-        confirmButtonColor: '#3B82F6',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-          confirmButton: 'bg-blue-500 hover:bg-blue-600',
-        },
-      });
-      return false;
+      missingFields.push('Amount');
     }
 
     if (!this.paymentReference.trim()) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Validation Error',
-        text: 'Please enter payment reference',
-        confirmButtonColor: '#3B82F6',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-          confirmButton: 'bg-blue-500 hover:bg-blue-600',
-        },
-      });
-      return false;
+      missingFields.push('Payment Reference');
     }
 
     if (!this.uploadedFile) {
+      missingFields.push('CSV/Excel File');
+    }
+
+    return {
+      isValid: missingFields.length === 0,
+      missingFields
+    };
+  }
+
+  onUpload(): void {
+    const validation = this.validateForm();
+    
+    if (!validation.isValid) {
+      const fieldsList = validation.missingFields.map(field => `• ${field}`).join('<br>');
+      
       Swal.fire({
         icon: 'warning',
-        title: 'Validation Error',
-        text: 'Please upload a CSV/Excel file',
+        title: 'Missing Required Fields',
+        html: `Please fill in the following fields:<br><br>${fieldsList}`,
         confirmButtonColor: '#3B82F6',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -180,14 +194,6 @@ export class PaymentHistoryAddNewComponent {
           confirmButton: 'bg-blue-500 hover:bg-blue-600',
         },
       });
-      return false;
-    }
-
-    return true;
-  }
-
-  onUpload(): void {
-    if (!this.validateForm()) {
       return;
     }
 
@@ -219,6 +225,9 @@ export class PaymentHistoryAddNewComponent {
     ).subscribe({
       next: (response) => {
         this.isUploading = false;
+        // Add file name to uploaded set
+        this.uploadedFileNames.add(this.uploadedFileName);
+        
         Swal.fire({
           icon: 'success',
           title: 'Success!',
@@ -293,12 +302,10 @@ export class PaymentHistoryAddNewComponent {
     let value = input.value.replace(/,/g, '');
     
     if (value && !isNaN(Number(value))) {
-      // Format with commas
-      value = Number(value).toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-      this.amount = value;
+      // Format with commas for thousands
+      const parts = value.split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      this.amount = parts.join('.');
     }
   }
 

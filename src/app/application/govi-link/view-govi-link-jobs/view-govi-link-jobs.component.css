@@ -1,3 +1,4 @@
+/* Dropdown Base Styles */
 :host ::ng-deep .dark .p-dropdown {
   color: var(--text-textDark);
   background-color: var(--tile-tileBlack);
@@ -8,58 +9,7 @@
   border-color: #dc2626;
 }
 
-::ng-deep .dark .p-dropdown-item.p-highlight {
-  background-color: #1e40af;
-  color: white;
-}
-
-::ng-deep .dark .p-dropdown-item {
-  color: #f9fafb;
-}
-
-::ng-deep .p-dropdown-item:hover {
-  background-color: #f3f4f6;
-}
-
-::ng-deep .dark .p-dropdown-item:hover {
-  background-color: #4b5563;
-}
-
-::ng-deep .p-dropdown-item.p-highlight {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-::ng-deep .p-dropdown-item {
-  border: none;
-  color: #374151;
-  background-color: transparent;
-  transition: background-color 0.15s ease-in-out;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-::ng-deep .dark .p-dropdown-panel {
-  background-color: #374151;
-  border-color: #6b7280;
-}
-
-::ng-deep .p-dropdown-panel {
-  z-index: 1000 !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  background-color: white;
-}
-
-::ng-deep .dark .p-dropdown-custom .p-dropdown {
-  background-color: #374151;
-  border-color: #6b7280;
-  color: #f9fafb;
-}
-
+/* Dropdown Custom Styles */
 ::ng-deep .p-dropdown-custom .p-dropdown {
   width: 100%;
   padding: 0.5rem;
@@ -71,11 +21,116 @@
   position: relative;
 }
 
+::ng-deep .dark .p-dropdown-custom .p-dropdown {
+  background-color: #374151;
+  border-color: #6b7280;
+  color: #f9fafb;
+}
+
+/* Dropdown Label Alignment */
+::ng-deep .p-dropdown .p-dropdown-label {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Dropdown Trigger Icon Alignment */
+::ng-deep .p-dropdown .p-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dropdown Panel Styles */
+::ng-deep .p-dropdown-panel {
+  z-index: 1000 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+  border-color: #6b7280;
+}
+
+/* Dropdown Items List */
+::ng-deep .p-dropdown-panel .p-dropdown-items {
+  padding: 0.25rem 0;
+}
+
+/* Dropdown Items */
+::ng-deep .p-dropdown-item {
+  border: none;
+  color: #374151;
+  background-color: transparent;
+  transition: background-color 0.15s ease-in-out;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.5rem 0.75rem !important;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+::ng-deep .dark .p-dropdown-item {
+  color: #f9fafb;
+  padding: 0.5rem 0.75rem !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+/* Dropdown Item Hover */
+::ng-deep .p-dropdown-item:hover {
+  background-color: #f3f4f6;
+}
+
+::ng-deep .dark .p-dropdown-item:hover {
+  background-color: #4b5563;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+/* Dropdown Item Highlight */
+::ng-deep .p-dropdown-item.p-highlight {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+::ng-deep .dark .p-dropdown-item.p-highlight {
+  background-color: #1e40af;
+  color: white;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+/* Dropdown Filter */
 ::ng-deep .p-dropdown-filter {
   padding: 0.375rem 0.75rem;
   width: 100%;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
+}
+
+::ng-deep .p-dropdown-filter-container {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 ::ng-deep .dark .p-dropdown-filter-container {
@@ -86,122 +141,79 @@
   background-color: #4b5563;
 }
 
-::ng-deep .p-dropdown-filter-container {
-  padding: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
+/* Dropdown Placeholder Styles */
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
 }
 
-::ng-deep .dark .p-dropdown-item.p-highlight {
-  background-color: #1e40af;
-  color: white;
+::ng-deep .dark .p-dropdown .p-dropdown-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
+  color: #d1d5db;
 }
 
-::ng-deep .p-dropdown-item.p-highlight {
-  background-color: #dbeafe;
-  color: #1e40af;
+/* MultiSelect Placeholder Styles */
+::ng-deep .p-multiselect .p-multiselect-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
 }
+
+::ng-deep .dark .p-multiselect .p-multiselect-label.p-placeholder {
+  font-style: italic;
+  opacity: 0.8;
+  color: #d1d5db;
+}
+
+/* Calendar Styles */
 :host ::ng-deep .p-calendar .p-button {
   color: black;
 }
+
 :host-context(.dark) ::ng-deep .p-calendar .p-button {
   color: white;
 }
 
 ::ng-deep .p-calendar .p-inputtext {
-  padding-right: 3rem !important; /* Make room for both icons */
+  padding-right: 3rem !important;
 }
 
 ::ng-deep .p-calendar .p-calendar-clear-icon {
-  right: 1.2rem !important; /* Position clear button to the left of calendar icon */
-  top: 8.2px !important; /* Move clear button slightly down */
+  right: 1.2rem !important;
+  top: 8.2px !important;
   order: 1;
 }
 
 ::ng-deep .p-calendar .p-datepicker-trigger {
-  right: 0.5rem !important; /* Position calendar icon on the far right */
+  right: 0.5rem !important;
   order: 2;
 }
 
-/* For light mode placeholder */
+/* Calendar Placeholder */
 :host ::ng-deep .p-calendar .p-inputtext::placeholder {
-  color: #6c6c6c; /* gray-400 */
+  color: #6c6c6c;
 }
 
-/* For dark mode placeholder */
 :host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
-  color: #8b8b8b; /* gray-300 */
+  color: #8b8b8b;
 }
 
-/* making pop up small*/
-
+/* Calendar Popup Small */
 ::ng-deep .calendar-popup-small {
-  width: 320px !important; /* Adjust as needed */
+  width: 320px !important;
   min-width: 280px !important;
 }
 
 ::ng-deep .calendar-popup-small .p-datepicker-calendar {
-  font-size: 0.875rem; /* Smaller font */
+  font-size: 0.875rem;
 }
 
 ::ng-deep .calendar-popup-small .p-datepicker-calendar td {
-  padding: 0.25rem !important; /* Smaller cell padding */
+  padding: 0.25rem !important;
 }
 
 ::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
   width: 1.5rem !important;
   height: 1.5rem !important;
   line-height: 1.5rem !important;
-}
-
-::ng-deep .dark .p-dropdown-panel {
-  background-color: #2d354d !important;
-  color: #b1b1b1 !important;
-  border-radius: 6px !important; /* <-- add this for rounded corners */
-  overflow: hidden; /* ensures child items don't spill over rounded corners */
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
-  background-color: #2d354d !important;
-  color: #b1b1b1 !important;
-  padding-left: 0.2rem !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-item {
-  padding-left: 0.2rem !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
-  background-color: #3a4160 !important;
-  color: #fff !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
-  background-color: #2d354d !important;
-  color: #b1b1b1 !important;
-}
-
-/* Make placeholder text italic for dropdown */
-::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
-  font-style: italic;
-  opacity: 0.8; /* optional, gives subtle "placeholder" look */
-}
-
-/* Dark mode italic placeholder */
-::ng-deep .dark .p-dropdown .p-dropdown-label.p-placeholder {
-  font-style: italic;
-  opacity: 0.8;
-  color: #d1d5db; /* optional: lighter gray for contrast */
-}
-
-/* Make placeholder text italic for MultiSelect */
-::ng-deep .p-multiselect .p-multiselect-label.p-placeholder {
-  font-style: italic;
-  opacity: 0.8;
-}
-
-/* Dark mode placeholder italic */
-::ng-deep .dark .p-multiselect .p-multiselect-label.p-placeholder {
-  font-style: italic;
-  opacity: 0.8;
-  color: #d1d5db;
 }

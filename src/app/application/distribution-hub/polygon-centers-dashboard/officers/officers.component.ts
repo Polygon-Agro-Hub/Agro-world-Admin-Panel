@@ -330,6 +330,12 @@ export class OfficersComponent implements OnChanges {
       }
     });
   }
+
+  navigateProfile(id:number){
+     this.router.navigate([
+      `/distribution-hub/action/view-polygon-centers/distributed-officer-profile/${id}`,
+    ]);
+  }
 }
 
 interface CenterDetails {

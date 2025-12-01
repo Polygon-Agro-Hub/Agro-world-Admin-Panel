@@ -354,7 +354,7 @@ export class FinanceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -670,17 +670,36 @@ export class FinanceService {
       params = params.set('search', search.trim());
     }
 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
     const url = `${this.apiUrl}finance/govicare-requests`;
     return this.http.get<GoviCareRequestsResponse>(url, {
-      headers: this.getHeaders(),
+      headers: headers,
       params: params,
     });
   }
-  
-    getAllApprovedGoviCareRequests(
+
+  getGoviCareRequestById(requestId: string): Observable<GoviCareRequestDetailResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    const url = `${this.apiUrl}finance/govicare-requests/${requestId}`;
+    return this.http.get<GoviCareRequestDetailResponse>(url, {
+      headers: headers,
+    });
+  }
+
+  getAllApprovedGoviCareRequests(
     status?: string,
     search?: string
   ): Observable<ApprovedGoviCareRequestsResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
     let params = new HttpParams();
 
     if (status && status.trim()) {
@@ -693,17 +712,12 @@ export class FinanceService {
 
     const url = `${this.apiUrl}finance/approved-govicare-requests`;
     return this.http.get<ApprovedGoviCareRequestsResponse>(url, {
-      headers: this.getHeaders(),
+      headers: headers,
       params: params,
     });
   }
 
-  getGoviCareRequestById(requestId: string): Observable<GoviCareRequestDetailResponse> {
-    const url = `${this.apiUrl}finance/govicare-requests/${requestId}`;
-    return this.http.get<GoviCareRequestDetailResponse>(url, {
-      headers: this.getHeaders(),
-    });
-  }
+
 
   getOfficersByDistrictAndRoleForInvestment(
     distrct: string,
@@ -744,8 +758,8 @@ export class FinanceService {
   getOfficerDetailsById(empId: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}finance/officer-details/${empId}`);
   }
-  
-   updateGoviCareRequestPublishStatus(
+
+  updateGoviCareRequestPublishStatus(
     requestId: number
   ): Observable<UpdatePublishStatusResponse> {
     const headers = new HttpHeaders({
@@ -759,38 +773,38 @@ export class FinanceService {
   }
 
 
-getAllPublishedProjects(
-  searchText: string = '',
- 
-): Observable<any> {
-  console.log('searchText', searchText)
-  
-  let url = `${this.apiUrl}finance/get-all-published-projects?page=${1}`;
+  getAllPublishedProjects(
+    searchText: string = '',
 
-  if (searchText) {
-    url += `&searchText=${searchText}`;
+  ): Observable<any> {
+    console.log('searchText', searchText)
+
+    let url = `${this.apiUrl}finance/get-all-published-projects?page=${1}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
   }
-
-  return this.http.get<any>(url, {
-    headers: this.getHeaders(),
-  });
-}
 
 
 
   getAllRejectedInvestmentRequests(
-  search?: string
-): Observable<any> {
-  let params = new HttpParams();
+    search?: string
+  ): Observable<any> {
+    let params = new HttpParams();
 
-  if (search && search.trim()) {
-    params = params.set('search', search.trim());
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/rejected-investment-requests`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
   }
-
-  const url = `${this.apiUrl}finance/rejected-investment-requests`;
-  return this.http.get<any>(url, {
-    headers: this.getHeaders(),
-    params: params,
-  });
-}
 }

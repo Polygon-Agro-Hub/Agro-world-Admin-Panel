@@ -121,7 +121,7 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{item.nic}}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark" (click)="navigateProfile(item.id)">
               <button class="text-[#000] hover:text-[#83aefd] text-[22px]">
                 <i class="fa-regular fa-file dark:text-[#fff]"></i>
               </button>

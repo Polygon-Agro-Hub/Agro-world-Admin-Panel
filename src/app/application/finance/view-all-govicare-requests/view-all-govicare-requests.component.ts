@@ -115,6 +115,14 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     this.loadGovicareRequests();
   }
 
+  formatThreeDigits(num: number): string {
+    return num.toString().padStart(3, '0');
+  }
+
+  formatTwoDigits(num: number): string {
+    return num.toString().padStart(2, '0');
+  }
+
   // Details Modal Methods
   viewDetails(requestId: string): void {
     this.isLoading = true;

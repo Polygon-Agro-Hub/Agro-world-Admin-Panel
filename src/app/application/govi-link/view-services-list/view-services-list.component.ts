@@ -134,4 +134,11 @@ export class ViewServicesListComponent implements OnInit {
       }
     });
   }
+
+formatServiceFee(fee: number | string | null | undefined): string {
+  if (!fee) return '-';
+  const numericFee = typeof fee === 'string' ? parseFloat(fee) : fee;
+  if (isNaN(numericFee)) return '-';
+  return numericFee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 }

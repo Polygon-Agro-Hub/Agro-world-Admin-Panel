@@ -939,7 +939,7 @@ export const routes: Routes = [
                 path: 'stakholder-collection-centers',
                 component: CollectionAllViewComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View collection centers' },
+                data: { permission: 'View Collection Center' },
               },
               {
                 path: 'stakholder-distributed-centers',
@@ -1015,7 +1015,7 @@ export const routes: Routes = [
             path: 'update-collection-center/:id',
             component: EditCollectionCenterComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Edit Collection Center' },
+            data: { permission: ['Edit Collection Center', 'Manage Collection Centre'] },
           },
           {
             path: 'create-company',
@@ -1033,7 +1033,7 @@ export const routes: Routes = [
             path: 'add-collection-center',
             component: AddCollectionCenterComponent,
             canActivate: [PermissionGuard],
-            data: { permission: 'Add Collection Center' },
+            data: { permission: ['Add Collection Center', 'Onboard Collection Centre'] },
           },
           {
             path: 'add-daily-target/:id/:name/:regCode',
@@ -1615,6 +1615,10 @@ export const routes: Routes = [
                   {
                     path: 'selected-officer-target',
                     component: SelectedOfficerTargetComponent,
+                  },
+                  {
+                    path: 'distributed-officer-profile/:id',
+                    component: ViewCollectiveOfficerProfileComponent,
                   },
                 ],
               },

@@ -5,7 +5,7 @@
   Back
 </button>
 <button *ngIf="
-    permissionService.hasPermission('Add Collection Center') ||
+    permissionService.hasPermission('Add Collection Center') || permissionService.hasPermission('Onboard Collection Centre') ||
     tokenService.getUserDetails().role === '1'
   " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="add()">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -192,7 +192,7 @@
               </button> -->
 
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateEdit(item.id)" *ngIf="
-                  permissionService.hasPermission('Edit Collection Center') ||
+                  permissionService.hasPermission('Edit Collection Center') || permissionService.hasPermission('Manage Collection Centre') ||
                   tokenService.getUserDetails().role === '1'
                 ">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -205,7 +205,7 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button *ngIf="
-                  permissionService.hasPermission('Delete Collection Center') ||
+                  permissionService.hasPermission('Delete Collection Center') || permissionService.hasPermission('Delete(remove) Collation Centre') ||
                   tokenService.getUserDetails().role === '1'
                 " class="text-red-500 hover:text-red-700" (click)="deleteCollectionCenter(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"

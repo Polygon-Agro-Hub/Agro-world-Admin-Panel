@@ -97,7 +97,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View collection centers') || tokenService.getUserDetails().role === '1'">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View Collection Center') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewCollectionCenter()"
         type="button"

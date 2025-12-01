@@ -131,7 +131,7 @@
   (click)="closeExcludedItemsModal()">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-md mx-4 max-h-[90vh] flex flex-col">
     <!-- Modal Header -->
-    <div class="px-6 py-4 text-center shrink-0 border-b border-gray-200 dark:border-gray-700">
+    <div class="px-6 py-4 text-center shrink-0  dark:border-gray-700">
       <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
         Excluded List Items
       </h3>
@@ -153,7 +153,7 @@
           class="flex-1 overflow-y-auto px-6 pb-4 scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
           <div class="space-y-2">
             <div *ngFor="let item of excludedItemsArr; let i = index"
-              class="flex items-center py-2 border-b border-gray-100 dark:border-gray-700">
+              class="flex items-center py-2  dark:border-gray-700">
               <div class="w-16 text-center text-gray-600 dark:text-gray-300">{{ i + 1 }}</div>
               <div class="flex-1 text-left pl-4 text-gray-800 dark:text-gray-100 truncate">
                 {{ item.displayName }}
@@ -185,7 +185,7 @@
   (click)="closeAdditionalItemsModal()">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-[500px] max-w-md mx-4 max-h-[90vh] flex flex-col">
     <!-- Modal Header -->
-    <div class="px-6 py-4 text-center shrink-0 border-b border-gray-200 dark:border-gray-700">
+    <div class="px-6 py-4 text-center shrink-0 dark:border-gray-700">
       <h3 class="text-lg font-semibold text-[#000000] dark:text-gray-100">
         Additional Items 
       </h3>
@@ -208,7 +208,7 @@
       <div
         class="flex-1 overflow-y-auto px-6 pb-4 scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
         <div class="space-y-3">
-          <div *ngFor="let item of additionalItems; let i = index" class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+          <div *ngFor="let item of additionalItems; let i = index" class="flex justify-between items-center py-2 dark:border-gray-700">
             <div class="w-12 text-center text-sm text-[#808080] dark:text-gray-400">
               {{ i + 1 }}
             </div>
@@ -232,7 +232,7 @@
     </div>
 
     <!-- Modal Footer -->
-    <div class="px-6 py-4 flex justify-center shrink-0 border-t border-gray-200 dark:border-gray-700">
+    <div class="px-6 py-4 flex justify-center shrink-0 dark:border-gray-700">
       <button type="button"
         class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-md text-sm font-medium transition-colors"
         (click)="closeAdditionalItemsModal()">

@@ -93,15 +93,21 @@
             <th
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               Status</th>
-            <th *ngIf="permissionService.hasPermission('Reply Wholesale complaint') || tokenService.getUserDetails().role === '1'"
+            <th
+              *ngIf="permissionService.hasPermission('Reply Wholesale complaint') || tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               View</th>
             <th
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               Reply</th>
-            <th *ngIf="permissionService.hasPermission('View Wholesale complaint') || tokenService.getUserDetails().role === '1'" class="px-3 py-2 whitespace-nowrap text-center"
+            <th
+              *ngIf="permissionService.hasPermission('View Wholesale complaint') || tokenService.getUserDetails().role === '1'"
+              class="px-3 py-2 whitespace-nowrap text-center"
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               View Reply</th>
+            <th
+              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-left">
+              Reply By</th>
           </tr>
         </thead>
         <tbody>
@@ -154,7 +160,8 @@
                 {{ item.status }}
               </span>
             </td>
-            <td class="px-3 py-2 whitespace-nowrap text-center" *ngIf="permissionService.hasPermission('Reply Wholesale complaint') || tokenService.getUserDetails().role === '1'">
+            <td class="px-3 py-2 whitespace-nowrap text-center"
+              *ngIf="permissionService.hasPermission('Reply Wholesale complaint') || tokenService.getUserDetails().role === '1'">
               <button (click)="navigateSelectComplain(item.id)" class="text-blue-600 hover:text-blue-900"
                 aria-label="View complaint details">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5">
@@ -168,13 +175,18 @@
               <span *ngIf="!item.reply && item.status !== 'Closed'" class="italic opacity-60 ">No</span>
               <span *ngIf="item.reply && item.status === 'Closed'" class="underline">Yes</span>
             </td>
-            <td *ngIf="permissionService.hasPermission('View Wholesale complaint') || tokenService.getUserDetails().role === '1'" class="px-3 py-2 whitespace-nowrap text-center">
+            <td
+              *ngIf="permissionService.hasPermission('View Wholesale complaint') || tokenService.getUserDetails().role === '1'"
+              class="px-3 py-2 whitespace-nowrap text-center">
               <button (click)="item.reply && showReplyDialog(item)" [disabled]="!item.reply"
                 [ngClass]="{'opacity-40 cursor-not-allowed': !item.reply}" class="text-blue-600 hover:text-blue-900"
                 aria-label="View complaint reply">
                 <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
 
               </button>
+            </td>
+            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-left">
+              {{ item.replyBy || '--' }}
             </td>
           </tr>
         </tbody>

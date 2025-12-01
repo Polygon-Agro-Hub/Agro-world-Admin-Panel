@@ -42,6 +42,8 @@ export class PublishedProjectsComponent implements OnInit {
   searchText: string = '';
   errorMessage: string | null = null;
 
+  progress: number = 50
+
   
 
   constructor(

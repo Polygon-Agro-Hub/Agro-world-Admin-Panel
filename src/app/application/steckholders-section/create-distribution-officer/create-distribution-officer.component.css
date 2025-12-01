@@ -268,3 +268,60 @@
     color: white;
 }
 
+
+/* Calendar icon colors */
+:host ::ng-deep .p-calendar .p-button {
+  color: black;             
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-button {
+  color: white;              
+}
+
+/* Calendar input spacing for icons */
+::ng-deep .p-calendar .p-inputtext {
+  padding-right: 3rem !important; /* Make room for both icons */
+}
+
+/* Clear icon positioning */
+::ng-deep .p-calendar .p-calendar-clear-icon {
+  right: 1.2rem !important; /* Position clear button to the left of calendar icon */
+  top: 8.2px !important; /* Move clear button slightly down */
+  order: 1;
+}
+
+/* Calendar icon positioning */
+::ng-deep .p-calendar .p-datepicker-trigger {
+  right: 0.5rem !important; /* Position calendar icon on the far right */
+  order: 2;
+}
+
+/* Light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c; /* gray-400 */
+}
+
+/* Dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8B8B8B; /* gray-300 */
+}
+
+/* Calendar popup size */
+::ng-deep .calendar-popup-small {
+  width: 320px !important;
+  min-width: 280px !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  font-size: 0.875rem;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.25rem !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  line-height: 1.5rem !important;
+}

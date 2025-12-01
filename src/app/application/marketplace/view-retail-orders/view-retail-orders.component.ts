@@ -213,6 +213,21 @@ downloadPostInvoice(id: number, tableInvoiceNo: string): void {
       this.isLoading = false;
     });
 }
+
+isPostInvoiceEnabled(status: string): boolean {
+  // Define the statuses that allow post-invoice download
+  const enabledStatuses = [
+    'Out For Delivery', 
+    'Delivered', 
+    'Picked Up', 
+    'On the way', 
+    'Failed'
+  ];
+  
+  return enabledStatuses.includes(status);
+}
+
+
 }
 
 class RetailOrders {

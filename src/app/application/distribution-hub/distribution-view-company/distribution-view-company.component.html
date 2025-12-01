@@ -78,9 +78,9 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Created At
             </th>
-            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
-            <th *ngIf="permissionService.hasPermission('Distribution Hub edit company') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
-            <th *ngIf="permissionService.hasPermission('Distribution Hub delete company') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th *ngIf="permissionService.hasPermission('Distribution Hub view a cch') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th *ngIf="permissionService.hasPermission('Distribution Hub edit a cch') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
+            <th *ngIf="permissionService.hasPermission('Distribution Hub delete a cch') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
         </thead>
         <tbody>

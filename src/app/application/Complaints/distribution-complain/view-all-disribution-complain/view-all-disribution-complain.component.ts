@@ -271,6 +271,7 @@ class Complain {
   officerPhone!: string;
   farmerName!: string;
   language!: string;
+  replyBy!: string;
 }
 
 class Status {

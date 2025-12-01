@@ -90,7 +90,7 @@ export class CollectionCenterViewComplainComponent implements OnInit {
     }
     else if (this.tokenService.getUserDetails().role === "4") {
       this.filterCategory.type = "Call Center";
-    } 
+    }
     else if (this.tokenService.getUserDetails().role === "5") {
       this.filterCategory.type = "Procuiment";
     }
@@ -338,6 +338,7 @@ class Complain {
   officerPhone!: string;
   farmerName!: string;
   language!: string;
+  replyBy!: string;
 }
 
 class Status {

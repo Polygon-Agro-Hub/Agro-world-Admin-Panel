@@ -124,6 +124,9 @@
             <th class="py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View Collector complaint') || tokenService.getUserDetails().role === '1'">
               View Reply
             </th>
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-left" >
+              Reply By
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -204,6 +207,9 @@
                   <img src="assets/icons/viewreply.png" alt="View Reply" class="w-6 h-6 inline-block" />
                 </button>
               </div>
+            </td>
+            <td class="py-3 px-2 dark:text-textDark text-left">
+              {{ item.replyBy || '--' }}
             </td>
           </tr>
         </tbody>

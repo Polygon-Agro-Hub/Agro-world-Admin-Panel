@@ -264,6 +264,7 @@ export class PermissionAreaComponent {
                 life: 3000,
               });
             }
+            this.ngOnInit();
           },
           error: (error) => {
             console.error('Error creating role feature:', error);

@@ -167,7 +167,10 @@
               Order Status
             </th>
             <th *ngIf="permissionService.hasPermission('Dash view orders download invoice') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
-              Invoice
+              PRE-INVOICE
+            </th>
+            <th class="whitespace-nowrap px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
+              POST-INVOICE
             </th>
             <!-- <th
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
@@ -281,6 +284,22 @@
                 <i class="fa-solid fa-file-lines text-xl text-[#5C5C5C]"></i>
               </button>
             </td>
+
+            <td class="px-4 py-3 text-center dark:text-textDark" 
+    *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
+  
+  <div class="relative inline-block">
+    <button 
+      class="text-textLight dark:text-textDark gap-1"
+      [class.opacity-50]="!isPostInvoiceEnabled(item.orderStatus)"
+      [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.orderStatus)"
+      [class.cursor-pointer]="isPostInvoiceEnabled(item.orderStatus)"
+      [disabled]="!isPostInvoiceEnabled(item.orderStatus)"
+      (click)="isPostInvoiceEnabled(item.orderStatus) ? downloadPostInvoice(item.id, item.invNo) : null">
+      <i class="fa-solid fa-file-lines text-2xl"></i>
+    </button>
+  </div>
+</td>
 
             <!-- <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button

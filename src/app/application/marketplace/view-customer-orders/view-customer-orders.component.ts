@@ -7,6 +7,9 @@ import { InvoiceService } from '../../../services/invoice/invoice.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
+import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface Order {
   id: number;
@@ -54,14 +57,17 @@ export class ViewCustomerOrdersComponent implements OnInit {
     failed: 'Faild',
     "Out For Delivery": "Out For Delivery",
     "Ready to Pickup": "Ready to Pickup",
-    "Picked up" : "Picked up"
+    "Picked up": "Picked up"
   };
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private marketplace: MarketPlaceService,
-    private invoiceService: FinalinvoiceService
+    private invoiceService: FinalinvoiceService,
+    private postInvoiceService: PostinvoiceService,
+    private permissionService: PermissionService,
+    private tokenService: TokenService
   ) { }
 
   ngOnInit(): void {
@@ -146,6 +152,59 @@ export class ViewCustomerOrdersComponent implements OnInit {
           text: 'Failed to download invoice. Please try again.',
           confirmButtonColor: '#3085d6',
         });
+      });
+  }
+
+  isPostInvoiceEnabled(status: string): boolean {
+    // Normalize status by trimming
+    const normalizedStatus = status?.trim();
+    
+    // Define the statuses that allow post-invoice download
+    const enabledStatuses = [
+      'Out For Delivery', 
+      'Delivered', 
+      'Picked up',
+      'Picked Up',
+      'On the way',
+      'Failed',
+      'Faild'
+    ];
+    
+    return enabledStatuses.some(enabledStatus => 
+      normalizedStatus?.toLowerCase() === enabledStatus.toLowerCase()
+    );
+  }
+
+  shouldShowPostInvoiceColumn(): boolean {
+    // Check if any order has a status that enables post-invoice download
+    return this.orders.some(order => this.isPostInvoiceEnabled(order.status));
+  }
+
+  downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+    this.isLoading = true;
+
+    this.postInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
+      .then(() => {
+        // Success case
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Post invoice downloaded successfully!',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .catch((error) => {
+        console.error('Error generating invoice:', error);
+        this.errorMessage = 'Failed to download invoice';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }

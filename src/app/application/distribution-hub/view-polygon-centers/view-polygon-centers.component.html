@@ -97,15 +97,15 @@
               Contact Number 01
             </th>
             <th *ngIf="
-        permissionService.hasPermission('Distribution Hub polygon centres view location') ||
+        permissionService.hasPermission('Polygon centres view location') ||
         tokenService.getUserDetails().role === '1'
-      " class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
+      " class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
               Location
             </th>
             <th *ngIf="
         permissionService.hasPermission('Polygon centres view dashboard') ||
         tokenService.getUserDetails().role === '1'
-      " class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
+      " class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
               Dashboard
             </th>
           </tr>

@@ -7,7 +7,7 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxColorsModule } from 'ngx-colors';
 import Swal from 'sweetalert2';
@@ -106,7 +106,8 @@ export class CreateCropCalenderComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private cropCalendarService: CropCalendarService
+    private cropCalendarService: CropCalendarService,
+    private location: Location
   ) {
     this.cropForm = this.fb.group({
       groupId: ['', Validators.required],
@@ -134,7 +135,9 @@ export class CreateCropCalenderComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/plant-care/action']);
+        // this.router.navigate(['/plant-care/action']);
+        this.location.back();
+
       }
     });
   }
@@ -615,7 +618,8 @@ export class CreateCropCalenderComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/plant-care/action']);
+        // this.router.navigate(['/plant-care/action']);
+        this.location.back();
       }
     });
   }

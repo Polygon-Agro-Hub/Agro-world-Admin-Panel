@@ -281,7 +281,7 @@ export const routes: Routes = [
                 path: 'create-news',
                 component: CreateNewsComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Create a news' },
+                data: { permission: ['Create a news', 'Manage content'] },
               },
               {
                 path: 'manage-content',
@@ -624,17 +624,17 @@ export const routes: Routes = [
               {
                 path: 'finance-govicapital',
                 children: [
-                  { 
-                    path: 'ivesment-requests', 
-                    component: InvestmentRequestsComponent 
+                  {
+                    path: 'ivesment-requests',
+                    component: InvestmentRequestsComponent
                   },
-                  { 
-                    path: 'viewAll-Govicare-requests', 
-                    component: ViewAllGovicareRequestsComponent 
+                  {
+                    path: 'viewAll-Govicare-requests',
+                    component: ViewAllGovicareRequestsComponent
                   },
-                  { 
-                    path: 'viewAll-Govicare-ApprovedRequests', 
-                    component: ViewAllApprovedGovicareRequestsComponent 
+                  {
+                    path: 'viewAll-Govicare-ApprovedRequests',
+                    component: ViewAllApprovedGovicareRequestsComponent
                   },
                   {
                     path: 'reject-requests',

@@ -328,6 +328,7 @@ class Complain {
   status!: string;
   createdAt!: Date;
   reply!: string;
+  replyBy!: string;
 }
 
 class Status {

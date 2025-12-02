@@ -49,10 +49,11 @@
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="statusfilterArr"
-                        [(ngModel)]="filterStatus" name="filterStatus" [checkmark]="true" optionLabel="label" optionValue="value" [showClear]="!!filterStatus"
-                        placeholder="Status" (onChange)="applyFilters()" appendTo="body"></p-dropdown>
+                        [(ngModel)]="filterStatus" name="filterStatus" [checkmark]="true" optionLabel="label"
+                        optionValue="value" [showClear]="!!filterStatus" placeholder="Status"
+                        (onChange)="applyFilters()" appendTo="body"></p-dropdown>
                 </div>
-                
+
                 <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
                     <input type="text" placeholder="Search By EMP ID, Company, Centre Code..." [(ngModel)]="searchText"
                         class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
@@ -110,14 +111,19 @@
                         <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
                             Status
                         </th>
-                        <th *ngIf="permissionService.hasPermission('Reply Distribution complaint') || tokenService.getUserDetails().role === '1'" class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th *ngIf="permissionService.hasPermission('Reply Distribution complaint') || tokenService.getUserDetails().role === '1'"
+                            class="py-3 font-normal text-textLight dark:text-textDark text-center">
                             View
                         </th>
                         <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
                             Reply
                         </th>
-                        <th *ngIf="permissionService.hasPermission('View Distribution complaint') || tokenService.getUserDetails().role === '1'" class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th *ngIf="permissionService.hasPermission('View Distribution complaint') || tokenService.getUserDetails().role === '1'"
+                            class="py-3 font-normal text-textLight dark:text-textDark text-center">
                             View Reply
+                        </th>
+                        <th class="py-3 px-3 font-normal text-textLight dark:text-textDark text-left">
+                            Reply By
                         </th>
                     </tr>
                 </thead>
@@ -168,7 +174,8 @@
                                     item.status }}</span>
                             </div>
                         </td>
-                        <td *ngIf="permissionService.hasPermission('Reply Distribution complaint') || tokenService.getUserDetails().role === '1'" class="py-3 dark:text-textDark text-center">
+                        <td *ngIf="permissionService.hasPermission('Reply Distribution complaint') || tokenService.getUserDetails().role === '1'"
+                            class="py-3 dark:text-textDark text-center">
                             <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
                                 (click)="navigateSelectComplain(item.id)">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -185,7 +192,8 @@
                             <span *ngIf="item.reply != null"
                                 class="px-4 py-3 text-center text-textLight dark:text-textDark underline">Yes</span>
                         </td>
-                        <td class="py-3 dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View Distribution complaint') || tokenService.getUserDetails().role === '1'">
+                        <td class="py-3 dark:text-textDark text-center"
+                            *ngIf="permissionService.hasPermission('View Distribution complaint') || tokenService.getUserDetails().role === '1'">
                             <div *ngIf="item.reply === null">
                                 <button disabled class="w-5 h-5 text-blue-100">
                                     <img src="assets/icons/viewreply.png" alt="View Reply"
@@ -200,6 +208,9 @@
                                         class="w-6 h-6 inline-block" />
                                 </button>
                             </div>
+                        </td>
+                        <td class="py-3 px-3 dark:text-textDark text-left">
+                            {{ item.replyBy || '--' }}
                         </td>
                     </tr>
                 </tbody>

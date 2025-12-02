@@ -16,6 +16,7 @@ import { finalize } from 'rxjs';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
 
 @Component({
   selector: 'app-view-orders',
@@ -83,7 +84,8 @@ export class ViewOrdersComponent implements OnInit {
     private finalInvoiceService: FinalinvoiceService,
     private salesDashService: SalesDashService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
+    private postInvoiceService: PostinvoiceService,
   ) {}
 
   ngOnInit() {
@@ -294,6 +296,41 @@ async downloadInvoice(orderId: number, invoiceNumber: string): Promise<void> {
       this.searchText
     );
   }
+
+  isPostInvoiceEnabled(status: string): boolean {
+  // Define the statuses that allow post-invoice download
+  const enabledStatuses = [
+    'Out For Delivery', 
+    'Delivered', 
+    'Picked Up', 
+    'On the way', 
+    'Failed'
+  ];
+  
+  return enabledStatuses.includes(status);
+}
+
+downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+  this.isLoading = true;
+
+  this.postInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
+    .then(() => {
+      // Success case - no action needed unless you want to show a success message
+    })
+    .catch((error) => {
+      console.error('Error generating invoice:', error);
+      this.errorMessage = 'Failed to download invoice';
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to download invoice. Please try again.',
+        confirmButtonColor: '#3085d6',
+      });
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
+}
 }
 
 class Orders {

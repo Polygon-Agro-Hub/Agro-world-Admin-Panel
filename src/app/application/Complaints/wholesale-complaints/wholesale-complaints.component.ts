@@ -24,6 +24,7 @@ interface Complaint {
   reply?: string;
   complain: string;
   companyName?: string;
+  replyBy:string | null;
 }
 
 interface DropdownOption {
@@ -113,6 +114,7 @@ export class WholesaleComplaintsComponent implements OnInit {
             status: this.normalizeStatus(item.status, item.createdAt),
             reply: item.reply || undefined,
             complain: item.complain,
+            replyBy: item.replyBy || null,
           }))
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.filteredComplaints = [...this.complaints];

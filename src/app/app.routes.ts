@@ -1567,7 +1567,7 @@ export const routes: Routes = [
                 path: 'create-company',
                 component: CreateCompanyComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Add And Edit Company' },
+                data: { permission: ['Add And Edit Company', 'Distribution Hub add new company'] },
               },
               {
                 path: 'view-companies',
@@ -1638,7 +1638,7 @@ export const routes: Routes = [
                 path: 'assign-cities',
                 component: AssignCitiesComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'DDistribution Hub assign cities' },
+                data: { permission: 'Distribution Hub assign cities' },
               },
             ],
           },

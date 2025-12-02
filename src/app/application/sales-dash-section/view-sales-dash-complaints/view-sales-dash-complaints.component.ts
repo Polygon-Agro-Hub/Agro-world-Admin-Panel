@@ -89,7 +89,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
     }
     else if (this.tokenService.getUserDetails().role === '4') {
       this.filterCategory.type = 'Call Center';
-    } 
+    }
     else if (this.tokenService.getUserDetails().role === '5') {
       this.filterCategory.type = 'Procuiment';
     }
@@ -366,6 +366,7 @@ class Complain {
   status!: string;
   createdAt!: string;
   reply!: string;
+  replyBy!: string;
 }
 
 class Status {

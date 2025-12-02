@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -95,7 +95,8 @@ export class AddDestributionCenterComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private distributionService: DestributionService,
-    private emailValidationService: EmailvalidationsService
+    private emailValidationService: EmailvalidationsService,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -970,7 +971,7 @@ export class AddDestributionCenterComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        window.history.back();
+        this.location.back();
       }
     });
   }
@@ -992,7 +993,8 @@ export class AddDestributionCenterComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+        // this.router.navigate(['/distribution-hub/action/view-destribition-center']);
+        this.location.back();
       }
     });
   }

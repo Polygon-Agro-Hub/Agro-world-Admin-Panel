@@ -14,6 +14,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { finalize } from 'rxjs';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
+import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
 
 @Component({
   selector: 'app-view-retail-orders',
@@ -69,6 +70,7 @@ export class ViewRetailOrdersComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private finalInvoiceService: FinalinvoiceService,
+    private postInvoiceService: PostinvoiceService,
     private http: HttpClient
   ) {}
 
@@ -189,6 +191,43 @@ export class ViewRetailOrdersComponent implements OnInit {
       this.isLoading = false;
     });
 }
+
+downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+  this.isLoading = true;
+
+  this.postInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
+    .then(() => {
+      // Success case - no action needed unless you want to show a success message
+    })
+    .catch((error) => {
+      console.error('Error generating invoice:', error);
+      this.errorMessage = 'Failed to download invoice';
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to download invoice. Please try again.',
+        confirmButtonColor: '#3085d6',
+      });
+    })
+    .finally(() => {
+      this.isLoading = false;
+    });
+}
+
+isPostInvoiceEnabled(status: string): boolean {
+  // Define the statuses that allow post-invoice download
+  const enabledStatuses = [
+    'Out For Delivery', 
+    'Delivered', 
+    'Picked Up', 
+    'On the way', 
+    'Failed'
+  ];
+  
+  return enabledStatuses.includes(status);
+}
+
+
 }
 
 class RetailOrders {

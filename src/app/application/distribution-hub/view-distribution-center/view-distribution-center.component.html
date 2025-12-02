@@ -9,8 +9,9 @@
 </button>
 <button
   *ngIf="
-    permissionService.hasPermission('Distribution Hub add a distribution centre') ||
-    tokenService.getUserDetails().role === '1'
+    permissionService.hasPermission(
+      'Distribution Hub add a distribution centre'
+    ) || tokenService.getUserDetails().role === '1'
   "
   class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="add()"
@@ -262,14 +263,39 @@
             </th>
 
             <th
-            *ngIf="
-            permissionService.hasPermission('Distribution Hub view location') ||
-            tokenService.getUserDetails().role === '1'
-          "
+              *ngIf="
+                permissionService.hasPermission(
+                  'Distribution Hub view location'
+                ) || tokenService.getUserDetails().role === '1'
+              "
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
             >
               Location
             </th>
+            <th
+              *ngIf="
+                permissionService.hasPermission(
+                  'Distribution Hub view a distribution centre'
+                ) || tokenService.getUserDetails().role === '1'
+              "
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            ></th>
+            <th
+              *ngIf="
+                permissionService.hasPermission(
+                  'Distribution Hub edit a distribution centre'
+                ) || tokenService.getUserDetails().role === '1'
+              "
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            ></th>
+            <th
+              *ngIf="
+                permissionService.hasPermission(
+                  'Distribution Hub delete a distribution centre'
+                ) || tokenService.getUserDetails().role === '1'
+              "
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
+            ></th>
           </tr>
         </thead>
         <tbody>
@@ -317,10 +343,14 @@
               >
             </td>
 
-            <td *ngIf="
-            permissionService.hasPermission('Distribution Hub view location') ||
-            tokenService.getUserDetails().role === '1'
-          " class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+            <td
+              *ngIf="
+                permissionService.hasPermission(
+                  'Distribution Hub view location'
+                ) || tokenService.getUserDetails().role === '1'
+              "
+              class="px-4 py-3 text-center text-[#000000] dark:text-textDark"
+            >
               <a
                 *ngIf="item.longitude && item.latitude"
                 href="https://www.google.com/maps?q={{ item.latitude }},{{
@@ -342,10 +372,14 @@
               </span>
             </td>
 
-            <td *ngIf="
-            permissionService.hasPermission('Distribution Hub view a distribution centre') ||
-            tokenService.getUserDetails().role === '1'
-          "  class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td
+              *ngIf="
+                permissionService.hasPermission(
+                  'Distribution Hub view a distribution centre'
+                ) || tokenService.getUserDetails().role === '1'
+              "
+              class="px-2 py-3 text-left text-textLight dark:text-textDark"
+            >
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="viewDistributionCenter(item.id)"
@@ -369,8 +403,9 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 *ngIf="
-                  permissionService.hasPermission('Distribution Hub edit a distribution centre') ||
-                  tokenService.getUserDetails().role === '1'
+                  permissionService.hasPermission(
+                    'Distribution Hub edit a distribution centre'
+                  ) || tokenService.getUserDetails().role === '1'
                 "
                 class="text-blue-400 hover:text-blue-700"
                 (click)="navigateEdit(item.id)"
@@ -392,8 +427,9 @@
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="navigateEdit(item.id)"
                 *ngIf="
-                  permissionService.hasPermission('Distribution Hub edit a distribution centre') ||
-                  tokenService.getUserDetails().role === '1'
+                  permissionService.hasPermission(
+                    'Distribution Hub edit a distribution centre'
+                  ) || tokenService.getUserDetails().role === '1'
                 "
               >
                 <svg
@@ -412,8 +448,9 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 *ngIf="
-                  permissionService.hasPermission('Distribution Hub delete a distribution centre') ||
-                  tokenService.getUserDetails().role === '1'
+                  permissionService.hasPermission(
+                    'Distribution Hub delete a distribution centre'
+                  ) || tokenService.getUserDetails().role === '1'
                 "
                 class="text-red-500 hover:text-red-700"
                 (click)="deleteDistributionCenter(item.id)"

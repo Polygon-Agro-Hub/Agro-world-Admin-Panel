@@ -5,17 +5,12 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<div
-  *ngIf="!hasData"
-  class="flex justify-center items-center h-full bg-white dark:bg-tileBlack rounded-lg shadow-md mx-auto mb-5 py-64"
->
+<div *ngIf="!hasData"
+  class="flex justify-center items-center h-full bg-white dark:bg-tileBlack rounded-lg shadow-md mx-auto mb-5 py-64">
   <h2 class="text-xl font-normal dark:text-textDark">No Data Available !</h2>
 </div>
 <div *ngIf="hasData">
-  <div
-    *ngFor="let postRcord of post"
-    class="bg-white dark:bg-tileBlack rounded-lg shadow-md w-100 mx-auto mb-5"
-  >
+  <div *ngFor="let postRcord of post" class="bg-white dark:bg-tileBlack rounded-lg shadow-md w-100 mx-auto mb-5">
     <div class="p-4">
       <div class="flex items-center justify-between w-100">
         <div class="flex items-center justify-between gap-x-5 w-full">
@@ -23,78 +18,61 @@
 
             <!-- Icon Container -->
             <div
-              class="rounded-full bg-gray-200 h-10 w-10 flex-shrink-0 flex items-center justify-center overflow-hidden mx-5 my-5 cursor-pointer"
-            >
+              class="rounded-full bg-gray-200 h-10 w-10 flex-shrink-0 flex items-center justify-center overflow-hidden mx-5 my-5 cursor-pointer">
               <i class="fa-regular fa-user text-xl"></i>
             </div>
             <!-- Icon Container -->
-          
+
             <!-- Heading -->
             <h3 class="text-lg font-medium dark:text-textDark break-words">
               {{ postRcord.heading }}
             </h3>
-          
+
           </div>
 
-          
+
           <div class="flex items-end space-x-3 mx-5 w-28">
             <!-- time -->
             <p class="text-sm whitespace-nowrap text-gray-600 w-full dark:text-textDark">
               {{ postRcord.timeAgo }}
             </p>
             <!-- time -->
-            <div
-              *ngIf="
+            <div *ngIf="
                 permissionService.hasPermission('Delete post') ||
                 tokenService.getUserDetails().role === '1'
-              "
-              class="flex flex-col"
-            >
+              " class="flex flex-col">
               <div class="relative flex flex-col text-gray-500 hover:text-gray-700 group cursor-pointer">
-  <i 
-    class="fa-solid fa-ellipsis-vertical dark:text-textDark"
-    (click)="toggleDeleteButton(postRcord.id)"
-  ></i>
+                <i class="fa-solid fa-ellipsis-vertical dark:text-textDark"
+                  (click)="toggleDeleteButton(postRcord.id)"></i>
 
-  <div
-    *ngIf="activeDeleteMenu === postRcord.id"
-    class="absolute flex justify-center items-center py-4 text-black border-2 border-[#fcfdff] shadow-xl rounded-lg transition-all duration-300 mt-6 -right-5 w-32 h-10"
-  >
-    <button
-      class="dark:text-textDark flex items-center justify-center align-middle"
-      (click)="deletePost(postRcord.id)"
-    >
-      Delete Post
-    </button>
-  </div>
-</div>
+                <div *ngIf="activeDeleteMenu === postRcord.id"
+                  class="absolute flex justify-center items-center py-4 text-black border-2 border-[#fcfdff] shadow-xl rounded-lg transition-all duration-300 mt-6 -right-5 w-32 h-10">
+                  <button class="dark:text-textDark flex items-center justify-center align-middle"
+                    (click)="deletePost(postRcord.id)">
+                    Delete Post
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="flex justify-center my-5">
         <div class="flex w-[60%] h-auto justify-center">
-          <img
-            *ngIf="postRcord.postimage"
-            [src]="postRcord.postimage"
-            alt="Post Image"
-          />
+          <img *ngIf="postRcord.postimage" [src]="postRcord.postimage" alt="Post Image" />
         </div>
       </div>
       <div class="flex flex-col justify-center mx-5 my-10">
         <p class="dark:text-textDark">{{ postRcord.message }}</p>
         <div class="flex justify-end my-5 cursor-pointer">
-          <span
-            *ngIf="
+          <span *ngIf="
               permissionService.hasPermission('View replies') ||
               tokenService.getUserDetails().role === '1'
-            "
-            class="flex border-b-2 border-[#0075FF] text-[#0075FF]"
-          >
+            " class="flex border-b-2 border-[#0075FF] text-[#0075FF]">
             <div *ngFor="let i of countReply">
-  <p *ngIf="i.chatId === postRcord.id">{{ i.replyCount }}</p>
-</div>
-<p *ngIf="!hasReplies(postRcord.id)">0</p>
+              <p *ngIf="i.chatId === postRcord.id">{{ i.replyCount }}</p>
+            </div>
+            <p *ngIf="!hasReplies(postRcord.id)">0</p>
             <button class="ml-2" (click)="openPopup(postRcord.id)">
               Replies
             </button>
@@ -103,23 +81,14 @@
       </div>
     </div>
     <hr />
-    <div
-      *ngIf="
+    <div *ngIf="
         permissionService.hasPermission('Reply for each post') ||
         tokenService.getUserDetails().role === '1'
-      "
-      class="p-10 flex items-center space-x-2 w-full"
-    >
-      <div
-        class="flex items-center border border-gray-300 rounded-lg p-2 w-full dark:bg-[#272F45] dark:border-none"
-      >
-        <textarea
-          [(ngModel)]="replyMessage"
-          type="text "
-          placeholder="Write your message here... "
+      " class="p-10 flex items-center space-x-2 w-full">
+      <div class="flex items-center border border-gray-300 rounded-lg p-2 w-full dark:bg-[#272F45] dark:border-none">
+        <textarea [(ngModel)]="replyMessage" type="text " placeholder="Write your message here... "
           (input)="onReplyMassageInput($event)"
-          class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 dark:text-textDark"
-        ></textarea>
+          class="flex-grow bg-transparent border-none focus:outline-none px-2 h-36 dark:text-textDark"></textarea>
         <!-- <button
           class="text-gray-500 hover:text-gray-600 p-2"
           id="file-upload-btn "
@@ -128,39 +97,21 @@
         </button> -->
         <input id="file-upload " type="file " class="hidden" />
       </div>
-      <button
-        class="ml-2 text-[#3980C0] hover:cursor-pointer"
-        (click)="sendMessage(postRcord.id)"
-      >
+      <button class="ml-2 text-[#3980C0] hover:cursor-pointer" (click)="sendMessage(postRcord.id)">
         <i class="material-icons" style="font-size: 36px">send</i>
       </button>
     </div>
   </div>
 </div>
 
-<div
-  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40 h-screen"
-  *ngIf="isPopupVisible"
->
-  <div
-    class="bg-white w-full max-w-4xl mx-auto dark:bg-tileBlack rounded-lg shadow-lg p-2 max-h-[90vh] flex flex-col"
-  >
+<div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40 h-screen"
+  *ngIf="isPopupVisible">
+  <div class="bg-white w-full max-w-4xl mx-auto dark:bg-tileBlack rounded-lg shadow-lg p-2 max-h-[90vh] flex flex-col">
     <div class="flex justify-between items-center border-b pb-3">
       <h2 class="text-lg font-semibold py-2 px-8"></h2>
       <button class="text-gray-500 hover:text-gray-700" (click)="closePopup()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
@@ -174,75 +125,56 @@
             Govi Care Admin
           </p>
           <p class="text-lg text-blue-500 underline" *ngIf="item.firstName">
-            {{item.replyStaffId !== null ? item.staffFirstName + ' ' + item.staffLastName : item.firstName + ' ' + item.lastName}}
+            {{item.replyStaffId !== null ? item.staffFirstName + ' ' + item.staffLastName : item.firstName + ' ' +
+            item.lastName}}
             <!-- {{ item.firstName }} {{ item.lastName }} -->
           </p>
           <!-- In your *ngFor loop, modify the delete menu section -->
-<div class="flex flex-row py-2">
-  <div
-    class="bg-gray-200 dark:bg-[#272F45] dark:text-textDark px-4 py-1 text-lg rounded-[8px]"
-  >
-    {{ item.replyMessage }}
-    <p class="text-end ml-8 text-sm dark:text-textDark">
-      {{ item.createdAt | date : "shortTime" }}
-    </p>
-  </div>
-  <div class="relative flex justify-center items-center mx-5">
-    <!-- SVG Icon with click handler -->
-    <i 
-      class="fa-solid fa-ellipsis dark:text-textDark cursor-pointer"
-      (click)="toggleDeleteMenu(item.id)"
-    ></i>
+          <div class="flex flex-row py-2">
+            <div class="bg-gray-200 dark:bg-[#272F45] dark:text-textDark px-4 py-1 text-lg rounded-[8px]">
+              {{ item.replyMessage }}
+              <p class="text-end ml-8 text-sm dark:text-textDark">
+                {{ item.createdAt | date : "shortTime" }}
+              </p>
+            </div>
+            <div class="relative flex justify-center items-center mx-5">
+              <!-- SVG Icon with click handler -->
+              <i class="fa-solid fa-ellipsis dark:text-textDark cursor-pointer" (click)="toggleDeleteMenu(item.id)"></i>
 
-    <!-- Delete Button (shown based on activeDeleteMenu) -->
-    <div
-      class="absolute flex justify-center items-center p-2 bg-white text-black dark:bg-[#272F45] shadow-xl rounded-lg transition-all duration-300 -right-52 w-48"
-      [class.hidden]="activeDeleteMenu !== item.id"
-    >
-      <button
-        class="dark:text-textDark"
-        (click)="deleteReply(item.id)"
-      >
-        Delete Comment
-      </button>
-    </div>
-  </div>
-</div>
+              <!-- Delete Button (shown based on activeDeleteMenu) -->
+              <div *ngIf="permissionService.hasPermission('Delete comment') ||tokenService.getUserDetails().role === '1'"
+                class="absolute flex justify-center items-center p-2 bg-white text-black dark:bg-[#272F45] shadow-xl rounded-lg transition-all duration-300 -right-52 w-48"
+                [class.hidden]="activeDeleteMenu !== item.id">
+                <button class="dark:text-textDark" (click)="deleteReply(item.id)">
+                  Delete Comment
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <hr class="border-1 border-gray-500 my-4" />
 
-    <div
-      *ngIf="
+    <div *ngIf="
         permissionService.hasPermission('Reply for each post') ||
         tokenService.getUserDetails().role === '1'
-      "
-      class="px-12 pb-4"
-    >
+      " class="px-12 pb-4">
       <!-- Added pb-4 for bottom padding -->
       <div class="flex flex-row border-t-gray-600">
-  <div class="flex flex-row w-full">
-    <div class="flex relative w-full">
-      <textarea
-        [(ngModel)]="replyMessage"
-        (input)="onReplyMassageInput($event)"
-        rows="4"
-        cols="5"
-        placeholder="Comment here..."
-        class="w-full px-4 py-2 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-tileBlack dark:text-textDark"
-      ></textarea>
-    </div>
-  </div>
-  <button
-    class="ml-2 text-[#3980C0] hover:cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed"
-    (click)="sendMessage(selectPostId)"
-    [disabled]="!replyMessage.trim()"
-  >
-    <i class="material-icons" style="font-size: 36px">send</i>
-  </button>
-</div>
+        <div class="flex flex-row w-full">
+          <div class="flex relative w-full">
+            <textarea [(ngModel)]="replyMessage" (input)="onReplyMassageInput($event)" rows="4" cols="5"
+              placeholder="Comment here..."
+              class="w-full px-4 py-2 pr-12 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-tileBlack dark:text-textDark"></textarea>
+          </div>
+        </div>
+        <button class="ml-2 text-[#3980C0] hover:cursor-pointer disabled:text-gray-400 disabled:cursor-not-allowed"
+          (click)="sendMessage(selectPostId)" [disabled]="!replyMessage.trim()">
+          <i class="material-icons" style="font-size: 36px">send</i>
+        </button>
+      </div>
     </div>
   </div>
 </div>

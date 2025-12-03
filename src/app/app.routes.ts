@@ -365,7 +365,7 @@ export const routes: Routes = [
                 data: {
                   permission: 'View each farmer’s crop calendar task list',
                 },
-              },/view-certificate-list
+              },
 
               {
                 path: 'report-farmer-list',

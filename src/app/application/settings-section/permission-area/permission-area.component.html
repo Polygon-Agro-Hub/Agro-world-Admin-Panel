@@ -51,7 +51,7 @@
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-tileLight dark:bg-tileBlack dark:text-white"
         placeholder="Enter feature" />
 
-      <button (click)="addCategory()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">
+      <button (click)="addCategory()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition cursor-pointer">
         Add
       </button>
     </div>
@@ -103,12 +103,12 @@
                   {{ feature.name }}
                 </td>
                 <td *ngFor="let position of positionList" class="border border-gray-300 p-2 text-center">
-                  <input type="checkbox" class="form-checkbox h-5 w-5 text-[#3980C0]"
+                  <input type="checkbox" class="form-checkbox h-5 w-5 text-[#3980C0] cursor-pointer"
                     [checked]="isChecked(feature.id, position.id)"
                     (change)="onCheckboxChange($event, feature.id, position.id)" />
                 </td>
                 <td class="border border-gray-300 py-2 text-center">
-                  <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                  <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] cursor-pointer"
                     (click)="editFeature(feature.id, feature.name)">
                     <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                       <title>pen-to-square</title>

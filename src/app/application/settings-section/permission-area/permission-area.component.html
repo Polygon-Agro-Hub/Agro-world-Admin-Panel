@@ -19,23 +19,36 @@
     </div>
     <div class="flex items-center space-x-3 px-6">
       <label for="featureCategory" class="text-textLight dark:text-textDark">Category</label>
-      <select id="featureCategory" name="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)"
+      <!-- <select id="featureCategory" name="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)"
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full">
-        <!-- Bind to the 'category' name but store the 'id' -->
         <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.category }}</option>
         <option value="add_new">Add New</option>
-      </select>
+      </select> -->
+      <p-dropdown [(ngModel)]="selectedCategory" [options]="categories" optionLabel="category" optionValue="id"
+        (onChange)="onCategoryChange($event)" placeholder="Select a category" [filter]="true" filterBy="category"
+         styleClass="custom-dropdown w-[300px] border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" [style]="{ width: '300px' }">
+        <ng-template pTemplate="item" let-category>
+          <div class="flex align-items-center">
+            <div>{{category.category}}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+      <!-- Add New option can be handled in the component or as a separate button -->
+      <!-- <button *ngIf="selectedCategory === 'add_new'" class="mt-2 p-button p-button-text">
+        Add New Category
+      </button> -->
 
       <!-- Show input field only when 'Add New' is selected -->
-      <input *ngIf="selectedCategory === 'add_new'" type="text" [(ngModel)]="newCategory" (blur)="addNewCategory()"
-        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+      <input *ngIf="selectedCategory === -1" type="text" [(ngModel)]="newCategory" (blur)="addNewCategory()"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-tileLight dark:bg-tileBlack dark:text-white"
         placeholder="Enter new category" />
 
 
 
       <label for="featureCategory" class="text-textLight dark:text-textDark w-40">Feature </label>
       <input type="text" id="featureCategory" name="category" [(ngModel)]="createCategroyObj.category"
-        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-tileLight dark:bg-tileBlack dark:text-white"
         placeholder="Enter feature" />
 
       <button (click)="addCategory()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">

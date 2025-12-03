@@ -14,6 +14,7 @@ import { PermissionManagerService } from '../../../services/permission-manager/p
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { DropdownModule } from 'primeng/dropdown';
 
 interface Category {
   id: number;
@@ -30,6 +31,7 @@ interface Category {
     HttpClientModule,
     ToastModule,
     LoadingSpinnerComponent,
+    DropdownModule
   ],
   templateUrl: './permission-area.component.html',
   styleUrl: './permission-area.component.css',
@@ -115,6 +117,10 @@ export class PermissionAreaComponent {
               text: 'New feature has been added to the list successfully.',
               icon: 'success',
               confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              }
             }).then((result) => {
               if (result.isConfirmed) {
                 this.getAllPosition();
@@ -339,7 +345,7 @@ export class PermissionAreaComponent {
 
   onCategoryChange(event: any) {
     console.log('Selected Category ID:', this.selectedCategory); // This will now log the string ID
-    if (this.selectedCategory !== 'add_new' && this.selectedCategory !== '') {
+    if (this.selectedCategory !== -1 && this.selectedCategory !== '') {
       const selectedCategoryObj = this.categories.find(
         (cat) => cat.id.toString() === this.selectedCategory
       );
@@ -351,9 +357,11 @@ export class PermissionAreaComponent {
 
   addNewCategory() {
     if (this.newCategory.trim()) {
-      const newId = this.categories.length + 1; // You can generate an ID or use the API to add the category
+      // const newId = this.categories.length + 1; 
+      const newId = -2;
+      this.selectedCategory = newId// You can generate an ID or use the API to add the category
       this.categories.push({ id: newId, category: this.newCategory });
-      this.selectedCategory = newId.toString(); // Set the newly added category as selected
+      // this.selectedCategory = newId.toString(); // Set the newly added category as selected
     }
   }
 
@@ -384,6 +392,9 @@ export class PermissionAreaComponent {
             id: cat.id,
             category: cat.category,
           }));
+
+          this.categories.push({ id: -1, category: 'Add New Category' })
+
           this.setSelectedCategoryIfMatch()
         } else {
           console.error('Invalid response structure:', response);

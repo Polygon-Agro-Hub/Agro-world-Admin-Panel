@@ -365,7 +365,7 @@ export const routes: Routes = [
                 data: {
                   permission: 'View each farmer’s crop calendar task list',
                 },
-              },
+              },/view-certificate-list
 
               {
                 path: 'report-farmer-list',
@@ -374,12 +374,14 @@ export const routes: Routes = [
               {
                 path: 'Farmers-farms-list',
                 component: FarmerListFarmersFarmsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View farms assets' },
               },
               {
                 path: 'report-farmer-current-assert/:userId/:name/:farmId',
                 component: ReportCurrentAssertsComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View users current assets by category' },
+                data: { permission: 'View farms current assets' },
               },
               {
                 path: 'current-assets-view',
@@ -393,7 +395,7 @@ export const routes: Routes = [
                 path: 'assets/fixed-asset-category',
                 component: FixedAssetCategoryComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View users fixed assets by category' },
+                data: { permission: 'View farms fixed assets' },
               },
               {
                 path: 'assets/fixed-asset-category/building-fixed-asset',

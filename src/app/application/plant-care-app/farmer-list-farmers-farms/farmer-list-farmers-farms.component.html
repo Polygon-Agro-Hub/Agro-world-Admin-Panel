@@ -32,7 +32,7 @@
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Current</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Fixed</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Created Date</th>
-            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"></th>
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Delete ongoing cultivation farms') ||tokenService.getUserDetails().role === '1'"></th>
           </tr>
         </thead>
         <tbody>
@@ -79,7 +79,7 @@
               {{ farm.createdAt | date:'yyyy/MM/dd' }}
             </td>
 
-            <td class="px-4 py-3 text-center">
+            <td class="px-4 py-3 text-center" *ngIf="permissionService.hasPermission('Delete ongoing cultivation farms') ||tokenService.getUserDetails().role === '1'">
               <button class="text-red-500 hover:text-red-700" (click)="deleteFarm(farm.id)">
                 <i class="fa-solid fa-trash"></i>
               </button>

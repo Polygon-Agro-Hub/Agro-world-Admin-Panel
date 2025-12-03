@@ -343,13 +343,15 @@ export const routes: Routes = [
               {
                 path: 'farmers-farm',
                 component: FarmerFarmsComponent,
+                canActivate: [PermissionGuard],
+                data: {permission: 'View ongoing cultivation farms',},
               },
               {
                 path: 'view-crop-task-by-user',
                 component: SlaveCropCalendarComponent,
                 canActivate: [PermissionGuard],
                 data: {
-                  permission: 'View each farmer’s enrolled crop calendars',
+                  permission: ['View each farmer’s enrolled crop calendars','View ongoing cultivation farm cultivation']
                 },
               },
               {

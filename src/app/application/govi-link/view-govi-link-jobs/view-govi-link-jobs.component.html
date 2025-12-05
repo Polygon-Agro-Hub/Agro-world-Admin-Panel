@@ -249,7 +249,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ job.district }}
             </td>
-            <td *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'" class="px-4 py-3 text-center text-textLight dark:text-textDark cursor-pointer">
+            <td  class="px-4 py-3 text-center text-textLight dark:text-textDark cursor-pointer">
               <span
                 class="px-2 py-1 rounded-full text-xs font-medium cursor-pointer"
                 [ngClass]=" {
@@ -261,7 +261,9 @@
                 {{ job.status || "--" }}
               </span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark cursor-pointer">
+            <td 
+            *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
+            class="px-4 py-3 text-center text-textLight dark:text-textDark cursor-pointer">
               <span
                 class="px-2 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
                 [ngClass]="{

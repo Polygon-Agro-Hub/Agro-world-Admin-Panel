@@ -281,7 +281,7 @@ export const routes: Routes = [
                 path: 'create-news',
                 component: CreateNewsComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Create a news' },
+                data: { permission: ['Create a news', 'Manage content'] },
               },
               {
                 path: 'manage-content',
@@ -343,13 +343,15 @@ export const routes: Routes = [
               {
                 path: 'farmers-farm',
                 component: FarmerFarmsComponent,
+                canActivate: [PermissionGuard],
+                data: {permission: 'View ongoing cultivation farms',},
               },
               {
                 path: 'view-crop-task-by-user',
                 component: SlaveCropCalendarComponent,
                 canActivate: [PermissionGuard],
                 data: {
-                  permission: 'View each farmer’s enrolled crop calendars',
+                  permission: ['View each farmer’s enrolled crop calendars','View ongoing cultivation farm cultivation']
                 },
               },
               {
@@ -372,12 +374,14 @@ export const routes: Routes = [
               {
                 path: 'Farmers-farms-list',
                 component: FarmerListFarmersFarmsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View farms assets' },
               },
               {
                 path: 'report-farmer-current-assert/:userId/:name/:farmId',
                 component: ReportCurrentAssertsComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View users current assets by category' },
+                data: { permission: 'View farms current assets' },
               },
               {
                 path: 'current-assets-view',
@@ -391,7 +395,7 @@ export const routes: Routes = [
                 path: 'assets/fixed-asset-category',
                 component: FixedAssetCategoryComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View users fixed assets by category' },
+                data: { permission: 'View farms fixed assets' },
               },
               {
                 path: 'assets/fixed-asset-category/building-fixed-asset',
@@ -624,17 +628,17 @@ export const routes: Routes = [
               {
                 path: 'finance-govicapital',
                 children: [
-                  { 
-                    path: 'ivesment-requests', 
-                    component: InvestmentRequestsComponent 
+                  {
+                    path: 'ivesment-requests',
+                    component: InvestmentRequestsComponent
                   },
-                  { 
-                    path: 'viewAll-Govicare-requests', 
-                    component: ViewAllGovicareRequestsComponent 
+                  {
+                    path: 'viewAll-Govicare-requests',
+                    component: ViewAllGovicareRequestsComponent
                   },
-                  { 
-                    path: 'viewAll-Govicare-ApprovedRequests', 
-                    component: ViewAllApprovedGovicareRequestsComponent 
+                  {
+                    path: 'viewAll-Govicare-ApprovedRequests',
+                    component: ViewAllApprovedGovicareRequestsComponent
                   },
                   {
                     path: 'reject-requests',

@@ -130,11 +130,7 @@
               No. of Farms
             </th>
             <th
-              *ngIf="
-                permissionService.hasPermission(
-                  'View each farmer’s enrolled crop calendars'
-                ) || tokenService.getUserDetails().role === '1'
-              "
+              *ngIf="permissionService.hasPermission('View ongoing cultivation farms') ||tokenService.getUserDetails().role === '1'" 
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
             >
               Farms
@@ -183,7 +179,7 @@
             <td class="px-4 py-3 dark:text-textDark text-center">
               {{ item.FarmCount }}
             </td>
-            <td class="px-4 py-3 text-center">
+            <td *ngIf="permissionService.hasPermission('View ongoing cultivation farms') ||tokenService.getUserDetails().role === '1'"  class="px-4 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="

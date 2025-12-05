@@ -65,9 +65,9 @@
             <th class="px-2 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">Service Fee</th>
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left text-nowrap">Last
               Modified By</th>
-            <th class=" py-3"></th>
-            <th class=" py-3"></th>
-            <th class=" py-3"></th>
+            <th class=" py-3"  *ngIf="permissionService.hasPermission('GoVi Link view a service') || tokenService.getUserDetails().role === '1'"></th>
+            <th class=" py-3" *ngIf="permissionService.hasPermission('GoVi Link edit service') || tokenService.getUserDetails().role === '1'"></th>
+            <th class=" py-3" *ngIf="permissionService.hasPermission('GoVi Link delete service') || tokenService.getUserDetails().role === '1'"></th>
           </tr>
         </thead>
         <tbody>

@@ -6,6 +6,8 @@ import { CommonModule, NgIf, NgFor } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface FarmItem {
   no: number;
@@ -20,7 +22,7 @@ interface FarmItem {
   cropName?: string;
   cropCalendarId?: number;
   onCulscropID?: number;
-  regCode:string;
+  regCode: string;
 
 }
 
@@ -45,7 +47,9 @@ export class FarmerFarmsComponent implements OnInit {
     private ongoingCultivationService: OngoingCultivationService,
     private router: Router,
     private location: Location,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   ngOnInit(): void {
@@ -89,7 +93,7 @@ export class FarmerFarmsComponent implements OnInit {
             district: farm.farmDistrict,
             staffCount: farm.staffCount ?? 0,
             cultivationCount: farm.cultivationCount,
-            regCode:farm.regCode ?? '-',
+            regCode: farm.regCode ?? '-',
             createdDate: new Date(farm.farmCreatedAt).toLocaleDateString(),
             cultivationId: null,
             cropName: null,

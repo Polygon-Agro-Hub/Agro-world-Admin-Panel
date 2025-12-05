@@ -106,24 +106,26 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.email }}
             </td>
-            <td class="px-4 py-3 text-center" *ngIf="
-            permissionService.hasPermission('Distribution Hub approved/not approved cch') ||
-            tokenService.getUserDetails().role === '1'
-          ">
-              <div>
-                <span [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] dark:text-[#A8A100] rounded-lg':
-                      item.status === 'Not Approved',
-                    'font-bold px-3 py-1 text-sm bg-[#BBFFC6] text-[#308233] dark:text-[#308233] rounded-lg':
-                      item.status === 'Approved',
-                    'font-bold px-3 py-1 text-sm bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A] rounded-lg':
-                      item.status === 'Rejected'
-                  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs cursor-pointer text-center"
-                  (click)="openPopup(item)">
-                  {{ item.status }}
-                </span>
-              </div>
-            </td>
+            <td class="px-4 py-3 text-center">
+  <div>
+    <span 
+      [ngClass]="{
+        'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] dark:text-[#A8A100] rounded-lg':
+          item.status === 'Not Approved',
+        'font-bold px-3 py-1 text-sm bg-[#BBFFC6] text-[#308233] dark:text-[#308233] rounded-lg':
+          item.status === 'Approved',
+        'font-bold px-3 py-1 text-sm bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A] rounded-lg':
+          item.status === 'Rejected'
+      }" 
+      class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
+      [class.cursor-pointer]="canApproveReject"
+      [class.cursor-not-allowed]="!canApproveReject"
+      [class.opacity-50]="!canApproveReject"
+      (click)="canApproveReject ? openPopup(item) : null">
+      {{ item.status }}
+    </span>
+  </div>
+</td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <!-- {{ item.phoneCode01 + "" + item.phoneNumber01 }} -->
               <span *ngIf="item.phoneNumber01 === null">-</span>

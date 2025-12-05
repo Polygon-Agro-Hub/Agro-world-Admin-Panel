@@ -560,10 +560,10 @@ export class PostinvoiceService {
         showVerticalLines: false,
         columnStyles: {
           0: { cellWidth: 20 }, // Index
-          1: { cellWidth: 31 }, // Category
+          1: { cellWidth: 29 }, // Category
           2: { cellWidth: 40 }, // Item Description
           3: { cellWidth: 35 }, // Unit Price
-          4: { cellWidth: 19 }, // QTY
+          4: { cellWidth: 21 }, // QTY
           5: { cellWidth: 35 }, // Amount
         },
       });

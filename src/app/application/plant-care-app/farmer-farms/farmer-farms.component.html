@@ -44,7 +44,7 @@
             <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">District</th>
             <th class="py-3 font-normal text-gray-500 dark:text-textDark text-center">No. of Staff</th>
             <th class="py-3 font-normal text-gray-500 dark:text-textDark text-center">No. of Cultivations</th>
-            <th class="py-3 font-normal text-gray-500 dark:text-textDark text-center">Cultivation</th>
+            <th class="py-3 font-normal text-gray-500 dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View ongoing cultivation farm cultivation') ||tokenService.getUserDetails().role === '1'">Cultivation</th>
             <th class="py-3 px-3 font-normal text-gray-500 dark:text-textDark text-left">Created Date</th>
 
           </tr>
@@ -59,7 +59,7 @@
             <td class="py-3 dark:text-textDark text-center">{{ farm.staffCount }}</td>
             <td class="py-3 dark:text-textDark text-center">{{ farm.cultivationCount }}</td>
 
-            <td class="py-3 dark:text-textDark text-center">
+            <td *ngIf="permissionService.hasPermission('View ongoing cultivation farm cultivation') ||tokenService.getUserDetails().role === '1'" class="py-3 dark:text-textDark text-center">
               <button class="text-blue-500 hover:text-blue-700 mr-2" (click)="viewTaskByUsers(farm.farmId, userId)"
                 [disabled]="!farm.farmId || !userId">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
@@ -70,7 +70,7 @@
               </button>
 
             <td class="py-3 px-3 dark:text-textDark text-left">{{ farm.createdDate }}</td>
-            <td>
+            <td *ngIf="permissionService.hasPermission('Delete ongoing cultivation farm cultivation') ||tokenService.getUserDetails().role === '1'">
               <button class="text-red-500 hover:text-red-700" (click)="deleteFarm(farm.farmId)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5">
                   <path

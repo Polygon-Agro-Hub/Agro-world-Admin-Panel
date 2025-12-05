@@ -238,6 +238,7 @@ import { ProjectInvestmentsComponent } from './application/finance/project-inves
 import { ProjectInvestmentsTransactionsComponent } from './application/finance/project-investments-transactions/project-investments-transactions.component';
 import { PublishedProjectsComponent } from './application/finance/published-projects/published-projects.component';
 import { ViewAllApprovedGovicareRequestsComponent } from './application/finance/view-all-approved-govicare-requests/view-all-approved-govicare-requests.component';
+import { AgentsCommissionComponent } from './application/finance/agents-commission/agents-commission.component';
 
 export const routes: Routes = [
   {
@@ -344,14 +345,17 @@ export const routes: Routes = [
                 path: 'farmers-farm',
                 component: FarmerFarmsComponent,
                 canActivate: [PermissionGuard],
-                data: {permission: 'View ongoing cultivation farms',},
+                data: { permission: 'View ongoing cultivation farms' },
               },
               {
                 path: 'view-crop-task-by-user',
                 component: SlaveCropCalendarComponent,
                 canActivate: [PermissionGuard],
                 data: {
-                  permission: ['View each farmer’s enrolled crop calendars','View ongoing cultivation farm cultivation']
+                  permission: [
+                    'View each farmer’s enrolled crop calendars',
+                    'View ongoing cultivation farm cultivation',
+                  ],
                 },
               },
               {
@@ -630,15 +634,15 @@ export const routes: Routes = [
                 children: [
                   {
                     path: 'ivesment-requests',
-                    component: InvestmentRequestsComponent
+                    component: InvestmentRequestsComponent,
                   },
                   {
                     path: 'viewAll-Govicare-requests',
-                    component: ViewAllGovicareRequestsComponent
+                    component: ViewAllGovicareRequestsComponent,
                   },
                   {
                     path: 'viewAll-Govicare-ApprovedRequests',
-                    component: ViewAllApprovedGovicareRequestsComponent
+                    component: ViewAllApprovedGovicareRequestsComponent,
                   },
                   {
                     path: 'reject-requests',
@@ -655,9 +659,13 @@ export const routes: Routes = [
                   {
                     path: 'published-projects',
                     component: PublishedProjectsComponent,
-                  }
-                ]
-              }
+                  },
+                ],
+              },
+              {
+                path: 'agents-commission',
+                component: AgentsCommissionComponent,
+              },
             ],
           },
         ],
@@ -1019,7 +1027,12 @@ export const routes: Routes = [
             path: 'update-collection-center/:id',
             component: EditCollectionCenterComponent,
             canActivate: [PermissionGuard],
-            data: { permission: ['Edit Collection Center', 'Manage Collection Centre'] },
+            data: {
+              permission: [
+                'Edit Collection Center',
+                'Manage Collection Centre',
+              ],
+            },
           },
           {
             path: 'create-company',
@@ -1037,7 +1050,12 @@ export const routes: Routes = [
             path: 'add-collection-center',
             component: AddCollectionCenterComponent,
             canActivate: [PermissionGuard],
-            data: { permission: ['Add Collection Center', 'Onboard Collection Centre'] },
+            data: {
+              permission: [
+                'Add Collection Center',
+                'Onboard Collection Centre',
+              ],
+            },
           },
           {
             path: 'add-daily-target/:id/:name/:regCode',
@@ -1571,7 +1589,12 @@ export const routes: Routes = [
                 path: 'create-company',
                 component: CreateCompanyComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: ['Add And Edit Company', 'Distribution Hub add new company'] },
+                data: {
+                  permission: [
+                    'Add And Edit Company',
+                    'Distribution Hub add new company',
+                  ],
+                },
               },
               {
                 path: 'view-companies',
@@ -1695,4 +1718,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

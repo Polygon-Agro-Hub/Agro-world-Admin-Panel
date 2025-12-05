@@ -474,6 +474,8 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private processUpload(): void {
     // Ensure cluster name is trimmed before validation
+    console.log("Start------------");
+
     if (this.clusterName) {
       this.clusterName = this.clusterName.trim();
       this.hasLeadingOrTrailingSpaces = false;
@@ -519,6 +521,8 @@ export class AddFarmerClustersComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
+    console.log("XL read start-----------------");
+
 
     const reader = new FileReader();
 
@@ -586,6 +590,17 @@ export class AddFarmerClustersComponent implements OnInit {
 
         // TODO: Add your API call here to submit the payload
         // this.submitCluster(payload);
+        this.farmerClusterService.createFarmerCluster(payload).subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            this.showSuccessPopup(response);
+            this.resetForm();
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.handleError(error);
+          },
+        });
 
       } catch (error) {
         this.isLoading = false;

@@ -67,7 +67,7 @@
 
           <!-- Download Section -->
           <div class="px-2"
-            *ngIf="(permissionService.hasPermission('Retail subscriptions') && permissionService.hasPermission('Download retail subscriptions'))  || ( permissionService.hasPermission('Wholesale subscriptions') && permissionService.hasPermission('Download wholesale scriptions') )|| tokenService.getUserDetails().role === '1'">
+            *ngIf="(activeTab === 'retail' && permissionService.hasPermission('Retail subscriptions') && permissionService.hasPermission('Download retail subscriptions'))  || (activeTab === 'wholesale' && permissionService.hasPermission('Wholesale subscriptions') && permissionService.hasPermission('Download wholesale scriptions') )|| tokenService.getUserDetails().role === '1'">
             <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
               (click)="downloadExcel()">
               <i class="fa-solid fa-download pr-4"></i>
@@ -78,7 +78,7 @@
           <ng-container *ngIf="!isLoading; else loading">
             <div class="overflow-y-auto max-h-[80vh] flex-1">
               <table
-                *ngIf="hasData && (permissionService.hasPermission('Wholesale subscriptions') || permissionService.hasPermission('Wholesale subscriptions') || tokenService.getUserDetails().role === '1'); else noData"
+                *ngIf="hasData && ((activeTab === 'retail' && permissionService.hasPermission('Retail subscriptions')) || ( activeTab === 'wholesale' && permissionService.hasPermission('Wholesale subscriptions')) || tokenService.getUserDetails().role === '1'); else noData"
                 class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">
                 <thead>
                   <tr>

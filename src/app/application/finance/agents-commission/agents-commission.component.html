@@ -42,15 +42,15 @@
           ></p-dropdown>
         </div>
         <div class="mr-5 flex items-center">
-          <p-calendar
-            [showIcon]="true"
-            [showButtonBar]="true"
-            dateFormat="yy-mm-dd"
-            placeholder="Select Date"
-            styleClass="border border-2 rounded-xl h-8 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            inputStyleClass="bg-transparent border-none text-textLight dark:text-textDark"
-            [readonlyInput]="true"
-          ></p-calendar>
+          <p-dropdown
+            [options]="monthOptions"
+            [(ngModel)]="selectedMonth"
+            (onChange)="onMonthChange($event)"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Months"
+          ></p-dropdown>
         </div>
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
@@ -161,7 +161,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let data of filteredData; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-700">
+          <tr *ngFor="let data of filteredCommissionData; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-700">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ data.no }}
             </td>
@@ -186,7 +186,7 @@
               {{ data.month }}
             </td>
           </tr>
-          <tr *ngIf="filteredData.length === 0">
+          <tr *ngIf="filteredCommissionData.length === 0">
             <td colspan="7" class="px-4 py-3 text-center text-textLight dark:text-textDark">
               No data found
             </td>

@@ -16,6 +16,16 @@ interface CommissionData {
   month: string;
 }
 
+interface FilterOption {
+  label: string;
+  value: string;
+}
+
+interface MonthOption {
+  label: string;
+  value: string;
+}
+
 @Component({
   selector: 'app-agents-commission',
   standalone: true,
@@ -32,21 +42,44 @@ interface CommissionData {
 export class AgentsCommissionComponent {
   isLoading = false;
   commissionData: CommissionData[] = [];
-  filterOptions = [
+  filteredCommissionData: CommissionData[] = [];
+  
+  // Eligibility filter options
+  filterOptions: FilterOption[] = [
     { label: 'Eligible', value: 'eligible' },
     { label: 'Not Eligible', value: 'notEligible' },
     { label: 'All', value: 'all' }
   ];
   selectedFilter = 'eligible';
+  
+  // Month filter options
+  monthOptions: MonthOption[] = [
+    { label: 'January', value: '1' },
+    { label: 'February', value: '2' },
+    { label: 'March', value: '3' },
+    { label: 'April', value: '4' },
+    { label: 'May', value: '5' },
+    { label: 'June', value: '6' },
+    { label: 'July', value: '7' },
+    { label: 'August', value: '8' },
+    { label: 'September', value: '9' },
+    { label: 'October', value: '10' },
+    { label: 'November', value: '11' },
+    { label: 'December', value: '12' }
+  ];
+  selectedMonth = 'all';
+  
   searchQuery = '';
 
   constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.loadDummyData();
+    this.applyFilters();
   }
 
   loadDummyData(): void {
+    // Expanded data with different months for testing
     this.commissionData = [
       {
         no: '001',
@@ -73,7 +106,7 @@ export class AgentsCommissionComponent {
         totalOrderValue: 200000.00,
         eligibility: 'Eligible',
         commission: 200000.00,
-        month: 'June'
+        month: 'May'
       },
       {
         no: '004',
@@ -82,7 +115,7 @@ export class AgentsCommissionComponent {
         totalOrderValue: 850000.00,
         eligibility: 'Eligible',
         commission: 74250.00,
-        month: 'June'
+        month: 'May'
       },
       {
         no: '005',
@@ -92,15 +125,29 @@ export class AgentsCommissionComponent {
         eligibility: 'Not Eligible',
         commission: '--',
         month: 'June'
+      },
+      {
+        no: '006',
+        empId: 'SA00009',
+        noOfCustomers: 150,
+        totalOrderValue: 300000.00,
+        eligibility: 'Eligible',
+        commission: 15000.00,
+        month: 'July'
+      },
+      {
+        no: '007',
+        empId: 'SA00010',
+        noOfCustomers: 80,
+        totalOrderValue: 40000.00,
+        eligibility: 'Not Eligible',
+        commission: '--',
+        month: 'July'
       }
     ];
   }
 
-  back(): void {
-    this.router.navigate(['finance/action']);
-  }
-
-  get filteredData(): CommissionData[] {
+  applyFilters(): void {
     let filtered = this.commissionData;
     
     // Filter by eligibility
@@ -110,6 +157,11 @@ export class AgentsCommissionComponent {
       filtered = filtered.filter(item => item.eligibility === 'Not Eligible');
     }
     
+    // Filter by month
+    if (this.selectedMonth !== 'all') {
+      filtered = filtered.filter(item => item.month === this.selectedMonth);
+    }
+    
     // Filter by search query
     if (this.searchQuery.trim()) {
       filtered = filtered.filter(item => 
@@ -117,30 +169,41 @@ export class AgentsCommissionComponent {
       );
     }
     
-    return filtered;
+    this.filteredCommissionData = filtered;
+  }
+
+  back(): void {
+    this.router.navigate(['finance/action']);
   }
 
   getTotalOrders(): number {
-    return this.commissionData.filter(item => item.eligibility === 'Eligible').length;
+    return this.filteredCommissionData.length;
   }
 
   onFilterChange(event: any): void {
     this.selectedFilter = event.value;
+    this.applyFilters();
+  }
+
+  onMonthChange(event: any): void {
+    this.selectedMonth = event.value;
+    this.applyFilters();
   }
 
   onSearch(): void {
-    // Filter logic is handled in the getter
+    this.applyFilters();
   }
 
   clearSearch(): void {
     this.searchQuery = '';
+    this.applyFilters();
   }
 
   downloadData(): void {
     this.isLoading = true;
     // Simulate download process
     setTimeout(() => {
-      console.log('Downloading data:', this.filteredData);
+      console.log('Downloading data:', this.filteredCommissionData);
       this.isLoading = false;
       alert('Data downloaded successfully!');
     }, 1000);

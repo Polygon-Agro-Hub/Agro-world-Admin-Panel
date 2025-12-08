@@ -807,4 +807,22 @@ export class FinanceService {
       params: params,
     });
   }
+
+  getProjectInvestments(
+  search?: string
+): Observable<{ count: number; data: any[] }> {
+  let params = new HttpParams();
+
+  if (search && search.trim()) {
+    params = params.set('search', search.trim());
+  }
+
+  const url = `${this.apiUrl}finance/project-investments`;
+  return this.http.get<{ count: number; data: any[] }>(url, {
+    headers: this.getHeaders(),
+    params: params,
+  });
 }
+}
+
+

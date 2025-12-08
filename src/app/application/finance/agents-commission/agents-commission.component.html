@@ -4,7 +4,6 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
@@ -14,11 +13,9 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center whitespace-nowrap">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Farmer Payments
+          Agents’ Commission
         </h2>
-        <span class="ml-2 mr-5 text-xl dark:text-white">
-          ({{ getTotalRecords() }})
-        </span>
+        <span class="ml-2 mr-5 text-xl dark:text-white"> ({{ getTotalOrders() }}) </span>
       </div>
       <div class="flex items-center">
         <i class="mr-6 w-6 h-6 fill-current text-gray-500">
@@ -35,39 +32,35 @@
         </p>
         <div class="mr-5">
           <p-dropdown
-            [options]="bankOptions"
-            [(ngModel)]="selectedBank"
-            (onChange)="onBankChange($event)"
+            [options]="filterOptions"
+            [(ngModel)]="selectedFilter"
+            (onChange)="onFilterChange($event)"
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [showClear]="!!selectedBank"
             optionLabel="label"
             optionValue="value"
-            placeholder="Bank Name"
+            placeholder="Eligible"
           ></p-dropdown>
         </div>
         <div class="mr-5 flex items-center">
-          <p-calendar
-            [(ngModel)]="selectedDate"
-            (onSelect)="onDateChange($event)"
-            (onClear)="clearDate()"
-            [showIcon]="true"
-            [showButtonBar]="true"
-            dateFormat="yy-mm-dd"
-            placeholder="Select Date"
-            styleClass="border border-2 rounded-xl h-8 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            inputStyleClass="bg-transparent border-none text-textLight dark:text-textDark"
-            [readonlyInput]="true"
-          ></p-calendar>
+          <p-dropdown
+            [options]="monthOptions"
+            [(ngModel)]="selectedMonth"
+            (onChange)="onMonthChange($event)"
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Months"
+          ></p-dropdown>
         </div>
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >
           <input
             type="text"
-            [(ngModel)]="searchTerm"
-            (keyup.enter)="onSearch()"
-            placeholder="Search By Name, NIC & Phone number"
+            placeholder="Search By EMP ID"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            [(ngModel)]="searchQuery"
+            (input)="onSearch()"
           />
           <button
             type="button"
@@ -115,20 +108,12 @@
     <button
       class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
       (click)="downloadData()"
-      [disabled]="filteredPayments.length === 0 || isDownloading"
-      [class.opacity-50]="filteredPayments.length === 0 || isDownloading"
-      [class.cursor-not-allowed]="
-        filteredPayments.length === 0 || isDownloading
-      "
     >
-      <i class="fa-solid fa-download mr-3" [class.fa-spin]="isDownloading"></i>
-      {{ isDownloading ? "Downloading..." : "Download" }}
+      <i class="fa-solid fa-download mr-3"></i>
+      Download
     </button>
     <div>
-      <table
-        class="min-w-full divide-y divide-gray-200 table-auto"
-        *ngIf="hasData"
-      >
+      <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
             <th
@@ -141,127 +126,73 @@
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
-              Full Name
+              EMP ID
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
-              NIC
+              No.of Customers
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
               style="white-space: nowrap"
             >
-              Phone number
+              Total Order Value
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
-              Amount (Rs.)
+              Eligibility
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
-              Date
+              Commission
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
-              Account Number
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-              style="white-space: nowrap"
-            >
-              Bank Name
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-              style="white-space: nowrap"
-            >
-              Branch Name
-            </th>
-            <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-              style="white-space: nowrap"
-            >
-              Payment Reference
+              Month
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let payment of filteredPayments; let i = index"
-          >
+          <tr *ngFor="let data of filteredCommissionData; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-700">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ i + 1 | number:'3.0' }}
+              {{ data.no }}
             </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ payment.farmerName }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ data.empId }}
             </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ payment.NICnumber }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ data.noOfCustomers | number }}
             </td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ payment.phoneNumber }}
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ data.totalOrderValue | number:'1.2-2' }}
             </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ formatCurrency(payment.totalPayment) }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <span [class]="data.eligibility === 'Eligible' ? 'text-green-600' : 'text-red-600'">
+                {{ data.eligibility }}
+              </span>
             </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ formatDate(payment.createdAt) }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ data.commission | number:'1.2-2' }}
             </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ payment.accNumber }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ data.month }}
             </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ payment.bankName }}
-            </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ payment.branchName }}
-            </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"
-            >
-              {{ payment.invNo }}
+          </tr>
+          <tr *ngIf="filteredCommissionData.length === 0">
+            <td colspan="7" class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              No data found
             </td>
           </tr>
         </tbody>
       </table>
-
-      <div
-        *ngIf="!hasData && !isLoading"
-        class="flex flex-col justify-center items-center py-20 shadow-lg"
-      >
-        <p class="text-[#494949] dark:text-textDark mb-4">
-          -- No Data Available --
-        </p>
-        <img
-          src="assets/images/NoData.png"
-          alt="No Data"
-          class="w-20 h-20 mb-4"
-        />
-      </div>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="flex h-screen">
+<div class="flex h-full">
   <!-- Main Content -->
   <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
     <!-- Header -->
@@ -76,7 +76,7 @@
           </div>
 
           <ng-container *ngIf="!isLoading; else loading">
-            <div class="overflow-y-auto max-h-[80vh] flex-1">
+            <div class="overflow-y-auto min-h-max flex-1">
               <table
                 *ngIf="hasData && ((activeTab === 'retail' && permissionService.hasPermission('Retail subscriptions')) || ( activeTab === 'wholesale' && permissionService.hasPermission('Wholesale subscriptions')) || tokenService.getUserDetails().role === '1'); else noData"
                 class="w-full bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">

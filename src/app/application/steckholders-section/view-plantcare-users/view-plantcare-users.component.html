@@ -19,7 +19,7 @@
   </button>
 
   <button *ngIf="
-      permissionService.hasPermission('Bulk onboarding plan care users') ||
+      permissionService.hasPermission('Bulk onboarding plant care users') ||
       tokenService.getUserDetails().role === '1'
     " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
     (click)="bulkUpload()">
@@ -28,7 +28,7 @@
   </button>
 
   <button *ngIf="
-      permissionService.hasPermission('Bulk onboarding plan care users') ||
+      permissionService.hasPermission('Bulk onboarding plant care users') ||
       tokenService.getUserDetails().role === '1'
     " class="text-[#3980C0] text-lg flex items-center mb-5" (click)="downloadTemplate()">
     <i class="fa-solid fa-download mr-3"></i>

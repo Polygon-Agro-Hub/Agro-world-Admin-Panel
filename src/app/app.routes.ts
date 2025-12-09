@@ -822,7 +822,7 @@ export const routes: Routes = [
                     path: 'upload-farmers',
                     component: UserBulkUploadComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Bulk onboarding plan care users' },
+                    data: { permission: 'Bulk onboarding plant care users' },
                   },
                   {
                     path: 'view-farmer-staff/:id',

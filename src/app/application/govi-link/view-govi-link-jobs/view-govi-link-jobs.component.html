@@ -251,7 +251,7 @@
             </td>
             <td  class="px-4 py-3 text-center text-textLight dark:text-textDark cursor-pointer">
               <span
-                class="px-2 py-1 rounded-full text-xs font-medium cursor-pointer"
+                class="px-2 py-1 rounded-full font-medium cursor-pointer"
                 [ngClass]=" {
                   'text-red-500': job.status === 'Pending',
                   'text-green-500': job.status === 'Completed',
@@ -265,7 +265,7 @@
             *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
             class="px-4 py-3 text-center text-textLight dark:text-textDark cursor-pointer">
               <span
-                class="px-2 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
+                class="px-2 py-2 rounded-lg text-sm font-medium cursor-pointer hover:opacity-80 transition-opacity"
                 [ngClass]="{
                   'bg-[#BBFFC6] text-[#308233] cursor-pointer hover:bg-green-200':
                     job.assignStatus === 'Assigned',

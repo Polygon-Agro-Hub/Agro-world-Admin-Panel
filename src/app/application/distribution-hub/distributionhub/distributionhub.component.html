@@ -130,7 +130,7 @@
     </div>
 
     <div *ngIf="
-            permissionService.hasPermission('Distribution Hub assign site') ||
+            permissionService.hasPermission('Distribution Hub assign cities') ||
             tokenService.getUserDetails().role === '1'
           " class="flex justify-center cursor-pointer" (click)="assignCities()">
       <div

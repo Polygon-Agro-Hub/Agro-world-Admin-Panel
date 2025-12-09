@@ -467,4 +467,64 @@ export class DistributionHubService {
     );
   }
 
+  // Get all return reasons
+  getAllReturnReasons(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(`${this.apiUrl}distribution/get-all-return-reasons`, { headers });
+  }
+
+  // Get return reason by ID
+  getReturnReasonById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(`${this.apiUrl}distribution/get-return-reason/${id}`, { headers });
+  }
+
+  // Create new return reason
+  createReturnReason(reasonData: { rsnEnglish: string; rsnSinhala: string; rsnTamil: string }): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post<any>(`${this.apiUrl}distribution/create-return-reason`, reasonData, { headers });
+  }
+
+  // Delete return reason
+  deleteReturnReason(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete<any>(`${this.apiUrl}distribution/delete-return-reason/${id}`, { headers });
+  }
+
+  // Update indexes after reordering
+  updateReturnReasonIndexes(reasons: { id: number; indexNo: number }[]): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post<any>(`${this.apiUrl}distribution/update-return-reason-indexes`, { reasons }, { headers });
+  }
+
+  // Get next available index
+  getNextReturnReasonIndex(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<any>(`${this.apiUrl}distribution/get-next-return-reason-index`, { headers });
+  }
+
 }

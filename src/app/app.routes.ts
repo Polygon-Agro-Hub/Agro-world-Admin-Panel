@@ -241,6 +241,9 @@ import { ViewAllApprovedGovicareRequestsComponent } from './application/finance/
 import { AgentsCommissionComponent } from './application/finance/agents-commission/agents-commission.component';
 import { DistributionhubTransportActionComponent } from './application/distribution-hub/distributionhub-transport-action/distributionhub-transport-action.component';
 import { TransportReasonsToReturnComponent } from './application/distribution-hub/transport-reasons-to-return/transport-reasons-to-return.component';
+import { ViewDriverComponent } from './application/steckholders-section/view-driver/view-driver.component';
+import { PreviewDriverComponent } from './application/steckholders-section/preview-driver/preview-driver.component';
+import { EditDriverComponent } from './application/steckholders-section/edit-driver/edit-driver.component';
 
 export const routes: Routes = [
   {
@@ -928,6 +931,29 @@ export const routes: Routes = [
                   {
                     path: 'view-officer-targets/:officerId',
                     component: ViewOfficerTargetComponent,
+                  },
+                ],
+              },
+
+              {
+                path: 'drivers',
+                children: [
+                  {
+                    path: '',
+                    component: ViewDriverComponent,
+                  },
+    
+                  {
+                    path: 'preview-driver/:id',
+                    component: PreviewDriverComponent,
+                  },
+                  {
+                    path: 'edit-driver/:id',
+                    component: EditDriverComponent,
+                  },
+                  {
+                    path: 'add-driver',
+                    component: CreateDistributionOfficerComponent,
                   },
                 ],
               },

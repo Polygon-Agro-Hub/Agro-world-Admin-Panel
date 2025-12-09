@@ -23,7 +23,7 @@ export class DistributionhubComponent {
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) {}
+  ) { }
 
   togglePopupNews() {
     this.popupVisibleNews = !this.popupVisibleNews;
@@ -55,14 +55,14 @@ export class DistributionhubComponent {
     }
   }
 
-navigateToCreateNews(): void {
-  this.isLoading = true;
-  this.router.navigate(['/distribution-hub/action/create-company'], {
-    queryParams: { type: 'distribution' }
-  }).then(() => {
-    this.isLoading = false;
-  });
-}
+  navigateToCreateNews(): void {
+    this.isLoading = true;
+    this.router.navigate(['/distribution-hub/action/create-company'], {
+      queryParams: { type: 'distribution' }
+    }).then(() => {
+      this.isLoading = false;
+    });
+  }
 
   navigateToViewCompanies(): void {
     this.isLoading = true;
@@ -77,19 +77,23 @@ navigateToCreateNews(): void {
     this.router.navigate(['/distribution-hub/action/add-destribition-center']);
   }
 
-  
+
 
   createVariety(): void {
     this.router.navigate(['/distribution-hub/action/view-destribition-center']);
   }
 
-  
+
   viewPolygon(): void {
     this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
   }
 
-  assignCities(){
+  assignCities() {
     this.router.navigate(['/distribution-hub/action/assign-cities']);
+
+  }
+  transport() {
+    this.router.navigate(['/distribution-hub/action/transport']);
 
   }
 }

@@ -150,7 +150,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       axisY: {
         title: 'Total Weight (Kg)',
         includeZero: true,
-        titleFontColor: '#666666',
+        titleFontColor: '#738AC0',
         labelFontColor: '#666666',
         lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
         tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
@@ -352,7 +352,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     
     // Draw x-axis title
     doc.setFontSize(10);
-    doc.text('Total Weight (kg)', xAxisStartX + (chartWidth / 2), xAxisY + 15, { align: 'center' });
+    doc.setTextColor('#738AC0');
+    doc.text('Total Weight (kg)', xAxisStartX + 150, xAxisY + 15, { align: 'right' });
 
     // Draw legend
     const legendY = chartStartY - 15;

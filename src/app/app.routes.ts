@@ -653,7 +653,7 @@ export const routes: Routes = [
                     component: ProjectInvestmentsComponent,
                   },
                   {
-                    path: 'project-investments-transactions',
+                    path: 'project-investments-transactions/:id',
                     component: ProjectInvestmentsTransactionsComponent,
                   },
                   {

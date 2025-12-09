@@ -239,6 +239,9 @@ import { ProjectInvestmentsTransactionsComponent } from './application/finance/p
 import { PublishedProjectsComponent } from './application/finance/published-projects/published-projects.component';
 import { ViewAllApprovedGovicareRequestsComponent } from './application/finance/view-all-approved-govicare-requests/view-all-approved-govicare-requests.component';
 import { AgentsCommissionComponent } from './application/finance/agents-commission/agents-commission.component';
+import { ViewDriverComponent } from './application/steckholders-section/view-driver/view-driver.component';
+import { PreviewDriverComponent } from './application/steckholders-section/preview-driver/preview-driver.component';
+import { EditDriverComponent } from './application/steckholders-section/edit-driver/edit-driver.component';
 
 export const routes: Routes = [
   {
@@ -926,6 +929,29 @@ export const routes: Routes = [
                   {
                     path: 'view-officer-targets/:officerId',
                     component: ViewOfficerTargetComponent,
+                  },
+                ],
+              },
+
+              {
+                path: 'drivers',
+                children: [
+                  {
+                    path: '',
+                    component: ViewDriverComponent,
+                  },
+    
+                  {
+                    path: 'preview-driver/:id',
+                    component: PreviewDriverComponent,
+                  },
+                  {
+                    path: 'edit-driver/:id',
+                    component: EditDriverComponent,
+                  },
+                  {
+                    path: 'add-driver',
+                    component: CreateDistributionOfficerComponent,
                   },
                 ],
               },

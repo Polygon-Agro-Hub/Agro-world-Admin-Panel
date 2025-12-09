@@ -139,4 +139,8 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
     this.router.navigate(['/steckholders/action/view-companies']);
   }
 
+  navigateToViewDrivers() {
+    this.router.navigate(['/steckholders/action/drivers']);
+  }
+
 }

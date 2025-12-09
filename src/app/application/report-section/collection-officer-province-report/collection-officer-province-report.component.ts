@@ -315,7 +315,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
     const barHeight = 8;
     const gap = 2;
     const chartHeight = 100; // Fixed height for the chart area
-    const chartWidth = 120; // Width of the bar area
+    const chartWidth = 100; // Width of the bar area
     
     const colors = {
       gradeA: '#FF9263',
@@ -327,7 +327,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
     doc.setFontSize(16);
     doc.setTextColor(102, 102, 102); // Gray color #666666
     doc.text(
-      `${this.selectedProvince.name} - Crop Grade Report`,
+      `${this.selectedProvince.name} - Crop Weights`,
       pageWidth / 2,
       25,
       { align: 'center' }
@@ -365,6 +365,15 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
     doc.setDrawColor(0, 0, 0);
     doc.setLineWidth(0.5);
     doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5); // Extended slightly above and below bars
+
+    // Draw y-axis title "Crops" (vertical text on the left)
+    doc.setFontSize(10);
+    doc.setTextColor('#738AC0');
+    
+    // Use text rotation for vertical text
+    const textX = yAxisX - 5;
+    const textY = (barAreaStartY + barAreaEndY) / 3;
+    doc.text('Crops', textX, textY, { angle: 360, align: 'center' });
     
     // Draw y-axis tick marks for each crop
     let currentBarY = barAreaStartY;
@@ -395,10 +404,10 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
     groupedData.forEach((crop, index) => {
       let currentX = chartStartX;
       
-      // Draw Grade C (first segment - appears on the left in horizontal bar)
-      if (crop.gradeC > 0) {
-        const segmentWidth = crop.gradeC * scaleFactor;
-        doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
+      // Draw Grade A (first segment)
+      if (crop.gradeA > 0) {
+        const segmentWidth = crop.gradeA * scaleFactor;
+        doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
         doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
         currentX += segmentWidth;
       }
@@ -411,10 +420,10 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
         currentX += segmentWidth;
       }
       
-      // Draw Grade A
-      if (crop.gradeA > 0) {
-        const segmentWidth = crop.gradeA * scaleFactor;
-        doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
+      // Draw Grade C
+      if (crop.gradeC > 0) {
+        const segmentWidth = crop.gradeC * scaleFactor;
+        doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
         doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
         currentX += segmentWidth;
       }
@@ -467,30 +476,31 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
     
     // Draw x-axis title
     doc.setFontSize(10);
-    doc.text('Total Weight (kg)', xAxisStartX + (chartWidth / 2), xAxisY + 15, { align: 'center' });
+    doc.setTextColor('#738AC0');
+    doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 15, { align: 'right' });
 
     // Draw legend
     const legendY = chartStartY - 15;
     const legendSquareSize = 6;
     
-    // Grade C
-    doc.setFillColor(61, 225, 136);
+    // Grade A
+    doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
     doc.rect(chartStartX, legendY, legendSquareSize, legendSquareSize, 'F');
     doc.setFontSize(9);
     doc.setTextColor(102, 102, 102);
-    doc.text('Grade C', chartStartX + legendSquareSize + 3, legendY + legendSquareSize/2 + 1);
+    doc.text('Grade A', chartStartX + legendSquareSize + 3, legendY + legendSquareSize/2 + 1);
     
     // Grade B
     const legendBX = chartStartX + 45;
-    doc.setFillColor(95, 117, 233);
+    doc.setFillColor(95, 117, 233); // #5F75E9 - Grade B color
     doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
     doc.text('Grade B', legendBX + legendSquareSize + 3, legendY + legendSquareSize/2 + 1);
     
-    // Grade A
+    // Grade C
     const legendCX = legendBX + 45;
-    doc.setFillColor(255, 146, 99);
+    doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
     doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
-    doc.text('Grade A', legendCX + legendSquareSize + 3, legendY + legendSquareSize/2 + 1);
+    doc.text('Grade C', legendCX + legendSquareSize + 3, legendY + legendSquareSize/2 + 1);
 
     // Summary Table
     const tableStartY = xAxisY + 30;
@@ -544,7 +554,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit {
     const date = new Date().toLocaleDateString();
     doc.text(`Generated on ${date}`, pageWidth / 2, footerY, { align: 'center' });
 
-    doc.save(`${this.selectedProvince.name}_CropGradeReport.pdf`);
+    doc.save(`${this.selectedProvince.name}_CropWeights.pdf`);
     this.isDownloading = false;
   }, 0);
 }

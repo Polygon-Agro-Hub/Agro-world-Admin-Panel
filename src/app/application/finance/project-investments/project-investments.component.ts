@@ -343,7 +343,7 @@ export class ProjectInvestmentsComponent implements OnInit {
 
   Back(): void {
     this.router.navigate([
-      '/finance/action/finance-govicapital/investment-requests',
+      '/finance/action/finance-govicapital/ivesment-requests',
     ]);
   }
 }

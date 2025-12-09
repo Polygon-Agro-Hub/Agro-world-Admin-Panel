@@ -247,6 +247,15 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     doc.setLineWidth(0.5);
     doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5); // Extended slightly above and below bars
     
+    // Draw y-axis title "Crops" (vertical text on the left)
+    doc.setFontSize(10);
+    doc.setTextColor('#738AC0');
+    
+    // Use text rotation for vertical text
+    const textX = yAxisX - 5;
+    const textY = (barAreaStartY + barAreaEndY) / 3;
+    doc.text('Crops', textX, textY, { angle: 360, align: 'center' });
+    
     // Draw y-axis tick marks for each crop
     let currentBarY = barAreaStartY;
     cropNames.forEach((cropName, index) => {

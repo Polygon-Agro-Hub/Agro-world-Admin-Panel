@@ -289,10 +289,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       
       let currentX = chartStartX;
       
-      // Draw Grade C (first segment - appears on the left in horizontal bar)
-      if (crop.qtyC > 0) {
-        const segmentWidth = crop.qtyC * scaleFactor;
-        doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
+
+      // Draw Grade A
+      if (crop.qtyA > 0) {
+        const segmentWidth = crop.qtyA * scaleFactor;
+        doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
         doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
         currentX += segmentWidth;
       }
@@ -304,11 +305,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
         currentX += segmentWidth;
       }
-      
-      // Draw Grade A
-      if (crop.qtyA > 0) {
-        const segmentWidth = crop.qtyA * scaleFactor;
-        doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
+
+      // Draw Grade C (first segment - appears on the left in horizontal bar)
+      if (crop.qtyC > 0) {
+        const segmentWidth = crop.qtyC * scaleFactor;
+        doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
         doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
         currentX += segmentWidth;
       }

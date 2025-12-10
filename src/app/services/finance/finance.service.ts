@@ -808,6 +808,50 @@ export class FinanceService {
     });
   }
 
+  getAllInvestments(id: number, status: string = '', search: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}finance/get-all-investments?id=${id}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (search) {
+      url += `&search=${search}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
+
+  rejectInvestmentStatus(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    let url = `${this.apiUrl}finance/reject-investment-status/${id}`;
+
+    return this.http.put<any>(url, {}, {
+      headers
+    });
+  }
+
+  approveInvestmentStatus(id: number): Observable<any> {
+    console.log('id', id)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    let url = `${this.apiUrl}finance/approve-investment-status/${id}`;
+
+    return this.http.put<any>(url, {}, {
+      headers
+    });
+  }
+
+
   getProjectInvestments(
   search?: string
 ): Observable<{ count: number; data: any[] }> {

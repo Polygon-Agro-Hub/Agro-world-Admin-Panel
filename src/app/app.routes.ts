@@ -239,6 +239,11 @@ import { ProjectInvestmentsTransactionsComponent } from './application/finance/p
 import { PublishedProjectsComponent } from './application/finance/published-projects/published-projects.component';
 import { ViewAllApprovedGovicareRequestsComponent } from './application/finance/view-all-approved-govicare-requests/view-all-approved-govicare-requests.component';
 import { AgentsCommissionComponent } from './application/finance/agents-commission/agents-commission.component';
+import { DistributionhubTransportActionComponent } from './application/distribution-hub/distributionhub-transport-action/distributionhub-transport-action.component';
+import { TransportReasonsToReturnComponent } from './application/distribution-hub/transport-reasons-to-return/transport-reasons-to-return.component';
+import { ViewDriverComponent } from './application/steckholders-section/view-driver/view-driver.component';
+import { PreviewDriverComponent } from './application/steckholders-section/preview-driver/preview-driver.component';
+import { EditDriverComponent } from './application/steckholders-section/edit-driver/edit-driver.component';
 
 export const routes: Routes = [
   {
@@ -653,7 +658,7 @@ export const routes: Routes = [
                     component: ProjectInvestmentsComponent,
                   },
                   {
-                    path: 'project-investments-transactions',
+                    path: 'project-investments-transactions/:id',
                     component: ProjectInvestmentsTransactionsComponent,
                   },
                   {
@@ -820,7 +825,7 @@ export const routes: Routes = [
                     path: 'upload-farmers',
                     component: UserBulkUploadComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Bulk onboarding plan care users' },
+                    data: { permission: 'Bulk onboarding plant care users' },
                   },
                   {
                     path: 'view-farmer-staff/:id',
@@ -926,6 +931,29 @@ export const routes: Routes = [
                   {
                     path: 'view-officer-targets/:officerId',
                     component: ViewOfficerTargetComponent,
+                  },
+                ],
+              },
+
+              {
+                path: 'drivers',
+                children: [
+                  {
+                    path: '',
+                    component: ViewDriverComponent,
+                  },
+    
+                  {
+                    path: 'preview-driver/:id',
+                    component: PreviewDriverComponent,
+                  },
+                  {
+                    path: 'edit-driver/:id',
+                    component: EditDriverComponent,
+                  },
+                  {
+                    path: 'add-driver',
+                    component: CreateDistributionOfficerComponent,
                   },
                 ],
               },
@@ -1585,6 +1613,7 @@ export const routes: Routes = [
             path: 'action',
             children: [
               { path: '', component: DistributionhubComponent },
+              { path: 'reasons-to-return', component: TransportReasonsToReturnComponent },
               {
                 path: 'create-company',
                 component: CreateCompanyComponent,
@@ -1595,6 +1624,12 @@ export const routes: Routes = [
                     'Distribution Hub add new company',
                   ],
                 },
+              },
+              {
+                path:'transport',
+                children:[
+                  {path:'',component:DistributionhubTransportActionComponent}
+                ],
               },
               {
                 path: 'view-companies',

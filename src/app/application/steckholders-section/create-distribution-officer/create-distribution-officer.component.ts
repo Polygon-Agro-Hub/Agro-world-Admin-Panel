@@ -85,6 +85,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   invalidFields: Set<string> = new Set();
 
   languagesRequired: boolean = false;
+  isDriverRoute: boolean = false;
 
   // Driver Images
   licenseFrontImageFileName!: string;
@@ -596,6 +597,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
+    console.log('pdatra', this.personalData)
     if (page === 'pageTwo') {
       const missingFields: string[] = [];
 
@@ -636,7 +638,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
         missingFields.push('Job Role is Required');
       }
 
-      if (this.personalData.jobRole === 'Distribution Officer' && !this.personalData.irmId) {
+      if ((this.personalData.jobRole === 'Distribution Officer' || this.personalData.jobRole === 'Driver') && !this.personalData.irmId) {
         missingFields.push('Manager Name is Required');
       }
 
@@ -648,19 +650,19 @@ private formatDateForDatabase(date: Date | string | null): string | null {
         missingFields.push('Last Name (in English) is Required');
       }
 
-      if (!this.personalData.firstNameSinhala) {
+      if (!this.personalData.firstNameSinhala && !this.isDriverRoute) {
         missingFields.push('First Name (in Sinhala) is Required');
       }
 
-      if (!this.personalData.lastNameSinhala) {
+      if (!this.personalData.lastNameSinhala && !this.isDriverRoute) {
         missingFields.push('Last Name (in Sinhala) is Required');
       }
 
-      if (!this.personalData.firstNameTamil) {
+      if (!this.personalData.firstNameTamil && !this.isDriverRoute) {
         missingFields.push('First Name (in Tamil) is Required');
       }
 
-      if (!this.personalData.lastNameTamil) {
+      if (!this.personalData.lastNameTamil && !this.isDriverRoute) {
         missingFields.push('Last Name (in Tamil) is Required');
       }
 
@@ -764,6 +766,17 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   }
 
   ngOnInit(): void {
+  const currentRoute = this.router.url;
+
+  if (currentRoute.includes('drivers/add-driver')) {
+
+    this.isDriverRoute = true;
+ 
+    this.jobRoleOptions = [
+      { label: 'Driver', value: 'Driver' }
+    ];
+
+  }
     this.loadBanks();
     this.loadBranches();
     this.getAllCompanies();
@@ -771,6 +784,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     // Pre-fill country with Sri Lanka
     this.personalData.country = 'Sri Lanka';
   }
+
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       (data) => {

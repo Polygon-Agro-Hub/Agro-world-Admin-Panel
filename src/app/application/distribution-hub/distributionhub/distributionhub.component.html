@@ -9,9 +9,7 @@
         *ngIf="
             permissionService.hasPermission('Distribution Hub companies') ||
             tokenService.getUserDetails().role === '1'
-          "
-        (click)="togglePopupNews()"
-      >
+          " (click)="togglePopupNews()">
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
             <i class="fa-regular fa-building" style="color: #4a90e2"></i>
@@ -22,41 +20,34 @@
       </div>
       <div
         class="rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] absolute top-full mt-2 left-0 dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        *ngIf="popupVisibleNews"
-      >
-        <div
-          *ngIf="
+        *ngIf="popupVisibleNews">
+        <div *ngIf="
             permissionService.hasPermission('Distribution Hub add a company') ||
             tokenService.getUserDetails().role === '1'
           "
           class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-          (click)="navigateToCreateNews()"
-        >
+          (click)="navigateToCreateNews()">
           Add a Company
         </div>
         <hr />
-        <div
-          *ngIf="
+        <div *ngIf="
             permissionService.hasPermission('Distribution Hub view company list') ||
             tokenService.getUserDetails().role === '1'
           "
           class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-          (click)="navigateToViewCompanies()"
-        >
+          (click)="navigateToViewCompanies()">
           View Company List
         </div>
       </div>
     </div>
 
     <div class="relative flex justify-center cursor-pointer">
-      <div
-      *ngIf="
+      <div *ngIf="
             permissionService.hasPermission('Distribution Hub distribution centres') ||
             tokenService.getUserDetails().role === '1'
           "
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        (click)="togglePopupCropCalender()"
-      >
+        (click)="togglePopupCropCalender()">
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
             <i class="fa-solid fa-align-center" style="color: #4a90e2"></i>
@@ -67,43 +58,33 @@
       </div>
       <div
         class="rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] absolute top-full mt-2 left-0 dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-        *ngIf="popupVisibleCropCalender"
-      >
-        <div
-          *ngIf="
+        *ngIf="popupVisibleCropCalender">
+        <div *ngIf="
             permissionService.hasPermission('Distribution Hub add a distribution centre') ||
             tokenService.getUserDetails().role === '1'
           "
           class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-          (click)="createCalendar()"
-        >
+          (click)="createCalendar()">
           Add a Distribution Centre
         </div>
         <hr />
-        <div
-          *ngIf="
+        <div *ngIf="
             permissionService.hasPermission('Distribution Hub view distribution centre list') ||
             tokenService.getUserDetails().role === '1'
           "
           class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-          (click)="createVariety()"
-        >
+          (click)="createVariety()">
           View Distribution Centres
         </div>
       </div>
     </div>
 
-    <div
-      *ngIf="
+    <div *ngIf="
         permissionService.hasPermission('Distribution Hub polygon centres') ||
         tokenService.getUserDetails().role === '1'
-      "
-      class="flex justify-center cursor-pointer"
-    >
-      <div
-        (click)="viewPolygon()"
-        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-      >
+      " class="flex justify-center cursor-pointer">
+      <div (click)="viewPolygon()"
+        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
             <i class="fa-regular fa-calendar-days" style="color: #4a90e2"></i>
@@ -114,17 +95,13 @@
       </div>
     </div>
 
-    <div
-      *ngIf="
+    <div *ngIf="
         permissionService.hasPermission(
           'Distribution Hub goods received'
         ) || tokenService.getUserDetails().role === '1'
-      "
-      class="flex justify-center cursor-pointer"
-    >
+      " class="flex justify-center cursor-pointer">
       <div
-        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-      >
+        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
             <i class="fa-solid fa-list" style="color: #4a90e2"></i>
@@ -135,16 +112,13 @@
       </div>
     </div>
 
-    <div
-    *ngIf="
+    <div *ngIf="
         permissionService.hasPermission(
           'Distribution Hub customer orders'
         ) || tokenService.getUserDetails().role === '1'
-      "
-    class="flex justify-center cursor-pointer">
+      " class="flex justify-center cursor-pointer">
       <div
-        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-      >
+        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
             <i class="fa-solid fa-boxes-packing" style="color: #4a90e2"></i>
@@ -156,12 +130,11 @@
     </div>
 
     <div *ngIf="
-            permissionService.hasPermission('Distribution Hub assign site') ||
+            permissionService.hasPermission('Distribution Hub assign cities') ||
             tokenService.getUserDetails().role === '1'
           " class="flex justify-center cursor-pointer" (click)="assignCities()">
       <div
-        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-      >
+        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
             <i class="fa-solid fa-link" style="color: #4a90e2"></i>
@@ -170,6 +143,21 @@
         </div>
         <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </div>
+    </div>
+    <div class="relative flex justify-center cursor-pointer">
+      <div class="flex justify-center cursor-pointer" (click)="transport()">
+        <div
+          class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
+          <div class="flex items-center">
+            <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
+              <i class="fa-solid fa-truck" style="color: #4a90e2"></i>
+            </div>
+            <span class="ml-3">Transportation</span>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

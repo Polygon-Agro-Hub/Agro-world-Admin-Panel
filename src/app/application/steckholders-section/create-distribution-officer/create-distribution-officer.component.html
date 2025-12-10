@@ -127,7 +127,7 @@
           <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">Job Role is a required field</span>
         </div>
 
-        <div *ngIf="personalData.jobRole === 'Distribution Officer'">
+        <div *ngIf="personalData.jobRole === 'Distribution Officer' || personalData.jobRole === 'Driver'">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Manager Name *
           </label>
@@ -166,7 +166,7 @@
         </div>
 
         <!-- Updated First Name (Sinhala) input -->
-        <div>
+        <div *ngIf="!isDriverRoute">
           <label for="firstNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
             (in Sinhala) *</label>
           <input id="firstNameSinhala" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
@@ -178,7 +178,7 @@
         </div>
 
         <!-- Updated Last Name (Sinhala) input -->
-        <div>
+        <div *ngIf="!isDriverRoute">
           <label for="lastNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Sinhala) *</label>
           <input id="lastNameSinhala" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
@@ -190,7 +190,7 @@
         </div>
 
         <!-- Updated First Name (Tamil) input -->
-        <div>
+        <div *ngIf="!isDriverRoute">
           <label for="firstNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in
             Tamil) *</label>
           <input id="firstNameTamil" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
@@ -202,7 +202,7 @@
         </div>
 
         <!-- Updated Last Name (Tamil) input -->
-        <div>
+        <div *ngIf="!isDriverRoute">
           <label for="lastNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
             Tamil) *</label>
           <input id="lastNameTamil" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"

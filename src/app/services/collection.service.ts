@@ -306,5 +306,83 @@ export class CollectionService {
     });
   }
 
+  getAllDrivers(
+    page: number,
+    limit: number,
+    centerStatus: string = '',
+    status: string = '',
+    searchNIC: string = '',
+    centerId: number | null = null,
+  ): Observable<any> {
+    console.log('centerId', centerId)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    
+    let url = `${this.apiUrl}auth/driver/view-all-drivers?page=${page}&limit=${limit}`;
+    if (centerId) {
+      url += `&centerId=${centerId}`;
+    }
+
+    if (centerStatus) {
+      url += `&centerStatus=${centerStatus}`
+    }
+
+    if (status) {
+      url += `&status=${status}`
+    }
+
+    if (searchNIC) {
+      url += `&nic=${searchNIC}`;
+    }
+    return this.http.get<any>(url, { headers });
+  }
+
+  getDistributionCenterNames(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}auth/driver/get-all-distribution-center-names`;
+    return this.http.get<any>(url, { headers });
+  }
+
+
+  getDistributionCenterManagerNames(centerId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}auth/driver/get-all-Distribution-manager-names/${centerId}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  claimDriver(id: number, payload: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+  
+    return this.http.put(
+      `${this.apiUrl}auth/driver/claim-driver/${id}`,
+      payload, // Include the payload in the request body
+      { headers }
+    );
+  }
+  
+  disclaimOfficer(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.put(
+      `${this.apiUrl}auth/driver/disclaim-driver/${id}`,
+      {},
+      {
+        headers,
+      }
+    );
+  }
 
 }

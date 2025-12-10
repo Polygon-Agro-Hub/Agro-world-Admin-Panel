@@ -527,4 +527,65 @@ export class DistributionHubService {
     return this.http.get<any>(`${this.apiUrl}distribution/get-next-return-reason-index`, { headers });
   }
 
+  getAllHoldReasons(): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.get<any>(`${this.apiUrl}distribution/get-all-hold-reasons`, { headers });
 }
+
+
+getHoldReasonById(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.get<any>(`${this.apiUrl}distribution/get-hold-reason/${id}`, { headers });
+}
+
+
+createHoldReason(reasonData: { rsnEnglish: string; rsnSinhala: string; rsnTamil: string }): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.post<any>(`${this.apiUrl}distribution/create-hold-reason`, reasonData, { headers });
+}
+
+
+deleteHoldReason(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.delete<any>(`${this.apiUrl}distribution/delete-hold-reason/${id}`, { headers });
+}
+
+
+updateHoldReasonIndexes(reasons: { id: number; indexNo: number }[]): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.post<any>(`${this.apiUrl}distribution/update-hold-reason-indexes`, { reasons }, { headers });
+}
+
+
+getNextHoldReasonIndex(): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  return this.http.get<any>(`${this.apiUrl}distribution/get-next-hold-reason-index`, { headers });
+}
+
+}
+
+

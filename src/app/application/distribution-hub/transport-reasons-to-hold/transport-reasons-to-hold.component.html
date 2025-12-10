@@ -1,0 +1,222 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button
+  (click)="onBack()"
+  class="text-textLight dark:text-textDark mb-6 flex items-center gap-2"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="mx-auto">
+  <!-- Add Reason Form -->
+  <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg p-6 mb-6">
+    <h2 class="text-xl font-normal text-textLight text-center dark:text-textDark mb-6">
+      Add a Reason (For Holding Orders)
+    </h2>
+
+    <form [formGroup]="reasonForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-4">
+        <!-- Index No (Auto-filled and disabled) -->
+        <div>
+          <label
+            for="indexNo"
+            class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+          >
+            Index No
+          </label>
+          <input
+            id="indexNo"
+            type="text"
+            formControlName="indexNo"
+            placeholder="--auto fill--"
+            class="block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-textLight dark:text-textDark cursor-not-allowed"
+            readonly
+          />
+        </div>
+
+        <!-- Reason (in English) -->
+        <div>
+          <label
+            for="rsnEnglish"
+            class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+          >
+            Reason (in English)
+          </label>
+          <textarea
+            id="rsnEnglish"
+            formControlName="rsnEnglish"
+            (keydown)="preventLeadingSpace($event)"
+            rows="3"
+            class="block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            [ngClass]="{
+              'border-red-500':
+                reasonForm.get('rsnEnglish')?.invalid &&
+                reasonForm.get('rsnEnglish')?.touched
+            }"
+          ></textarea>
+          <div
+            *ngIf="
+              reasonForm.get('rsnEnglish')?.errors?.['required'] &&
+              reasonForm.get('rsnEnglish')?.touched
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            Reason (in English) is Required
+          </div>
+        </div>
+
+        <!-- Reason (in Sinhala) -->
+        <div>
+          <label
+            for="rsnSinhala"
+            class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+          >
+            Reason (in Sinhala)
+          </label>
+          <textarea
+            id="rsnSinhala"
+            formControlName="rsnSinhala"
+            (keydown)="preventLeadingSpace($event)"
+            rows="3"
+            class="block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            [ngClass]="{
+              'border-red-500':
+                reasonForm.get('rsnSinhala')?.invalid &&
+                reasonForm.get('rsnSinhala')?.touched
+            }"
+          ></textarea>
+          <div
+            *ngIf="
+              reasonForm.get('rsnSinhala')?.errors?.['required'] &&
+              reasonForm.get('rsnSinhala')?.touched
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            Reason (in Sinhala) is Required
+          </div>
+        </div>
+
+        <!-- Reason (in Tamil) -->
+        <div>
+          <label
+            for="rsnTamil"
+            class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
+          >
+            Reason (in Tamil)
+          </label>
+          <textarea
+            id="rsnTamil"
+            formControlName="rsnTamil"
+            (keydown)="preventLeadingSpace($event)"
+            rows="3"
+            class="block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            [ngClass]="{
+              'border-red-500':
+                reasonForm.get('rsnTamil')?.invalid &&
+                reasonForm.get('rsnTamil')?.touched
+            }"
+          ></textarea>
+          <div
+            *ngIf="
+              reasonForm.get('rsnTamil')?.errors?.['required'] &&
+              reasonForm.get('rsnTamil')?.touched
+            "
+            class="text-red-500 text-sm mt-1"
+          >
+            Reason (in Tamil) is Required
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-2 mt-6">
+        <div
+          class="px-4 py-2 bg-[#74788D] text-white rounded-md cursor-pointer w-32 text-center hover:bg-[#5f6275] transition-colors"
+          (click)="onCancel()"
+        >
+          Cancel
+        </div>
+        <button
+          type="submit"
+          class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-32 hover:bg-[#2d6699] transition-colors"
+        >
+          Add
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Added Reasons List -->
+  <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg p-6">
+    <h2 class="text-xl font-normal text-textLight dark:text-textDark mb-6">
+      Added Reasons
+    </h2>
+
+    <!-- No Reasons Message -->
+    <div
+      *ngIf="reasons.length === 0"
+      class="text-center py-12 text-gray-500 dark:text-gray-400"
+    >
+      <i class="fa-solid fa-inbox text-5xl mb-4 opacity-30"></i>
+      <p class="text-lg">No reasons added yet</p>
+    </div>
+
+    <!-- Reasons Cards -->
+    <div
+      *ngIf="reasons.length > 0"
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+      class="space-y-3"
+    >
+      <div
+        *ngFor="let reason of reasons"
+        cdkDrag
+        class="flex items-center gap-4"
+      >
+        <!-- Index Number (Outside the border) -->
+        <div
+          class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-md font-semibold text-textLight dark:text-textDark"
+        >
+          {{ reason.indexNo < 10 ? '0' + reason.indexNo : reason.indexNo }}
+        </div>
+
+        <!-- Reason Text (With border) -->
+        <div
+          class="flex-grow p-4 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 hover:shadow-md transition-shadow cursor-move"
+        >
+          <p class="text-textLight dark:text-textDark line-clamp-2">
+            {{ reason.rsnEnglish }}
+          </p>
+        </div>
+
+        <!-- Delete Button (Outside the border) -->
+        <button
+          type="button"
+          (click)="onDelete(reason.id)"
+          [disabled]="reason.id === 1"
+          class="flex-shrink-0 w-10 h-10 flex items-center justify-center transition-colors"
+          [ngClass]="{
+            'text-[#8B1A10] hover:text-red-700 cursor-pointer': reason.id !== 1,
+            'text-gray-300 dark:text-gray-600 cursor-not-allowed': reason.id === 1
+          }"
+        >
+          <i class="fa-solid fa-trash text-lg"></i>
+        </button>
+
+        <!-- Drag Handle (Hidden but functional) -->
+        <div class="cdk-drag-handle opacity-0">
+          <i class="fa-solid fa-grip-vertical"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drag Hint -->
+    <div
+      *ngIf="reasons.length > 1"
+      class="mt-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2"
+    >
+      <i class="fa-solid fa-info-circle"></i>
+      <span>Drag and drop to reorder reasons</span>
+    </div>
+  </div>
+</div>

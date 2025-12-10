@@ -35,6 +35,15 @@ export class DistributionhubTransportActionComponent {
     });
   }
 
+    navigateToResonsHold(): void {
+    this.isLoading = true;
+    this.router.navigate(['/distribution-hub/action/reasons-to-hold'], {
+      queryParams: { type: 'distribution' }
+    }).then(() => {
+      this.isLoading = false;
+    });
+  }
+
   back(): void{
     this.isLoading= true;
      this.router.navigate(['/distribution-hub/action'], {

@@ -1,12 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-hold-todays-deleveries',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './hold-todays-deleveries.component.html',
-  styleUrl: './hold-todays-deleveries.component.css'
+  styleUrl: './hold-todays-deleveries.component.css',
 })
-export class HoldTodaysDeleveriesComponent {
-
-}
+export class HoldTodaysDeleveriesComponent {}

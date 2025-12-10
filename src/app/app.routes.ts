@@ -244,6 +244,7 @@ import { TransportReasonsToReturnComponent } from './application/distribution-hu
 import { ViewDriverComponent } from './application/steckholders-section/view-driver/view-driver.component';
 import { PreviewDriverComponent } from './application/steckholders-section/preview-driver/preview-driver.component';
 import { EditDriverComponent } from './application/steckholders-section/edit-driver/edit-driver.component';
+import { TransportReasonsToHoldComponent } from './application/distribution-hub/transport-reasons-to-hold/transport-reasons-to-hold.component';
 
 export const routes: Routes = [
   {
@@ -1614,6 +1615,7 @@ export const routes: Routes = [
             children: [
               { path: '', component: DistributionhubComponent },
               { path: 'reasons-to-return', component: TransportReasonsToReturnComponent },
+              { path: 'reasons-to-hold', component: TransportReasonsToHoldComponent },
               {
                 path: 'create-company',
                 component: CreateCompanyComponent,

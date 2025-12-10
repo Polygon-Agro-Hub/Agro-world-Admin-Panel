@@ -1,1 +1,144 @@
-<p>todays-deliveries works!</p>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="flex w-full mb-10">
+  <form
+    class="flex w-full pt-5 px-40 pb-5 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-end w-full mr-2 flex-col space-y-2">
+      <div class="flex w-full mr-2 space-y-2">
+        <label
+          for="new-target"
+          class="text-gray-600 dark:text-textDark font-medium flex items-center justify-center align-middle w-40 mr-5"
+          >Filter By Centre :</label
+        >
+        <input
+          type="number"
+          id="new-target"
+          placeholder="--Type New Target--"
+          class="border border-gray-300 rounded-lg dark:border-[#AFAFAF] dark:bg-tileBlack dark:text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+          name="newTargetValue"
+          step="1"
+          min="1"
+        />
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex mt-2.5 ml-2 flex-col space-y-2">
+      <button
+        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out"
+      >
+        Go
+      </button>
+    </div>
+  </form>
+</div>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
+      <button
+        (click)="selectTab('all')"
+        [ngClass]="
+          activeTab === 'all'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'all'" class="fa fa-check"></i>
+        All
+      </button>
+      <button
+        (click)="selectTab('out-for-delivery')"
+        [ngClass]="
+          activeTab === 'out-for-delivery'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'out-for-delivery'" class="fa fa-check"></i>
+        Out for Delivery
+      </button>
+      <button
+        (click)="selectTab('on-the-way')"
+        [ngClass]="
+          activeTab === 'on-the-way'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'on-the-way'" class="fa fa-check"></i>
+        On the way
+      </button>
+      <button
+        (click)="selectTab('hold')"
+        [ngClass]="
+          activeTab === 'hold'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'hold'" class="fa fa-check"></i>
+        Hold
+      </button>
+      <button
+        (click)="selectTab('return')"
+        [ngClass]="
+          activeTab === 'return'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'return'" class="fa fa-check"></i>
+        Return
+      </button>
+      <button
+        (click)="selectTab('delivered')"
+        [ngClass]="
+          activeTab === 'delivered'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'delivered'" class="fa fa-check"></i>
+        Delivered
+      </button>
+    </div>
+
+    <div class="h-5"></div>
+
+    <div *ngIf="activeTab === 'all'">
+      <app-all-todays-deleveries></app-all-todays-deleveries>
+    </div>
+    <div *ngIf="activeTab === 'out-for-delivery'">
+      <app-out-for-delivery-todays-deleveries></app-out-for-delivery-todays-deleveries>
+    </div>
+    <div *ngIf="activeTab === 'on-the-way'">
+      <app-on-the-way-todays-deleveries></app-on-the-way-todays-deleveries>
+    </div>
+    <div *ngIf="activeTab === 'hold'">
+      <app-hold-todays-deleveries></app-hold-todays-deleveries>
+    </div>
+    <div *ngIf="activeTab === 'return'">
+      <app-return-todays-deleveries></app-return-todays-deleveries>
+    </div>
+    <div *ngIf="activeTab === 'delivered'">
+      <app-delivered-todays-deleveries></app-delivered-todays-deleveries>
+    </div>
+  </div>
+</div>

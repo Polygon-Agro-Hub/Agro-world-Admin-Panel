@@ -244,6 +244,7 @@ import { TransportReasonsToReturnComponent } from './application/distribution-hu
 import { ViewDriverComponent } from './application/steckholders-section/view-driver/view-driver.component';
 import { PreviewDriverComponent } from './application/steckholders-section/preview-driver/preview-driver.component';
 import { EditDriverComponent } from './application/steckholders-section/edit-driver/edit-driver.component';
+import { TodaysDeliveriesComponent } from './application/distribution-hub/todays-deliveries/todays-deliveries.component';
 
 export const routes: Routes = [
   {
@@ -942,7 +943,7 @@ export const routes: Routes = [
                     path: '',
                     component: ViewDriverComponent,
                   },
-    
+
                   {
                     path: 'preview-driver/:id',
                     component: PreviewDriverComponent,
@@ -1613,7 +1614,14 @@ export const routes: Routes = [
             path: 'action',
             children: [
               { path: '', component: DistributionhubComponent },
-              { path: 'reasons-to-return', component: TransportReasonsToReturnComponent },
+              {
+                path: 'reasons-to-return',
+                component: TransportReasonsToReturnComponent,
+              },
+              {
+                path: 'todays-deliveries',
+                component: TodaysDeliveriesComponent,
+              },
               {
                 path: 'create-company',
                 component: CreateCompanyComponent,
@@ -1626,9 +1634,12 @@ export const routes: Routes = [
                 },
               },
               {
-                path:'transport',
-                children:[
-                  {path:'',component:DistributionhubTransportActionComponent}
+                path: 'transport',
+                children: [
+                  {
+                    path: '',
+                    component: DistributionhubTransportActionComponent,
+                  },
                 ],
               },
               {

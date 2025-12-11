@@ -146,7 +146,9 @@
       ></app-hold-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'return'">
-      <app-return-todays-deleveries></app-return-todays-deleveries>
+      <app-return-todays-deleveries
+        [deliveries]="returnData"
+      ></app-return-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'delivered'">
       <app-delivered-todays-deleveries></app-delivered-todays-deleveries>

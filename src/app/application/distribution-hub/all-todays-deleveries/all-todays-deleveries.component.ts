@@ -27,6 +27,7 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
     { label: 'All', value: null },
     { label: 'Out for Delivery', value: 'Out For Delivery' },
     { label: 'Delivered', value: 'Delivered' },
+    { label: 'Collected', value: 'Collected' },
     { label: 'On the way', value: 'On the way' },
     { label: 'Return', value: 'Return' },
     { label: 'Hold', value: 'Hold' },
@@ -47,6 +48,8 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
         return 'bg-[#FCD4FF] text-[#80118A] dark:bg-[#424B5F] dark:text-[#E3E3E3]';
       case 'Delivered':
         return 'bg-[#BBFFC6] text-[#308233] dark:bg-[#1C4332] dark:text-[#D1FADF]';
+      case 'Collected':
+        return 'bg-[#F8FEA5] text-[#7E8700] dark:bg-[#1C4332] dark:text-[#D1FADF]';
       case 'On the way':
         return 'bg-[#FFEDCF] text-[#D17A00] dark:bg-[#5C4109] dark:text-[#FEF0C7]';
       case 'Return':

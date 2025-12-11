@@ -360,7 +360,6 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: {
                   permission: [
-                    'View each farmer’s enrolled crop calendars',
                     'View ongoing cultivation farm cultivation',
                   ],
                 },
@@ -971,7 +970,7 @@ export const routes: Routes = [
                 path: 'field-officer-profile/:id',
                 component: FieldOfficerProfileComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View feild officer profile' },
+                data: { permission: 'View field officer profile' },
               },
               {
                 path: 'edit-field-officer/:id',

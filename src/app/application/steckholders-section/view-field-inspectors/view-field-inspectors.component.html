@@ -5,7 +5,7 @@
   Back
 </button>
 
-<div class="mb-4 flex justify-between" *ngIf=" permissionService.hasPermission('Add feild officers') || tokenService.getUserDetails().role === '1'">
+<div class="mb-4 flex justify-between" *ngIf=" permissionService.hasPermission('Add field officers') || tokenService.getUserDetails().role === '1'">
   <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-1 items-center"
     (click)="addNew()">
     <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -157,7 +157,7 @@
               {{ inspector.language }}
             </td>
             <td class="px-4 py-3 text-center cursor-pointer">
-              <button  [disabled]="permissionService.hasPermission('Approve field officers') || tokenService.getUserDetails().role !== '1'"
+              <button  [disabled]="!permissionService.hasPermission('Approve field officers') && tokenService.getUserDetails().role !== '1'"
               [ngClass]="{
                   'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
                     inspector.status === 'Not Approved',

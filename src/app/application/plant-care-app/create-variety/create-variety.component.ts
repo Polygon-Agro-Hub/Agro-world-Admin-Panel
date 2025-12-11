@@ -741,7 +741,8 @@ export class CreateVarietyComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/plant-care/action/view-crop-group']);
+        // this.router.navigate(['/plant-care/action/view-crop-group']);
+        this.location.back();
       }
     });
   }

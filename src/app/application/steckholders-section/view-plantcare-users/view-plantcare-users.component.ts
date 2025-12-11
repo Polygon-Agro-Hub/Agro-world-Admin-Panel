@@ -169,7 +169,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
           } else {
             Swal.fire({
               title: 'Error',
-              text: 'Failed to fetch plant care users.',
+              text: 'Failed to fetch Govi Care users.',
               icon: 'error',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -260,7 +260,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
             (error) => {
               Swal.fire({
                 title: 'Error',
-                text: 'There was a problem deleting the plant care user.',
+                text: 'There was a problem deleting the GoVi Care user.',
                 icon: 'error',
                 customClass: {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

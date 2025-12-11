@@ -22,6 +22,8 @@ interface Delivery {
   no?: number; // Will be calculated based on index
   driver?: string; // You might need to fetch this from backend
   phoneNumber?: string; // You might need to fetch this from backend
+  // For Hold tab specifically
+  heldTime?: string; // We'll calculate this from createdAt or outDlvrTime
 }
 
 @Component({
@@ -100,14 +102,46 @@ export class TodaysDeliveriesComponent implements OnInit {
 
   prepareDeliveryData(): void {
     // Add additional properties that child components might need
-    this.allDeliveries = this.allDeliveries.map((delivery, index) => ({
-      ...delivery,
-      no: index + 1,
-      // These fields might need to come from your backend
-      // For now, I'm adding placeholders - you should update these based on your actual data structure
-      driver: 'DIV000001', // Replace with actual driver data from backend
-      phoneNumber: '0781112300', // Replace with actual phone number from backend
-    }));
+    this.allDeliveries = this.allDeliveries.map((delivery, index) => {
+      // For Hold tab: Convert createdAt or outDlvrTime to heldTime format (e.g., "11.20AM")
+      const heldTime = this.formatToHeldTime(delivery.createdAt || delivery.outDlvrTime);
+      
+      return {
+        ...delivery,
+        no: index + 1,
+        driver: 'DIV000001', // Replace with actual driver data from backend if available
+        phoneNumber: '0781112300', // Replace with actual phone number from backend if available
+        heldTime: heldTime // Add heldTime for Hold tab
+      };
+    });
+  }
+
+  // Helper method to format time to "HH.MMAM/PM" format
+  private formatToHeldTime(timeString: string): string {
+    if (!timeString) return 'N/A';
+    
+    try {
+      const date = new Date(timeString);
+      if (isNaN(date.getTime())) {
+        // If timeString is already in "HH.MMAM" format, return as is
+        if (timeString.includes('.')) return timeString;
+        return 'N/A';
+      }
+      
+      let hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      
+      hours = hours % 12;
+      hours = hours ? hours : 12; // Convert 0 to 12
+      
+      const minutesStr = minutes < 10 ? '0' + minutes : minutes.toString();
+      
+      return `${hours}.${minutesStr}${ampm}`;
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return 'N/A';
+    }
   }
 
   filterDataByStatus(): void {

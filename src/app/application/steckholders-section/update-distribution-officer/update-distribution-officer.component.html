@@ -180,7 +180,7 @@
         </div>
 
         <div>
-          <div *ngIf="personalData.jobRole === 'Distribution Officer'">
+          <div *ngIf="personalData.jobRole === 'Distribution Officer' || personalData.jobRole === 'Driver'">
             <label for="managerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Manager Name *
             </label>
@@ -194,10 +194,9 @@
             </div>
           </div>
 
-          <div *ngIf="personalData.jobRole === 'Distribution Officer'"></div>
+          <div *ngIf="personalData.jobRole === 'Distribution Centre Manager'"></div>
         </div>
 
-        <!-- First Name (in English) - Updated with validation call -->
         <!-- First Name (in English) - Updated with validation call -->
         <div>
           <label for="firstNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -227,37 +226,34 @@
         </div>
 
         <!-- First Name (in Sinhala) - Updated with validation call -->
-        <div>
+        <div *ngIf="personalData.jobRole !== 'Driver'">
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in Sinhala)
             *</label>
           <input id="firstName" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
             (keydown)="preventLeadingSpace($event, 'firstNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #firstNameSinhalaInput="ngModel" (input)="formatName('firstNameSinhala')" required />
-          <div *ngIf="
-              firstNameSinhalaInput.touched && !personalData.firstNameSinhala
-            " class="text-red-500 text-sm mt-1">
+          <div *ngIf="firstNameSinhalaInput.touched && !personalData.firstNameSinhala"
+            class="text-red-500 text-sm mt-1">
             <div>First Name (in Sinhala) is required</div>
           </div>
         </div>
 
-        <!-- Last Name (in Sinhala) - Updated with validation call -->
-        <div>
+        <!-- Last Name (in Sinhala) - Hidden for Driver -->
+        <div *ngIf="personalData.jobRole !== 'Driver'">
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in Sinhala)
             *</label>
           <input id="lastName" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
             (keydown)="preventLeadingSpace($event, 'lastNameSinhala')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #lastNameSinhalaInput="ngModel" (input)="formatName('lastNameSinhala')" required />
-          <div *ngIf="
-              lastNameSinhalaInput.touched && !personalData.lastNameSinhala
-            " class="text-red-500 text-sm mt-1">
+          <div *ngIf="lastNameSinhalaInput.touched && !personalData.lastNameSinhala" class="text-red-500 text-sm mt-1">
             <div>Last Name (in Sinhala) is required</div>
           </div>
         </div>
 
-        <!-- First Name (in Tamil) - Updated with validation call -->
-        <div>
+        <!-- First Name (in Tamil) - Hidden for Driver -->
+        <div *ngIf="personalData.jobRole !== 'Driver'">
           <label for="crop" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name (in Tamil)
             *</label>
           <input id="firstName" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
@@ -269,8 +265,8 @@
           </div>
         </div>
 
-        <!-- Last Name (in Tamil) - Updated with validation call -->
-        <div>
+        <!-- Last Name (in Tamil) - Hidden for Driver -->
+        <div *ngIf="personalData.jobRole !== 'Driver'">
           <label for="variety" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in Tamil)
             *</label>
           <input id="lastName" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
@@ -655,10 +651,284 @@
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
         </button>
-        <button type="submit" (click)="onSubmit()" class="px-4 py-2 bg-[#3980C0] text-white rounded-md">
+
+        <!-- Conditional buttons based on job role -->
+        <button *ngIf="personalData.jobRole === 'Driver'" type="button"
+          class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="nextFormCreate('pageThree')">
+          Next
+        </button>
+
+        <button *ngIf="personalData.jobRole !== 'Driver'" type="submit"
+          class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
           Submit
         </button>
       </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedPage === 'pageThree'">
+    <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
+      Driving Details
+    </h2>
+
+    <div>
+      <label for="licNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        Driving License ID *
+      </label>
+      <input id="licNo" type="text" name="licNo" [(ngModel)]="driverObj.licNo" (keypress)="preventNonNumbers($event)"
+        class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+      <!-- License Front Image -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          License's Front Image *
+        </label>
+        <input id="licenseFrontImageUpload" type="file" accept="image/*" (change)="onLicenseFrontImageSelected($event)"
+          class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'licenseFrontImageUpload')"
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload License Front Image</p>
+        </div>
+        <div *ngIf="licenseFrontImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">Attached:
+            <span class="text-blue-600 font-normal">{{ licenseFrontImageFileName }}</span>
+          </span>
+          <button (click)="clearLicenseFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- License Back Image -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          License's Back Image *
+        </label>
+        <input id="licenseBackImageUpload" type="file" accept="image/*" (change)="onLicenseBackImageSelected($event)"
+          class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'licenseBackImageUpload')"
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload License Back Image</p>
+        </div>
+        <div *ngIf="licenseBackImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">Attached:
+            <span class="text-blue-600 font-normal">{{ licenseBackImageFileName }}</span>
+          </span>
+          <button (click)="clearLicenseBackImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="text-2xl mt-16 mb-6 text-textLight dark:text-textDark">
+      Vehicle Insurance Details
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+      <!-- Insurance Number -->
+      <div>
+        <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Insurance Number *
+        </label>
+        <input id="insNo" type="text" name="insNo" [(ngModel)]="driverObj.insNo" (keypress)="preventNonNumbers($event)"
+          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      </div>
+      <div>
+        <label for="insExpDate" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Insurance Expire Date *
+        </label>
+        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [showIcon]="true" [showClear]="true"
+          [showButtonBar]="true" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
+          [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                     [&_.p-datepicker-header]:dark:text-white
+                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                     [&_.p-button:hover]:dark:bg-[#6b7280]"
+          inputStyleClass="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
+          [appendTo]="'body'" />
+      </div>
+
+      <!-- Insurance Front Image -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          Insurance's Front Image *
+        </label>
+        <input id="insurenceFrontImageUpload" type="file" accept="image/*"
+          (change)="onInsurenceFrontImageSelected($event)" class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'insurenceFrontImageUpload')"
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload Insurance Front Image</p>
+        </div>
+        <div *ngIf="insurenceFrontImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">Attached:
+            <span class="text-blue-600 font-normal">{{ insurenceFrontImageFileName }}</span>
+          </span>
+          <button (click)="clearInsurenceFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Insurance Back Image -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          Insurance's Back Image *
+        </label>
+        <input id="insuranceBackImageUpload" type="file" accept="image/*"
+          (change)="onInsurenceBackImageSelected($event)" class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'insuranceBackImageUpload')"
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload Insurance Back Image</p>
+        </div>
+        <div *ngIf="insurenceBackImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">Attached:
+            <span class="text-blue-600 font-normal">{{ insurenceBackImageFileName }}</span>
+          </span>
+          <button (click)="clearInsurenceBackImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="text-2xl mt-16 mb-6 text-textLight dark:text-textDark">
+      Vehicle Details
+    </h2>
+
+    <div>
+      <label for="vRegNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        Vehicle Registration Number *
+      </label>
+      <input id="vRegNo" type="text" name="vRegNo" [(ngModel)]="driverObj.vRegNo" (keypress)="preventNonNumbers($event)"
+        class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+      <!-- Vehicle Type Dropdown -->
+      <div>
+        <label for="selectVehicletype" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Vehicle Type *
+        </label>
+        <p-dropdown id="selectVehicletype" [(ngModel)]="selectVehicletype" [options]="VehicleTypes" optionLabel="name"
+          placeholder="Select Vehicle Type" (onChange)="vehicleChange()" styleClass="w-full mt-1"
+          panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom">
+        </p-dropdown>
+      </div>
+
+      <!-- Vehicle Capacity (Read-only) -->
+      <div>
+        <label for="capacity" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Vehicle Capacity
+        </label>
+        <input id="capacity" placeholder="------------" [value]="selectVehicletype?.capacity"
+          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800"
+          readonly />
+      </div>
+
+      <!-- Vehicle Images (Front, Back, Side A, Side B) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          Vehicle's Front Image *
+        </label>
+        <input id="vehicleFrontImageUpload" type="file" accept="image/*" (change)="onVehicleFrontImageSelected($event)"
+          class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'vehicleFrontImageUpload')"
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload Vehicle Front Image</p>
+        </div>
+        <div *ngIf="vehicleFrontImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">Attached:
+            <span class="text-blue-600 font-normal">{{ vehicleFrontImageFileName }}</span>
+          </span>
+          <button (click)="clearVehicleFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          Vehicle's Back Image *
+        </label>
+        <input id="vehicleBackImageUpload" type="file" accept="image/*" (change)="onVehicleBackImageSelected($event)"
+          class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'vehicleBackImageUpload')"
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload Vehicle Back Image</p>
+        </div>
+        <div *ngIf="vehicleBackImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">Attached:
+            <span class="text-blue-600 font-normal">{{ vehicleBackImageFileName }}</span>
+          </span>
+          <button (click)="clearVehicleBackImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          Vehicle's Side Image - 1 *
+        </label>
+        <input id="vehicleSideAImageUpload" type="file" accept="image/*" (change)="onVehicleSideAImageSelected($event)"
+          class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'vehicleSideAImageUpload')"
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload Side Image - 1</p>
+        </div>
+        <div *ngIf="vehicleSideAImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">Attached:
+            <span class="text-blue-600 font-normal">{{ vehicleSideAImageFileName }}</span>
+          </span>
+          <button (click)="clearVehicleSideAImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          Vehicle's Side Image - 2 *
+        </label>
+        <input id="vehicleSideBImageUpload" type="file" accept="image/*" (change)="onVehicleSideBImageSelected($event)"
+          class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'vehicleSideBImageUpload')"
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload Side Image - 2</p>
+        </div>
+        <div *ngIf="vehicleSideBImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">Attached:
+            <span class="text-blue-600 font-normal">{{ vehicleSideBImageFileName }}</span>
+          </span>
+          <button (click)="clearVehicleSideBImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons for Page Three -->
+    <div class="flex justify-end">
+      <button (click)="nextFormCreate('pageTwo')" type="button"
+        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
+        Back
+      </button>
+      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
+        Submit
+      </button>
     </div>
   </div>
 </div>

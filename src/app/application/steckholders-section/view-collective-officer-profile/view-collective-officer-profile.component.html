@@ -26,11 +26,11 @@
           </p>
 
           <!-- collection officer -->
-          <p *ngIf="officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head'" class="font-semibold text-textLight dark:text-textDark">
+          <p *ngIf="officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head' " class="font-semibold text-textLight dark:text-textDark">
             {{ officerObj.centerRegCode || 'Officer has been disclaimed - No Assigned Centre' }}
           </p>
           <!-- distribution officer -->
-           <p *ngIf="officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head'" class="font-semibold text-textLight dark:text-textDark">
+           <p *ngIf="officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head' || officerObj.jobRole === 'Driver'" class="font-semibold text-textLight dark:text-textDark">
             {{ officerObj.distributedCenterName || 'Officer has been disclaimed - No Assigned Centre' }}
           </p>
           <p class="dark:text-[#a6aebb]">{{ officerObj.companyNameEnglish }}</p>
@@ -191,6 +191,128 @@
         </div>
       </div>
     </div>
+  
+
+    <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Driving Details</p>
+
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Driving License ID</p>
+              <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.licNo}}</p>
+          </div>
+
+          <div>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">License's Front Image</p>
+              <a [href]="officerObj.licFrontImg" target="_blank">
+                  <i class="fa-solid fa-images text-3xl text-black"></i>
+              </a>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">License's Back Image</p>
+              <a [href]="officerObj.licBackImg" target="_blank">
+                  <i class="fa-solid fa-images text-3xl text-black"></i>
+              </a>
+          </div>
+
+      </div>
+
+  </div>
+  
+  <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Vehicle Insurance Details</p>
+
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Vehicle Insurance Number</p>
+              <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.insNo}}</p>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Insurance Expire Date</p>
+              <p class="text-[#030308] dark:text-[#ffffff]">
+                {{ officerObj.insExpDate | date:'yyyy-MM-dd' }}
+              </p>
+            </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Insurance's Front Image</p>
+              <a [href]="officerObj.insFrontImg" target="_blank">
+                  <i class="fa-solid fa-images text-3xl text-black"></i>
+              </a>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Insurance's Back Image</p>
+              <a [href]="officerObj.insBackImg" target="_blank">
+                  <i class="fa-solid fa-images text-3xl text-black"></i>
+              </a>
+          </div>
+
+      </div>
+
+  </div>
+
+  <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Vehicle Details</p>
+
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Vehicle Registration Number</p>
+              <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.vRegNo}}</p>
+          </div>
+
+          <div>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Vehicle Type</p>
+              <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.vType}}</p>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Vehicle Capacity</p>
+              <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.vCapacity}}Kg</p>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Vehicle’s Front Image</p>
+              <a [href]="officerObj.vehFrontImg" target="_blank">
+                  <i class="fa-solid fa-images text-3xl text-black"></i>
+              </a>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Vehicle’s Back Image</p>
+              <a [href]="officerObj.vehBackImg" target="_blank">
+                  <i class="fa-solid fa-images text-3xl text-black"></i>
+              </a>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Vehicle’s Side Image - 1</p>
+              <a [href]="officerObj.vehSideImgA" target="_blank">
+                  <i class="fa-solid fa-images text-3xl text-black"></i>
+              </a>
+          </div>
+
+          <div>
+              <p class="text-[#627189] dark:text-textDark">Vehicle’s Side Image - 2</p>
+              <a [href]="officerObj.vehSideImgB" target="_blank">
+                  <i class="fa-solid fa-images text-3xl text-black"></i>
+              </a>
+          </div>
+
+      </div>
+
+  </div>
   </div>
 </div>
 

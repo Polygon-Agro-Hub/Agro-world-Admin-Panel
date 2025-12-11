@@ -26,6 +26,24 @@ export class DistributionhubTransportActionComponent {
     });
   }
 
+  navigateToTodaysDeliveries(): void {
+    this.isLoading = true;
+    this.router.navigate(['/distribution-hub/action/todays-deliveries'], {
+      queryParams: { type: 'distribution' }
+    }).then(() => {
+      this.isLoading = false;
+    });
+  }
+
+    navigateToResonsHold(): void {
+    this.isLoading = true;
+    this.router.navigate(['/distribution-hub/action/reasons-to-hold'], {
+      queryParams: { type: 'distribution' }
+    }).then(() => {
+      this.isLoading = false;
+    });
+  }
+
   back(): void{
     this.isLoading= true;
      this.router.navigate(['/distribution-hub/action'], {

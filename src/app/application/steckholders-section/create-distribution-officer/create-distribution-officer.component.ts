@@ -275,7 +275,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
       missingFields.push('Manager Name is Required');
     }
 
-    if (!this.personalData.firstNameEnglish) {
+    if (!this.personalData.firstNameEnglish ) {
       missingFields.push('First Name (in English) is Required');
     }
 
@@ -283,19 +283,19 @@ private formatDateForDatabase(date: Date | string | null): string | null {
       missingFields.push('Last Name (in English) is Required');
     }
 
-    if (!this.personalData.firstNameSinhala) {
+    if (!this.personalData.firstNameSinhala && !this.isDriverRoute) {
       missingFields.push('First Name (in Sinhala) is Required');
     }
 
-    if (!this.personalData.lastNameSinhala) {
+    if (!this.personalData.lastNameSinhala && !this.isDriverRoute) {
       missingFields.push('Last Name (in Sinhala) is Required');
     }
 
-    if (!this.personalData.firstNameTamil) {
+    if (!this.personalData.firstNameTamil && !this.isDriverRoute) {
       missingFields.push('First Name (in Tamil) is Required');
     }
 
-    if (!this.personalData.lastNameTamil) {
+    if (!this.personalData.lastNameTamil && !this.isDriverRoute) {
       missingFields.push('Last Name (in Tamil) is Required');
     }
 

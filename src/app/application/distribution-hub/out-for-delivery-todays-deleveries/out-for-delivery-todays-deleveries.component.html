@@ -1,0 +1,127 @@
+<div class="pt-5 px-12 pb-5 w-full bg-tileLight dark:bg-tileBlack">
+  <div class="flex justify-between items-center mb-8">
+    <div class="flex items-center">
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        All ({{ filteredDeliveries.length }})
+      </h2>
+    </div>
+    <div class="flex items-center mr-5">
+      <div
+        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+      >
+        <input
+          type="text"
+          placeholder="Search by Order ID, Centre"
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+          [(ngModel)]="searchTerm"
+          (input)="search()"
+        />
+        <button
+          type="button"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+          (click)="search()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+            />
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none"
+          (click)="clearSearch()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="w-full">
+    <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <thead>
+        <tr>
+          <th
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+          >
+            No
+          </th>
+          <th
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+          >
+            Order ID
+          </th>
+          <th
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+          >
+            Centre
+          </th>
+          <th
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+          >
+            Delivery Time Slot
+          </th>
+          <th
+            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+          >
+            Out Time
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let delivery of filteredDeliveries"
+          class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+        >
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ delivery.no | number : "2.0" }}
+          </td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            {{ delivery.orderId }}
+          </td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            {{ delivery.centre }}
+          </td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            {{ delivery.deliveryTimeSlot }}
+          </td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            {{ delivery.outTime }}
+          </td>
+        </tr>
+
+        <!-- Show message when no results found -->
+        <tr *ngIf="filteredDeliveries.length === 0">
+          <td
+            colspan="5"
+            class="px-4 py-8 text-center text-textLight dark:text-textDark"
+          >
+            No deliveries found matching your search.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

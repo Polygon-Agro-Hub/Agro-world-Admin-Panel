@@ -945,7 +945,7 @@ export const routes: Routes = [
     
                   {
                     path: 'preview-driver/:id',
-                    component: PreviewDriverComponent,
+                    component: ViewCollectiveOfficerProfileComponent,
                   },
                   {
                     path: 'edit-driver/:id',

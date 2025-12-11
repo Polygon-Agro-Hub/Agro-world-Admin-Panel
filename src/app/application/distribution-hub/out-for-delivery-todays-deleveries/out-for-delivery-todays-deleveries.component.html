@@ -92,23 +92,23 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let delivery of filteredDeliveries"
+          *ngFor="let delivery of filteredDeliveries; let i = index"
           class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
         >
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ delivery.no | number : "2.0" }}
+            {{ i + 1 | number : "2.0" }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ delivery.orderId }}
+            {{ delivery.invNo }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ delivery.centre }}
+            {{ delivery.regCode }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ delivery.deliveryTimeSlot }}
+            {{ formatTimeSlot(delivery.sheduleTime) }}
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ delivery.outTime }}
+            {{ formatOutTime(delivery.outDlvrTime) }}
           </td>
         </tr>
 
@@ -118,7 +118,7 @@
             colspan="5"
             class="px-4 py-8 text-center text-textLight dark:text-textDark"
           >
-            No deliveries found matching your search.
+            No out for delivery items found.
           </td>
         </tr>
       </tbody>

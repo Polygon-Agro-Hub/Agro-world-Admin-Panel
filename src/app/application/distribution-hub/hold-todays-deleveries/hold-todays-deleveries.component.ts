@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface DeliveryData {
@@ -19,36 +19,70 @@ interface DeliveryData {
   templateUrl: './hold-todays-deleveries.component.html',
   styleUrl: './hold-todays-deleveries.component.css',
 })
-export class HoldTodaysDeleveriesComponent {
+export class HoldTodaysDeleveriesComponent implements OnChanges {
+  @Input() holdDeliveries: any[] = [];
+  
   searchTerm: string = '';
   
-  // Original dummy data
-  originalData: DeliveryData[] = [
-    { no: 1, orderId: '2506200010', centre: 'D-WPCK-01', driver: 'DIV000001', phoneNumber: '0781112300', deliveryTimeSlot: '8AM - 2PM', heldTime: '11.20AM' },
-    { no: 2, orderId: '2506200006', centre: 'D-WPCK-02', driver: 'DIV000007', phoneNumber: '0781112300', deliveryTimeSlot: '8AM - 2PM', heldTime: '11.10AM' },
-    { no: 3, orderId: '2506200003', centre: 'D-WPCK-01', driver: 'DIV000090', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', heldTime: '11.00AM' },
-    { no: 4, orderId: '2506200002', centre: 'D-WPCK-01', driver: 'DIV000080', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', heldTime: '10.20AM' },
-    { no: 5, orderId: '2506200001', centre: 'D-WPCK-01', driver: 'DIV000667', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', heldTime: '10.10AM' },
-    { no: 6, orderId: '2506200001', centre: 'D-WPCK-03', driver: 'DIV000065', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', heldTime: '10.00AM' }
-  ];
-
-  // Filtered data for display
+  // Processed data for display
+  processedData: DeliveryData[] = [];
   filteredData: DeliveryData[] = [];
 
-  constructor() {
-    // Initialize filtered data with all items
-    this.filteredData = [...this.originalData];
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['holdDeliveries'] && this.holdDeliveries) {
+      this.processDeliveryData();
+      this.onSearch(); // Apply search filter if any
+    }
+  }
+
+  // Convert backend data to the format needed by the template
+  private processDeliveryData(): void {
+    this.processedData = this.holdDeliveries.map(delivery => {
+      // Convert scheduleTime to delivery time slot format (e.g., "8AM - 2PM")
+      const deliveryTimeSlot = this.formatToTimeSlot(delivery.sheduleTime);
+      
+      return {
+        no: delivery.no || 0,
+        orderId: delivery.invNo || 'N/A',
+        centre: delivery.regCode || 'N/A',
+        driver: delivery.driver || 'N/A',
+        phoneNumber: delivery.phoneNumber || 'N/A',
+        deliveryTimeSlot: deliveryTimeSlot,
+        heldTime: delivery.heldTime || 'N/A'
+      };
+    });
+    
+    this.filteredData = [...this.processedData];
+  }
+
+  // Helper method to format schedule time to time slot
+  private formatToTimeSlot(scheduleTime: string): string {
+    if (!scheduleTime) return 'N/A';
+    
+    try {
+      // Assuming scheduleTime is in format like "08:00:00" or similar
+      const [hours, minutes] = scheduleTime.split(':');
+      const hourNum = parseInt(hours, 10);
+      
+      if (hourNum < 12) {
+        return '8AM - 2PM'; // Morning slot
+      } else {
+        return '2PM - 8PM'; // Afternoon slot
+      }
+    } catch (error) {
+      return 'N/A';
+    }
   }
 
   // Search function
   onSearch(): void {
     if (!this.searchTerm.trim()) {
-      this.filteredData = [...this.originalData];
+      this.filteredData = [...this.processedData];
       return;
     }
 
     const term = this.searchTerm.toLowerCase().trim();
-    this.filteredData = this.originalData.filter(item => 
+    this.filteredData = this.processedData.filter(item => 
       item.orderId.toLowerCase().includes(term) ||
       item.centre.toLowerCase().includes(term) ||
       item.driver.toLowerCase().includes(term) ||
@@ -61,10 +95,10 @@ export class HoldTodaysDeleveriesComponent {
   // Clear search
   clearSearch(): void {
     this.searchTerm = '';
-    this.filteredData = [...this.originalData];
+    this.filteredData = [...this.processedData];
   }
 
-  // View details (you can implement this as needed)
+  // View details
   viewDetails(item: DeliveryData): void {
     console.log('View details for:', item);
     // Add your logic here for viewing details

@@ -59,7 +59,8 @@
       </div>
     </div>
   </div>
-  <div class="w-full">
+  
+  <div *ngIf="filteredData.length > 0" class="w-full">
     <table class="min-w-full divide-y divide-gray-200 table-auto">
       <thead>
         <tr>
@@ -169,5 +170,9 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div *ngIf="filteredData.length === 0" class="text-center py-8">
+    <p class="text-textLight dark:text-textDark">No hold deliveries found</p>
   </div>
 </div>

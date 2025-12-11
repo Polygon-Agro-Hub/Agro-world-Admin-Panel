@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface DeliveryItem {
@@ -19,81 +19,47 @@ interface DeliveryItem {
   templateUrl: './return-todays-deleveries.component.html',
   styleUrl: './return-todays-deleveries.component.css',
 })
-export class ReturnTodaysDeleveriesComponent {
-  // Dummy data based on the screenshot
-  deliveries: DeliveryItem[] = [
-    {
-      no: 1,
-      orderId: '2506200010',
-      centre: 'D-WPCK-01',
-      driver: 'DIV000001',
-      phoneNumber: '0781112300',
-      deliveryTimeSlot: '8AM - 2PM',
-      returnTime: '11.20AM',
-    },
-    {
-      no: 2,
-      orderId: '2506200006',
-      centre: 'D-WPCK-02',
-      driver: 'DIV000007',
-      phoneNumber: '0781112300',
-      deliveryTimeSlot: '8AM - 2PM',
-      returnTime: '11.10AM',
-    },
-    {
-      no: 3,
-      orderId: '2506200003',
-      centre: 'D-WPCK-01',
-      driver: 'DIV000090',
-      phoneNumber: '0781112300',
-      deliveryTimeSlot: '2PM - 8PM',
-      returnTime: '11.00AM',
-    },
-    {
-      no: 4,
-      orderId: '2506200002',
-      centre: 'D-WPCK-01',
-      driver: 'DIV000080',
-      phoneNumber: '0781112300',
-      deliveryTimeSlot: '2PM - 8PM',
-      returnTime: '10.20AM',
-    },
-    {
-      no: 5,
-      orderId: '2506200001',
-      centre: 'D-WPCK-01',
-      driver: 'DIV000667',
-      phoneNumber: '0781112300',
-      deliveryTimeSlot: '2PM - 8PM',
-      returnTime: '10.10AM',
-    },
-    {
-      no: 6,
-      orderId: '2506200001',
-      centre: 'D-WPCK-03',
-      driver: 'DIV000065',
-      phoneNumber: '0781112300',
-      deliveryTimeSlot: '2PM - 8PM',
-      returnTime: '10.00AM',
-    },
-  ];
+export class ReturnTodaysDeleveriesComponent implements OnChanges {
+  @Input() deliveries: any[] = [];
+  
+  // Processed data for display
+  processedDeliveries: DeliveryItem[] = [];
+  
+  // For search functionality
+  searchTerm: string = '';
 
-  // Update the "All ()" count to show the number of items
-  get totalCount(): number {
-    return this.deliveries.length;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['deliveries'] && this.deliveries) {
+      this.processDeliveryData();
+    }
   }
 
-  // For search functionality (optional - you can expand this)
-  searchTerm: string = '';
+  private processDeliveryData(): void {
+    // Transform the input data to match the DeliveryItem interface
+    this.processedDeliveries = this.deliveries.map(delivery => ({
+      no: delivery.no || 0,
+      orderId: delivery.orderId || delivery.invNo || 'N/A',
+      centre: delivery.centre || delivery.regCode || 'N/A',
+      driver: delivery.driver || 'N/A',
+      phoneNumber: delivery.phoneNumber || 'N/A',
+      deliveryTimeSlot: delivery.deliveryTimeSlot || 'N/A',
+      returnTime: delivery.returnTime || 'N/A'
+    }));
+  }
+
+  // Get the total count of processed deliveries
+  get totalCount(): number {
+    return this.processedDeliveries.length;
+  }
 
   // Method to filter deliveries based on search term
   get filteredDeliveries(): DeliveryItem[] {
     if (!this.searchTerm.trim()) {
-      return this.deliveries;
+      return this.processedDeliveries;
     }
 
     const term = this.searchTerm.toLowerCase();
-    return this.deliveries.filter(
+    return this.processedDeliveries.filter(
       (item) =>
         item.orderId.toLowerCase().includes(term) ||
         item.centre.toLowerCase().includes(term) ||

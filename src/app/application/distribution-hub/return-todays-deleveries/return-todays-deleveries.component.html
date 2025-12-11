@@ -107,7 +107,7 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Add ngFor loop to iterate through deliveries -->
+        <!-- Iterate through filteredDeliveries from parent data -->
         <tr
           *ngFor="let delivery of filteredDeliveries"
           class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
@@ -161,7 +161,7 @@
             colspan="8"
             class="px-4 py-8 text-center text-textLight dark:text-textDark"
           >
-            No deliveries found
+            No return deliveries found
           </td>
         </tr>
       </tbody>

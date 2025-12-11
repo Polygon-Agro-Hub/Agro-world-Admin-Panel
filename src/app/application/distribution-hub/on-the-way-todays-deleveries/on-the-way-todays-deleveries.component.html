@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        All ({{ totalCount }})
+        On the Way ({{ totalCount }})
       </h2>
     </div>
     <div class="flex items-center mr-5">
@@ -11,7 +11,7 @@
       >
         <input
           type="text"
-          placeholder="Search by Order ID, Centre"
+          placeholder="Search by Invoice No, Centre"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
           [(ngModel)]="searchQuery"
           (keyup.enter)="onSearch()"
@@ -47,7 +47,7 @@
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-          >
+            >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -71,7 +71,7 @@
           <th
             class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
           >
-            Order ID
+            Invoice No
           </th>
           <th
             class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -114,10 +114,10 @@
             {{ delivery.no }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ delivery.orderId }}
+            {{ delivery.invNo }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ delivery.centre }}
+            {{ delivery.regCode }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
             {{ delivery.driver }}
@@ -163,7 +163,12 @@
             colspan="8"
             class="px-4 py-8 text-center text-textLight dark:text-textDark"
           >
-            No deliveries found matching "{{ searchQuery }}"
+            <div *ngIf="deliveryData.length === 0">
+              No "On the way" deliveries found
+            </div>
+            <div *ngIf="deliveryData.length > 0 && filteredDeliveries.length === 0">
+              No deliveries found matching "{{ searchQuery }}"
+            </div>
           </td>
         </tr>
       </tbody>

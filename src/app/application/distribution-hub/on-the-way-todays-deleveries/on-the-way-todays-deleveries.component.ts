@@ -1,15 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface DeliveryItem {
   no: number;
-  orderId: string;
-  centre: string;
+  invNo: string; // Changed from orderId to invNo to match backend
+  regCode: string; // Changed from centre to regCode to match backend
   driver: string;
   phoneNumber: string;
-  deliveryTimeSlot: string;
-  startedTime: string;
+  deliveryTimeSlot: string; // This will come from sheduleTime
+  startedTime: string; // This will come from outDlvrTime or createdAt
+  status: string;
+  sheduleTime?: string;
+  outDlvrTime?: string;
+  createdAt?: string;
 }
 
 @Component({
@@ -19,41 +23,100 @@ interface DeliveryItem {
   templateUrl: './on-the-way-todays-deleveries.component.html',
   styleUrl: './on-the-way-todays-deleveries.component.css',
 })
-export class OnTheWayTodaysDeleveriesComponent {
+export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
+  @Input() deliveries: any[] = [];
+  
   searchQuery: string = '';
   
-  // Dummy data based on the image
-  deliveries: DeliveryItem[] = [
-    { no: 1, orderId: '2506200010', centre: 'D-WPCK-01', driver: 'DIV000001', phoneNumber: '0781112300', deliveryTimeSlot: '8AM - 2PM', startedTime: '11.20AM' },
-    { no: 2, orderId: '2506200006', centre: 'D-WPCK-02', driver: 'DIV000007', phoneNumber: '0781112300', deliveryTimeSlot: '8AM - 2PM', startedTime: '11.10AM' },
-    { no: 3, orderId: '2506200003', centre: 'D-WPCK-01', driver: 'DIV000090', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', startedTime: '11.00AM' },
-    { no: 4, orderId: '2506200002', centre: 'D-WPCK-01', driver: 'DIV000080', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', startedTime: '10.20AM' },
-    { no: 5, orderId: '2506200001', centre: 'D-WPCK-01', driver: 'DIV000667', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', startedTime: '10.10AM' },
-    { no: 6, orderId: '2506200001', centre: 'D-WPCK-03', driver: 'DIV000065', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', startedTime: '10.00AM' }
-  ];
+  // Transformed delivery data for the table
+  deliveryData: DeliveryItem[] = [];
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['deliveries'] && this.deliveries) {
+      this.transformDeliveryData();
+    }
+  }
+  
+  transformDeliveryData(): void {
+    // Transform the backend data to match the frontend interface
+    this.deliveryData = this.deliveries.map((delivery, index) => ({
+      no: index + 1,
+      invNo: delivery.invNo || '',
+      regCode: delivery.regCode || '',
+      driver: delivery.driver || 'N/A', // This should come from backend
+      phoneNumber: delivery.phoneNumber || 'N/A', // This should come from backend
+      deliveryTimeSlot: this.formatTimeSlot(delivery.sheduleTime),
+      startedTime: this.formatTime(delivery.outDlvrTime || delivery.createdAt),
+      status: delivery.status || '',
+      sheduleTime: delivery.sheduleTime,
+      outDlvrTime: delivery.outDlvrTime,
+      createdAt: delivery.createdAt
+    }));
+  }
+  
+  formatTimeSlot(timeString: string): string {
+    if (!timeString) return 'N/A';
+    
+    try {
+      // Assuming timeString is in format 'HH:MM:SS'
+      const time = new Date(`2000-01-01T${timeString}`);
+      const hours = time.getHours();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12;
+      
+      // Create time slot (assuming 6-hour slots as per your dummy data)
+      if (hours < 14) {
+        return `8AM - 2PM`;
+      } else {
+        return `2PM - 8PM`;
+      }
+    } catch {
+      return timeString;
+    }
+  }
+  
+  formatTime(timeString: string): string {
+    if (!timeString) return 'N/A';
+    
+    try {
+      const time = new Date(`2000-01-01T${timeString}`);
+      const hours = time.getHours();
+      const minutes = time.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = hours % 12 || 12;
+      
+      return `${formattedHours}.${minutes.toString().padStart(2, '0')}${ampm}`;
+    } catch {
+      // Try to extract time from datetime string
+      const timeMatch = timeString.match(/(\d{1,2}):(\d{2})/);
+      if (timeMatch) {
+        const hours = parseInt(timeMatch[1]);
+        const minutes = timeMatch[2];
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 || 12;
+        return `${formattedHours}.${minutes}${ampm}`;
+      }
+      return timeString;
+    }
+  }
 
   // Filtered deliveries based on search
   get filteredDeliveries(): DeliveryItem[] {
     if (!this.searchQuery.trim()) {
-      return this.deliveries;
+      return this.deliveryData;
     }
     
     const query = this.searchQuery.toLowerCase();
-    return this.deliveries.filter(delivery =>
-      delivery.orderId.toLowerCase().includes(query) ||
-      delivery.centre.toLowerCase().includes(query) ||
-      delivery.driver.toLowerCase().includes(query)
+    return this.deliveryData.filter(delivery =>
+      delivery.invNo.toLowerCase().includes(query) ||
+      delivery.regCode.toLowerCase().includes(query) ||
+      (delivery.driver && delivery.driver.toLowerCase().includes(query))
     );
   }
 
   // Clear search
   clearSearch(): void {
     this.searchQuery = '';
-  }
-
-  // Get total count
-  get totalCount(): number {
-    return this.deliveries.length;
   }
 
   // Handle search button click
@@ -64,7 +127,12 @@ export class OnTheWayTodaysDeleveriesComponent {
 
   // Handle details button click
   onDetailsClick(delivery: DeliveryItem): void {
-    console.log('Viewing details for order:', delivery.orderId);
+    console.log('Viewing details for invoice:', delivery.invNo);
     // You can implement navigation or modal opening here
+  }
+
+  // Get total count
+  get totalCount(): number {
+    return this.deliveryData.length;
   }
 }

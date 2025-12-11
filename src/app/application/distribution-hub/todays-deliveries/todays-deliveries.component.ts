@@ -18,6 +18,10 @@ interface Delivery {
   createdAt: string;
   status: string;
   outDlvrTime: string;
+  // Additional fields that might be needed for child components
+  no?: number; // Will be calculated based on index
+  driver?: string; // You might need to fetch this from backend
+  phoneNumber?: string; // You might need to fetch this from backend
 }
 
 @Component({
@@ -82,6 +86,7 @@ export class TodaysDeliveriesComponent implements OnInit {
       next: (response) => {
         if (response.status && response.data) {
           this.allDeliveries = response.data;
+          this.prepareDeliveryData();
           this.filterDataByStatus();
         }
         this.isLoading = false;
@@ -91,6 +96,18 @@ export class TodaysDeliveriesComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  prepareDeliveryData(): void {
+    // Add additional properties that child components might need
+    this.allDeliveries = this.allDeliveries.map((delivery, index) => ({
+      ...delivery,
+      no: index + 1,
+      // These fields might need to come from your backend
+      // For now, I'm adding placeholders - you should update these based on your actual data structure
+      driver: 'DIV000001', // Replace with actual driver data from backend
+      phoneNumber: '0781112300', // Replace with actual phone number from backend
+    }));
   }
 
   filterDataByStatus(): void {

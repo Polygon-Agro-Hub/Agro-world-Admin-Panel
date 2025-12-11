@@ -58,7 +58,6 @@
         class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
       >
         <i *ngIf="activeTab === 'all'" class="fa fa-check"></i>
-        All ({{ getTotalCount() }})
       </button>
       <button
         (click)="selectTab('out-for-delivery')"
@@ -71,7 +70,7 @@
         class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
       >
         <i *ngIf="activeTab === 'out-for-delivery'" class="fa fa-check"></i>
-        Out for Delivery ({{ getOutForDeliveryCount() }})
+        Out for Delivery
       </button>
       <button
         (click)="selectTab('on-the-way')"
@@ -83,7 +82,7 @@
         class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
       >
         <i *ngIf="activeTab === 'on-the-way'" class="fa fa-check"></i>
-        On the way ({{ getOnTheWayCount() }})
+        On the way
       </button>
       <button
         (click)="selectTab('hold')"
@@ -95,7 +94,7 @@
         class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
       >
         <i *ngIf="activeTab === 'hold'" class="fa fa-check"></i>
-        Hold ({{ getHoldCount() }})
+        Hold
       </button>
       <button
         (click)="selectTab('return')"
@@ -107,7 +106,7 @@
         class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
       >
         <i *ngIf="activeTab === 'return'" class="fa fa-check"></i>
-        Return ({{ getReturnCount() }})
+        Return
       </button>
       <button
         (click)="selectTab('delivered')"
@@ -119,7 +118,7 @@
         class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
       >
         <i *ngIf="activeTab === 'delivered'" class="fa fa-check"></i>
-        Delivered ({{ getDeliveredCount() }})
+        Delivered
       </button>
     </div>
 
@@ -137,23 +136,17 @@
     </div>
     <div *ngIf="activeTab === 'on-the-way'">
       <app-on-the-way-todays-deleveries
-        
+        [deliveries]="onTheWayData"
       ></app-on-the-way-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'hold'">
-      <app-hold-todays-deleveries
-        
-      ></app-hold-todays-deleveries>
+      <app-hold-todays-deleveries></app-hold-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'return'">
-      <app-return-todays-deleveries
-        
-      ></app-return-todays-deleveries>
+      <app-return-todays-deleveries></app-return-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'delivered'">
-      <app-delivered-todays-deleveries
-        
-      ></app-delivered-todays-deleveries>
+      <app-delivered-todays-deleveries></app-delivered-todays-deleveries>
     </div>
   </div>
 </div>

@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 
-interface Order {
-  no: string;
-  orderId: string;
-  centre: string;
-  deliveryTimeSlot: string;
+interface Delivery {
+  invNo: string;
+  regCode: string;
+  sheduleDate: string;
+  createdAt: string;
   status: string;
-  details?: string;
 }
 
 @Component({
@@ -19,55 +18,14 @@ interface Order {
   templateUrl: './all-todays-deleveries.component.html',
   styleUrl: './all-todays-deleveries.component.css',
 })
-export class AllTodaysDeleveriesComponent {
-  orders: Order[] = [
-    {
-      no: '01',
-      orderId: '2506200010',
-      centre: 'D-WPCK-01',
-      deliveryTimeSlot: '8AM - 2PM',
-      status: 'Out for Delivery',
-    },
-    {
-      no: '02',
-      orderId: '2506200006',
-      centre: 'D-WPCK-02',
-      deliveryTimeSlot: '8AM - 2PM',
-      status: 'Delivered',
-    },
-    {
-      no: '03',
-      orderId: '2506200003',
-      centre: 'D-WPCK-01',
-      deliveryTimeSlot: '2PM - 8PM',
-      status: 'On the way',
-    },
-    {
-      no: '04',
-      orderId: '2506200002',
-      centre: 'D-WPCK-01',
-      deliveryTimeSlot: '2PM - 8PM',
-      status: 'Return',
-    },
-    {
-      no: '05',
-      orderId: '2506200001',
-      centre: 'D-WPCK-01',
-      deliveryTimeSlot: '2PM - 8PM',
-      status: 'Hold',
-    },
-    {
-      no: '06',
-      orderId: '2506200001',
-      centre: 'D-WPCK-03',
-      deliveryTimeSlot: '2PM - 8PM',
-      status: 'Return',
-    },
-  ];
+export class AllTodaysDeleveriesComponent implements OnChanges {
+  @Input() deliveries: Delivery[] = [];
+
+  displayedDeliveries: Delivery[] = [];
 
   statusOptions = [
     { label: 'All', value: null },
-    { label: 'Out for Delivery', value: 'Out for Delivery' },
+    { label: 'Out for Delivery', value: 'Out For Delivery' },
     { label: 'Delivered', value: 'Delivered' },
     { label: 'On the way', value: 'On the way' },
     { label: 'Return', value: 'Return' },
@@ -77,9 +35,15 @@ export class AllTodaysDeleveriesComponent {
   selectedStatus: any = null;
   searchText: string = '';
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['deliveries']) {
+      this.filterDeliveries();
+    }
+  }
+
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Out for Delivery':
+      case 'Out For Delivery':
         return 'bg-[#FCD4FF] text-[#80118A] dark:bg-[#424B5F] dark:text-[#E3E3E3]';
       case 'Delivered':
         return 'bg-[#BBFFC6] text-[#308233] dark:bg-[#1C4332] dark:text-[#D1FADF]';
@@ -94,32 +58,69 @@ export class AllTodaysDeleveriesComponent {
     }
   }
 
-  get filteredOrders(): Order[] {
-    let filtered = this.orders;
+  filterDeliveries(): void {
+    let filtered = [...this.deliveries];
 
+    // Apply status filter
     if (this.selectedStatus) {
       filtered = filtered.filter(
-        (order) => order.status === this.selectedStatus
+        (delivery) => delivery.status === this.selectedStatus
       );
     }
 
+    // Apply search filter
     if (this.searchText) {
       const searchLower = this.searchText.toLowerCase();
       filtered = filtered.filter(
-        (order) =>
-          order.orderId.toLowerCase().includes(searchLower) ||
-          order.centre.toLowerCase().includes(searchLower)
+        (delivery) =>
+          delivery.invNo.toLowerCase().includes(searchLower) ||
+          delivery.regCode.toLowerCase().includes(searchLower)
       );
     }
 
-    return filtered;
+    this.displayedDeliveries = filtered;
+  }
+
+  onStatusChange(): void {
+    this.filterDeliveries();
+  }
+
+  onSearchChange(): void {
+    this.filterDeliveries();
   }
 
   getOrderCount(): number {
-    return this.filteredOrders.length;
+    return this.displayedDeliveries.length;
   }
 
   clearSearch(): void {
     this.searchText = '';
+    this.filterDeliveries();
+  }
+
+  formatTimeSlot(dateString: string): string {
+    if (!dateString) return 'N/A';
+
+    // Parse the date string
+    const date = new Date(dateString);
+
+    // Format time to AM/PM format
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    // Convert to 12-hour format
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+    return `${formattedHours}${
+      formattedMinutes !== '00' ? ':' + formattedMinutes : ''
+    }${ampm}`;
+  }
+
+  formatTimeRange(dateString: string): string {
+    if (!dateString) return 'N/A';
+
+    return this.formatTimeSlot(dateString);
   }
 }

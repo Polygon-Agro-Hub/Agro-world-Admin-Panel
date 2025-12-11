@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TokenService } from '../token/services/token.service';
 import { environment } from '../../environment/environment';
@@ -585,6 +585,33 @@ getNextHoldReasonIndex(): Observable<any> {
 
   return this.http.get<any>(`${this.apiUrl}distribution/get-next-hold-reason-index`, { headers });
 }
+
+getTodaysDeliveries(regCode?: string, invNo?: string, searchType: string = 'partial'): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let params = new HttpParams();
+    
+    if (regCode) {
+      params = params.set('regCode', regCode);
+    }
+    
+    if (invNo) {
+      params = params.set('invNo', invNo);
+    }
+    
+    params = params.set('searchType', searchType);
+
+    return this.http.get<any>(
+      `${this.apiUrl}distribution/get-todays-deliveries`, 
+      { 
+        headers, 
+        params 
+      }
+    );
+  }
 
 }
 

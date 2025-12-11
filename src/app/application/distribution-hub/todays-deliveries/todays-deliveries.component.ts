@@ -14,7 +14,7 @@ import { DistributionHubService } from '../../../services/distribution-hub/distr
 interface Delivery {
   invNo: string;
   regCode: string;
-  sheduleDate: string;
+  sheduleTime: string;
   createdAt: string;
   status: string;
 }

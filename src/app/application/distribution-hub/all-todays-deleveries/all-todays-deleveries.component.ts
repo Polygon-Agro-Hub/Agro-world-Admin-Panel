@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 interface Delivery {
   invNo: string;
   regCode: string;
-  sheduleDate: string;
+  sheduleTime: string;  // This will be like "Within 8-12 PM"
   createdAt: string;
   status: string;
 }
@@ -74,7 +74,8 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
       filtered = filtered.filter(
         (delivery) =>
           delivery.invNo.toLowerCase().includes(searchLower) ||
-          delivery.regCode.toLowerCase().includes(searchLower)
+          delivery.regCode.toLowerCase().includes(searchLower) ||
+          delivery.sheduleTime.toLowerCase().includes(searchLower)
       );
     }
 
@@ -98,29 +99,55 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
     this.filterDeliveries();
   }
 
-  formatTimeSlot(dateString: string): string {
-    if (!dateString) return 'N/A';
-
-    // Parse the date string
-    const date = new Date(dateString);
-
-    // Format time to AM/PM format
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-
-    // Convert to 12-hour format
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-
-    return `${formattedHours}${
-      formattedMinutes !== '00' ? ':' + formattedMinutes : ''
-    }${ampm}`;
+  // Format the schedule time to remove "Within " if you just want "8-12 PM"
+  formatTimeSlot(sheduleTime: string): string {
+    if (!sheduleTime) return 'N/A';
+    
+    // If it starts with "Within ", remove it
+    if (sheduleTime.startsWith('Within ')) {
+      return sheduleTime.substring(7); // Remove "Within "
+    }
+    
+    return sheduleTime;
   }
 
-  formatTimeRange(dateString: string): string {
-    if (!dateString) return 'N/A';
-
-    return this.formatTimeSlot(dateString);
+  // Alternative: If you want to convert to format "8AM - 12PM"
+  formatTimeRange(sheduleTime: string): string {
+    if (!sheduleTime) return 'N/A';
+    
+    // Remove "Within " prefix if present
+    let timeRange = sheduleTime;
+    if (timeRange.startsWith('Within ')) {
+      timeRange = timeRange.substring(7);
+    }
+    
+    // Convert "8-12 PM" to "8AM - 12PM"
+    // Handle various formats
+    if (timeRange.includes('AM') || timeRange.includes('PM')) {
+      // If it already has AM/PM indicators
+      return timeRange.replace('-', ' - ');
+    } else {
+      // If it's just numbers like "8-12"
+      const parts = timeRange.split('-');
+      if (parts.length === 2) {
+        const start = parts[0].trim();
+        const end = parts[1].trim();
+        
+        // Determine AM/PM based on the hour
+        const startNum = parseInt(start);
+        const endNum = parseInt(end);
+        
+        const startSuffix = startNum < 12 ? 'AM' : 'PM';
+        const endSuffix = endNum < 12 ? 'AM' : 'PM';
+        
+        // Convert to 12-hour format if needed
+        const startHour = startNum > 12 ? startNum - 12 : startNum;
+        const endHour = endNum > 12 ? endNum - 12 : endNum;
+        
+        return `${startHour}${startSuffix} - ${endHour}${endSuffix}`;
+      }
+    }
+    
+    return timeRange;
   }
 }

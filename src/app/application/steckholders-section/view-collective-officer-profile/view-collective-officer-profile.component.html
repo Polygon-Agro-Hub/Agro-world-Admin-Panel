@@ -26,11 +26,11 @@
           </p>
 
           <!-- collection officer -->
-          <p *ngIf="officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head'" class="font-semibold text-textLight dark:text-textDark">
+          <p *ngIf="officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head' " class="font-semibold text-textLight dark:text-textDark">
             {{ officerObj.centerRegCode || 'Officer has been disclaimed - No Assigned Centre' }}
           </p>
           <!-- distribution officer -->
-           <p *ngIf="officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head'" class="font-semibold text-textLight dark:text-textDark">
+           <p *ngIf="officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head' || officerObj.jobRole === 'Driver'" class="font-semibold text-textLight dark:text-textDark">
             {{ officerObj.distributedCenterName || 'Officer has been disclaimed - No Assigned Centre' }}
           </p>
           <p class="dark:text-[#a6aebb]">{{ officerObj.companyNameEnglish }}</p>

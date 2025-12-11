@@ -258,10 +258,17 @@ fetchOfficerById(id: number) {
   y += 7;
 
   // Center Name (if exists)
-  if (this.officerObj.centerRegCode) {
+  if (this.officerObj.centerRegCode ) {
     doc.setFont("Inter", "normal");
     doc.setTextColor(colors.textSecondary);
     doc.text(getValueOrNA(this.officerObj.centerRegCode), detailsX, y + 10);
+    y += 7;
+  }
+
+  if (this.officerObj.distributedCenterRegCode ) {
+    doc.setFont("Inter", "normal");
+    doc.setTextColor(colors.textSecondary);
+    doc.text(getValueOrNA(this.officerObj.distributedCenterRegCode), detailsX, y + 10);
     y += 7;
   }
 
@@ -556,26 +563,48 @@ fetchOfficerById(id: number) {
    doc.setTextColor(colors.textPrimary);
    doc.text(getValueOrNA(String(this.officerObj.vType)), leftColumnX, y + 28);
 
-  //  doc.setFontSize(10);
-  //  doc.setFont("Inter", "normal");
-  //  doc.setTextColor(colors.textSecondary);
-  //  doc.text("Vehicle’s Front Image", leftColumnX, y + 40);
+   doc.setFontSize(10);
+   doc.setFont("Inter", "normal");
+   doc.setTextColor(colors.textSecondary);
+   doc.text("Vehicle’s Front Image", leftColumnX, y + 44);
 
-  //  doc.addImage(iconBase64, 'PNG', leftColumnX, y + 49, 9, 9);
+   doc.addImage(iconBase64, 'PNG', leftColumnX, y + 48, 9, 9);
 
-  //     if (this.officerObj.vehFrontImg) {
-  //       doc.link(leftColumnX, y + 49, 9, 9, { url: this.officerObj.vehFrontImg });
-  //     }
+      if (this.officerObj.vehFrontImg) {
+        doc.link(leftColumnX, y + 48, 9, 9, { url: this.officerObj.vehFrontImg });
+      }
 
-  //  doc.setFont("Inter", "normal");
-  //  doc.setTextColor(colors.textSecondary);
-  //  doc.text("Vehicle’s Side Image - 1", leftColumnX, y + 63);
+   doc.setFont("Inter", "normal");
+   doc.setTextColor(colors.textSecondary);
+   doc.text("Vehicle’s Side Image - 1", leftColumnX, y + 70);
 
-  //  doc.addImage(iconBase64, 'PNG', leftColumnX, y + 80, 9, 9);
+   doc.addImage(iconBase64, 'PNG', leftColumnX, y + 74, 9, 9);
 
-  //     if (this.officerObj.vehSideImgA) {
-  //       doc.link(leftColumnX, y + 80, 9, 9, { url: this.officerObj.vehSideImgA });
-  //     }
+      if (this.officerObj.vehSideImgA) {
+        doc.link(leftColumnX, y + 74, 9, 9, { url: this.officerObj.vehSideImgA });
+      }
+
+
+      doc.setFontSize(10);
+      doc.setFont("Inter", "normal");
+      doc.setTextColor(colors.textSecondary);
+      doc.text("Vehicle’s Back Image", rightColumnX, y + 44);
+   
+      doc.addImage(iconBase64, 'PNG', rightColumnX, y + 48, 9, 9);
+   
+         if (this.officerObj.vehBackImg) {
+           doc.link(rightColumnX, y + 48, 9, 9, { url: this.officerObj.vehBackImg });
+         }
+   
+      doc.setFont("Inter", "normal");
+      doc.setTextColor(colors.textSecondary);
+      doc.text("Vehicle’s Side Image - 2", rightColumnX, y + 70);
+   
+      doc.addImage(iconBase64, 'PNG', rightColumnX, y + 74, 9, 9);
+   
+         if (this.officerObj.vehSideImgB) {
+           doc.link(rightColumnX, y + 74, 9, 9, { url: this.officerObj.vehSideImgB });
+         }
  
   //  doc.setFont("Inter", "normal");
   //  doc.setTextColor(colors.textSecondary);
@@ -595,18 +624,18 @@ fetchOfficerById(id: number) {
  
    doc.setFont("Inter", "normal");
    doc.setTextColor(colors.textSecondary);
-   doc.text('Insurance Expire Date', rightColumnX, y);
+   doc.text('Insurance Expire Date', rightColumnX, y + 21);
    doc.setFont("Inter", "bold");
    doc.setTextColor(colors.textPrimary);
-   doc.text(getValueOrNA(String(this.officerObj.insExpDate.split("T")[0])), rightColumnX, y + 7);
-   doc.setFont("Inter", "normal");
-   doc.setTextColor(colors.textSecondary);
-   doc.text("Insurance's Back Image", rightColumnX, y + 21);
-   doc.addImage(iconBase64, 'PNG', rightColumnX, y + 24, 9, 9);
+   doc.text(getValueOrNA(String(this.officerObj.insExpDate.split("T")[0])), rightColumnX, y + 28);
+  //  doc.setFont("Inter", "normal");
+  //  doc.setTextColor(colors.textSecondary);
+  //  doc.text("Insurance's Back Image", rightColumnX, y + 21);
+  //  doc.addImage(iconBase64, 'PNG', rightColumnX, y + 24, 9, 9);
 
-      if (this.officerObj.insBackImg) {
-        doc.link(rightColumnX, y + 24, 9, 9, { url: this.officerObj.insBackImg });
-      }
+  //     if (this.officerObj.insBackImg) {
+  //       doc.link(rightColumnX, y + 24, 9, 9, { url: this.officerObj.insBackImg });
+  //     }
  
    y += 100;
 
@@ -716,6 +745,7 @@ class CollectionOfficer {
   vehSideImgA?: string;
   vehSideImgB?: string;
   distributedCenterName!: string;
+  distributedCenterRegCode!: string;
   fullEmpId!: string;
   centerRegCode!: string;
   insExpDate!: string;

@@ -17,6 +17,7 @@ interface Delivery {
   sheduleTime: string;
   createdAt: string;
   status: string;
+  outDlvrTime: string;
 }
 
 @Component({
@@ -48,7 +49,14 @@ export class TodaysDeliveriesComponent implements OnInit {
   
   // Data from backend
   allDeliveries: Delivery[] = [];
-  filteredDeliveries: Delivery[] = [];
+  
+  // Filtered data for tabs
+  allFilteredDeliveries: Delivery[] = [];
+  outForDeliveryData: Delivery[] = [];
+  onTheWayData: Delivery[] = [];
+  holdData: Delivery[] = [];
+  returnData: Delivery[] = [];
+  deliveredData: Delivery[] = [];
 
   constructor(private distributionService: DistributionHubService) {}
 
@@ -62,7 +70,6 @@ export class TodaysDeliveriesComponent implements OnInit {
 
   selectTab(tabName: string): void {
     this.activeTab = tabName;
-    this.filterDeliveriesByTab();
   }
 
   fetchDeliveries(): void {
@@ -75,7 +82,7 @@ export class TodaysDeliveriesComponent implements OnInit {
       next: (response) => {
         if (response.status && response.data) {
           this.allDeliveries = response.data;
-          this.filterDeliveriesByTab();
+          this.filterDataByStatus();
         }
         this.isLoading = false;
       },
@@ -86,29 +93,14 @@ export class TodaysDeliveriesComponent implements OnInit {
     });
   }
 
-  filterDeliveriesByTab(): void {
-    switch(this.activeTab) {
-      case 'all':
-        this.filteredDeliveries = this.allDeliveries;
-        break;
-      case 'out-for-delivery':
-        this.filteredDeliveries = this.allDeliveries.filter(d => d.status === 'Out For Delivery');
-        break;
-      case 'on-the-way':
-        this.filteredDeliveries = this.allDeliveries.filter(d => d.status === 'On the way');
-        break;
-      case 'hold':
-        this.filteredDeliveries = this.allDeliveries.filter(d => d.status === 'Hold');
-        break;
-      case 'return':
-        this.filteredDeliveries = this.allDeliveries.filter(d => d.status === 'Return');
-        break;
-      case 'delivered':
-        this.filteredDeliveries = this.allDeliveries.filter(d => d.status === 'Delivered');
-        break;
-      default:
-        this.filteredDeliveries = this.allDeliveries;
-    }
+  filterDataByStatus(): void {
+    // Filter data for each status
+    this.allFilteredDeliveries = this.allDeliveries;
+    this.outForDeliveryData = this.allDeliveries.filter(d => d.status === 'Out For Delivery');
+    this.onTheWayData = this.allDeliveries.filter(d => d.status === 'On the way');
+    this.holdData = this.allDeliveries.filter(d => d.status === 'Hold');
+    this.returnData = this.allDeliveries.filter(d => d.status === 'Return');
+    this.deliveredData = this.allDeliveries.filter(d => d.status === 'Delivered');
   }
 
   onSearch(): void {
@@ -121,31 +113,28 @@ export class TodaysDeliveriesComponent implements OnInit {
     this.fetchDeliveries();
   }
 
+  // Getter methods for counts
   getTotalCount(): number {
     return this.allDeliveries.length;
   }
 
   getOutForDeliveryCount(): number {
-    return this.allDeliveries.filter(d => d.status === 'Out For Delivery').length;
+    return this.outForDeliveryData.length;
   }
 
   getOnTheWayCount(): number {
-    return this.allDeliveries.filter(d => d.status === 'On the way').length;
+    return this.onTheWayData.length;
   }
 
   getHoldCount(): number {
-    return this.allDeliveries.filter(d => d.status === 'Hold').length;
+    return this.holdData.length;
   }
 
   getReturnCount(): number {
-    return this.allDeliveries.filter(d => d.status === 'Return').length;
+    return this.returnData.length;
   }
 
   getDeliveredCount(): number {
-    return this.allDeliveries.filter(d => d.status === 'Delivered').length;
-  }
-
-  getCountByTab(): number {
-    return this.filteredDeliveries.length;
+    return this.deliveredData.length;
   }
 }

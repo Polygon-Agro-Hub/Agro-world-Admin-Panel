@@ -18,16 +18,15 @@ interface Delivery {
   createdAt: string;
   status: string;
   outDlvrTime: string;
-  // Additional fields that might be needed for child components
-  no?: number; // Will be calculated based on index
-  driver?: string; // You might need to fetch this from backend
-  phoneNumber?: string; // You might need to fetch this from backend
-  // For Return tab specifically
-  returnTime?: string; // We'll calculate this from createdAt or outDlvrTime
-  deliveryTimeSlot?: string; // We'll format the sheduleTime
-  // For Return tab
-  orderId?: string; // Using invNo as orderId
-  centre?: string; // Using regCode as centre
+  no?: number;
+  driver?: string;
+  phoneNumber?: string;
+  returnTime?: string;
+  deliveryTimeSlot?: string;
+  // Add these properties for child component compatibility
+  orderId?: string;
+  centre?: string;
+  deliveryTime?: string;
 }
 
 @Component({
@@ -66,7 +65,7 @@ export class TodaysDeliveriesComponent implements OnInit {
   onTheWayData: Delivery[] = [];
   holdData: Delivery[] = [];
   returnData: Delivery[] = [];
-  deliveredData: Delivery[] = [];
+  deliveredData: Delivery[] = []; // This will hold Delivered status data
 
   constructor(private distributionService: DistributionHubService) {}
 
@@ -105,35 +104,36 @@ export class TodaysDeliveriesComponent implements OnInit {
   }
 
   prepareDeliveryData(): void {
-    // Add additional properties that child components might need
     this.allDeliveries = this.allDeliveries.map((delivery, index) => {
-      // For Return tab: Convert createdAt or outDlvrTime to returnTime format (e.g., "11.20AM")
+      // Format return time from createdAt or outDlvrTime
       const returnTime = this.formatToReturnTime(delivery.createdAt || delivery.outDlvrTime);
       
       // Format delivery time slot from sheduleTime
       const deliveryTimeSlot = this.formatDeliveryTimeSlot(delivery.sheduleTime);
       
+      // Format delivery time for delivered items (use outDlvrTime or createdAt)
+      const deliveryTime = this.formatToReturnTime(delivery.outDlvrTime || delivery.createdAt);
+      
       return {
         ...delivery,
         no: index + 1,
-        driver: 'DIV000001', // Replace with actual driver data from backend if available
-        phoneNumber: '0781112300', // Replace with actual phone number from backend if available
-        returnTime: returnTime, // Add returnTime for Return tab
-        deliveryTimeSlot: deliveryTimeSlot, // Add formatted delivery time slot
+        driver: 'DIV000001', // Placeholder - update with actual data if available
+        phoneNumber: '0781112300', // Placeholder - update with actual data if available
+        returnTime: returnTime,
+        deliveryTimeSlot: deliveryTimeSlot,
+        deliveryTime: deliveryTime, // Add deliveryTime for delivered tab
         orderId: delivery.invNo, // Map invNo to orderId
         centre: delivery.regCode // Map regCode to centre
       };
     });
   }
 
-  // Helper method to format time to "HH.MMAM/PM" format for return time
   private formatToReturnTime(timeString: string): string {
     if (!timeString) return 'N/A';
     
     try {
       const date = new Date(timeString);
       if (isNaN(date.getTime())) {
-        // If timeString is already in "HH.MMAM" format, return as is
         if (timeString.includes('.')) return timeString;
         return 'N/A';
       }
@@ -143,7 +143,7 @@ export class TodaysDeliveriesComponent implements OnInit {
       const ampm = hours >= 12 ? 'PM' : 'AM';
       
       hours = hours % 12;
-      hours = hours ? hours : 12; // Convert 0 to 12
+      hours = hours ? hours : 12;
       
       const minutesStr = minutes < 10 ? '0' + minutes : minutes.toString();
       
@@ -154,19 +154,17 @@ export class TodaysDeliveriesComponent implements OnInit {
     }
   }
 
-  // Helper method to format sheduleTime to time slot format
   private formatDeliveryTimeSlot(sheduleTime: string): string {
     if (!sheduleTime) return 'N/A';
     
     try {
       const date = new Date(sheduleTime);
       if (isNaN(date.getTime())) {
-        return sheduleTime; // Return as is if not a valid date
+        return sheduleTime;
       }
       
       const hours = date.getHours();
       
-      // Determine time slot based on hour
       if (hours >= 8 && hours < 14) {
         return '8AM - 2PM';
       } else if (hours >= 14 && hours < 20) {

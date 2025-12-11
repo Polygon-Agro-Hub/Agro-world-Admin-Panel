@@ -412,28 +412,56 @@ export class DistributionHubService {
     });
   }
 
-  editDistributionOfficer(
-    person: any,
-    id: number,
-    selectedImage: any
-  ): Observable<any> {
-    const formData = new FormData();
-    formData.append('officerData', JSON.stringify(person)); // Attach officer data as a string
-    if (selectedImage) {
-      formData.append('file', selectedImage); // Attach the file (ensure the key matches the expected field name on the backend)
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-    return this.http.put(
-      `${this.apiUrl}distribution/update-distribution-officer-details/${id}`,
-      formData,
-      {
-        headers,
-      }
-    );
+ editDistributionOfficer(
+  person: any,
+  id: number,
+  selectedImage: any,
+  driver?: any,
+  licFront?: any,
+  licBack?: any,
+  insFront?: any,
+  insBack?: any,
+  vehiFront?: any,
+  vehiBack?: any,
+  vehiSideA?: any,
+  vehiSideB?: any
+): Observable<any> {
+  const formData = new FormData();
+  
+  // Attach officer data
+  formData.append('officerData', JSON.stringify(person));
+  
+  // Attach profile image if provided
+  if (selectedImage) {
+    formData.append('file', selectedImage);
   }
+
+  // Add driver data if jobRole is Driver
+  if (person.jobRole === 'Driver' && driver) {
+    formData.append('driverData', JSON.stringify(driver));
+    
+    // Attach driver-related images only if they are new files
+    if (licFront) formData.append('licFront', licFront);
+    if (licBack) formData.append('licBack', licBack);
+    if (insFront) formData.append('insFront', insFront);
+    if (insBack) formData.append('insBack', insBack);
+    if (vehiFront) formData.append('vehiFront', vehiFront);
+    if (vehiBack) formData.append('vehiBack', vehiBack);
+    if (vehiSideA) formData.append('vehiSideA', vehiSideA);
+    if (vehiSideB) formData.append('vehiSideB', vehiSideB);
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
+
+  return this.http.put(
+    `${this.apiUrl}distribution/update-distribution-officer-details/${id}`,
+    formData,
+    { headers }
+  );
+}
+
 
   claimDistributedOfficer(data: any): Observable<any> {
     const headers = new HttpHeaders({

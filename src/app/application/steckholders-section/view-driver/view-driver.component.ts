@@ -505,7 +505,7 @@ export class ViewDriverComponent implements OnInit {
 
   editDriver(id: number) {
     this.router.navigate([
-      '/steckholders/action/drivers/edit-driver',
+      '/steckholders/action/view-distribution-officers/update-distribution-officer',
       id,
     ]);
   }

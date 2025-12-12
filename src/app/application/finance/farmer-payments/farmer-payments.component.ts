@@ -399,4 +399,20 @@ export class FarmerPaymentsComponent implements OnInit {
   back(): void {
     this.router.navigate(['finance/action/govicare-finance']);
   }
+
+  // Add this method
+trimSearchInput(): void {
+  if (this.searchTerm) {
+    this.searchTerm = this.searchTerm.trim();
+    this.applyFilters();
+  }
+}
+
+preventLeadingSpace(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  // Prevent space at the beginning of the input
+  if (event.key === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+  }
+}
 }

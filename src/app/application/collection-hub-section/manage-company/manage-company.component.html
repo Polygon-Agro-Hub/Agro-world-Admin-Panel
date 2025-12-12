@@ -168,6 +168,10 @@
             </th>
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf="
+                  permissionService.hasPermission('View Company Head Portals') ||
+                  tokenService.getUserDetails().role === '1'
+                "
             >
               Centre Head Portals
             </th>

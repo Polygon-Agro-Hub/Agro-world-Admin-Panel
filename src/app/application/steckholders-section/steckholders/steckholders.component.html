@@ -148,7 +148,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholders view distribution officer') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewDistribution()"
         type="button"

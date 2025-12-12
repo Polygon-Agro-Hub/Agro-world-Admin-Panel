@@ -771,6 +771,8 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: ViewDistributionOfficerComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Stakeholders view distribution officer' },
                   },
                   {
                     path: 'create-distribution-officer',
@@ -1765,4 +1767,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

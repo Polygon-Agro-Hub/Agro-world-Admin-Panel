@@ -682,7 +682,7 @@ export class EditPlantcareUsersComponent implements OnInit {
 
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to create a new plant care user?',
+      text: 'Do you really want to create a new GoVi Care user?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -725,7 +725,7 @@ export class EditPlantcareUsersComponent implements OnInit {
               Swal.fire({
                 icon: 'success',
                 title: 'Created!',
-                text: "A new plant care user has been created.",
+                text: "A new GoVi Care user has been created.",
                 customClass: {
                   popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
@@ -740,7 +740,7 @@ export class EditPlantcareUsersComponent implements OnInit {
             },
             (error) => {
               this.isLoading = false;
-              let errorMessage = 'There was an error creating the plant care user.';
+              let errorMessage = 'There was an error creating the GoVi Care user.';
               if (error.error?.error) {
                 errorMessage = error.error.error;
               } else if (error.status === 400) {
@@ -886,7 +886,7 @@ export class EditPlantcareUsersComponent implements OnInit {
 
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you really want to update this plant care user?',
+      text: 'Do you really want to update this GoVi Care user?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -930,7 +930,7 @@ export class EditPlantcareUsersComponent implements OnInit {
               Swal.fire({
                 icon: 'success',
                 title: 'Updated!',
-                text: 'Plant care user has been updated.',
+                text: 'GoVi Care user has been updated.',
                 customClass: {
                   popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
                   title: 'dark:text-white',
@@ -942,7 +942,7 @@ export class EditPlantcareUsersComponent implements OnInit {
             },
             (error) => {
               this.isLoading = false;
-              let errorMessage = 'There was an error updating the plant care user.';
+              let errorMessage = 'There was an error updating the GoVi Care user.';
               if (error.error?.error) {
                 errorMessage = error.error.error;
               } else if (error.error?.message) {

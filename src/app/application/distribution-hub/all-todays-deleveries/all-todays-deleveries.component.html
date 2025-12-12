@@ -20,6 +20,7 @@
           styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
           [options]="statusOptions"
           [(ngModel)]="selectedStatus"
+          (onChange)="onStatusChange()"
           [checkmark]="true"
           optionLabel="label"
           optionValue="value"
@@ -31,30 +32,11 @@
       >
         <input
           type="text"
-          placeholder="Search by Order ID, Centre"
+          placeholder="Search by Order ID"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
           [(ngModel)]="searchText"
+          (input)="onSearchChange()"
         />
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-          (click)="searchText = ''"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-            />
-          </svg>
-        </button>
         <button
           type="button"
           class="text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -116,28 +98,28 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let order of filteredOrders"
+          *ngFor="let delivery of displayedDeliveries; let i = index"
           class="border-b border-gray-200 dark:border-gray-700"
         >
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            {{ order.no }}
+            {{ i + 1 | number : "2.0" }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ order.orderId }}
+            {{ delivery.invNo || "N/A" }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ order.centre }}
+            {{ delivery.regCode || "N/A" }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-            {{ order.deliveryTimeSlot }}
+             {{ formatTimeRange(delivery.sheduleTime) }}
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             <span
               class="inline-block w-32 px-3 py-1 rounded-full text-sm font-medium text-center {{
-                getStatusClass(order.status)
+                getStatusClass(delivery.status)
               }}"
             >
-              {{ order.status }}
+              {{ delivery.status }}
             </span>
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
@@ -158,6 +140,14 @@
                 />
               </svg>
             </button>
+          </td>
+        </tr>
+        <tr *ngIf="displayedDeliveries.length === 0">
+          <td
+            colspan="7"
+            class="px-4 py-8 text-center text-textLight dark:text-textDark"
+          >
+            No deliveries found
           </td>
         </tr>
       </tbody>

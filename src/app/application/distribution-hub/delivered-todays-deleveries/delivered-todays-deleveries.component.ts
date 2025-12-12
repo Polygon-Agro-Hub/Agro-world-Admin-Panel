@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface DeliveryRecord {
@@ -19,46 +19,50 @@ interface DeliveryRecord {
   templateUrl: './delivered-todays-deleveries.component.html',
   styleUrl: './delivered-todays-deleveries.component.css'
 })
-export class DeliveredTodaysDeleveriesComponent {
+export class DeliveredTodaysDeleveriesComponent implements OnChanges {
+  @Input() deliveries: any[] = [];
+  
   searchTerm: string = '';
-  deliveries: DeliveryRecord[] = [
-    { no: 1, orderId: '2506200010', centre: 'D-WPCK-01', driver: 'DIV000001', phoneNumber: '0781112300', deliveryTimeSlot: '8AM - 2PM', deliveryTime: '11.20AM' },
-    { no: 2, orderId: '2506200006', centre: 'D-WPCK-02', driver: 'DIV000007', phoneNumber: '0781112300', deliveryTimeSlot: '8AM - 2PM', deliveryTime: '11.10AM' },
-    { no: 3, orderId: '2506200003', centre: 'D-WPCK-01', driver: 'DIV000090', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', deliveryTime: '11.00AM' },
-    { no: 4, orderId: '2506200002', centre: 'D-WPCK-01', driver: 'DIV000080', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', deliveryTime: '10.20AM' },
-    { no: 5, orderId: '2506200001', centre: 'D-WPCK-01', driver: 'DIV000667', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', deliveryTime: '10.10AM' },
-    { no: 6, orderId: '2506200001', centre: 'D-WPCK-03', driver: 'DIV000065', phoneNumber: '0781112300', deliveryTimeSlot: '2PM - 8PM', deliveryTime: '10.00AM' }
-  ];
+  deliveryRecords: DeliveryRecord[] = [];
+  filteredDeliveries: DeliveryRecord[] = [];
 
-  filteredDeliveries: DeliveryRecord[] = [...this.deliveries];
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['deliveries'] && this.deliveries) {
+      this.transformDeliveryData();
+      this.filteredDeliveries = [...this.deliveryRecords];
+    }
+  }
 
-  constructor() {
-    this.updateHeaderCount();
+  private transformDeliveryData(): void {
+    // Transform parent data to match child component interface
+    this.deliveryRecords = this.deliveries.map(delivery => ({
+      no: delivery.no || 0,
+      orderId: delivery.orderId || delivery.invNo || 'N/A',
+      centre: delivery.centre || delivery.regCode || 'N/A',
+      driver: delivery.driver || 'N/A',
+      phoneNumber: delivery.phoneNumber || 'N/A',
+      deliveryTimeSlot: delivery.deliveryTimeSlot || 'N/A',
+      deliveryTime: delivery.deliveryTime || delivery.outDlvrTime || 'N/A'
+    }));
   }
 
   onSearch(): void {
     if (!this.searchTerm.trim()) {
-      this.filteredDeliveries = [...this.deliveries];
+      this.filteredDeliveries = [...this.deliveryRecords];
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredDeliveries = this.deliveries.filter(delivery =>
+      this.filteredDeliveries = this.deliveryRecords.filter(delivery =>
         delivery.orderId.toLowerCase().includes(term) ||
         delivery.centre.toLowerCase().includes(term) ||
         delivery.driver.toLowerCase().includes(term) ||
         delivery.phoneNumber.includes(term)
       );
     }
-    this.updateHeaderCount();
   }
 
   clearSearch(): void {
     this.searchTerm = '';
-    this.filteredDeliveries = [...this.deliveries];
-    this.updateHeaderCount();
-  }
-
-  private updateHeaderCount(): void {
-    // This will be used in the template to show the count
+    this.filteredDeliveries = [...this.deliveryRecords];
   }
 
   get totalCount(): number {

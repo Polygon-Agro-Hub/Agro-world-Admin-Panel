@@ -86,7 +86,7 @@
                     <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Email</th>
                     <th class="p-3 text-textLight dark:text-textDark font-normal text-left">Time</th>
                     <th class="p-3"
-                      *ngIf="permissionService.hasPermission('Delete subscriptions') || tokenService.getUserDetails().role === '1'">
+                      *ngIf="( activeTab === 'retail' && permissionService.hasPermission('Delete retail subscriptions')) ||  (activeTab === 'wholesale' && permissionService.hasPermission('Delete wholesale subscriptions')) || tokenService.getUserDetails().role === '1'">
                     </th>
                   </tr>
                 </thead>
@@ -97,7 +97,7 @@
                     <td class="p-3 text-textLight dark:text-textDark">{{ user.email }}</td>
                     <td class="p-3 text-textLight dark:text-textDark">{{ user.time }}</td>
                     <td class="p-3"
-                      *ngIf="permissionService.hasPermission('Delete subscriptions') || tokenService.getUserDetails().role === '1'">
+                      *ngIf="( activeTab === 'retail' && permissionService.hasPermission('Delete retail subscriptions')) ||  (activeTab === 'wholesale' && permissionService.hasPermission('Delete wholesale subscriptions')) || tokenService.getUserDetails().role === '1'">
                       <img class="w-5 h-5 cursor-pointer hover:opacity-80 transition-opacity duration-200"
                         src="./assets/icons/dlt.png" alt="Delete user" aria-label="Delete user"
                         (click)="deleteUser(user.id)" />

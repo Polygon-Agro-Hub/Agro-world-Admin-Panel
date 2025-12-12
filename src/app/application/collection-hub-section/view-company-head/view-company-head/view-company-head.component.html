@@ -70,7 +70,12 @@
             <th class="px-4 py-3 m-y-5 font-normal text-textLight dark:text-textDark text-left">
               Email
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            *ngIf="
+              permissionService.hasPermission('Approve Or Reject Company Head') ||
+              tokenService.getUserDetails().role === '1'
+            "
+              >
               Status
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -113,7 +118,12 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.email }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            *ngIf="
+              permissionService.hasPermission('Approve Or Reject Company Head') ||
+              tokenService.getUserDetails().role === '1'
+            "
+            class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div class="cursor-pointer">
                 <span [ngClass]="{
     'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
@@ -123,10 +133,7 @@
                     'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
                       item.status === 'Rejected'
   }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32" (click)="openPopup(item)"
-  *ngIf="
-  permissionService.hasPermission('Approve Or Reject Company Head') ||
-  tokenService.getUserDetails().role === '1'
-"
+  
   >
                   {{ item.status }}
                 </span>

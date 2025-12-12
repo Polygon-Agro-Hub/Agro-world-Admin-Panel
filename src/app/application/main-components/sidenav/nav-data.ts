@@ -50,7 +50,7 @@ export const navbarData = [
   {
     RouterLink: 'plant-care',
     icon: 'fas fa-leaf',
-    label: 'Govi Care',
+    label: 'GoVi Care',
     expanded: false,
     Permission: 'GoviCare Tab',
     children: [
@@ -125,7 +125,7 @@ export const navbarData = [
   {
     RouterLink: 'market',
     icon: 'fa-solid fa-shop',
-    label: 'GoviMart',
+    label: 'GoViMart',
     expanded: false,
     Permission: 'GoviMart Tab',
     children: [

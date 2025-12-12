@@ -411,24 +411,26 @@ export class GovilinkServicesDashboardComponent
   getIncomeChangeDisplay(): { icon: string; color: string; text: string } {
   // Clamp the percentage value between 0 and 100
   const clampedPercent = Math.max(0, Math.min(100, this.incomeChangePercent));
+  // Round to 1 decimal place for cleaner display
+  const formattedPercent = parseFloat(clampedPercent.toFixed(1));
   
   if (this.incomeStatus === 'increased') {
     return {
       icon: 'fa-arrow-trend-up',
       color: 'text-teal-600',
-      text: `+${clampedPercent}%`,
+      text: `${formattedPercent}%`, // Removed the + sign
     };
   } else if (this.incomeStatus === 'decreased') {
     return {
       icon: 'fa-arrow-trend-down',
       color: 'text-red-600',
-      text: `-${clampedPercent}%`,
+      text: `${formattedPercent}%`, // Removed the - sign
     };
   } else {
     return {
       icon: 'fa-arrow-right-long',
       color: 'text-gray-500',
-      text: `${clampedPercent}%`,
+      text: `${formattedPercent}%`,
     };
   }
 }

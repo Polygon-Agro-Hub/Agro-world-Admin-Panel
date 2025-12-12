@@ -84,7 +84,7 @@ export class GovilinkServicesDashboardComponent
   }
 
   onBack(): void {
-    this.location.back();
+    this.router.navigate(['/finance/action/govicare-finance']);
   }
 
   loadDashboardData(): void {

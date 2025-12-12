@@ -24,7 +24,8 @@
           dateFormat="yy-mm-dd"
           [showButtonBar]="true"
           [showClear]="false"
-          [maxDate]="maxDate"
+          [maxDate]="toDate ? maxFromDate : maxDate"
+          [minDate]="null"
           inputId="fromDate"
           iconDisplay="input"
           placeholder="--Select Date--"
@@ -45,40 +46,40 @@
     </div>
 
     <div class="flex items-center gap-2 w-full">
-  <label class="text-textLight dark:text-textDark whitespace-nowrap w-10"
-    >To :</label
-  >
-  <div class="flex-1 w-full">
-    <p-calendar
-      [(ngModel)]="toDate"
-      [showIcon]="true"
-      dateFormat="yy-mm-dd"
-      [showButtonBar]="true"
-      [showClear]="false"
-      [minDate]="minDate"
-      [maxDate]="maxDate" 
-      [disabled]="!fromDate" 
-      inputId="toDate"
-      iconDisplay="input"
-      placeholder="--Select Date--"
-      panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-         [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-         [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-         [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-         [&_.p-datepicker-header]:dark:text-white
-         [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-         [&_.p-button:hover]:dark:bg-[#6b7280]"
-      inputStyleClass="p-2 border cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12 border-gray-300 dark:border-gray-600"
-      [baseZIndex]="10000"
-      styleClass="w-full"
-    >
-    </p-calendar>
-  </div>
-</div>
+      <label class="text-textLight dark:text-textDark whitespace-nowrap w-10"
+        >To :</label
+      >
+      <div class="flex-1 w-full">
+        <p-calendar
+          [(ngModel)]="toDate"
+          [showIcon]="true"
+          dateFormat="yy-mm-dd"
+          [showButtonBar]="true"
+          [showClear]="false"
+          [minDate]="minDate"
+          [maxDate]="maxDate"
+          inputId="toDate"
+          iconDisplay="input"
+          placeholder="--Select Date--"
+          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+             [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+             [&_.p-datepicker-header]:dark:text-white
+             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+             [&_.p-button:hover]:dark:bg-[#6b7280]"
+          inputStyleClass="p-2 border cursor-pointer rounded-md bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12 border-gray-300 dark:border-gray-600"
+          [baseZIndex]="10000"
+          styleClass="w-full"
+          (onSelect)="onToDateSelect()"
+        >
+        </p-calendar>
+      </div>
+    </div>
 
     <button
       (click)="applyDateFilter()"
-      [disabled]="!fromDate" 
+      [disabled]="!fromDate"
       class="bg-[#3980C0] text-white px-8 py-2 rounded-md hover:bg-[#2c6ba0] transition duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed"
     >
       Go
@@ -86,6 +87,7 @@
   </div>
 </div>
 
+<!-- Rest of your HTML remains the same -->
 <!-- Table Section -->
 <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-8">
   <div class="flex justify-between items-center mb-6">

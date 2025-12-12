@@ -57,7 +57,13 @@
             styleClass="border border-2 rounded-xl h-8 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             inputStyleClass="bg-transparent border-none text-textLight dark:text-textDark"
             [readonlyInput]="true"
-          ></p-calendar>
+            [showClear]="true"
+          >
+            <!-- Custom clear icon -->
+            <ng-template pTemplate="clearicon">
+              <i class="pi pi-times "></i>
+            </ng-template>
+          </p-calendar>
         </div>
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"

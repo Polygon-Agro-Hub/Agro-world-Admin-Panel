@@ -55,7 +55,7 @@ export class FarmerPaymentsComponent implements OnInit {
 
   // Filter properties
   selectedBank: string = '';
-  selectedDate: Date | null = null;
+  selectedDate: Date | null = new Date(); // Set today's date by default
   searchTerm: string = '';
 
   // Dropdown options
@@ -69,7 +69,11 @@ export class FarmerPaymentsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Set today's date
+    this.selectedDate = new Date();
+    
     this.loadBanks(); // Load banks first
+    // Load data with today's date by default
     this.loadFarmerPayments();
   }
 
@@ -171,7 +175,8 @@ export class FarmerPaymentsComponent implements OnInit {
 
   clearDate(): void {
     this.selectedDate = null;
-    this.applyFilters();
+    // When date is cleared, reload all data
+    this.loadFarmerPayments();
   }
 
   applyFilters(): void {
@@ -209,7 +214,7 @@ export class FarmerPaymentsComponent implements OnInit {
 
   refreshData(): void {
     this.selectedBank = '';
-    this.selectedDate = null;
+    this.selectedDate = new Date(); // Reset to today's date
     this.searchTerm = '';
     this.loadFarmerPayments();
   }

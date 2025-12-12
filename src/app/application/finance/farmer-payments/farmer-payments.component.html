@@ -121,8 +121,13 @@
         filteredPayments.length === 0 || isDownloading
       "
     >
-      <i class="fa-solid fa-download mr-3" [class.fa-spin]="isDownloading"></i>
-      {{ isDownloading ? "Downloading..." : "Download" }}
+      <!-- Show spinner or download icon -->
+      <i *ngIf="!isDownloading" class="fa-solid fa-download mr-3"></i>
+      <i *ngIf="isDownloading" class="fa-solid fa-spinner fa-spin mr-3"></i>
+
+      <!-- Dynamic text based on state -->
+      <span *ngIf="!isDownloading">Download</span>
+      <span *ngIf="isDownloading">Downloading...</span>
     </button>
     <div>
       <table
@@ -194,11 +199,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let payment of filteredPayments; let i = index"
-          >
+          <tr *ngFor="let payment of filteredPayments; let i = index">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ i + 1 | number:'3.0' }}
+              {{ i + 1 | number : "3.0" }}
             </td>
             <td
               class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"

@@ -285,13 +285,13 @@ export class FarmerPaymentsComponent implements OnInit {
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Farmer Payments');
 
-        // Generate file name
-        const fileName = `Farmer_Payments_${this.getCurrentTimestamp()}.xlsx`;
+        // Generate dynamic file name based on filters
+        const fileName = this.generateFileName();
 
         // Save the file
         XLSX.writeFile(wb, fileName);
 
-        console.log('Excel file downloaded successfully');
+        console.log('Excel file downloaded successfully:', fileName);
       } catch (error) {
         console.error('Error downloading Excel file:', error);
         alert('Error downloading Excel file. Please try again.');
@@ -300,6 +300,42 @@ export class FarmerPaymentsComponent implements OnInit {
         this.isDownloading = false;
       }
     }, 100); // Small delay to ensure UI updates
+  }
+
+  // Generate dynamic file name based on filters
+  private generateFileName(): string {
+    let fileName = 'Farmer Payments';
+    
+    // Add bank name if filter is applied
+    if (this.selectedBank) {
+      // Remove any special characters and spaces from bank name for filename
+      const safeBankName = this.selectedBank.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ');
+      fileName += ` - ${safeBankName}`;
+    }
+    
+    // Add date
+    if (this.selectedDate) {
+      const dateStr = this.formatDateForDisplay(this.selectedDate);
+      fileName += ` - ${dateStr}`;
+    } else {
+      // If no date selected, use current date
+      const currentDate = new Date();
+      const dateStr = this.formatDateForDisplay(currentDate);
+      fileName += ` - ${dateStr}`;
+    }
+    
+    // Add file extension
+    fileName += '.xlsx';
+    
+    return fileName;
+  }
+
+  // Format date for display in filename (YYYY-MM-DD)
+  private formatDateForDisplay(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   private prepareExcelData(): any[] {

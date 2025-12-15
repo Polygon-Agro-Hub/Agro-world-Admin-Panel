@@ -246,6 +246,7 @@ import { PreviewDriverComponent } from './application/steckholders-section/previ
 import { EditDriverComponent } from './application/steckholders-section/edit-driver/edit-driver.component';
 import { TodaysDeliveriesComponent } from './application/distribution-hub/todays-deliveries/todays-deliveries.component';
 import { TransportReasonsToHoldComponent } from './application/distribution-hub/transport-reasons-to-hold/transport-reasons-to-hold.component';
+import { ViewDriverComplaintsComponent } from './application/Complaints/view-driver-complaints/view-driver-complaints.component';
 
 export const routes: Routes = [
   {
@@ -1589,6 +1590,21 @@ export const routes: Routes = [
             component: FiealdOfficerComplaintsComponent,
             canActivate: [PermissionGuard],
             data: { permission: 'GoviLink Complaint' },
+          },
+
+          {
+            path: 'driver-complaints',
+            canActivate: [PermissionGuard],
+            data: { permission: 'driver Complaints' },
+            children: [
+              {
+                path: '',
+                component: ViewDriverComplaintsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'view driver Complaints' },
+              },
+              
+            ],
           },
         ],
       },

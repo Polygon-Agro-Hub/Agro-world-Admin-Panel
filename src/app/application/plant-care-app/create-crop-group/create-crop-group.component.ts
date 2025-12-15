@@ -142,10 +142,11 @@ export class CreateCropGroupComponent {
         this.cropCalendarService.getCropGroupById(this.itemId).subscribe({
           next: (response: any) => {
             this.newsItems = response.groups;
-            this.selectUpdateName = response.groups[0].cropNameEnglish;
+            console.log('newsItems', this.newsItems)
+            this.selectUpdateName = response.groups[0]?.cropNameEnglish;
 
-            if (response.groups[0].image) {
-              this.selectedImage = response.groups[0].image;
+            if (response.groups[0]?.image) {
+              this.selectedImage = response.groups[0]?.image;
               this.selectedFileName = 'Existing Image';
             }
 
@@ -383,6 +384,7 @@ export class CreateCropGroupComponent {
   }
 
   onColorChangeEdit(event: any): void {
+    console.log('triggered')
     this.newsItems[0].bgColor = event.color.hex;
     console.log('this.newsItems[0].bgColor', this.newsItems[0].bgColor)
   }

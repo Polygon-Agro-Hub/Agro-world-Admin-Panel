@@ -417,6 +417,58 @@ export class ComplaintsService {
     headers,
   });
 }
+
+getAllDriverComplain(
+
+  page: number,
+  limit: number,
+  status: String,
+  category: String,
+  comCategory: String,
+  filterCompany: String,
+  searchText: string,
+  rpstatus: string
+  
+): Observable<any> {
+
+  console.log('rpstatus', rpstatus, 'status', status)
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  console.log('searchText', searchText);
+
+  let url = `${this.apiUrl}complain/get-all-driver-complains?page=${page}&limit=${limit}`;
+
+  if (status) {
+    url += `&status=${status}`;
+  }
+
+  if (category) {
+    url += `&category=${category}`;
+  }
+
+  if (comCategory) {
+    url += `&comCategory=${comCategory}`;
+  }
+
+  if (filterCompany) {
+    url += `&filterCompany=${filterCompany}`;
+  }
+
+  if (searchText) {
+    url += `&searchText=${searchText}`;
+  }
+
+  if (rpstatus) {
+    url += `&rpstatus=${rpstatus}`;
+  }
+
+  return this.http.get(url, {
+    headers,
+  });
+}
 }
 
 

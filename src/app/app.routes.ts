@@ -762,10 +762,14 @@ export const routes: Routes = [
               {
                 path: 'manage-company',
                 component: ManageCompanyComponent,
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Stakeholder collection companies' }
               },
               {
                 path: 'view-companies',
                 component: ViewCompaniesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Stakeholder distribution companies' },
               },
               {
                 path: 'view-distribution-officers',
@@ -900,6 +904,8 @@ export const routes: Routes = [
 
               {
                 path: 'collective-officer',
+                // canActivate: [PermissionGuard],
+                // data: {permission: 'Stakeholders collection officers'},
                 children: [
                   {
                     path: '',
@@ -989,6 +995,8 @@ export const routes: Routes = [
               {
                 path: 'stakholder-distributed-centers',
                 component: ViewPolygonCentersComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Stakeholder distribution centres' },
               },
             ],
           },
@@ -1071,8 +1079,8 @@ export const routes: Routes = [
           {
             path: 'create-company',
             component: CreateCompanyComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Add And Edit Company' },
+            // canActivate: [PermissionGuard],
+            // data: { permission: 'Add And Edit Company' },
           },
           {
             path: 'manage-company',
@@ -1176,6 +1184,13 @@ export const routes: Routes = [
             canActivate: [PermissionGuard],
             data: { permission: 'Collection Hub Add Market Prices' },
           },
+          {
+            path: 'edit-collection-officers/:id',
+            component: CollectiveofficersEditComponent,
+            // canActivate: [PermissionGuard],
+            // data: { permission: 'Edit Polygon Centre Officers' },
+          },
+
         ],
       },
 

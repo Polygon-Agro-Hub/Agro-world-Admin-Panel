@@ -46,6 +46,8 @@ export class ViewPolygonCentersComponent implements OnInit {
   selectDistrict: string = '';
   selectCompany: string = '';
 
+  urlSegment: string = '';
+
   ProvinceData = [
     {
       province: 'Western',
@@ -133,7 +135,10 @@ export class ViewPolygonCentersComponent implements OnInit {
         value: d.districtName,
       }))
       .sort((a, b) => a.label.localeCompare(b.label));
+
+    this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
   }
+
   back(): void {
     this.router.navigate(['/distribution-hub/action/view-destribition-center'], {
       queryParams: {

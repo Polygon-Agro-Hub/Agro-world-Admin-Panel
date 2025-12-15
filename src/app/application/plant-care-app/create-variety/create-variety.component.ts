@@ -409,7 +409,7 @@ export class CreateVarietyComponent implements OnInit {
               title: 'font-semibold',
             },
           }).then(() => {
-            this.router.navigate(['/plant-care/action/view-crop-group']);
+            this.location.back();
           });
         } else {
           this.isLoading = false;
@@ -689,7 +689,8 @@ export class CreateVarietyComponent implements OnInit {
               title: 'font-semibold',
             },
           });
-          this.router.navigate(['/plant-care/action/view-crop-group']);
+          this.location.back();
+          
         },
         () => {
           this.isLoading = false;

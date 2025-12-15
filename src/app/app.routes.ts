@@ -913,7 +913,7 @@ export const routes: Routes = [
                     path: 'personal-edit/:id',
                     component: CollectiveofficersEditComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Manage CO / CCM / DO' },
+                    data: { permission: ['Manage CO / CCM / DO', 'Edit Polygon Centre Officers'] },
                   },
                   {
                     path: 'company',
@@ -1060,6 +1060,7 @@ export const routes: Routes = [
               permission: [
                 'Edit Collection Center',
                 'Manage Collection Centre',
+                'Edit Polygon Collection Centre'
               ],
             },
           },
@@ -1631,6 +1632,7 @@ export const routes: Routes = [
                   permission: [
                     'Add And Edit Company',
                     'Distribution Hub add new company',
+                    'View Company',
                   ],
                 },
               },

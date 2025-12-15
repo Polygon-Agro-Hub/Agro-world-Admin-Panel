@@ -3,7 +3,7 @@ import { MarketPlaceService } from '../../../services/market-place/market-place.
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location  } from '@angular/common';
 
 @Component({
   selector: 'app-add-product-types',
@@ -18,7 +18,8 @@ export class AddProductTypesComponent {
 
   constructor(
     private marketSrv: MarketPlaceService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     // Fetch existing product types on component initialization
     this.fetchProductTypes();
@@ -50,7 +51,7 @@ export class AddProductTypesComponent {
     cancelButtonText: 'No, Stay Here',
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/market/action']);
+      this.location.back();
     }
   });
 }
@@ -65,7 +66,7 @@ onCancel() {
     cancelButtonText: 'No, Keep Editing',
   }).then((result) => {
     if (result.isConfirmed) {
-      this.router.navigate(['/market/action']);
+      this.location.back();
     }
   });
 }

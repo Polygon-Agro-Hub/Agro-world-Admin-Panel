@@ -109,7 +109,7 @@
       </button>
 
       <!-- Image Validation Error -->
-      <div *ngIf="imageTouched && !selectedFile" class="text-red-500 text-sm mt-1">
+      <div *ngIf="errorMassage" class="text-red-500 text-sm mt-1">
         Please select an image
       </div>
 
@@ -260,16 +260,29 @@
         <!-- Add Background Color -->
         <div class="flex items-center space-x-4">
           <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
-          <ngx-colors ngx-colors-trigger [(ngModel)]="newsItems[0].bgColor" (colorChange)="onColorChange($event)"
-            style="display: inline-block; margin:5px;" #bgColorInputEdit="ngModel" required>
+        
+          <ngx-colors 
+            ngx-colors-trigger 
+            [(ngModel)]="newsItems[0].bgColor" 
+            (colorChange)="onColorChangeEdit($event)"
+            style="display: inline-block; margin:5px;" 
+            #bgColorInputEdit="ngModel" 
+            required>
           </ngx-colors>
-
+        
+          <!-- Color Preview Box -->
+          <div 
+            class="w-8 h-8 rounded border" 
+            [style.background]="newsItems[0].bgColor">
+          </div>
+        
           <!-- Validation Error -->
           <div *ngIf="bgColorInputEdit.touched && bgColorInputEdit.errors?.['required']"
-            class="text-red-500 text-sm mt-1">
+               class="text-red-500 text-sm mt-1">
             Background Color is required
           </div>
         </div>
+        
 
         <!-- Buttons -->
         <div class="flex justify-end space-x-4 mt-6">

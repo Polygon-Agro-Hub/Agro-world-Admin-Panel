@@ -111,6 +111,9 @@ export class CreateCropGroupComponent {
 
   newsItems: NewsItem[] = [];
 
+  isInputClicked: boolean = false;
+  errorMassage: string = ''
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -187,6 +190,11 @@ export class CreateCropGroupComponent {
       };
       reader.readAsDataURL(file);
     }
+    if (this.isInputClicked && !this.selectedFile) {
+      this.errorMassage = 'Please select an image'
+    } else if (this.isInputClicked && this.selectedFile) {
+      this.errorMassage = ''
+    }
   }
 
   onSubmit() {
@@ -197,6 +205,10 @@ export class CreateCropGroupComponent {
       });
     }
     this.imageTouched = true;
+
+    if (this.isInputClicked && !this.selectedFile) {
+      this.errorMassage = 'Please select an image'
+    }
 
     // Collect all validation errors
     const errors: string[] = [];
@@ -358,10 +370,21 @@ export class CreateCropGroupComponent {
     this.imageTouched = true;
     const fileInput = document.getElementById('imageUpload') as HTMLElement;
     fileInput.click();
+    this.isInputClicked = true;
+    // if (this.isInputClicked && !this.selectedFile) {
+    //   this.errorMassage = 'Please select an image'
+    // } else if (this.isInputClicked && this.selectedFile) {
+    //   this.errorMassage = 'Please select an image'
+    // }
   }
 
   onColorChange(event: any): void {
     this.cropGroup.bgColor = event.color.hex;
+  }
+
+  onColorChangeEdit(event: any): void {
+    this.newsItems[0].bgColor = event.color.hex;
+    console.log('this.newsItems[0].bgColor', this.newsItems[0].bgColor)
   }
 
   updateNews() {
@@ -438,6 +461,8 @@ export class CreateCropGroupComponent {
     }
 
     const newsItem = this.newsItems[0];
+
+    console.log('newsItem', newsItem)
 
     const formData = new FormData();
     formData.append('cropNameEnglish', newsItem.cropNameEnglish || '');

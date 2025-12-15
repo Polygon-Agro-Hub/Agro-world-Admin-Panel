@@ -30,23 +30,23 @@
 
           <div
             *ngIf="!selectedImage"
-            class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60"
+            class="flex rounded-full border-solid border-2 justify-center items-center w-40 h-40"
           >
             <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
           </div>
 
           <img
-            *ngIf="selectedImage"
-            class="rounded-full w-60 h-60 object-cover"
-            [src]="selectedImage"
-            alt="Profile Picture"
-          />
+  *ngIf="selectedImage"
+  class="rounded-full w-[105px] h-[105px] object-cover"
+  [src]="selectedImage"
+  alt="Profile Picture"
+/>
 
           <span
             (click)="triggerFileInput($event)"
-            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
+            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-10 h-10 flex items-center justify-center rounded-full cursor-pointer"
           >
-            <i class="fa-solid fa-pen text-lg text-white"></i>
+            <i class="fa-solid fa-pen text-sm text-white"></i>
           </span>
         </div>
       </div>

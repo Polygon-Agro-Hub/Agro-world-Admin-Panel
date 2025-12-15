@@ -771,6 +771,8 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: ViewDistributionOfficerComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Stakeholders view distribution officer' },
                   },
                   {
                     path: 'create-distribution-officer',
@@ -913,7 +915,7 @@ export const routes: Routes = [
                     path: 'personal-edit/:id',
                     component: CollectiveofficersEditComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Manage CO / CCM / DO' },
+                    data: { permission: ['Manage CO / CCM / DO', 'Edit Polygon Centre Officers'] },
                   },
                   {
                     path: 'company',
@@ -1060,6 +1062,7 @@ export const routes: Routes = [
               permission: [
                 'Edit Collection Center',
                 'Manage Collection Centre',
+                'Edit Polygon Collection Centre'
               ],
             },
           },
@@ -1631,6 +1634,7 @@ export const routes: Routes = [
                   permission: [
                     'Add And Edit Company',
                     'Distribution Hub add new company',
+                    'View Company',
                   ],
                 },
               },
@@ -1765,4 +1769,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

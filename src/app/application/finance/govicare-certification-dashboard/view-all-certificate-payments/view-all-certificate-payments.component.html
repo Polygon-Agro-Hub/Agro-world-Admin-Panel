@@ -15,18 +15,9 @@
   <div class="flex items-center gap-4">
     <div class="flex items-center gap-3">
       <label class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[45px]">From:</label>
-      <p-calendar 
-        id="fromDate" 
-        [(ngModel)]="fromDate" 
-        (ngModelChange)="onFromDateChange()"
-        placeholder="YYYY/MM/DD" 
-        [showIcon]="true" 
-        [showClear]="false"
-        [showButtonBar]="true" 
-        iconDisplay="input"
-        [maxDate]="maxDate"
-        [style]="{ width: '20rem', height: '2.5rem' }" 
-        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+      <p-calendar id="fromDate" [(ngModel)]="fromDate" (ngModelChange)="onFromDateChange()" placeholder="YYYY/MM/DD"
+        [showIcon]="true" [showClear]="false" [showButtonBar]="true" iconDisplay="input" [maxDate]="maxDate"
+        [style]="{ width: '20rem', height: '2.5rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -38,19 +29,9 @@
 
     <div class="flex items-center gap-3">
       <label class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[30px]">To:</label>
-      <p-calendar 
-        id="toDate" 
-        [(ngModel)]="toDate" 
-        placeholder="YYYY/MM/DD" 
-        [showIcon]="true" 
-        [showClear]="false"
-        [showButtonBar]="true" 
-        iconDisplay="input"
-        [maxDate]="maxDate"
-        [minDate]="minToDate"
-        [disabled]="!fromDate"
-        [style]="{ width: '20rem', height: '2.5rem' }" 
-        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+      <p-calendar id="toDate" [(ngModel)]="toDate" placeholder="YYYY/MM/DD" [showIcon]="true" [showClear]="false"
+        [showButtonBar]="true" iconDisplay="input" [maxDate]="maxDate" [minDate]="minToDate" [disabled]="!fromDate"
+        [style]="{ width: '20rem', height: '2.5rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -77,7 +58,9 @@
     </div>
 
     <!-- Search Bar -->
-    <div class="flex items-center rounded-full px-4 py-2 bg-[#F1F1F1] dark:bg-[#272F45]" style="width: 280px;">
+    <!-- Search Bar -->
+    <div class="flex items-center rounded-full px-4 py-2 bg-[#F1F1F1] dark:bg-[#272F45]" style="width: 280px;"
+      title="Search By Transaction ID, Farmer Name / Cluster Name">
       <input type="text" placeholder="Search..." [(ngModel)]="searchTerm"
         class="bg-transparent outline-none w-full text-textLight dark:text-textDark text-sm" (keyup.enter)="onSearch()"
         (keyup.esc)="offSearch()" />
@@ -109,7 +92,8 @@
         <tr class="border-b border-gray-200 dark:border-gray-700">
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">No</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Transaction ID</th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Farmer Name / Cluster Name</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Farmer Name / Cluster
+            Name</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Validity Period</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Amount (Rs.)</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm">Date & Time</th>

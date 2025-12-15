@@ -343,7 +343,7 @@ export class ViewCollectiveOfficerComponent {
 
   editCollectionOfficer(id: number) {
     this.navigatePath(
-      `/steckholders/action/collective-officer/personal-edit/${id}`
+      `/collection-hub/edit-collection-officers/${id}`
     );
   }
 

@@ -257,7 +257,7 @@
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 *ngIf="
-                  permissionService.hasPermission('Add And Edit Company') ||
+                  permissionService.hasPermission('View Company') ||
                   tokenService.getUserDetails().role === '1'
                 "
                 (click)="viewCompany(item.id, true)"

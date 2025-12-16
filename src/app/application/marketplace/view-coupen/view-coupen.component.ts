@@ -40,7 +40,7 @@ export class ViewCoupenComponent implements OnInit {
   totalItems: number = 0;
   itemsPerPage: number = 10;
 
-  Status = [{ name: 'Enabled' }, { name: 'Finished' }, { name: 'Disabled' }];
+  Status = [{ name: 'Enabled' }, { name: 'Disabled' }];
   Types = [
     { name: 'Percentage' },
     { name: 'Fixed Amount' },

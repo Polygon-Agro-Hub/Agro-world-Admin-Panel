@@ -76,8 +76,8 @@
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
-    <div *ngIf="hasData" >
-      <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
+    <div *ngIf="hasData" class="mr-2">
+      <table class=" w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
         <thead>
           <tr>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-start">
@@ -98,6 +98,9 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Varieties
             </th>
+            <th class="px-4 py-3 font-normal"></th>
+            <th class="px-4 py-3 font-normal"></th>
+            <th class="px-4 py-3 font-normal"></th>
             <th class="px-4 py-3 font-normal"></th>
           </tr>
         </thead>
@@ -146,15 +149,17 @@
               <div *ngIf="item.varietyList.length === 0">No Varieties Yet</div>
             </td>
 
-            <td class="flex flex-row gap-x-6 py-3 text-center text-textLight dark:text-textDark">
+            <td class="py-3 px-2 dark:text-textDark text-center">
               <button *ngIf="
-                  permissionService.hasPermission('Add varieties') ||
-                  tokenService.getUserDetails().role === '1'
-                " class="flex w-6 h-6 text-blue-500 hover:text-blue-700 align-middle items-center justify-center"
-                (click)="addVarietie(item.id)">
-                <i class="fa-regular fa-square-plus text-2xl"></i>
-              </button>
+              permissionService.hasPermission('Add varieties') ||
+              tokenService.getUserDetails().role === '1'
+            " class="flex w-6 h-6 mb-1.5 text-blue-500 hover:text-blue-700 align-middle items-center justify-center"
+            (click)="addVarietie(item.id)">
+            <i class="fa-regular fa-square-plus text-2xl"></i>
+          </button>
+            </td>
 
+            <td class="py-3 px-2 dark:text-textDark text-center">
               <button *ngIf="
                   permissionService.hasPermission(
                     'View varieties of each group'
@@ -166,7 +171,9 @@
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
+            </td>
 
+            <td class="py-3 px-2 dark:text-textDark text-center">
               <button *ngIf="
                   permissionService.hasPermission('Edit crop group') ||
                   tokenService.getUserDetails().role === '1'
@@ -178,7 +185,9 @@
                   </path>
                 </svg>
               </button>
+            </td>
 
+            <td class="py-3 px-2 dark:text-textDark text-center">
               <button *ngIf="
                   permissionService.hasPermission('Delete crop group') ||
                   tokenService.getUserDetails().role === '1'
@@ -190,6 +199,7 @@
                 </svg>
               </button>
             </td>
+
           </tr>
         </tbody>
       </table>

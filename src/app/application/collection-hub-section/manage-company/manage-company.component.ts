@@ -151,17 +151,20 @@ export class ManageCompanyComponent {
   isLoading = false;
   total: number | null = null;
   search: string = '';
-  hasData=false;
+  hasData = false;
+  urlSegment: string = '';
 
   constructor(
     private companyService: CollectionCenterService,
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllCompanys();
+    this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
+    console.log('First segment:', this.urlSegment);
   }
 
   fetchAllCompanys() {
@@ -171,12 +174,12 @@ export class ManageCompanyComponent {
         this.isLoading = false;
         this.companies = response.results;
         this.total = response.total;
-        this.hasData = this.companies.length >0;
+        this.hasData = this.companies.length > 0;
 
       },
       () => {
         this.isLoading = false;
-        this.hasData=false;
+        this.hasData = false;
       }
     );
   }
@@ -209,62 +212,62 @@ export class ManageCompanyComponent {
     });
   }
 
- deleteCompany(id: number) {
-  const token = this.tokenService.getToken();
-  if (!token) {
-    return;
+  deleteCompany(id: number) {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this company? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonColor: '#2563eb', // Blue confirm
+      cancelButtonColor: '#dc2626',  // Red cancel
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.companyService.deleteCompany(id).subscribe(
+          () => {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The company has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+            this.fetchAllCompanys();
+          },
+          () => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the company.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+          }
+        );
+      }
+    });
   }
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this company? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    confirmButtonColor: '#2563eb', // Blue confirm
-    cancelButtonColor: '#dc2626',  // Red cancel
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.companyService.deleteCompany(id).subscribe(
-        () => {
-          Swal.fire({
-            title: 'Deleted!',
-            text: 'The company has been deleted.',
-            icon: 'success',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-          this.fetchAllCompanys();
-        },
-        () => {
-          Swal.fire({
-            title: 'Error!',
-            text: 'There was an error deleting the company.',
-            icon: 'error',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-        }
-      );
-    }
-  });
-}
 
-  
   back(): void {
-  window.history.back();
-}
+    window.history.back();
+  }
 
   add(): void {
     this.router.navigate(['/collection-hub/create-company']);

@@ -51,7 +51,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View all collection officers') || tokenService.getUserDetails().role === '1'">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholders collection officers') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewCoOfficers()"
         type="button"
@@ -129,7 +129,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholder distribution centres') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewDistributionCenter()"
         type="button"
@@ -194,7 +194,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholder collection companies') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewCompaniesAgents()"
         type="button"
@@ -211,7 +211,7 @@
     </div>
 
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholder distribution companies') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewDistributionCompanies()"
         type="button"

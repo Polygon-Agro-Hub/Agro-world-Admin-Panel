@@ -21,6 +21,7 @@ export class ViewCompaniesComponent implements OnInit {
   total: number | null = null;
   search: string = '';
   hasData = false;
+  urlSegment: string = '';
 
   constructor(
     private distributionHubService: DistributionHubService,
@@ -32,6 +33,11 @@ export class ViewCompaniesComponent implements OnInit {
 
   ngOnInit() {
     this.fetchAllCompanys(); // Initial fetch
+
+    const currentUrl = this.router.url;
+    const segments = currentUrl.split('/').filter(segment => segment.length > 0);
+    this.urlSegment = segments[0]; // "steckholders"
+    console.log('First segment:', this.urlSegment);
   }
 
   fetchAllCompanys() {
@@ -82,71 +88,71 @@ export class ViewCompaniesComponent implements OnInit {
     );
   }
 
- deleteCompany(id: number) {
-  const token = this.tokenService.getToken();
-  if (!token) {
+  deleteCompany(id: number) {
+    const token = this.tokenService.getToken();
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unauthorized',
+        text: 'No valid token found. Please log in again.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+        confirmButtonColor: '#2563eb',
+      });
+      return;
+    }
+
     Swal.fire({
-      icon: 'error',
-      title: 'Unauthorized',
-      text: 'No valid token found. Please log in again.',
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this company? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
       },
-      confirmButtonColor: '#2563eb',
+      confirmButtonColor: '#2563eb', // Blue confirm
+      cancelButtonColor: '#dc2626',  // Red cancel
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.distributionHubService.deleteCompany(id).subscribe(
+          () => {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'The company has been deleted.',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+            this.fetchAllCompanys();
+          },
+          () => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'There was an error deleting the company.',
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+              confirmButtonColor: '#2563eb',
+            });
+          }
+        );
+      }
     });
-    return;
   }
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this company? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    confirmButtonColor: '#2563eb', // Blue confirm
-    cancelButtonColor: '#dc2626',  // Red cancel
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.distributionHubService.deleteCompany(id).subscribe(
-        () => {
-          Swal.fire({
-            title: 'Deleted!',
-            text: 'The company has been deleted.',
-            icon: 'success',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-          this.fetchAllCompanys();
-        },
-        () => {
-          Swal.fire({
-            title: 'Error!',
-            text: 'There was an error deleting the company.',
-            icon: 'error',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-        }
-      );
-    }
-  });
-}
-
   back(): void {
-  this.location.back();
-}
+    this.location.back();
+  }
 
   add(): void {
     this.router

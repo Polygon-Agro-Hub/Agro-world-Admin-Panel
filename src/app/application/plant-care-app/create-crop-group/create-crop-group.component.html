@@ -158,25 +158,37 @@
     <form #cropForm="ngForm">
       <div class="space-y-4">
         <!-- Crop Name -->
-        <div>
-          <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <div *ngIf="newsItems?.length">
+          <label for="cropNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Crop Name By English *
           </label>
-          <input type="text" id="cropNameEnglish" name="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish"
-            #cropNameEnglishInput="ngModel" (input)="capitalizeFirstLetter($event)" (keydown)="preventLeadingSpace($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
-
+        
+          <input
+            type="text"
+            id="cropNameEnglish"
+            name="cropNameEnglish"
+            [(ngModel)]="newsItems[0].cropNameEnglish"
+            #cropNameEnglishInput="ngModel"
+            (input)="capitalizeFirstLetter($event)"
+            (keydown)="preventLeadingSpace($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
+                   focus:outline-none focus:ring-green-500 focus:border-blue-500
+                   dark:bg-tileBlack dark:text-textDark"
+            required
+            pattern="^(?!\d+$)[a-zA-Z0-9]*$"
+          />
+        
           <!-- Validation Errors -->
           <div *ngIf="cropNameEnglishInput.touched">
-            <div *ngIf="cropNameEnglishInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            <div
+              *ngIf="cropNameEnglishInput.errors?.['required']"
+              class="text-red-500 text-sm mt-1"
+            >
               English Crop name is required
             </div>
-            <!-- <div *ngIf="cropNameEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-              Cannot enter numbers only & Can not enter special character
-            </div> -->
           </div>
         </div>
+        
 
         <!-- Crop Name Sinhala -->
         <div>
@@ -267,6 +279,7 @@
             (colorChange)="onColorChangeEdit($event)"
             style="display: inline-block; margin:5px;" 
             #bgColorInputEdit="ngModel" 
+            name="bgColor"
             required>
           </ngx-colors>
         

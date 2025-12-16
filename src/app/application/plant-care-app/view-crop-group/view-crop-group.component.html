@@ -16,7 +16,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -98,6 +98,12 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Varieties
             </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Cost per acre(Rs.)
+            </th>
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Income per acre(Rs.)
+            </th>
             <th class="px-4 py-3 font-normal"></th>
             <th class="px-4 py-3 font-normal"></th>
             <th class="px-4 py-3 font-normal"></th>
@@ -148,6 +154,12 @@
               </div>
               <div *ngIf="item.varietyList.length === 0">No Varieties Yet</div>
             </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+  {{ formatNumberWithCommas(item.costFeild) }}
+</td>
+<td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+  {{ formatNumberWithCommas(item.incomeFeild) }}
+</td>
 
             <td class="py-3 px-2 dark:text-textDark text-center">
               <button *ngIf="

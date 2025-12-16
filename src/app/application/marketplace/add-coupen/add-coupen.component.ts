@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -18,8 +18,13 @@ export class AddCoupenComponent {
   today: string = this.getTodayDate();
   checkPrecentageValueMessage: string = '';
   checkfixAmountValueMessage: string = '';
+  minDate: Date = new Date();
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
+  constructor(
+    private marketSrv: MarketPlaceService,
+    private router: Router,
+    private location: Location
+  ) { }
 
 
 
@@ -37,7 +42,8 @@ export class AddCoupenComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['market/action']);
+        // this.router.navigate(['market/action']);
+        this.location.back();
       }
     });
   }
@@ -56,7 +62,9 @@ export class AddCoupenComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['market/action']);
+        // this.router.navigate(['market/action']);
+        this.location.back();
+
       }
     });
   }
@@ -136,8 +144,11 @@ export class AddCoupenComponent {
       }
     }
 
+    console.log(!this.coupenObj.priceLimit,"djdjdjjd");
+    
     if (this.coupenObj.checkLimit && !this.coupenObj.priceLimit) {
-      missingFields.push('Price Limit is Required');
+      if(this.coupenObj.priceLimit === 0) missingFields.push('Price limit must be greater than 0');
+      else missingFields.push('Price Limit is Required');
     }
 
     if (missingFields.length > 0) {
@@ -174,7 +185,8 @@ export class AddCoupenComponent {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-
+        this.coupenObj.startDate = this.formatDateForAPI(this.DateConverter(this.coupenObj.startDate));
+        this.coupenObj.endDate = this.formatDateForAPI(this.DateConverter(this.coupenObj.endDate));
         this.marketSrv.createCoupen(this.coupenObj).subscribe({
           next: (res) => {
             if (res.status) {
@@ -217,6 +229,8 @@ export class AddCoupenComponent {
               errorMessage = 'A coupon with this code already exists.';
             } else if (err.status === 500) {
               errorMessage = 'Server error. Please try again later.';
+            }else{
+              errorMessage = `${err.error}`;
             }
 
             this.checkPrecentageValueMessage = '';
@@ -267,11 +281,11 @@ export class AddCoupenComponent {
     }
 
     if (num < 0) {
-      this.coupenObj.percentage = 0;
+      // this.coupenObj.percentage = 0;
       this.checkPrecentageValueMessage = 'Cannot be negative number';
-    } else if (num > 100) {
-      this.coupenObj.percentage = 100;
-      this.checkPrecentageValueMessage = 'Cannot be greater than 100';
+    } else if (num > 100 || num === 0) {
+      // this.coupenObj.percentage = 100;
+      this.checkPrecentageValueMessage = 'Enter a value between 1 and 100';
     } else {
       this.checkPrecentageValueMessage = '';
     }
@@ -314,6 +328,30 @@ export class AddCoupenComponent {
       input.value = trimmedValue;
       this.coupenObj.code = trimmedValue;
     }
+  }
+
+  DateConverter(date: any): Date {
+    if (!date) {
+      return new Date();
+    }
+
+    // Handle if date is already a Date object
+    if (date instanceof Date) {
+      return date;
+    }
+
+    // Convert string to Date
+    return new Date(date);
+  }
+
+  private formatDateForAPI(date: Date | null): string {
+    if (!date) return '';
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`; 
   }
 }
 

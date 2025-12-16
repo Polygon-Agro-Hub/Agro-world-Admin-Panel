@@ -21,6 +21,8 @@ export class EditCoupenComponent {
   checkfixAmountValueMessage: string = '';
   coupenId: number | null = null;
   isLoading: boolean = false;
+  minDate: Date = new Date();
+
 
   constructor(
     private marketSrv: MarketPlaceService,
@@ -252,10 +254,16 @@ export class EditCoupenComponent {
 
 
 
-  private formatDateForAPI(date: Date | null): string | null {
-    if (!date) return null;
-    return date.toISOString().split('T')[0];
+  private formatDateForAPI(date: Date | null): string {
+    if (!date) return '';
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`; 
   }
+
   onCancel() {
     Swal.fire({
       icon: 'warning',
@@ -342,6 +350,21 @@ validateDecimalInput(event: Event, field: 'priceLimit' | 'fixDiscount' | 'percen
       this.coupenObj.code = trimmedValue;
     }
   }
+  DateConverter(date: any): Date {
+    if (!date) {
+      return new Date();
+    }
+
+    // Handle if date is already a Date object
+    if (date instanceof Date) {
+      return date;
+    }
+
+    // Convert string to Date
+    return new Date(date);
+  }
+
+  
 }
 
 class Coupen {

@@ -1,6 +1,20 @@
+input[type="date"]::before {
+    content: attr(placeholder);
+    width: 100%;
+    color: #999;
+}
+
+input[type="date"]:focus::before,
+input[type="date"]:valid::before {
+    display: none;
+}
+
 /* Hides clear icon when dropdown has no selected value */
 ::ng-deep .p-dropdown .p-dropdown-clear {
   display: none;
+}
+::ng-deep .p-datepicker-trigger {
+  cursor: pointer !important;
 }
 
 /* Show the clear button only when a value is selected */
@@ -12,9 +26,7 @@
   background-color: #2d354d !important;
   color: #B1B1B1 !important;
   border-radius: 6px !important;
-  /* <-- add this for rounded corners */
   overflow: hidden;
-  /* ensures child items don't spill over rounded corners */
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
@@ -31,7 +43,6 @@
   background-color: #2d354d !important;
   color: #B1B1B1 !important;
 }
-
 
 /* Dark mode styles for PrimeNG Calendar */
 .dark .custom-calendar .p-datepicker {
@@ -106,56 +117,112 @@
 
 ::ng-deep .p-calendar .p-inputtext {
   padding-right: 3rem !important;
-  /* Make room for both icons */
 }
 
 ::ng-deep .p-calendar .p-calendar-clear-icon {
   right: 1.2rem !important;
-  /* Position clear button to the left of calendar icon */
   top: 8.2px !important;
-  /* Move clear button slightly down */
   order: 1;
 }
 
-
 ::ng-deep .p-calendar .p-datepicker-trigger {
   right: 0.5rem !important;
-  /* Position calendar icon on the far right */
   order: 2;
 }
 
 /* For light mode placeholder */
 :host ::ng-deep .p-calendar .p-inputtext::placeholder {
   color: #6c6c6c;
-  /* gray-400 */
 }
 
 /* For dark mode placeholder */
 :host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
   color: #8B8B8B;
-  /* gray-300 */
 }
 
-/* making pop up small*/
+/* ====== SMALLER CALENDAR WITH CLICKABLE DATES ====== */
 
+/* Make calendar popup smaller but still usable */
 ::ng-deep .calendar-popup-small {
-  width: 300px !important;
-  /* Adjust as needed */
-  min-width: 200px !important;
+  width: 260px !important; /* Reduced from 300px */
+  padding: 0.5rem !important; /* Reduced padding */
+  transform: scale(0.95); /* Optional: Scale the entire calendar */
+  transform-origin: top left;
+}
+
+/* Adjust font sizes for smaller calendar */
+::ng-deep .calendar-popup-small .p-datepicker-header {
+  padding: 0.5rem !important;
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-title {
+  font-size: 0.9rem !important;
 }
 
 ::ng-deep .calendar-popup-small .p-datepicker-calendar {
-  font-size: 0.800rem;
-  /* Smaller font */
+  font-size: 0.8rem !important; /* Smaller font for dates */
+}
+
+/* Make date cells compact but still clickable */
+::ng-deep .calendar-popup-small .p-datepicker-calendar table {
+  width: 100% !important;
+  border-spacing: 2px !important; /* Reduced spacing between cells */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-calendar thead th {
+  padding: 0.4rem 0 !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
 }
 
 ::ng-deep .calendar-popup-small .p-datepicker-calendar td {
-  padding: 0.20rem !important;
-  /* Smaller cell padding */
+  padding: 3px 2px !important; /* Reduced cell padding */
 }
 
-::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
-  width: 1.0rem !important;
-  height: 1.0rem !important;
-  line-height: 1.0rem !important;
+/* Optimized date cells - small but clickable */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td > span {
+  min-width: 28px !important;  /* Reduced but still clickable */
+  min-height: 28px !important; /* Reduced but still clickable */
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 0.85rem !important;
+  font-weight: 400 !important;
+}
+
+/* Make clear icon smaller to match */
+::ng-deep .calendar-popup-small .p-calendar-clear-icon {
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-trigger {
+  font-size: 0.9rem !important;
+}
+
+/* Hover effect for better UX */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td > span:hover {
+  transform: scale(1.1) !important;
+  transition: transform 0.15s ease !important;
+}
+
+/* Dark mode adjustments for smaller calendar */
+.dark ::ng-deep .calendar-popup-small {
+  background-color: #2d354d !important;
+}
+
+.dark ::ng-deep .calendar-popup-small .p-datepicker-calendar td > span:hover {
+  background-color: #4a5568 !important;
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important; /* Space between month and year */
 }

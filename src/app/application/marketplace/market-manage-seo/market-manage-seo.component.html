@@ -1,0 +1,95 @@
+<div class="flex items-center text-sm text-gray-500 dark:text-gray-300 mb-2">
+    <span class="hover:text-gray-700 dark:hover:text-gray-100 cursor-pointer">GoviMart</span>
+    <span class="mx-2 text-lg">›</span>
+    <span class="hover:text-gray-700 dark:hover:text-gray-100 cursor-pointer underline-offset-2 hover:underline"
+        (click)="goToActions()">Actions</span>
+    <span class="mx-2 text-lg">›</span>
+    <span class="text-gray-700 dark:text-white">Manage SEO</span>
+</div>
+
+<!-- Main Content -->
+<div class="max-w-8xl mx-auto">
+    <!-- Main Card -->
+    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-6 md:p-8 mt-4">
+        <h1 class="text-2xl md:text-xl font-semibold text-gray-800 dark:text-white mb-2">Search Engine
+            Optimization</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-200 mb-6">
+            Provide information that will help improve the snippet and bring your product to the top of search
+            engines.
+        </p>
+
+        <!-- Form -->
+        <form #seoForm="ngForm" novalidate class="space-y-5">
+            <!-- Select Page -->
+            <div class="w-full">
+                <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Select Page</label>
+                <p-dropdown [options]="pageOptions" [(ngModel)]="selectedPage" name="page" #pageCtrl="ngModel" required
+                    optionLabel="label" optionValue="value" (onChange)="onPageChange($event.value)"
+                    styleClass="w-full h-10 text-sm bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-white p-dropdown-custom"
+                    panelStyleClass="custom-dropdown-panel">
+                </p-dropdown>
+                <p class="mt-1 text-xs text-red-500" *ngIf="pageCtrl.invalid && (pageCtrl.touched || pageCtrl.dirty)">
+                    Page is required.</p>
+            </div>
+
+            <!-- Slug -->
+            <div class="w-full">
+                <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Slug</label>
+                <input type="text" [(ngModel)]="slug" name="slug" #slugCtrl="ngModel" required readonly
+                    aria-readonly="true"
+                    class="w-full h-10 px-3 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-600 dark:text-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed placeholder-gray-400 dark:placeholder-gray-400"
+                    placeholder="https://myfarm.lk/Promotions">
+                <p class="mt-1 text-xs text-red-500" *ngIf="slugCtrl.invalid && (slugCtrl.touched || slugCtrl.dirty)">
+                    Slug is required.</p>
+            </div>
+
+            <!-- Meta Description (allow any characters) -->
+            <div class="w-full">
+                <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Meta Description</label>
+                <textarea [(ngModel)]="metaDescription" name="metaDescription" #metaCtrl="ngModel" required rows="4"
+                    class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none placeholder-gray-400 dark:placeholder-gray-400"
+                    placeholder=""></textarea>
+                <p class="mt-1 text-xs text-red-500" *ngIf="metaCtrl.invalid && (metaCtrl.touched || metaCtrl.dirty)">
+                    Meta description is required.</p>
+            </div>
+
+            <!-- Keywords -->
+            <div class="w-full">
+                <label class="block text-sm font-medium text-gray-700 dark:text-white mb-2">Keywords</label>
+                <div
+                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-slate-800 min-h-[90px] p-3 focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500">
+                    <!-- Keyword Tags -->
+                    <div class="flex flex-wrap gap-2 mb-2" *ngIf="keywords.length > 0">
+                        <span *ngFor="let keyword of keywords"
+                            class="inline-flex items-center gap-1.5 px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-white rounded text-sm">
+                            {{ keyword }}
+                            <button type="button" (click)="removeKeyword(keyword)"
+                                class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </span>
+                    </div>
+                    <!-- Input Field (standalone so it doesn't affect form validity) -->
+                    <input type="text" [(ngModel)]="newKeyword" name="keywordAdder"
+                        [ngModelOptions]="{standalone: true}" (keypress)="onKeywordKeyPress($event)"
+                        class="w-full text-sm text-gray-700 dark:text-white focus:outline-none bg-transparent placeholder-gray-400 dark:placeholder-gray-400"
+                        placeholder="Type a keyword and press Enter">
+                </div>
+                <p class="mt-1 text-xs text-red-500" *ngIf="keywords.length === 0">At least one keyword is
+                    required.</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" (click)="onCancel()"
+                    class="px-5 py-2 bg-gray-500 text-white text-sm font-medium rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400">Cancel</button>
+                <button type="submit" [disabled]="!seoForm.form.valid || keywords.length === 0"
+                    (click)="onSave(seoForm)"
+                    class="px-6 py-2 bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

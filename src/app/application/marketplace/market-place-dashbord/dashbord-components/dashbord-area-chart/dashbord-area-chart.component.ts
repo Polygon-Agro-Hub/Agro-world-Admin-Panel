@@ -28,7 +28,7 @@ export class DashbordAreaChartComponent implements AfterViewInit {
             data: this.areaData.salesCount,
             borderColor: "#4E97FD",
             backgroundColor: "rgba(78, 151, 253, 0.3)",
-            fill: true,
+            fill: false,
             tension: 0.4
           },
           {

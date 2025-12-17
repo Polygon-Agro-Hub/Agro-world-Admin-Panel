@@ -66,6 +66,7 @@ export class CollectionAllViewComponent implements OnInit {
 
   selectProvince: string = '';
   selectDistrict: string = '';
+  urlSegment: string = '';
 
   ProvinceData = [
     {
@@ -141,6 +142,8 @@ export class CollectionAllViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
+    this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
+    console.log('First segment:', this.urlSegment);
 
     this.provinceOptions = this.ProvinceData.map((p) => ({
       label: p.province,

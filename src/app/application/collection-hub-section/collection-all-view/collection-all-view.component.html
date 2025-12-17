@@ -151,13 +151,11 @@
               <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
             </td>
 
-
-
-
+          
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" 
                 *ngIf="
-                  permissionService.hasPermission('View Collection Center') ||
+                ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Collection Center') )||
                   tokenService.getUserDetails().role === '1'
                 "
               (click)="viewCollectionCenter(item.id)">
@@ -191,6 +189,8 @@
                 </svg>
               </button> -->
 
+              <!-- ( urlSegment === 'collection-hub' && permissionService.hasPermission('Add And Edit Company') )||
+              ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder edit collection company') )|| -->
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="navigateEdit(item.id)" *ngIf="
                   permissionService.hasPermission('Edit Collection Center') || permissionService.hasPermission('Manage Collection Centre') ||
                   tokenService.getUserDetails().role === '1'

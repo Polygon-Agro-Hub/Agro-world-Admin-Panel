@@ -937,7 +937,7 @@ export const routes: Routes = [
                     path: 'collective-officer-profile/:id',
                     component: ViewCollectiveOfficerProfileComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'View individual collection officer' },
+                    data: { permission: ['View individual collection officer', 'View Polygon Centre Officer Profile'] },
                   },
                   {
                     path: 'view-officer-targets/:officerId',
@@ -1187,8 +1187,8 @@ export const routes: Routes = [
           {
             path: 'edit-collection-officers/:id',
             component: CollectiveofficersEditComponent,
-            // canActivate: [PermissionGuard],
-            // data: { permission: 'Edit Polygon Centre Officers' },
+            canActivate: [PermissionGuard],
+            data: { permission: ['Edit Polygon Centre Officers', 'Manage CO / CCM / DO'] },
           },
 
         ],

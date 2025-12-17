@@ -181,7 +181,7 @@
 
               <td>
                 <button *ngIf="
-                    permissionService.hasPermission('Delete crop group') ||
+                    permissionService.hasPermission('Delete ongoing cultivation farm cultivation') ||
                     tokenService.getUserDetails().role === '1'
                   " class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                   (click)="deleteCultivation(item.ongoingcultivationscropsid, i)">

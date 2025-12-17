@@ -1,11 +1,11 @@
-import { Component, ViewChild, OnInit  } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormsModule, NgModel  } from '@angular/forms';
+import { FormsModule, NgModel } from '@angular/forms';
 import { CollectionService } from '../../../services/collection.service';
 import { environment } from '../../../environment/environment';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -28,7 +28,7 @@ interface CollectionOfficers {
   created_at: string;
   centerName: string;
   officerModiyBy: string;
-  adminModifyBy:string;
+  adminModifyBy: string;
   regCode: string;
 }
 
@@ -58,7 +58,6 @@ export class ViewDriverComponent implements OnInit {
   jobRole: JobRole[] = [
     { id: 1, jobRole: 'Collection Officer' },
     { id: 2, jobRole: 'Collection Centre Manager' },
-
   ];
   centerNames: CenterName[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];
@@ -111,14 +110,16 @@ export class ViewDriverComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      if (params['Cname']) {
+        this.Cname = params['Cname'];
+      }
+    });
+
     this.fetchAllDrivers();
     this.getAllcompany();
     this.fetchCenterNames();
-    if (this.centerId !== null) {
-      this.fetchManagerNames(this.centerId);
-    }
     console.log('role', this.tokenService.getUserDetails().role);
-  
   }
 
   fetchAllDrivers(
@@ -127,34 +128,30 @@ export class ViewDriverComponent implements OnInit {
     centerStatus: string = this.selectCenterStatus,
     status: string = this.selectStatus,
     searchNIC: string = this.searchNIC,
-    centerId: number| null = this.cId
+    centerId: number | null = this.cId
   ) {
-      this.isLoading = true;
-      this.collectionService
-        .getAllDrivers(
-          page,
-          limit,
-          centerStatus,
-          status,
-          searchNIC,
-          centerId
-
-        )
-        .subscribe(
-          (response) => {
-            this.isLoading = false;
-            if (response.total > 0) {
-              this.hasData = true
-            } else {
-              this.hasData = false
-            }
-            this.collectionOfficers = response.items;
-            this.totalItems = response.total;
-          },
-          (error) => {
-            this.isLoading = false;
-          }
-        );
+    this.isLoading = true;
+    this.collectionService
+      .getAllDrivers(
+        page,
+        limit,
+        centerStatus,
+        status,
+        searchNIC,
+        centerId
+      )
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          this.hasData = response.total > 0;
+          this.collectionOfficers = response.items;
+          this.totalItems = response.total;
+        },
+        (error) => {
+          this.isLoading = false;
+          this.hasData = false;
+        }
+      );
   }
 
   back(): void {
@@ -163,7 +160,6 @@ export class ViewDriverComponent implements OnInit {
     } else {
       this.router.navigate(['steckholders/action']);
     }
-
   }
 
   fetchCenterNames() {
@@ -172,7 +168,7 @@ export class ViewDriverComponent implements OnInit {
       (response: CenterName[]) => {
         this.isLoading = false;
         this.centerNames = response;
-  
+
         this.centerOptions = response.map(item => ({
           label: `${item.regCode} - ${item.centerName}`,
           value: item.id
@@ -181,16 +177,11 @@ export class ViewDriverComponent implements OnInit {
       (error) => { }
     );
   }
-  
 
   onCenterChange() {
     if (this.selectedCenterId) {
       const numericCenterId = parseInt(this.selectedCenterId);
-      console.log(this.selectedCenterId);
-
-
       this.fetchManagerNames(numericCenterId);
-
     } else {
       this.collectionCenterManagerNames = [];
     }
@@ -201,8 +192,6 @@ export class ViewDriverComponent implements OnInit {
     this.collectionService.getDistributionCenterManagerNames(centerId).subscribe(
       (response) => {
         this.isLoading = false;
-        console.log('Manager names response:', response);
-
         this.collectionCenterManagerNames = response.data || response;
         this.collectionCenterManagerNames = this.collectionCenterManagerNames.map(manager => ({
           ...manager,
@@ -216,64 +205,115 @@ export class ViewDriverComponent implements OnInit {
     );
   }
 
-  
-
   onPageChange(event: number) {
     this.page = event;
-    this.fetchAllDrivers();
+    this.fetchAllDrivers(
+      this.page,
+      this.itemsPerPage,
+      this.selectCenterStatus,
+      this.selectStatus,
+      this.searchNIC,
+      this.cId
+    );
   }
 
   applyCenterFilters() {
-    this.fetchAllDrivers();
+    this.page = 1;
+    this.fetchAllDrivers(
+      this.page,
+      this.itemsPerPage,
+      this.selectCenterStatus,
+      this.selectStatus,
+      this.searchNIC,
+      this.cId
+    );
   }
 
   applyCenterStatusFilters() {
-    this.fetchAllDrivers();
+    this.page = 1;
+    this.fetchAllDrivers(
+      this.page,
+      this.itemsPerPage,
+      this.selectCenterStatus,
+      this.selectStatus,
+      this.searchNIC,
+      this.cId
+    );
   }
 
   clearCenterStatusFilter() {
     this.selectCenterStatus = '';
-    this.fetchAllDrivers();
+    this.page = 1;
+    this.fetchAllDrivers(
+      this.page,
+      this.itemsPerPage,
+      this.selectCenterStatus,
+      this.selectStatus,
+      this.searchNIC,
+      this.cId
+    );
   }
 
- deleteCollectionOfficer(id: number) {
-  const token = this.tokenService.getToken();
-  if (!token) return;
+  deleteCollectionOfficer(id: number) {
+    const token = this.tokenService.getToken();
+    if (!token) return;
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this Driver? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-      confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
-      cancelButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2'
-    },
-    buttonsStyling: false, // let Tailwind handle button styling
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
-      this.collectionService.deleteOfficer(id).subscribe(
-        (data) => {
-          this.isLoading = false;
-          if (data.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Deleted!',
-              text: 'The Driver has been deleted.',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-              },
-              buttonsStyling: false
-            });
-            this.fetchAllDrivers(this.page, this.itemsPerPage);
-          } else {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Driver? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+        cancelButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2'
+      },
+      buttonsStyling: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.collectionService.deleteOfficer(id).subscribe(
+          (data) => {
+            this.isLoading = false;
+            if (data.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'The Driver has been deleted.',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+                },
+                buttonsStyling: false
+              });
+              this.fetchAllDrivers(
+                this.page,
+                this.itemsPerPage,
+                this.selectCenterStatus,
+                this.selectStatus,
+                this.searchNIC,
+                this.cId
+              );
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'There was an error deleting the Driver.',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+                },
+                buttonsStyling: false
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
             Swal.fire({
               icon: 'error',
               title: 'Error!',
@@ -286,32 +326,15 @@ export class ViewDriverComponent implements OnInit {
               buttonsStyling: false
             });
           }
-        },
-        () => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'There was an error deleting the Driver.',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-            },
-            buttonsStyling: false
-          });
-        }
-      );
-    }
-  });
-}
-
+        );
+      }
+    });
+  }
 
   openPopup(item: any) {
     const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
     const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
 
-    // Dynamic message based on status
     let message = '';
     if (item.status === 'Approved') {
       message = 'Are you sure you want to reject this driver?';
@@ -370,7 +393,14 @@ export class ViewDriverComponent implements OnInit {
                         title: 'font-semibold',
                       },
                     });
-                    this.fetchAllDrivers(this.page, this.itemsPerPage);
+                    this.fetchAllDrivers(
+                      this.page,
+                      this.itemsPerPage,
+                      this.selectCenterStatus,
+                      this.selectStatus,
+                      this.searchNIC,
+                      this.cId
+                    );
                   } else {
                     Swal.fire({
                       icon: 'error',
@@ -425,7 +455,14 @@ export class ViewDriverComponent implements OnInit {
                         title: 'font-semibold',
                       },
                     });
-                    this.fetchAllDrivers(this.page, this.itemsPerPage);
+                    this.fetchAllDrivers(
+                      this.page,
+                      this.itemsPerPage,
+                      this.selectCenterStatus,
+                      this.selectStatus,
+                      this.searchNIC,
+                      this.cId
+                    );
                   } else {
                     Swal.fire({
                       icon: 'error',
@@ -463,15 +500,15 @@ export class ViewDriverComponent implements OnInit {
 
   updateStatus(item: CollectionOfficers, newStatus: string) {
     item.status = newStatus;
-    Swal.fire(
-     { title: 'Updated!',
-     text: `The Collection Officer status has been updated to ${newStatus}.`,
-     icon: 'success',
-     customClass: {
-       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-       title: 'font-semibold',
-     }}
-    );
+    Swal.fire({
+      title: 'Updated!',
+      text: `The Collection Officer status has been updated to ${newStatus}.`,
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      }
+    });
     this.isPopupVisible = false;
   }
 
@@ -482,14 +519,29 @@ export class ViewDriverComponent implements OnInit {
   }
 
   onSearch() {
-    this.searchNIC = this.searchNIC?.trim() || ''
-    console.log('searchNIC', "'", this.searchNIC, "'")
-    this.fetchAllDrivers(this.page, this.itemsPerPage);
+    this.searchNIC = this.searchNIC?.trim() || '';
+    this.page = 1;
+    this.fetchAllDrivers(
+      this.page,
+      this.itemsPerPage,
+      this.selectCenterStatus,
+      this.selectStatus,
+      this.searchNIC,
+      this.cId
+    );
   }
 
   offSearch() {
     this.searchNIC = '';
-    this.fetchAllDrivers(this.page, this.itemsPerPage);
+    this.page = 1;
+    this.fetchAllDrivers(
+      this.page,
+      this.itemsPerPage,
+      this.selectCenterStatus,
+      this.selectStatus,
+      this.searchNIC,
+      this.cId
+    );
   }
 
   navigatePath(path: string) {
@@ -530,17 +582,15 @@ export class ViewDriverComponent implements OnInit {
 
   handleClaimButtonClick(item: CollectionOfficers) {
     this.selectedOfficer = item;
-    console.log('this.selectedOfficer', this.selectedOfficer)
     this.selectOfficerId = item.id;
 
     if (item.claimStatus === 0) {
-      this.selectedCenterId = null; // Reset selection
-      this.selectedIrmId = null; // Reset selection
+      this.selectedCenterId = null;
+      this.selectedIrmId = null;
       this.iseditModalOpen = true;
       this.collectionCenterManagerNames = [];
     } else if (item.claimStatus === 1) {
       this.showDisclaimView = true;
-      
     }
   }
 
@@ -559,10 +609,17 @@ export class ViewDriverComponent implements OnInit {
               title: 'font-semibold',
               confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
             },
-            
+
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.reload();
+              this.fetchAllDrivers(
+                this.page,
+                this.itemsPerPage,
+                this.selectCenterStatus,
+                this.selectStatus,
+                this.searchNIC,
+                this.cId
+              );
             }
           });
           this.showDisclaimView = false;
@@ -586,27 +643,24 @@ export class ViewDriverComponent implements OnInit {
   claimOfficer() {
     const centerControl = (this as any).selectedCenterIdInput;
     const managerControl = (this as any).selectedIrmIdInput;
-  
+
     if (centerControl) {
       centerControl.control.markAsTouched();
     }
     if (managerControl) {
       managerControl.control.markAsTouched();
     }
-  
+
     if (this.selectedOfficer?.jobRole === 'Driver') {
-      // Require both center and manager
       if (!this.selectedCenterId || !this.selectedIrmId) {
         return;
       }
     } else {
-      // For other roles, require only center
       if (!this.selectedCenterId) {
         return;
       }
     }
 
-    // Prepare payload - include manager ID if selected
     const payload: any = { centerId: this.selectedCenterId };
     if (this.selectedIrmId) {
       payload.managerId = this.selectedIrmId;
@@ -631,7 +685,14 @@ export class ViewDriverComponent implements OnInit {
               this.iseditModalOpen = false;
               this.selectedCenterId = null;
               this.selectedIrmId = null;
-              this.fetchAllDrivers(this.page, this.itemsPerPage);
+              this.fetchAllDrivers(
+                this.page,
+                this.itemsPerPage,
+                this.selectCenterStatus,
+                this.selectStatus,
+                this.searchNIC,
+                this.cId
+              );
             }
           });
         },
@@ -652,16 +713,32 @@ export class ViewDriverComponent implements OnInit {
   }
 
   applyStatusFilters() {
-    this.fetchAllDrivers(this.page, this.itemsPerPage);
+    this.page = 1;
+    this.fetchAllDrivers(
+      this.page,
+      this.itemsPerPage,
+      this.selectCenterStatus,
+      this.selectStatus,
+      this.searchNIC,
+      this.cId
+    );
   }
 
   clearStatusFilter() {
     this.selectStatus = '';
-    this.fetchAllDrivers(this.page, this.itemsPerPage);
+    this.page = 1;
+    this.fetchAllDrivers(
+      this.page,
+      this.itemsPerPage,
+      this.selectCenterStatus,
+      this.selectStatus,
+      this.searchNIC,
+      this.cId
+    );
   }
 
   getModifiedBy(item: CollectionOfficers): string {
-  return item.officerModiyBy || item.adminModifyBy || '--';
+    return item.officerModiyBy || item.adminModifyBy || '--';
   }
 }
 
@@ -681,10 +758,10 @@ class ManagerNames {
   firstNameEnglish!: string;
   lastNameEnglish!: string;
   empId!: string;
+  displayLabel?: string;
 }
 
 class CenterOptions {
   label!: string;
   value!: string;
 }
-

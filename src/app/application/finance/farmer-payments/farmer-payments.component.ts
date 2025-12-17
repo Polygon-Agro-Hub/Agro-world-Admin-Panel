@@ -180,37 +180,53 @@ export class FarmerPaymentsComponent implements OnInit {
   }
 
   applyFilters(): void {
-    let filtered = [...this.farmerPayments];
+  let filtered = [...this.farmerPayments];
 
-    // Apply bank filter
-    if (this.selectedBank) {
-      filtered = filtered.filter(
-        (payment) => payment.bankName === this.selectedBank
-      );
-    }
-
-    // Apply date filter
-    if (this.selectedDate) {
-      const selectedDateStr = this.formatDateForApi(this.selectedDate);
-      filtered = filtered.filter((payment) =>
-        payment.createdAt.startsWith(selectedDateStr)
-      );
-    }
-
-    // Apply search filter
-    if (this.searchTerm) {
-      const searchLower = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (payment) =>
-          payment.farmerName.toLowerCase().includes(searchLower) ||
-          payment.NICnumber.toLowerCase().includes(searchLower) ||
-          payment.phoneNumber.includes(searchLower)
-      );
-    }
-
-    this.filteredPayments = filtered;
-    this.hasData = filtered.length > 0;
+  // Apply bank filter
+  if (this.selectedBank) {
+    filtered = filtered.filter(
+      (payment) => payment.bankName === this.selectedBank
+    );
   }
+
+  // Apply date filter - FIXED
+  if (this.selectedDate) {
+    // Format the selected date as YYYY-MM-DD without timezone issues
+    const selectedDateStr = this.formatDateForFilter(this.selectedDate);
+    
+    filtered = filtered.filter((payment) => {
+      // Parse the payment date string to Date object
+      const paymentDate = new Date(payment.createdAt);
+      // Format the payment date as YYYY-MM-DD for comparison
+      const paymentDateStr = this.formatDateForFilter(paymentDate);
+      
+      return paymentDateStr === selectedDateStr;
+    });
+  }
+
+  // Apply search filter
+  if (this.searchTerm) {
+    const searchLower = this.searchTerm.toLowerCase();
+    filtered = filtered.filter(
+      (payment) =>
+        payment.farmerName.toLowerCase().includes(searchLower) ||
+        payment.NICnumber.toLowerCase().includes(searchLower) ||
+        payment.phoneNumber.includes(searchLower)
+    );
+  }
+
+  this.filteredPayments = filtered;
+  this.hasData = filtered.length > 0;
+}
+
+// Add this new method for consistent date formatting
+private formatDateForFilter(date: Date): string {
+  // Use UTC methods to avoid timezone issues
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
   refreshData(): void {
     this.selectedBank = '';
@@ -220,9 +236,9 @@ export class FarmerPaymentsComponent implements OnInit {
   }
 
   // Helper method to format date for API
-  private formatDateForApi(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
+ private formatDateForApi(date: Date): string {
+  return this.formatDateForFilter(date);
+}
 
   downloadData(): void {
     if (this.filteredPayments.length === 0) {

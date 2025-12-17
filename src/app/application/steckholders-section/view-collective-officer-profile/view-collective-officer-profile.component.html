@@ -3,13 +3,23 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+<div
+  class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+>
   <div class="flex flex-col gap-7 px-2 py-2" id="reportcontainer">
-    <div class="flex flex-row justify-between items-center border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+    <div
+      class="flex flex-row justify-between items-center border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6"
+    >
       <div class="flex flex-row items-center">
-        <div class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden">
+        <div
+          class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden"
+        >
           <ng-container *ngIf="officerObj.image; else defaultIcon">
-            <img [src]="officerObj.image" alt="Officer Image" class="w-full h-full object-cover" />
+            <img
+              [src]="officerObj.image"
+              alt="Officer Image"
+              class="w-full h-full object-cover"
+            />
           </ng-container>
           <ng-template #defaultIcon>
             <i class="fa-regular fa-user text-5xl dark:text-textDark"></i>
@@ -21,8 +31,10 @@
             {{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}
           </p>
           <p class="dark:text-[#a6aebb]">
-            <span>{{ officerObj.jobRole }} -
-              <span>{{ this.empHeader }}{{ officerObj.empId }}</span></span>
+            <span
+              >{{ officerObj.jobRole }} -
+              <span>{{ this.empHeader }}{{ officerObj.empId }}</span></span
+            >
           </p>
 
           <!-- collection officer -->
@@ -115,7 +127,10 @@
 
         <div>
           <p class="text-[#627189]">Mobile Number - 2</p>
-          <p *ngIf="officerObj?.phoneNumber02; else noPhone" class="text-[#030308] dark:text-[#ffffff]">
+          <p
+            *ngIf="officerObj?.phoneNumber02; else noPhone"
+            class="text-[#030308] dark:text-[#ffffff]"
+          >
             {{ officerObj.phoneCode02 }} {{ officerObj.phoneNumber02 }}
           </p>
           <ng-template #noPhone>
@@ -211,7 +226,6 @@
     <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <p class="text-[#030308] dark:text-[#ffffff]">Driving Details</p>
 
-
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div>
           <p class="text-[#627189] dark:text-textDark">Driving License ID</p>
@@ -277,7 +291,6 @@
     <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <p class="text-[#030308] dark:text-[#ffffff]">Vehicle Details</p>
 
-
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div>
           <p class="text-[#627189] dark:text-textDark">Vehicle Registration Number</p>
@@ -331,11 +344,10 @@
   </div>
 </div>
 
-
-
-
-
-<div *ngIf="showDisclaimView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div
+  *ngIf="showDisclaimView"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
   <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
     <div>
       <!-- Icon -->
@@ -349,7 +361,7 @@
         </p>
         <p class="font-semibold text-lg dark:text-white">
           "{{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}""
-          (EMP ID - "{{officerObj.fullEmpId}}")
+          (EMP ID - "{{ officerObj.fullEmpId }}")
           <span class="font-normal dark:text-textDark">from centre</span> <br />
           "{{ officerObj.distributedCenterName }}"?
         </p>
@@ -359,15 +371,23 @@
 
       <!-- Buttons -->
       <div class="flex justify-center gap-4">
-        <button class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="confirmDisclaim(officerId)">
+        <button
+          class="bg-[#E8E8E8] border-[1px] border-[#6B7D8C] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="confirmDisclaim(officerId)"
+        >
           <span class="font-semibold text-[#6B7D8C]">Yes,</span> <br />
-          <span class="text-light text-whight-700 button-text text-[#6B7D8C]">Discharge</span>
+          <span class="text-light text-whight-700 button-text text-[#6B7D8C]"
+            >Discharge</span
+          >
         </button>
-        <button class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
-          (click)="cancelDisclaim()">
+        <button
+          class="bg-[#415CFF] border-[1px] border-[#415CFF] px-10 py-0.35 rounded-lg shadow-md"
+          (click)="cancelDisclaim()"
+        >
           <span class="font-semibold text-white">No,</span> <br />
-          <span class="text-light text-whight-700 button-text text-white">Go Back</span>
+          <span class="text-light text-whight-700 button-text text-white"
+            >Go Back</span
+          >
         </button>
       </div>
     </div>

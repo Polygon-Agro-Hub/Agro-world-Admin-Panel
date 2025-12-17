@@ -52,35 +52,35 @@ export class ViewCollectiveOfficerProfileComponent {
   }
 
   getRoleHeading() {
-    // Normalize the jobRole to handle both "Center" and "Centre" spellings
-    const normalizedRole = this.officerObj.jobRole?.replace('Center', 'Centre') || '';
-
-    switch (normalizedRole) {
-      case 'Customer Officer':
-        this.empHeader = 'CUO';
-        break;
-      case 'Collection Centre Manager':
-        this.empHeader = 'CCM';
-        break;
-      case 'Collection Centre Head':
-        this.empHeader = 'CCH';
-        break;
-      case 'Collection Officer':
-        this.empHeader = 'COO';
-        break;
-      case 'Distribution Centre Manager':
-        this.empHeader = 'DCM';
-        break;
-      case 'Distribution Officer':
-        this.empHeader = 'DIO';
-        break;
-      case 'Driver':
-        this.empHeader = 'DVR';
-        break;
-      default:
-        this.empHeader = '';
+      // Normalize the jobRole to handle both "Center" and "Centre" spellings
+      const normalizedRole = this.officerObj.jobRole?.replace('Center', 'Centre') || '';
+  
+      switch (normalizedRole) {
+        case 'Customer Officer':
+          this.empHeader = 'CUO';
+          break;
+        case 'Collection Centre Manager':
+          this.empHeader = 'CCM';
+          break;
+        case 'Collection Centre Head':
+          this.empHeader = 'CCH';
+          break;
+        case 'Collection Officer':
+          this.empHeader = 'COO';
+          break;
+        case 'Distribution Centre Manager':
+          this.empHeader = 'DCM';
+          break;
+        case 'Distribution Officer':
+          this.empHeader = 'DIO';
+          break;
+        case 'Driver':
+          this.empHeader = 'DVR';
+          break;
+        default:
+          this.empHeader = '';
+      }
     }
-  }
 
   fetchOfficerById(id: number) {
     this.isLoading = true;
@@ -102,7 +102,65 @@ export class ViewCollectiveOfficerProfileComponent {
 
 
   goBack() {
-    window.history.back();
+      window.history.back();
+    }
+
+  deleteFieldOfficer(id: number) {
+    // Show confirmation dialog before deleting
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This action cannot be undone!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.collectionService.deleteOfficer(id).subscribe(
+          (response) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Officer has been deleted successfully.',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            }).then(() => {
+              // Navigate back or to a different page after deletion
+              this.router.navigate(['/steckholders/action/collective-officer']);
+            });
+          },
+          (error) => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Failed to delete officer. Please try again.',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+              },
+            });
+          }
+        );
+      }
+    });
+  }
+
+  editFieldOfficer(id: number) {
+    // Navigate to edit page with the officer ID
+    this.router.navigate([`/steckholders/action/view-distribution-officers/update-distribution-officer/${id}`]);
   }
 
   viewOfficerTarget(officerId: number) {
@@ -121,6 +179,8 @@ export class ViewCollectiveOfficerProfileComponent {
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
 
+    // Detect dark mode
+    const isDarkMode = document.documentElement.classList.contains('dark');
     // Detect dark mode
     const isDarkMode = document.documentElement.classList.contains('dark');
 
@@ -309,6 +369,9 @@ export class ViewCollectiveOfficerProfileComponent {
     doc.text('Personal Information', margin + 2, y);
     y += 10;
 
+    doc.setFontSize(10);
+    const leftColumnX = margin + 2;
+    const rightColumnX = margin + 90;
     doc.setFontSize(10);
     const leftColumnX = margin + 2;
     const rightColumnX = margin + 90;

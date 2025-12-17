@@ -31,6 +31,8 @@ interface NewCropGroup {
   category: string;
   varietyCount: number;
   varietyList: string[];
+  costFeild?: string;
+  incomeFeild?: string;
   image?: string;
   bgColor?: string;
   createdAt?: string;
@@ -295,4 +297,26 @@ export class ViewCropGroupComponent {
   add(): void {
     this.router.navigate(['/plant-care/action/create-crop-group']);
   }
+
+  // In your TypeScript component
+formatNumberWithCommas(value: any): string {
+  if (value === null || value === undefined || value === 'N/A') {
+    return 'N/A';
+  }
+  
+  // Convert to string and remove any existing commas
+  const numStr = value.toString().replace(/,/g, '');
+  
+  // Check if it's a valid number
+  const num = parseFloat(numStr);
+  if (isNaN(num)) {
+    return 'N/A';
+  }
+  
+  // Format with commas and 2 decimal places
+  return num.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
 }

@@ -248,6 +248,7 @@ import { TodaysDeliveriesComponent } from './application/distribution-hub/todays
 import { TransportReasonsToHoldComponent } from './application/distribution-hub/transport-reasons-to-hold/transport-reasons-to-hold.component';
 import { DriverComplainComponent } from './application/Complaints/driver-complain/driver-complain.component';
 import { ViewDriverComplaintsComponent } from './application/Complaints/view-driver-complaints/view-driver-complaints.component';
+import { MarketManageSeoComponent } from './application/marketplace/market-manage-seo/market-manage-seo.component';
 
 export const routes: Routes = [
   {
@@ -1451,6 +1452,12 @@ export const routes: Routes = [
                 component: ViewWholwsaleOrdersComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'View wholesale orders' },
+              },
+              {
+                path: 'manage-seo',
+                component: MarketManageSeoComponent,
+                // canActivate: [PermissionGuard],
+                // data: { permission: 'Manage SEO' },
               },
             ],
           },

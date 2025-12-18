@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -67,6 +65,13 @@ export class SelectedRetailComplaintsComponent implements OnInit {
   ngOnInit(): void {
     this.complainId = this.route.snapshot.params['id'];
     this.fetchComplain();
+  }
+
+  // Getter for formatted phone number (remove hyphens but keep plus sign)
+  get formattedPhoneNumber(): string {
+    if (!this.complain.farmerPhone) return '';
+    // Remove hyphens and spaces, but keep the plus sign for international numbers
+    return this.complain.farmerPhone.replace(/[-\s]/g, '');
   }
 
   back(): void {

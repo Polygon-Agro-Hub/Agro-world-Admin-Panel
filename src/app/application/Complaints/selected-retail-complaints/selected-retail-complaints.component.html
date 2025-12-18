@@ -77,13 +77,14 @@
             style="border-color: #D9D9D9;" disabled />
         </div>
         <div class="flex flex-row justify-center items-center">
-          <label class="block text-gray-700 dark:text-textDark mb-2">
-            <p>Customer</p>Contact
-          </label>
-          <input type="text" [value]="complain.farmerPhone"
-            class="w-full p-4 border ml-5 rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
-            style="border-color: #D9D9D9;" disabled />
-        </div>
+    <label class="block text-gray-700 dark:text-textDark mb-2">
+      <p>Customer</p>Contact
+    </label>
+    <!-- Changed from complain.farmerPhone to formattedPhoneNumber -->
+    <input type="text" [value]="formattedPhoneNumber"
+      class="w-full p-4 border ml-5 rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
+      style="border-color: #D9D9D9;" disabled />
+  </div>
       </div>
 
       <div class="text-center my-20">

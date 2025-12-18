@@ -52,35 +52,35 @@ export class ViewCollectiveOfficerProfileComponent {
   }
 
   getRoleHeading() {
-      // Normalize the jobRole to handle both "Center" and "Centre" spellings
-      const normalizedRole = this.officerObj.jobRole?.replace('Center', 'Centre') || '';
-  
-      switch (normalizedRole) {
-        case 'Customer Officer':
-          this.empHeader = 'CUO';
-          break;
-        case 'Collection Centre Manager':
-          this.empHeader = 'CCM';
-          break;
-        case 'Collection Centre Head':
-          this.empHeader = 'CCH';
-          break;
-        case 'Collection Officer':
-          this.empHeader = 'COO';
-          break;
-        case 'Distribution Centre Manager':
-          this.empHeader = 'DCM';
-          break;
-        case 'Distribution Officer':
-          this.empHeader = 'DIO';
-          break;
-        case 'Driver':
-          this.empHeader = 'DVR';
-          break;
-        default:
-          this.empHeader = '';
-      }
+    // Normalize the jobRole to handle both "Center" and "Centre" spellings
+    const normalizedRole = this.officerObj.jobRole?.replace('Center', 'Centre') || '';
+
+    switch (normalizedRole) {
+      case 'Customer Officer':
+        this.empHeader = 'CUO';
+        break;
+      case 'Collection Centre Manager':
+        this.empHeader = 'CCM';
+        break;
+      case 'Collection Centre Head':
+        this.empHeader = 'CCH';
+        break;
+      case 'Collection Officer':
+        this.empHeader = 'COO';
+        break;
+      case 'Distribution Centre Manager':
+        this.empHeader = 'DCM';
+        break;
+      case 'Distribution Officer':
+        this.empHeader = 'DIO';
+        break;
+      case 'Driver':
+        this.empHeader = 'DVR';
+        break;
+      default:
+        this.empHeader = '';
     }
+  }
 
   fetchOfficerById(id: number) {
     this.isLoading = true;
@@ -102,8 +102,8 @@ export class ViewCollectiveOfficerProfileComponent {
 
 
   goBack() {
-      window.history.back();
-    }
+    window.history.back();
+  }
 
   deleteFieldOfficer(id: number) {
     // Show confirmation dialog before deleting
@@ -322,14 +322,14 @@ export class ViewCollectiveOfficerProfileComponent {
     y += 7;
 
     // Center Name (if exists)
-    if (this.officerObj.centerRegCode ) {
+    if (this.officerObj.centerRegCode) {
       doc.setFont("Inter", "normal");
       doc.setTextColor(colors.textSecondary);
       doc.text(getValueOrNA(this.officerObj.centerRegCode), detailsX, y + 10);
       y += 7;
     }
 
-    if (this.officerObj.distributedCenterRegCode ) {
+    if (this.officerObj.distributedCenterRegCode) {
       doc.setFont("Inter", "normal");
       doc.setTextColor(colors.textSecondary);
       doc.text(getValueOrNA(this.officerObj.distributedCenterRegCode), detailsX, y + 10);
@@ -340,7 +340,7 @@ export class ViewCollectiveOfficerProfileComponent {
     doc.setFont("Inter", "normal");
     doc.setTextColor(colors.textSecondary);
     doc.text(getValueOrNA(this.officerObj.companyNameEnglish), detailsX, y + 10);
-    
+
     // Add extra space between profile section and Personal Information section
     y += 25; // Increased from 20 to 25 for more spacing
 
@@ -360,7 +360,7 @@ export class ViewCollectiveOfficerProfileComponent {
     // Personal Information Section
     const personalInfoHeight = 70;
     checkNewPage(personalInfoHeight);
-    
+
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
     doc.setTextColor(colors.textPrimary);
@@ -426,7 +426,7 @@ export class ViewCollectiveOfficerProfileComponent {
     // Address Details Section
     const addressDetailsHeight = 70;
     checkNewPage(addressDetailsHeight);
-    
+
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
     doc.setTextColor(colors.textPrimary);
@@ -477,7 +477,7 @@ export class ViewCollectiveOfficerProfileComponent {
     // Bank Details Section
     const bankDetailsHeight = 50;
     checkNewPage(bankDetailsHeight);
-    
+
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
     doc.setTextColor(colors.textPrimary);
@@ -516,7 +516,7 @@ export class ViewCollectiveOfficerProfileComponent {
     // Driving Details Section
     const driverDetailsHeight = 50;
     checkNewPage(driverDetailsHeight);
-    
+
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
     doc.setTextColor(colors.textPrimary);
@@ -554,7 +554,7 @@ export class ViewCollectiveOfficerProfileComponent {
     // Vehicle Insurance Details Section
     const insuranceDetailsHeight = 50;
     checkNewPage(insuranceDetailsHeight);
-    
+
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
     doc.setTextColor(colors.textPrimary);
@@ -598,7 +598,7 @@ export class ViewCollectiveOfficerProfileComponent {
     // Vehicle Details Section
     const vehicleDetailsHeight = 100;
     checkNewPage(vehicleDetailsHeight);
-    
+
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
     doc.setTextColor(colors.textPrimary);
@@ -733,6 +733,82 @@ export class ViewCollectiveOfficerProfileComponent {
       'polygon holdings private limited' && this.officerObj.status === 'Approved'
     );
   }
+
+  deleteOfficer(jobRole: string) {
+    const token = this.tokenService.getToken();
+    if (!token) return;
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to delete this ${jobRole}? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+        cancelButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2'
+      },
+      buttonsStyling: false, // let Tailwind handle button styling
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.collectionService.deleteOfficer(this.officerId).subscribe(
+          (data) => {
+            this.isLoading = false;
+            if (data.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: `The ${jobRole} has been deleted.`,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+                },
+                buttonsStyling: false
+              });
+              this.location.back();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: `There was an error deleting the ${jobRole}.`,
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+                },
+                buttonsStyling: false
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: `There was an error deleting the ${jobRole}.`,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              },
+              buttonsStyling: false
+            });
+          }
+        );
+      }
+    });
+  }
+
+editOfficer(id: number, jobRole: string) {
+  if(jobRole === 'Driver'){
+    this.router.navigate([`/steckholders/action/view-distribution-officers/update-distribution-officer/${id}`]);
+  }
+}
 }
 
 class CollectionOfficer {

@@ -85,6 +85,8 @@ export class ViewCollectiveOfficerComponent {
 
   hasData: boolean = false;
 
+  urlSegment: string = '';
+
   centerStatusOptions = [
     { label: 'Disclaimed', value: 'Disclaimed' },
     { label: 'Claimed', value: 'Claimed' },
@@ -244,6 +246,10 @@ export class ViewCollectiveOfficerComponent {
       this.fetchManagerNames(this.centerId);
     }
     console.log('role', this.tokenService.getUserDetails().role);
+
+    this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
+    console.log('First segment:', this.urlSegment);
+
     // this.route.queryParams.subscribe((params) => {
     //   this.centerId = params['id'] ? +params['id'] : null;
     // });

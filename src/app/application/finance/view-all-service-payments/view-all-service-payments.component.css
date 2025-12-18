@@ -16,3 +16,61 @@
 ::ng-deep .calendar-popup-small .p-datepicker .p-datepicker-header {
   padding: 0.5rem !important;
 }
+
+/* Option 1: Target specific classes */
+.small-calendar .p-calendar {
+  font-size: 0.875rem; /* Smaller font size */
+}
+
+.small-calendar-input {
+  height: 2rem !important; /* Smaller height */
+  padding: 0.25rem 0.5rem !important; /* Smaller padding */
+  font-size: 0.875rem !important;
+}
+
+/* Option 2: Target the calendar icon */
+.small-calendar .p-calendar .p-datepicker-trigger {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+/* Option 3: Adjust the calendar popup */
+.calendar-popup-small .p-datepicker {
+  width: 250px !important;
+}
+
+.calendar-popup-small .p-datepicker table td {
+  padding: 0.1rem !important;
+}
+
+.calendar-popup-small .p-datepicker table td > span {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  font-size: 0.75rem !important;
+}
+
+.calendar-popup-small .p-datepicker-header {
+  padding: 0.25rem !important;
+  font-size: 0.875rem !important;
+}
+
+/* Option 4: Global style for all p-calendar in this component */
+:host ::ng-deep .p-calendar {
+  font-size: 0.875rem;
+}
+
+:host ::ng-deep .p-calendar .p-inputtext {
+  padding: 0.25rem 0.5rem;
+  height: 2rem;
+  font-size: 0.875rem;
+}
+
+:host ::ng-deep .p-calendar .p-datepicker-trigger {
+  width: 2rem;
+  height: 2rem;
+}
+
+:host ::ng-deep .p-datepicker {
+  transform: scale(0.9);
+  transform-origin: top left;
+}

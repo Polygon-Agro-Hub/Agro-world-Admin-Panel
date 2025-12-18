@@ -242,8 +242,9 @@
       <!-- Image Navigation -->
       <div class="relative flex items-center justify-center">
         
-        <!-- Left Arrow -->
+        <!-- Left Arrow - Only show if more than 1 image -->
         <button
+          *ngIf="sanitizedImageUrls.length > 1"
           class="absolute left-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
           (click)="prevImage()" [disabled]="currentIndex === 0" aria-label="Previous Image">
           <i class="fa-solid fa-chevron-left"></i>
@@ -255,8 +256,9 @@
             class="max-w-[250px] max-h-[250px] object-contain rounded shadow-md" (error)="handleImageError($event)" />
         </div>
 
-        <!-- Right Arrow -->
+        <!-- Right Arrow - Only show if more than 1 image -->
         <button
+          *ngIf="sanitizedImageUrls.length > 1"
           class="absolute right-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
           (click)="nextImage()" [disabled]="currentIndex === sanitizedImageUrls.length - 1" aria-label="Next Image">
           <i class="fa-solid fa-chevron-right"></i>

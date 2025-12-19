@@ -249,6 +249,7 @@ import { TransportReasonsToHoldComponent } from './application/distribution-hub/
 import { DriverComplainComponent } from './application/Complaints/driver-complain/driver-complain.component';
 import { ViewDriverComplaintsComponent } from './application/Complaints/view-driver-complaints/view-driver-complaints.component';
 import { MarketManageSeoComponent } from './application/marketplace/market-manage-seo/market-manage-seo.component';
+import { DistributionViewCustomerOrdersComponent } from './application/distribution-hub/distribution-view-customer-orders/distribution-view-customer-orders.component';
 
 export const routes: Routes = [
   {
@@ -1762,6 +1763,10 @@ export const routes: Routes = [
                 component: AssignCitiesComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'Distribution Hub assign cities' },
+              },
+              {
+                path: 'view-customer-orders',
+                component: DistributionViewCustomerOrdersComponent,
               },
             ],
           },

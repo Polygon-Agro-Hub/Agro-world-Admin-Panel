@@ -18,12 +18,13 @@ export class DistributionhubComponent {
   popupVisibleNews = false;
   popupVisibleMarketPrice = false;
   popupVisibleCropCalender = false;
+  popupViewCustomerOrders = false;
 
   constructor(
     private router: Router,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) { }
+  ) {}
 
   togglePopupNews() {
     this.popupVisibleNews = !this.popupVisibleNews;
@@ -55,13 +56,19 @@ export class DistributionhubComponent {
     }
   }
 
+  toggleViewCustomerOrders() {
+    this.popupViewCustomerOrders = !this.popupViewCustomerOrders;
+  }
+
   navigateToCreateNews(): void {
     this.isLoading = true;
-    this.router.navigate(['/distribution-hub/action/create-company'], {
-      queryParams: { type: 'distribution' }
-    }).then(() => {
-      this.isLoading = false;
-    });
+    this.router
+      .navigate(['/distribution-hub/action/create-company'], {
+        queryParams: { type: 'distribution' },
+      })
+      .then(() => {
+        this.isLoading = false;
+      });
   }
 
   navigateToViewCompanies(): void {
@@ -77,12 +84,13 @@ export class DistributionhubComponent {
     this.router.navigate(['/distribution-hub/action/add-destribition-center']);
   }
 
-
+  navigateToViewCustomerOrders(): void {
+    this.router.navigate(['/distribution-hub/action/view-customer-orders']);
+  }
 
   createVariety(): void {
     this.router.navigate(['/distribution-hub/action/view-destribition-center']);
   }
-
 
   viewPolygon(): void {
     this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
@@ -90,10 +98,8 @@ export class DistributionhubComponent {
 
   assignCities() {
     this.router.navigate(['/distribution-hub/action/assign-cities']);
-
   }
   transport() {
     this.router.navigate(['/distribution-hub/action/transport']);
-
   }
 }

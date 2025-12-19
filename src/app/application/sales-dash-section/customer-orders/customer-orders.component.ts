@@ -50,7 +50,7 @@ export class CustomerOrdersComponent implements OnInit {
 
   // Status mapping for UI buttons to API values
   private statusMap: { [key: string]: string } = {
-    assigned: 'Ordered',
+    assigned: 'Assigned',
     processing: 'Processing',
     hold: 'Hold',
     collected: 'Collected',

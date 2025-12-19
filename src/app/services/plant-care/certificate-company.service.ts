@@ -147,6 +147,7 @@ export interface FarmerClusterAudit {
   officerEmpId: string;
   userName:string;
   assignedByCFO:string;
+  assigedOfficerEmpId: string;
 }
 export interface FarmerClusterAuditResponse {
   message: string;

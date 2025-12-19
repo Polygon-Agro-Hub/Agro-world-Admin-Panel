@@ -25,6 +25,7 @@
 
             <!-- Category -->
             <p-dropdown
+            panelStyleClass="w-36"
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
               [options]="comCategories" [(ngModel)]="filterComCategory" optionLabel="label" optionValue="value"
               [showClear]="true" placeholder="Category" (onChange)="applyFilters()"></p-dropdown>
@@ -296,3 +297,34 @@
     </div>
   </div>
 </div>
+
+
+<!-- ::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important; /* <-- add this for rounded corners */
+  overflow: hidden; /* ensures child items don't spill over rounded corners */
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+padding-left: 0.9rem !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+padding-left: 0.9rem !important;
+} -->

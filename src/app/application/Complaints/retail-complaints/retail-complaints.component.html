@@ -77,19 +77,19 @@
         <thead class="bg-white dark:bg-gray-800">
           <tr>
             <th
-              class="py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
+              class="py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-left">
               Ref No</th>
             <th
-              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
+              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-left">
               Category</th>
             <th
-              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
+              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-left">
               First Name</th>
             <th
-              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
+              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-left">
               Last Name</th>
             <th
-              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
+              class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-left">
               Contact Number</th>
             <th
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
@@ -107,6 +107,9 @@
             <th  *ngIf="permissionService.hasPermission('View Retail complaint') || tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-center">
               View Reply</th>
+
+            <th  class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-gray-500 dark:text-gray-300 whitespace-nowrap text-left">
+              Replied By</th>
           </tr>
         </thead>
         <tbody>
@@ -119,44 +122,61 @@
                     id: 'retailComplaintsPager'
                   }
             " class="text-gray-900 dark:text-gray-100">
-            <td class="py-3 text-[14px] md:text-[16px] font-normal text-center whitespace-nowrap">
+            <td class="py-3 text-[14px] md:text-[16px] font-normal text-left whitespace-nowrap">
               {{ item.refNo }}
             </td>
-            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-center">
-              {{ item.complainCategory }}
+            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-left">
+              <span class="group inline-block max-w-[300px]">
+                <!-- Truncated -->
+                <span class="block group-hover:hidden whitespace-nowrap">
+                  {{ item.complainCategory | slice:0:25 }}
+                  {{ item.complainCategory.length > 25 ? '...' : '' }}
+                </span>
+            
+                <!-- Full text -->
+                <span class="hidden group-hover:block whitespace-nowrap break-words">
+                  {{ item.complainCategory }}
+                </span>
+              </span>
             </td>
-            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-center">
+            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-left">
               {{ item.firstName }}
             </td>
-            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-center">
+            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-left">
               {{ item.lastName }}
             </td>
-            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-center">
+            <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-left">
               {{ item.contactNumber }}
             </td>
             <td
               class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-center text-gray-900 dark:text-gray-100 whitespace-nowrap">
-              {{ item.createdAt | date: 'yyyy/MM/dd' }} at
-              {{ item.createdAt | date: 'hh:mm a' }}
+              <p>{{ item.createdAt | date: 'yyyy/MM/dd' }} at</p>
+              <p>{{ item.createdAt | date: 'hh:mm a' }}</p>
             </td>
 
-            <td class="flex px-4 py-3 text-center justify-center">
-              <span class="w-32 h-8 flex items-center justify-center font-medium rounded-md text-sm" 
-              [ngClass]="{
-                'bg-green-100 text-green-600': item.status === 'Assigned',
-                'bg-red-100 text-red-600': item.status === 'Pending',
-                'bg-yellow-100 text-yellow-600': item.status === 'Closed'
-              }" [ngStyle]="{
-                'color': item.status==='Assigned'? '#308233':
-                         item.status==='Pending'? '#D16D6A':
-                         item.status==='Closed'? '#A8A100':'',
-                'background-color': item.status==='Assigned'? '#BBFFC6':
-                                    item.status==='Pending'? '#FFB9B7':
-                                    item.status==='Closed'? '#F8FFA6':''
-              }">
-                {{ item.status }}
-              </span>
+            <td class="px-4 py-3 align-middle text-center">
+              <div class="flex items-center justify-center">
+                <span
+                  class="w-32 h-8 flex items-center justify-center font-medium rounded-md text-sm"
+                  [ngClass]="{
+                    'bg-green-100 text-green-600': item.status === 'Assigned',
+                    'bg-red-100 text-red-600': item.status === 'Pending',
+                    'bg-yellow-100 text-yellow-600': item.status === 'Closed'
+                  }"
+                  [ngStyle]="{
+                    'color': item.status==='Assigned'? '#308233':
+                             item.status==='Pending'? '#D16D6A':
+                             item.status==='Closed'? '#A8A100':'',
+                    'background-color': item.status==='Assigned'? '#BBFFC6':
+                                        item.status==='Pending'? '#FFB9B7':
+                                        item.status==='Closed'? '#F8FFA6':'' 
+                  }"
+                >
+                  {{ item.status }}
+                </span>
+              </div>
             </td>
+            
 
             <td class="px-3 py-2 whitespace-nowrap text-center" *ngIf="permissionService.hasPermission('Reply Retail complaint') || tokenService.getUserDetails().role === '1'">
               <button (click)="navigateSelectComplain(item.id)" class="text-blue-600 hover:text-blue-900"

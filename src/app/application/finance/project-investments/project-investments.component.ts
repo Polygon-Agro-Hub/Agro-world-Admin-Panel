@@ -346,4 +346,10 @@ export class ProjectInvestmentsComponent implements OnInit {
       '/finance/action/finance-govicapital/ivesment-requests',
     ]);
   }
+
+  viewDetails(id:number){
+    this.router.navigate([
+      `/finance/action/finance-govicapital/project-investments-transactions/${id}`,
+    ]);
+  }
 }

@@ -26,6 +26,8 @@ class Complain {
   createdAt!: string;
   reply!: string;
   imageUrls: string[] = [];
+  companyNameEnglish!: string;
+  companyContactEnglish!: string;
 }
 
 @Component({
@@ -107,6 +109,8 @@ export class SelectedwholesaleComplaintsComponent implements OnInit {
           createdAt: this.datePipe.transform(data.createdAt, 'yyyy-MM-dd hh:mm:ss a') || '',
           reply: data.reply || '',
           imageUrls: this.parseImageUrls(data.imageUrls),
+          companyNameEnglish: data.companyName,
+          companyContactEnglish: data.companyContactNumber,
         };
         
         this.messageContent = data.reply || '';

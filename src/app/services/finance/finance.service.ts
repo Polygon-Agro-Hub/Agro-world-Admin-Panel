@@ -853,20 +853,30 @@ export class FinanceService {
 
 
   getProjectInvestments(
-  search?: string
-): Observable<{ count: number; data: any[] }> {
-  let params = new HttpParams();
+    search?: string
+  ): Observable<{ count: number; data: any[] }> {
+    let params = new HttpParams();
 
-  if (search && search.trim()) {
-    params = params.set('search', search.trim());
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/project-investments`;
+    return this.http.get<{ count: number; data: any[] }>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
   }
 
-  const url = `${this.apiUrl}finance/project-investments`;
-  return this.http.get<{ count: number; data: any[] }>(url, {
-    headers: this.getHeaders(),
-    params: params,
-  });
-}
+  getInspectionDetails(id:number): Observable<{ count: number; data: any[] }> {
+    let params = new HttpParams();
+
+
+    const url = `${this.apiUrl}finance/get-inspection-details/${id}`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
+  }
 }
 
 

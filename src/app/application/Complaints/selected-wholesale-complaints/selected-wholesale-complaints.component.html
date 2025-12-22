@@ -86,6 +86,23 @@
         </div>
       </div>
 
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="flex flex-row justify-center items-center">
+          <label class="block text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark mb-2">Company </label>
+          <input type="text" [value]="complain.companyNameEnglish"
+            class="w-full p-4 ml-10 border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
+            style="border-color: #D9D9D9;" disabled />
+        </div>
+        <div class="flex flex-row justify-center items-center">
+          <label class="block text-gray-700 dark:text-textDark mb-2">
+            <p>Company</p>Contact
+          </label>
+          <input type="text" [value]="complain.companyContactEnglish"
+            class="w-full p-4 border ml-5 rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
+            style="border-color: #D9D9D9;" disabled />
+        </div>
+      </div>
+
        <div class="text-center my-20">
         <button (click)="showReplyDialog(complain.language)"
           class="bg-[#3980C0] text-white py-2 px-4 rounded-lg hover:bg-[#3980C0]">

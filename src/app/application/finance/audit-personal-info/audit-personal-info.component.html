@@ -8,22 +8,187 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="mb-10 p-6 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center justify-between space-x-8 divide-x"
+    class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center justify-between space-x-8 divide-x"
   ></div>
-  <div class="pt-5 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
+  <div
+    class="pt-5 pb-5 min-w-[1700px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div
+      class="flex whitespace-nowrap space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300"
+    >
       <button
-        [ngClass]="
-          activeButton === 'personal info'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        "
+        (click)="selectTab('Personal Info')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]':
+            activeTab === 'Personal Info',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Personal Info'
+        }"
         class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-        
       >
-        <i *ngIf="activeButton === 'personal info'" class="fa fa-check"></i>
+        <i *ngIf="activeTab === 'Personal Info'" class="fa fa-check"></i>
         Personal Info
       </button>
+      <button
+        (click)="selectTab('ID Proof')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]': activeTab === 'ID Proof',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'ID Proof'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'ID Proof'" class="fa fa-check"></i>
+        ID Proof
+      </button>
+      <button
+        (click)="selectTab('Finance Info')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]':
+            activeTab === 'Finance Info',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Finance Info'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Finance Info'" class="fa fa-check"></i>
+        Finance Info
+      </button>
+      <button
+        (click)="selectTab('Land Info')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Land Info',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Land Info'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Land Info'" class="fa fa-check"></i>
+        Land Info
+      </button>
+      <button
+        (click)="selectTab('Investment Info')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]':
+            activeTab === 'Investment Info',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Investment Info'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Investment Info'" class="fa fa-check"></i>
+        Investment Info
+      </button>
+      <button
+        (click)="selectTab('Cultivation Info')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]':
+            activeTab === 'Cultivation Info',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Cultivation Info'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Cultivation Info'" class="fa fa-check"></i>
+        Cultivation Info
+      </button>
+      <button
+        (click)="selectTab('Cropping Systems')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]':
+            activeTab === 'Cropping Systems',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Cropping Systems'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Cropping Systems'" class="fa fa-check"></i>
+        Cropping Systems
+      </button>
+      <button
+        (click)="selectTab('Profit & Risk')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]':
+            activeTab === 'Profit & Risk',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Profit & Risk'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Profit & Risk'" class="fa fa-check"></i>
+        Profit & Risk
+      </button>
+      <button
+        (click)="selectTab('Economical')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Economical',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Economical'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Economical'" class="fa fa-check"></i>
+        Economical
+      </button>
+      <button
+        (click)="selectTab('Labour')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Labour',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Labour'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Labour'" class="fa fa-check"></i>
+        Labour
+      </button>
+      <button
+        (click)="selectTab('Harvest Storage')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]':
+            activeTab === 'Harvest Storage',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Harvest Storage'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Harvest Storage'" class="fa fa-check"></i>
+        Harvest Storage
+      </button>
+    </div>
+    <div class="h-5"></div>
+    <div *ngIf="activeTab === 'Personal Info'">
+      <app-personal-info-tab></app-personal-info-tab>
+    </div>
+    <div *ngIf="activeTab === 'ID Proof'">
+      <app-id-proof-tab></app-id-proof-tab>
+    </div>
+    <div *ngIf="activeTab === 'Finance Info'">
+      <app-finance-info-tab></app-finance-info-tab>
+    </div>
+    <div *ngIf="activeTab === 'Land Info'">
+      <app-land-info-tab></app-land-info-tab>
+    </div>
+    <div *ngIf="activeTab === 'Investment Info'">
+      <app-investment-info-tab></app-investment-info-tab>
+    </div>
+    <div *ngIf="activeTab === 'Cultivation Info'">
+      <app-cultivation-info-tab></app-cultivation-info-tab>
+    </div>
+    <div *ngIf="activeTab === 'Cropping Systems'">
+      <app-cropping-system-tab></app-cropping-system-tab>
+    </div>
+    <div *ngIf="activeTab === 'Profit & Risk'">
+      <app-profit-risk-tab></app-profit-risk-tab>
+    </div>
+    <div *ngIf="activeTab === 'Economical'">
+      <app-economical-tab></app-economical-tab>
+    </div>
+    <div *ngIf="activeTab === 'Labour'">
+      <app-labour-tab></app-labour-tab>
+    </div>
+    <div *ngIf="activeTab === 'Harvest Storage'">
+      <app-harvest-storage-tab></app-harvest-storage-tab>
     </div>
   </div>
 </div>

@@ -37,7 +37,12 @@
               placeholder="Reply" (onChange)="regStatusFil()"></p-dropdown>
 
             <!-- Search -->
-            <div class="flex items-center rounded-full px-2 py-1 w-96 bg-gray-100 dark:bg-gray-800">
+            <div class="group flex items-center rounded-full px-2 py-1 w-96 bg-gray-100 dark:bg-gray-800 relative">
+              <div
+            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          >
+          Search by RefNo, Category, Name, Phone Number
+          </div>
               <input type="text" placeholder="Search by RefNo, Category, Name, Phone..." [(ngModel)]="searchText"
                 (keyup.enter)="searchComplain()" (ngModelChange)="onSearchTextChange($event)"
                 class="bg-transparent outline-none w-full text-gray-900 dark:text-gray-100" />

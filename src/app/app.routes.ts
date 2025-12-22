@@ -250,6 +250,7 @@ import { DriverComplainComponent } from './application/Complaints/driver-complai
 import { ViewDriverComplaintsComponent } from './application/Complaints/view-driver-complaints/view-driver-complaints.component';
 import { MarketManageSeoComponent } from './application/marketplace/market-manage-seo/market-manage-seo.component';
 import { DistributionViewCustomerOrdersComponent } from './application/distribution-hub/distribution-view-customer-orders/distribution-view-customer-orders.component';
+import { AuditPersonalInfoComponent } from './application/finance/audit-personal-info/audit-personal-info.component';
 
 export const routes: Routes = [
   {
@@ -363,9 +364,7 @@ export const routes: Routes = [
                 component: SlaveCropCalendarComponent,
                 canActivate: [PermissionGuard],
                 data: {
-                  permission: [
-                    'View ongoing cultivation farm cultivation',
-                  ],
+                  permission: ['View ongoing cultivation farm cultivation'],
                 },
               },
               {
@@ -670,6 +669,10 @@ export const routes: Routes = [
                     path: 'published-projects',
                     component: PublishedProjectsComponent,
                   },
+                  {
+                    path: 'audit-personal-infor',
+                    component: AuditPersonalInfoComponent,
+                  },
                 ],
               },
               {
@@ -780,7 +783,9 @@ export const routes: Routes = [
                     path: '',
                     component: ViewDistributionOfficerComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Stakeholders view distribution officer' },
+                    data: {
+                      permission: 'Stakeholders view distribution officer',
+                    },
                   },
                   {
                     path: 'create-distribution-officer',
@@ -925,7 +930,12 @@ export const routes: Routes = [
                     path: 'personal-edit/:id',
                     component: CollectiveofficersEditComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: ['Manage CO / CCM / DO', 'Edit Polygon Centre Officers'] },
+                    data: {
+                      permission: [
+                        'Manage CO / CCM / DO',
+                        'Edit Polygon Centre Officers',
+                      ],
+                    },
                   },
                   {
                     path: 'company',
@@ -939,7 +949,12 @@ export const routes: Routes = [
                     path: 'collective-officer-profile/:id',
                     component: ViewCollectiveOfficerProfileComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: ['View individual collection officer', 'View Polygon Centre Officer Profile'] },
+                    data: {
+                      permission: [
+                        'View individual collection officer',
+                        'View Polygon Centre Officer Profile',
+                      ],
+                    },
                   },
                   {
                     path: 'view-officer-targets/:officerId',
@@ -1074,7 +1089,7 @@ export const routes: Routes = [
               permission: [
                 'Edit Collection Center',
                 'Manage Collection Centre',
-                'Edit Polygon Collection Centre'
+                'Edit Polygon Collection Centre',
               ],
             },
           },
@@ -1190,9 +1205,13 @@ export const routes: Routes = [
             path: 'edit-collection-officers/:id',
             component: CollectiveofficersEditComponent,
             canActivate: [PermissionGuard],
-            data: { permission: ['Edit Polygon Centre Officers', 'Manage CO / CCM / DO'] },
+            data: {
+              permission: [
+                'Edit Polygon Centre Officers',
+                'Manage CO / CCM / DO',
+              ],
+            },
           },
-
         ],
       },
 
@@ -1633,7 +1652,6 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'view driver Complaints' },
               },
-              
             ],
           },
         ],
@@ -1671,7 +1689,10 @@ export const routes: Routes = [
                 path: 'todays-deliveries',
                 component: TodaysDeliveriesComponent,
               },
-              { path: 'reasons-to-hold', component: TransportReasonsToHoldComponent },
+              {
+                path: 'reasons-to-hold',
+                component: TransportReasonsToHoldComponent,
+              },
               {
                 path: 'create-company',
                 component: CreateCompanyComponent,
@@ -1819,4 +1840,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

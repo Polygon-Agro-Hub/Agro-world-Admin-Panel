@@ -1,0 +1,29 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="mb-10 p-6 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center justify-between space-x-8 divide-x"
+  ></div>
+  <div class="pt-5 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
+      <button
+        [ngClass]="
+          activeButton === 'personal info'
+            ? 'border border-[#415CFF] text-[#415CFF]'
+            : 'border border-gray-300 text-textLight dark:text-textDark'
+        "
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        
+      >
+        <i *ngIf="activeButton === 'personal info'" class="fa fa-check"></i>
+        Personal Info
+      </button>
+    </div>
+  </div>
+</div>

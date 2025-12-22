@@ -9,7 +9,7 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 px-16 pb-5 min-w-[1300px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -26,6 +26,11 @@
           </svg>
         </i>
 
+        <!-- <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
+              [options]="comCategories" [(ngModel)]="filterComCategory" optionLabel="label" optionValue="value"
+              [showClear]="true" placeholder="Category" (onChange)="applyFilters()"></p-dropdown> -->
+
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
@@ -34,7 +39,6 @@
             appendTo="body"
             [options]="comCategories"
             [(ngModel)]="filterComCategory"
-            [checkmark]="true"
             optionLabel="categoryEnglish"
             [showClear]="filterComCategory === '' ? false : true"
             placeholder="Category"
@@ -51,7 +55,6 @@
             appendTo="body"
             [options]="status"
             [(ngModel)]="filterStatus"
-            [checkmark]="true"
             optionLabel="type"
             [showClear]="filterStatus === '' ? false : true"
             placeholder="Status"
@@ -63,7 +66,6 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="replyStatus"
-            [checkmark]="true"
             [(ngModel)]="rpst"
             optionLabel="label"
             optionValue="value"
@@ -139,27 +141,27 @@
               Ref No.
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Category
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               AgentID
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               First Name
             </th>
             <th
-              class="px-2 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left "
             >
               Last Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser"
             >
               Received At
             </th>
@@ -179,12 +181,12 @@
               Reply
             </th>
             <th *ngIf="permissionService.hasPermission('View Sales complaint') || tokenService.getUserDetails().role === '1'" class="px-4 py-3 text-center"
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser whitespace-nowrap"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-centser "
             >
               View Reply
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left "
             >
               Reply By
             </th>
@@ -203,19 +205,19 @@
                     }
             "
           >
-            <td class="py-3 dark:text-textDark text-centser">
+            <td class="py-3 dark:text-textDark text-left">
               {{ item.refNo }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark ">
               {{ item.complainCategory }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.agentId }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.firstName }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.lastName }}
             </td>
 

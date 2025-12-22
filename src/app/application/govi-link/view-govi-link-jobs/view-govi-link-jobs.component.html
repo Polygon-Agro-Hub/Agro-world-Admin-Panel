@@ -222,7 +222,13 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Assigned By
+              Assigned Admin
+            </th>
+
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Assigned Officer
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -285,7 +291,11 @@
               {{ job.createdAt | date : "dd/MM/yyyy HH:mm" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ job.assignedBy || "--" }}
+              {{ job.assignedByAdmin || "--" }}
+            </td>
+
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.assignedByEmpId || "--" }}
             </td>
             <td *ngIf="permissionService.hasPermission('Assign govi link jobs view request') || tokenService.getUserDetails().role === '1'" class="text-center flex justify-center mt-3 space-x-3">
               <!-- VIEW -->

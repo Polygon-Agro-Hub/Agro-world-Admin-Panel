@@ -124,7 +124,13 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Assign By
+              Assigned Admin
+            </th>
+
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Assigned Officer
             </th>
           </tr>
         </thead>
@@ -161,7 +167,11 @@
               </button>
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ audit?.userName ?? audit?.assignedByCFO ?? "-" }}
+              {{ audit.userName || "-" }}
+            </td>
+
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ audit.assigedOfficerEmpId || "-" }}
             </td>
           </tr>
         </tbody>

@@ -96,13 +96,21 @@
                 Completed Date</th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">On
                 Screen Time</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Status
-              </th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Assigned
-                On</th>
+
+                <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Status
+                </th>
+              
+              
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Assigned
-                By
+                Admin
               </th>
+
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Assigned
+                Officer
+              </th>
+
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">Last Assigned On</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -149,11 +157,17 @@
               <td class="px-6 py-3 text-center text-sm font-medium whitespace-nowrap" [ngClass]="getStatusClass(item.status)">
                 {{ item.status }}
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap" >
-                {{ item.assignedOn }}
-              </td>
+              
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
                 {{ item.assignedByName }}
+              </td>
+
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+                {{ item.assignedOfficer }}
+              </td>
+
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap" >
+                {{ item.assignedOn }}
               </td>
             </tr>
           </tbody>

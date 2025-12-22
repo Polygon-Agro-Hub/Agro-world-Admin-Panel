@@ -145,3 +145,18 @@
 ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;
 }
+
+/* In your component's CSS file or global styles */
+:host ::ng-deep .p-dropdown {
+  height: 45px !important; /* Adjust this value as needed */
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-label {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  min-height: 36px !important;
+}
+
+:host ::ng-deep .p-dropdown .p-dropdown-trigger {
+  width: 2.5rem !important;
+}

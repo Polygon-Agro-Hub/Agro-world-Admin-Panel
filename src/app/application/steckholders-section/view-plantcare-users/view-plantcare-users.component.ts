@@ -396,4 +396,14 @@ export class ViewPlantcareUsersComponent implements OnInit {
       queryParams: { fname: name, phone: phone }
     })
   }
+
+  onSearchKeydown(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  
+  // Prevent space at the beginning of input
+  if (event.key === ' ' && 
+      (input.selectionStart === 0 || this.searchNIC === '')) {
+    event.preventDefault();
+  }
+}
 }

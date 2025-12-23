@@ -145,31 +145,37 @@
   <div
     class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden"
   >
-    <!-- Centered Header -->
-    <div
-      class="flex justify-center items-center p-4 border-b bg-gray-50 relative"
-    >
-      <h3 class="text-lg font-semibold text-gray-800 text-center">
-        Image Gallery
-      </h3>
-      <button
-        (click)="closePopup()"
-        class="absolute right-4 text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-200"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+    <!-- Header with Image Count, Title, and Close Button -->
+    <div class="flex justify-between items-center p-4 border-b bg-gray-50">
+      <!-- Center - Title -->
+      <div class="flex-1 text-center">
+        <h3 class="text-lg font-semibold text-gray-800">
+          {{ getImagesCount() }} Photos were provided
+        </h3>
+      </div>
+
+      <!-- Right side - Close Button -->
+      <div class="flex items-center">
+        <button
+          (click)="closePopup()"
+          class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-200 flex items-center"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+          <span class="ml-2 text-sm font-medium">Close</span>
+        </button>
+      </div>
     </div>
 
     <div class="p-6">

@@ -17,7 +17,7 @@
   <!-- Main Card with Horizontal Scroll -->
   <div
     class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-    <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6 min-w-[1400px]">
+    <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6 min-w-max">
 
       <!-- Header Section - Title and Filters in Same Line -->
       <div class="flex justify-between items-center mb-6">
@@ -114,6 +114,12 @@
                 Farmer Name</th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Phone number</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Shares</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                View Shares</th>
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Shares Updated By</th>
               <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Status</th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
@@ -126,6 +132,10 @@
                 NIC Back Image</th>
               <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Details</th>
+              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Audit Results</th>
+              <th class="px-8 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -134,7 +144,7 @@
 
               <!-- No -->
               <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                {{ formatNumber(request.No) }}
+                {{ formatNumber(i+1) }}
               </td>
 
               <!-- Request ID -->
@@ -150,6 +160,30 @@
               <!-- Phone Number -->
               <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
                 {{ request.Phone_number }}
+              </td>
+
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                <!-- {{ request.Phone_number }} -->
+                <p class="text-[#C40D0DC4]" *ngIf="request.approvedDetails === null">Not Divided</p>
+                <p class="text-[#3980C0]" *ngIf="request.approvedDetails !== null">Divided</p>
+
+              </td>
+
+              <td class="px-4 py-4 text-sm text-center">
+                <button class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block"
+                  [ngClass]="{'pointer-events-none opacity-50': request.approvedDetails === null}"
+                  [disabled]="request.approvedDetails === null" (click)="ViewShares(request)">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </td>
+
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.approvedDetails === null ? '--' : request.approvedDetails.defineBy !== null ?
+                request.approvedDetails.defineBy : '--' }}
               </td>
 
               <!-- Status -->
@@ -197,6 +231,21 @@
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
+                </button>
+              </td>
+
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center">
+                <button>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-xl text-[#3980C0]"></i>
+                </button>
+              </td>
+
+              <td class="px-8 py-4 text-sm text-center">
+                <button class="bg-[#3980C0] text-white px-4 py-2 rounded-lg whitespace-nowrap"
+                  [ngClass]="{'pointer-events-none opacity-50 cursor-not-allowed': request.approvedDetails === null}"
+                  [disabled]="request.approvedDetails === null"
+                  (click)="openPublishPopup(request)">
+                  Publish Now!
                 </button>
               </td>
             </tr>
@@ -268,22 +317,22 @@
       </div>
 
       <!-- Variety -->
-      <div class="flex items-start">
+      <!-- <div class="flex items-start">
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Variety</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Variety }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Certificate -->
-      <div class="flex items-start">
+      <!-- <div class="flex items-start">
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Certificate</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Certificate }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Extent -->
       <div class="flex items-start">
@@ -357,6 +406,62 @@
         <i *ngIf="isPublishing" class="fa-solid fa-spinner fa-spin"></i>
         {{ isPublishing ? 'Publishing...' : 'Yes, Publish' }}
       </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- shares popup -->
+<div *ngIf="isSharePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="isSharePopup = false">
+  <div class="bg-white dark:bg-tileBlack px-5 py-4 rounded-lg shadow-2xl max-w-lg" (click)="$event.stopPropagation()">
+
+    <div class="flex flex-row items-center justify-between">
+      <div class="w-16"></div>
+
+      <p class="mr-12 font-semibold dark:text-white">Request ID : {{selectedShares.Request_ID}}</p>
+
+      <button class="flex flex-row gap-x-3 bg-[#3980C0] text-white px-4 py-2 rounded-lg">
+        <i class="fa-solid fa-pen-to-square"></i>
+        <p>Edit</p>
+      </button>
+
+    </div>
+
+    <hr class="h-[1px] bg-[#5C5C5C] dark:bg-white my-3" />
+
+    <div>
+      <table>
+        <tr>
+          <td class="px-8 text-[#5C5C5C] dark:text-white">Total Value</td>
+          <td class="text-[#000000] dark:text-white">: Rs. {{selectedShares.approvedDetails.totValue | number: '1.2-2'}}
+          </td>
+        </tr>
+        <tr>
+          <td class="px-8 text-[#5C5C5C] dark:text-white">No. of Sharese</td>
+          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.defineShares}}</td>
+        </tr>
+        <tr>
+          <td class="px-8 text-[#5C5C5C] dark:text-white">Value of One Share</td>
+          <td class="text-[#000000] dark:text-white">:
+            Rs.{{divideFunc(selectedShares.approvedDetails.totValue,selectedShares.approvedDetails.defineShares) |
+            number: '1.2-2'}}</td>
+        </tr>
+        <tr>
+          <td class="px-8 text-[#5C5C5C] dark:text-white">Minimum Shares</td>
+          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.minShare}}</td>
+        </tr>
+        <tr>
+          <td class="px-8 text-[#5C5C5C] dark:text-white">Maximum Shares</td>
+          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.maxShare}}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="flex flex-row justify-center items-center my-5">
+      <button class="bg-[#74788D] text-white px-4 py-2 rounded-lg" (click)="isSharePopup = false">
+        Close
+      </button>
+
     </div>
   </div>
 </div>

@@ -291,6 +291,7 @@ export interface GoviCareRequest {
   empId: string;
   publishStatus: string;
   Request_Date_Time: string;
+  approvedDetails: any;
 }
 
 export interface GoviCareRequestsResponse {
@@ -311,6 +312,7 @@ export interface GoviCareRequestDetail {
   Expected_Yield: string;
   Expected_Start_Date: string;
   Request_Date_Time: string;
+  approvedDetails: any;
 
 }
 
@@ -345,6 +347,8 @@ export interface UpdatePublishStatusResponse {
   status: boolean;
   message: string;
 }
+
+
 
 
 @Injectable({
@@ -868,7 +872,7 @@ export class FinanceService {
     });
   }
 
-  getInspectionDetails(id:number): Observable<{ count: number; data: any[] }> {
+  getInspectionDetails(id: number): Observable<{ count: number; data: any[] }> {
     let params = new HttpParams();
 
 

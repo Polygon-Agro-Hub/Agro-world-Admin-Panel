@@ -173,7 +173,7 @@
               {{ request.phoneNumber || "N/A" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ request.officerEmpId || "N/A" }}
+              {{ request.rejectedBy || "N/A" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ formatDate(request.rejectedAt) }}
@@ -305,24 +305,24 @@
         </div>
 
         <!-- Variety -->
-        <div class="grid grid-cols-2 gap-4">
+        <!-- <div class="grid grid-cols-2 gap-4">
           <div class="text-sm font-medium text-textLight dark:text-textDark">
             Variety
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
             : {{ selectedRequest.varietyNameEnglish }}
           </div>
-        </div>
+        </div> -->
 
         <!-- Certificate -->
-        <div class="grid grid-cols-2 gap-4">
+        <!-- <div class="grid grid-cols-2 gap-4">
           <div class="text-sm font-medium text-textLight dark:text-textDark">
             Certificate
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
             : {{ selectedRequest.certificateName }}
           </div>
-        </div>
+        </div> -->
 
         <!-- Extent -->
         <div class="grid grid-cols-2 gap-4">

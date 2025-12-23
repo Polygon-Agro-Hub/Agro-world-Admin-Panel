@@ -30,11 +30,13 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   // Details Modal
   showDetailsModal: boolean = false;
   selectedRequest: GoviCareRequestDetail | null = null;
+  selectedShares!: GoviCareRequest;
 
   // Publish Confirmation Popup
   isPublishPopup: boolean = false;
   selectedRequestForPublish: GoviCareRequest | null = null;
   isPublishing: boolean = false;
+  isSharePopup: boolean = false;
 
   constructor(
     private financeService: FinanceService,
@@ -253,5 +255,19 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
 
   formatTotalItems(count: number): string {
     return count.toString().padStart(2, '0');
+  }
+
+  ViewShares(shares: GoviCareRequest) {
+    this.selectedShares = shares;
+    this.isSharePopup = true;
+  }
+
+  divideFunc(num1: number, num2: number): number {
+    if (num2 === 0) {
+      console.error("Division by zero error");
+      return 0; // or throw an error
+    }
+    const result = num1 / num2;
+    return parseFloat(result.toFixed(2));
   }
 }

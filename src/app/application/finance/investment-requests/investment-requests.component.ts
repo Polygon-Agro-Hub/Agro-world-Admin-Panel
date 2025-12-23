@@ -33,7 +33,7 @@ export class InvestmentRequestsComponent {
   }
 
   ViewApprovedGovicareRequests(): void {
-    this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-ApprovedRequests']);
+    this.router.navigate(['/finance/action/finance-govicapital/view-Govicare-approved-requests']);
   }
 
   ViewPublishProjects(): void {

@@ -650,7 +650,7 @@ export const routes: Routes = [
                     component: ViewAllGovicareRequestsComponent,
                   },
                   {
-                    path: 'viewAll-Govicare-ApprovedRequests',
+                    path: 'view-Govicare-approved-requests',
                     component: ViewAllApprovedGovicareRequestsComponent,
                   },
                   {

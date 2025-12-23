@@ -178,6 +178,15 @@
     </div>
 
     <div class="p-6">
+      <!-- Current Image Counter - Outside the image div -->
+      <div class="mb-3 text-center">
+        <span
+          class="inline-block text-gray-700 px-4 py-2 rounded-lg text-sm font-medium"
+        >
+          {{ currentImageIndex + 1 }} out of {{ currentImages.length }}
+        </span>
+      </div>
+
       <!-- Main Image Display -->
       <div
         class="h-96 bg-gray-100 rounded-lg border border-gray-300 overflow-hidden mb-4"
@@ -210,13 +219,6 @@
               >
                 <i class="fa-solid fa-chevron-right"></i>
               </button>
-            </div>
-
-            <!-- Image counter -->
-            <div
-              class="absolute top-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm"
-            >
-              {{ currentImageIndex + 1 }} / {{ currentImages.length }}
             </div>
           </div>
         </div>

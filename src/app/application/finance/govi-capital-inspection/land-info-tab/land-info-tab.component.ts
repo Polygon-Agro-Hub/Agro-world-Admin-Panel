@@ -15,6 +15,7 @@ export class LandInfoTabComponent {
   showMapPopup = false;
   showImagePopup = false;
   selectedCoordinates = '';
+  selectedCoordinatesObj: any = null;
   selectedImageInfo = '';
   popupTitle = '';
   
@@ -28,11 +29,16 @@ export class LandInfoTabComponent {
         (a, b) => a.qIndex - b.qIndex
       );
 
+      // Process answers for map and image types
       this.sortedLandArr.forEach((question) => {
-        if (question.qIndex === 4 && !question.ansType) {
+        if (question.qIndex === 4) {
           question.ansType = 'map';
-        } else if (question.qIndex === 5 && !question.ansType) {
+          // Format the answer for display in the button
+          question.formattedAnswer = this.formatMapAnswer(question.answer);
+        } else if (question.qIndex === 5) {
           question.ansType = 'image';
+          // Format the answer for display in the button
+          question.formattedAnswer = this.formatImageAnswer(question.answer);
         }
       });
     }
@@ -42,31 +48,132 @@ export class LandInfoTabComponent {
     return index < 10 ? `0${index}` : `${index}`;
   }
 
-  openMapPopup(coordinates: string): void {
-    this.selectedCoordinates = coordinates;
+  // Format map answer for display
+  formatMapAnswer(answer: any): string {
+    if (!answer) return '';
+    
+    if (typeof answer === 'string') {
+      return answer;
+    } else if (typeof answer === 'object') {
+      if (answer.latitude && answer.longitude) {
+        return `Lat: ${answer.latitude}, Lng: ${answer.longitude}`;
+      } else if (answer.lat && answer.lng) {
+        return `Lat: ${answer.lat}, Lng: ${answer.lng}`;
+      } else if (answer.coordinates) {
+        return answer.coordinates;
+      }
+    }
+    return JSON.stringify(answer);
+  }
+
+  // Format image answer for display
+  formatImageAnswer(answer: any): string {
+    if (!answer) return '';
+    
+    if (typeof answer === 'string') {
+      return answer;
+    } else if (Array.isArray(answer)) {
+      return `${answer.length} image(s)`;
+    } else if (typeof answer === 'object') {
+      return 'Image data';
+    }
+    return JSON.stringify(answer);
+  }
+
+  openMapPopup(answer: any): void {
+    // Format the coordinates for display
+    if (typeof answer === 'object' && answer.latitude && answer.longitude) {
+      this.selectedCoordinates = `Latitude: ${answer.latitude}, Longitude: ${answer.longitude}`;
+      // Store the coordinates object for potential map integration
+      this.selectedCoordinatesObj = answer;
+    } else if (typeof answer === 'string') {
+      this.selectedCoordinates = answer;
+      this.selectedCoordinatesObj = null;
+    } else {
+      this.selectedCoordinates = this.formatMapAnswer(answer);
+      this.selectedCoordinatesObj = answer;
+    }
+    
     this.popupTitle = 'Location Map';
     this.showMapPopup = true;
   }
 
-  openImagePopup(imageInfo: string): void {
-    this.selectedImageInfo = imageInfo;
+  openImagePopup(answer: any): void {
+    this.selectedImageInfo = answer;
     
-    // Parse image data - assuming imageInfo contains image URLs or data
-    // In real implementation, you would parse actual image data
-    this.currentImages = this.parseImageData(imageInfo);
+    // Parse image data from the answer
+    this.currentImages = this.parseImageData(answer);
     this.currentImageIndex = 0;
     
     this.showImagePopup = true;
   }
 
-  // Helper methods for image gallery
-  parseImageData(imageInfo: string): ImageItem[] {
-    // This is a sample implementation
-    // In reality, you would parse actual image data from your backend
+  // Enhanced image data parser
+  parseImageData(imageInfo: any): ImageItem[] {
     if (!imageInfo) return [];
 
-    // If imageInfo contains multiple URLs or data, parse them here
-    // For demo purposes, creating sample images
+    // If it's already an array of images
+    if (Array.isArray(imageInfo)) {
+      return imageInfo.map((img, index) => {
+        if (typeof img === 'string') {
+          // If it's a URL string
+          return {
+            url: img,
+            thumbnail: img,
+            title: `Image ${index + 1}`,
+            description: 'Uploaded image',
+            uploadDate: new Date().toISOString().split('T')[0]
+          };
+        } else if (typeof img === 'object') {
+          // If it's an image object
+          return {
+            url: img.url || img.imageUrl || this.getPlaceholderImage(),
+            thumbnail: img.thumbnail || img.url || img.imageUrl || this.getPlaceholderThumbnail(),
+            title: img.title || `Image ${index + 1}`,
+            description: img.description || 'Uploaded image',
+            uploadDate: img.uploadDate || img.date || new Date().toISOString().split('T')[0],
+            size: img.size || 'Unknown'
+          };
+        }
+        return {
+          url: this.getPlaceholderImage(),
+          thumbnail: this.getPlaceholderThumbnail(),
+          title: `Image ${index + 1}`,
+          description: 'Invalid image data'
+        };
+      });
+    }
+    
+    // If it's a string (could be comma-separated URLs)
+    if (typeof imageInfo === 'string') {
+      const urls = imageInfo.split(',').map(url => url.trim());
+      return urls.map((url, index) => ({
+        url: url,
+        thumbnail: url,
+        title: `Image ${index + 1}`,
+        description: 'Uploaded image',
+        uploadDate: new Date().toISOString().split('T')[0]
+      }));
+    }
+    
+    // If it's a single object
+    if (typeof imageInfo === 'object') {
+      return [{
+        url: imageInfo.url || imageInfo.imageUrl || this.getPlaceholderImage(),
+        thumbnail: imageInfo.thumbnail || imageInfo.url || imageInfo.imageUrl || this.getPlaceholderThumbnail(),
+        title: imageInfo.title || 'Image',
+        description: imageInfo.description || 'Uploaded image',
+        uploadDate: imageInfo.uploadDate || imageInfo.date || new Date().toISOString().split('T')[0],
+        size: imageInfo.size || 'Unknown'
+      }];
+    }
+
+    // Fallback to sample images
+    return this.getSampleImages();
+  }
+
+  // Helper method for sample images (for demo purposes)
+  private getSampleImages(): ImageItem[] {
     return [
       {
         url: 'https://via.placeholder.com/800x600/4CAF50/FFFFFF?text=Land+Photo+1',
@@ -83,14 +190,6 @@ export class LandInfoTabComponent {
         description: 'Showing the northeast boundary',
         uploadDate: '2024-01-15',
         size: '1.8 MB'
-      },
-      {
-        url: 'https://via.placeholder.com/800x600/FF9800/FFFFFF?text=Land+Photo+3',
-        thumbnail: 'https://via.placeholder.com/150/FF9800/FFFFFF?text=3',
-        title: 'Soil Sample Area',
-        description: 'Location where soil samples were taken',
-        uploadDate: '2024-01-14',
-        size: '3.1 MB'
       }
     ];
   }
@@ -131,20 +230,6 @@ export class LandInfoTabComponent {
     return 'https://via.placeholder.com/150/9E9E9E/FFFFFF?text=Thumbnail';
   }
 
-  downloadImage(): void {
-    const image = this.getCurrentImage();
-    // Implement download logic here
-    console.log('Downloading:', image.title);
-    // In real implementation, trigger file download
-  }
-
-  shareImage(): void {
-    const image = this.getCurrentImage();
-    // Implement share logic here
-    console.log('Sharing:', image.title);
-    // In real implementation, use Web Share API or custom share dialog
-  }
-
   closePopup(): void {
     this.showMapPopup = false;
     this.showImagePopup = false;
@@ -156,11 +241,13 @@ export class LandInfoTabComponent {
   }
 }
 
+// Updated interfaces
 interface Question {
   answer: any;
   qIndex: number;
   ansType: string;
   quaction: string;
+  formattedAnswer?: string; // For display purposes
 }
 
 interface ImageItem {
@@ -170,4 +257,13 @@ interface ImageItem {
   description?: string;
   uploadDate?: string;
   size?: string;
+}
+
+// For storing coordinates object
+interface Coordinates {
+  latitude?: string;
+  longitude?: string;
+  lat?: string;
+  lng?: string;
+  coordinates?: string;
 }

@@ -137,17 +137,18 @@
   </div>
 </div>
 
-<!-- Image Popup Modal -->
+<!-- Image Gallery Popup Modal -->
 <div
   *ngIf="showImagePopup"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
 >
   <div
-    class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+    class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden"
   >
-    <div class="flex justify-between items-center p-4 border-b bg-gray-50">
+    <div class="flex justify-center items-center p-4 border-b bg-gray-50">
       <h3 class="text-lg font-semibold text-gray-800">Image Gallery</h3>
-      <button
+      <div class="flex justify-end">
+        <button
         (click)="closePopup()"
         class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-200"
       >
@@ -165,19 +166,56 @@
           />
         </svg>
       </button>
+      </div>
     </div>
     <div class="p-6">
-      <div class="mb-4">
-        <h4 class="font-medium text-gray-700 mb-1">Image Information</h4>
-        <p class="text-gray-600 bg-gray-50 p-3 rounded">
-          {{ selectedImageInfo }}
-        </p>
-      </div>
+      <!-- Main Image Display -->
       <div
-        class="h-96 bg-gray-100 rounded-lg border border-gray-300 overflow-hidden"
+        class="h-96 bg-gray-100 rounded-lg border border-gray-300 overflow-hidden mb-4"
       >
+        <div *ngIf="currentImages.length > 0" class="w-full h-full">
+          <!-- Main Image -->
+          <div class="relative w-full h-full">
+            <img
+              [src]="
+                currentImages[currentImageIndex].url || getPlaceholderImage()
+              "
+              [alt]="currentImages[currentImageIndex].title || 'Image'"
+              class="w-full h-full object-contain"
+            />
+
+            <!-- Navigation arrows for image -->
+            <div
+              *ngIf="currentImages.length > 1"
+              class="absolute inset-0 flex items-center justify-between p-4"
+            >
+              <button
+                (click)="previousImage()"
+                class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full flex items-center justify-center transition-all"
+              >
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <button
+                (click)="nextImage()"
+                class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full flex items-center justify-center transition-all"
+              >
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+
+            <!-- Image counter -->
+            <div
+              class="absolute top-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm"
+            >
+              {{ currentImageIndex + 1 }} / {{ currentImages.length }}
+            </div>
+          </div>
+        </div>
+
+        <!-- No images placeholder -->
         <div
-          class="w-full h-full flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100"
+          *ngIf="currentImages.length === 0"
+          class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-green-50 to-green-100"
         >
           <div class="text-center p-6">
             <div class="w-24 h-24 mx-auto mb-6">
@@ -191,21 +229,12 @@
                 />
               </svg>
             </div>
-            <h4 class="text-xl font-bold text-gray-800 mb-2">Image Preview</h4>
-            <p class="text-gray-600 mb-4">
-              Displaying images for:
-              <span class="font-semibold">{{ selectedImageInfo }}</span>
-            </p>
+            <h4 class="text-xl font-bold text-gray-800 mb-2">
+              No Images Available
+            </h4>
+            <p class="text-gray-600">There are no images to display.</p>
           </div>
         </div>
-      </div>
-      <div class="mt-6 flex justify-end">
-        <button
-          (click)="closePopup()"
-          class="px-5 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors font-medium"
-        >
-          Close Gallery
-        </button>
       </div>
     </div>
   </div>

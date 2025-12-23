@@ -1,223 +1,50 @@
 <div class="space-y-2 p-10">
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+  <div
+    class="bg-[#F9FAFC] p-5 rounded-lg mb-5"
+    *ngFor="let question of sortedPersonalArr; let i = index"
+  >
     <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">01.</span> First Name
+      <span class="text-gray-500">{{ formatIndex(question.qIndex) }}.</span>
+      {{ question.quaction }}
     </label>
     <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">02.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">03.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">04.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">05.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">06.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">07.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">08.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">09.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">010.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">11.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">12.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">13.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">14.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">15.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">16.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
-    </div>
-  </div>
-  <div class="bg-[#F9FAFC] p-5 rounded-lg">
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">17.</span> First Name
-    </label>
-    <div class="relative">
-      <input
-        type="text"
-        value="Kasun"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-        readonly
-      />
+      <ng-container [ngSwitch]="question.ansType.toLowerCase()">
+        <!-- Text Input -->
+        <input
+          *ngSwitchCase="'text'"
+          type="text"
+          [value]="question.answer || ''"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+
+        <!-- Email Input -->
+        <input
+          *ngSwitchCase="'email'"
+          type="email"
+          [value]="question.answer || ''"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+
+        <!-- Date Input -->
+        <input
+          *ngSwitchCase="'date'"
+          type="date"
+          [value]="question.answer || ''"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+
+        <!-- Default to text input -->
+        <input
+          *ngSwitchDefault
+          type="text"
+          [value]="question.answer || ''"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+      </ng-container>
     </div>
   </div>
 </div>

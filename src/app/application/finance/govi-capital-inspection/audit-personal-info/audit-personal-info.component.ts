@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { FinanceService } from '../../../../services/finance/finance.service';
 import { PersonalInfoTabComponent } from '../personal-info-tab/personal-info-tab.component';
 import { IdProofTabComponent } from '../id-proof-tab/id-proof-tab.component';
 import { FinanceInfoTabComponent } from '../finance-info-tab/finance-info-tab.component';
@@ -12,8 +14,6 @@ import { ProfitRiskTabComponent } from '../profit-risk-tab/profit-risk-tab.compo
 import { EconomicalTabComponent } from '../economical-tab/economical-tab.component';
 import { LabourTabComponent } from '../labour-tab/labour-tab.component';
 import { HarvestStorageTabComponent } from '../harvest-storage-tab/harvest-storage-tab.component';
-import { Router } from '@angular/router';
-import { FinanceService } from '../../../services/finance/finance.service';
 
 @Component({
   selector: 'app-audit-personal-info',
@@ -39,7 +39,7 @@ import { FinanceService } from '../../../services/finance/finance.service';
 export class AuditPersonalInfoComponent implements OnInit {
   isLoading: boolean = false;
   activeTab: string = 'Personal';
-  inspectionArray: Inspection[] = [];
+  inspectionArray!: Inspection;
   reqId: number = 2;
 
   constructor(
@@ -64,6 +64,8 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.isLoading = true;
     this.financeService.getInspectionDetails(this.reqId).subscribe((res: any) => {
       this.inspectionArray = res.data.categories;
+      console.log(res.data.categories);
+      
       console.log(this.inspectionArray);
 
       this.isLoading = false;

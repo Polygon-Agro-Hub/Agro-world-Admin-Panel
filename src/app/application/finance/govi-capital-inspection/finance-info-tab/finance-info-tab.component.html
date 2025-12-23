@@ -1,1 +1,87 @@
-<p>finance-info-tab works!</p>
+<div class="space-y-5 p-10">
+
+    <!-- 01. Account holder’s name -->
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 mb-2">
+            <span class="text-gray-400">01.</span> Account holder’s name
+        </label>
+        <input type="text" [value]="finance.accountHolderName || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+    <!-- 02. Account number -->
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 mb-2">
+            <span class="text-gray-400">02.</span> Account number
+        </label>
+        <input type="text" [value]="finance.accountNumber || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+    <!-- 04. Bank name -->
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 mb-2">
+            <span class="text-gray-400">04.</span> Bank name
+        </label>
+        <input type="text" [value]="finance.bankName || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+    <!-- 05. Branch name -->
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 mb-2">
+            <span class="text-gray-400">05.</span> Branch name
+        </label>
+        <input type="text" [value]="finance.branchName || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+    <!-- 06. Existing debts -->
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 mb-2">
+            <span class="text-gray-400">06.</span> Existing debts of the farmer
+        </label>
+        <input type="text" [value]="finance.existingDebts || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+    <!-- 07. Dependants -->
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 mb-2">
+            <span class="text-gray-400">07.</span> No. of Dependents
+        </label>
+        <input type="text" [value]="finance.dependents || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+    <!-- 08. Assets -->
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 mb-3">
+            <span class="text-gray-400">08.</span> Assets owned by the farmer
+        </label>
+
+        <div class="bg-white border border-gray-200 rounded-lg p-4 text-sm text-gray-800 space-y-2">
+            <div *ngIf="finance.assets.Land.length">
+                <span class="font-semibold w-32 inline-block">Land</span> :
+                <span>{{ finance.assets.Land.join(', ') }}</span>
+            </div>
+            <div *ngIf="finance.assets.Building.length">
+                <span class="font-semibold w-32 inline-block">Building</span> :
+                <span>{{ finance.assets.Building.join(', ') }}</span>
+            </div>
+            <div *ngIf="finance.assets.Vehicle.length">
+                <span class="font-semibold w-32 inline-block">Vehicle</span> :
+                <span>{{ finance.assets.Vehicle.join(', ') }}</span>
+            </div>
+            <div *ngIf="finance.assets.Machinery.length">
+                <span class="font-semibold w-32 inline-block">Machinery</span> :
+                <span>{{ finance.assets.Machinery.join(', ') }}</span>
+            </div>
+            <div *ngIf="finance.assets.SpecialFarmTools">
+                <span class="font-semibold w-32 inline-block">Special Farm Tools</span> :
+                <span>{{ finance.assets.SpecialFarmTools }}</span>
+            </div>
+        </div>
+    </div>
+
+</div>

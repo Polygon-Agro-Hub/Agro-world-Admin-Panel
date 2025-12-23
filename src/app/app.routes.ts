@@ -251,6 +251,7 @@ import { ViewDriverComplaintsComponent } from './application/Complaints/view-dri
 import { MarketManageSeoComponent } from './application/marketplace/market-manage-seo/market-manage-seo.component';
 import { DistributionViewCustomerOrdersComponent } from './application/distribution-hub/distribution-view-customer-orders/distribution-view-customer-orders.component';
 import { AuditPersonalInfoComponent } from './application/finance/govi-capital-inspection/audit-personal-info/audit-personal-info.component';
+import { ViewAllAuditedGovicareRequestsComponent } from './application/finance/view-all-audited-govicare-requests/view-all-audited-govicare-requests.component';
 
 export const routes: Routes = [
   {
@@ -652,6 +653,10 @@ export const routes: Routes = [
                   {
                     path: 'viewAll-Govicare-ApprovedRequests',
                     component: ViewAllApprovedGovicareRequestsComponent,
+                  },
+                  {
+                    path: 'viewAll-Govicare-AuditedRequests',
+                    component: ViewAllAuditedGovicareRequestsComponent,
                   },
                   {
                     path: 'reject-requests',

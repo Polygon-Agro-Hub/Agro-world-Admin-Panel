@@ -877,6 +877,31 @@ export class FinanceService {
       headers: this.getHeaders(),
     });
   }
+
+  getAllAuditedGoviCareRequests(
+    status?: string,
+    search?: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    let params = new HttpParams();
+
+    if (status && status.trim()) {
+      params = params.set('status', status.trim());
+    }
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/audited-govicare-requests`;
+    return this.http.get<any>(url, {
+      headers: headers,
+      params: params,
+    });
+  }
 }
 
 

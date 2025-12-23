@@ -38,7 +38,7 @@ import { FinanceService } from '../../../services/finance/finance.service';
 })
 export class AuditPersonalInfoComponent implements OnInit {
   isLoading: boolean = false;
-  activeTab: string = 'Personal Info';
+  activeTab: string = 'Personal';
   inspectionArray: Inspection[] = [];
   reqId: number = 2;
 

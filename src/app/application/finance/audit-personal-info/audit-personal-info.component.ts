@@ -36,7 +36,7 @@ import { HarvestStorageTabComponent } from '../harvest-storage-tab/harvest-stora
 })
 export class AuditPersonalInfoComponent {
   isLoading: boolean = false;
-  activeTab: string = 'Personal Info';
+  activeTab: string = 'Personal';
 
   constructor() {}
 

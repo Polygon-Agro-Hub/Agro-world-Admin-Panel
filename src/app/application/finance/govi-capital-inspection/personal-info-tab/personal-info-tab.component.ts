@@ -14,7 +14,6 @@ export class PersonalInfoTabComponent implements OnChanges {
     console.log('-----------------------------------------------------------------------------------');
     console.log(this.personalArr);
     console.log('-----------------------------------------------------------------------------------');
-    
   }
 
 }

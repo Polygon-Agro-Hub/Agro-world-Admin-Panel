@@ -190,10 +190,10 @@
       <app-personal-info-tab [personalArr]="inspectionArray.Personal"></app-personal-info-tab>
     </div>
     <div *ngIf="activeTab === 'IDProof'">
-      <app-id-proof-tab></app-id-proof-tab>
+      <app-id-proof-tab [personalArr]="inspectionArray.ID"></app-id-proof-tab>
     </div>
     <div *ngIf="activeTab === 'Finance'">
-      <app-finance-info-tab></app-finance-info-tab>
+      <app-finance-info-tab [financeArr]="inspectionArray.Finance"></app-finance-info-tab>
     </div>
     <div *ngIf="activeTab === 'Land'">
       <app-land-info-tab></app-land-info-tab>

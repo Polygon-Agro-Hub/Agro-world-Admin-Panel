@@ -906,6 +906,44 @@ export class FinanceService {
       params: params,
     });
   }
+
+  devideSharesRequest(
+    devideRequestObj: any
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}finance/devide-shares`,
+      {
+        sharesData: devideRequestObj,
+      },
+      {
+        headers
+      }
+    );
+  }
+
+  rejectRequest(
+    id: number,
+    rejectReason: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}finance/reject-request`,
+      {
+        reqId: id,
+        reason: rejectReason
+      },
+      {
+        headers
+      }
+    );
+  }
 }
 
 

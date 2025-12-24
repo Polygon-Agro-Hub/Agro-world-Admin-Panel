@@ -14,6 +14,8 @@ import { ProfitRiskTabComponent } from '../profit-risk-tab/profit-risk-tab.compo
 import { EconomicalTabComponent } from '../economical-tab/economical-tab.component';
 import { LabourTabComponent } from '../labour-tab/labour-tab.component';
 import { HarvestStorageTabComponent } from '../harvest-storage-tab/harvest-storage-tab.component';
+import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-audit-personal-info',
@@ -32,6 +34,7 @@ import { HarvestStorageTabComponent } from '../harvest-storage-tab/harvest-stora
     EconomicalTabComponent,
     LabourTabComponent,
     HarvestStorageTabComponent,
+    FormsModule
   ],
   templateUrl: './audit-personal-info.component.html',
   styleUrl: './audit-personal-info.component.css',
@@ -41,6 +44,18 @@ export class AuditPersonalInfoComponent implements OnInit {
   activeTab: string = 'Personal';
   inspectionArray!: Inspection;
   reqId: number = 2;
+  jobId: string = 'SS222';
+  approvePopUpOpen: boolean = false
+  rejectPopUpOpen: boolean = false
+  rejectReason: string = '';
+  openDevideSharesPopUp: boolean = false;
+
+  numShares!: number;
+  shareValue: number = 0.00;
+  minimumShare!: number;
+  maximumShare!: number;
+
+  sharesData: Partial<Shares> = {};
 
   constructor(private financeService: FinanceService, private router: Router) {}
 
@@ -62,12 +77,131 @@ export class AuditPersonalInfoComponent implements OnInit {
       .getInspectionDetails(this.reqId)
       .subscribe((res: any) => {
         this.inspectionArray = res.data.categories;
-        console.log(res.data.categories);
+        this.sharesData = res.shares
+      console.log('sharesData', this.sharesData)
+      console.log(res.data.categories);
 
         console.log(this.inspectionArray);
 
         this.isLoading = false;
       });
+  }
+
+
+  onNumSharesChange(value: number) {
+    this.numShares = value; // optional, ngModel already does this
+    console.log('numShares', this.numShares)
+    if (this.numShares !== null) {
+      this.shareValue = Number(this.sharesData.totalValue) / (this.numShares)
+    } else if (this.numShares === null ) {
+      this.shareValue = 0.00
+    }
+    console.log('shareValue', this.shareValue)
+  }
+
+  openApprovePopUp() {
+    this.approvePopUpOpen = true;
+  }
+
+  openRejectPopUp() {
+    this.rejectPopUpOpen = true;
+  }
+
+  cancelApprovePopUp() {
+    this.approvePopUpOpen = false;
+  }
+
+  cancelRejectPopUp() {
+    this.rejectPopUpOpen = false;
+  }
+
+  ApproveRequest() {
+    this.approvePopUpOpen = false;
+    this.openDevideSharesPopUp = true;
+  }
+
+  RejectRequest() {
+
+    this.rejectPopUpOpen = false;
+
+    this.isLoading = true;
+
+    this.financeService.rejectRequest(this.sharesData.id!, this.rejectReason).subscribe((res: any) => {
+
+      if (res.status) {
+        Swal.fire({
+          title: 'Success',
+          text: `Request Rejected Successfully`,
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      } else if (!res.status) {
+        Swal.fire({
+          title: 'error',
+          text: `Failed to Reject the Request`,
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+      this.isLoading = false;
+    })
+
+  }
+
+  cancelDevidePopUp() {
+    this.openDevideSharesPopUp = false;
+  }
+
+  DevideRequest() {
+     this.openDevideSharesPopUp = false;
+
+     this.isLoading = true;
+
+     let devideRequestObj: Partial<DevideRequest> = {};
+
+     devideRequestObj.totalValue = this.sharesData.totalValue
+     devideRequestObj.numShares = this.numShares
+     devideRequestObj.shareValue = Number(this.shareValue.toFixed(2))
+     devideRequestObj.minimumShare = this.minimumShare
+     devideRequestObj.maximumShare = this.maximumShare
+     devideRequestObj.id = this.sharesData.id
+     devideRequestObj.jobId = this.sharesData.jobId
+     devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime
+     devideRequestObj.empId = this.sharesData.empId
+     console.log('devideRequestObj', devideRequestObj)
+
+     
+    this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
+
+      if (res.status) {
+        Swal.fire({
+          title: 'Success',
+          text: `Request Approved Successfully`,
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      } else if (!res.status) {
+        Swal.fire({
+          title: 'error',
+          text: `Failed to Approve the Request`,
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+      this.isLoading = false;
+    })
   }
 }
 
@@ -90,4 +224,28 @@ interface Question {
   qIndex: number;
   ansType: string;
   quaction: string;
+}
+
+class Shares {
+
+  id!: number;
+  reqCahangeTime!: Date;
+  jobId!: string;
+  farmerPhone!: string;
+  empId!: string;
+  officerPhone!: string;
+  totalValue: string = '';
+
+}
+
+class DevideRequest {
+  id!: number;
+  jobId!: string;
+  reqCahangeTime!: Date;
+  empId!: string;
+  totalValue!: string;
+  numShares!: number;
+  shareValue!: number;
+  minimumShare!: number;
+  maximumShare!: number;
 }

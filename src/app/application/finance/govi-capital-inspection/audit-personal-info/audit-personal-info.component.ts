@@ -38,7 +38,7 @@ import { HarvestStorageTabComponent } from '../harvest-storage-tab/harvest-stora
 })
 export class AuditPersonalInfoComponent implements OnInit {
   isLoading: boolean = false;
-  activeTab: string = 'Investment';
+  activeTab: string = 'ProfitRisk';
   inspectionArray!: Inspection;
   reqId: number = 2;
 

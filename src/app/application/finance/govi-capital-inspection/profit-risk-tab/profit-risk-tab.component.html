@@ -1,1 +1,65 @@
-<p>profit-risk-tab works!</p>
+<div class="space-y-2 p-10">
+  <!-- Loop through each investment data item -->
+  <div *ngFor="let item of investmentData" class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      <span class="text-gray-500">{{item.id}}.</span> {{item.label}}
+    </label>
+    <div class="relative">
+      <ng-container [ngSwitch]="item.type">
+        <!-- Text Input -->
+        <input
+          *ngSwitchCase="'text'"
+          type="text"
+          [value]="item.value"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+
+        <!-- Currency Input (same as text but for formatting) -->
+        <input
+          *ngSwitchCase="'currency'"
+          type="text"
+          [value]="item.value"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+
+        <!-- Boolean/Yes-No Input -->
+        <input
+          *ngSwitchCase="'boolean'"
+          type="text"
+          [value]="item.value"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+
+        <!-- Email Input -->
+        <input
+          *ngSwitchCase="'email'"
+          type="email"
+          [value]="item.value"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+
+        <!-- Date Input -->
+        <input
+          *ngSwitchCase="'date'"
+          type="date"
+          [value]="item.value"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+
+        <!-- Default to text input -->
+        <input
+          *ngSwitchDefault
+          type="text"
+          [value]="item.value"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -42,11 +42,7 @@ export class AuditPersonalInfoComponent implements OnInit {
   inspectionArray!: Inspection;
   reqId: number = 2;
 
-  constructor(
-    private financeService: FinanceService,
-    private router: Router
-  ) { }
-
+  constructor(private financeService: FinanceService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchData();
@@ -62,34 +58,36 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   fetchData() {
     this.isLoading = true;
-    this.financeService.getInspectionDetails(this.reqId).subscribe((res: any) => {
-      this.inspectionArray = res.data.categories;
-      console.log(res.data.categories);
-      
-      console.log(this.inspectionArray);
+    this.financeService
+      .getInspectionDetails(this.reqId)
+      .subscribe((res: any) => {
+        this.inspectionArray = res.data.categories;
+        console.log(res.data.categories);
 
-      this.isLoading = false;
-    })
+        console.log(this.inspectionArray);
+
+        this.isLoading = false;
+      });
   }
 }
 
 interface Inspection {
-  Personal: Question[]
-  ID: Question[]
-  Finance: Question[]
-  Land: Question[]
-  Investment: Question[]
-  Cultivation: Question[]
-  Cropping: Question[]
-  ProfitRisk: Question[]
-  Economical: Question[]
-  Labor: Question[]
-  Harvest: Question[]
+  Personal: Question[];
+  ID: Question[];
+  Finance: Question[];
+  Land: Question[];
+  Investment: Question[];
+  Cultivation: Question[];
+  Cropping: Question[];
+  ProfitRisk: Question[];
+  Economical: Question[];
+  Labor: Question[];
+  Harvest: Question[];
 }
 
 interface Question {
   answer: any;
-  qIndex: number
-  ansType: string
+  qIndex: number;
+  ansType: string;
   quaction: string;
 }

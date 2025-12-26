@@ -213,10 +213,10 @@ interface Inspection {
   Investment: Question[];
   Cultivation: Question[];
   Cropping: Question[];
-  ProfitRisk: Question[];
-  Economical: Question[];
-  Labor: Question[];
-  Harvest: Question[];
+  ProfitRisk: IProfitRisk;
+  Economical: IEconomical;
+  Labor: ILabor;
+  Harvest: IHarvest;
 }
 
 interface Question {
@@ -266,4 +266,51 @@ interface IPersonal {
   country: string 
   district: string
   province: string 
+}
+
+interface IProfitRisk {
+  id: number
+  reqId: string
+  profit: number
+  isProfitable: number
+  isRisk: number
+  risk: string
+  solution: string
+  manageRisk: string
+  worthToTakeRisk: string
+  createdAt: Date
+}
+
+interface IEconomical {
+  id: number
+  reqId: string
+  isSuitaleSize: number
+  isFinanceResource: number
+  isAltRoutes: number
+  createdAt: Date
+}
+
+interface IHarvest {
+  id: number
+  reqId: string
+  hasOwnStorage: number
+  hasPrimaryProcessingAccess: number
+  ifNotHasFacilityAccess: number
+  knowsValueAdditionTech: number
+  hasValueAddedMarketLinkage: number
+  awareOfQualityStandards: number
+  createdAt: Date
+}
+
+interface ILabor {
+  id: number
+  reqId: string
+  isManageFamilyLabour: number
+  isFamilyHiredLabourEquipped: number
+  hasAdequateAlternativeLabour: number
+  areThereMechanizationOptions: number
+  isMachineryAvailable: number
+  isMachineryAffordable: number
+  isMachineryCostEffective: number
+  createdAt: Date
 }

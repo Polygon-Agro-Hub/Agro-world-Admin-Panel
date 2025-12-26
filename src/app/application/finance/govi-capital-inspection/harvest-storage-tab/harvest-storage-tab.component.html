@@ -5,7 +5,7 @@
             <span class="text-[#4A4A4A]">01.</span>
             Does the farmer own storage facility?
         </label>
-        <input type="text" value="No" readonly
+        <input type="text" [value]="HarvestObj.hasOwnStorage == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
     </div>
 
@@ -14,7 +14,7 @@
             <span class="text-[#4A4A4A]">02.</span>
             If not, does the farmer have access to such facility?
         </label>
-        <input type="text" value="No" readonly
+        <input type="text" [value]="HarvestObj.hasPrimaryProcessingAccess == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
     </div>
 
@@ -23,7 +23,7 @@
             <span class="text-[#4A4A4A]">03.</span>
             Does the farmer has access to primary processing facility?
         </label>
-        <input type="text" value="No" readonly
+        <input type="text" [value]="HarvestObj.ifNotHasFacilityAccess == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
     </div>
 
@@ -32,7 +32,7 @@
             <span class="text-[#4A4A4A]">04.</span>
             Does farmer knows technologies for value addition of your crop?
         </label>
-        <input type="text" value="Yes" readonly
+        <input type="text" [value]="HarvestObj.knowsValueAdditionTech == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
     </div>
 
@@ -41,7 +41,7 @@
             <span class="text-[#4A4A4A]">05.</span>
             Does the farmer has market linkage for value added products?
         </label>
-        <input type="text" value="Yes" readonly
+        <input type="text" [value]="HarvestObj.hasValueAddedMarketLinkage == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
     </div>
 
@@ -50,7 +50,7 @@
             <span class="text-[#4A4A4A]">06.</span>
             Is farmer aware about required quality standards of value added products of proposed crops?
         </label>
-        <input type="text" value="Yes" readonly
+        <input type="text" [value]="HarvestObj.awareOfQualityStandards == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
     </div>
 

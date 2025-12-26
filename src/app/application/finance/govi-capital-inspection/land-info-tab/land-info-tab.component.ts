@@ -1,4 +1,3 @@
-// land-info-tab.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
@@ -39,6 +38,19 @@ export class LandInfoTabComponent {
     }
     
     return false;
+  }
+
+  // Add this getter to convert 1/0 to Yes/No
+  get ownershipDisplay(): string {
+    if (!this.landlObj?.isOwnByFarmer) return 'Not provided';
+    
+    const value = this.landlObj.isOwnByFarmer.toString().trim();
+    
+    if (value === '1') return 'Yes';
+    if (value === '0') return 'No';
+    
+    // If it's already "Yes"/"No" or some other value, return as is
+    return this.landlObj.isOwnByFarmer;
   }
 
   openMapPopup(): void {

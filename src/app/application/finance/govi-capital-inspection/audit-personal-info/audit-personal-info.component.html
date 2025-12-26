@@ -136,14 +136,12 @@
     <div *ngIf="activeTab === 'Personal'">
       <app-personal-info-tab [personalObj]="inspectionArray.Personal"></app-personal-info-tab>
     </div>
-    <!-- dumith -->
-    <!-- <div *ngIf="activeTab === 'IDProof'">
-      <app-id-proof-tab [personalArr]="inspectionArray.ID"></app-id-proof-tab>
-    </div> -->
-    <!-- dumith -->
-    <!-- <div *ngIf="activeTab === 'Finance'">
-      <app-finance-info-tab [financeArr]="inspectionArray.Finance"></app-finance-info-tab>
-    </div> -->
+    <div *ngIf="activeTab === 'IDProof'">
+      <app-id-proof-tab [idInfo]="inspectionArray.ID"></app-id-proof-tab>
+    </div>
+    <div *ngIf="activeTab === 'Finance'">
+      <app-finance-info-tab [financeInfo]="inspectionArray.Finance"></app-finance-info-tab>
+    </div>
     <!-- biman -->
     <!-- <div *ngIf="activeTab === 'Land'">
       <app-land-info-tab [landlArr]="inspectionArray.Land"></app-land-info-tab>
@@ -152,13 +150,11 @@
     <div *ngIf="activeTab === 'Investment'">
       <app-investment-info-tab></app-investment-info-tab>
     </div>
-    <!-- dumith -->
     <div *ngIf="activeTab === 'Cultivation'">
-      <app-cultivation-info-tab></app-cultivation-info-tab>
+      <app-cultivation-info-tab [cultivationData]="inspectionArray.Cultivation"></app-cultivation-info-tab>
     </div>
-    <!-- dumith -->
     <div *ngIf="activeTab === 'CroppingSystems'">
-      <app-cropping-system-tab></app-cropping-system-tab>
+      <app-cropping-system-tab [croppingData]="inspectionArray.Cropping"></app-cropping-system-tab>
     </div>
     <!-- ashan -->
     <div *ngIf="activeTab === 'ProfitRisk'">

@@ -34,7 +34,7 @@ import Swal from 'sweetalert2';
     EconomicalTabComponent,
     LabourTabComponent,
     HarvestStorageTabComponent,
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './audit-personal-info.component.html',
   styleUrl: './audit-personal-info.component.css',
@@ -45,19 +45,19 @@ export class AuditPersonalInfoComponent implements OnInit {
   inspectionArray!: Inspection;
   reqId: number = 2;
   jobId: string = 'SS222';
-  approvePopUpOpen: boolean = false
-  rejectPopUpOpen: boolean = false
+  approvePopUpOpen: boolean = false;
+  rejectPopUpOpen: boolean = false;
   rejectReason: string = '';
   openDevideSharesPopUp: boolean = false;
 
   numShares!: number;
-  shareValue: number = 0.00;
+  shareValue: number = 0.0;
   minimumShare!: number;
   maximumShare!: number;
 
   sharesData: Partial<Shares> = {};
 
-  constructor(private financeService: FinanceService, private router: Router) { }
+  constructor(private financeService: FinanceService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchData();
@@ -77,8 +77,8 @@ export class AuditPersonalInfoComponent implements OnInit {
       .getInspectionDetails(this.reqId)
       .subscribe((res: any) => {
         this.inspectionArray = res.data;
-        this.sharesData = res.shares
-        console.log('sharesData', this.sharesData)
+        this.sharesData = res.shares;
+        console.log('sharesData', this.sharesData);
         console.log(res.data);
 
         console.log(this.inspectionArray);
@@ -87,16 +87,15 @@ export class AuditPersonalInfoComponent implements OnInit {
       });
   }
 
-
   onNumSharesChange(value: number) {
     this.numShares = value; // optional, ngModel already does this
-    console.log('numShares', this.numShares)
+    console.log('numShares', this.numShares);
     if (this.numShares !== null) {
-      this.shareValue = Number(this.sharesData.totalValue) / (this.numShares)
+      this.shareValue = Number(this.sharesData.totalValue) / this.numShares;
     } else if (this.numShares === null) {
-      this.shareValue = 0.00
+      this.shareValue = 0.0;
     }
-    console.log('shareValue', this.shareValue)
+    console.log('shareValue', this.shareValue);
   }
 
   openApprovePopUp() {
@@ -121,37 +120,38 @@ export class AuditPersonalInfoComponent implements OnInit {
   }
 
   RejectRequest() {
-
     this.rejectPopUpOpen = false;
 
     this.isLoading = true;
 
-    this.financeService.rejectRequest(this.sharesData.id!, this.rejectReason).subscribe((res: any) => {
-
-      if (res.status) {
-        Swal.fire({
-          title: 'Success',
-          text: `Request Rejected Successfully`,
-          icon: 'success',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      } else if (!res.status) {
-        Swal.fire({
-          title: 'error',
-          text: `Failed to Reject the Request`,
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      }
-      this.isLoading = false;
-    })
-
+    this.financeService
+      .rejectRequest(this.sharesData.id!, this.rejectReason)
+      .subscribe((res: any) => {
+        if (res.status) {
+          Swal.fire({
+            title: 'Success',
+            text: `Request Rejected Successfully`,
+            icon: 'success',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        } else if (!res.status) {
+          Swal.fire({
+            title: 'error',
+            text: `Failed to Reject the Request`,
+            icon: 'error',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+        this.isLoading = false;
+      });
   }
 
   cancelDevidePopUp() {
@@ -165,54 +165,56 @@ export class AuditPersonalInfoComponent implements OnInit {
 
     let devideRequestObj: Partial<DevideRequest> = {};
 
-    devideRequestObj.totalValue = this.sharesData.totalValue
-    devideRequestObj.numShares = this.numShares
-    devideRequestObj.shareValue = Number(this.shareValue.toFixed(2))
-    devideRequestObj.minimumShare = this.minimumShare
-    devideRequestObj.maximumShare = this.maximumShare
-    devideRequestObj.id = this.sharesData.id
-    devideRequestObj.jobId = this.sharesData.jobId
-    devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime
-    devideRequestObj.empId = this.sharesData.empId
-    console.log('devideRequestObj', devideRequestObj)
+    devideRequestObj.totalValue = this.sharesData.totalValue;
+    devideRequestObj.numShares = this.numShares;
+    devideRequestObj.shareValue = Number(this.shareValue.toFixed(2));
+    devideRequestObj.minimumShare = this.minimumShare;
+    devideRequestObj.maximumShare = this.maximumShare;
+    devideRequestObj.id = this.sharesData.id;
+    devideRequestObj.jobId = this.sharesData.jobId;
+    devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime;
+    devideRequestObj.empId = this.sharesData.empId;
+    console.log('devideRequestObj', devideRequestObj);
 
-
-    this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
-
-      if (res.status) {
-        Swal.fire({
-          title: 'Success',
-          text: `Request Approved Successfully`,
-          icon: 'success',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      } else if (!res.status) {
-        Swal.fire({
-          title: 'error',
-          text: `Failed to Approve the Request`,
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      }
-      this.isLoading = false;
-    })
+    this.financeService
+      .devideSharesRequest(devideRequestObj)
+      .subscribe((res: any) => {
+        if (res.status) {
+          Swal.fire({
+            title: 'Success',
+            text: `Request Approved Successfully`,
+            icon: 'success',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        } else if (!res.status) {
+          Swal.fire({
+            title: 'error',
+            text: `Failed to Approve the Request`,
+            icon: 'error',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+        this.isLoading = false;
+      });
   }
 }
 
 interface Inspection {
   Personal: IPersonal;
-  ID: Question[];
-  Finance: Question[];
+  ID: IIdInfo;
+  Finance: IFinance;
   Land: Question[];
   Investment: Question[];
-  Cultivation: Question[];
-  Cropping: Question[];
+  Cultivation: ICultivation;
+  Cropping: ICropping;
   ProfitRisk: IProfitRisk;
   Economical: IEconomical;
   Labor: ILabor;
@@ -249,23 +251,52 @@ class DevideRequest {
 }
 
 interface IPersonal {
-  firstName: string 
-  lastName: string 
-  otherName: string
-  callName: string 
-  phone1: string 
-  phone2: string 
-  familyPhone: string 
-  landHome: string 
-  landWork: string 
-  email1: string 
-  email2: string 
-  house: string 
-  street: string 
-  city: string 
-  country: string 
-  district: string
-  province: string 
+  firstName: string;
+  lastName: string;
+  otherName: string;
+  callName: string;
+  phone1: string;
+  phone2: string;
+  familyPhone: string;
+  landHome: string;
+  landWork: string;
+  email1: string;
+  email2: string;
+  house: string;
+  street: string;
+  city: string;
+  country: string;
+  district: string;
+  province: string;
+}
+
+interface IIdInfo {
+  pType: string;
+  pNumber: string;
+  frontImg: string;
+  backImg: string;
+}
+
+interface IFinance {
+  accHolder: string;
+  accNum: string;
+  bank: string;
+  branch: string;
+  debtsOfFarmer: string;
+  noOfDepartments: number;
+  assetsLand: { Land: string[] };
+  assetsBuilding: { Building: string[] };
+  assetsVehicle: { Vehicle: string[] };
+  assetsMachinery: { Machinery: string[] };
+  assetsFarmTool: string;
+}
+
+interface ICropping {
+  opportunity: string[];
+  otherOpportunity: string;
+  hasKnowlage: number;
+  prevExperince: string;
+  opinion: string;
 }
 
 interface IProfitRisk {
@@ -314,3 +345,25 @@ interface ILabor {
   isMachineryCostEffective: number
   createdAt: Date
 }
+
+export interface ICultivation {
+  temperature: number;         
+  rainfall: number;            
+  sunShine: number;            
+  humidity: number;            
+  windVelocity: number;        
+  windDirection: number;       
+  zone: number;
+  isCropSuitale: number;       
+  ph: number;                  
+  soilType: string;
+  soilfertility: string;
+  waterSources: string[];
+  waterImage: string[]; 
+  isRecevieRainFall: number;   
+  isRainFallSuitableCrop: number;
+  isRainFallSuitableCultivation: number;
+  isElectrocityAvailable: number;
+  ispumpOrirrigation: number;
+}
+

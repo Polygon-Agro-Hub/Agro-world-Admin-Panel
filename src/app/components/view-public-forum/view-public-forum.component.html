@@ -73,9 +73,9 @@
               <p *ngIf="i.chatId === postRcord.id">{{ i.replyCount }} {{ i.replyCount > 1 ? 'Replies' : 'Reply' }}</p>
             </div>
             <p *ngIf="!hasReplies(postRcord.id)">0 Reply</p>
-            <button class="ml-2" >
-              
-            </button>
+            <!-- <button class="ml-2">
+
+            </button> -->
           </span>
         </div>
       </div>
@@ -106,7 +106,7 @@
 
 <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-40 h-screen"
   *ngIf="isPopupVisible">
-  <div class="bg-white w-full max-w-4xl mx-auto dark:bg-tileBlack rounded-lg shadow-lg p-2 max-h-[90vh] flex flex-col">
+  <div class="bg-white w-full max-w-6xl mx-auto dark:bg-tileBlack rounded-lg shadow-lg p-2 max-h-[90vh] flex flex-col">
     <div class="flex justify-between items-center border-b pb-3">
       <h2 class="text-lg font-semibold py-2 px-8"></h2>
       <button class="text-gray-500 hover:text-gray-700" (click)="closePopup()">
@@ -118,7 +118,6 @@
 
     <!-- Scrollable content area -->
     <div class="flex-1 overflow-y-auto p-2">
-      <!-- Changed here -->
       <div class="px-12">
         <div *ngFor="let item of publiForum">
           <p class="text-lg text-blue-500 underline" *ngIf="!item.firstName">
@@ -127,21 +126,17 @@
           <p class="text-lg text-blue-500 underline" *ngIf="item.firstName">
             {{item.replyStaffId !== null ? item.staffFirstName + ' ' + item.staffLastName : item.firstName + ' ' +
             item.lastName}}
-            <!-- {{ item.firstName }} {{ item.lastName }} -->
           </p>
-          <!-- In your *ngFor loop, modify the delete menu section -->
           <div class="flex flex-row py-2">
-            <div class="bg-gray-200 dark:bg-[#272F45] dark:text-textDark px-4 py-1 text-lg rounded-[8px]">
+            <div class="bg-gray-200 dark:bg-[#272F45] dark:text-textDark px-4 py-1 text-lg rounded-[8px] max-w-[80%]">
               {{ item.replyMessage }}
               <p class="text-end ml-8 text-sm dark:text-textDark">
                 {{ item.createdAt | date : "shortTime" }}
               </p>
             </div>
             <div class="relative flex justify-center items-center mx-5">
-              <!-- SVG Icon with click handler -->
               <i class="fa-solid fa-ellipsis dark:text-textDark cursor-pointer" (click)="toggleDeleteMenu(item.id)"></i>
 
-              <!-- Delete Button (shown based on activeDeleteMenu) -->
               <div *ngIf="permissionService.hasPermission('Delete comment') ||tokenService.getUserDetails().role === '1'"
                 class="absolute flex justify-center items-center p-2 bg-white text-black dark:bg-[#272F45] shadow-xl rounded-lg transition-all duration-300 -right-52 w-48"
                 [class.hidden]="activeDeleteMenu !== item.id">
@@ -151,6 +146,7 @@
               </div>
             </div>
           </div>
+         
         </div>
       </div>
     </div>

@@ -5,203 +5,143 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
->
-  <div
-    class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10"
-  >
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10">
     <div class="flex flex-col">
       <span class="text-[#7E7E7E]">Request_ID :</span><span>GC000003</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Farmer Phone :</span
-      ><span>+94 783344555</span>
+      <span class="text-[#7E7E7E]">Farmer Phone :</span><span>+94 783344555</span>
     </div>
     <div class="flex flex-col">
       <span class="text-[#7E7E7E]">Audited By :</span><span>CFO00001</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Officer Phone :</span
-      ><span>+94 783344500</span>
+      <span class="text-[#7E7E7E]">Officer Phone :</span><span>+94 783344500</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Audited Date :</span
-      ><span>June 2, 2023</span>
+      <span class="text-[#7E7E7E]">Audited Date :</span><span>June 2, 2023</span>
     </div>
     <div class="flex flex-col gap-4">
       <div class="flex gap-4">
         <button
           class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
-          (click)="openApprovePopUp()"
-        >
+          (click)="openApprovePopUp()">
           Approve
         </button>
 
         <button
           class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md hover:bg-[#980808] transition-colors duration-200 shadow-sm"
-          (click)="openRejectPopUp()"
-        >
+          (click)="openRejectPopUp()">
           Reject
         </button>
       </div>
     </div>
   </div>
-  <div
-    class="pt-5 pb-5 min-w-[1700px] bg-white dark:bg-tileBlack shadow-lg rounded-lg"
-  >
-    <div
-      class="flex whitespace-nowrap space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300"
-    >
-      <button
-        (click)="selectTab('Personal')"
-        [ngClass]="{
+  <div class="pt-5 pb-5 min-w-[1700px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex whitespace-nowrap space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
+      <button (click)="selectTab('Personal')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'Personal',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Personal'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'Personal'" class="fa fa-check"></i>
         Personal Info
       </button>
-      <button
-        (click)="selectTab('IDProof')"
-        [ngClass]="{
+      <button (click)="selectTab('IDProof')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'IDProof',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'IDProof'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'IDProof'" class="fa fa-check"></i>
         ID Proof
       </button>
-      <button
-        (click)="selectTab('Finance')"
-        [ngClass]="{
+      <button (click)="selectTab('Finance')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'Finance',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Finance'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'Finance'" class="fa fa-check"></i>
         Finance Info
       </button>
-      <button
-        (click)="selectTab('Land')"
-        [ngClass]="{
+      <button (click)="selectTab('Land')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'Land',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Land'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'Land'" class="fa fa-check"></i>
         Land Info
       </button>
-      <button
-        (click)="selectTab('Investment')"
-        [ngClass]="{
+      <button (click)="selectTab('Investment')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'Investment',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Investment'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'Investment'" class="fa fa-check"></i>
         Investment Info
       </button>
-      <button
-        (click)="selectTab('Cultivation')"
-        [ngClass]="{
+      <button (click)="selectTab('Cultivation')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'Cultivation',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Cultivation'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'Cultivation'" class="fa fa-check"></i>
         Cultivation Info
       </button>
-      <button
-        (click)="selectTab('CroppingSystems')"
-        [ngClass]="{
+      <button (click)="selectTab('CroppingSystems')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]':
             activeTab === 'CroppingSystems',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'CroppingSystems'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'CroppingSystems'" class="fa fa-check"></i>
         Cropping Systems
       </button>
-      <button
-        (click)="selectTab('ProfitRisk')"
-        [ngClass]="{
+      <button (click)="selectTab('ProfitRisk')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'ProfitRisk',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'ProfitRisk'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'ProfitRisk'" class="fa fa-check"></i>
         Profit & Risk
       </button>
-      <button
-        (click)="selectTab('Economical')"
-        [ngClass]="{
+      <button (click)="selectTab('Economical')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'Economical',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Economical'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'Economical'" class="fa fa-check"></i>
         Economical
       </button>
-      <button
-        (click)="selectTab('Labour')"
-        [ngClass]="{
+      <button (click)="selectTab('Labour')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'Labour',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Labour'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'Labour'" class="fa fa-check"></i>
         Labour
       </button>
-      <button
-        (click)="selectTab('HarvestStorage')"
-        [ngClass]="{
+      <button (click)="selectTab('HarvestStorage')" [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]':
             activeTab === 'HarvestStorage',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'HarvestStorage'
-        }"
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
+        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
         <i *ngIf="activeTab === 'HarvestStorage'" class="fa fa-check"></i>
         Harvest Storage
       </button>
     </div>
     <div class="h-5"></div>
     <!-- //biman -->
-    <div *ngIf="activeTab === 'Personal'"> 
-      <app-personal-info-tab
-        [personalObj]="inspectionArray.Personal"
-      ></app-personal-info-tab>
+    <div *ngIf="activeTab === 'Personal'">
+      <app-personal-info-tab [personalObj]="inspectionArray.Personal"></app-personal-info-tab>
     </div>
-    <!-- dumith -->
-    <!-- <div *ngIf="activeTab === 'IDProof'">
-      <app-id-proof-tab [personalArr]="inspectionArray.ID"></app-id-proof-tab>
-    </div> -->
-    <!-- dumith -->
-    <!-- <div *ngIf="activeTab === 'Finance'">
-      <app-finance-info-tab [financeArr]="inspectionArray.Finance"></app-finance-info-tab>
-    </div> -->
+    <div *ngIf="activeTab === 'IDProof'">
+      <app-id-proof-tab [idInfo]="inspectionArray.ID"></app-id-proof-tab>
+    </div>
+    <div *ngIf="activeTab === 'Finance'">
+      <app-finance-info-tab [financeInfo]="inspectionArray.Finance"></app-finance-info-tab>
+    </div>
     <!-- biman -->
     <!-- <div *ngIf="activeTab === 'Land'">
       <app-land-info-tab [landlArr]="inspectionArray.Land"></app-land-info-tab>
@@ -210,13 +150,11 @@
     <div *ngIf="activeTab === 'Investment'">
       <app-investment-info-tab></app-investment-info-tab>
     </div>
-    <!-- dumith -->
     <div *ngIf="activeTab === 'Cultivation'">
-      <app-cultivation-info-tab></app-cultivation-info-tab>
+      <app-cultivation-info-tab [cultivationData]="inspectionArray.Cultivation"></app-cultivation-info-tab>
     </div>
-    <!-- dumith -->
     <div *ngIf="activeTab === 'CroppingSystems'">
-      <app-cropping-system-tab></app-cropping-system-tab>
+      <app-cropping-system-tab [croppingData]="inspectionArray.Cropping"></app-cropping-system-tab>
     </div>
     <!-- ashan -->
     <div *ngIf="activeTab === 'ProfitRisk'">
@@ -243,31 +181,31 @@
 <div *ngIf="approvePopUpOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 py-10 w-1/3">
 
-      <div>
-          <!-- Icon -->
-          <div class="mb-6 text-center mt-4 font-semibold dark:text-textDark">
-            <p class="text-xl mb-2">
-              Request ID : {{sharesData.jobId}}
-            </p>
-          </div>
-
-          <div class="mb-8 text-center dark:text-textDark">
-              <p class="text-lg mb-2">
-                Are you sure you want to Approve this Project?
-              </p>
-              
-          </div>
-
-          <!-- Buttons -->
-          <div class="flex justify-center gap-6">
-              <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-10 py-3 rounded-xl shadow-md"
-                  (click)="cancelApprovePopUp()"><span class="text-white">No, Go Back</span> 
-              </button>
-              <button class="bg-[#3980C0] border-[1px] border-[#3980C0] px-10 py-3 rounded-xl shadow-md"
-                  (click)="ApproveRequest()"><span class=" text-lg text-white">Yes, Approve</span> 
-              </button>
-          </div>
+    <div>
+      <!-- Icon -->
+      <div class="mb-6 text-center mt-4 font-semibold dark:text-textDark">
+        <p class="text-xl mb-2">
+          Request ID : {{sharesData.jobId}}
+        </p>
       </div>
+
+      <div class="mb-8 text-center dark:text-textDark">
+        <p class="text-lg mb-2">
+          Are you sure you want to Approve this Project?
+        </p>
+
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-center gap-6">
+        <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-10 py-3 rounded-xl shadow-md"
+          (click)="cancelApprovePopUp()"><span class="text-white">No, Go Back</span>
+        </button>
+        <button class="bg-[#3980C0] border-[1px] border-[#3980C0] px-10 py-3 rounded-xl shadow-md"
+          (click)="ApproveRequest()"><span class=" text-lg text-white">Yes, Approve</span>
+        </button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -276,47 +214,43 @@
 <div *ngIf="rejectPopUpOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 py-10 w-1/3">
 
-      <div>
-          <!-- Icon -->
-          <div class="mb-6 text-center mt-4 font-semibold dark:text-textDark">
-            <p class="text-xl mb-2">
-              Request ID : {{sharesData.jobId}}
-            </p>
-          </div>
+    <div>
+      <!-- Icon -->
+      <div class="mb-6 text-center mt-4 font-semibold dark:text-textDark">
+        <p class="text-xl mb-2">
+          Request ID : {{sharesData.jobId}}
+        </p>
+      </div>
 
-          <div class="mb-8 text-center dark:text-textDark">
-              <p class="text-lg mb-2">
-                Are you sure you want to Reject this Project?
-              </p>
-              
-          </div>
+      <div class="mb-8 text-center dark:text-textDark">
+        <p class="text-lg mb-2">
+          Are you sure you want to Reject this Project?
+        </p>
 
-          <div class="mb-8">
-            <label class="block mb-2 text-lg font-semibold dark:text-textDark">
-              Reason to Reject :
-            </label>
-            <textarea
-              rows="8"
-              placeholder="Mention Reason Here.."
-              class="w-full rounded-lg border border-gray-300 dark:border-gray-600
+      </div>
+
+      <div class="mb-8">
+        <label class="block mb-2 text-lg font-semibold dark:text-textDark">
+          Reason to Reject :
+        </label>
+        <textarea rows="8" placeholder="Mention Reason Here.." class="w-full rounded-lg border border-gray-300 dark:border-gray-600
                      bg-white dark:bg-tileBlack
                      px-4 py-3 text-xl italic text-[#4B5563]
                      focus:outline-none focus:ring-2 focus:ring-[#3980C0]
-                     dark:text-[#4B5563]"
-              [(ngModel)]="rejectReason">
+                     dark:text-[#4B5563]" [(ngModel)]="rejectReason">
             </textarea>
-          </div>
-
-          <!-- Buttons -->
-          <div class="flex justify-center gap-6">
-              <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-10 py-3 rounded-xl shadow-md"
-                  (click)="cancelRejectPopUp()"><span class="text-white">No, Go Back</span> 
-              </button>
-              <button class="bg-[#C40D0D] border-[1px] border-[#C40D0D] px-10 py-3 rounded-xl shadow-md"
-                  (click)="RejectRequest()"><span class=" text-lg text-white">Yes, Reject</span> 
-              </button>
-          </div>
       </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-center gap-6">
+        <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-10 py-3 rounded-xl shadow-md"
+          (click)="cancelRejectPopUp()"><span class="text-white">No, Go Back</span>
+        </button>
+        <button class="bg-[#C40D0D] border-[1px] border-[#C40D0D] px-10 py-3 rounded-xl shadow-md"
+          (click)="RejectRequest()"><span class=" text-lg text-white">Yes, Reject</span>
+        </button>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -325,66 +259,69 @@
 <div *ngIf="openDevideSharesPopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 pt-4 pb-10 w-1/4">
 
-      <div class="px-4">
-          <div class="mb-6 text-center font-semibold dark:text-textDark">
-            <p class="text-xl mb-2">
-              Request ID : {{sharesData.jobId}}
-            </p>
-          </div>
-
-          <div class="mb-8">
-            <div>
-              <label class="block mb-2 text-lg dark:text-textDark">
-                Total Value (Rs.)
-              </label>
-              <input id="totalValue" [value]="sharesData.totalValue | number:'1.2-2'" name="totalValue" readonly
-                class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            </div>
-
-            <div>
-              <label class="block mb-2 text-lg dark:text-textDark">
-                Define Number of Shares
-              </label>
-              <input id="numShares" type="number" [(ngModel)]="numShares" name="numShares" placeholder="--Enter Here--"  (ngModelChange)="onNumSharesChange($event)"
-                class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            </div>
-
-            <div>
-              <label class="block mb-2 text-lg dark:text-textDark">
-                Value of One Share (Rs.)
-              </label>
-              <input id="shareValue" [value]="shareValue | number:'1.2-2'" name="shareValue" readonly
-                class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            </div>
-
-            <div>
-              <label class="block mb-2 text-lg dark:text-textDark">
-                Minimum Investment Shares
-              </label>
-              <input id="minimumShare" type="number" [(ngModel)]="minimumShare" name="minimumShare" placeholder="--Enter Here--" 
-                class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            </div>
-
-            <div>
-              <label class="block mb-2 text-lg dark:text-textDark">
-                Maximum Investment Shares
-              </label>
-              <input id="maximumShare" type="number" [(ngModel)]="maximumShare" name="maximumShare" placeholder="--Enter Here--" 
-                class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            </div>
-          </div>
-
-
-          <!-- Buttons -->
-          <div class="flex justify-between gap-16">
-              <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-6 py-3 rounded-xl shadow-md"
-                  (click)="cancelDevidePopUp()"><span class="text-white">Cancel</span> 
-              </button>
-              <button class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-xl shadow-md"
-                  (click)="DevideRequest()"><span class=" text-lg text-white">Devide</span> 
-              </button>
-          </div>
+    <div class="px-4">
+      <div class="mb-6 text-center font-semibold dark:text-textDark">
+        <p class="text-xl mb-2">
+          Request ID : {{sharesData.jobId}}
+        </p>
       </div>
+
+      <div class="mb-8">
+        <div>
+          <label class="block mb-2 text-lg dark:text-textDark">
+            Total Value (Rs.)
+          </label>
+          <input id="totalValue" [value]="sharesData.totalValue | number:'1.2-2'" name="totalValue" readonly
+            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div>
+          <label class="block mb-2 text-lg dark:text-textDark">
+            Define Number of Shares
+          </label>
+          <input id="numShares" type="number" [(ngModel)]="numShares" name="numShares" placeholder="--Enter Here--"
+            (ngModelChange)="onNumSharesChange($event)"
+            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div>
+          <label class="block mb-2 text-lg dark:text-textDark">
+            Value of One Share (Rs.)
+          </label>
+          <input id="shareValue" [value]="shareValue | number:'1.2-2'" name="shareValue" readonly
+            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div>
+          <label class="block mb-2 text-lg dark:text-textDark">
+            Minimum Investment Shares
+          </label>
+          <input id="minimumShare" type="number" [(ngModel)]="minimumShare" name="minimumShare"
+            placeholder="--Enter Here--"
+            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+
+        <div>
+          <label class="block mb-2 text-lg dark:text-textDark">
+            Maximum Investment Shares
+          </label>
+          <input id="maximumShare" type="number" [(ngModel)]="maximumShare" name="maximumShare"
+            placeholder="--Enter Here--"
+            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+        </div>
+      </div>
+
+
+      <!-- Buttons -->
+      <div class="flex justify-between gap-16">
+        <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-6 py-3 rounded-xl shadow-md"
+          (click)="cancelDevidePopUp()"><span class="text-white">Cancel</span>
+        </button>
+        <button class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-xl shadow-md"
+          (click)="DevideRequest()"><span class=" text-lg text-white">Devide</span>
+        </button>
+      </div>
+    </div>
   </div>
 
 </div>

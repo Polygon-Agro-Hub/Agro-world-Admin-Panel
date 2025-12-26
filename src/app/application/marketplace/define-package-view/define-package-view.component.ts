@@ -84,8 +84,8 @@ export class DefinePackageViewComponent implements OnInit {
   goBack(): void {
     Swal.fire({
       icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
+      title: 'Are you sure you want to go back?',
+      text: 'Your basic package details are saved. If you return to the previous page, the form will not remain filled.\nIf you need to update any basic information, please go to Edit.',
       showCancelButton: true,
       confirmButtonText: 'Yes, Go Back',
       cancelButtonText: 'No, Stay Here',
@@ -105,8 +105,8 @@ export class DefinePackageViewComponent implements OnInit {
   onCancel() {
     Swal.fire({
       icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
+      title: 'Are you sure you want to Cancel?',
+      text: 'Your basic package details are saved. If you return to the previous page, the form will not remain filled.\nIf you need to update any basic information, please go to Edit.',
       showCancelButton: true,
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',

@@ -1,0 +1,94 @@
+
+<div class="space-y-2 p-10">
+  
+  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      <span class="text-gray-500">01.</span> Can the farmer manage the proposed crop / cropping system through family labour?
+    </label>
+
+    <input
+          type="text"
+          [value]="LaborObj.isManageFamilyLabour == 1 ? 'Yes' : 'No'"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+  </div>
+
+  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      <span class="text-gray-500">02.</span> If not, do you have adequate labours to manage the same?
+    </label>
+
+    <input
+          type="text"
+          [value]="LaborObj.isFamilyHiredLabourEquipped == 1 ? 'Yes' : 'No'"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+  </div>
+
+  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      <span class="text-gray-500">03.</span> Is family/hired labour equipped to handle the proposed crop/cropping system?
+    </label>
+
+    <input
+          type="text"
+          [value]="LaborObj.hasAdequateAlternativeLabour == 1 ? 'Yes' : 'No'"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+  </div>
+
+  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      <span class="text-gray-500">04.</span> Are there any mechanization options to substitute the labour?
+    </label>
+
+    <input
+          type="text"
+          [value]="LaborObj.areThereMechanizationOptions == 1 ? 'Yes' : 'No'"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+  </div>
+
+  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      <span class="text-gray-500">05.</span> Is machinery available?
+    </label>
+
+    <input
+          type="text"
+          [value]="LaborObj.isMachineryAvailable == 1 ? 'Yes' : 'No'"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+  </div>
+
+  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      <span class="text-gray-500">06.</span> Is machinery affordable?
+    </label>
+
+    <input
+          type="text"
+          [value]="LaborObj.isMachineryAffordable == 1 ? 'Yes' : 'No'"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+  </div>
+
+  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 mb-2">
+      <span class="text-gray-500">07.</span> Is machinery cost effective?
+    </label>
+
+    <input
+          type="text"
+          [value]="LaborObj.isMachineryCostEffective == 1 ? 'Yes' : 'No'"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          readonly
+        />
+  </div>
+</div>

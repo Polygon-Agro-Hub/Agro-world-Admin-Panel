@@ -107,7 +107,8 @@
         <table class="w-full">
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700">
-              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">No
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                No
               </th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Request_ID</th>
@@ -137,7 +138,7 @@
 
               <!-- No -->
               <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                {{ formatThreeDigits(request.No) }}
+               {{ (i+1) | number:'3.0-0' }}
               </td>
 
               <!-- Request ID -->
@@ -272,22 +273,22 @@
       </div>
 
       <!-- Variety -->
-      <div class="flex items-start">
+      <!-- <div class="flex items-start">
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Variety</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Variety }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Certificate -->
-      <div class="flex items-start">
+      <!-- <div class="flex items-start">
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Certificate</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Certificate }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Extent -->
       <div class="flex items-start">
@@ -422,7 +423,7 @@
       </p>
       <p class="text-sm text-textLight dark:text-textDark">
         District: {{ selectedOfficerInfo.district }}
-      </p> 
+      </p>
     </div>
 
     <div *ngIf="assignError" class="mt-3 p-2 text-red-700 rounded text-sm">

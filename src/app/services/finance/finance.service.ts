@@ -291,6 +291,7 @@ export interface GoviCareRequest {
   empId: string;
   publishStatus: string;
   Request_Date_Time: string;
+  approvedDetails: any;
 }
 
 export interface GoviCareRequestsResponse {
@@ -311,6 +312,7 @@ export interface GoviCareRequestDetail {
   Expected_Yield: string;
   Expected_Start_Date: string;
   Request_Date_Time: string;
+  approvedDetails: any;
 
 }
 
@@ -345,6 +347,8 @@ export interface UpdatePublishStatusResponse {
   status: boolean;
   message: string;
 }
+
+
 
 
 @Injectable({
@@ -868,7 +872,7 @@ export class FinanceService {
     });
   }
 
-  getInspectionDetails(id:number): Observable<{ count: number; data: any[] }> {
+  getInspectionDetails(id: number): Observable<{ count: number; data: any[] }> {
     let params = new HttpParams();
 
 
@@ -876,6 +880,69 @@ export class FinanceService {
     return this.http.get<any>(url, {
       headers: this.getHeaders(),
     });
+  }
+
+  getAllAuditedGoviCareRequests(
+    status?: string,
+    search?: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    let params = new HttpParams();
+
+    if (status && status.trim()) {
+      params = params.set('status', status.trim());
+    }
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/audited-govicare-requests`;
+    return this.http.get<any>(url, {
+      headers: headers,
+      params: params,
+    });
+  }
+
+  devideSharesRequest(
+    devideRequestObj: any
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}finance/devide-shares`,
+      {
+        sharesData: devideRequestObj,
+      },
+      {
+        headers
+      }
+    );
+  }
+
+  rejectRequest(
+    id: number,
+    rejectReason: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}finance/reject-request`,
+      {
+        reqId: id,
+        reason: rejectReason
+      },
+      {
+        headers
+      }
+    );
   }
 }
 

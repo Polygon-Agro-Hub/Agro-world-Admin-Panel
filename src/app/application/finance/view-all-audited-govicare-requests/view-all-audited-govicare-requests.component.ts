@@ -6,16 +6,16 @@ import Swal from 'sweetalert2';
 import { FinanceService, GoviCareRequest, GoviCareRequestDetail } from '../../../services/finance/finance.service';
 
 @Component({
-  selector: 'app-view-all-approved-govicare-requests',
+  selector: 'app-view-all-audited-govicare-requests',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './view-all-approved-govicare-requests.component.html',
-  styleUrl: './view-all-approved-govicare-requests.component.css'
+  templateUrl: './view-all-audited-govicare-requests.component.html',
+  styleUrl: './view-all-audited-govicare-requests.component.css'
 })
-export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
+export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
   isLoading: boolean = false;
 
-  govicareRequests: GoviCareRequest[] = [];
+  govicareRequests: AuditedRequest[] = [];
   totalItems: number = 0;
 
   // Status Filter
@@ -30,13 +30,11 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   // Details Modal
   showDetailsModal: boolean = false;
   selectedRequest: GoviCareRequestDetail | null = null;
-  selectedShares!: GoviCareRequest;
 
   // Publish Confirmation Popup
   isPublishPopup: boolean = false;
   selectedRequestForPublish: GoviCareRequest | null = null;
   isPublishing: boolean = false;
-  isSharePopup: boolean = false;
 
   constructor(
     private financeService: FinanceService,
@@ -53,7 +51,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     const status = this.selectStatus || undefined;
 
     this.financeService
-      .getAllApprovedGoviCareRequests(status, this.search)
+      .getAllAuditedGoviCareRequests(status, this.search)
       .subscribe({
         next: (response) => {
           this.govicareRequests = response.data || [];
@@ -118,6 +116,10 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  auditResults(requestId: string) {
+
   }
 
   closeDetailsModal(): void {
@@ -256,18 +258,16 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   formatTotalItems(count: number): string {
     return count.toString().padStart(2, '0');
   }
+}
 
-  ViewShares(shares: GoviCareRequest) {
-    this.selectedShares = shares;
-    this.isSharePopup = true;
-  }
 
-  divideFunc(num1: number, num2: number): number {
-    if (num2 === 0) {
-      console.error("Division by zero error");
-      return 0; // or throw an error
-    }
-    const result = num1 / num2;
-    return parseFloat(result.toFixed(2));
-  }
+class AuditedRequest {
+  No!: number;
+  Request_ID!: string;
+  Farmer_Name!: string;
+  Phone_number!: string;
+  NIC_Front_Image!: string;
+  NIC_Back_Image!: string;
+  empId!: string;
+  reqCahangeTime!: string;
 }

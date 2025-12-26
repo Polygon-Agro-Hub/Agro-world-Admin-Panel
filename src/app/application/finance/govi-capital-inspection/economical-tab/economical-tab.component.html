@@ -1,0 +1,30 @@
+<div class="space-y-10 p-10">
+
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-[#4A4A4A] mb-2">
+            <span class="text-[#4A4A4A]">01.</span>
+            Are the proposed crop/cropping systems suitable for the farmer's size of land holding?
+        </label>
+        <input type="text" [value]="EconomicalObj.isSuitaleSize == 1 ? 'Yes' : 'No'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-[#4A4A4A] mb-2">
+            <span class="text-[#4A4A4A]">02.</span>
+            Are the financial resources adequate to manage the proposed crop/cropping system?
+        </label>
+        <input type="text" [value]="EconomicalObj.isFinanceResource == 1 ? 'Yes' : 'No'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+    <div class="bg-[#F9FAFC] p-5 rounded-xl">
+        <label class="block text-sm text-[#4A4A4A] mb-2">
+            <span class="text-[#4A4A4A]">03.</span>
+            If not, can the farmer mobilize financial resources through alternative routes?
+        </label>
+        <input type="text" [value]="EconomicalObj.isAltRoutes == 1 ? 'Yes' : 'No'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+    </div>
+
+</div>

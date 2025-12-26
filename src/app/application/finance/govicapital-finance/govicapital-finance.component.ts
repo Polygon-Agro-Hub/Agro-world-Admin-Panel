@@ -39,6 +39,7 @@ interface RejectedInvestmentRequest {
   requestDateTime?: string;
   NICnumber: string;
   officerEmpId: string;
+  rejectedBy: string;
 }
 
 @Component({

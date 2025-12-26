@@ -41,6 +41,12 @@ export class EditCoupenComponent {
     if (this.coupenId) {
       this.fetchCoupen(this.coupenId);
     }
+
+    if (this.coupenObj.startDate && this.coupenObj.startDate < this.today) {
+      this.minDate = this.coupenObj.startDate; // If start date is in past
+    } else {
+      this.minDate = this.today; // If start date is today or future
+    }
   }
 
   fetchCoupen(coupenId: number): void {

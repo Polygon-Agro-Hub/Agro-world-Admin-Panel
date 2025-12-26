@@ -323,13 +323,13 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span [class.cursor-pointer]="
-                    permissionService.hasPermission(
-                      'Claim collection officer'
-                    ) || tokenService.getUserDetails().role === '1'
-                  " (click)="
-                    permissionService.hasPermission(
-                      'Claim collection officer'
-                    ) || tokenService.getUserDetails().role === '1'
+                    (urlSegment === 'steckholders' && permissionService.hasPermission('Claim collection officer')) || 
+                    (urlSegment === 'collection-hub' && permissionService.hasPermission('Claim Polygon Centre officer')) || 
+                    tokenService.getUserDetails().role === '1'" 
+                    (click)="
+                    (urlSegment === 'steckholders' && permissionService.hasPermission('Claim collection officer')) || 
+                    (urlSegment === 'collection-hub' && permissionService.hasPermission('Claim Polygon Centre officer')) || 
+                    tokenService.getUserDetails().role === '1'
                       ? handleClaimButtonClick(item)
                       : null
                   " [ngClass]="{

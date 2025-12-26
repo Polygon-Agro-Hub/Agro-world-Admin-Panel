@@ -188,38 +188,49 @@
       </button>
     </div>
     <div class="h-5"></div>
-    <div *ngIf="activeTab === 'Personal'">
+    <!-- //biman -->
+    <div *ngIf="activeTab === 'Personal'"> 
       <app-personal-info-tab
-        [personalArr]="inspectionArray.Personal"
+        [personalObj]="inspectionArray.Personal"
       ></app-personal-info-tab>
     </div>
-    <div *ngIf="activeTab === 'IDProof'">
+    <!-- dumith -->
+    <!-- <div *ngIf="activeTab === 'IDProof'">
       <app-id-proof-tab [personalArr]="inspectionArray.ID"></app-id-proof-tab>
-    </div>
-    <div *ngIf="activeTab === 'Finance'">
+    </div> -->
+    <!-- dumith -->
+    <!-- <div *ngIf="activeTab === 'Finance'">
       <app-finance-info-tab [financeArr]="inspectionArray.Finance"></app-finance-info-tab>
-    </div>
-    <div *ngIf="activeTab === 'Land'">
+    </div> -->
+    <!-- biman -->
+    <!-- <div *ngIf="activeTab === 'Land'">
       <app-land-info-tab [landlArr]="inspectionArray.Land"></app-land-info-tab>
-    </div>
+    </div> -->
+    <!-- biman -->
     <div *ngIf="activeTab === 'Investment'">
       <app-investment-info-tab></app-investment-info-tab>
     </div>
+    <!-- dumith -->
     <div *ngIf="activeTab === 'Cultivation'">
       <app-cultivation-info-tab></app-cultivation-info-tab>
     </div>
+    <!-- dumith -->
     <div *ngIf="activeTab === 'CroppingSystems'">
       <app-cropping-system-tab></app-cropping-system-tab>
     </div>
+    <!-- ashan -->
     <div *ngIf="activeTab === 'ProfitRisk'">
       <app-profit-risk-tab></app-profit-risk-tab>
     </div>
+    <!-- ashan -->
     <div *ngIf="activeTab === 'Economical'">
       <app-economical-tab></app-economical-tab>
     </div>
+    <!-- ashan -->
     <div *ngIf="activeTab === 'Labour'">
       <app-labour-tab></app-labour-tab>
     </div>
+    <!-- ashan -->
     <div *ngIf="activeTab === 'HarvestStorage'">
       <app-harvest-storage-tab></app-harvest-storage-tab>
     </div>

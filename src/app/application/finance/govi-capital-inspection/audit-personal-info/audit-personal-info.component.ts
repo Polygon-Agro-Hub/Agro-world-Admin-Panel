@@ -57,7 +57,7 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   sharesData: Partial<Shares> = {};
 
-  constructor(private financeService: FinanceService, private router: Router) {}
+  constructor(private financeService: FinanceService, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchData();
@@ -76,10 +76,10 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.financeService
       .getInspectionDetails(this.reqId)
       .subscribe((res: any) => {
-        this.inspectionArray = res.data.categories;
+        this.inspectionArray = res.data;
         this.sharesData = res.shares
-      console.log('sharesData', this.sharesData)
-      console.log(res.data.categories);
+        console.log('sharesData', this.sharesData)
+        console.log(res.data);
 
         console.log(this.inspectionArray);
 
@@ -93,7 +93,7 @@ export class AuditPersonalInfoComponent implements OnInit {
     console.log('numShares', this.numShares)
     if (this.numShares !== null) {
       this.shareValue = Number(this.sharesData.totalValue) / (this.numShares)
-    } else if (this.numShares === null ) {
+    } else if (this.numShares === null) {
       this.shareValue = 0.00
     }
     console.log('shareValue', this.shareValue)
@@ -159,24 +159,24 @@ export class AuditPersonalInfoComponent implements OnInit {
   }
 
   DevideRequest() {
-     this.openDevideSharesPopUp = false;
+    this.openDevideSharesPopUp = false;
 
-     this.isLoading = true;
+    this.isLoading = true;
 
-     let devideRequestObj: Partial<DevideRequest> = {};
+    let devideRequestObj: Partial<DevideRequest> = {};
 
-     devideRequestObj.totalValue = this.sharesData.totalValue
-     devideRequestObj.numShares = this.numShares
-     devideRequestObj.shareValue = Number(this.shareValue.toFixed(2))
-     devideRequestObj.minimumShare = this.minimumShare
-     devideRequestObj.maximumShare = this.maximumShare
-     devideRequestObj.id = this.sharesData.id
-     devideRequestObj.jobId = this.sharesData.jobId
-     devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime
-     devideRequestObj.empId = this.sharesData.empId
-     console.log('devideRequestObj', devideRequestObj)
+    devideRequestObj.totalValue = this.sharesData.totalValue
+    devideRequestObj.numShares = this.numShares
+    devideRequestObj.shareValue = Number(this.shareValue.toFixed(2))
+    devideRequestObj.minimumShare = this.minimumShare
+    devideRequestObj.maximumShare = this.maximumShare
+    devideRequestObj.id = this.sharesData.id
+    devideRequestObj.jobId = this.sharesData.jobId
+    devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime
+    devideRequestObj.empId = this.sharesData.empId
+    console.log('devideRequestObj', devideRequestObj)
 
-     
+
     this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
 
       if (res.status) {
@@ -206,7 +206,7 @@ export class AuditPersonalInfoComponent implements OnInit {
 }
 
 interface Inspection {
-  Personal: Question[];
+  Personal: IPersonal;
   ID: Question[];
   Finance: Question[];
   Land: Question[];
@@ -227,7 +227,6 @@ interface Question {
 }
 
 class Shares {
-
   id!: number;
   reqCahangeTime!: Date;
   jobId!: string;
@@ -235,7 +234,6 @@ class Shares {
   empId!: string;
   officerPhone!: string;
   totalValue: string = '';
-
 }
 
 class DevideRequest {
@@ -248,4 +246,24 @@ class DevideRequest {
   shareValue!: number;
   minimumShare!: number;
   maximumShare!: number;
+}
+
+interface IPersonal {
+  firstName: string 
+  lastName: string 
+  otherName: string
+  callName: string 
+  phone1: string 
+  phone2: string 
+  familyPhone: string 
+  landHome: string 
+  landWork: string 
+  email1: string 
+  email2: string 
+  house: string 
+  street: string 
+  city: string 
+  country: string 
+  district: string
+  province: string 
 }

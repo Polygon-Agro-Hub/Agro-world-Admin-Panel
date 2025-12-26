@@ -1,5 +1,5 @@
 <div class="space-y-2 p-10">
-  <div
+  <!-- <div
     class="bg-[#F9FAFC] p-5 rounded-lg mb-5"
     *ngFor="let question of sortedPersonalArr; let i = index"
   >
@@ -9,7 +9,6 @@
     </label>
     <div class="relative">
       <ng-container [ngSwitch]="question.ansType.toLowerCase()">
-        <!-- Text Input -->
         <input
           *ngSwitchCase="'text'"
           type="text"
@@ -18,7 +17,6 @@
           readonly
         />
 
-        <!-- Email Input -->
         <input
           *ngSwitchCase="'email'"
           type="email"
@@ -27,7 +25,6 @@
           readonly
         />
 
-        <!-- Date Input -->
         <input
           *ngSwitchCase="'date'"
           type="date"
@@ -36,7 +33,6 @@
           readonly
         />
 
-        <!-- Default to text input -->
         <input
           *ngSwitchDefault
           type="text"
@@ -46,5 +42,5 @@
         />
       </ng-container>
     </div>
-  </div>
+  </div> -->
 </div>

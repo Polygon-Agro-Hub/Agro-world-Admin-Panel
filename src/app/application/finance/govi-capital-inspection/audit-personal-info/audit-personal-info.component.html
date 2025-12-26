@@ -208,7 +208,9 @@
     </div>
     <!-- biman -->
     <div *ngIf="activeTab === 'Investment'">
-      <app-investment-info-tab></app-investment-info-tab>
+      <app-investment-info-tab
+        [investmentObj]="inspectionArray.Investment"
+      ></app-investment-info-tab>
     </div>
     <!-- dumith -->
     <div *ngIf="activeTab === 'Cultivation'">

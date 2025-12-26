@@ -212,7 +212,7 @@ interface Inspection {
   ID: Question[];
   Finance: Question[];
   Land: ILand;
-  Investment: Question[];
+  Investment: IInvestment;
   Cultivation: Question[];
   Cropping: Question[];
   ProfitRisk: Question[];
@@ -277,5 +277,12 @@ interface ILand {
   longitude: string;
   latitude: string;
   images: string;
+  createdAt: string;
+}
+
+interface IInvestment {
+  expected: string;
+  purpose: string;
+  repaymentMonth: number;
   createdAt: string;
 }

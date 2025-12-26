@@ -142,7 +142,7 @@
            [&_.p-datepicker-header]:dark:text-white
            [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
             inputStyleClass="mt-2 block w-full p-2 cursor-pointer border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [appendTo]="'body'" dateFormat="yy-mm-dd" [minDate]="minDate"/>
+            [appendTo]="'body'" dateFormat="yy-mm-dd"/>
           <div *ngIf="startDateInput.touched && startDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
             Start date is required.
           </div>

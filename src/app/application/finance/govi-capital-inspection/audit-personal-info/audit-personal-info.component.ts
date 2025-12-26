@@ -211,8 +211,8 @@ interface Inspection {
   Personal: IPersonal;
   ID: IIdInfo;
   Finance: IFinance;
-  Land: Question[];
-  Investment: Question[];
+  Land: ILand;
+  Investment: IInvestment;
   Cultivation: ICultivation;
   Cropping: ICropping;
   ProfitRisk: IProfitRisk;
@@ -251,119 +251,21 @@ class DevideRequest {
 }
 
 interface IPersonal {
-  firstName: string;
-  lastName: string;
-  otherName: string;
-  callName: string;
-  phone1: string;
-  phone2: string;
-  familyPhone: string;
-  landHome: string;
-  landWork: string;
-  email1: string;
-  email2: string;
-  house: string;
-  street: string;
-  city: string;
-  country: string;
-  district: string;
-  province: string;
+  firstName: string 
+  lastName: string 
+  otherName: string
+  callName: string 
+  phone1: string 
+  phone2: string 
+  familyPhone: string 
+  landHome: string 
+  landWork: string 
+  email1: string 
+  email2: string 
+  house: string 
+  street: string 
+  city: string 
+  country: string 
+  district: string
+  province: string 
 }
-
-interface IIdInfo {
-  pType: string;
-  pNumber: string;
-  frontImg: string;
-  backImg: string;
-}
-
-interface IFinance {
-  accHolder: string;
-  accNum: string;
-  bank: string;
-  branch: string;
-  debtsOfFarmer: string;
-  noOfDepartments: number;
-  assetsLand: { Land: string[] };
-  assetsBuilding: { Building: string[] };
-  assetsVehicle: { Vehicle: string[] };
-  assetsMachinery: { Machinery: string[] };
-  assetsFarmTool: string;
-}
-
-interface ICropping {
-  opportunity: string[];
-  otherOpportunity: string;
-  hasKnowlage: number;
-  prevExperince: string;
-  opinion: string;
-}
-
-interface IProfitRisk {
-  id: number
-  reqId: string
-  profit: number
-  isProfitable: number
-  isRisk: number
-  risk: string
-  solution: string
-  manageRisk: string
-  worthToTakeRisk: string
-  createdAt: Date
-}
-
-interface IEconomical {
-  id: number
-  reqId: string
-  isSuitaleSize: number
-  isFinanceResource: number
-  isAltRoutes: number
-  createdAt: Date
-}
-
-interface IHarvest {
-  id: number
-  reqId: string
-  hasOwnStorage: number
-  hasPrimaryProcessingAccess: number
-  ifNotHasFacilityAccess: number
-  knowsValueAdditionTech: number
-  hasValueAddedMarketLinkage: number
-  awareOfQualityStandards: number
-  createdAt: Date
-}
-
-interface ILabor {
-  id: number
-  reqId: string
-  isManageFamilyLabour: number
-  isFamilyHiredLabourEquipped: number
-  hasAdequateAlternativeLabour: number
-  areThereMechanizationOptions: number
-  isMachineryAvailable: number
-  isMachineryAffordable: number
-  isMachineryCostEffective: number
-  createdAt: Date
-}
-
-export interface ICultivation {
-  temperature: number;         
-  rainfall: number;            
-  sunShine: number;            
-  humidity: number;            
-  windVelocity: number;        
-  windDirection: number;       
-  zone: number;
-  isCropSuitale: number;       
-  ph: number;                  
-  soilType: string;
-  soilfertility: string;
-  waterSources: string[];
-  waterImage: string[]; 
-  isRecevieRainFall: number;   
-  isRainFallSuitableCrop: number;
-  isRainFallSuitableCultivation: number;
-  isElectrocityAvailable: number;
-  ispumpOrirrigation: number;
-}
-

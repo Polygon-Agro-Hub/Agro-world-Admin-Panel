@@ -1,46 +1,293 @@
-<div class="space-y-2 p-10">
-  <!-- <div
-    class="bg-[#F9FAFC] p-5 rounded-lg mb-5"
-    *ngFor="let question of sortedPersonalArr; let i = index"
-  >
-    <label class="block text-sm font-medium text-gray-700">
-      <span class="text-gray-500">{{ formatIndex(question.qIndex) }}.</span>
-      {{ question.quaction }}
-    </label>
-    <div class="relative">
-      <ng-container [ngSwitch]="question.ansType.toLowerCase()">
+<div class="space-y-8 p-10 bg-white dark:bg-tileBlack rounded-lg">
+  <!-- Grid Layout for Personal Information -->
+  <div class="block space-y-8">
+    <!-- First Name -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">01. First Name</span>
+      </label>
+      <div class="relative">
         <input
-          *ngSwitchCase="'text'"
           type="text"
-          [value]="question.answer || ''"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          [value]="personalObj.firstName"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
           readonly
         />
-
-        <input
-          *ngSwitchCase="'email'"
-          type="email"
-          [value]="question.answer || ''"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-          readonly
-        />
-
-        <input
-          *ngSwitchCase="'date'"
-          type="date"
-          [value]="question.answer || ''"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-          readonly
-        />
-
-        <input
-          *ngSwitchDefault
-          type="text"
-          [value]="question.answer || ''"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
-          readonly
-        />
-      </ng-container>
+      </div>
     </div>
-  </div> -->
+
+    <!-- Last Name -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">02. Last Name</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.lastName"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Other Names -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">03. Other Names</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.otherName"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Call Name -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">04. Call Name</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.callName"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Mobile Number - 1 -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">05. Mobile Number - 1</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.phone1"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Mobile Number - 2 -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">06. Mobile Number - 2</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.phone2"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Mobile number of a family member -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">07. Mobile number of a family member</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.familyPhone"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Land phone number - Home -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">08. Land phone number - Home</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.landHome"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Land phone number - Work -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">09. Land phone number - Work</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.landWork"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Email Address - 1 -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">10. Email Address - 1</span>
+      </label>
+      <div class="relative">
+        <input
+          type="email"
+          [value]="personalObj.email1"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Email Address - 2 -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">11. Email Address - 2</span>
+      </label>
+      <div class="relative">
+        <input
+          type="email"
+          [value]="personalObj.email2"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- House / Plot number -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">12. House / Plot number</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.house"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Street Name -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">13. Street Name</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.street"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- City / Town Name -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">14. City / Town Name</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.city"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- District -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">15. District</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.district"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Province -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">16. Province</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.province"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+
+    <!-- Country -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">17. Country</span>
+      </label>
+      <div class="relative">
+        <input
+          type="text"
+          [value]="personalObj.country"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+          readonly
+        />
+      </div>
+    </div>
+  </div>
 </div>

@@ -143,12 +143,14 @@
       <app-finance-info-tab [financeInfo]="inspectionArray.Finance"></app-finance-info-tab>
     </div>
     <!-- biman -->
-    <!-- <div *ngIf="activeTab === 'Land'">
-      <app-land-info-tab [landlArr]="inspectionArray.Land"></app-land-info-tab>
-    </div> -->
+    <div *ngIf="activeTab === 'Land'">
+      <app-land-info-tab [landlObj]="inspectionArray.Land"></app-land-info-tab>
+    </div>
     <!-- biman -->
     <div *ngIf="activeTab === 'Investment'">
-      <app-investment-info-tab></app-investment-info-tab>
+      <app-investment-info-tab
+        [investmentObj]="inspectionArray.Investment"
+      ></app-investment-info-tab>
     </div>
     <div *ngIf="activeTab === 'Cultivation'">
       <app-cultivation-info-tab [cultivationData]="inspectionArray.Cultivation"></app-cultivation-info-tab>
@@ -175,10 +177,12 @@
   </div>
 </div>
 
-
 <!-- pop ups -->
 
-<div *ngIf="approvePopUpOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div
+  *ngIf="approvePopUpOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 py-10 w-1/3">
 
     <div>
@@ -207,11 +211,12 @@
       </div>
     </div>
   </div>
-
 </div>
 
-
-<div *ngIf="rejectPopUpOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<div
+  *ngIf="rejectPopUpOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 py-10 w-1/3">
 
     <div>
@@ -252,19 +257,18 @@
       </div>
     </div>
   </div>
-
 </div>
 
 
 <div *ngIf="openDevideSharesPopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 pt-4 pb-10 w-1/4">
 
-    <div class="px-4">
-      <div class="mb-6 text-center font-semibold dark:text-textDark">
-        <p class="text-xl mb-2">
-          Request ID : {{sharesData.jobId}}
-        </p>
-      </div>
+      <div class="px-4">
+          <div class="mb-6 text-center font-semibold dark:text-textDark">
+            <p class="text-xl mb-2">
+              Request ID : {{sharesData.jobId}}
+            </p>
+          </div>
 
       <div class="mb-8">
         <div>
@@ -323,5 +327,4 @@
       </div>
     </div>
   </div>
-
 </div>

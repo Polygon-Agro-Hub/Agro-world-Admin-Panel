@@ -336,7 +336,7 @@ createNews() {
         },
         error: (error: any) => {
           this.isLoading = false;
-          let errorMessage = 'An unexpected error occurred';
+          let errorMessage = 'The selected image is too large. The maximum allowed size is 5MB';
           if (error.error && error.error.error) {
             switch (error.error.error) {
               case 'Invalid file format':
@@ -346,7 +346,7 @@ createNews() {
                 errorMessage = 'A news item with this title already exists.';
                 break;
               default:
-                errorMessage = error.error.error || 'An unexpected error occurred';
+                errorMessage = error.error.error || 'The selected image is too large. The maximum allowed size is 5MB';
             }
           }
           Swal.fire({
@@ -773,8 +773,8 @@ formatDateForBackend(date: Date | null): string {
       });
       Swal.fire({
             icon: 'error',
-            title: 'Missing or Invalid Information',
-            html: 'Publish date should be later than Today',
+            title: 'Invalid Information',
+            html: 'Publish date cannot be in the past. Please select a valid date.',
             confirmButtonText: 'OK',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -831,7 +831,7 @@ checkPublishDateEdit() {
           Swal.fire({
             icon: 'error',
             title: 'Missing or Invalid Information',
-            html: 'Expire date should be later than Publish date',
+            html: 'Expiry date cannot be in the past. Please select a valid date.',
             confirmButtonText: 'OK',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -851,7 +851,7 @@ checkPublishDateEdit() {
         Swal.fire({
           icon: 'error',
           title: 'Missing or Invalid Information',
-          html: 'Expire date should be later than Today',
+          html: 'Expiry date cannot be in the past. Please select a valid date.',
           confirmButtonText: 'OK',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

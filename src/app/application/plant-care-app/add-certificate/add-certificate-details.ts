@@ -184,25 +184,40 @@ export class AddCertificateDetailsComponent implements OnInit {
     }
 
     const file = input.files[0];
-
-    // Validate file type (image only)
-    if (!file.type.startsWith('image/')) {
-      this.logoError =
-        'Please select a valid image file (JPEG, JPG, PNG, WebP).';
-      this.uploadedLogo = null;
-      this.logoPreview = null;
-      this.certificateForm.patchValue({ logo: null });
-      return;
+    const fileName = file.name.toLowerCase();
+    
+    // Validate file type (only JPG, JPEG, PNG, WebP allowed)
+    const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    
+    // Get file extension
+    const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+    
+    // Check if file type is allowed
+    const isMimeTypeValid = allowedMimeTypes.includes(file.type.toLowerCase());
+    const isExtensionValid = allowedExtensions.includes(fileExtension.toLowerCase());
+    
+    if (!isMimeTypeValid && !isExtensionValid) {
+        this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
+        this.uploadedLogo = null;
+        this.logoPreview = null;
+        this.certificateForm.patchValue({ logo: null });
+        
+        // Reset the file input
+        if (this.logoInput && this.logoInput.nativeElement) {
+            this.logoInput.nativeElement.value = '';
+        }
+        return;
     }
 
     // Check file size (5MB limit)
     const maxSizeBytes = 5 * 1024 * 1024;
     if (file.size > maxSizeBytes) {
-      this.logoError = 'Logo must be smaller than 5 MB.';
-      this.uploadedLogo = null;
-      this.logoPreview = null;
-      this.certificateForm.patchValue({ logo: null });
-      return;
+        this.logoError = 'Logo must be smaller than 5 MB.';
+        this.uploadedLogo = null;
+        this.logoPreview = null;
+        this.certificateForm.patchValue({ logo: null });
+        return;
     }
 
     // All good
@@ -213,7 +228,7 @@ export class AddCertificateDetailsComponent implements OnInit {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.logoPreview = reader.result;
+        this.logoPreview = reader.result;
     };
     reader.readAsDataURL(file);
   }

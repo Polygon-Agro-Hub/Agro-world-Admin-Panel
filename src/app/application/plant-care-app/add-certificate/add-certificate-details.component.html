@@ -17,6 +17,7 @@
         <div class="flex items-center gap-4">
           <label for="logo" class="block text-sm font-medium text-textLight dark:text-textDark">
             Add Logo *
+            <span class="text-xs text-gray-500 ml-1">(JPG, PNG, WebP, max 5MB)</span>
           </label>
 
           <!-- Upload Button -->
@@ -36,7 +37,7 @@
 
         <div class="flex items-center gap-4">
           <!-- Hidden File Input -->
-          <input type="file" #logoInput id="logo" accept="image/*" (change)="onLogoSelected($event)" hidden />
+          <input type="file" #logoInput id="logo" accept="image/jpeg, image/jpg, image/png, image/webp" (change)="onLogoSelected($event)" hidden />
         </div>
 
         <!-- Validation error -->

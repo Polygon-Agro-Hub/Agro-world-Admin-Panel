@@ -316,10 +316,17 @@
         <!-- Show attached file -->
         <div *ngIf="uploadedFile" class="mt-2 text-textLight dark:text-textDark">
           Attached: <span class="text-[#415CFF]">{{ uploadedFile.name }} </span>
+          <span class="text-sm text-gray-500 ml-2">
+            ({{ (uploadedFile.size / 1024).toFixed(2) }} KB)
+          </span>
         </div>
 
-        <!-- Validation error -->
-        <div *ngIf="!uploadedFile && (certificateForm.get('tearmsFile')?.touched || certificateForm.get('tearmsFile')?.dirty)"
+        <!-- Validation errors -->
+        <div *ngIf="fileSizeError" class="text-red-500 text-sm mt-1">
+          {{ fileSizeError }}
+        </div>
+        
+        <div *ngIf="!uploadedFile && !fileSizeError && (certificateForm.get('tearmsFile')?.touched || certificateForm.get('tearmsFile')?.dirty)"
           class="text-red-500 text-sm mt-1">
           Payment Terms File is required
         </div>

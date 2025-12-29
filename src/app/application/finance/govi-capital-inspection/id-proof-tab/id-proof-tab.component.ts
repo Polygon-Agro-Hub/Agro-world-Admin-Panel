@@ -9,80 +9,65 @@ import { Component, Input, OnChanges } from '@angular/core';
   styleUrl: './id-proof-tab.component.css',
 })
 export class IdProofTabComponent implements OnChanges {
-  @Input() personalArr!: Question[];
-  @Input() imageBasePath: string = '';
+  @Input() idInfo!: IIdInfo;
 
   isModalOpen = false;
   modalTitle = '';
   modalImage = '';
   scale = 1;
 
-  idProof = {
-    proofType: '',
-    nicNumber: '',
-    frontPhoto: '',
-    backPhoto: '',
-  };
-
   ngOnChanges(): void {
-    const getByLabel = (label: string) =>
-      (this.personalArr || []).find((q) => q.quaction === label)?.answer ?? '';
-
-    this.idProof.proofType = getByLabel('ID Proof Type') || 'NIC';
-    this.idProof.nicNumber = getByLabel('NIC Number');
-    this.idProof.frontPhoto = getByLabel('NIC Front Photo');
-    this.idProof.backPhoto = getByLabel('NIC Back Photo');
-
-    console.log('[IdProofTab] personalArr ->', this.personalArr);
-    console.log('[IdProofTab] idProof ->', this.idProof);
+    console.log(this.idInfo);
   }
 
-  private resolveImageUrl(filename: string): string {
-    if (/^https?:\/\//i.test(filename)) return filename;
+  getProofTypeDisplay(): string {
+    if (!this.idInfo || !this.idInfo.pType) return 'ID';
 
-    if (this.imageBasePath) {
-      const hasSlash = this.imageBasePath.endsWith('/');
-      return `${this.imageBasePath}${hasSlash ? '' : '/'}${filename}`;
+    const type = this.idInfo.pType.trim();
+
+    if (type.toLowerCase() === 'license') {
+      return 'Driving License';
     }
-    return `assets/uploads/${filename}`;
+
+    return type;
   }
 
-  openModal(type: 'front' | 'back') {
+  openModal(type: 'front' | 'back'): void {
+    if (!this.idInfo) return;
+
     this.scale = 1;
     this.isModalOpen = true;
 
-    const titleBase =
-      this.idProof.proofType && this.idProof.proofType.trim() !== ''
-        ? this.idProof.proofType
-        : 'NIC';
+    const title = this.getProofTypeDisplay();
 
     if (type === 'front') {
-      this.modalTitle = `${titleBase} Front Photo`;
-      this.modalImage = this.resolveImageUrl(this.idProof.frontPhoto);
+      this.modalTitle = `${title} Front Photo`;
+      this.modalImage = this.idInfo.frontImg;
     } else {
-      this.modalTitle = `${titleBase} Back Photo`;
-      this.modalImage = this.resolveImageUrl(this.idProof.backPhoto);
+      this.modalTitle = `${title} Back Photo`;
+      this.modalImage = this.idInfo.backImg;
     }
   }
 
-  closeModal() {
+  closeModal(): void {
     this.isModalOpen = false;
+    this.modalImage = '';
   }
 
-  zoomIn() {
+  zoomIn(): void {
     this.scale += 0.1;
   }
 
-  zoomOut() {
+  zoomOut(): void {
     if (this.scale > 0.5) {
       this.scale -= 0.1;
     }
   }
 }
 
-interface Question {
-  answer: any;
-  qIndex: number;
-  ansType: string;
-  quaction: string;
+interface IIdInfo {
+  pType: string;
+  pNumber: string;
+  frontImg: string;
+  backImg: string;
 }

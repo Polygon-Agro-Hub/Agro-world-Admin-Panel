@@ -20,6 +20,16 @@
     right: 0.5rem !important; /* Position calendar icon on the far right */
     order: 2;
   }
+
+  ::ng-deep .p-datepicker .p-datepicker-header .p-datepicker-title {
+  display: flex;
+  gap: 0.5rem; /* Space between month and year */
+  align-items: center;
+}
+
+::ng-deep .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+  margin-right: 0.25rem; /* Additional spacing after month */
+}
   
   /* For light mode placeholder */
 :host ::ng-deep .p-calendar .p-inputtext::placeholder {

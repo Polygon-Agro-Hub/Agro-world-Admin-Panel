@@ -184,31 +184,31 @@ export class AuditPersonalInfoComponent implements OnInit {
     devideRequestObj.empId = this.sharesData.empId;
     console.log('devideRequestObj', devideRequestObj);
 
-    // this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
+    this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
 
-    //   if (res.status) {
-    //     Swal.fire({
-    //       title: 'Success',
-    //       text: `Request Approved Successfully`,
-    //       icon: 'success',
-    //       customClass: {
-    //         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    //         title: 'font-semibold text-lg',
-    //       },
-    //     });
-    //   } else if (!res.status) {
-    //     Swal.fire({
-    //       title: 'error',
-    //       text: `Failed to Approve the Request`,
-    //       icon: 'error',
-    //       customClass: {
-    //         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    //         title: 'font-semibold text-lg',
-    //       },
-    //     });
-    //   }
-    //   this.isLoading = false;
-    // })
+      if (res.status) {
+        Swal.fire({
+          title: 'Success',
+          text: `Request Approved Successfully`,
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      } else if (!res.status) {
+        Swal.fire({
+          title: 'error',
+          text: `Failed to Approve the Request`,
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+      this.isLoading = false;
+    })
   }
 
 allowDecimalOnly(event: KeyboardEvent) {

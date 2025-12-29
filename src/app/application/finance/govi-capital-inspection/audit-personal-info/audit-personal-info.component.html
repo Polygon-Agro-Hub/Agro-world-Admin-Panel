@@ -6,21 +6,21 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10">
+  <div class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10 dark:text-textDark">
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Request_ID :</span><span>GC000003</span>
+      <span class="text-[#7E7E7E]">Request_ID :</span><span>{{sharesData.jobId}}</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Farmer Phone :</span><span>+94 783344555</span>
+      <span class="text-[#7E7E7E]">Farmer Phone :</span><span>{{sharesData.farmerPhone}}</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Audited By :</span><span>CFO00001</span>
+      <span class="text-[#7E7E7E]">Audited By :</span><span>{{sharesData.empId}}</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Officer Phone :</span><span>+94 783344500</span>
+      <span class="text-[#7E7E7E]">Officer Phone :</span><span>{{sharesData.officerPhone}}</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Audited Date :</span><span>June 2, 2023</span>
+      <span class="text-[#7E7E7E]">Audited Date :</span><span>{{sharesData.reqCahangeTime | date: 'MMMM d, yyyy'}}</span>
     </div>
     <div class="flex flex-col gap-4">
       <div class="flex gap-4">

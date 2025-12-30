@@ -4,92 +4,136 @@
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
-  <div class="pt-5 pr-12 pl-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 w-full bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
     <div>
       <div class="text-center mb-4">
-        <p class="text-[#292929] text-lg dark:text-textDark  mb-2" >
+        <p class="text-[#292929] text-lg dark:text-textDark mb-2">
           Ref No : {{ complain.refNo }}
         </p>
 
-        <p class="text-[#292929] text-normal dark:text-textDark ">
-          Received : {{ complain.createdAt | date:'yyyy/MM/dd' }} at {{ complain.createdAt | date:'hh.mm a' }}
+        <p class="text-[#292929] text-normal dark:text-textDark">
+          Received : {{ complain.createdAt | date : "yyyy/MM/dd" }} at
+          {{ complain.createdAt | date : "hh.mm a" }}
         </p>
-
-
       </div>
 
       <div class="flex flex-row mb-6 justify-between">
-        <label class="block text-[#534E4E] text-[12px] md:text-[16px] mb-2 mr-12 dark:text-textDark">Category</label>
+        <label
+          class="block text-[#534E4E] text-[12px] md:text-[16px] mb-2 mr-12 dark:text-textDark"
+          >Category</label
+        >
         <textarea
           class="w-full text-[#534E4E] text-[12px] md:text-[16px] p-4 border rounded-lg bg-white dark:text-textDark dark:bg-tileBlack"
-          style="border-color: #D9D9D9;" rows="1" [value]="complain.complainCategory" disabled></textarea>
+          style="border-color: #d9d9d9"
+          rows="1"
+          [value]="complain.complainCategory"
+          disabled
+        ></textarea>
       </div>
 
       <div class="flex flex-row mb-6 justify-between">
-        <label class="block text-gray-700 mb-2 mr-10 dark:text-textDark">Complaint</label>
+        <label class="block text-gray-700 mb-2 mr-10 dark:text-textDark"
+          >Complaint</label
+        >
         <textarea
-          class="w-full p-4  border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
-          style="border-color: #D9D9D9;" rows="4" [value]="complain.complain" disabled></textarea>
+          class="w-full p-4 border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
+          style="border-color: #d9d9d9"
+          rows="4"
+          [value]="complain.complain"
+          disabled
+        ></textarea>
       </div>
 
       <ng-container *ngIf="sanitizedImageUrls.length > 0">
         <div class="flex flex-row mb-6 justify-between">
-          <label class="block text-[#534E4E] text-[12px] md:text-[16px] mb-2 mr-10  dark:text-textDark">Photos</label>
-      
+          <label
+            class="block text-[#534E4E] text-[12px] md:text-[16px] mb-2 mr-10 dark:text-textDark"
+            >Photos</label
+          >
+
           <!-- Group container for hover effect -->
           <div
-            class="group relative w-full p-4 ml-5 border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack overflow-hidden">
-      
+            class="group relative w-full p-4 ml-5 border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack overflow-hidden"
+          >
             <!-- Blurred overlay shown on hover -->
             <div
-              class="absolute inset-0 bg-black/30 backdrop-blur-sm z-10 opacity-0 group-hover:opacity-100 transition duration-300 rounded-lg">
-            </div>
-      
+              class="absolute inset-0 bg-black/30 backdrop-blur-sm z-10 opacity-0 group-hover:opacity-100 transition duration-300 rounded-lg"
+            ></div>
+
             <!-- Eye icon shown on hover -->
             <div
-              class="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
-              <span class="text-white text-2xl bg-opacity-60 rounded-full p-3 cursor-pointer"
-                (click)="openImageViewer(0)">
+              class="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300"
+            >
+              <span
+                class="text-white text-2xl bg-opacity-60 rounded-full p-3 cursor-pointer"
+                (click)="openImageViewer(0)"
+              >
                 <i class="fa-solid fa-eye"></i>
               </span>
             </div>
-      
+
             <!-- Image grid (z-0 so it's behind the blur and icon) -->
             <div
-              class="image-gallery relative  text-[#534E4E] dark:bg-tileBlack text-[12px] md:text-[16px] z-0 flex flex-wrap w-full">
-              <div *ngFor="let imageUrl of sanitizedImageUrls | slice:0:6; let i = index" class="w-1/6 p-1">
-                <img [src]="imageUrl" alt="Complaint image {{ i + 1 }}"
-                  class="w-full h-auto rounded object-cover cursor-pointer" (error)="handleImageError($event)"
-                  (click)="openImageViewer(i)" loading="lazy" />
+              class="image-gallery relative text-[#534E4E] dark:bg-tileBlack text-[12px] md:text-[16px] z-0 flex flex-wrap w-full"
+            >
+              <div
+                *ngFor="
+                  let imageUrl of sanitizedImageUrls | slice : 0 : 6;
+                  let i = index
+                "
+                class="w-1/6 p-1"
+              >
+                <img
+                  [src]="imageUrl"
+                  alt="Complaint image {{ i + 1 }}"
+                  class="w-full h-auto rounded object-cover cursor-pointer"
+                  (error)="handleImageError($event)"
+                  (click)="openImageViewer(i)"
+                  loading="lazy"
+                />
               </div>
             </div>
           </div>
         </div>
       </ng-container>
-      
-
 
       <div class="grid grid-cols-2 gap-3 mb-6">
         <div class="flex flex-row justify-center items-center">
-          <label class="block text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark mb-2">Complainant </label>
-          <input type="text" [value]="complain.firstName"
+          <label
+            class="block text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark mb-2"
+            >Complainant
+          </label>
+          <input
+            type="text"
+            [value]="complain.firstName"
             class="w-full p-4 ml-5 border rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
-            style="border-color: #D9D9D9;" disabled />
+            style="border-color: #d9d9d9"
+            disabled
+          />
         </div>
         <div class="flex flex-row justify-center items-center">
-    <label class="block text-gray-700 dark:text-textDark mb-2">
-      <p>Customer</p>Contact
-    </label>
-    <!-- Changed from complain.farmerPhone to formattedPhoneNumber -->
-    <input type="text" [value]="formattedPhoneNumber"
-      class="w-full p-4 border ml-5 rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
-      style="border-color: #D9D9D9;" disabled />
-  </div>
+          <label class="block text-gray-700 dark:text-textDark mb-2">
+            <p>Customer</p>
+            Contact
+          </label>
+          <!-- Changed from complain.farmerPhone to formattedPhoneNumber -->
+          <input
+            type="text"
+            [value]="formattedPhoneNumber"
+            class="w-full p-4 border ml-5 rounded-lg bg-white text-[#534E4E] text-[12px] md:text-[16px] dark:text-textDark dark:bg-tileBlack"
+            style="border-color: #d9d9d9"
+            disabled
+          />
+        </div>
       </div>
 
       <div class="text-center my-20">
-        <button (click)="showReplyDialog(complain.language)"
-          class="bg-[#3980C0] text-white py-2 px-4 rounded-lg hover:bg-[#3980C0]">
+        <button
+          (click)="showReplyDialog(complain.language)"
+          class="bg-[#3980C0] text-white py-2 px-4 rounded-lg hover:bg-[#3980C0]"
+        >
           Send Message
         </button>
       </div>
@@ -97,60 +141,90 @@
   </div>
 </div>
 
-<div *ngIf="display === true" 
-     class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-40 dark:bg-opacity-70 dark:text-[#DFDFDF]">
-
-  <div class="dark:bg-tileBlack bg-white rounded-[20px] shadow-lg w-[90%] md:w-[600px] max-w-[95%]">
-
+<div
+  *ngIf="display === true"
+  class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-40 dark:bg-opacity-70 dark:text-[#DFDFDF]"
+>
+  <div
+    class="dark:bg-tileBlack bg-white rounded-[20px] shadow-lg w-[90%] md:w-[600px] max-w-[95%]"
+  >
     <div class="dialog-header text-center pt-5">
-      <i class="fa-regular fa-envelope" style="font-size: 1.5rem; color: #999"></i>
-      <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000] dark:text-[#DFDFDF]">Reply as Polygon</h3>
+      <i
+        class="fa-regular fa-envelope"
+        style="font-size: 1.5rem; color: #999"
+      ></i>
+      <h3
+        class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000] dark:text-[#DFDFDF]"
+      >
+        Reply as Polygon
+      </h3>
     </div>
 
-    <div class="dialog-content text-[16px] md:text-[18px] border rounded-[20px] border-gray-300 dark:border-textDark text-[#000000] dark:text-[#DFDFDF] mt-5 mx-8 mb-5">
+    <div
+      class="dialog-content text-[16px] md:text-[18px] border rounded-[20px] border-gray-300 dark:border-textDark text-[#000000] dark:text-[#DFDFDF] mt-5 mx-8 mb-5"
+    >
       <div class="p-5">
         <p>Dear {{ farmerName }}</p>
-        <p class="mt-3">We are pleased to inform you that your complaint has been resolved.</p>
+        <p class="mt-3">
+          We are pleased to inform you that your complaint has been resolved.
+        </p>
 
         <div class="message-box mt-4 dark:text-[#DFDFDF]">
-          <textarea 
-            [(ngModel)]="messageContent" 
-            placeholder="[Add message here]" 
+          <textarea
+            [(ngModel)]="messageContent"
+            placeholder="[Add message here]"
             rows="5"
-            class="w-full border-none outline-none rounded p-2 text-base font-bold 
-                   bg-white           
-                   dark:bg-tileBlack dark:text-[#DFDFDF]  
-                   resize-none
-                   placeholder-black placeholder:text-left
-                   dark:placeholder-[#DFDFDF]">
+            class="w-full border-none outline-none rounded p-2 text-base font-bold bg-white dark:bg-tileBlack dark:text-[#DFDFDF] resize-none placeholder-black placeholder:text-left dark:placeholder-[#DFDFDF]"
+          >
           </textarea>
         </div>
 
         <p class="mt-4">
-          If you have any further concerns or questions, feel free to reach out. <br />
+          If you have any further concerns or questions, feel free to reach out.
+          <br />
           Thank you for your patience and understanding.
         </p>
 
         <p class="mt-5">
           Sincerely,<br />
-         Polygon Customer Support Team
+          Polygon Customer Support Team
         </p>
       </div>
     </div>
 
     <div class="dialog-footer text-right mt-3 pb-5 pr-5">
-      <button pButton type="button" label="Cancel" class="p-button-secondary"
-        style="margin-right: 8px; background-color: #74788D; color: #D3D3D3; border: none; width: 120px; height: 40px;"
-        (click)="hideDialog()"></button>
-      <button pButton type="button" label="Send" class="p-button-primary"
-        style="background-color: #3980C0; border: none; width: 120px; height: 40px; color:white"
-        (click)="submitComplaint()"></button>
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        class="p-button-secondary"
+        style="
+          margin-right: 8px;
+          background-color: #74788d;
+          color: #d3d3d3;
+          border: none;
+          width: 120px;
+          height: 40px;
+        "
+        (click)="hideDialog()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        label="Send"
+        class="p-button-primary"
+        style="
+          background-color: #3980c0;
+          border: none;
+          width: 120px;
+          height: 40px;
+          color: white;
+        "
+        (click)="submitComplaint()"
+      ></button>
     </div>
-
   </div>
 </div>
-
-
 
 <!-- Reply Dialog -->
 <!-- <p-dialog [(visible)]="display" [modal]="true" [closable]="false" [style]="{ width: '600px' }"
@@ -218,22 +292,33 @@
 </p-dialog> -->
 
 <!-- Modal Overlay (Dark Background) -->
-<div *ngIf="modalVisible" class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
-  
+<div
+  *ngIf="modalVisible"
+  class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center"
+>
   <!-- Modal Box -->
-  <div class="relative bg-white dark:bg-tileBlack rounded-[20px] p-4 z-50 w-[90%] max-w-md shadow-lg">
-    
+  <div
+    class="relative bg-white dark:bg-tileBlack rounded-[20px] p-4 z-50 w-[90%] max-w-md shadow-lg"
+  >
     <!-- Close Button -->
-    <button (click)="modalVisible = false"
+    <button
+      (click)="modalVisible = false"
       class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full text-white dark:text-textDark"
-      style="background-color: #D9D9D9; border: none;" aria-label="Close">
-      <i class="fa-solid fa-xmark text-sm dark:text-red-600 "></i>
+      style="background-color: #d9d9d9; border: none"
+      aria-label="Close"
+    >
+      <i class="fa-solid fa-xmark text-sm dark:text-red-600"></i>
     </button>
 
     <!-- Modal Content -->
-    <div *ngIf="sanitizedImageUrls.length > 0"  class="pt-2 pb-4">
-      <h3 class="text-md text-center font-semibold text-gray-800 dark:text-textDark mb-2">
-        {{ sanitizedImageUrls.length }} Photos were provided
+    <div *ngIf="sanitizedImageUrls.length > 0" class="pt-2 pb-4">
+      <h3
+        class="text-md text-center font-semibold text-gray-800 dark:text-textDark mb-2"
+      >
+        <span [hidden]="sanitizedImageUrls.length === 1">{{
+          sanitizedImageUrls.length
+        }}</span>
+        Photos were provided
       </h3>
       <p class="text-sm text-center text-gray-500 dark:text-textDark mb-4">
         {{ currentIndex + 1 }} out of {{ sanitizedImageUrls.length }}
@@ -241,26 +326,37 @@
 
       <!-- Image Navigation -->
       <div class="relative flex items-center justify-center">
-        
         <!-- Left Arrow - Only show if more than 1 image -->
         <button
           *ngIf="sanitizedImageUrls.length > 1"
           class="absolute left-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
-          (click)="prevImage()" [disabled]="currentIndex === 0" aria-label="Previous Image">
+          (click)="prevImage()"
+          [disabled]="currentIndex === 0"
+          aria-label="Previous Image"
+        >
           <i class="fa-solid fa-chevron-left"></i>
         </button>
 
         <!-- Image Box -->
-        <div class="rounded-md border border-[#D9D9D9] dark:border-[#444444] p-2 inline-block">
-          <img [src]="sanitizedImageUrls[currentIndex]" alt="Complaint image"
-            class="max-w-[250px] max-h-[250px] object-contain rounded shadow-md" (error)="handleImageError($event)" />
+        <div
+          class="rounded-md border border-[#D9D9D9] dark:border-[#444444] p-2 inline-block"
+        >
+          <img
+            [src]="sanitizedImageUrls[currentIndex]"
+            alt="Complaint image"
+            class="max-w-[250px] max-h-[250px] object-contain rounded shadow-md"
+            (error)="handleImageError($event)"
+          />
         </div>
 
         <!-- Right Arrow - Only show if more than 1 image -->
         <button
           *ngIf="sanitizedImageUrls.length > 1"
           class="absolute right-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
-          (click)="nextImage()" [disabled]="currentIndex === sanitizedImageUrls.length - 1" aria-label="Next Image">
+          (click)="nextImage()"
+          [disabled]="currentIndex === sanitizedImageUrls.length - 1"
+          aria-label="Next Image"
+        >
           <i class="fa-solid fa-chevron-right"></i>
         </button>
       </div>
@@ -272,7 +368,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- <p-dialog [(visible)]="modalVisible" [modal]="true" [closable]="false" [dismissableMask]="true"
   [style]="{ width: '470px', 'border-radius': '20px', position: 'relative' }"

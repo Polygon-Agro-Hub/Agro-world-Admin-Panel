@@ -158,7 +158,15 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.openDevideSharesPopUp = false;
   }
 
-  DevideRequest() {
+  DevideRequest(form: any) {
+
+    console.log('devind')
+
+    if (form.invalid) {
+      form.form.markAllAsTouched();
+      return;
+    }
+
     this.openDevideSharesPopUp = false;
 
     this.isLoading = true;
@@ -176,35 +184,49 @@ export class AuditPersonalInfoComponent implements OnInit {
     devideRequestObj.empId = this.sharesData.empId;
     console.log('devideRequestObj', devideRequestObj);
 
-    this.financeService
-      .devideSharesRequest(devideRequestObj)
-      .subscribe((res: any) => {
-        if (res.status) {
-          Swal.fire({
-            title: 'Success',
-            text: `Request Approved Successfully`,
-            icon: 'success',
-            customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        } else if (!res.status) {
-          Swal.fire({
-            title: 'error',
-            text: `Failed to Approve the Request`,
-            icon: 'error',
-            customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        }
-        this.isLoading = false;
-      });
+    this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
+
+      if (res.status) {
+        Swal.fire({
+          title: 'Success',
+          text: `Request Approved Successfully`,
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      } else if (!res.status) {
+        Swal.fire({
+          title: 'error',
+          text: `Failed to Approve the Request`,
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+      this.isLoading = false;
+    })
   }
+
+allowDecimalOnly(event: KeyboardEvent) {
+  const allowedKeys = ['0','1','2','3','4','5','6','7','8','9','.'];
+  const key = event.key;
+
+  // Block everything except numbers and dot
+  if (!allowedKeys.includes(key)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Prevent multiple dots
+  if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+    event.preventDefault();
+  }
+}
+
 }
 
 interface Inspection {

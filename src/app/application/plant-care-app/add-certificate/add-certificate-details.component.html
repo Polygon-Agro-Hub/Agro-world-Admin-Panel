@@ -17,6 +17,7 @@
         <div class="flex items-center gap-4">
           <label for="logo" class="block text-sm font-medium text-textLight dark:text-textDark">
             Add Logo *
+            <span class="text-xs text-gray-500 ml-1">(JPG, PNG, WebP, max 5MB)</span>
           </label>
 
           <!-- Upload Button -->
@@ -36,7 +37,7 @@
 
         <div class="flex items-center gap-4">
           <!-- Hidden File Input -->
-          <input type="file" #logoInput id="logo" accept="image/*" (change)="onLogoSelected($event)" hidden />
+          <input type="file" #logoInput id="logo" accept="image/jpeg, image/jpg, image/png, image/webp" (change)="onLogoSelected($event)" hidden />
         </div>
 
         <!-- Validation error -->
@@ -316,10 +317,17 @@
         <!-- Show attached file -->
         <div *ngIf="uploadedFile" class="mt-2 text-textLight dark:text-textDark">
           Attached: <span class="text-[#415CFF]">{{ uploadedFile.name }} </span>
+          <span class="text-sm text-gray-500 ml-2">
+            ({{ (uploadedFile.size / 1024).toFixed(2) }} KB)
+          </span>
         </div>
 
-        <!-- Validation error -->
-        <div *ngIf="!uploadedFile && (certificateForm.get('tearmsFile')?.touched || certificateForm.get('tearmsFile')?.dirty)"
+        <!-- Validation errors -->
+        <div *ngIf="fileSizeError" class="text-red-500 text-sm mt-1">
+          {{ fileSizeError }}
+        </div>
+        
+        <div *ngIf="!uploadedFile && !fileSizeError && (certificateForm.get('tearmsFile')?.touched || certificateForm.get('tearmsFile')?.dirty)"
           class="text-red-500 text-sm mt-1">
           Payment Terms File is required
         </div>

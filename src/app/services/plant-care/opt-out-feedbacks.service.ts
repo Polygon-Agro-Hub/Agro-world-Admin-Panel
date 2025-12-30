@@ -34,20 +34,38 @@ export class OptOutFeedbacksService {
   // }
 
   getUserFeedbackDetails(
-    page: number,
-    limit: number,
-  ): Observable<{ feedbackDetails: any[]; total: number }> {
+    page?: number,
+    limit?: number
+  ): Observable<{
+    feedbackDetails: any[];
+    feedbackCount: any;
+    deletedUserCount: any;
+  }> {
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`, // Ensure this.token is defined in your service
+      Authorization: `Bearer ${this.token}`,
     });
 
-    // Construct the URL with pagination parameters
-    let url = `${this.apiUrl}auth/opt-out-feedbacks?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/opt-out-feedbacks`;
 
-    // Return the HTTP GET request with pagination
-    return this.http.get<{ feedbackDetails: any[]; total: number }>(url, {
-      headers,
-    });
+    const params: string[] = [];
+
+    if (page !== undefined) {
+      params.push(`page=${page}`);
+    }
+
+    if (limit !== undefined) {
+      params.push(`limit=${limit}`);
+    }
+
+    if (params.length) {
+      url += `?${params.join('&')}`;
+    }
+
+    return this.http.get<{
+      feedbackDetails: any[];
+      feedbackCount: any;
+      deletedUserCount: any;
+    }>(url, { headers });
   }
 
   getAllFeedbackListForBarChart(): Observable<any> {

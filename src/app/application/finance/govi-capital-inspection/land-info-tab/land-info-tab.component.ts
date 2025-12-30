@@ -45,6 +45,13 @@ export class LandInfoTabComponent implements OnDestroy {
   get hasImages(): boolean {
     if (!this.landlObj?.images) return false;
     
+    // Handle array of images
+    if (Array.isArray(this.landlObj.images)) {
+      return this.landlObj.images.length > 0 && 
+             this.landlObj.images.some(img => img && img.trim().length > 0);
+    }
+    
+    // Handle string format (legacy support)
     if (typeof this.landlObj.images === 'string') {
       const cleanString = this.landlObj.images.replace(/[\[\]"]/g, '');
       const images = cleanString.split(',').map(img => img.trim()).filter(img => img.length > 0);
@@ -86,12 +93,6 @@ export class LandInfoTabComponent implements OnDestroy {
       // OpenStreetMap with marker - using openstreetmap.org
       const url = `https://www.openstreetmap.org/export/embed.html?bbox=${lng}%2C${lat}%2C${lng}%2C${lat}&layer=mapnik&marker=${lat}%2C${lng}`;
       
-      // Alternative: Using Leaflet via openstreetmap.fr (nicer interface)
-      // const url = `https://www.openstreetmap.fr/?mlat=${lat}&mlon=${lng}&zoom=16&layers=M`;
-      
-      // Alternative 2: Using mapy.cz (good satellite imagery)
-      // const url = `https://mapy.cz/zakladni?x=${lng}&y=${lat}&z=16`;
-      
       this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
   }
@@ -104,17 +105,23 @@ export class LandInfoTabComponent implements OnDestroy {
       // Open in OpenStreetMap
       const url = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=16`;
       window.open(url, '_blank');
-      
-      // Alternative: Open in Google Maps (still works without API key for viewing)
-      // const url = `https://www.google.com/maps?q=${lat},${lng}`;
-      // window.open(url, '_blank');
     }
   }
 
   openImagePopup(): void {
-    if (this.landlObj?.images && typeof this.landlObj.images === 'string') {
+    if (!this.landlObj?.images) {
+      this.currentImages = [];
+    } else if (Array.isArray(this.landlObj.images)) {
+      // Handle array format
+      this.currentImages = this.landlObj.images
+        .filter(img => img && typeof img === 'string' && img.trim().length > 0)
+        .map(img => img.trim());
+    } else if (typeof this.landlObj.images === 'string') {
+      // Handle legacy string format
       const cleanString = this.landlObj.images.replace(/[\[\]"]/g, '');
-      this.currentImages = cleanString.split(',').map(img => img.trim()).filter(img => img.length > 0);
+      this.currentImages = cleanString.split(',')
+        .map(img => img.trim())
+        .filter(img => img.length > 0);
     } else {
       this.currentImages = [];
     }
@@ -154,15 +161,26 @@ export class LandInfoTabComponent implements OnDestroy {
       clearTimeout(this.mapTimeout);
     }
   }
+
+  handleImageError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/800x600/9E9E9E/FFFFFF?text=Image+Not+Available';
+    imgElement.classList.add('p-4');
+  }
+
+  handleThumbnailError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/150/9E9E9E/FFFFFF?text=Image';
+  }
 }
 
-// Interface
+// Interface - Updated to support both array and string formats
 interface ILand {
   isOwnByFarmer: string | null;
   ownershipStatus: string;
   landDiscription: string;
   longitude: string;
   latitude: string;
-  images: string | null;
+  images: string[] | string | null; // Changed to support array
   createdAt: string;
 }

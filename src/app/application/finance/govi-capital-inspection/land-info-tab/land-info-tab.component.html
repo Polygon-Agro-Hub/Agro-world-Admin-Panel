@@ -1,50 +1,49 @@
-<!-- land-info-tab.component.html -->
 <div class="space-y-8 p-10 bg-white dark:bg-tileBlack rounded-lg">
   <div class="block space-y-8">
     <!-- Question 1: Is the land owned by the farmer? -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 mb-1">
+      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
         01. Is the land own by the farmer?
       </div>
       <div class="relative">
         <input type="text" [value]="ownershipDisplay"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
           readonly />
       </div>
     </div>
 
     <!-- Question 2: Legal status of ownership -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 mb-1">
+      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
         02. Legal status of the ownership of the land
       </div>
       <div class="relative">
         <input type="text" [value]="landlObj.ownershipStatus || 'Not provided'"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
           readonly />
       </div>
     </div>
 
     <!-- Question 3: Brief description -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 mb-1">
+      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
         03. Brief description to reach the cultivation land
       </div>
       <div class="relative">
         <input type="text" [value]="landlObj.landDiscription || 'Not provided'"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
           readonly />
       </div>
     </div>
 
     <!-- Question 4: Geo Coordinates -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 mb-1">
+      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
         04. Geo Coordinates of the land
       </div>
       <div>
         <button (click)="openMapPopup()"
-          class="inline-flex items-center gap-2 px-5 py-3 bg-[#000000] hover:bg-[#2a2a2a] text-white rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+          class="inline-flex items-center gap-2 px-5 py-3 bg-[#000000] dark:bg-gray-700 hover:bg-[#2a2a2a] dark:hover:bg-gray-600 text-white dark:text-textDark rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           [disabled]="!hasCoordinates">
           <i class="fa-solid fa-eye"></i>
           View Location
@@ -54,13 +53,13 @@
 
     <!-- Question 5: Images -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 mb-1">
+      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
         05. Images of the deed / lease / permit / any other formal document to
         prove the ownership of the land by the farmer
       </div>
       <div>
         <button (click)="openImagePopup()"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-[#000000] hover:bg-[#2a2a2a] text-white rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-[#000000] dark:bg-gray-700 hover:bg-[#2a2a2a] dark:hover:bg-gray-600 text-white dark:text-textDark rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           [disabled]="!hasImages">
           <i class="fa-solid fa-eye"></i>
           View Photos
@@ -71,7 +70,7 @@
 </div>
 
 <!-- Map Popup Modal -->
-<div *ngIf="showMapPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 h-full"
+<div *ngIf="showMapPopup" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4 h-full"
   (click)="closePopup()">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl overflow-hidden flex flex-col"
     (click)="$event.stopPropagation()" style="max-height: 90vh;">
@@ -79,10 +78,10 @@
     <div
       class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div class="flex-1 text-center">
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-textDark">
           Location Coordinates
         </h3>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+        <p class="text-sm text-gray-600 dark:text-textDark mt-1">
           <span *ngIf="hasCoordinates">
             Latitude: {{ landlObj.latitude }}, Longitude: {{ landlObj.longitude }}
           </span>
@@ -92,7 +91,7 @@
         </p>
       </div>
       <button (click)="closePopup()"
-        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ml-4"
+        class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ml-4"
         aria-label="Close">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -111,22 +110,22 @@
           <div class="text-center">
             <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4">
             </div>
-            <p class="text-gray-600 dark:text-gray-300">Loading map...</p>
+            <p class="text-gray-600 dark:text-textDark">Loading map...</p>
           </div>
         </div>
 
         <!-- No Coordinates Message -->
         <div *ngIf="!hasCoordinates" class="h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
           <div class="text-center p-6">
-            <svg class="w-20 h-20 text-gray-400 dark:text-gray-500 mx-auto mb-4" fill="currentColor"
+            <svg class="w-20 h-20 text-gray-400 dark:text-textDark mx-auto mb-4" fill="currentColor"
               viewBox="0 0 24 24">
               <path
                 d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
             </svg>
-            <h4 class="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">
+            <h4 class="text-lg font-semibold text-gray-600 dark:text-textDark mb-2">
               No Coordinates Available
             </h4>
-            <p class="text-gray-500 dark:text-gray-400">
+            <p class="text-gray-500 dark:text-textDark">
               Latitude and longitude coordinates are not provided for this location.
             </p>
           </div>
@@ -151,7 +150,7 @@
     <!-- Footer with action buttons -->
     <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div class="text-sm text-gray-600 dark:text-gray-400">
+        <div class="text-sm text-gray-600 dark:text-textDark">
           <span *ngIf="hasCoordinates">
             Coordinates: {{ landlObj.latitude }}, {{ landlObj.longitude }}
           </span>
@@ -161,7 +160,7 @@
         </div>
         <div class="flex flex-wrap gap-2">
           <button *ngIf="hasCoordinates" (click)="openInExternalMap()"
-            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center gap-2 transition-colors">
+            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
               <path
                 d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
@@ -169,7 +168,7 @@
             Open in OpenStreetMap
           </button>
           <button (click)="closePopup()"
-            class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-textDark hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
             Close
           </button>
         </div>
@@ -179,16 +178,17 @@
 </div>
 
 <!-- Image Gallery Popup Modal -->
-<div *ngIf="showImagePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
+<div *ngIf="showImagePopup" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
     <!-- Header -->
-    <div class="flex justify-between items-center p-4">
+    <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div class="flex-1 text-center">
-        <h3 class="text-lg font-semibold text-gray-800">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-textDark">
           Land Document Images
         </h3>
       </div>
-      <button (click)="closePopup()" class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-200">
+      <button (click)="closePopup()" 
+        class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -198,27 +198,30 @@
     <div class="p-6">
       <!-- Image Counter -->
       <div class="mb-3 text-center" *ngIf="currentImages.length > 0">
-        <span class="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium">
-          Image {{ currentImageIndex + 1 }} of {{ currentImages.length }}
+        <span class="inline-block dark:text-blue-200 px-4 py-2 rounded-lg text-sm font-medium">
+         {{ currentImageIndex + 1 }} out of {{ currentImages.length }}
         </span>
       </div>
 
       <!-- Main Image Display -->
-      <div class="h-96 bg-gray-100 rounded-lg border border-gray-300 overflow-hidden mb-4">
+      <div class="h-96 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden mb-4">
         <!-- If we have images -->
         <div *ngIf="currentImages.length > 0" class="relative w-full h-full">
-          <img [src]="currentImages[currentImageIndex]" alt="Land document"
-            class="w-full h-full object-contain bg-white"
-            onerror="this.src='https://via.placeholder.com/800x600/9E9E9E/FFFFFF?text=Image+Not+Available'" />
+          <img [src]="currentImages[currentImageIndex]" 
+               [alt]="'Land document ' + (currentImageIndex + 1)"
+               class="w-full h-full object-contain bg-white dark:bg-gray-800"
+               (error)="handleImageError($event)" />
 
           <!-- Navigation arrows -->
           <div class="absolute inset-0 flex items-center justify-between p-4">
             <button (click)="previousImage()" *ngIf="currentImages.length > 1"
-              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full flex items-center justify-center transition-all">
+              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-full flex items-center justify-center transition-all"
+              aria-label="Previous image">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
             <button (click)="nextImage()" *ngIf="currentImages.length > 1"
-              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full flex items-center justify-center transition-all">
+              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-full flex items-center justify-center transition-all"
+              aria-label="Next image">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
@@ -228,28 +231,18 @@
         <div *ngIf="currentImages.length === 0" class="w-full h-full flex flex-col items-center justify-center">
           <div class="text-center p-6">
             <div class="w-24 h-24 mx-auto mb-6">
-              <svg class="w-24 h-24 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+              <svg class="w-24 h-24 text-gray-300 dark:text-textDark" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
               </svg>
             </div>
-            <h4 class="text-xl font-bold text-gray-800 mb-2">
+            <h4 class="text-xl font-bold text-gray-800 dark:text-textDark mb-2">
               No Images Available
             </h4>
-            <p class="text-gray-600">
+            <p class="text-gray-600 dark:text-textDark">
               No document images were provided for this land.
             </p>
           </div>
-        </div>
-      </div>
-
-      <!-- Thumbnail Navigation -->
-      <div *ngIf="currentImages.length > 1" class="flex justify-center space-x-2 mt-4">
-        <div *ngFor="let image of currentImages; let i = index" (click)="selectImage(i)"
-          class="w-16 h-16 cursor-pointer border-2 rounded overflow-hidden transition-all hover:border-blue-400"
-          [class.border-blue-500]="i === currentImageIndex" [class.border-gray-200]="i !== currentImageIndex">
-          <img [src]="image" [alt]="'Document ' + (i + 1)" class="w-full h-full object-cover"
-            onerror="this.src='https://via.placeholder.com/150/9E9E9E/FFFFFF?text=Image'" />
         </div>
       </div>
     </div>

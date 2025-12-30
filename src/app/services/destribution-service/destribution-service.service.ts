@@ -357,4 +357,27 @@ export class DestributionService {
 
     return this.http.get<{ total: number; items: any[] }>(url, { headers });
   }
+
+  getDistributedVehicles(
+    page: number = 1,
+    limit: number = 10,
+    centerName?: string,
+    vehicleType?: string,
+    searchText?: string
+  ): Observable<{ total: number; items: any[] }> {
+    const headers = this.getHeaders();
+    let url = `${this.apiUrl}distribution/get-distributed-vehicles?page=${page}&limit=${limit}`;
+
+    if (centerName) {
+      url += `&centerName=${encodeURIComponent(centerName)}`;
+    }
+    if (vehicleType) {
+      url += `&vehicleType=${encodeURIComponent(vehicleType)}`;
+    }
+    if (searchText) {
+      url += `&searchText=${encodeURIComponent(searchText)}`;
+    }
+    
+    return this.http.get<{ total: number; items: any[] }>(url, { headers });
+  }
 }

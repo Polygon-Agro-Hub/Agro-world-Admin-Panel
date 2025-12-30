@@ -641,6 +641,21 @@ getTodaysDeliveries(regCode?: string, invNo?: string, searchType: string = 'part
     );
   }
 
+  // Get all centers for dropdown filter (from distributed vehicles)
+  getAllCentersForVehicles(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}distribution/get-distributed-vehicles?page=1&limit=1000`, { headers });
+  }
+
+  // Get all vehicle types for dropdown filter (from distributed vehicles)
+  getAllVehicleTypes(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}distribution/get-distributed-vehicles?page=1&limit=1000`, { headers });
+  }
 }
 
 

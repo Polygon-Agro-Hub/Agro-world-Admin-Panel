@@ -52,19 +52,23 @@ export class OptOutFeedbacksComponent {
 
   fetchAllFeedbacks(page: number = 1, limit: number = this.itemsPerPage) {
     this.page = page;
+    this.isLoading = true;
+
     this.plantcareService.getUserFeedbackDetails(page, limit).subscribe(
       (response: any) => {
         this.feedbacks = response.feedbackDetails;
         this.total = response.feedbackCount.Total;
         this.deleteCount = response.deletedUserCount.Total;
+        this.totalItems = response.feedbackCount.Total;
+
+        this.hasData = this.feedbacks.length === 0;
+
         this.isLoading = false;
-        if (response.length > 0) {
-          this.hasData = false;
-        }
         this.calculatePercentageChange();
       },
-      (error) => {
+      () => {
         this.isLoading = false;
+        this.hasData = true;
       }
     );
   }

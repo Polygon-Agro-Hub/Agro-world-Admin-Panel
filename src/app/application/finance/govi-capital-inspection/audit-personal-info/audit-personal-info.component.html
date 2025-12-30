@@ -6,23 +6,23 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10">
+  <div class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10 dark:text-textDark">
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Request_ID :</span><span>GC000003</span>
+      <span class="text-[#7E7E7E]">Request_ID :</span><span>{{sharesData.jobId}}</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Farmer Phone :</span><span>+94 783344555</span>
+      <span class="text-[#7E7E7E]">Farmer Phone :</span><span>{{sharesData.farmerPhone}}</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Audited By :</span><span>CFO00001</span>
+      <span class="text-[#7E7E7E]">Audited By :</span><span>{{sharesData.empId}}</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Officer Phone :</span><span>+94 783344500</span>
+      <span class="text-[#7E7E7E]">Officer Phone :</span><span>{{sharesData.officerPhone}}</span>
     </div>
     <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Audited Date :</span><span>June 2, 2023</span>
+      <span class="text-[#7E7E7E]">Audited Date :</span><span>{{sharesData.reqCahangeTime | date: 'MMMM d, yyyy'}}</span>
     </div>
-    <div class="flex flex-col gap-4">
+    <div *ngIf="lastSegment === 'viewAll-Govicare-AuditedRequests' " class="flex flex-col gap-4">
       <div class="flex gap-4">
         <button
           class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
@@ -263,29 +263,36 @@
 <div *ngIf="openDevideSharesPopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 pt-4 pb-10 w-1/4">
 
-      <div class="px-4">
-          <div class="mb-6 text-center font-semibold dark:text-textDark">
-            <p class="text-xl mb-2">
-              Request ID : {{sharesData.jobId}}
-            </p>
-          </div>
+    <div class="px-4">
+      <form #devideForm="ngForm" (ngSubmit)="DevideRequest(devideForm)">
+      <div class="mb-6 text-center font-semibold dark:text-textDark">
+        <p class="text-xl mb-2">
+          Request ID : {{sharesData.jobId}}
+        </p>
+      </div>
 
       <div class="mb-8">
+        
         <div>
           <label class="block mb-2 text-lg dark:text-textDark">
             Total Value (Rs.)
           </label>
           <input id="totalValue" [value]="sharesData.totalValue | number:'1.2-2'" name="totalValue" readonly
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            
         </div>
 
         <div>
           <label class="block mb-2 text-lg dark:text-textDark">
             Define Number of Shares
           </label>
-          <input id="numShares" type="number" [(ngModel)]="numShares" name="numShares" placeholder="--Enter Here--"
-            (ngModelChange)="onNumSharesChange($event)"
+          <input id="numShares" required type="number" [(ngModel)]="numShares" #numSharesInput="ngModel" name="numShares" placeholder="--Enter Here--"
+            (ngModelChange)="onNumSharesChange($event)" (keypress)="allowDecimalOnly($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <span
+            *ngIf="numSharesInput.touched && !numShares "
+            class="text-red-600 text-sm"
+            >This field is required.</span>
         </div>
 
         <div>
@@ -300,18 +307,39 @@
           <label class="block mb-2 text-lg dark:text-textDark">
             Minimum Investment Shares
           </label>
-          <input id="minimumShare" type="number" [(ngModel)]="minimumShare" name="minimumShare"
-            placeholder="--Enter Here--"
+          <input id="minimumShare" required type="number" [(ngModel)]="minimumShare" #minimumShareInput="ngModel" name="minimumShare"
+            placeholder="--Enter Here--" (keypress)="allowDecimalOnly($event)" pattern="^[1-9]\d*(\.\d+)?$"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <span
+            *ngIf="minimumShareInput.touched && minimumShareInput.errors?.['required']"
+            class="text-red-600 text-sm"
+            >This field is required.</span>
+            <span
+              *ngIf="minimumShareInput.touched && !minimumShareInput.errors?.['required'] && (minimumShare <= 0)" 
+              class="text-red-600 text-sm"
+            >
+            Minimum Investment Shares cannot be 0 or less than 0.
+            </span>
         </div>
 
         <div>
           <label class="block mb-2 text-lg dark:text-textDark">
             Maximum Investment Shares
           </label>
-          <input id="maximumShare" type="number" [(ngModel)]="maximumShare" name="maximumShare"
-            placeholder="--Enter Here--"
+          <input id="maximumShare" required type="number" [(ngModel)]="maximumShare" #maximumShareInput="ngModel" name="maximumShare"
+            placeholder="--Enter Here--" (keypress)="allowDecimalOnly($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <span
+            *ngIf="maximumShareInput.touched && maximumShareInput.errors?.['required']"
+            class="text-red-600 text-sm"
+            >This field is required.</span>
+
+            <span
+              *ngIf="maximumShareInput.touched && !maximumShareInput.errors?.['required'] && (maximumShare <= 0)" 
+              class="text-red-600 text-sm"
+            >
+            Maximum Investment Shares cannot be 0 or less than 0.
+            </span>
         </div>
       </div>
 
@@ -319,12 +347,15 @@
       <!-- Buttons -->
       <div class="flex justify-between gap-16">
         <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-6 py-3 rounded-xl shadow-md"
-          (click)="cancelDevidePopUp()"><span class="text-white">Cancel</span>
+         type="button" (click)="cancelDevidePopUp()"><span class="text-white">Cancel</span>
         </button>
-        <button class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-xl shadow-md"
-          (click)="DevideRequest()"><span class=" text-lg text-white">Devide</span>
+        <button
+          type="submit"
+          class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-xl shadow-md">
+          <span class="text-lg text-white">Devide</span>
         </button>
       </div>
+    </form>
     </div>
   </div>
 </div>

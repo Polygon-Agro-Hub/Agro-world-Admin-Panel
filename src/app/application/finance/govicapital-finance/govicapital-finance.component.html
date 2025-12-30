@@ -153,6 +153,12 @@
             >
               Details
             </th>
+
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Audit Results
+            </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -216,6 +222,12 @@
                     stroke-linejoin="round"
                   />
                 </svg>
+              </button>
+            </td>
+
+            <td class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center">
+              <button (click)="auditResults(request.id)">
+                <i class="fa-solid fa-arrow-up-right-from-square text-xl text-[#3980C0]"></i>
               </button>
             </td>
           </tr>

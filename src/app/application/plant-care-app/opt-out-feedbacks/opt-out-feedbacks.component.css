@@ -2,6 +2,44 @@
     background-image: none !important;
   }
 
+  /* Hide CanvasJS watermark/credit - Multiple targeting methods */
+  ::ng-deep .canvasjs-chart-credit {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  ::ng-deep a[href*="canvasjs.com"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+  }
+
+  ::ng-deep .canvasjs-chart-container > div > a {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  ::ng-deep .canvasjs-chart-container a {
+    display: none !important;
+  }
+
+  ::ng-deep canvasjs-chart a {
+    display: none !important;
+  }
+
+  ::ng-deep .canvasjs-chart-tooltip a {
+    display: block !important; 
+  }
+
   .theme-toggle {
   position: absolute;
   top: 10px;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FinanceService } from '../../../../services/finance/finance.service';
 import { PersonalInfoTabComponent } from '../personal-info-tab/personal-info-tab.component';
 import { IdProofTabComponent } from '../id-proof-tab/id-proof-tab.component';
@@ -43,8 +43,7 @@ export class AuditPersonalInfoComponent implements OnInit {
   isLoading: boolean = false;
   activeTab: string = 'Personal';
   inspectionArray!: Inspection;
-  reqId: number = 2;
-  jobId: string = 'SS222';
+  reqId!: number;
   approvePopUpOpen: boolean = false;
   rejectPopUpOpen: boolean = false;
   rejectReason: string = '';
@@ -56,10 +55,21 @@ export class AuditPersonalInfoComponent implements OnInit {
   maximumShare!: number;
 
   sharesData: Partial<Shares> = {};
+  lastSegment!: string;
 
-  constructor(private financeService: FinanceService, private router: Router) {}
+  constructor(private financeService: FinanceService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+
+    const requestId = this.route.snapshot.paramMap.get('requestId');
+    console.log(requestId);
+    this.reqId = Number(requestId);
+
+    const segments = this.route.snapshot.url;
+    this.lastSegment = segments[segments.length - 3]?.path;
+  
+    console.log('Last route part:', this.lastSegment);
+
     this.fetchData();
   }
 
@@ -158,7 +168,15 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.openDevideSharesPopUp = false;
   }
 
-  DevideRequest() {
+  DevideRequest(form: any) {
+
+    console.log('devind')
+
+    if (form.invalid) {
+      form.form.markAllAsTouched();
+      return;
+    }
+
     this.openDevideSharesPopUp = false;
 
     this.isLoading = true;
@@ -176,35 +194,49 @@ export class AuditPersonalInfoComponent implements OnInit {
     devideRequestObj.empId = this.sharesData.empId;
     console.log('devideRequestObj', devideRequestObj);
 
-    this.financeService
-      .devideSharesRequest(devideRequestObj)
-      .subscribe((res: any) => {
-        if (res.status) {
-          Swal.fire({
-            title: 'Success',
-            text: `Request Approved Successfully`,
-            icon: 'success',
-            customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        } else if (!res.status) {
-          Swal.fire({
-            title: 'error',
-            text: `Failed to Approve the Request`,
-            icon: 'error',
-            customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        }
-        this.isLoading = false;
-      });
+    this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
+
+      if (res.status) {
+        Swal.fire({
+          title: 'Success',
+          text: `Request Approved Successfully`,
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      } else if (!res.status) {
+        Swal.fire({
+          title: 'error',
+          text: `Failed to Approve the Request`,
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+      this.isLoading = false;
+    })
   }
+
+allowDecimalOnly(event: KeyboardEvent) {
+  const allowedKeys = ['0','1','2','3','4','5','6','7','8','9','.'];
+  const key = event.key;
+
+  // Block everything except numbers and dot
+  if (!allowedKeys.includes(key)) {
+    event.preventDefault();
+    return;
+  }
+
+  // Prevent multiple dots
+  if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+    event.preventDefault();
+  }
+}
+
 }
 
 interface Inspection {

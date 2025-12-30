@@ -118,8 +118,8 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
     });
   }
 
-  auditResults(requestId: string) {
-
+  auditResults(requestId: number) {
+    this.router.navigate(['finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests/audit-personal-infor', String(requestId)]);
   }
 
   closeDetailsModal(): void {

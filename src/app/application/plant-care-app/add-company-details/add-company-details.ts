@@ -227,33 +227,46 @@ export class AddCompanyDetailsComponent implements OnInit {
     }
 
     const file = input.files[0];
+    
+    // Define allowed file formats
+    const allowedFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const fileName = file.name.toLowerCase();
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    
+    // Check file extension
+    const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+    // Check MIME type
+    const hasValidMimeType = allowedFormats.includes(file.type.toLowerCase());
 
-    // Validate file type (image only)
-    if (!file.type.startsWith('image/')) {
+    // Validate file type (only JPG, PNG, or WebP formats)
+    if (!hasValidExtension || !hasValidMimeType) {
       this.logoError = true;
       this.logoFile = null;
       this.logoPreview = null;
       this.logoRequiredError = true;
+      
       Swal.fire({
         icon: 'error',
-        title: 'Invalid File',
-        text: 'Please select an image file (png, jpg, jpeg, webp, etc.).',
+        title: 'Unsupported File Format',
+        text: 'Please upload JPG, PNG, or WebP files only.',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
         },
       });
+      
       input.value = ''; // clear the value
       return;
     }
 
-    // check file size (example: < 5MB)
+    // Check file size (example: < 5MB)
     const maxSizeBytes = 5 * 1024 * 1024; // 5 MB
     if (file.size > maxSizeBytes) {
       this.logoError = true;
       this.logoFile = null;
       this.logoPreview = null;
       this.logoRequiredError = true;
+      
       Swal.fire({
         icon: 'error',
         title: 'File Too Large',
@@ -263,6 +276,7 @@ export class AddCompanyDetailsComponent implements OnInit {
           title: 'font-semibold text-lg',
         },
       });
+      
       input.value = '';
       return;
     }

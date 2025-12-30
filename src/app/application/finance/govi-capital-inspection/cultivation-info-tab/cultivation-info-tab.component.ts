@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-cultivation-info-tab',
@@ -8,11 +8,15 @@ import { Component, Input, OnInit } from '@angular/core';
   templateUrl: './cultivation-info-tab.component.html',
   styleUrl: './cultivation-info-tab.component.css',
 })
-export class CultivationInfoTabComponent implements OnInit {
+export class CultivationInfoTabComponent implements OnDestroy {
   @Input() cultivationData!: ICultivation;
 
   showImageModal = false;
   currentImageIndex = 0;
+  currentImages: string[] = [];
+  
+  imageLoaded = false;
+  private imageTimeout: any;
 
   ngOnInit() {
     if (this.cultivationData) {
@@ -20,7 +24,14 @@ export class CultivationInfoTabComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.imageTimeout) {
+      clearTimeout(this.imageTimeout);
+    }
+  }
+
   getYesNo(value: number | undefined): string {
+    if (value === undefined) return 'Not provided';
     return value === 1 ? 'Yes' : 'No';
   }
 
@@ -30,7 +41,7 @@ export class CultivationInfoTabComponent implements OnInit {
 
   getFormattedPh(): string {
     if (!this.cultivationData || this.cultivationData.ph === undefined) {
-      return '-';
+      return 'Not provided';
     }
     return parseFloat(this.cultivationData.ph.toString()).toString();
   }
@@ -40,60 +51,76 @@ export class CultivationInfoTabComponent implements OnInit {
       !this.cultivationData?.waterSources ||
       this.cultivationData.waterSources.length === 0
     ) {
-      return 'No water sources';
+      return 'Not provided';
     }
     return this.cultivationData.waterSources.join(', ');
   }
 
   get hasWaterImages(): boolean {
-    return (
-      this.cultivationData?.waterImage &&
-      this.cultivationData.waterImage.length > 0
-    );
-  }
-
-  get images() {
-    if (!this.hasWaterImages) {
-      return [];
+    if (!this.cultivationData?.waterImage) return false;
+    
+    if (Array.isArray(this.cultivationData.waterImage)) {
+      return this.cultivationData.waterImage.length > 0;
+    } else if (typeof this.cultivationData.waterImage === 'string') {
+      const cleanString = this.cultivationData.waterImage.replace(/[\[\]"]/g, '');
+      const images = cleanString.split(',').map(img => img.trim()).filter(img => img.length > 0);
+      return images.length > 0;
     }
-    return this.cultivationData.waterImage.map((src, index) => ({
-      id: index + 1,
-      src: src,
-      alt: `Water Source Image ${index + 1}`,
-    }));
+    
+    return false;
   }
 
-  openImageModal() {
+  openImageModal(): void {
     if (this.hasWaterImages) {
-      this.showImageModal = true;
+      this.imageLoaded = false;
+      
+      if (Array.isArray(this.cultivationData.waterImage)) {
+        this.currentImages = this.cultivationData.waterImage;
+      } else if (typeof this.cultivationData.waterImage === 'string') {
+        const cleanString = this.cultivationData.waterImage.replace(/[\[\]"]/g, '');
+        this.currentImages = cleanString.split(',').map(img => img.trim()).filter(img => img.length > 0);
+      } else {
+        this.currentImages = [];
+      }
+      
       this.currentImageIndex = 0;
+      this.showImageModal = true;
+      
+      this.imageTimeout = setTimeout(() => {
+        this.imageLoaded = true;
+      }, 300);
     }
   }
 
-  closeImageModal() {
+  closeImageModal(): void {
     this.showImageModal = false;
-  }
-
-  nextImage() {
-    if (this.images.length > 0) {
-      this.currentImageIndex =
-        (this.currentImageIndex + 1) % this.images.length;
+    this.currentImageIndex = 0;
+    this.currentImages = [];
+    this.imageLoaded = false;
+    
+    if (this.imageTimeout) {
+      clearTimeout(this.imageTimeout);
     }
   }
 
-  prevImage() {
-    if (this.images.length > 0) {
-      this.currentImageIndex =
-        (this.currentImageIndex - 1 + this.images.length) % this.images.length;
+  nextImage(): void {
+    if (this.currentImages.length > 0) {
+      this.currentImageIndex = (this.currentImageIndex + 1) % this.currentImages.length;
     }
   }
 
-  get currentImage() {
-    return this.images[this.currentImageIndex];
+  prevImage(): void {
+    if (this.currentImages.length > 0) {
+      this.currentImageIndex = this.currentImageIndex === 0 
+        ? this.currentImages.length - 1 
+        : this.currentImageIndex - 1;
+    }
   }
 
-  get imageCounter() {
-    return `Image ${this.currentImageIndex + 1} of ${this.images.length}`;
+  selectImage(index: number): void {
+    if (index >= 0 && index < this.currentImages.length) {
+      this.currentImageIndex = index;
+    }
   }
 }
 
@@ -110,7 +137,7 @@ export interface ICultivation {
   soilType: string;
   soilfertility: string;
   waterSources: string[];
-  waterImage: string[];
+  waterImage: string[] | string;
   isRecevieRainFall: number;
   isRainFallSuitableCrop: number;
   isRainFallSuitableCultivation: number;

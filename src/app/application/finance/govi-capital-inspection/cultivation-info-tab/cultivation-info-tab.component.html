@@ -241,8 +241,9 @@
       07. Images of the water source
     </label>
     <div>
-      <button *ngIf="hasWaterImages" (click)="openImageModal()"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-[#000000] dark:bg-gray-700 hover:bg-[#2a2a2a] dark:hover:bg-gray-600 text-white dark:text-textDark rounded-lg transition-colors shadow-sm hover:shadow-md">
+      <button (click)="openImageModal()"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-[#000000] dark:bg-gray-700 hover:bg-[#2a2a2a] dark:hover:bg-gray-600 text-white dark:text-textDark rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="!hasWaterImages">
         <i class="fa-solid fa-eye"></i>
         View Photos
       </button>
@@ -312,42 +313,53 @@
 </div>
 
 <!-- Image Gallery Popup Modal -->
-<div *ngIf="showImageModal && hasWaterImages"
-  class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
-    <!-- Header with Title and Close Button -->
+<div *ngIf="showImageModal" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+    <!-- Header -->
     <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div class="flex-1 text-center">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-textDark">
-          Water Source Photos
+          Water Source Images
         </h3>
       </div>
-      <div class="flex items-center">
-        <button (click)="closeImageModal()"
-          class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
+      <button (click)="closeImageModal()" 
+        class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ml-4"
+        aria-label="Close">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
 
-    <div class="p-6">
-      <!-- Current Image Counter -->
-      <div class="mb-3 text-center">
-        <span class="inline-block text-gray-700 dark:text-textDark px-4 py-2 rounded-lg text-sm font-medium">
-          Image {{ currentImageIndex + 1 }} of {{ images.length }}
+    <div class="p-6 flex-1 overflow-auto">
+      <!-- Image Counter -->
+      <div class="mb-3 text-center" *ngIf="currentImages.length > 0">
+        <span class="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-4 py-2 rounded-lg text-sm font-medium">
+          Image {{ currentImageIndex + 1 }} of {{ currentImages.length }}
         </span>
       </div>
 
       <!-- Main Image Display -->
-      <div class="h-96 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden mb-4">
-        <div class="relative w-full h-full">
-          <img [src]="images[currentImageIndex].src" [alt]="images[currentImageIndex].alt"
-            class="w-full h-full object-contain" />
+      <div class="h-96 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden mb-4 relative">
+        <!-- If we have images -->
+        <div *ngIf="currentImages.length > 0" class="relative w-full h-full">
+          <!-- Loading Spinner -->
+          <div *ngIf="!imageLoaded"
+            class="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 z-10">
+            <div class="text-center">
+              <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4">
+              </div>
+              <p class="text-gray-600 dark:text-textDark">Loading image...</p>
+            </div>
+          </div>
+
+          <img [src]="currentImages[currentImageIndex]" alt="Water source"
+            class="w-full h-full object-contain bg-white dark:bg-gray-800"
+            (load)="imageLoaded = true"
+            onerror="this.src='https://via.placeholder.com/800x600/9E9E9E/FFFFFF?text=Image+Not+Available'" />
 
           <!-- Navigation arrows -->
-          <div class="absolute inset-0 flex items-center justify-between p-4" *ngIf="images.length > 1">
+          <div class="absolute inset-0 flex items-center justify-between p-4" *ngIf="currentImages.length > 1 && imageLoaded">
             <button (click)="prevImage()"
               class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-full flex items-center justify-center transition-all">
               <i class="fa-solid fa-chevron-left"></i>
@@ -358,17 +370,46 @@
             </button>
           </div>
         </div>
+
+        <!-- If no images -->
+        <div *ngIf="currentImages.length === 0" class="w-full h-full flex flex-col items-center justify-center">
+          <div class="text-center p-6">
+            <div class="w-24 h-24 mx-auto mb-6">
+              <svg class="w-24 h-24 text-gray-300 dark:text-textDark" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+              </svg>
+            </div>
+            <h4 class="text-xl font-bold text-gray-800 dark:text-textDark mb-2">
+              No Images Available
+            </h4>
+            <p class="text-gray-600 dark:text-textDark">
+              No water source images were provided.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <!-- Image Thumbnails -->
-      <div class="flex gap-2 justify-center" *ngIf="images.length > 1">
-        <div *ngFor="let image of images; let i = index" (click)="currentImageIndex = i"
-          class="w-20 h-20 border-2 rounded-lg overflow-hidden cursor-pointer transition-all"
+      <!-- Thumbnail Navigation -->
+      <div *ngIf="currentImages.length > 1 && imageLoaded" class="flex justify-center space-x-2 mt-4">
+        <div *ngFor="let image of currentImages; let i = index" (click)="selectImage(i)"
+          class="w-16 h-16 cursor-pointer border-2 rounded overflow-hidden transition-all hover:border-blue-400"
           [class.border-blue-500]="i === currentImageIndex" 
-          [class.border-gray-300]="i !== currentImageIndex"
+          [class.border-gray-200]="i !== currentImageIndex"
           [class.dark:border-gray-600]="i !== currentImageIndex">
-          <img [src]="image.src" [alt]="image.alt" class="w-full h-full object-cover">
+          <img [src]="image" [alt]="'Water source ' + (i + 1)" class="w-full h-full object-cover"
+            onerror="this.src='https://via.placeholder.com/150/9E9E9E/FFFFFF?text=Image'" />
         </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+      <div class="flex justify-end">
+        <button (click)="closeImageModal()"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-textDark hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+          Close
+        </button>
       </div>
     </div>
   </div>

@@ -399,38 +399,34 @@
     </div>
 
     <!-- Officer Selection -->
-    <div class="flex flex-col mb-4 w-full">
-      <label
-        class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
-      >
-        Officer
-      </label>
-      <p-dropdown
-        [options]="availableOfficers"
-        [(ngModel)]="selectedOfficerId"
-        optionLabel="displayName"
-        optionValue="empId"
-        placeholder="--Select Officer--"
-        [showClear]="true"
-        appendTo="body"
-        [disabled]="!selectedOfficerRole || isLoadingOfficers"
-        (onChange)="onOfficerSelected()"
-        styleClass="w-96 border border-2 rounded-lg h-12"
-      >
-        <ng-template pTemplate="empty">
-          <div class="p-2 text-center text-gray-500">
-            {{
-              selectedOfficerRole
-                ? "No officers available"
-                : "Please select a role first"
-            }}
-          </div>
-        </ng-template>
-      </p-dropdown>
-      <div *ngIf="isLoadingOfficers" class="text-sm text-gray-500 mt-1">
-        Loading officers...
+   <div class="flex flex-col mb-4 w-full">
+  <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
+    Officer
+  </label>
+  <p-dropdown
+    [options]="availableOfficers"
+    [(ngModel)]="selectedOfficerId"
+    optionLabel="displayName"
+    optionValue="empId"
+    placeholder="--Select Officer--"
+    [showClear]="true"
+    appendTo="body"
+    [disabled]="!selectedOfficerRole || isLoadingOfficers"
+    (onChange)="onOfficerSelected()"
+    (onClear)="onOfficerCleared()"
+    [style]="{'width': '100%'}"
+    styleClass="w-96 border border-2 rounded-lg h-12"
+  >
+    <ng-template pTemplate="empty">
+      <div class="p-2 text-center text-gray-500">
+        {{ selectedOfficerRole ? "No officers available" : "Please select a role first" }}
       </div>
-    </div>
+    </ng-template>
+  </p-dropdown>
+  <div *ngIf="isLoadingOfficers" class="text-sm text-gray-500 mt-1">
+    Loading officers...
+  </div>
+</div>
 
     <!-- Selected Officer Info -->
     <div

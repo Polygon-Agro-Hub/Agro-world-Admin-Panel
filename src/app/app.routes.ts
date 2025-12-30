@@ -675,9 +675,19 @@ export const routes: Routes = [
                     component: PublishedProjectsComponent,
                   },
                   {
-                    path: 'audit-personal-infor',
+                    path: 'viewAll-Govicare-AuditedRequests/audit-personal-infor/:requestId',
                     component: AuditPersonalInfoComponent,
                   },
+
+                  {
+                    path: 'view-Govicare-approved-requests/audit-personal-infor/:requestId',
+                    component: AuditPersonalInfoComponent,
+                  },
+
+                  {
+                    path: 'reject-requests/audit-personal-infor/:requestId',
+                    component: AuditPersonalInfoComponent,
+                  }
                 ],
               },
               {

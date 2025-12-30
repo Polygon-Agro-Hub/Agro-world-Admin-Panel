@@ -270,4 +270,8 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     const result = num1 / num2;
     return parseFloat(result.toFixed(2));
   }
+
+  auditResults(requestId: number) {
+    this.router.navigate(['finance/action/finance-govicapital/view-Govicare-approved-requests/audit-personal-infor', String(requestId)]);
+  }
 }

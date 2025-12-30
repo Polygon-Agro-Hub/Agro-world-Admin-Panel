@@ -17,6 +17,15 @@ export class DistributionhubTransportActionComponent {
     private router: Router
   ) { }
 
+  navigateToViewVehicles(): void {
+    this.isLoading = true;
+    this.router.navigate(['/distribution-hub/action/view-vehicles'], {
+      queryParams: { type: 'distribution' }
+    }).then(() => {
+      this.isLoading = false;
+    });
+  }
+
   navigateToResonsToReturn(): void {
     this.isLoading = true;
     this.router.navigate(['/distribution-hub/action/reasons-to-return'], {

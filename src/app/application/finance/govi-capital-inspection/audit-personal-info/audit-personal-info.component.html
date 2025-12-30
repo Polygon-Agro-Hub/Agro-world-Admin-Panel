@@ -22,7 +22,7 @@
     <div class="flex flex-col">
       <span class="text-[#7E7E7E]">Audited Date :</span><span>{{sharesData.reqCahangeTime | date: 'MMMM d, yyyy'}}</span>
     </div>
-    <div class="flex flex-col gap-4">
+    <div *ngIf="lastSegment === 'viewAll-Govicare-AuditedRequests' " class="flex flex-col gap-4">
       <div class="flex gap-4">
         <button
           class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"

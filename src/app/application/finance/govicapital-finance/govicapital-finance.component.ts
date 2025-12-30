@@ -3,6 +3,7 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinanceService } from '../../../services/finance/finance.service';
+import { Router } from '@angular/router';
 
 interface RejectedInvestmentRequest {
   id: string;
@@ -61,7 +62,8 @@ export class GovicapitalFinanceComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private financeService: FinanceService
+    private financeService: FinanceService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -148,5 +150,9 @@ export class GovicapitalFinanceComponent implements OnInit {
   formatNumber(index: number): string {
     // Format as 3-digit number with leading zeros (001, 002, etc.)
     return (index + 1).toString().padStart(3, '0');
+  }
+
+  auditResults(requestId: string) {
+    this.router.navigate(['finance/action/finance-govicapital/reject-requests/audit-personal-infor', requestId]);
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FinanceService } from '../../../../services/finance/finance.service';
 import { PersonalInfoTabComponent } from '../personal-info-tab/personal-info-tab.component';
 import { IdProofTabComponent } from '../id-proof-tab/id-proof-tab.component';
@@ -43,8 +43,7 @@ export class AuditPersonalInfoComponent implements OnInit {
   isLoading: boolean = false;
   activeTab: string = 'Personal';
   inspectionArray!: Inspection;
-  reqId: number = 2;
-  jobId: string = 'SS222';
+  reqId!: number;
   approvePopUpOpen: boolean = false;
   rejectPopUpOpen: boolean = false;
   rejectReason: string = '';
@@ -56,10 +55,21 @@ export class AuditPersonalInfoComponent implements OnInit {
   maximumShare!: number;
 
   sharesData: Partial<Shares> = {};
+  lastSegment!: string;
 
-  constructor(private financeService: FinanceService, private router: Router) {}
+  constructor(private financeService: FinanceService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+
+    const requestId = this.route.snapshot.paramMap.get('requestId');
+    console.log(requestId);
+    this.reqId = Number(requestId);
+
+    const segments = this.route.snapshot.url;
+    this.lastSegment = segments[segments.length - 3]?.path;
+  
+    console.log('Last route part:', this.lastSegment);
+
     this.fetchData();
   }
 

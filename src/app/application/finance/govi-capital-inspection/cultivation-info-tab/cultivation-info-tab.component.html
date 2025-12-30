@@ -1,21 +1,21 @@
 <div class="space-y-2 p-10">
   <!-- Question 01 - Climatic Parameters Table -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       01. Is the crop / cropping system suitable for overall climatic parameters?
     </label>
 
     <div class="overflow-x-auto">
-      <table class="min-w-[50%] bg-white border border-gray-200 rounded-lg">
+      <table class="min-w-[50%] bg-white dark:bg-tileBlack border border-gray-200 dark:border-gray-600 rounded-lg">
         <thead>
-          <tr class="bg-gray-50">
-            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 border-b">
+          <tr class="bg-gray-50 dark:bg-gray-700">
+            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 dark:text-textDark border-b dark:border-gray-600">
               Factor
             </th>
-            <th class="py-3 px-4 text-center text-sm font-semibold text-gray-600 border-b">
+            <th class="py-3 px-4 text-center text-sm font-semibold text-gray-600 dark:text-textDark border-b dark:border-gray-600">
               Yes
             </th>
-            <th class="py-3 px-4 text-center text-sm font-semibold text-gray-600 border-b">
+            <th class="py-3 px-4 text-center text-sm font-semibold text-gray-600 dark:text-textDark border-b dark:border-gray-600">
               No
             </th>
           </tr>
@@ -23,20 +23,20 @@
 
         <tbody>
           <!-- Temperature -->
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-4 text-sm text-gray-800 border-b">Temperature</td>
-            <td class="py-3 px-4 text-center border-b">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Temperature</td>
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.temperature)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4 text-center border-b">
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="!getClimaticValue(cultivationData.temperature)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
@@ -44,20 +44,20 @@
           </tr>
 
           <!-- Rainfall -->
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-4 text-sm text-gray-800 border-b">Rainfall</td>
-            <td class="py-3 px-4 text-center border-b">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Rainfall</td>
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.rainfall)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4 text-center border-b">
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="!getClimaticValue(cultivationData.rainfall)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
@@ -65,20 +65,20 @@
           </tr>
 
           <!-- Sunshine hours -->
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-4 text-sm text-gray-800 border-b">Sunshine hours</td>
-            <td class="py-3 px-4 text-center border-b">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Sunshine hours</td>
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.sunShine)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4 text-center border-b">
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="!getClimaticValue(cultivationData.sunShine)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
@@ -86,20 +86,20 @@
           </tr>
 
           <!-- Relative humidity -->
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-4 text-sm text-gray-800 border-b">Relative humidity</td>
-            <td class="py-3 px-4 text-center border-b">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Relative humidity</td>
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.humidity)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4 text-center border-b">
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="!getClimaticValue(cultivationData.humidity)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
@@ -107,20 +107,20 @@
           </tr>
 
           <!-- Wind velocity -->
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-4 text-sm text-gray-800 border-b">Wind velocity</td>
-            <td class="py-3 px-4 text-center border-b">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Wind velocity</td>
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.windVelocity)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4 text-center border-b">
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="!getClimaticValue(cultivationData.windVelocity)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
@@ -128,20 +128,20 @@
           </tr>
 
           <!-- Wind direction -->
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-4 text-sm text-gray-800 border-b">Wind direction</td>
-            <td class="py-3 px-4 text-center border-b">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Wind direction</td>
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.windDirection)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4 text-center border-b">
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="!getClimaticValue(cultivationData.windDirection)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
@@ -149,22 +149,22 @@
           </tr>
 
           <!-- Seasons and agro-ecological zone -->
-          <tr class="hover:bg-gray-50">
-            <td class="py-3 px-4 text-sm text-gray-800 border-b">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">
               Seasons and agro-ecological zone
             </td>
-            <td class="py-3 px-4 text-center border-b">
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.zone)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
             </td>
-            <td class="py-3 px-4 text-center border-b">
+            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="!getClimaticValue(cultivationData.zone)"
-                  class="w-4 h-4 bg-black rounded-sm flex items-center justify-center">
+                  class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
                   <i class="fas fa-check text-white text-[10px]"></i>
                 </div>
               </div>
@@ -176,136 +176,136 @@
   </div>
 
   <!-- Question 02 - Suitable for local soil type -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       02. Is the crop / cropping system suitable for local soil type?
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isCropSuitale)"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 03 - pH -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       03. pH
     </label>
     <div class="relative">
       <input type="text" [value]="getFormattedPh()"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 04 - Soil Type -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       04. Soil Type
     </label>
     <div class="relative">
       <input type="text" [value]="cultivationData.soilType"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 05 - Overall Soil Fertility -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       05. Overall Soil Fertility
     </label>
     <div class="relative">
       <input type="text" [value]="cultivationData.soilfertility"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 06 - Water Sources -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       06. Water Sources
     </label>
     <div class="relative">
       <input type="text" [value]="formattedWaterSources"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 07 - Images of the water source -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       07. Images of the water source
     </label>
     <div>
       <button *ngIf="hasWaterImages" (click)="openImageModal()"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-[#000000] hover:bg-[#2a2a2a] text-white rounded-lg transition-colors shadow-sm hover:shadow-md">
+        class="inline-flex items-center gap-2 px-6 py-3 bg-[#000000] dark:bg-gray-700 hover:bg-[#2a2a2a] dark:hover:bg-gray-600 text-white dark:text-textDark rounded-lg transition-colors shadow-sm hover:shadow-md">
         <i class="fa-solid fa-eye"></i>
         View Photos
       </button>
-      <div *ngIf="!hasWaterImages" class="text-gray-400 italic py-3">No images available</div>
+      <div *ngIf="!hasWaterImages" class="text-gray-400 dark:text-textDark italic py-3">No images available</div>
     </div>
   </div>
 
   <!-- Question 08 - Adequate rainfall -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       08. Does this land receive adequate rainfall?
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isRecevieRainFall)"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 09 - Rainfall distribution -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       09. Is the distribution of rainfall suitable to grow identified crops?
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isRainFallSuitableCrop)"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 10 - Water quality -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       10. Is the water quality suitable for cultivation?
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isRainFallSuitableCultivation)"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 11 - Electricity available -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       11. Is electricity available for lifting the water?
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isElectrocityAvailable)"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
 
   <!-- Question 12 - Pump sets -->
-  <div class="bg-[#F9FAFC] p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 mb-3">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
       12. Is there pump sets, micro irrigation systems?
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.ispumpOrirrigation)"
-        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly />
     </div>
   </div>
@@ -313,18 +313,18 @@
 
 <!-- Image Gallery Popup Modal -->
 <div *ngIf="showImageModal && hasWaterImages"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
+  class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
     <!-- Header with Title and Close Button -->
-    <div class="flex justify-between items-center p-4">
+    <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div class="flex-1 text-center">
-        <h3 class="text-lg font-semibold text-gray-800">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-textDark">
           Water Source Photos
         </h3>
       </div>
       <div class="flex items-center">
         <button (click)="closeImageModal()"
-          class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-200 flex items-center">
+          class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -335,13 +335,13 @@
     <div class="p-6">
       <!-- Current Image Counter -->
       <div class="mb-3 text-center">
-        <span class="inline-block text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">
+        <span class="inline-block text-gray-700 dark:text-textDark px-4 py-2 rounded-lg text-sm font-medium">
           Image {{ currentImageIndex + 1 }} of {{ images.length }}
         </span>
       </div>
 
       <!-- Main Image Display -->
-      <div class="h-96 bg-gray-100 rounded-lg border border-gray-300 overflow-hidden mb-4">
+      <div class="h-96 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden mb-4">
         <div class="relative w-full h-full">
           <img [src]="images[currentImageIndex].src" [alt]="images[currentImageIndex].alt"
             class="w-full h-full object-contain" />
@@ -349,11 +349,11 @@
           <!-- Navigation arrows -->
           <div class="absolute inset-0 flex items-center justify-between p-4" *ngIf="images.length > 1">
             <button (click)="prevImage()"
-              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full flex items-center justify-center transition-all">
+              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-full flex items-center justify-center transition-all">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
             <button (click)="nextImage()"
-              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white rounded-full flex items-center justify-center transition-all">
+              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-full flex items-center justify-center transition-all">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
@@ -364,7 +364,9 @@
       <div class="flex gap-2 justify-center" *ngIf="images.length > 1">
         <div *ngFor="let image of images; let i = index" (click)="currentImageIndex = i"
           class="w-20 h-20 border-2 rounded-lg overflow-hidden cursor-pointer transition-all"
-          [class.border-blue-500]="i === currentImageIndex" [class.border-gray-300]="i !== currentImageIndex">
+          [class.border-blue-500]="i === currentImageIndex" 
+          [class.border-gray-300]="i !== currentImageIndex"
+          [class.dark:border-gray-600]="i !== currentImageIndex">
           <img [src]="image.src" [alt]="image.alt" class="w-full h-full object-cover">
         </div>
       </div>

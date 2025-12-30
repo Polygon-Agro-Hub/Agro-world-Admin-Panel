@@ -53,7 +53,7 @@
             type="file"
             #logoInput
             id="logo"
-            accept="image/*"
+            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
             (change)="onLogoSelected($event)"
             hidden
           />
@@ -61,7 +61,7 @@
 
         <!-- Validation error -->
         <div *ngIf="logoError" class="text-red-500 text-sm mt-2">
-          Please upload a valid image file.
+          Please upload a valid image file (JPG, PNG, or WebP).
         </div>
         <div *ngIf="logoRequiredError" class="text-red-500 text-sm mt-2">
           Company logo is required.

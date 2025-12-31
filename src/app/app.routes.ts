@@ -1651,13 +1651,6 @@ export const routes: Routes = [
             data: { permission: 'GoviLink Complaint' },
           },
           {
-            path: 'driver-complain/:id',
-            component: DriverComplainComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Reply Driver complaint' },
-          },
-
-          {
             path: 'driver-complaints',
             canActivate: [PermissionGuard],
             data: { permission: 'driver Complaints' },
@@ -1667,6 +1660,12 @@ export const routes: Routes = [
                 component: ViewDriverComplaintsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'view driver Complaints' },
+              },
+              {
+                path: 'view-each-complain/:id',
+                component: DriverComplainComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Reply Driver complaint' },
               },
             ],
           },
@@ -1860,4 +1859,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

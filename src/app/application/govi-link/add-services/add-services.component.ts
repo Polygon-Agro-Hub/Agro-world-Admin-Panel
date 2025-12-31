@@ -351,4 +351,26 @@ export class AddServicesComponent {
     }
   }
 
+  onBack() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!.',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Reset form if needed
+        // Navigate to view services list
+        this.router.navigate(['/govi-link/action/view-services-list']);
+      }
+      // If user clicked "No", do nothing and stay on the page
+    });
+  }
+
 }

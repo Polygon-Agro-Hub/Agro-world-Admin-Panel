@@ -16,6 +16,8 @@ interface NewsItem {
   cropNameSinhala: string;
   cropNameTamil: string;
   category: string;
+  costFeild: string;
+  incomeFeild: string;
   bgColor: string;
   image: string;
 }
@@ -96,6 +98,8 @@ export class CreateCropGroupComponent {
     cropNameSinahala: '',
     cropNameTamil: '',
     parentCategory: '',
+    costFeild: '',
+    incomeFeild: '',
     bgColor: '',
     fileName: '',
   };
@@ -110,6 +114,9 @@ export class CreateCropGroupComponent {
   itemId: number | null = null;
 
   newsItems: NewsItem[] = [];
+
+  isInputClicked: boolean = false;
+  errorMassage: string = ''
 
   constructor(
     private fb: FormBuilder,
@@ -139,10 +146,11 @@ export class CreateCropGroupComponent {
         this.cropCalendarService.getCropGroupById(this.itemId).subscribe({
           next: (response: any) => {
             this.newsItems = response.groups;
-            this.selectUpdateName = response.groups[0].cropNameEnglish;
+            console.log('newsItems', this.newsItems)
+            this.selectUpdateName = response.groups[0]?.cropNameEnglish;
 
-            if (response.groups[0].image) {
-              this.selectedImage = response.groups[0].image;
+            if (response.groups[0]?.image) {
+              this.selectedImage = response.groups[0]?.image;
               this.selectedFileName = 'Existing Image';
             }
 
@@ -187,6 +195,11 @@ export class CreateCropGroupComponent {
       };
       reader.readAsDataURL(file);
     }
+    if (this.isInputClicked && !this.selectedFile) {
+      this.errorMassage = 'Please select an image'
+    } else if (this.isInputClicked && this.selectedFile) {
+      this.errorMassage = ''
+    }
   }
 
   onSubmit() {
@@ -197,6 +210,10 @@ export class CreateCropGroupComponent {
       });
     }
     this.imageTouched = true;
+
+    if (this.isInputClicked && !this.selectedFile) {
+      this.errorMassage = 'Please select an image'
+    }
 
     // Collect all validation errors
     const errors: string[] = [];
@@ -215,6 +232,14 @@ export class CreateCropGroupComponent {
 
     if (!this.cropGroup.parentCategory) {
       errors.push('Please select a Parent Category');
+    }
+
+    if (!this.cropGroup.costFeild){
+      errors.push('Please fill the Cost per acre field');
+    }
+
+    if (!this.cropGroup.incomeFeild){
+      errors.push('Please fill the Cost per acre field');
     }
 
     if (!this.cropGroup.bgColor) {
@@ -261,6 +286,8 @@ export class CreateCropGroupComponent {
     formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala);
     formData.append('cropNameTamil', this.cropGroup.cropNameTamil);
     formData.append('category', this.cropGroup.parentCategory);
+    formData.append('costFeild', this.cropGroup.costFeild);
+    formData.append('incomeFeild', this.cropGroup.incomeFeild);
     formData.append('bgColor', this.cropGroup.bgColor);
 
     // Add the file only if it exists
@@ -334,6 +361,8 @@ export class CreateCropGroupComponent {
           cropNameSinahala: '',
           cropNameTamil: '',
           parentCategory: '',
+          costFeild: '',
+          incomeFeild: '',
           bgColor: '',
           fileName: '',
         };
@@ -358,152 +387,175 @@ export class CreateCropGroupComponent {
     this.imageTouched = true;
     const fileInput = document.getElementById('imageUpload') as HTMLElement;
     fileInput.click();
+    this.isInputClicked = true;
+    // if (this.isInputClicked && !this.selectedFile) {
+    //   this.errorMassage = 'Please select an image'
+    // } else if (this.isInputClicked && this.selectedFile) {
+    //   this.errorMassage = 'Please select an image'
+    // }
   }
 
   onColorChange(event: any): void {
     this.cropGroup.bgColor = event.color.hex;
   }
 
+  onColorChangeEdit(event: any): void {
+    console.log('triggered')
+    this.newsItems[0].bgColor = event.color.hex;
+    console.log('this.newsItems[0].bgColor', this.newsItems[0].bgColor)
+  }
+
   updateNews() {
-    // Mark all fields as touched to trigger validation messages
-    if (this.cropForm) {
-      Object.keys(this.cropForm.controls).forEach(key => {
-        this.cropForm.controls[key].markAsTouched();
-      });
-    }
-
-    // Collect all validation errors
-    const errors: string[] = [];
-
-    if (!this.newsItems[0].cropNameEnglish) {
-      errors.push('Please fill the Crop Name in English');
-    }
-
-    if (!this.newsItems[0].cropNameSinhala) {
-      errors.push('Please fill the Crop Name in Sinhala');
-    }
-
-    if (!this.newsItems[0].cropNameTamil) {
-      errors.push('Please fill the Crop Name in Tamil');
-    }
-
-    if (!this.newsItems[0].category) {
-      errors.push('Please select a Parent Category');
-    }
-
-    if (!this.newsItems[0].bgColor) {
-      errors.push('Please choose a Background Color');
-    }
-
-    // If there are validation errors, show them in SweetAlert
-    if (errors.length > 0) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Validation Errors',
-        html: errors.join('<br>'),
-        confirmButtonText: 'OK',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    const token = this.tokenService.getToken();
-    if (!token) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Authentication token not found',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    if (!this.newsItems || this.newsItems.length === 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No crop group data found',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      return;
-    }
-
-    const newsItem = this.newsItems[0];
-
-    const formData = new FormData();
-    formData.append('cropNameEnglish', newsItem.cropNameEnglish || '');
-    formData.append('cropNameSinhala', newsItem.cropNameSinhala || '');
-    formData.append('cropNameTamil', newsItem.cropNameTamil || '');
-    formData.append('category', newsItem.category || '');
-    formData.append('bgColor', newsItem.bgColor || '');
-
-    // Add the file only if it exists
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
+  // Mark all fields as touched to trigger validation messages
+  if (this.cropForm) {
+    Object.keys(this.cropForm.controls).forEach(key => {
+      this.cropForm.controls[key].markAsTouched();
     });
+  }
 
-    this.isLoading = true;
+  // Collect all validation errors
+  const errors: string[] = [];
 
-    this.http
-      .put(
-        `${environment.API_URL}crop-calendar/update-crop-group/${this.itemId}/${this.selectUpdateName}`,
-        formData,
-        { headers }
-      )
-      .subscribe(
-        (res: any) => {
-          if (res.status) {
-            this.isLoading = false;
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Crop group has been updated successfully',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-              },
-            });
-            this.router.navigate(['/plant-care/action/view-crop-group']);
-          } else {
-            this.isLoading = false;
-            Swal.fire({
-              icon: 'error',
-              title: 'Unsuccess',
-              text: res.message,
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-              },
-            });
-          }
-        },
-        (error) => {
+  if (!this.newsItems[0].cropNameEnglish) {
+    errors.push('Please fill the Crop Name in English');
+  }
+
+  if (!this.newsItems[0].cropNameSinhala) {
+    errors.push('Please fill the Crop Name in Sinhala');
+  }
+
+  if (!this.newsItems[0].cropNameTamil) {
+    errors.push('Please fill the Crop Name in Tamil');
+  }
+
+  if (!this.newsItems[0].category) {
+    errors.push('Please select a Parent Category');
+  }
+
+  // Add validation for cost and income fields
+  if (!this.newsItems[0].costFeild) {
+    errors.push('Please fill the Cost per acre field');
+  }
+
+  if (!this.newsItems[0].incomeFeild) {
+    errors.push('Please fill the Income per acre field');
+  }
+
+  if (!this.newsItems[0].bgColor) {
+    errors.push('Please choose a Background Color');
+  }
+
+  // If there are validation errors, show them in SweetAlert
+  if (errors.length > 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Validation Errors',
+      html: errors.join('<br>'),
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  const token = this.tokenService.getToken();
+  if (!token) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Authentication token not found',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  if (!this.newsItems || this.newsItems.length === 0) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No crop group data found',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+    });
+    return;
+  }
+
+  const newsItem = this.newsItems[0];
+
+  const formData = new FormData();
+  formData.append('cropNameEnglish', newsItem.cropNameEnglish || '');
+  formData.append('cropNameSinhala', newsItem.cropNameSinhala || '');
+  formData.append('cropNameTamil', newsItem.cropNameTamil || '');
+  formData.append('category', newsItem.category || '');
+  formData.append('costFeild', newsItem.costFeild || ''); // Add cost field
+  formData.append('incomeFeild', newsItem.incomeFeild || ''); // Add income field
+  formData.append('bgColor', newsItem.bgColor || '');
+
+  // Add the file only if it exists
+  if (this.selectedFile) {
+    formData.append('image', this.selectedFile);
+  }
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
+
+  this.isLoading = true;
+
+  this.http
+    .put(
+      `${environment.API_URL}crop-calendar/update-crop-group/${this.itemId}/${this.selectUpdateName}`,
+      formData,
+      { headers }
+    )
+    .subscribe(
+      (res: any) => {
+        if (res.status) {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Crop group has been updated successfully',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+            },
+          });
+          this.router.navigate(['/plant-care/action/view-crop-group']);
+        } else {
           this.isLoading = false;
           Swal.fire({
             icon: 'error',
-            title: 'Unsuccessful',
-            text: 'Error updating crop group',
+            title: 'Unsuccess',
+            text: res.message,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
             },
           });
         }
-      );
-  }
+      },
+      (error) => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Unsuccessful',
+          text: 'Error updating crop group',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+        });
+      }
+    );
+}
 
   ischeckEnglish = false;
 
@@ -560,5 +612,30 @@ export class CreateCropGroupComponent {
       event.preventDefault();
     }
   }
+
+  // Allow only numbers and decimal point (.)
+allowOnlyNumbers(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const char = event.key;
+  
+  // Prevent leading spaces
+  if (char === ' ' && input.selectionStart === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Allow: backspace, delete, tab, escape, enter, decimal point
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter'];
+  
+  // Allow decimal point only if there isn't already one in the input
+  if (char === '.' && !input.value.includes('.')) {
+    return;
+  }
+  
+  // Allow numeric keys (0-9) and allowed control keys
+  if (!/^\d$/.test(char) && !allowedKeys.includes(char)) {
+    event.preventDefault();
+  }
+}
 
 }

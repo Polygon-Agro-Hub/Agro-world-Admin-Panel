@@ -5,16 +5,6 @@
   Back
 </button>
 
-<div class="flex space-x-4">
-  <button *ngIf="permissionService.hasPermission('GoVi Link jobs view add job') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center">
-    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-        stroke-linejoin="round" />
-    </svg>
-    Add New
-  </button>
-</div>
-
 <div
   class="overflow-x-auto scrollbar-thin scrollbar-thumb-yellow-300 scrollbar-track-transparent dark:scrollbar-thumb-yellow-300 scrollbar-thumb-rounded-lg">
   <div class="min-w-[2000px] bg-white dark:bg-tileBlack shadow-lg rounded-lg relative p-8">
@@ -106,13 +96,21 @@
                 Completed Date</th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">On
                 Screen Time</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Status
-              </th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Assigned
-                On</th>
+
+                <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Status
+                </th>
+              
+              
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Assigned
-                By
+                Admin
               </th>
+
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Assigned
+                Officer
+              </th>
+
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">Last Assigned On</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -136,7 +134,7 @@
                 {{ item.empId }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
-                {{ item.regCode }}
+                {{ item.farmId }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
                 {{ item.visitPurpose }}
@@ -159,11 +157,17 @@
               <td class="px-6 py-3 text-center text-sm font-medium whitespace-nowrap" [ngClass]="getStatusClass(item.status)">
                 {{ item.status }}
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap" >
-                {{ item.assignedOn }}
-              </td>
+              
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
                 {{ item.assignedByName }}
+              </td>
+
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
+                {{ item.assignedOfficer }}
+              </td>
+
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap" >
+                {{ item.assignedOn }}
               </td>
             </tr>
           </tbody>

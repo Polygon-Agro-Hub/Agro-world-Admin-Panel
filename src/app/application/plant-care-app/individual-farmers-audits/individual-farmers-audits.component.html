@@ -5,7 +5,7 @@
 </button>
 
 <div class="overflow-x-auto">
-  <div class="min-w-[1450px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-5">
+  <div class="min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-5">
     <div>
       <div class="flex items-center justify-between">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-6">
@@ -74,7 +74,11 @@
               Assign
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
-              Assign By
+              Assigned Admin
+            </th>
+
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Assigned Officer
             </th>
           </tr>
         </thead>
@@ -122,6 +126,10 @@
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ audit.userName || "--" }}
+            </td>
+
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ audit.officerEmpId }}
             </td>
           </tr>
         </tbody>

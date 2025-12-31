@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssignCenterTargetComponent } from '../assign-center-target/assign-center-target.component';
 import { SelectVarietyListComponent } from '../select-variety-list/select-variety-list.component';
 import { Location } from '@angular/common';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-add-daily-target',
@@ -38,7 +40,10 @@ export class AddDailyTargetComponent {
   isSaveButtonDisabled = false;
   iscountDown = true;
 
-  constructor(private route: ActivatedRoute, private router: Router, private location: Location) {}
+  constructor(private route: ActivatedRoute, private router: Router, private location: Location,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) {}
 
   ngOnInit(): void {
     this.dailyTartgetObj.centerId = this.route.snapshot.params['id'];

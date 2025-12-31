@@ -1,0 +1,100 @@
+<div class="space-y-5 p-10" *ngIf="financeInfo">
+
+    <!-- 01. Account holder's name -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">01.</span> Account holder's name
+        </label>
+        <input type="text" [value]="financeInfo.accHolder || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
+                   bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark" />
+    </div>
+
+    <!-- 02. Account number -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">02.</span> Account number
+        </label>
+        <input type="text" [value]="financeInfo.accNum || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
+                   bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark" />
+    </div>
+
+    <!-- 04. Bank name -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">04.</span> Bank name
+        </label>
+        <input type="text" [value]="financeInfo.bank || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
+                   bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark" />
+    </div>
+
+    <!-- 05. Branch name -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">05.</span> Branch name
+        </label>
+        <input type="text" [value]="financeInfo.branch || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
+                   bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark" />
+    </div>
+
+    <!-- 06. Existing debts -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">06.</span> Existing debts of the farmer
+        </label>
+        <input type="text" [value]="financeInfo.debtsOfFarmer || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
+                   bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark" />
+    </div>
+
+    <!-- 07. Dependents -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">07.</span> No. of Dependents
+        </label>
+        <input type="text" [value]="financeInfo.noOfDepartments || '-'" readonly
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
+                   bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark" />
+    </div>
+
+    <!-- 08. Assets -->
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-3">
+            <span class="text-gray-400 dark:text-textDark">08.</span> Assets owned by the farmer
+        </label>
+
+        <div class="bg-white dark:bg-tileBlack border border-gray-200 dark:border-gray-600 
+                   rounded-lg p-4 text-sm text-gray-800 dark:text-textDark space-y-2">
+
+            <div *ngIf="financeInfo.assetsLand.Land.length" class="dark:text-textDark">
+                <span class="font-semibold w-32 inline-block dark:text-textDark">Land</span> :
+                {{ financeInfo.assetsLand.Land.join(', ') }}
+            </div>
+
+            <div *ngIf="financeInfo.assetsBuilding.Building.length" class="dark:text-textDark">
+                <span class="font-semibold w-32 inline-block dark:text-textDark">Building</span> :
+                {{ financeInfo.assetsBuilding.Building.join(', ') }}
+            </div>
+
+            <div *ngIf="financeInfo.assetsVehicle.Vehicle.length" class="dark:text-textDark">
+                <span class="font-semibold w-32 inline-block dark:text-textDark">Vehicle</span> :
+                {{ financeInfo.assetsVehicle.Vehicle.join(', ') }}
+            </div>
+
+            <div *ngIf="financeInfo.assetsMachinery.Machinery.length" class="dark:text-textDark">
+                <span class="font-semibold w-32 inline-block dark:text-textDark">Machinery</span> :
+                {{ financeInfo.assetsMachinery.Machinery.join(', ') }}
+            </div>
+
+            <div *ngIf="financeInfo.assetsFarmTool" class="dark:text-textDark">
+                <span class="font-semibold w-32 inline-block dark:text-textDark">Special Farm Tools</span> :
+                {{ financeInfo.assetsFarmTool }}
+            </div>
+
+        </div>
+    </div>
+
+</div>

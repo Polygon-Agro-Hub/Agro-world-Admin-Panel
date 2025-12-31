@@ -12,6 +12,7 @@
   ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
+   
   }
   
   ::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
@@ -26,9 +27,9 @@
 
     /* Reduce dropdown item padding */
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+  padding-left: 1rem !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+  padding-left: 1rem !important;
 }

@@ -1,0 +1,126 @@
+<div class="space-y-5 p-10" *ngIf="idInfo">
+  <!-- 01. ID Proof Type -->
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+    <label
+      class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2"
+    >
+      <span class="text-gray-500 dark:text-textDark">01. ID Proof Type</span>
+    </label>
+    <input
+      type="text"
+      [value]="getProofTypeDisplay()"
+      readonly
+      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark text-lg"
+    />
+  </div>
+
+  <!-- 02. ID Number -->
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      <span class="text-gray-400 dark:text-textDark">02.</span> {{ getProofTypeDisplay() }} Number
+    </label>
+    <input
+      type="text"
+      [value]="idInfo.pNumber || '-'"
+      readonly
+      class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
+                 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+    />
+  </div>
+
+  <!-- 03. Front Photo -->
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
+      <span class="text-gray-400 dark:text-textDark">03.</span> {{ getProofTypeDisplay() }} Front
+      Photo
+    </label>
+    <button
+      (click)="openModal('front')"
+      [disabled]="!idInfo.frontImg"
+      class="flex items-center gap-2 bg-black dark:bg-gray-700 text-white dark:text-textDark 
+             px-5 py-2.5 rounded-lg disabled:opacity-40 hover:bg-gray-800 dark:hover:bg-gray-600 
+             transition-colors"
+    >
+      <i class="fa-solid fa-eye"></i> View Photo
+    </button>
+  </div>
+
+  <!-- 04. Back Photo -->
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
+      <span class="text-gray-400 dark:text-textDark">04.</span> {{ getProofTypeDisplay() }} Back
+      Photo
+    </label>
+    <button
+      (click)="openModal('back')"
+      [disabled]="!idInfo.backImg"
+      class="flex items-center gap-2 bg-black dark:bg-gray-700 text-white dark:text-textDark 
+             px-5 py-2.5 rounded-lg disabled:opacity-40 hover:bg-gray-800 dark:hover:bg-gray-600 
+             transition-colors"
+    >
+      <i class="fa-solid fa-eye"></i> View Photo
+    </button>
+  </div>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div
+  *ngIf="isModalOpen"
+  class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
+>
+  <!-- Modal Container -->
+  <div
+    class="bg-white dark:bg-gray-800 rounded-[20px] w-[700px] h-[700px] p-6 relative flex items-center justify-center"
+  >
+    <!-- Title -->
+    <div class="absolute top-4 left-0 w-full text-center">
+      <h2 class="text-sm font-semibold dark:text-textDark">
+        {{ modalTitle }}
+      </h2>
+    </div>
+
+    <!-- Image Frame -->
+    <div
+      class="bg-white dark:bg-gray-700 border border-[#D9D9D9] dark:border-gray-600 
+             rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative"
+    >
+      <img
+        [src]="modalImage"
+        [style.transform]="'scale(' + scale + ')'"
+        class="w-[545px] h-[545px] object-contain transition"
+        alt="ID Image"
+      />
+
+      <!-- Zoom Buttons -->
+      <div class="absolute right-4 bottom-6 flex flex-col gap-3">
+        <button
+          (click)="zoomOut()"
+          class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
+                 border dark:border-gray-500 shadow text-xl dark:text-textDark
+                 hover:bg-gray-100 dark:hover:bg-gray-500"
+        >
+          −
+        </button>
+        <button
+          (click)="zoomIn()"
+          class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
+                 border dark:border-gray-500 shadow text-xl dark:text-textDark
+                 hover:bg-gray-100 dark:hover:bg-gray-500"
+        >
+          +
+        </button>
+      </div>
+    </div>
+
+    <!-- Close Button -->
+    <button
+      (click)="closeModal()"
+      class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 
+             hover:text-gray-700 dark:hover:text-white text-xl"
+    >
+      ✕
+    </button>
+  </div>
+</div>

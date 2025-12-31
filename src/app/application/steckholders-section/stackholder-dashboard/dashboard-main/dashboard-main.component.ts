@@ -10,6 +10,7 @@ import { SalesAgentsRowComponent } from '../sales-agents-row/sales-agents-row.co
 import { DistributionOfficerUsersRowComponent } from '../distribution-officer-users-row/distribution-officer-users-row.component';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { jsPDF } from 'jspdf';
+import { DriverRowComponent } from '../driver-row/driver-row.component';
 
 @Component({
   selector: 'app-dashboard-main',
@@ -23,6 +24,7 @@ import { jsPDF } from 'jspdf';
     SalesAgentsRowComponent,
     DistributionOfficerUsersRowComponent,
     LoadingSpinnerComponent,
+    DriverRowComponent,
   ],
   templateUrl: './dashboard-main.component.html',
   styleUrl: './dashboard-main.component.css',
@@ -33,12 +35,13 @@ export class DashboardMainComponent implements OnInit {
   thirdRow: any = {};
   fourthRow: any = {};
   fifthRow: any = {};
+  sixthRow: any = {};
   isLoading = false;
   adminRowData: any = {};
   collectionOfficerRowData: any = {};
   salesAgentRowData: any = {};
   plantCareRowData: any = {};
-  distributionOfficerRowData: any = {}; 
+  distributionOfficerRowData: any = {};
   isDownloading: boolean = false;
   currentDate = new Date().toISOString().split('T')[0];
 
@@ -52,11 +55,14 @@ export class DashboardMainComponent implements OnInit {
     this.isLoading = true;
     this.stakeholderSrv.getAdminUserData().subscribe(
       (res) => {
+        console.log('data', res);
+
         this.firstRow = res.firstRow;
         this.secondRow = res.secondRow;
         this.thirdRow = res.thirdRow;
         this.fourthRow = res.fourthRow;
         this.fifthRow = res.fifthRow;
+        this.sixthRow = res.sixthRow;
         this.isLoading = false;
       },
       () => {
@@ -83,6 +89,10 @@ export class DashboardMainComponent implements OnInit {
 
   // Add this new event handler
   onDistributionOfficerDataEmitted(data: any) {
+    this.distributionOfficerRowData = data;
+  }
+
+  onDriverDataEmitted(data: any) {
     this.distributionOfficerRowData = data;
   }
 
@@ -123,7 +133,9 @@ export class DashboardMainComponent implements OnInit {
 
         // Generate filename with today's date only
         const today = new Date();
-        const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+        const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
         const fileName = `Stakeholder Dashboard Report on ${currentDate}.pdf`;
 
         doc.setFontSize(18);
@@ -322,7 +334,8 @@ export class DashboardMainComponent implements OnInit {
         );
 
         const QRpresentage = this.plantCareRowData.QRpresentageForOutput || 0;
-        const nonQRpresentage = this.plantCareRowData.nonQRpresentageForOutput || 0;
+        const nonQRpresentage =
+          this.plantCareRowData.nonQRpresentageForOutput || 0;
         const barWidth = boxWidth * 0.35;
         const barMaxHeight = secondRowBoxHeight * 0.55;
         const startX = box5X + (boxWidth - (2 * barWidth + 5)) / 2;
@@ -516,7 +529,7 @@ export class DashboardMainComponent implements OnInit {
           'Distribution Officers',
           `${this.distributionOfficerRowData.distributionOfficers || 0}`
         );
-        
+
         // Fifth Row - Sales Agents
         const row5YAdjustment = getY(4) + (secondRowBoxHeight - baseBoxHeight);
         drawBox(

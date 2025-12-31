@@ -301,10 +301,10 @@
                 permissionService.hasPermission('Manage sales agent') ||
                 tokenService.getUserDetails().role === '1'
               "
-              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+              class="px-2 py-3 text-center text-textLight dark:text-textDark"
             >
               <button *ngIf="permissionService.hasPermission('Edit sales agent') ||tokenService.getUserDetails().role === '1'"
-                class="w-6 h-6 mr-2 ml-2 text-[#367bfa] hover:text-[#83aefd]"
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="editCompanyHead(item.id)"
               >
                 <svg
@@ -326,10 +326,10 @@
                 permissionService.hasPermission('Delete(remove) sales agent') ||
                 tokenService.getUserDetails().role === '1'
               "
-              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+              class="px-2 py-3 text-center text-textLight dark:text-textDark"
             >
               <button
-                class="w-6 h-6 ml-2 mr-2 text-[#fc3636] hover:text-[#f38f8f]"
+                class="w-6 h-6 text-[#fc3636] hover:text-[#f38f8f]"
                 (click)="deleteSalesAgent(item.id)"
               >
                 <svg

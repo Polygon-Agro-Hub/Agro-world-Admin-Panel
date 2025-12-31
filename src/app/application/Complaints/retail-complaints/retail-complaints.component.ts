@@ -23,6 +23,7 @@ interface Complaint {
   status: string;
   reply?: string;
   complain: string;
+  replyBy: string | null;
 }
 
 interface DropdownOption {
@@ -109,11 +110,12 @@ export class RetailComplaintsComponent implements OnInit {
             complainCategory: item.categoryEnglish,
             firstName: item.firstName,
             lastName: item.lastName,
-            contactNumber: item.ContactNumber,
+            contactNumber: item.ContactNumber ? item.ContactNumber.replace(/-/g, '') : '', // Remove hyphens here
             createdAt: this.formatDate(item.createdAt),
             status: this.normalizeStatus(item.status, item.createdAt),
             reply: item.reply || undefined,
             complain: item.complain,
+            replyBy: item.replyBy || null,
           }))
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.filteredComplaints = [...this.complaints];
@@ -249,8 +251,7 @@ export class RetailComplaintsComponent implements OnInit {
     this.messageContent = '';
   }
 
-
   submitReply(): void {
-
+    // Implementation for submitting reply if needed
   }
 }

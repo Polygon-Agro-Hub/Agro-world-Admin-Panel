@@ -5,6 +5,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 import { CalendarModule } from 'primeng/calendar';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-govi-link-jobs',
@@ -70,7 +72,8 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   jobDetails: any = null;
   isLoadingJobDetails = false;
 
-  constructor(private goviLinkService: GoviLinkService) {}
+  constructor(private goviLinkService: GoviLinkService, public tokenService: TokenService,
+    public permissionService: PermissionService) { }
 
   ngOnInit(): void {
     this.dateFilter = new Date();
@@ -225,14 +228,15 @@ export class ViewGoviLinkJobsComponent implements OnInit {
     }
   }
 
-  // Load officers by role
+  // Load officers by role - updated method
   loadOfficersByRole(role: string): void {
     this.isLoadingOfficers = true;
 
-    // Use the job's scheduled date when fetching available officers
+    // Use the job's scheduled date and jobId when fetching available officers
     const scheduleDate = this.selectedJob?.scheduledDate;
+    const jobId = this.selectedJob?.jobId;
 
-    this.goviLinkService.getOfficersByJobRole(role, scheduleDate).subscribe({
+    this.goviLinkService.getOfficersByJobRole(role, scheduleDate, jobId).subscribe({
       next: (response) => {
         this.isLoadingOfficers = false;
         if (response.success && response.data) {
@@ -265,6 +269,11 @@ export class ViewGoviLinkJobsComponent implements OnInit {
         this.assignError = 'Failed to load officers';
       },
     });
+  }
+
+  onOfficerCleared() {
+    this.selectedOfficerId = '';
+    this.selectedOfficerInfo = null;
   }
 
   // When officer is selected

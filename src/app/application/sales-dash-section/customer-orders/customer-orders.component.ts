@@ -50,13 +50,18 @@ export class CustomerOrdersComponent implements OnInit {
 
   // Status mapping for UI buttons to API values
   private statusMap: { [key: string]: string } = {
-    assigned: 'Assinged',
+    assigned: 'Assigned',
     processing: 'Processing',
+    hold: 'Hold',
+    collected: 'Collected',
+    ontheway: 'On the way',
+    outForDelivery: 'Out For Delivery',
+    readyToPickup: 'Ready to Pickup',
+    pickedUp: 'Picked up',
     delivered: 'Delivered',
-    ontheway: 'Out For Delivery',
+    return: 'Return',
+    returnReceived: 'Return Received',
     cancelled: 'Cancelled',
-    failed: 'Faild',
-    "Out For Delivery" : "Out For Delivery"
   };
 
   constructor(
@@ -68,7 +73,7 @@ export class CustomerOrdersComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private finalInvoiceService: FinalinvoiceService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -105,7 +110,6 @@ export class CustomerOrdersComponent implements OnInit {
     const apiStatus = this.statusMap[this.activeButton] || 'Ordered';
     console.log(this.activeButton, apiStatus);
 
-
     this.dasService
       .fetchUserOrders(this.userId, apiStatus)
       .pipe(finalize(() => (this.isLoading = false)))
@@ -131,14 +135,22 @@ export class CustomerOrdersComponent implements OnInit {
 
   getStatusClass(status: string): string {
     const statusClasses: { [key: string]: string } = {
-      Assinged: 'bg-[#E6F0FF] text-[#415CFF]',
-      Processing: 'bg-[#FFF8E6] text-[#FFB800]',
-      Delivered: 'bg-[#E6FFEE] text-[#00A441]',
-      'On the way': 'bg-[#F3E6FF] text-[#8A3FFC]',
-      Cancelled: 'bg-[#FFE6E6] text-[#FF0000]',
-      Faild: 'bg-[#FFE6E6] text-[#FF0000]',
+      Assigned: 'bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2',
+      Processing: 'bg-[#CFE1FF] text-[#3B82F6] rounded-xl px-5 py-2',
+      'Out For Delivery': 'bg-[#FCD4FF] text-[#80118A] rounded-xl px-5 py-2',
+      'Ready to Pickup': 'bg-[#ACFBFF] text-[#00818A] rounded-xl px-5 py-2',
+      'Picked up': 'bg-[#BBFFC6] text-[#308233] rounded-xl px-5 py-2',
+      Collected: 'bg-[#F8FEA5] text-[#7E8700] rounded-xl px-5 py-2',
+      'On the way': 'bg-[#FFEDCF] text-[#D17A00] rounded-xl px-5 py-2',
+      Delivered: 'bg-[#BBFFC6] text-[#308233] rounded-xl px-5 py-2',
+      Hold: 'bg-[#FFEDCF] text-[#D17A00] rounded-xl px-5 py-2',
+      Return: 'bg-[#FFDCDA] text-[#FF1100] rounded-xl px-5 py-2',
+      'Return Received': 'bg-[#FFDCDA] text-[#FF1100] rounded-xl px-5 py-2',
+      Cancelled: 'bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-5 py-2',
     };
-    return statusClasses[status] || 'bg-gray-100 text-gray-800';
+    return (
+      statusClasses[status] || 'bg-gray-100 text-gray-800 rounded-xl px-5 py-2'
+    );
   }
 
   async downloadInvoice(orderId: string, invoiceNumber: string): Promise<void> {

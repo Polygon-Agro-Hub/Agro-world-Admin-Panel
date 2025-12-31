@@ -46,6 +46,10 @@ export class FinanceActionMainComponent {
     this.router.navigate(['/finance/action/viewAll-payments']);
   }
 
+  AgentsCommisionNavigation(): void {
+    this.router.navigate(['/finance/action/agents-commission']);
+  }
+
   togglePopupCropCalender() {
     this.popupVisibleCropCalender = !this.popupVisibleCropCalender;
     if ((this.popupVisibleNews = true)) {
@@ -58,5 +62,9 @@ export class FinanceActionMainComponent {
 
   invesmentRequest(): void {
     this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests']);
+  }
+
+  publishedProjects() {
+    this.router.navigate(['/finance/action/finance-govicapital/published-projects']);
   }
 }

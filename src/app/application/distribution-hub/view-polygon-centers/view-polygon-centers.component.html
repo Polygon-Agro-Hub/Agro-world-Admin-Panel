@@ -42,13 +42,11 @@
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] group relative">
           <input type="text" placeholder="Search.."
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchItem"
-            (keydown.enter)="searchPlantCareUsers()" (keydown)="onSearchKeydown($event)"
-            />
-            <div
-            class="absolute top-full mt-2 
+            (keydown.enter)="searchPlantCareUsers()" (keydown)="onSearchKeydown($event)" />
+          <div class="absolute top-full mt-2 
                    bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 
                    group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                   Search by Company, Centre Name, City
+            Search by Company, Centre Name, City
           </div>
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             (click)="searchPlantCareUsers()" title="Search">
@@ -96,15 +94,38 @@
             <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
               Contact Number 01
             </th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
+            <th *ngIf="
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view location') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution center view location') ) ||
+        tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
               Location
             </th>
-            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">
+            <th *ngIf="
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view dashboard') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution view dashboard') ) ||
+        tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
               Dashboard
             </th>
-            <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"></th>
-            <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"></th>
-            <th class="py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"></th>
+            <th *ngIf="
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view a distribution centre') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution view a centre') ) ||
+        tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
+            </th>
+            <th *ngIf="
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres edit a distribution centre') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution edit centre') ) ||
+        tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
+            </th>
+            <th *ngIf="
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres delete a distribution centre') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution delete centre') ) ||
+        tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -144,7 +165,10 @@
               <span *ngIf="item.contact01 === null">-</span>
               <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ " " + item.contact01 }}</span>
             </td>
-            <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
+            <td *ngIf="
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view location') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution center view location') ) ||
+        tokenService.getUserDetails().role === '1'" class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               <a *ngIf="item.longitude && item.latitude" href="https://www.google.com/maps?q={{ item.latitude }},{{
                   item.longitude
                 }}" target="_blank" class="text-red-600 hover:text-blue-800 text-xl" title="View on map">
@@ -156,13 +180,19 @@
                 <!-- Disabled/grayed out icon when no coordinates -->
               </span>
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view dashboard') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution view dashboard') ) ||
+        tokenService.getUserDetails().role === '1'" class="px-2 py-3 text-center text-textLight dark:text-textDark">
               <button class="w-6 h-6 text-[#000] hover:text-[#83aefd] dark:text-[#fff] dark:hover:text-[#83aefd]"
                 (click)="viewDistributionCenterDashboard(item.companyCenerId, item.centerName, item.regCode)">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
               </button>
             </td>
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td *ngIf="
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres view a distribution centre') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution view a centre') ) ||
+        tokenService.getUserDetails().role === '1'" class="px-2 py-3 text-left text-textLight dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="viewDistributionCenter(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -173,9 +203,10 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button *ngIf="
-                  permissionService.hasPermission('Edit Collection Center') ||
-                  tokenService.getUserDetails().role === '1'
-                " class="text-blue-400 hover:text-blue-700" (click)="editCenter(item.id)">
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres edit a distribution centre') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution edit centre') ) ||
+        tokenService.getUserDetails().role === '1'" class="text-blue-400 hover:text-blue-700"
+                (click)="editCenter(item.id)">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>pen-to-square</title>
                   <path
@@ -184,9 +215,9 @@
                 </svg>
               </button>
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="editCenter(item.id)" *ngIf="
-                  permissionService.hasPermission('Edit Collection Center') ||
-                  tokenService.getUserDetails().role === '1'
-                ">
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres edit a distribution centre') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution edit centre') ) ||
+        tokenService.getUserDetails().role === '1'">
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>Edit</title>
                   <path
@@ -197,9 +228,10 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button *ngIf="
-                  permissionService.hasPermission('Delete Collection Center') ||
-                  tokenService.getUserDetails().role === '1'
-                " class="text-red-500 hover:text-red-700" (click)="deleteCenter(item.id)">
+        ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon centres delete a distribution centre') ) ||
+        ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder distribution delete centre') ) ||
+        tokenService.getUserDetails().role === '1'" class="text-red-500 hover:text-red-700"
+                (click)="deleteCenter(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                   viewBox="0 0 24 24">
                   <title>Delete</title>

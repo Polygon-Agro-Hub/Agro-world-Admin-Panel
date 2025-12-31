@@ -29,6 +29,7 @@ interface PlantCareUser {
   activeStatus: string;
   profileImage: string;
   created_at: string;
+  membership: string;
 }
 
 interface NewsItem {
@@ -89,10 +90,16 @@ export class ViewPlantcareUsersComponent implements OnInit {
   hasData: boolean = true;
   regStatus: string = '';
   district: string = '';
+  selectPlan: string = '';
 
   registerStatusFilter = [
     { status: 'Registered', value: 'Registered' },
     { status: 'Unregistered', value: 'Unregistered' },
+  ];
+
+  planStatusFilter = [
+    { label: 'PRO', value: 'Pro' },
+    { label: 'BASIC', value: 'Basic' },
   ];
 
   districtFilter = [
@@ -140,13 +147,14 @@ export class ViewPlantcareUsersComponent implements OnInit {
     limit: number = this.itemsPerPage,
     search: string = this.searchNIC,
     regStatus: string = this.regStatus,
-    district: string = this.district
+    district: string = this.district,
+    plan: string = this.selectPlan
   ) {
     this.isLoading = true;
     // Trim the search string to remove leading/trailing spaces
     const trimmedSearch = search.trim();
     this.plantcareService
-      .getAllPlantCareUsers(page, limit, trimmedSearch, regStatus, district)
+      .getAllPlantCareUsers(page, limit, trimmedSearch, regStatus, district, plan)
       .subscribe(
         (response) => {
           this.isLoading = false;
@@ -169,7 +177,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
           } else {
             Swal.fire({
               title: 'Error',
-              text: 'Failed to fetch plant care users.',
+              text: 'Failed to fetch Govi Care users.',
               icon: 'error',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -260,7 +268,7 @@ export class ViewPlantcareUsersComponent implements OnInit {
             (error) => {
               Swal.fire({
                 title: 'Error',
-                text: 'There was a problem deleting the plant care user.',
+                text: 'There was a problem deleting the GoVi Care user.',
                 icon: 'error',
                 customClass: {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -352,48 +360,88 @@ export class ViewPlantcareUsersComponent implements OnInit {
   //   URL.revokeObjectURL(url);
   // }
   downloadTemplate(): void {
-    // this.isDownloading = true;
+  this.isLoading = true;
 
-    try {
-      const headers = ['First Name', 'Last Name', 'Phone Number', 'NIC Number', 'Membership', 'District'];
+  // Define the header row
+  const header = ['First Name', 'Last Name', 'Phone Number', 'NIC Number', 'Membership', 'District'];
 
-      // Create worksheet and workbook in one go
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.aoa_to_sheet([headers]);
-      XLSX.utils.book_append_sheet(wb, ws, 'Template');
+  // Define sample empty data rows
+  const numberOfRowsToGenerate = 10000;
+  const emptyRows = Array.from({ length: numberOfRowsToGenerate }, () => [
+    '', // First Name
+    '', // Last Name
+    '', // Phone Number
+    '', // NIC Number
+    '', // Membership
+    '', // District
+  ]);
 
-      // Download the file
-      XLSX.writeFile(wb, 'bulk_onboarding_template.xlsx');
+  // Combine header and data rows
+  const worksheetData = [header, ...emptyRows];
+  const ws = XLSX.utils.aoa_to_sheet(worksheetData);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Downloaded',
-        text: 'Please check your downloads folder',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-
-      // this.isDownloading = false;
-
-    } catch (error: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Download Failed',
-        text: error.message,
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-        },
-      });
-      // this.isDownloading = false;
+  // Force all columns to be treated as TEXT
+  const range = XLSX.utils.decode_range(ws['!ref']!);
+  
+  // Iterate over all cells in all columns and set them as text
+  for (let R = range.s.r; R <= range.e.r; ++R) {
+    for (let C = 0; C <= 5; ++C) { // All 6 columns
+      const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+      
+      // For phone number column (index 2) and NIC column (index 3)
+      if (C === 2 || C === 3) {
+        // Create or update cell with text format
+        if (!ws[cellAddress]) {
+          ws[cellAddress] = { v: '', t: 's' };
+        } else {
+          ws[cellAddress].t = 's'; // 's' for string type
+        }
+        // Set Excel format to @ which means "text"
+        ws[cellAddress].z = '@';
+      } else {
+        // For other columns, also set as text to be safe
+        if (!ws[cellAddress]) {
+          ws[cellAddress] = { v: '', t: 's' };
+        } else {
+          ws[cellAddress].t = 's';
+        }
+      }
     }
   }
+
+  // Set column widths
+  ws['!cols'] = [
+    { wch: 25 }, // First Name
+    { wch: 20 }, // Last Name
+    { wch: 20 }, // Phone Number (needs space for +94 prefix)
+    { wch: 20 }, // NIC Number
+    { wch: 20 }, // Membership
+    { wch: 20 }, // District
+  ];
+
+  // Create workbook
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Template');
+
+  // Write to XLSX file
+  XLSX.writeFile(wb, 'bulk_onboarding_template.xlsx');
+
+  this.isLoading = false;
+}
 
   viewFarmerStaff(id: number, name: string = '', phone: string = '') {
     this.router.navigate([`/steckholders/action/farmers/view-farmer-staff/${id}`], {
       queryParams: { fname: name, phone: phone }
     })
+  }
+
+  onSearchKeydown(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+
+    // Prevent space at the beginning of input
+    if (event.key === ' ' &&
+      (input.selectionStart === 0 || this.searchNIC === '')) {
+      event.preventDefault();
+    }
   }
 }

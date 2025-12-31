@@ -14,7 +14,7 @@ export class InvestmentRequestsComponent {
   constructor(
     private router: Router,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   goBack() {
     this.router.navigate(['/finance/action']);
@@ -22,5 +22,25 @@ export class InvestmentRequestsComponent {
 
   govicareRequest(): void {
     this.router.navigate(['/finance/action/finance-govicapital/reject-requests']);
+  }
+
+  projectInvestments(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/project-investments']);
+  }
+
+  ViewAllGovicareRequests(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-requests']);
+  }
+
+  ViewApprovedGovicareRequests(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/view-Govicare-approved-requests']);
+  }
+
+  ViewAuditedGovicareRequests(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests']);
+  }
+
+  ViewPublishProjects(): void {
+    this.router.navigate(['/finance/action/finance-govicapital/published-projects']);
   }
 }

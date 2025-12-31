@@ -15,7 +15,7 @@
 
 <div
   class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1600px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
     <div>
       <div class="flex items-center justify-between mb-5">
@@ -125,7 +125,7 @@
             <td class="px-4 py-3 text-center">
               <div class="flex space-x-3 justify-center">
                 <!-- EDIT -->
-                <button *ngIf="permissionService.hasPermission('Edit cluster') || tokenService.getUserDetails().role === '1'"
+                <button *ngIf="permissionService.hasPermission('Edit farmer clusters') || tokenService.getUserDetails().role === '1'"
                   class="text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center w-6 h-6 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   (click)="editCluster(cluster.clusterId!)" [disabled]="isLoading || cluster.status === 'Started'"
                   title="Edit Cluster">
@@ -139,7 +139,7 @@
                 </button>
 
                 <!-- DELETE -->
-                <button *ngIf="permissionService.hasPermission('Delete cluster') || tokenService.getUserDetails().role === '1'"
+                <button *ngIf="permissionService.hasPermission('Delete farmer clusters') || tokenService.getUserDetails().role === '1'"
                   class="text-red-500 hover:text-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   (click)="deleteCluster(cluster.clusterId!)" [disabled]="cluster.status === 'Started'"
                   title="Delete Cluster">

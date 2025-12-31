@@ -40,6 +40,9 @@ export class DistributionViewCompanyComponent implements OnInit {
   searchText: string = '';
   isPopupVisible = false;
 
+  // Add permission flag
+  canApproveReject: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -59,7 +62,24 @@ export class DistributionViewCompanyComponent implements OnInit {
       this.companyId = params['id'] ? +params['id'] : null;
       this.companyName = params['companyName'] ? params['companyName'] : null;
     });
+    
+    // Check permission
+    this.checkPermission();
+    
     this.fetchAllCompanyHeads();
+  }
+
+  // Method to check permission
+  checkPermission(): void {
+    this.canApproveReject = 
+      this.permissionService.hasPermission('Distribution Hub approved/not approved cch') ||
+      this.tokenService.getUserDetails().role === '1';
+  }
+
+  // Alternative method approach (if you prefer using a method instead of property)
+  hasPermission(): boolean {
+    return this.permissionService.hasPermission('Distribution Hub approved/not approved cch') ||
+           this.tokenService.getUserDetails().role === '1';
   }
 
   fetchAllCompanyHeads(
@@ -186,9 +206,7 @@ export class DistributionViewCompanyComponent implements OnInit {
     this.router.navigate([`/distribution-hub/action/view-head-portal/${id}`], {
       queryParams: { isView }
     });
-
   }
-
 
   edit(id: number): void {
     this.router.navigate([
@@ -198,6 +216,22 @@ export class DistributionViewCompanyComponent implements OnInit {
   }
 
   openPopup(item: any) {
+    // Check permission first
+    if (!this.canApproveReject) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Permission Denied',
+        text: 'You do not have permission to change approval status.',
+        timer: 2000,
+        showConfirmButton: false,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
     const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
     const showRejectButton = item.status === 'Approved' || item.status === 'Not Approved';
 

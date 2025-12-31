@@ -51,7 +51,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View all collection officers') || tokenService.getUserDetails().role === '1'">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholders collection officers') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewCoOfficers()"
         type="button"
@@ -97,7 +97,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View collection centers') || tokenService.getUserDetails().role === '1'">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('View Collection Center') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewCollectionCenter()"
         type="button"
@@ -129,7 +129,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholder distribution centres') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewDistributionCenter()"
         type="button"
@@ -148,7 +148,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholders view distribution officer') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewDistribution()"
         type="button"
@@ -194,7 +194,7 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholder collection companies') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewCompaniesAgents()"
         type="button"
@@ -211,7 +211,7 @@
     </div>
 
 
-    <div class="flex justify-center">
+    <div class="flex justify-center" *ngIf="permissionService.hasPermission('Stakeholder distribution companies') || tokenService.getUserDetails().role === '1'">
       <button
         (click)="navigateToViewDistributionCompanies()"
         type="button"
@@ -222,6 +222,22 @@
             <i class="fa-solid fa-warehouse" style="color: #4a90e2"></i>
           </div>
           <span class="ml-3">Distribution Companies</span>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
+      </button>
+    </div>
+
+    <div class="flex justify-center">
+      <button
+        (click)="navigateToViewDrivers()"
+        type="button"
+        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+      >
+        <div class="flex items-center">
+          <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
+            <i class="fa-solid fa-truck " style="color: #4a90e2"></i>
+          </div>
+          <span class="ml-3">Driver</span>
         </div>
         <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </button>

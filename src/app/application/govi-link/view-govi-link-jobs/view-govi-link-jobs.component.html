@@ -204,6 +204,7 @@
               Status
             </th>
             <th
+            *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Assign
@@ -221,7 +222,13 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Assigned By
+              Assigned Admin
+            </th>
+
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Assigned Officer
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
@@ -248,10 +255,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ job.district }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td  class="px-4 py-3 text-center text-textLight dark:text-textDark cursor-pointer">
               <span
-                class="px-2 py-1 rounded-full text-xs font-medium"
-                [ngClass]="{
+                class="px-2 py-1 rounded-full font-medium cursor-pointer"
+                [ngClass]=" {
                   'text-red-500': job.status === 'Pending',
                   'text-green-500': job.status === 'Completed',
                   'bg-gray-200 text-gray-800': !job.status
@@ -260,9 +267,11 @@
                 {{ job.status || "--" }}
               </span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            *ngIf="permissionService.hasPermission('Assign govi link jobs assign inspectors') || tokenService.getUserDetails().role === '1'"
+            class="px-4 py-3 text-center text-textLight dark:text-textDark cursor-pointer">
               <span
-                class="px-2 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity"
+                class="px-2 py-2 rounded-lg text-sm font-medium cursor-pointer hover:opacity-80 transition-opacity"
                 [ngClass]="{
                   'bg-[#BBFFC6] text-[#308233] cursor-pointer hover:bg-green-200':
                     job.assignStatus === 'Assigned',
@@ -282,9 +291,13 @@
               {{ job.createdAt | date : "dd/MM/yyyy HH:mm" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ job.assignedBy || "--" }}
+              {{ job.assignedByAdmin || "--" }}
             </td>
-            <td class="text-center flex justify-center mt-3 space-x-3">
+
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ job.assignedByEmpId || "--" }}
+            </td>
+            <td *ngIf="permissionService.hasPermission('Assign govi link jobs view request') || tokenService.getUserDetails().role === '1'" class="text-center flex justify-center mt-3 space-x-3">
               <!-- VIEW -->
               <button
                 class="w-6 h-6 text-blue-500 hover:text-blue-700"
@@ -386,38 +399,34 @@
     </div>
 
     <!-- Officer Selection -->
-    <div class="flex flex-col mb-4 w-full">
-      <label
-        class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
-      >
-        Officer
-      </label>
-      <p-dropdown
-        [options]="availableOfficers"
-        [(ngModel)]="selectedOfficerId"
-        optionLabel="displayName"
-        optionValue="empId"
-        placeholder="--Select Officer--"
-        [showClear]="true"
-        appendTo="body"
-        [disabled]="!selectedOfficerRole || isLoadingOfficers"
-        (onChange)="onOfficerSelected()"
-        styleClass="w-96 border border-2 rounded-lg h-12"
-      >
-        <ng-template pTemplate="empty">
-          <div class="p-2 text-center text-gray-500">
-            {{
-              selectedOfficerRole
-                ? "No officers available"
-                : "Please select a role first"
-            }}
-          </div>
-        </ng-template>
-      </p-dropdown>
-      <div *ngIf="isLoadingOfficers" class="text-sm text-gray-500 mt-1">
-        Loading officers...
+   <div class="flex flex-col mb-4 w-full">
+  <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
+    Officer
+  </label>
+  <p-dropdown
+    [options]="availableOfficers"
+    [(ngModel)]="selectedOfficerId"
+    optionLabel="displayName"
+    optionValue="empId"
+    placeholder="--Select Officer--"
+    [showClear]="true"
+    appendTo="body"
+    [disabled]="!selectedOfficerRole || isLoadingOfficers"
+    (onChange)="onOfficerSelected()"
+    (onClear)="onOfficerCleared()"
+    [style]="{'width': '100%'}"
+    styleClass="w-96 border border-2 rounded-lg h-12"
+  >
+    <ng-template pTemplate="empty">
+      <div class="p-2 text-center text-gray-500">
+        {{ selectedOfficerRole ? "No officers available" : "Please select a role first" }}
       </div>
-    </div>
+    </ng-template>
+  </p-dropdown>
+  <div *ngIf="isLoadingOfficers" class="text-sm text-gray-500 mt-1">
+    Loading officers...
+  </div>
+</div>
 
     <!-- Selected Officer Info -->
     <div

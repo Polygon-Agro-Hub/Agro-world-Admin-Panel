@@ -23,7 +23,7 @@
       <div class="flex justify-between items-center mb-6">
         <!-- Title with count -->
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
-          GoViCare Requests ({{ totalItems }})
+          GoViCare Requests ({{ formatTwoDigits(totalItems) }})
         </h1>
 
         <!-- Filters Container -->
@@ -85,7 +85,8 @@
 
           <!-- Search Input -->
           <div class="relative w-64">
-            <input type="text" [(ngModel)]="search" (keyup.enter)="applySearch()" placeholder="Search..."  title="Search By Request ID, Phone Number, EMP ID.."
+            <input type="text" [(ngModel)]="search" (keyup.enter)="applySearch()" placeholder="Search..."
+              title="Search By Request ID, Phone Number, EMP ID.."
               class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] border-[1.8px] border-[#828282] rounded-xl text-textLight dark:text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
             <!-- Clear/Search Icon -->
@@ -101,12 +102,13 @@
         </div>
       </div>
 
-      <!-- Table Section -->
-      <div class="overflow-x-auto">
+      <!-- Table Section - Only show if there's data -->
+      <div *ngIf="govicareRequests.length > 0" class="overflow-x-auto">
         <table class="w-full">
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700">
-              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">No
+              <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                No
               </th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Request_ID</th>
@@ -136,7 +138,7 @@
 
               <!-- No -->
               <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                {{ formatNumber(request.No) }}
+               {{ (i+1) | number:'3.0-0' }}
               </td>
 
               <!-- Request ID -->
@@ -189,7 +191,6 @@
               </td>
 
               <!-- Details (Eye Icon) -->
-              <!-- Details (Eye Icon) -->
               <td class="px-4 py-4 text-center">
                 <button (click)="viewDetails(request.Request_ID)"
                   class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
@@ -206,16 +207,14 @@
                 {{ request.Assigned_By }}
               </td>
             </tr>
-
-            <!-- Empty State -->
-            <tr *ngIf="govicareRequests.length === 0">
-              <td colspan="11" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
-                <i class="fa-solid fa-inbox text-4xl mb-2"></i>
-                <p>No GoViCare requests found</p>
-              </td>
-            </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Empty State - Show when no data -->
+      <div *ngIf="govicareRequests.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
       </div>
     </div>
   </div>
@@ -274,22 +273,22 @@
       </div>
 
       <!-- Variety -->
-      <div class="flex items-start">
+      <!-- <div class="flex items-start">
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Variety</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Variety }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Certificate -->
-      <div class="flex items-start">
+      <!-- <div class="flex items-start">
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Certificate</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Certificate }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Extent -->
       <div class="flex items-start">
@@ -381,9 +380,10 @@
     (click)="$event.stopPropagation()">
     <!-- Popup Header -->
     <div class="flex justify-center items-center mb-4 px-10">
-      <h3 class="text-lg font-semibold dark:text-white">Assign Inspectors</h3>
+      <h3 class="text-lg font-semibold dark:text-white">
+        {{ selectedGovicareRequest?.Status === 'Assigned' ? 'Update Inspector Assignment' : 'Assign Inspectors' }}
+      </h3>
     </div>
-
     <!-- Officer Role Selection -->
     <div class="flex flex-col mb-4 w-full">
       <label class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
@@ -424,18 +424,12 @@
       <p class="text-sm text-textLight dark:text-textDark">
         District: {{ selectedOfficerInfo.district }}
       </p>
-      <p class="text-sm text-textLight dark:text-textDark">
-        Count:
-        <span class="text-blue-500">{{ selectedOfficerInfo.activeJobCount }}</span>
-      </p>
     </div>
 
-    <!-- Error Message -->
     <div *ngIf="assignError" class="mt-3 p-2 text-red-700 rounded text-sm">
       {{ assignError }}
     </div>
 
-    <!-- Action Buttons -->
     <div class="flex justify-center gap-3 mt-4">
       <div class="flex gap-3 ml-auto">
         <button (click)="assignPopupClose()"
@@ -445,7 +439,7 @@
         <button (click)="assignOfficer()" [disabled]="!selectedOfficerId || isAssigning"
           class="px-4 py-2 text-sm font-medium text-white bg-[#3980C0] rounded-lg hover:bg-[#2c6da3] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2">
           <i *ngIf="isAssigning" class="fa-solid fa-spinner fa-spin"></i>
-          Assign
+          {{ selectedGovicareRequest?.Status === 'Assigned' ? 'Update' : 'Assign' }}
         </button>
       </div>
     </div>

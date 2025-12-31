@@ -18,6 +18,7 @@ export class DistributionhubComponent {
   popupVisibleNews = false;
   popupVisibleMarketPrice = false;
   popupVisibleCropCalender = false;
+  popupViewCustomerOrders = false;
 
   constructor(
     private router: Router,
@@ -55,14 +56,20 @@ export class DistributionhubComponent {
     }
   }
 
-navigateToCreateNews(): void {
-  this.isLoading = true;
-  this.router.navigate(['/distribution-hub/action/create-company'], {
-    queryParams: { type: 'distribution' }
-  }).then(() => {
-    this.isLoading = false;
-  });
-}
+  toggleViewCustomerOrders() {
+    this.popupViewCustomerOrders = !this.popupViewCustomerOrders;
+  }
+
+  navigateToCreateNews(): void {
+    this.isLoading = true;
+    this.router
+      .navigate(['/distribution-hub/action/create-company'], {
+        queryParams: { type: 'distribution' },
+      })
+      .then(() => {
+        this.isLoading = false;
+      });
+  }
 
   navigateToViewCompanies(): void {
     this.isLoading = true;
@@ -77,19 +84,22 @@ navigateToCreateNews(): void {
     this.router.navigate(['/distribution-hub/action/add-destribition-center']);
   }
 
-  
+  navigateToViewCustomerOrders(): void {
+    this.router.navigate(['/distribution-hub/action/view-customer-orders']);
+  }
 
   createVariety(): void {
     this.router.navigate(['/distribution-hub/action/view-destribition-center']);
   }
 
-  
   viewPolygon(): void {
     this.router.navigate(['/distribution-hub/action/view-polygon-centers']);
   }
 
-  assignCities(){
+  assignCities() {
     this.router.navigate(['/distribution-hub/action/assign-cities']);
-
+  }
+  transport() {
+    this.router.navigate(['/distribution-hub/action/transport']);
   }
 }

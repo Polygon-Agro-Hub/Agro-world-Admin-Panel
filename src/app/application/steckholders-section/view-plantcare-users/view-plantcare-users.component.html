@@ -19,7 +19,7 @@
   </button>
 
   <button *ngIf="
-      permissionService.hasPermission('Bulk onboarding plan care users') ||
+      permissionService.hasPermission('Bulk onboarding plant care users') ||
       tokenService.getUserDetails().role === '1'
     " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
     (click)="bulkUpload()">
@@ -28,7 +28,7 @@
   </button>
 
   <button *ngIf="
-      permissionService.hasPermission('Bulk onboarding plan care users') ||
+      permissionService.hasPermission('Bulk onboarding plant care users') ||
       tokenService.getUserDetails().role === '1'
     " class="text-[#3980C0] text-lg flex items-center mb-5" (click)="downloadTemplate()">
     <i class="fa-solid fa-download mr-3"></i>
@@ -46,7 +46,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          GoviCare Users ({{ this.totalItems }})
+          GoViCare Users ({{ this.totalItems }})
         </h2>
       </div>
 
@@ -58,8 +58,8 @@
           ">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="registerStatusFilter" [checkmark]="true" optionLabel="status" optionValue="value"
-            [showClear]="!!regStatus" placeholder="Register Status" [(ngModel)]="regStatus" (onChange)="regStatusFil()" />
+            [options]="registerStatusFilter" optionLabel="status" optionValue="value" [showClear]="!!regStatus"
+            placeholder="Register Status" [(ngModel)]="regStatus" (onChange)="regStatusFil()" />
         </div>
 
         <div *ngIf="
@@ -69,8 +69,15 @@
           ">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtFilter" [checkmark]="true" optionLabel="status" optionValue="value" [showClear]="!!district"
+            [options]="districtFilter" optionLabel="status" optionValue="value" [showClear]="!!district"
             placeholder="District" [(ngModel)]="district" (onChange)="regStatusFil()" />
+        </div>
+
+        <div>
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="planStatusFilter" optionLabel="label" optionValue="value" [showClear]="!!selectPlan"
+            placeholder="Plan" [(ngModel)]="selectPlan" (onChange)="regStatusFil()" />
         </div>
 
         <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group" *ngIf="
@@ -86,7 +93,7 @@
           <!-- Input field -->
           <input type="text" placeholder="Search by NIC"
             class="bg-transparent outline-none w-full dark:text-textDark text-gray-600" [(ngModel)]="searchNIC"
-            (keydown.enter)="searchPlantCareUsers()" />
+            (keydown)="onSearchKeydown($event)" (keydown.enter)="searchPlantCareUsers()" />
 
           <!-- Search button -->
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -133,6 +140,10 @@
             </th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               <!-- Reduced px-4 to px-3 -->
+              Subcription Plan
+            </th>
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+              <!-- Reduced px-4 to px-3 -->
               Phone
             </th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -147,7 +158,8 @@
               <!-- Reduced px-4 to px-3 -->
               Register Status
             </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View staff members') || tokenService.getUserDetails().role === '1'">
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf="permissionService.hasPermission('View staff members') || tokenService.getUserDetails().role === '1'">
               <!-- Reduced px-4 to px-3 -->
               Staff
             </th>
@@ -203,6 +215,16 @@
               {{ item.firstName }} {{ item.lastName }}
             </td>
             <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
+              <span *ngIf="item.membership === 'Basic'"
+                class="bg-[#D7EEFF] text-[#002AFF] px-4 py-2 rounded-lg shadow-md">
+                BASIC
+              </span>
+              <span *ngIf="item.membership === 'Pro'"
+                class="bg-[#FFFF9F] text-[#D8B800] px-6 py-2 rounded-lg shadow-md">
+                PRO
+              </span>
+            </td>
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               <!-- Reduced px-4 to px-3 -->
               {{ item.phoneNumber }}
             </td>
@@ -223,7 +245,8 @@
                 Unregistered
               </span>
             </td>
-            <td class="px-3 py-3 text-center" *ngIf="permissionService.hasPermission('View staff members') || tokenService.getUserDetails().role === '1'">
+            <td class="px-3 py-3 text-center"
+              *ngIf="permissionService.hasPermission('View staff members') || tokenService.getUserDetails().role === '1'">
               <!-- Reduced px-4 to px-3 -->
               <button (click)="viewFarmerStaff(item.id, item.firstName + ' ' + item.lastName, item.phoneNumber)"><i
                   class="fa-solid fa-users text-[#3980C0] text-xl"></i></button>

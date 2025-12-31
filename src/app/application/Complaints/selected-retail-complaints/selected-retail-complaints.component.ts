@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -69,6 +67,13 @@ export class SelectedRetailComplaintsComponent implements OnInit {
     this.fetchComplain();
   }
 
+  // Getter for formatted phone number (remove hyphens but keep plus sign)
+  get formattedPhoneNumber(): string {
+    if (!this.complain.farmerPhone) return '';
+    // Remove hyphens and spaces, but keep the plus sign for international numbers
+    return this.complain.farmerPhone.replace(/[-\s]/g, '');
+  }
+
   back(): void {
     this.router.navigate(['complaints/retail-complaints']);
   }
@@ -109,6 +114,7 @@ export class SelectedRetailComplaintsComponent implements OnInit {
           reply: data.reply || '',
           imageUrls: this.parseImageUrls(data.imageUrls),
         };
+        this.messageContent = data.reply || '';
 
         this.sanitizedImageUrls = this.complain.imageUrls.map(url =>
           this.sanitizer.bypassSecurityTrustUrl(url)

@@ -287,7 +287,11 @@ export interface GoviCareRequest {
   NIC_Back_Image: string;
   Requested_On: string;
   Assigned_By: string;
-  distrct: string;
+  district: string;
+  empId: string;
+  publishStatus: string;
+  Request_Date_Time: string;
+  approvedDetails: any;
 }
 
 export interface GoviCareRequestsResponse {
@@ -308,6 +312,8 @@ export interface GoviCareRequestDetail {
   Expected_Yield: string;
   Expected_Start_Date: string;
   Request_Date_Time: string;
+  approvedDetails: any;
+
 }
 
 export interface GoviCareRequestDetailResponse {
@@ -328,6 +334,23 @@ export interface InvestmentOfficer {
   distrct?: any;
 }
 
+export interface ApprovedGoviCareRequest extends GoviCareRequest {
+  publishStatus: string;
+}
+
+export interface ApprovedGoviCareRequestsResponse {
+  count: number;
+  data: ApprovedGoviCareRequest[];
+}
+
+export interface UpdatePublishStatusResponse {
+  status: boolean;
+  message: string;
+}
+
+
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -335,7 +358,7 @@ export class FinanceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
@@ -547,6 +570,7 @@ export class FinanceService {
     return this.http.get<any>(url, { headers: headers });
   }
 
+
   createPaymentHistory(
     receivers: string,
     amount: string,
@@ -636,81 +660,290 @@ export class FinanceService {
   }
 
 
-getAllGoviCareRequests(
-  status?: string,
-  search?: string
-): Observable<GoviCareRequestsResponse> {
-  let params = new HttpParams();
+  getAllGoviCareRequests(
+    status?: string,
+    search?: string
+  ): Observable<GoviCareRequestsResponse> {
+    let params = new HttpParams();
 
-  if (status && status.trim()) {
-    params = params.set('status', status.trim());
+    if (status && status.trim()) {
+      params = params.set('status', status.trim());
+    }
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    const url = `${this.apiUrl}finance/govicare-requests`;
+    return this.http.get<GoviCareRequestsResponse>(url, {
+      headers: headers,
+      params: params,
+    });
   }
 
-  if (search && search.trim()) {
-    params = params.set('search', search.trim());
+  getGoviCareRequestById(requestId: string): Observable<GoviCareRequestDetailResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    const url = `${this.apiUrl}finance/govicare-requests/${requestId}`;
+    return this.http.get<GoviCareRequestDetailResponse>(url, {
+      headers: headers,
+    });
   }
 
-  const url = `${this.apiUrl}finance/govicare-requests`;
-  return this.http.get<GoviCareRequestsResponse>(url, {
-    headers: this.getHeaders(),
-    params: params,
-  });
-}
+  getAllApprovedGoviCareRequests(
+    status?: string,
+    search?: string
+  ): Observable<ApprovedGoviCareRequestsResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
 
-getGoviCareRequestById(requestId: string): Observable<GoviCareRequestDetailResponse> {
-  const url = `${this.apiUrl}finance/govicare-requests/${requestId}`;
-  return this.http.get<GoviCareRequestDetailResponse>(url, {
-    headers: this.getHeaders(),
-  });
-}
+    let params = new HttpParams();
 
-getOfficersByDistrictAndRoleForInvestment(
-  distrct: string,
-  role: string
-): Observable<any> {
-  return this.http.get<any>(
-    `${this.apiUrl}finance/officers`,
-    {
-      params: {
-        district: distrct,
-        jobRole: role
+    if (status && status.trim()) {
+      params = params.set('status', status.trim());
+    }
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/approved-govicare-requests`;
+    return this.http.get<ApprovedGoviCareRequestsResponse>(url, {
+      headers: headers,
+      params: params,
+    });
+  }
+
+
+
+  getOfficersByDistrictAndRoleForInvestment(
+    distrct: string,
+    role: string
+  ): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}finance/officers`,
+      {
+        params: {
+          district: distrct,
+          jobRole: role
+        }
       }
+    );
+  }
+
+
+  assignOfficerToInvestmentRequest(
+    requestId: number,
+    officerId: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}finance/assign-officer`,
+      {
+        requestId: requestId,
+        officerId: officerId
+      },
+      {
+        headers
+      }
+    );
+  }
+
+  getOfficerDetailsById(empId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}finance/officer-details/${empId}`);
+  }
+
+  updateGoviCareRequestPublishStatus(
+    requestId: number
+  ): Observable<UpdatePublishStatusResponse> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    const url = `${this.apiUrl}finance/govicare-requests/${requestId}/publish`;
+    return this.http.put<UpdatePublishStatusResponse>(url, {}, {
+      headers,
+    });
+  }
+
+
+  getAllPublishedProjects(
+    searchText: string = '',
+
+  ): Observable<any> {
+    console.log('searchText', searchText)
+
+    let url = `${this.apiUrl}finance/get-all-published-projects?page=${1}`;
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
     }
-  );
-}
 
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
+  }
 
-assignOfficerToInvestmentRequest(
-  requestId: number,
-  officerId: number
-): Observable<any> {
-  return this.http.post<any>(
-    `${this.apiUrl}finance/assign-officer`,
-    {
-      requestId: requestId,
-      officerId: officerId
-    }
-  );
-}
-
-getOfficerDetailsById(empId: string): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}finance/officer-details/${empId}`);
-}
 
 
   getAllRejectedInvestmentRequests(
-  search?: string
-): Observable<any> {
-  let params = new HttpParams();
+    search?: string
+  ): Observable<any> {
+    let params = new HttpParams();
 
-  if (search && search.trim()) {
-    params = params.set('search', search.trim());
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/rejected-investment-requests`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
   }
 
-  const url = `${this.apiUrl}finance/rejected-investment-requests`;
-  return this.http.get<any>(url, {
-    headers: this.getHeaders(),
-    params: params,
-  });
+  getAllInvestments(id: number, status: string = '', search: string = ''): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}finance/get-all-investments?id=${id}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (search) {
+      url += `&search=${search}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
+
+  rejectInvestmentStatus(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    let url = `${this.apiUrl}finance/reject-investment-status/${id}`;
+
+    return this.http.put<any>(url, {}, {
+      headers
+    });
+  }
+
+  approveInvestmentStatus(id: number): Observable<any> {
+    console.log('id', id)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    let url = `${this.apiUrl}finance/approve-investment-status/${id}`;
+
+    return this.http.put<any>(url, {}, {
+      headers
+    });
+  }
+
+
+  getProjectInvestments(
+    search?: string
+  ): Observable<{ count: number; data: any[] }> {
+    let params = new HttpParams();
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/project-investments`;
+    return this.http.get<{ count: number; data: any[] }>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
+  }
+
+  getInspectionDetails(id: number): Observable<{ count: number; data: any[] }> {
+    let params = new HttpParams();
+
+
+    const url = `${this.apiUrl}finance/get-inspection-details/${id}`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getAllAuditedGoviCareRequests(
+    status?: string,
+    search?: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    let params = new HttpParams();
+
+    if (status && status.trim()) {
+      params = params.set('status', status.trim());
+    }
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/audited-govicare-requests`;
+    return this.http.get<any>(url, {
+      headers: headers,
+      params: params,
+    });
+  }
+
+  devideSharesRequest(
+    devideRequestObj: any
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}finance/devide-shares`,
+      {
+        sharesData: devideRequestObj,
+      },
+      {
+        headers
+      }
+    );
+  }
+
+  rejectRequest(
+    id: number,
+    rejectReason: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}finance/reject-request`,
+      {
+        reqId: id,
+        reason: rejectReason
+      },
+      {
+        headers
+      }
+    );
+  }
 }
-}
+
+

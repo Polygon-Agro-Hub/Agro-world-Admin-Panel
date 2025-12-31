@@ -96,6 +96,46 @@
         </div>
       </div>
 
+      <div>
+  <label for="costPerAcre" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Cost per acre field (Rs.) *
+  </label>
+  <input type="text" id="costPerAcre" [(ngModel)]="cropGroup.costFeild" name="costFeild"
+    (keydown)="allowOnlyNumbers($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #costperacreInput="ngModel" pattern="^\d+(\.\d{1,2})?$" required />
+
+  <!-- Validation Errors -->
+  <div *ngIf="costperacreInput.touched">
+    <div *ngIf="costperacreInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Cost Per Acre is required
+    </div>
+    <div *ngIf="costperacreInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Please enter a valid amount (e.g., 1000 or 1000.50)
+    </div>
+  </div>
+</div>
+
+      <div>
+  <label for="incomePerAcre" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Income per acre field (Rs.) *
+  </label>
+  <input type="text" id="incomePerAcre" [(ngModel)]="cropGroup.incomeFeild" name="incomeFeild"
+    (keydown)="allowOnlyNumbers($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #incomeperacreInput="ngModel" pattern="^\d+(\.\d{1,2})?$" required />
+
+  <!-- Validation Errors -->
+  <div *ngIf="incomeperacreInput.touched">
+    <div *ngIf="incomeperacreInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Income Per Acre is required
+    </div>
+    <div *ngIf="incomeperacreInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Please enter a valid amount (e.g., 2000 or 2000.75)
+    </div>
+  </div>
+</div>
+
       <!-- Add Image -->
       <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
@@ -109,7 +149,7 @@
       </button>
 
       <!-- Image Validation Error -->
-      <div *ngIf="imageTouched && !selectedFile" class="text-red-500 text-sm mt-1">
+      <div *ngIf="errorMassage" class="text-red-500 text-sm mt-1">
         Please select an image
       </div>
 
@@ -158,25 +198,37 @@
     <form #cropForm="ngForm">
       <div class="space-y-4">
         <!-- Crop Name -->
-        <div>
-          <label for="cropName" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <div *ngIf="newsItems?.length">
+          <label for="cropNameEnglish" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Crop Name By English *
           </label>
-          <input type="text" id="cropNameEnglish" name="cropNameEnglish" [(ngModel)]="newsItems[0].cropNameEnglish"
-            #cropNameEnglishInput="ngModel" (input)="capitalizeFirstLetter($event)" (keydown)="preventLeadingSpace($event)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack dark:text-textDark"
-            required pattern="^(?!\d+$)[a-zA-Z0-9]*$" />
-
+        
+          <input
+            type="text"
+            id="cropNameEnglish"
+            name="cropNameEnglish"
+            [(ngModel)]="newsItems[0].cropNameEnglish"
+            #cropNameEnglishInput="ngModel"
+            (input)="capitalizeFirstLetter($event)"
+            (keydown)="preventLeadingSpace($event)"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
+                   focus:outline-none focus:ring-green-500 focus:border-blue-500
+                   dark:bg-tileBlack dark:text-textDark"
+            required
+            pattern="^(?!\d+$)[a-zA-Z0-9]*$"
+          />
+        
           <!-- Validation Errors -->
           <div *ngIf="cropNameEnglishInput.touched">
-            <div *ngIf="cropNameEnglishInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            <div
+              *ngIf="cropNameEnglishInput.errors?.['required']"
+              class="text-red-500 text-sm mt-1"
+            >
               English Crop name is required
             </div>
-            <!-- <div *ngIf="cropNameEnglishInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
-              Cannot enter numbers only & Can not enter special character
-            </div> -->
           </div>
         </div>
+        
 
         <!-- Crop Name Sinhala -->
         <div>
@@ -237,6 +289,60 @@
           </div>
         </div>
 
+        <!-- Edit Section - Cost per acre field -->
+<div>
+  <label for="costPerAcreEdit" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Cost per acre field (Rs.) *
+  </label>
+  <input 
+    type="text" 
+    id="costPerAcreEdit" 
+    [(ngModel)]="newsItems[0].costFeild" 
+    name="costFeild"
+    (keydown)="allowOnlyNumbers($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #costperacreInputEdit="ngModel" 
+    pattern="^\d+(\.\d{1,2})?$" 
+    required />
+
+  <!-- Validation Errors -->
+  <div *ngIf="costperacreInputEdit.touched">
+    <div *ngIf="costperacreInputEdit.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Cost Per Acre is required
+    </div>
+    <div *ngIf="costperacreInputEdit.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Please enter a valid amount (e.g., 1000 or 1000.50)
+    </div>
+  </div>
+</div>
+
+<!-- Edit Section - Income per acre field -->
+<div>
+  <label for="incomePerAcreEdit" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Income per acre field (Rs.) *
+  </label>
+  <input 
+    type="text" 
+    id="incomePerAcreEdit" 
+    [(ngModel)]="newsItems[0].incomeFeild" 
+    name="incomeFeild"
+    (keydown)="allowOnlyNumbers($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #incomeperacreInputEdit="ngModel" 
+    pattern="^\d+(\.\d{1,2})?$" 
+    required />
+
+  <!-- Validation Errors -->
+  <div *ngIf="incomeperacreInputEdit.touched">
+    <div *ngIf="incomeperacreInputEdit.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Income Per Acre is required
+    </div>
+    <div *ngIf="incomeperacreInputEdit.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Please enter a valid amount (e.g., 2000 or 2000.75)
+    </div>
+  </div>
+</div>
+
         <!-- Add Image -->
         <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
@@ -260,16 +366,30 @@
         <!-- Add Background Color -->
         <div class="flex items-center space-x-4">
           <label for="bgColor" class="block text-sm font-medium text-textLight dark:text-textDark pt-2">Color *</label>
-          <ngx-colors ngx-colors-trigger [(ngModel)]="newsItems[0].bgColor" (colorChange)="onColorChange($event)"
-            style="display: inline-block; margin:5px;" #bgColorInputEdit="ngModel" required>
+        
+          <ngx-colors 
+            ngx-colors-trigger 
+            [(ngModel)]="newsItems[0].bgColor" 
+            (colorChange)="onColorChangeEdit($event)"
+            style="display: inline-block; margin:5px;" 
+            #bgColorInputEdit="ngModel" 
+            name="bgColor"
+            required>
           </ngx-colors>
-
+        
+          <!-- Color Preview Box -->
+          <div 
+            class="w-8 h-8 rounded border" 
+            [style.background]="newsItems[0].bgColor">
+          </div>
+        
           <!-- Validation Error -->
           <div *ngIf="bgColorInputEdit.touched && bgColorInputEdit.errors?.['required']"
-            class="text-red-500 text-sm mt-1">
+               class="text-red-500 text-sm mt-1">
             Background Color is required
           </div>
         </div>
+        
 
         <!-- Buttons -->
         <div class="flex justify-end space-x-4 mt-6">

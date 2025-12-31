@@ -38,21 +38,12 @@
               [(ngModel)]="date" (change)="dateFilter()" />
           </div> -->
 
-          
+
 
           <div class="flex items-center gap-2 h-8 ml-2">
-            <p-calendar
-            id="toDate"
-            [(ngModel)]="date"
-            (onSelect)="dateFilter()"
-            (onClear)="onDateClear()"       
-            placeholder="Schedule Date"
-            [showIcon]="true"
-            [showClear]="true"              
-            [showButtonBar]="true"
-            iconDisplay="input"
-            [style]="{ width: '16rem', height: '2rem' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+            <p-calendar id="toDate" [(ngModel)]="date" (onSelect)="dateFilter()" (onClear)="onDateClear()"
+              placeholder="Schedule Date" [showIcon]="true" [showClear]="true" [showButtonBar]="true"
+              iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -60,9 +51,8 @@
                              [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
                              
                              [&_.p-button:hover]:dark:bg-[#6b7280]"
-            inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-            [appendTo]="'body'"
-          />
+              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+              [appendTo]="'body'" />
           </div>
 
           <div>
@@ -85,13 +75,14 @@
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [options]="orderStatusArr" [checkmark]="true" optionLabel="orderStatus" optionValue="value"
-              [showClear]="orderStatusFilter === '' ? false : true" placeholder="Order Status" [(ngModel)]="orderStatusFilter"
-              (onChange)="applyOrderStatusFilters()" />
+              [showClear]="orderStatusFilter === '' ? false : true" placeholder="Order Status"
+              [(ngModel)]="orderStatusFilter" (onChange)="applyOrderStatusFilters()" />
           </div>
 
           <div
             class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
-            <input type="text" placeholder="Search By Invoice No, CUS ID, Agent ID" [(ngModel)]="searchText" (keydown.enter)="onSearch()"
+            <input type="text" placeholder="Search By Invoice No, CUS ID, Agent ID" [(ngModel)]="searchText"
+              (keydown.enter)="onSearch()"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
               (click)="onSearch()">
@@ -166,8 +157,14 @@
             <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
               Order Status
             </th>
-            <th *ngIf="permissionService.hasPermission('Dash view orders invoice heading') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
-              Invoice
+            <th
+              *ngIf="permissionService.hasPermission('Dash view orders download invoice') || tokenService.getUserDetails().role === '1'"
+              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
+              PRE-INVOICE
+            </th>
+            <th class="whitespace-nowrap px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center"
+              *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
+              POST-INVOICE
             </th>
             <!-- <th
               class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"
@@ -236,8 +233,7 @@
                       item.paymentStatus === 1,
                     'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
                       item.paymentStatus === 0
-                  }"
-                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs  text-center">
+                  }" class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs  text-center">
                   {{ item.paymentStatus == 1 ? "Paid" : "Pending" }}
                 </span>
               </div>
@@ -250,36 +246,42 @@
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#FFEDCF] text-[#D17A00] rounded-3xl':
-                      item.orderStatus === 'Out For Delivery',
-                    'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
-                      item.orderStatus === 'Delivered',
-                    'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
-                      item.orderStatus === 'Cancelled',
-                    'font-bold px-3 py-1 text-sm bg-[#CFE1FF] text-[#3B82F6] rounded-3xl':
-                      item.orderStatus === 'Processing',
-                    'font-bold px-3 py-1 text-sm bg-[#F5FF85] text-[#878216] rounded-3xl':
-                      item.orderStatus === 'Ordered' ||
-                      item.orderStatus === 'Assigned',
-                    'font-bold px-3 py-1 text-sm bg-[#FFDCDA] text-[#FF1100] rounded-3xl':
-                      item.orderStatus === 'Failed',
-                    'text-[#00818A] bg-[#ACFBFF] border-[]':
-                    item.orderStatus === 'Ready to Pickup'
-                  }"
-                  class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs  text-center">
-                  {{
-                  item.orderStatus === "Ordered"
-                  ? "Assigned"
-                  : item.orderStatus
-                  }}
+                    'bg-[#ACFBFF] text-[#00818A]': item.orderStatus === 'Ready to Pickup',
+                    'bg-[#CFE1FF] text-[#3B82F6]': item.orderStatus === 'Processing',
+                    'bg-[#F5FF85] text-[#878216]': item.orderStatus === 'Assigned' || item.orderStatus === 'Ordered',
+                    'bg-[#BBFFC6] text-[#308233]': item.orderStatus === 'Delivered' || item.orderStatus === 'Picked up',
+                    'bg-[#DFDFDF] text-[#5C5C5C]': item.orderStatus === 'Cancelled',
+                    'bg-[#FFDCDA] text-[#FF1100]': item.orderStatus === 'Return' || item.orderStatus === 'Return Received',
+                    'bg-[#FFEDCF] text-[#D17A00]': item.orderStatus === 'Hold' || item.orderStatus === 'On the way',
+                    'bg-[#F8FEA5] text-[#7E8700]': item.orderStatus === 'Collected',
+                    'bg-[#FCD4FF] text-[#80118A]': item.orderStatus === 'Out For Delivery'
+                  }" class="inline-block font-medium rounded-3xl min-w-28 px-4 py-2 text-xs text-center">
+                  {{ item.orderStatus === 'Ordered' ? 'Assigned' : item.orderStatus }}
                 </span>
               </div>
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              <button *ngIf="permissionService.hasPermission('Dash view orders download invoice') || tokenService.getUserDetails().role === '1'" (click)="downloadInvoice(item.id, item.invNo)">
+              <button
+                *ngIf="permissionService.hasPermission('Dash view orders download invoice') || tokenService.getUserDetails().role === '1'"
+                (click)="downloadInvoice(item.id, item.invNo)">
                 <i class="fa-solid fa-file-lines text-xl text-[#5C5C5C]"></i>
               </button>
+            </td>
+
+            <td class="px-4 py-3 text-center dark:text-textDark"
+              *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
+
+              <div class="relative inline-block">
+                <button class="text-textLight dark:text-textDark gap-1"
+                  [class.opacity-50]="!isPostInvoiceEnabled(item.orderStatus)"
+                  [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.orderStatus)"
+                  [class.cursor-pointer]="isPostInvoiceEnabled(item.orderStatus)"
+                  [disabled]="!isPostInvoiceEnabled(item.orderStatus)"
+                  (click)="isPostInvoiceEnabled(item.orderStatus) ? downloadPostInvoice(item.id, item.invNo) : null">
+                  <i class="fa-solid fa-file-lines text-2xl"></i>
+                </button>
+              </div>
             </td>
 
             <!-- <td class="px-2 py-3 text-center text-textLight dark:text-textDark">

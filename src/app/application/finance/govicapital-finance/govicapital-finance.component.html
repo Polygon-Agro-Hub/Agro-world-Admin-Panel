@@ -12,8 +12,8 @@
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Rejected Requests ({{ total ?? 0 }})
+        <h2 class="text-2xl font-bold text-textLight dark:text-textDark">
+          Rejected Requests ({{ (total ?? 0).toString().padStart(2, "0") }})
         </h2>
       </div>
 
@@ -31,7 +31,7 @@
           <!-- Input field -->
           <input
             type="text"
-            placeholder="Search by Request ID or Phone Number"
+            placeholder="Search By ID, Phone Number.."
             class="bg-transparent outline-none w-full dark:text-textDark text-gray-600"
             [(ngModel)]="searchTerm"
             (keyup.enter)="onSearch()"
@@ -119,22 +119,22 @@
               Request_ID
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Farmer Name
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Phone number
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Rejection Reason
+              Rejected By
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Rejected Date
             </th>
@@ -153,6 +153,12 @@
             >
               Details
             </th>
+
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Audit Results
+            </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -161,23 +167,21 @@
             class="hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ i + 1 }}
+              {{ formatNumber(i) }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ request.id }}
+              {{ request.jobId }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ getFullName(request.firstName, request.lastName) || "N/A" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ request.phoneNumber || "N/A" }}
             </td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark max-w-xs truncate"
-            >
-              {{ request.rejectionReason || "N/A" }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ request.rejectedBy || "N/A" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ formatDate(request.rejectedAt) }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
@@ -220,6 +224,12 @@
                 </svg>
               </button>
             </td>
+
+            <td class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center">
+              <button (click)="auditResults(request.id)">
+                <i class="fa-solid fa-arrow-up-right-from-square text-xl text-[#3980C0]"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -239,10 +249,10 @@
   >
     <!-- Modal Header -->
     <div
-      class="flex justify-center items-center p-6 border-b border-gray-200 dark:border-gray-700"
+      class="flex justify-center items-center p-6 border-b-2 border-gray-200 dark:border-gray-700"
     >
       <h3 class="text-xl font-semibold text-textLight dark:text-textDark">
-        Request ID - {{ selectedRequest.id }}
+        Request ID - {{ selectedRequest.jobId }}
       </h3>
     </div>
 
@@ -255,7 +265,7 @@
             Request ID
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.id }}
+            : {{ selectedRequest.jobId }}
           </div>
         </div>
 
@@ -307,24 +317,24 @@
         </div>
 
         <!-- Variety -->
-        <div class="grid grid-cols-2 gap-4">
+        <!-- <div class="grid grid-cols-2 gap-4">
           <div class="text-sm font-medium text-textLight dark:text-textDark">
             Variety
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
             : {{ selectedRequest.varietyNameEnglish }}
           </div>
-        </div>
+        </div> -->
 
         <!-- Certificate -->
-        <div class="grid grid-cols-2 gap-4">
+        <!-- <div class="grid grid-cols-2 gap-4">
           <div class="text-sm font-medium text-textLight dark:text-textDark">
             Certificate
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
             : {{ selectedRequest.certificateName }}
           </div>
-        </div>
+        </div> -->
 
         <!-- Extent -->
         <div class="grid grid-cols-2 gap-4">

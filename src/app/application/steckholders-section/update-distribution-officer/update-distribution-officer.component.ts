@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { CommonModule, Location } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { CalendarModule } from 'primeng/calendar';
 
 interface Bank {
   ID: number;
@@ -55,6 +56,7 @@ interface DistributionOfficers {
     FormsModule,
     LoadingSpinnerComponent,
     DropdownModule,
+    CalendarModule
   ],
   templateUrl: './update-distribution-officer.component.html',
   styleUrl: './update-distribution-officer.component.css',
@@ -63,7 +65,7 @@ export class UpdateDistributionOfficerComponent {
   userForm: FormGroup = new FormGroup({});
   page: number = 1;
   itemId!: number;
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageOne';
   selectedFile: File | null = null;
   selectedFileName!: string;
   selectedImage: string | ArrayBuffer | null = null;
@@ -71,6 +73,7 @@ export class UpdateDistributionOfficerComponent {
   selectedLanguages: string[] = [];
   selectJobRole!: string;
   personalData: Personal = new Personal();
+  driverObj: Drivers = new Drivers();
   CompanyData: Company[] = [];
   collectionCenterData: CollectionCenter[] = [];
   collectionManagerData: CollectionManager[] = [];
@@ -113,8 +116,47 @@ export class UpdateDistributionOfficerComponent {
   hasData: boolean = false;
   distributionOfficers: DistributionOfficers[] = [];
 
-  // Remove the redundant `district` array
-  // Keep only the `districts` array
+  // Driver Images
+  licenseFrontImageFileName!: string;
+  licenseFrontImagePreview: string | ArrayBuffer | null = null;
+  licenseFrontImageFile: File | null = null;
+
+  licenseBackImageFileName!: string;
+  licenseBackImagePreview: string | ArrayBuffer | null = null;
+  licenseBackImageFile: File | null = null;
+
+  insurenceFrontImageFileName!: string;
+  insurenceFrontImagePreview: string | ArrayBuffer | null = null;
+  insurenceFrontImageFile: File | null = null;
+
+  insurenceBackImageFileName!: string;
+  insurenceBackImagePreview: string | ArrayBuffer | null = null;
+  insurenceBackImageFile: File | null = null;
+
+  vehicleFrontImageFileName!: string;
+  vehicleFrontImagePreview: string | ArrayBuffer | null = null;
+  vehicleFrontImageFile: File | null = null;
+
+  vehicleBackImageFileName!: string;
+  vehicleBackImagePreview: string | ArrayBuffer | null = null;
+  vehicleBackImageFile: File | null = null;
+
+  vehicleSideAImageFileName!: string;
+  vehicleSideAImagePreview: string | ArrayBuffer | null = null;
+  vehicleSideAImageFile: File | null = null;
+
+  vehicleSideBImageFileName!: string;
+  vehicleSideBImagePreview: string | ArrayBuffer | null = null;
+  vehicleSideBImageFile: File | null = null;
+
+  selectVehicletype: any = { name: '', capacity: '' };
+
+  VehicleTypes = [
+    { name: 'Mahindra Bollero', capacity: 272 },
+    { name: 'Dimo Batta', capacity: 750 },
+    { name: 'Three Wheeler', capacity: 100 },
+  ];
+
   districts = [
     { name: 'Ampara', province: 'Eastern' },
     { name: 'Anuradhapura', province: 'North Central' },
@@ -145,10 +187,10 @@ export class UpdateDistributionOfficerComponent {
 
   jobRoleOptions: any[] = [
     { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
-    { label: 'Distribution Officer', value: 'Distribution Officer' }
+    { label: 'Distribution Officer', value: 'Distribution Officer' },
+    { label: 'Driver', value: 'Driver' }
   ];
 
-  // Update the setupDropdownOptions method to use `districts`
   setupDropdownOptions() {
     this.districts = this.districts.sort((a, b) =>
       a.name.localeCompare(b.name)
@@ -158,6 +200,7 @@ export class UpdateDistributionOfficerComponent {
       value: district.name,
     }));
   }
+
   countries: PhoneCode[] = [
     { code: 'LK', dialCode: '+94', name: 'Sri Lanka' },
     { code: 'VN', dialCode: '+84', name: 'Vietnam' },
@@ -180,90 +223,106 @@ export class UpdateDistributionOfficerComponent {
   ngOnInit() {
     this.loadBanks();
     this.loadBranches();
-    this.setupDropdownOptions(); // Ensure district dropdown is set up
+    this.setupDropdownOptions();
     this.itemId = this.route.snapshot.params['id'];
 
     if (this.itemId) {
       this.fetchData();
     }
 
-    // this.getAllCollectionCetnter();
     this.getAllCompanies();
     this.EpmloyeIdCreate();
   }
 
-fetchData() {
-  this.isLoading = true;
-  this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
-    next: (response: any) => {
-      console.log('Officer Data Response:', response); // Debug API response
-      const officerData = response.officerData[0];
-      console.log('Officer data structure:', response.officerData[0]);
+  fetchData() {
+    this.isLoading = true;
+    this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
+      next: (response: any) => {
+        console.log('Officer Data Response:', response);
+        const officerData = response.officerData[0];
+        console.log('Officer data structure:', response.officerData[0]);
 
-      // Populate personalData with API response or fallback to defaults
-      this.personalData.id = officerData.id || this.itemId;
-      this.personalData.empId = officerData.empId || '';
-      this.personalData.jobRole = officerData.jobRole || '';
-      this.personalData.firstNameEnglish =
-        officerData.firstNameEnglish || '';
-      this.personalData.firstNameSinhala =
-        officerData.firstNameSinhala || '';
-      this.personalData.firstNameTamil = officerData.firstNameTamil || '';
-      this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
-      this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
-      this.personalData.lastNameTamil = officerData.lastNameTamil || '';
-      this.personalData.contact1Code = officerData.phoneCode01 || '+94';
-      this.personalData.contact1 = officerData.phoneNumber01 ;
-      this.personalData.contact2Code = officerData.phoneCode02 || '+94';
-      this.personalData.contact2 = officerData.phoneNumber02;
-      this.personalData.nic = officerData.nic || '';
-      this.personalData.email = officerData.email || '';
-      this.personalData.houseNumber = officerData.houseNumber || '';
-      this.personalData.streetName = officerData.streetName || '';
-      this.personalData.city = officerData.city || '';
-      this.personalData.district = officerData.district || '';
-      this.personalData.province = officerData.province || '';
-      this.personalData.languages = officerData.languages || '';
-      this.personalData.companyId = officerData.companyId || '';
-      this.personalData.centerId = officerData.distributedCenterId || '';
-      this.personalData.bankName = officerData.bankName || '';
-      this.personalData.branchName = officerData.branchName || '';
-      this.personalData.accHolderName = officerData.accHolderName || '';
-      this.personalData.accNumber = officerData.accNumber || '';
-      this.personalData.confirmAccNumber = officerData.accNumber || '';
-      this.personalData.empType = officerData.empType || '';
-      this.personalData.irmId = officerData.irmId || '';
-      this.personalData.image = officerData.image || '';
-      this.personalData.status = officerData.status || '';
+        // Populate personalData
+        this.personalData.id = officerData.id || this.itemId;
+        this.personalData.empId = officerData.empId || '';
+        this.personalData.jobRole = officerData.jobRole || '';
+        this.personalData.firstNameEnglish = officerData.firstNameEnglish || '';
+        this.personalData.firstNameSinhala = officerData.firstNameSinhala || '';
+        this.personalData.firstNameTamil = officerData.firstNameTamil || '';
+        this.personalData.lastNameEnglish = officerData.lastNameEnglish || '';
+        this.personalData.lastNameSinhala = officerData.lastNameSinhala || '';
+        this.personalData.lastNameTamil = officerData.lastNameTamil || '';
+        this.personalData.contact1Code = officerData.phoneCode01 || '+94';
+        this.personalData.contact1 = officerData.phoneNumber01;
+        this.personalData.contact2Code = officerData.phoneCode02 || '+94';
+        this.personalData.contact2 = officerData.phoneNumber02;
+        this.personalData.nic = officerData.nic || '';
+        this.personalData.email = officerData.email || '';
+        this.personalData.houseNumber = officerData.houseNumber || '';
+        this.personalData.streetName = officerData.streetName || '';
+        this.personalData.city = officerData.city || '';
+        this.personalData.district = officerData.district || '';
+        this.personalData.province = officerData.province || '';
+        this.personalData.languages = officerData.languages || '';
+        this.personalData.companyId = officerData.companyId || '';
+        this.personalData.centerId = officerData.distributedCenterId || '';
+        this.personalData.bankName = officerData.bankName || '';
+        this.personalData.branchName = officerData.branchName || '';
+        this.personalData.accHolderName = officerData.accHolderName || '';
+        this.personalData.accNumber = officerData.accNumber || '';
+        this.personalData.confirmAccNumber = officerData.accNumber || '';
+        this.personalData.empType = officerData.empType || '';
+        this.personalData.irmId = officerData.irmId || '';
+        this.personalData.image = officerData.image || '';
+        this.personalData.status = officerData.status || '';
 
-      // Check if status is "Approved"
-      this.isApproved = this.personalData.status === 'Approved';
+        // Populate driver data if jobRole is Driver
+        if (officerData.jobRole === 'Driver' && response.driverData && response.driverData.length > 0) {
+          const driverData = response.driverData[0];
+          this.driverObj.licNo = driverData.licNo || '';
+          this.driverObj.insNo = driverData.insNo || '';
+          this.driverObj.insExpDate = driverData.insExpDate ? new Date(driverData.insExpDate) : '';
+          this.driverObj.vType = driverData.vType || '';
+          this.driverObj.vCapacity = driverData.vCapacity || '';
+          this.driverObj.vRegNo = driverData.vRegNo || '';
 
-      this.selectedLanguages = this.personalData.languages
-        ? this.personalData.languages.split(',')
-        : [];
-      this.empType = this.personalData.empType;
-      this.lastID = this.personalData.empId.slice(-5);
-      this.cenId = this.personalData.centerId;
-      this.comId = this.personalData.companyId;
-      this.initiateJobRole = officerData.jobRole || '';
-      this.initiateId = officerData.empId.slice(-5);
+          // Set existing image file names
+          this.licenseFrontImageFileName = driverData.licFrontName || '';
+          this.licenseBackImageFileName = driverData.licBackName || '';
+          this.insurenceFrontImageFileName = driverData.insFrontName || '';
+          this.insurenceBackImageFileName = driverData.insBackName || '';
+          this.vehicleFrontImageFileName = driverData.vFrontName || '';
+          this.vehicleBackImageFileName = driverData.vBackName || '';
+          this.vehicleSideAImageFileName = driverData.vSideAName || '';
+          this.vehicleSideBImageFileName = driverData.vSideBName || '';
 
-      console.log('Assigned Contact1Code:', this.personalData.contact1Code); // Debug
-      console.log('Assigned Contact1:', this.personalData.contact1); // Debug
-      console.log('Assigned Contact2Code:', this.personalData.contact2Code); // Debug
-      console.log('Assigned Contact2:', this.personalData.contact2); // Debug
-      this.matchExistingBankToDropdown();
-      this.getAllCollectionCetnter()
-      this.getAllCollectionManagers();
-      this.isLoading = false;
-    },
-    error: (error) => {
-      console.error('Error fetching officer data:', error);
-      this.isLoading = false;
-    },
-  });
-}
+          // Set vehicle type
+          const vehicleType = this.VehicleTypes.find(v => v.name === driverData.vType);
+          if (vehicleType) {
+            this.selectVehicletype = vehicleType;
+          }
+        }
+
+        this.isApproved = this.personalData.status === 'Approved';
+        this.selectedLanguages = this.personalData.languages ? this.personalData.languages.split(',') : [];
+        this.empType = this.personalData.empType;
+        this.lastID = this.personalData.empId.slice(-5);
+        this.cenId = this.personalData.centerId;
+        this.comId = this.personalData.companyId;
+        this.initiateJobRole = officerData.jobRole || '';
+        this.initiateId = officerData.empId.slice(-5);
+
+        this.matchExistingBankToDropdown();
+        this.getAllCollectionCetnter();
+        this.getAllCollectionManagers();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching officer data:', error);
+        this.isLoading = false;
+      },
+    });
+  }
 
 
   getFlagUrl(countryCode: string): string {
@@ -401,6 +460,432 @@ fetchData() {
     if (fieldName === 'confirmAccNumber') {
       this.validateConfirmAccNumber();
     }
+  }
+
+  triggerFileInputForDriver(event: Event, inputId: string): void {
+    event.preventDefault();
+    const fileInput = document.getElementById(inputId);
+    fileInput?.click();
+  }
+
+  onLicenseFrontImageSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'License image size should not exceed 5MB',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'License image must be JPEG, JPG or PNG format',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.licenseFrontImageFile = file;
+      this.licenseFrontImageFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.licenseFrontImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearLicenseFrontImage(): void {
+    this.licenseFrontImageFile = null;
+    this.licenseFrontImageFileName = '';
+    this.licenseFrontImagePreview = null;
+    const fileInput = document.getElementById('licenseFrontImageUpload') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onLicenseBackImageSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'License image size should not exceed 5MB',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'License image must be JPEG, JPG or PNG format',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.licenseBackImageFile = file;
+      this.licenseBackImageFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.licenseBackImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearLicenseBackImage(): void {
+    this.licenseBackImageFile = null;
+    this.licenseBackImageFileName = '';
+    this.licenseBackImagePreview = null;
+    const fileInput = document.getElementById('licenseBackImageUpload') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onInsurenceFrontImageSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Insurance image size should not exceed 5MB',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Insurance image must be JPEG, JPG or PNG format',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.insurenceFrontImageFile = file;
+      this.insurenceFrontImageFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.insurenceFrontImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearInsurenceFrontImage(): void {
+    this.insurenceFrontImageFile = null;
+    this.insurenceFrontImageFileName = '';
+    this.insurenceFrontImagePreview = null;
+    const fileInput = document.getElementById('insurenceFrontImageUpload') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onInsurenceBackImageSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Insurance image size should not exceed 5MB',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Insurance image must be JPEG, JPG or PNG format',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.insurenceBackImageFile = file;
+      this.insurenceBackImageFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.insurenceBackImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearInsurenceBackImage(): void {
+    this.insurenceBackImageFile = null;
+    this.insurenceBackImageFileName = '';
+    this.insurenceBackImagePreview = null;
+    const fileInput = document.getElementById('insuranceBackImageUpload') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onVehicleFrontImageSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Vehicle image size should not exceed 5MB',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Vehicle image must be JPEG, JPG or PNG format',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.vehicleFrontImageFile = file;
+      this.vehicleFrontImageFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.vehicleFrontImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearVehicleFrontImage(): void {
+    this.vehicleFrontImageFile = null;
+    this.vehicleFrontImageFileName = '';
+    this.vehicleFrontImagePreview = null;
+    const fileInput = document.getElementById('vehicleFrontImageUpload') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onVehicleBackImageSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Vehicle image size should not exceed 5MB',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Vehicle image must be JPEG, JPG or PNG format',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.vehicleBackImageFile = file;
+      this.vehicleBackImageFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.vehicleBackImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearVehicleBackImage(): void {
+    this.vehicleBackImageFile = null;
+    this.vehicleBackImageFileName = '';
+    this.vehicleBackImagePreview = null;
+    const fileInput = document.getElementById('vehicleBackImageUpload') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onVehicleSideAImageSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Vehicle image size should not exceed 5MB',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Vehicle image must be JPEG, JPG or PNG format',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.vehicleSideAImageFile = file;
+      this.vehicleSideAImageFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.vehicleSideAImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearVehicleSideAImage(): void {
+    this.vehicleSideAImageFile = null;
+    this.vehicleSideAImageFileName = '';
+    this.vehicleSideAImagePreview = null;
+    const fileInput = document.getElementById('vehicleSideAImageUpload') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onVehicleSideBImageSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      if (file.size > 5000000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Vehicle image size should not exceed 5MB',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Vehicle image must be JPEG, JPG or PNG format',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        return;
+      }
+
+      this.vehicleSideBImageFile = file;
+      this.vehicleSideBImageFileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.vehicleSideBImagePreview = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  clearVehicleSideBImage(): void {
+    this.vehicleSideBImageFile = null;
+    this.vehicleSideBImageFileName = '';
+    this.vehicleSideBImagePreview = null;
+    const fileInput = document.getElementById('vehicleSideBImageUpload') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  vehicleChange() {
+    this.driverObj.vType = this.selectVehicletype.name;
+    this.driverObj.vCapacity = this.selectVehicletype.capacity;
+  }
+
+  preventNonNumbers(event: KeyboardEvent) {
+    const allowedKeys = [
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'
+    ];
+
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  private formatDateForDatabase(date: Date | string | null): string | null {
+    if (!date) return null;
+
+    const dateObj = date instanceof Date ? date : new Date(date);
+
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   validateConfirmAccNumber(): void {
@@ -556,15 +1041,17 @@ fetchData() {
     return this.personalData.password === this.personalData.confirmPassword;
   }
 
-  // Update the checkFormValidity method to include password validation
+  // Update the checkFormValidity method
   checkFormValidity(): boolean {
-    const isFirstNameValid =
-      !!this.personalData.firstNameEnglish &&
+    const isFirstNameValid = this.personalData.jobRole === 'Driver'
+      ? !!this.personalData.firstNameEnglish
+      : !!this.personalData.firstNameEnglish &&
       !!this.personalData.firstNameSinhala &&
       !!this.personalData.firstNameTamil;
 
-    const isLastNameValid =
-      !!this.personalData.lastNameEnglish &&
+    const isLastNameValid = this.personalData.jobRole === 'Driver'
+      ? !!this.personalData.lastNameEnglish
+      : !!this.personalData.lastNameEnglish &&
       !!this.personalData.lastNameSinhala &&
       !!this.personalData.lastNameTamil;
 
@@ -597,6 +1084,7 @@ fetchData() {
       !this.arePhoneNumbersSame()
     );
   }
+
 
   onInputChange(event: any, type: string): void {
     if (type === 'phone') {
@@ -760,7 +1248,8 @@ fetchData() {
     });
   }
 
-  nextFormCreate(page: 'pageOne' | 'pageTwo') {
+  // Update the nextFormCreate method to handle pageThree
+  nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
     if (page === 'pageTwo') {
       const missingFields: string[] = [];
 
@@ -786,7 +1275,7 @@ fetchData() {
       }
 
       if (
-        this.personalData.jobRole === 'Distribution Officer' &&
+        (this.personalData.jobRole === 'Distribution Officer' || this.personalData.jobRole === 'Driver') &&
         !this.personalData.irmId
       ) {
         missingFields.push('Manager Name is Required');
@@ -800,20 +1289,23 @@ fetchData() {
         missingFields.push('Last Name (in English) is Required');
       }
 
-      if (!this.personalData.firstNameSinhala) {
-        missingFields.push('First Name (in Sinhala) is Required');
-      }
+      // Only validate Sinhala and Tamil names if not a Driver
+      if (this.personalData.jobRole !== 'Driver') {
+        if (!this.personalData.firstNameSinhala) {
+          missingFields.push('First Name (in Sinhala) is Required');
+        }
 
-      if (!this.personalData.lastNameSinhala) {
-        missingFields.push('Last Name (in Sinhala) is Required');
-      }
+        if (!this.personalData.lastNameSinhala) {
+          missingFields.push('Last Name (in Sinhala) is Required');
+        }
 
-      if (!this.personalData.firstNameTamil) {
-        missingFields.push('First Name (in Tamil) is Required');
-      }
+        if (!this.personalData.firstNameTamil) {
+          missingFields.push('First Name (in Tamil) is Required');
+        }
 
-      if (!this.personalData.lastNameTamil) {
-        missingFields.push('Last Name (in Tamil) is Required');
+        if (!this.personalData.lastNameTamil) {
+          missingFields.push('Last Name (in Tamil) is Required');
+        }
       }
 
       if (!this.personalData.contact1) {
@@ -853,7 +1345,6 @@ fetchData() {
         missingFields.push('Email - Invalid format (e.g., example@domain.com)');
       }
 
-      // If errors, show popup and stop navigation
       if (missingFields.length > 0) {
         let errorMessage =
           '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
@@ -875,11 +1366,66 @@ fetchData() {
         });
         return;
       }
+    } else if (page === 'pageThree') {
+      // Validate pageTwo fields
+      const missingFields: string[] = [];
+
+      if (!this.personalData.houseNumber) {
+        missingFields.push('House Number is Required');
+      }
+      if (!this.personalData.streetName) {
+        missingFields.push('Street Name is Required');
+      }
+      if (!this.personalData.city) {
+        missingFields.push('City is Required');
+      }
+      if (!this.personalData.district) {
+        missingFields.push('District is Required');
+      }
+      if (!this.personalData.accHolderName) {
+        missingFields.push(`Account Holder's Name is Required`);
+      }
+      if (!this.personalData.accNumber) {
+        missingFields.push('Account Number is Required');
+      }
+      if (!this.personalData.confirmAccNumber) {
+        missingFields.push('Confirm Account Number is Required');
+      } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
+        missingFields.push('Confirm Account Number - Must match Account Number');
+      }
+      if (!this.selectedBankId) {
+        missingFields.push('Bank Name is Required');
+      }
+      if (!this.selectedBranchId) {
+        missingFields.push('Branch Name is Required');
+      }
+
+      if (missingFields.length > 0) {
+        let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        missingFields.forEach((field) => {
+          errorMessage += `<li>${field}</li>`;
+        });
+        errorMessage += '</ul></div>';
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: errorMessage,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
+      }
     }
 
-    // Navigate to the selected page
     this.selectedPage = page;
   }
+
+
   updateProvince(event: DropdownChangeEvent): void {
     const selectedDistrict = event.value; // Get selected district name directly
 
@@ -1042,20 +1588,22 @@ fetchData() {
       missingFields.push('Last Name (in English) is Required');
     }
 
-    if (!this.personalData.firstNameSinhala) {
-      missingFields.push('First Name (in Sinhala) is Required');
-    }
+    if (this.personalData.jobRole !== 'Driver') {
+      if (!this.personalData.firstNameSinhala) {
+        missingFields.push('First Name (in Sinhala) is Required');
+      }
 
-    if (!this.personalData.lastNameSinhala) {
-      missingFields.push('Last Name (in Sinhala) is Required');
-    }
+      if (!this.personalData.lastNameSinhala) {
+        missingFields.push('Last Name (in Sinhala) is Required');
+      }
 
-    if (!this.personalData.firstNameTamil) {
-      missingFields.push('First Name (in Tamil) is Required');
-    }
+      if (!this.personalData.firstNameTamil) {
+        missingFields.push('First Name (in Tamil) is Required');
+      }
 
-    if (!this.personalData.lastNameTamil) {
-      missingFields.push('Last Name (in Tamil) is Required');
+      if (!this.personalData.lastNameTamil) {
+        missingFields.push('Last Name (in Tamil) is Required');
+      }
     }
 
     if (!this.personalData.contact1) {
@@ -1140,7 +1688,48 @@ fetchData() {
       missingFields.push('Branch Name is Required');
     }
 
-    // If errors, show list and stop
+    if (this.personalData.jobRole === 'Driver') {
+      if (!this.driverObj.licNo) {
+        missingFields.push('License Number is Required');
+      }
+      if (!this.licenseFrontImageFileName) {
+        missingFields.push("License's Front Image is Required");
+      }
+      if (!this.licenseBackImageFileName) {
+        missingFields.push("License's Back Image is Required");
+      }
+      if (!this.driverObj.insNo) {
+        missingFields.push('Insurance Number is Required');
+      }
+      if (!this.driverObj.insExpDate) {
+        missingFields.push('Insurance Expire Date is Required');
+      }
+      if (!this.insurenceFrontImageFileName) {
+        missingFields.push("Insurance's Front Image is Required");
+      }
+      if (!this.insurenceBackImageFileName) {
+        missingFields.push("Insurance's Back Image is Required");
+      }
+      if (!this.driverObj.vRegNo) {
+        missingFields.push('Vehicle Registration Number is Required');
+      }
+      if (!this.driverObj.vType) {
+        missingFields.push('Vehicle Type is Required');
+      }
+      if (!this.vehicleFrontImageFileName) {
+        missingFields.push("Vehicle's Front Image is Required");
+      }
+      if (!this.vehicleBackImageFileName) {
+        missingFields.push("Vehicle's Back Image is Required");
+      }
+      if (!this.vehicleSideAImageFileName) {
+        missingFields.push("Vehicle's Side Image - 1 is Required");
+      }
+      if (!this.vehicleSideBImageFileName) {
+        missingFields.push("Vehicle's Side Image - 2 is Required");
+      }
+    }
+
     if (missingFields.length > 0) {
       let errorMessage =
         '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
@@ -1165,10 +1754,26 @@ fetchData() {
       return;
     }
 
-    // If valid, confirm update
+    // Determine the role-specific message
+    let successMessage = '';
+    switch (this.personalData.jobRole) {
+      case 'Driver':
+        successMessage = 'Do you want to update the Driver ?';
+        break;
+      case 'Distribution Officer':
+        successMessage = 'Do you want to update the distribution officer?';
+        break;
+      case 'Distribution Centre Manager':
+        successMessage = 'Do you want to update the Distribution Centre Manager? ';
+        break;
+      default:
+        successMessage = 'Do you want to update the Distribution Officer?';
+    }
+
+
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Do you want to update the distribution officer?',
+      text: successMessage,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it!',
@@ -1184,10 +1789,9 @@ fetchData() {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        // Map phone number fields to backend expected names
         const payload = {
           ...this.personalData,
-          phoneNumber01: this.personalData.contact1 ,
+          phoneNumber01: this.personalData.contact1,
           phoneCode01: this.personalData.contact1Code || '+94',
           phoneNumber02: this.personalData.contact2,
           phoneCode02:
@@ -1196,22 +1800,62 @@ fetchData() {
             '+94',
         };
 
-        console.log('Payload sent to backend:', {
-          phoneNumber01: payload.phoneNumber01,
-          phoneCode01: payload.phoneCode01,
-          phoneNumber02: payload.phoneNumber02,
-          phoneCode02: payload.phoneCode02,
-        });
+        // Prepare driver data if job role is Driver
+        let driverDataToSend = null;
+        if (this.personalData.jobRole === 'Driver') {
+          driverDataToSend = {
+            ...this.driverObj,
+            insExpDate: this.formatDateForDatabase(this.driverObj.insExpDate),
+            licFrontName: this.licenseFrontImageFileName,
+            licBackName: this.licenseBackImageFileName,
+            insFrontName: this.insurenceFrontImageFileName,
+            insBackName: this.insurenceBackImageFileName,
+            vFrontName: this.vehicleFrontImageFileName,
+            vBackName: this.vehicleBackImageFileName,
+            vSideAName: this.vehicleSideAImageFileName,
+            vSideBName: this.vehicleSideBImageFileName,
+          };
+        }
 
         this.distributionOfficerServ
-          .editDistributionOfficer(payload, this.itemId, this.selectedImage)
+          .editDistributionOfficer(
+            payload,
+            this.itemId,
+            this.selectedImage,
+            driverDataToSend,
+            this.licenseFrontImagePreview,
+            this.licenseBackImagePreview,
+            this.insurenceFrontImagePreview,
+            this.insurenceBackImagePreview,
+            this.vehicleFrontImagePreview,
+            this.vehicleBackImagePreview,
+            this.vehicleSideAImagePreview,
+            this.vehicleSideBImagePreview
+          )
           .subscribe(
             (res: any) => {
               this.isLoading = false;
+
+              // Determine the role-specific message
+              let successMessage = '';
+              switch (this.personalData.jobRole) {
+                case 'Driver':
+                  successMessage = 'Driver Updated Successfully';
+                  break;
+                case 'Distribution Officer':
+                  successMessage = 'Distribution Officer Updated Successfully';
+                  break;
+                case 'Distribution Centre Manager':
+                  successMessage = 'Distribution Centre Manager Updated Successfully';
+                  break;
+                default:
+                  successMessage = 'Distribution Officer Updated Successfully';
+              }
+
               Swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'Distribution Officer Updated Successfully',
+                text: successMessage,
                 confirmButtonText: 'OK',
                 customClass: {
                   popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -1219,9 +1863,6 @@ fetchData() {
                   confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
-              // this.navigatePath(
-              //   '/steckholders/action/view-distribution-officers'
-              // );
               this.location.back();
             },
             (error: any) => {
@@ -1596,4 +2237,22 @@ class CollectionManager {
 class Company {
   id!: number;
   companyNameEnglish!: string;
+}
+
+class Drivers {
+  licNo!: string;
+  insNo!: string;
+  insExpDate!: string | Date;
+  vType!: string;
+  vCapacity!: string;
+  vRegNo!: string;
+
+  licFrontName!: string;
+  licBackName!: string;
+  insFrontName!: string;
+  insBackName!: string;
+  vFrontName!: string;
+  vBackName!: string;
+  vSideAName!: string;
+  vSideBName!: string;
 }

@@ -121,6 +121,7 @@ export class PlantcareUsersService {
     searchNIC: string = "",
     regStatus: string = "",
     district: string = "",
+    plan: string = "",
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -137,6 +138,10 @@ export class PlantcareUsersService {
 
     if (district) {
       url += `&district=${district}`;
+    }
+
+    if (plan) {
+      url += `&plan=${plan}`;
     }
 
     return this.http.get<any>(url, { headers });

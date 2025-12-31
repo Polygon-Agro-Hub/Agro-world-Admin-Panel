@@ -19,26 +19,39 @@
     </div>
     <div class="flex items-center space-x-3 px-6">
       <label for="featureCategory" class="text-textLight dark:text-textDark">Category</label>
-      <select id="featureCategory" name="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)"
+      <!-- <select id="featureCategory" name="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)"
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full">
-        <!-- Bind to the 'category' name but store the 'id' -->
         <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.category }}</option>
         <option value="add_new">Add New</option>
-      </select>
+      </select> -->
+      <p-dropdown [(ngModel)]="selectedCategory" [options]="categories" optionLabel="category" optionValue="id"
+        (onChange)="onCategoryChange($event)" placeholder="Select a category" [filter]="true" filterBy="category"
+         styleClass="custom-dropdown w-[300px] border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" [style]="{ width: '300px' }">
+        <ng-template pTemplate="item" let-category>
+          <div class="flex align-items-center">
+            <div>{{category.category}}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+
+      <!-- Add New option can be handled in the component or as a separate button -->
+      <!-- <button *ngIf="selectedCategory === 'add_new'" class="mt-2 p-button p-button-text">
+        Add New Category
+      </button> -->
 
       <!-- Show input field only when 'Add New' is selected -->
-      <input *ngIf="selectedCategory === 'add_new'" type="text" [(ngModel)]="newCategory" (blur)="addNewCategory()"
-        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+      <input *ngIf="selectedCategory === -1" type="text" [(ngModel)]="newCategory" (blur)="addNewCategory()"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-tileLight dark:bg-tileBlack dark:text-white"
         placeholder="Enter new category" />
 
 
 
       <label for="featureCategory" class="text-textLight dark:text-textDark w-40">Feature </label>
       <input type="text" id="featureCategory" name="category" [(ngModel)]="createCategroyObj.category"
-        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-tileLight dark:bg-tileBlack dark:text-white"
         placeholder="Enter feature" />
 
-      <button (click)="addCategory()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">
+      <button (click)="addCategory()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition cursor-pointer">
         Add
       </button>
     </div>
@@ -90,12 +103,12 @@
                   {{ feature.name }}
                 </td>
                 <td *ngFor="let position of positionList" class="border border-gray-300 p-2 text-center">
-                  <input type="checkbox" class="form-checkbox h-5 w-5 text-[#3980C0]"
+                  <input type="checkbox" class="form-checkbox h-5 w-5 text-[#3980C0] cursor-pointer"
                     [checked]="isChecked(feature.id, position.id)"
                     (change)="onCheckboxChange($event, feature.id, position.id)" />
                 </td>
                 <td class="border border-gray-300 py-2 text-center">
-                  <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                  <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] cursor-pointer"
                     (click)="editFeature(feature.id, feature.name)">
                     <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                       <title>pen-to-square</title>
@@ -126,10 +139,10 @@
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
     </div>
     <div class="flex flex-row items-center justify-center gap-4">
-      <button class="bg-[#74788D] text-[#D3D3D3] rounded-lg shadow-md px-4 py-2" (click)="cancelEditFeature()">
+      <button class="bg-[#74788D] text-[#D3D3D3] rounded-lg shadow-md px-4 py-2 cursor-pointer" (click)="cancelEditFeature()">
         Cancel
       </button>
-      <button class="bg-[#3980C0] text-white rounded-lg shadow-md px-6 py-2" (click)="editFeatureOnSubmit()">
+      <button class="bg-[#3980C0] text-white rounded-lg shadow-md px-6 py-2 cursor-pointer" (click)="editFeatureOnSubmit()">
         Save
       </button>
     </div>

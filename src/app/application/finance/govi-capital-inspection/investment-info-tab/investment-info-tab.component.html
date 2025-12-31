@@ -1,0 +1,49 @@
+<div class="space-y-2 p-10">
+  <!-- Expected investment by the farmer -->
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      01. Expected investment by the farmer
+    </label>
+    <div class="relative">
+      <!-- Text Input -->
+      <input
+        type="text"
+        [value]="formatExpectedInvestment(investmentObj.expected)"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+        readonly
+      />
+    </div>
+  </div>
+
+  <!-- Purpose for investment required as per the farmer -->
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      02. Purpose for investment required as per the farmer
+    </label>
+    <div class="relative">
+      <!-- Text Input -->
+      <input
+        type="text"
+        [value]="investmentObj.purpose"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+        readonly
+      />
+    </div>
+  </div>
+
+  <!-- Expected repayment period as per the farmer in months -->
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      03. Expected repayment period as per the farmer in months
+    </label>
+    <div class="relative">
+      <!-- Text Input -->
+      <input
+        type="text"
+        [value]="investmentObj.repaymentMonth"
+        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+        readonly
+      />
+    </div>
+  </div>
+</div>

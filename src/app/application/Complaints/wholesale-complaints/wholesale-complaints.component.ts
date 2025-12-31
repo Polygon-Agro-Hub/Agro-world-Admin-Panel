@@ -24,6 +24,7 @@ interface Complaint {
   reply?: string;
   complain: string;
   companyName?: string;
+  replyBy:string | null;
 }
 
 interface DropdownOption {
@@ -80,7 +81,11 @@ export class WholesaleComplaintsComponent implements OnInit {
     { label: 'No', value: 'No' },
   ];
   comCategories: DropdownOption[] = [];
-  status: DropdownOption[] = [];
+  status: DropdownOption[] = [
+    { label: 'Assigned', value: 'Assigned' },
+    { label: 'Closed', value: 'Closed' },
+    { label: 'Pending', value: 'Pending' },
+  ];
 
   constructor(
     private router: Router,
@@ -113,6 +118,7 @@ export class WholesaleComplaintsComponent implements OnInit {
             status: this.normalizeStatus(item.status, item.createdAt),
             reply: item.reply || undefined,
             complain: item.complain,
+            replyBy: item.replyBy || null,
           }))
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.filteredComplaints = [...this.complaints];
@@ -120,9 +126,11 @@ export class WholesaleComplaintsComponent implements OnInit {
         this.comCategories = Array.from(
           new Set(this.complaints.map(c => c.complainCategory))
         ).map(cat => ({ label: cat, value: cat }));
-        this.status = Array.from(
-          new Set(this.complaints.map(c => c.status))
-        ).map(st => ({ label: st, value: st }));
+        // this.status = Array.from(
+        //   new Set(this.complaints.map(c => c.status))
+        // ).map(st => ({ label: st, value: st }));
+
+        // console.log('this.status', this.status)
         this.isLoading = false;
         this.hasData = this.complaints.length > 0;
       },

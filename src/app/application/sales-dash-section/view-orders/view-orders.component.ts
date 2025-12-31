@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
@@ -16,6 +15,7 @@ import { finalize } from 'rxjs';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
 
 @Component({
   selector: 'app-view-orders',
@@ -61,7 +61,13 @@ export class ViewOrdersComponent implements OnInit {
     { orderStatus: 'Processing', value: 'Processing' },
     { orderStatus: 'Out For Delivery', value: 'Out For Delivery' },
     { orderStatus: 'Ready to Pickup', value: 'Ready to Pickup' },
+    { orderStatus: 'Picked up', value: 'Picked up' },
+    { orderStatus: 'Collected', value: 'Collected' },
+    { orderStatus: 'On the way', value: 'On the way' },
     { orderStatus: 'Delivered', value: 'Delivered' },
+    { orderStatus: 'Hold', value: 'Hold' },
+    { orderStatus: 'Return', value: 'Return' },
+    { orderStatus: 'Return Received', value: 'Return Received' },
     { orderStatus: 'Cancelled', value: 'Cancelled' },
   ];
 
@@ -83,7 +89,8 @@ export class ViewOrdersComponent implements OnInit {
     private finalInvoiceService: FinalinvoiceService,
     private salesDashService: SalesDashService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
+    private postInvoiceService: PostinvoiceService
   ) {}
 
   ngOnInit() {
@@ -230,7 +237,7 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   onSearch() {
-    this.searchText = this.searchText?.trim() || ''
+    this.searchText = this.searchText?.trim() || '';
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -264,23 +271,26 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   // In your component
-async downloadInvoice(orderId: number, invoiceNumber: string): Promise<void> {
-  this.isLoading = true;
-  try {
-    await this.finalInvoiceService.generateAndDownloadInvoice(orderId, invoiceNumber);
-  } catch (error) {
-    console.error('Error generating invoice:', error);
-    this.errorMessage = 'Failed to generate invoice';
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Failed to generate invoice. Please try again.',
-      confirmButtonColor: '#3085d6',
-    });
-  } finally {
-    this.isLoading = false;
+  async downloadInvoice(orderId: number, invoiceNumber: string): Promise<void> {
+    this.isLoading = true;
+    try {
+      await this.finalInvoiceService.generateAndDownloadInvoice(
+        orderId,
+        invoiceNumber
+      );
+    } catch (error) {
+      console.error('Error generating invoice:', error);
+      this.errorMessage = 'Failed to generate invoice';
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to generate invoice. Please try again.',
+        confirmButtonColor: '#3085d6',
+      });
+    } finally {
+      this.isLoading = false;
+    }
   }
-}
 
   onDateClear() {
     console.log('date', this.date);
@@ -293,6 +303,42 @@ async downloadInvoice(orderId: number, invoiceNumber: string): Promise<void> {
       this.deliveryTypeFilter,
       this.searchText
     );
+  }
+
+  isPostInvoiceEnabled(status: string): boolean {
+    // Define the statuses that allow post-invoice download
+    const enabledStatuses = [
+      'Out For Delivery',
+      'Delivered',
+      'Picked Up',
+      'On the way',
+      'Failed',
+    ];
+
+    return enabledStatuses.includes(status);
+  }
+
+  downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+    this.isLoading = true;
+
+    this.postInvoiceService
+      .generateAndDownloadInvoice(id, tableInvoiceNo)
+      .then(() => {
+        // Success case - no action needed unless you want to show a success message
+      })
+      .catch((error) => {
+        console.error('Error generating invoice:', error);
+        this.errorMessage = 'Failed to download invoice';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 }
 

@@ -94,9 +94,9 @@ export class ViewComplainComponent implements OnInit {
     } else if (this.tokenService.getUserDetails().role === "3") {
       this.filterCategory.type = "Finance";
     }
-    // else if (this.tokenService.getUserDetails().role === "4") {
-    //   this.filterCategory.type = "Call Center";
-    // } 
+    else if (this.tokenService.getUserDetails().role === "4") {
+      this.filterCategory.type = "Call Center";
+    }
     else if (this.tokenService.getUserDetails().role === "5") {
       this.filterCategory.type = "Procuiment";
     }
@@ -328,6 +328,7 @@ class Complain {
   status!: string;
   createdAt!: Date;
   reply!: string;
+  replyBy!: string;
 }
 
 class Status {

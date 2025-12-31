@@ -5,6 +5,8 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionService } from '../../../services/collection.service';
 import jsPDF from 'jspdf';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-expences-farmer-report',
@@ -30,6 +32,8 @@ export class ViewExpencesFarmerReportComponent implements OnInit {
     private router: Router,
     private collectionService: CollectionService,
     private route: ActivatedRoute,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
 
   ) { }
 

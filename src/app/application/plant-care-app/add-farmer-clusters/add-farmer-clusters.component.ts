@@ -95,7 +95,7 @@ export class AddFarmerClustersComponent implements OnInit {
   // Space handling methods for cluster name
   onClusterNameKeydown(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
-    
+
     // Prevent space if cursor is at the beginning or if the field is empty
     if (event.key === ' ' && (input.selectionStart === 0 || !this.clusterName)) {
       event.preventDefault();
@@ -106,15 +106,15 @@ export class AddFarmerClustersComponent implements OnInit {
   onClusterNameInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value;
-    
+
     // Remove leading spaces immediately
     if (value.startsWith(' ')) {
       value = value.trimStart();
     }
-    
+
     // Update the model with the cleaned value
     this.clusterName = value;
-    
+
     // Check for leading or trailing spaces for validation message
     this.hasLeadingOrTrailingSpaces = value !== value.trim();
   }
@@ -286,10 +286,196 @@ export class AddFarmerClustersComponent implements OnInit {
     reader.readAsArrayBuffer(file);
   }
 
+  // onUpload(): void {
+  //   this.formSubmitted = true;
+
+  //   // Ensure cluster name is trimmed before validation
+  //   if (this.clusterName) {
+  //     this.clusterName = this.clusterName.trim();
+  //     this.hasLeadingOrTrailingSpaces = false;
+  //   }
+
+  //   // Validate all required fields
+  //   if (
+  //     !this.selectedFile ||
+  //     !this.clusterName.trim() ||
+  //     !this.selectedDistrict ||
+  //     !this.selectedCertificateId
+  //   ) {
+  //     if (!this.clusterName.trim()) {
+  //       this.showErrorPopup(
+  //         'Cluster Name Required',
+  //         'Please enter a cluster name.'
+  //       );
+  //     }
+  //     if (!this.selectedDistrict) {
+  //       this.showErrorPopup('District Required', 'Please select a district.');
+  //     }
+  //     if (!this.selectedCertificateId) {
+  //       this.showErrorPopup(
+  //         'Certificate Required',
+  //         'Please select a certificate.'
+  //       );
+  //     }
+  //     if (!this.selectedFile) {
+  //       this.showErrorPopup('File Required', 'Please select a file to upload.');
+  //     }
+  //     return;
+  //   }
+
+  //   // Additional validation for leading/trailing spaces
+  //   if (this.hasLeadingOrTrailingSpaces) {
+  //     this.showErrorPopup(
+  //       'Invalid Cluster Name',
+  //       'Cluster name should not have leading or trailing spaces.'
+  //     );
+  //     return;
+  //   }
+
+  //   this.isLoading = true;
+  //   this.errorMessage = '';
+  //   this.successMessage = '';
+
+  //   const reader = new FileReader();
+  //   reader.onload = (e: any) => {
+  //     try {
+  //       const data = e.target.result;
+  //       const workbook = XLSX.read(data, { type: 'array' });
+  //       const firstSheetName = workbook.SheetNames[0];
+  //       const worksheet = workbook.Sheets[firstSheetName];
+  //       const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+  //       // Extract farmers from the file and check for duplicates
+  //       const farmerMap = new Map();
+  //       const duplicates: DuplicateEntry[] = [];
+  //       const farmers: FarmerDetail[] = [];
+
+  //       jsonData.forEach((row: any, index: number) => {
+  //         const nic = this.extractNIC(row);
+  //         const regCode = this.extractRegCode(row);
+
+  //         if (nic && regCode) {
+  //           const key = `${nic}-${regCode}`;
+  //           if (farmerMap.has(key)) {
+  //             // This is a duplicate
+  //             duplicates.push({
+  //               NIC: nic,
+  //               regCode: regCode,
+  //               rowNumber: index + 2,
+  //             });
+  //           } else {
+  //             // First time seeing this combination
+  //             farmerMap.set(key, index);
+  //             farmers.push({
+  //               farmerNIC: nic,
+  //               regCode: regCode,
+  //             });
+  //           }
+  //         }
+  //       });
+
+  //       // CHECK FOR DUPLICATES FIRST - before showing confirmation
+  //       if (duplicates.length > 0) {
+  //         this.isLoading = false;
+  //         this.duplicateEntries = duplicates;
+  //         this.downloadDuplicateCSV(duplicates);
+  //         this.showDuplicateErrorPopup(duplicates);
+  //         return;
+  //       }
+
+  //       if (farmers.length === 0) {
+  //         this.isLoading = false;
+  //         this.showErrorPopup(
+  //           'No Valid Data Found',
+  //           'The uploaded file does not contain any valid NIC and Registration code combinations.'
+  //         );
+  //         return;
+  //       }
+
+  //       const payload: FarmerCluster = {
+  //         clusterName: this.clusterName.trim(),
+  //         district: this.selectedDistrict,
+  //         certificateId: this.selectedCertificateId!,
+  //         farmers: farmers,
+  //       };
+
+  //       Swal.fire({
+  //         icon: 'info',
+  //         title: 'Are you sure?',
+  //         text: 'Do you really want to create this cluster?',
+  //         showCancelButton: true,
+  //         confirmButtonText: 'Yes, Create',
+  //         cancelButtonText: 'No, Cancel',
+  //         customClass: {
+  //           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+  //           title: 'font-semibold text-lg',
+  //         },
+  //         buttonsStyling: true,
+  //       }).then((result) => {
+  //         if (result.isConfirmed) {
+  //           // User confirmed - proceed with API call
+  //           this.farmerClusterService.createFarmerCluster(payload).subscribe({
+  //             next: (response) => {
+  //               this.isLoading = false;
+  //               this.showSuccessPopup(response);
+  //               this.resetForm();
+  //             },
+  //             error: (error) => {
+  //               this.isLoading = false;
+  //               this.handleError(error);
+  //             },
+  //           });
+  //         } else {
+  //           // User cancelled
+  //           this.isLoading = false;
+  //         }
+  //       });
+  //     } catch (error) {
+  //       this.isLoading = false;
+  //       console.error('Error processing file:', error);
+  //       this.handleError(
+  //         new Error('Failed to process the file. Please check the file format.')
+  //       );
+  //     }
+  //   };
+
+  //   reader.onerror = () => {
+  //     this.isLoading = false;
+  //     this.handleError(new Error('Error reading the file. Please try again.'));
+  //   };
+
+  //   reader.readAsArrayBuffer(this.selectedFile);
+  // }
+
   onUpload(): void {
     this.formSubmitted = true;
 
+    Swal.fire({
+      icon: 'info',
+      title: 'Are you sure?',
+      text: 'Do you really want to create this cluster?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Create',
+      cancelButtonText: 'No, Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.processUpload();
+      } else {
+        // User cancelled
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private processUpload(): void {
     // Ensure cluster name is trimmed before validation
+    console.log("Start------------");
+
     if (this.clusterName) {
       this.clusterName = this.clusterName.trim();
       this.hasLeadingOrTrailingSpaces = false;
@@ -335,8 +521,11 @@ export class AddFarmerClustersComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
+    console.log("XL read start-----------------");
+
 
     const reader = new FileReader();
+
     reader.onload = (e: any) => {
       try {
         const data = e.target.result;
@@ -399,37 +588,20 @@ export class AddFarmerClustersComponent implements OnInit {
           farmers: farmers,
         };
 
-        Swal.fire({
-          icon: 'info',
-          title: 'Are you sure?',
-          text: 'Do you really want to create this cluster?',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, Create',
-          cancelButtonText: 'No, Cancel',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-          buttonsStyling: true,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // User confirmed - proceed with API call
-            this.farmerClusterService.createFarmerCluster(payload).subscribe({
-              next: (response) => {
-                this.isLoading = false;
-                this.showSuccessPopup(response);
-                this.resetForm();
-              },
-              error: (error) => {
-                this.isLoading = false;
-                this.handleError(error);
-              },
-            });
-          } else {
-            // User cancelled
+        // TODO: Add your API call here to submit the payload
+        // this.submitCluster(payload);
+        this.farmerClusterService.createFarmerCluster(payload).subscribe({
+          next: (response) => {
             this.isLoading = false;
-          }
+            this.showSuccessPopup(response);
+            this.resetForm();
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.handleError(error);
+          },
         });
+
       } catch (error) {
         this.isLoading = false;
         console.error('Error processing file:', error);

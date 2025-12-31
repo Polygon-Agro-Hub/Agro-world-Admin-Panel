@@ -23,6 +23,8 @@ export class ComplaintsDashbordComponent {
   popupVisibleDistributedcenter = false;
   popupGoviLink = false;
 
+  popupVisibleDriver = false;
+
   constructor(
     private router: Router,
     public tokenService: TokenService,
@@ -79,6 +81,11 @@ export class ComplaintsDashbordComponent {
   togglePopupGovilink() {
     this.closeAllPopups();
     this.popupGoviLink = !this.popupGoviLink;
+  }
+
+  togglepopupVisibleDriver(): void {
+    this.closeAllPopups();
+    this.popupVisibleDriver = !this.popupVisibleDriver;
   }
 
 

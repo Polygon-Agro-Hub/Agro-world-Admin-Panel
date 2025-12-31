@@ -7,7 +7,10 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex space-x-4 pb-5 border-b border-gray-300">
-      <button (click)="setActiveTab('Progress')" [ngClass]="
+      <button *ngIf="
+        permissionService.hasPermission('Polygon centres view dashboard progress tab') ||
+        tokenService.getUserDetails().role === '1'
+      " (click)="setActiveTab('Progress')" [ngClass]="
           activeTab === 'Progress'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -16,7 +19,10 @@
         Progress
       </button>
 
-      <button (click)="setActiveTab('Out for Delivery')" [ngClass]="
+      <button *ngIf="
+        permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') ||
+        tokenService.getUserDetails().role === '1'
+      " (click)="setActiveTab('Out for Delivery')" [ngClass]="
           activeTab === 'Out for Delivery'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -25,7 +31,10 @@
         Out for Delivery
       </button>
 
-      <button (click)="setActiveTab('Officers')" [ngClass]="
+      <button *ngIf="
+        permissionService.hasPermission('Polygon centres view dashboard officers tab') ||
+        tokenService.getUserDetails().role === '1'
+      " (click)="setActiveTab('Officers')" [ngClass]="
           activeTab === 'Officers'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -34,7 +43,10 @@
         Officers
       </button>
 
-      <button (click)="setActiveTab('Officer Target')" [ngClass]="
+      <button *ngIf="
+        permissionService.hasPermission('Polygon centres view dashboard officer target tab') ||
+        tokenService.getUserDetails().role === '1'
+      " (click)="setActiveTab('Officer Target')" [ngClass]="
           activeTab === 'Officer Target'
             ? 'border border-[#415CFF] text-[#415CFF]'
             : 'border border-gray-300 text-textLight dark:text-textDark'
@@ -45,10 +57,10 @@
     </div>
     <div class="h-5"></div>
     <div class="tab-content">
-      <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress'" />
-      <app-out-of-delivery [centerObj]="centerObj"  *ngIf="activeTab === 'Out for Delivery'"></app-out-of-delivery>
-      <app-officers [centerObj]="centerObj" *ngIf="activeTab === 'Officers'"></app-officers>
-      <app-officer-target [centerObj]="centerObj" *ngIf="activeTab === 'Officer Target'"></app-officer-target>
+      <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress' && (permissionService.hasPermission('Polygon centres view dashboard progress tab') || tokenService.getUserDetails().role === '1')"></app-progress>
+      <app-out-of-delivery [centerObj]="centerObj" *ngIf="activeTab === 'Out for Delivery' && (permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') || tokenService.getUserDetails().role === '1')"></app-out-of-delivery>
+      <app-officers [centerObj]="centerObj" *ngIf="activeTab === 'Officers' && (permissionService.hasPermission('Polygon centres view dashboard officers tab') || tokenService.getUserDetails().role === '1')"></app-officers>
+      <app-officer-target [centerObj]="centerObj" *ngIf="activeTab === 'Officer Target' && (permissionService.hasPermission('Polygon centres view dashboard officer target tab') || tokenService.getUserDetails().role === '1')"></app-officer-target>
     </div>
   </div>
 </div>

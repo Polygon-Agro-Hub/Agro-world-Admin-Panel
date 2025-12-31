@@ -111,7 +111,10 @@
               STATUS
             </th>
             <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
-              INVOICE
+              PRE-INVOICE
+            </th>
+            <th class="whitespace-nowrap px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
+              POST-INVOICE
             </th>
           </tr>
         </thead>
@@ -190,12 +193,27 @@
               </span>
             </td>
 
-            <td class="px-4 py-3 flex justify-center text-center dark:text-textDark" *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
-              <button class="text-textLight dark:text-textDark flex justify-center gap-1"
+            <td class="px-4 py-3 text-center dark:text-textDark" *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
+              <button class="text-textLight dark:text-textDark gap-1"
                 (click)="downloadInvoice(item.orderId, item.invNo)">
                 <i class="fa-solid fa-file-lines text-2xl"></i>
               </button>
             </td>
+            <td class="px-4 py-3 text-center dark:text-textDark" 
+    *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
+  
+  <div class="relative inline-block">
+    <button 
+      class="text-textLight dark:text-textDark gap-1"
+      [class.opacity-50]="!isPostInvoiceEnabled(item.status)"
+      [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.status)"
+      [class.cursor-pointer]="isPostInvoiceEnabled(item.status)"
+      [disabled]="!isPostInvoiceEnabled(item.status)"
+      (click)="isPostInvoiceEnabled(item.status) ? downloadPostInvoice(item.orderId, item.invNo) : null">
+      <i class="fa-solid fa-file-lines text-2xl"></i>
+    </button>
+  </div>
+</td>
           </tr>
         </tbody>
       </table>

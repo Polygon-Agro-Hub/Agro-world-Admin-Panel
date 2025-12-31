@@ -43,7 +43,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
   loadingChart = true;
   loadingTable = true;
   isDownloading = false;
-  
 
   constructor(
     private collectionOfficerSrv: CollectionOfficerReportService,
@@ -134,7 +133,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     this.chartOptions = {
       animationEnabled: true,
       // theme: isDarkMode ? 'dark2' : 'light2',
-      backgroundColor: "transparent", // Changed to transparent
+      backgroundColor: 'transparent', // Changed to transparent
       title: {
         text: `${this.selectedDistrict.name} - Crop Weights`,
         fontColor: '#666666',
@@ -150,7 +149,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       axisY: {
         title: 'Total Weight (Kg)',
         includeZero: true,
-        titleFontColor: '#666666',
+        titleFontColor: '#738AC0',
         labelFontColor: '#666666',
         lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
         tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
@@ -191,206 +190,293 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     this.loadingChart = false;
   }
 
- async exportToPDF(): Promise<void> {
-  this.isDownloading = true;
+  async exportToPDF(): Promise<void> {
+    this.isDownloading = true;
 
-  setTimeout(() => {
-    const doc = new jsPDF('p', 'mm', 'a4'); // Portrait
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    
-    const margin = 20;
-    const chartStartX = 50;
-    const chartStartY = 60;
-    const barHeight = 8;
-    const gap = 2;
-    const chartWidth = 130;
-    
-    const colors = {
-      gradeA: '#FF9263',
-      gradeB: '#5F75E9',
-      gradeC: '#3DE188',
-    };
+    setTimeout(() => {
+      const doc = new jsPDF('p', 'mm', 'a4'); // Portrait
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
 
-    // Title
-    doc.setFontSize(18);
-    doc.setTextColor(0, 0, 0);
-    doc.text(
-      `${this.selectedDistrict.name} - Crop Grade Report`,
-      pageWidth / 2,
-      20,
-      { align: 'center' }
-    );
+      const margin = 20;
+      const chartStartX = 50;
+      const chartStartY = 70; // Increased from 60 to give more space for title
+      const barHeight = 8;
+      const gap = 2;
+      const chartHeight = 100; // Fixed height for the chart area
+      const chartWidth = 100; // Width of the bar area
 
-    if (!this.reportDetails || this.reportDetails.length === 0) {
-      doc.setFontSize(11);
-      doc.text('No data available to display.', chartStartX, chartStartY);
-      doc.save(`${this.selectedDistrict.name}_Report.pdf`);
-      this.isDownloading = false;
-      return;
-    }
+      const colors = {
+        gradeA: '#FF9263',
+        gradeB: '#5F75E9',
+        gradeC: '#3DE188',
+      };
 
-    // Draw Color Legend - Centered with smaller squares
-    const legendY = 35;
-    const legendSquareSize = 4;
-    const legendItemSpacing = 18;
-    const totalLegendWidth = (legendSquareSize * 3) + (legendItemSpacing * 2) + (3 * 2); // squares + spacing + text spacing
-    const legendStartX = (pageWidth - totalLegendWidth) / 2;
+      // Title - Match the screenshot style
+      doc.setFontSize(16);
+      doc.setTextColor(102, 102, 102); // Gray color #666666
+      doc.text(
+        `${this.selectedDistrict.name} - Crop Weights`,
+        pageWidth / 2,
+        25,
+        { align: 'center' }
+      );
 
-    doc.setFontSize(10);
-    
-    // Grade A
-    doc.setFillColor(255, 146, 99);
-    doc.rect(legendStartX, legendY, legendSquareSize, legendSquareSize, 'F');
-    doc.setTextColor(0, 0, 0);
-    doc.text('A', legendStartX + legendSquareSize + 2, legendY + 3.5);
-
-    // Grade B
-    const legendBX = legendStartX + legendSquareSize + 2 + 3 + legendItemSpacing;
-    doc.setFillColor(95, 117, 233);
-    doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
-    doc.text('B', legendBX + legendSquareSize + 2, legendY + 3.5);
-
-    // Grade C
-    const legendCX = legendBX + legendSquareSize + 2 + 3 + legendItemSpacing;
-    doc.setFillColor(61, 225, 136);
-    doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
-    doc.text('C', legendCX + legendSquareSize + 2, legendY + 3.5);
-
-    const groupedData = this.reportDetails.map((crop) => ({
-      cropName: crop.cropName,
-      gradeA: crop.qtyA || 0,
-      gradeB: crop.qtyB || 0,
-      gradeC: crop.qtyC || 0,
-      totalWeight: (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0),
-    }));
-
-    const maxWeight = Math.max(...groupedData.map((crop) => crop.totalWeight));
-    const chartHeight = groupedData.length * (barHeight + gap);
-    const chartEndY = chartStartY + chartHeight;
-
-    // Y-axis
-    const yAxisX = chartStartX;
-    const yAxisTop = chartStartY - 10;
-    const yAxisBottom = chartEndY + 5;
-    
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.line(yAxisX, yAxisBottom, yAxisX, yAxisTop);
-    
-    // Y-axis arrow
-    doc.line(yAxisX, yAxisTop, yAxisX - 2, yAxisTop + 3);
-    doc.line(yAxisX, yAxisTop, yAxisX + 2, yAxisTop + 3);
-    
-    // Y-axis label - aligned with arrow end
-    doc.setFontSize(10);
-    doc.setTextColor(60, 60, 60);
-    doc.text('Crop Variety', 20, yAxisTop + 1, { align: 'left' });
-
-    // Draw bars
-    let currentY = chartStartY;
-    doc.setFontSize(10);
-    
-    groupedData.forEach((crop) => {
-      // Crop name on left - aligned at x=20
-      doc.setTextColor(50, 50, 50);
-      doc.text(crop.cropName, 20, currentY + barHeight / 2 + 1.5, { align: 'left' });
-
-      let currentX = chartStartX;
-      
-      // Grade A bar
-      if (crop.gradeA > 0) {
-        const barWidth = (crop.gradeA / maxWeight) * chartWidth;
-        doc.setFillColor(255, 146, 99);
-        doc.rect(currentX, currentY, barWidth, barHeight, 'F');
-        currentX += barWidth;
-      }
-      
-      // Grade B bar
-      if (crop.gradeB > 0) {
-        const barWidth = (crop.gradeB / maxWeight) * chartWidth;
-        doc.setFillColor(95, 117, 233);
-        doc.rect(currentX, currentY, barWidth, barHeight, 'F');
-        currentX += barWidth;
-      }
-      
-      // Grade C bar
-      if (crop.gradeC > 0) {
-        const barWidth = (crop.gradeC / maxWeight) * chartWidth;
-        doc.setFillColor(61, 225, 136);
-        doc.rect(currentX, currentY, barWidth, barHeight, 'F');
-        currentX += barWidth;
+      if (!this.reportDetails || this.reportDetails.length === 0) {
+        doc.setFontSize(11);
+        doc.text('No data available to display.', chartStartX, chartStartY);
+        doc.save(`${this.selectedDistrict.name}_Report.pdf`);
+        this.isDownloading = false;
+        return;
       }
 
-      currentY += barHeight + gap;
-    });
+      // Crop list on the left (y-axis labels)
+      const cropNames = this.reportDetails.map((crop) => crop.cropName);
+      const maxCropNameLength = Math.max(
+        ...cropNames.map((name) => name.length)
+      );
+      const cropNameAreaWidth = 35; // Fixed width for crop names
 
-    // X-axis
-    const xAxisY = chartEndY + 5;
-    const xAxisEnd = chartStartX + chartWidth + 8;
-    
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    doc.line(chartStartX, xAxisY, xAxisEnd, xAxisY);
-    
-    // X-axis arrow
-    doc.line(xAxisEnd, xAxisY, xAxisEnd - 3, xAxisY - 2);
-    doc.line(xAxisEnd, xAxisY, xAxisEnd - 3, xAxisY + 2);
-    
-    // X-axis label
-    doc.setFontSize(10);
-    doc.setTextColor(60, 60, 60);
-    doc.text('kg', xAxisEnd + 3, xAxisY + 1);
+      // Calculate positions
+      const totalBarsHeight = cropNames.length * (barHeight + gap);
+      const barAreaStartY = chartStartY + (chartHeight - totalBarsHeight) / 2; // Center bars vertically
+      const barAreaEndY = barAreaStartY + totalBarsHeight;
 
-    // Summary Table
-    const tableStartY = chartEndY + 20;
-    const cellHeight = 10;
-    // Table width should match the x-axis length (from chartStartX to xAxisEnd)
-    const tableWidth = xAxisEnd - chartStartX;
-    const tableColWidths = [tableWidth * 0.25, tableWidth * 0.1875, tableWidth * 0.1875, tableWidth * 0.1875, tableWidth * 0.1875];
-    const tableStartX = chartStartX;
-    let rowY = tableStartY;
+      // Draw y-axis line
+      const yAxisX = chartStartX - 0.5; // X position for y-axis line
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5); // Extended slightly above and below bars
 
-    const headers = ['Crop Variety', 'Grade A', 'Grade B', 'Grade C', 'Total'];
-    doc.setFontSize(9);
-    doc.setDrawColor(0, 0, 0);
-    doc.setLineWidth(0.5);
-    
-    // Draw header row
-    let cellX = tableStartX;
-    headers.forEach((header, index) => {
-      doc.setFillColor(255, 255, 255);
-      doc.setTextColor(0, 0, 0);
-      doc.rect(cellX, rowY, tableColWidths[index], cellHeight, 'S');
-      doc.text(header, cellX + tableColWidths[index] / 2, rowY + 6.5, { align: 'center' });
-      cellX += tableColWidths[index];
-    });
+      // Draw y-axis title "Crops" (vertical text on the left)
+      doc.setFontSize(10);
+      doc.setTextColor('#738AC0');
 
-    rowY += cellHeight;
+      // Use text rotation for vertical text
+      const textX = yAxisX - 5;
+      const textY = (barAreaStartY + barAreaEndY) / 3;
+      doc.text('Crops', textX, textY, { angle: 360, align: 'center' });
 
-    // Draw data rows
-    groupedData.forEach((crop) => {
-      const values = [
-        crop.cropName,
-        crop.gradeA ? `${crop.gradeA}kg` : '-',
-        crop.gradeB ? `${crop.gradeB}kg` : '-',
-        crop.gradeC ? `${crop.gradeC}kg` : '-',
-        `${crop.totalWeight}kg`,
-      ];
+      // Draw y-axis tick marks for each crop
+      let currentBarY = barAreaStartY;
+      cropNames.forEach((cropName, index) => {
+        // Draw small tick mark on y-axis
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.5);
+        doc.line(
+          yAxisX,
+          currentBarY + barHeight / 2,
+          yAxisX - 2,
+          currentBarY + barHeight / 2
+        );
 
-      cellX = tableStartX;
-      values.forEach((value, index) => {
-        doc.setTextColor(0, 0, 0);
-        doc.rect(cellX, rowY, tableColWidths[index], cellHeight, 'S');
-        doc.text(value, cellX + tableColWidths[index] / 2, rowY + 6.5, { align: 'center' });
+        // Draw crop name
+        doc.setFontSize(10);
+        doc.setTextColor(102, 102, 102); // Gray color #666666
+        doc.text(cropName, chartStartX - 10, currentBarY + barHeight / 2 + 2, {
+          align: 'right',
+        });
+
+        currentBarY += barHeight + gap;
+      });
+
+      // Draw the horizontal bars
+      currentBarY = barAreaStartY;
+
+      // Find maximum total weight for scaling
+      const maxWeight = Math.max(
+        ...this.reportDetails.map(
+          (crop) => (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0)
+        )
+      );
+
+      // Scale factor to fit within chartWidth
+      const scaleFactor = chartWidth / maxWeight;
+
+      // Draw bars for each crop
+      this.reportDetails.forEach((crop, index) => {
+        const totalWeight =
+          (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0);
+
+        let currentX = chartStartX;
+
+        // Draw Grade A
+        if (crop.qtyA > 0) {
+          const segmentWidth = crop.qtyA * scaleFactor;
+          doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
+          doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
+          currentX += segmentWidth;
+        }
+
+        // Draw Grade B
+        if (crop.qtyB > 0) {
+          const segmentWidth = crop.qtyB * scaleFactor;
+          doc.setFillColor(95, 117, 233); // #5F75E9 - Grade B color
+          doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
+          currentX += segmentWidth;
+        }
+
+        // Draw Grade C (first segment - appears on the left in horizontal bar)
+        if (crop.qtyC > 0) {
+          const segmentWidth = crop.qtyC * scaleFactor;
+          doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
+          doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
+          currentX += segmentWidth;
+        }
+
+        // Draw total weight label at the end of the bar
+        if (totalWeight > 0) {
+          doc.setFontSize(8);
+          doc.setTextColor(0, 0, 0);
+          const labelX = chartStartX + totalWeight * scaleFactor + 2;
+          doc.text(
+            `${totalWeight}kg`,
+            labelX,
+            currentBarY + barHeight / 2 + 1.5
+          );
+        }
+
+        currentBarY += barHeight + gap;
+      });
+
+      // Draw x-axis line and labels
+      const xAxisStartX = chartStartX;
+      const xAxisEndX = chartStartX + chartWidth + 30; // Extra space for labels
+      const xAxisY = barAreaStartY + totalBarsHeight + 5;
+
+      // Draw x-axis line (connected to y-axis)
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
+      doc.line(xAxisStartX, xAxisY, xAxisEndX, xAxisY);
+
+      // Connect y-axis to x-axis
+      doc.line(yAxisX, xAxisY, yAxisX, barAreaEndY + 5); // Extend y-axis down to x-axis
+
+      // Draw x-axis labels (0 to maxWeight with increments)
+      doc.setFontSize(8);
+      doc.setTextColor(102, 102, 102);
+
+      // Calculate tick intervals
+      const maxTickValue = Math.ceil(maxWeight / 100) * 100;
+      const tickCount = Math.min(8, Math.ceil(maxTickValue / 100));
+
+      for (let i = 0; i <= tickCount; i++) {
+        const tickValue = (maxTickValue / tickCount) * i;
+        const tickX = chartStartX + tickValue * scaleFactor;
+
+        // Draw tick mark on x-axis
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(0.5);
+        doc.line(tickX, xAxisY, tickX, xAxisY + 2);
+
+        // Draw label
+        const labelText = tickValue === 0 ? '0' : tickValue.toLocaleString();
+        doc.text(labelText, tickX, xAxisY + 6, { align: 'center' });
+      }
+
+      // Draw x-axis title
+      doc.setFontSize(10);
+      doc.setTextColor('#738AC0');
+      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 15, {
+        align: 'right',
+      });
+
+      // Draw legend
+      const legendY = chartStartY - 15;
+      const legendSquareSize = 6;
+
+      doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
+      doc.rect(chartStartX, legendY, legendSquareSize, legendSquareSize, 'F');
+      doc.setFontSize(9);
+      doc.setTextColor(102, 102, 102);
+      doc.text(
+        'Grade A',
+        chartStartX + legendSquareSize + 3,
+        legendY + legendSquareSize / 2 + 1
+      );
+
+      // Grade B
+      const legendBX = chartStartX + 45;
+      doc.setFillColor(95, 117, 233); // #5F75E9 - Grade B color
+      doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
+      doc.text(
+        'Grade B',
+        legendBX + legendSquareSize + 3,
+        legendY + legendSquareSize / 2 + 1
+      );
+
+      // Grade C
+      const legendCX = legendBX + 45;
+      doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
+      doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
+      doc.text(
+        'Grade C',
+        legendCX + legendSquareSize + 3,
+        legendY + legendSquareSize / 2 + 1
+      );
+
+      // Summary Table (optional - you can remove this if you don't want it)
+      const tableStartY = xAxisY + 30;
+      const cellHeight = 8;
+      const tableColWidths = [40, 30, 30, 30, 30];
+      const tableStartX = (pageWidth - 160) / 2; // Center the table
+      let rowY = tableStartY;
+
+      const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
+      doc.setFontSize(9);
+      doc.setDrawColor(200, 200, 200);
+      doc.setLineWidth(0.2);
+
+      // Draw header row
+      let cellX = tableStartX;
+      headers.forEach((header, index) => {
+        doc.setFillColor(245, 245, 245);
+        doc.setTextColor(102, 102, 102);
+        doc.rect(cellX, rowY, tableColWidths[index], cellHeight, 'FD');
+        doc.text(header, cellX + tableColWidths[index] / 2, rowY + 5, {
+          align: 'center',
+        });
         cellX += tableColWidths[index];
       });
 
       rowY += cellHeight;
-    });
 
-    doc.save(`${this.selectedDistrict.name}_CropGradeReport.pdf`);
-    this.isDownloading = false;
-  }, 0);
-}
+      // Draw data rows
+      this.reportDetails.forEach((crop) => {
+        const totalWeight =
+          (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0);
+        const values = [
+          crop.cropName,
+          crop.qtyA ? `${crop.qtyA}kg` : '-',
+          crop.qtyB ? `${crop.qtyB}kg` : '-',
+          crop.qtyC ? `${crop.qtyC}kg` : '-',
+          `${totalWeight}kg`,
+        ];
+
+        cellX = tableStartX;
+        values.forEach((value, index) => {
+          doc.setTextColor(0, 0, 0);
+          doc.rect(cellX, rowY, tableColWidths[index], cellHeight, 'S');
+          doc.text(value, cellX + tableColWidths[index] / 2, rowY + 5, {
+            align: 'center',
+          });
+          cellX += tableColWidths[index];
+        });
+
+        rowY += cellHeight;
+      });
+
+      // Footer
+      const footerY = pageHeight - 10;
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      const date = new Date().toLocaleDateString();
+      doc.text(`Generated on ${date}`, pageWidth / 2, footerY, {
+        align: 'center',
+      });
+
+      doc.save(`${this.selectedDistrict.name}_CropWeights.pdf`);
+      this.isDownloading = false;
+    }, 0);
+  }
 }

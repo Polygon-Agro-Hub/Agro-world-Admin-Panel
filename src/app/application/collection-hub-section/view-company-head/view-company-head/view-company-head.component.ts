@@ -10,6 +10,8 @@ import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/
 import { FormsModule } from '@angular/forms';
 import { CollectionCenterService } from '../../../../services/collection-center/collection-center.service';
 import { CollectionService } from '../../../../services/collection.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-company-head',
@@ -45,7 +47,9 @@ export class ViewCompanyHeadComponent implements OnInit {
     private router: Router,
     private companyService: CollectionCenterService,
     private datePipe: DatePipe,
-    private collectionService: CollectionService
+    private collectionService: CollectionService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit() {

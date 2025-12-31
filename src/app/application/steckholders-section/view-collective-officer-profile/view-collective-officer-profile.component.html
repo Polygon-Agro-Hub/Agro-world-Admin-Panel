@@ -26,38 +26,81 @@
           </p>
 
           <!-- collection officer -->
-          <p *ngIf="officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head'" class="font-semibold text-textLight dark:text-textDark">
+          <p *ngIf="officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head' "
+            class="font-semibold text-textLight dark:text-textDark">
             {{ officerObj.centerRegCode || 'Officer has been disclaimed - No Assigned Centre' }}
           </p>
           <!-- distribution officer -->
-           <p *ngIf="officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head'" class="font-semibold text-textLight dark:text-textDark">
+          <p *ngIf="officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head' || officerObj.jobRole === 'Driver'"
+            class="font-semibold text-textLight dark:text-textDark">
             {{ officerObj.distributedCenterName || 'Officer has been disclaimed - No Assigned Centre' }}
           </p>
           <p class="dark:text-[#a6aebb]">{{ officerObj.companyNameEnglish }}</p>
         </div>
       </div>
 
-      <div class="flex">
-        <button *ngIf="isAgroworldCompany()"
-          class="bg-[#E20000] text-white font-semibold rounded-lg shadow-md px-5 py-2 mr-2"
-          (click)="toggleDisclaimView()" [disabled]="officerObj.claimStatus == 0" [ngClass]="{
+      <div class="flex flex-col gap-y-6">
+        <div class="flex flex-row gap-4 justify-between" *ngIf="officerObj.jobRole === 'Driver'">
+          <div class="flex flex-row justify-center min-w-24"
+            *ngIf=" permissionService.hasPermission('Stakeholder delete driver') || tokenService.getUserDetails().role === '1'">
+            <button
+              class="flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#6c2d3180] bg-[#FFDBDC80] dark:text-[#db4848] text-[#FF0000] border-2 dark:border-[#FF0000] border-[#FF0000] text-lg rounded-xl shadow-md"
+              (click)="deleteOfficer(officerObj.jobRole)">
+              <i class="fa-solid fa-trash text-base text-[#FF0000] dark:text-[#FF0000]"></i>
+              <span class="">Delete</span>
+            </button>
+          </div>
+
+          <div class="flex flex-row justify-center "
+            *ngIf="permissionService.hasPermission('Stakeholder edit driver') || tokenService.getUserDetails().role === '1'">
+            <button
+              class="min-w-24 flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#38608480] bg-[#DBEEFF80] dark:text-[#3980C0] text-[#3980C0] border-2 border-[#3980C0] dark:border-[#3980C0] text-lg rounded-xl shadow-md"
+              (click)="editOfficer(officerObj.id, officerObj.jobRole)">
+
+              <i class="fa-solid fa-pen-to-square text-base text-[#3980C0] dark:text-[#3980C0]"></i>
+              <span class="">Edit</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex">
+          <button *ngIf="(
+          (urlSegment === 'steckholders' && (officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head') && permissionService.hasPermission('Stakeholder claim or disclaim collection officer')) ||
+          (urlSegment === 'distribution-hub' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Distribution hub claim or disclaim officer')) ||
+          (urlSegment === 'steckholders' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Stakeholder claim or disclaim distribution officer')) ||
+          (urlSegment === 'steckholders' && officerObj.jobRole === 'Driver' && permissionService.hasPermission('Driver claim or disclaim')) ||
+          tokenService.getUserDetails().role === '1') &&  officerObj.jobRole !== 'Driver'"
+            class="bg-[#E20000] text-white font-semibold rounded-lg shadow-md px-5 py-2 mr-2"
+            (click)="toggleDisclaimView()" [disabled]="officerObj.claimStatus == 0" [ngClass]="{
             'bg-[#E20000]': officerObj.claimStatus !== 0,
             'bg-gray-400 cursor-not-allowed': officerObj.claimStatus === 0
           }">
-          {{ officerObj.claimStatus == 0 ? "Disclaimed" : "Disclaim" }}
-        </button>
-        <button *ngIf="isAgroworldCompany() && (officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head')"
-          class="bg-[#415CFF] text-white font-semibold rounded-lg shadow-md px-5 py-2 ml-2"
-          (click)="viewOfficerTarget(officerId)">
-          View Target
-        </button>
+            {{ officerObj.claimStatus == 0 ? "Disclaimed" : "Disclaim" }}
+          </button>
+          <button *ngIf="
+        (officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head') && 
+        (
+          (urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder view collection target')) ||
+          tokenService.getUserDetails().role === '1')"
+            class="bg-[#415CFF] text-white font-semibold rounded-lg shadow-md px-5 py-2 ml-2"
+            (click)="viewOfficerTarget(officerId)">
+            View Target
+          </button>
+        </div>
       </div>
+
     </div>
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <div class="flex flex-row justify-between">
         <p class="text-[#030308] dark:text-[#ffffff]">Personal Information</p>
-        <button class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md" (click)="generatePDF()"
+        <button *ngIf="(
+          (urlSegment === 'steckholders' && (officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head') && permissionService.hasPermission('Stakeholder collection officer download pdf')) ||
+          (urlSegment === 'distribution-hub' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Distribution hub officer download pdf')) ||
+          (urlSegment === 'steckholders' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Stakeholder distribution officer download pdf')) ||
+          (urlSegment === 'steckholders' && officerObj.jobRole === 'Driver' && permissionService.hasPermission('Driver download pdf')) ||
+          tokenService.getUserDetails().role === '1')"
+          class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md" (click)="generatePDF()"
           [disabled]="isGeneratingPDF">
           <i class="fa-solid fa-download" [ngClass]="{ hidden: isGeneratingPDF }"></i>
           <i class="fa-solid fa-spinner fa-spin" [ngClass]="{ hidden: !isGeneratingPDF }"></i>
@@ -191,12 +234,128 @@
         </div>
       </div>
     </div>
+
+
+    <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Driving Details</p>
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Driving License ID</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.licNo}}</p>
+        </div>
+
+        <div>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">License's Front Image</p>
+          <a [href]="officerObj.licFrontImg" target="_blank">
+            <i class="fa-solid fa-images text-3xl text-black"></i>
+          </a>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">License's Back Image</p>
+          <a [href]="officerObj.licBackImg" target="_blank">
+            <i class="fa-solid fa-images text-3xl text-black"></i>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Vehicle Insurance Details</p>
+
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Vehicle Insurance Number</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.insNo}}</p>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Insurance Expire Date</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.insExpDate | date:'yyyy-MM-dd' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Insurance's Front Image</p>
+          <a [href]="officerObj.insFrontImg" target="_blank">
+            <i class="fa-solid fa-images text-3xl text-black"></i>
+          </a>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Insurance's Back Image</p>
+          <a [href]="officerObj.insBackImg" target="_blank">
+            <i class="fa-solid fa-images text-3xl text-black"></i>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff]">Vehicle Details</p>
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Vehicle Registration Number</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.vRegNo}}</p>
+        </div>
+
+        <div>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Vehicle Type</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.vType}}</p>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Vehicle Capacity</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">{{officerObj.vCapacity}}Kg</p>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Vehicle’s Front Image</p>
+          <a [href]="officerObj.vehFrontImg" target="_blank">
+            <i class="fa-solid fa-images text-3xl text-black"></i>
+          </a>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Vehicle’s Back Image</p>
+          <a [href]="officerObj.vehBackImg" target="_blank">
+            <i class="fa-solid fa-images text-3xl text-black"></i>
+          </a>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Vehicle’s Side Image - 1</p>
+          <a [href]="officerObj.vehSideImgA" target="_blank">
+            <i class="fa-solid fa-images text-3xl text-black"></i>
+          </a>
+        </div>
+
+        <div>
+          <p class="text-[#627189] dark:text-textDark">Vehicle’s Side Image - 2</p>
+          <a [href]="officerObj.vehSideImgB" target="_blank">
+            <i class="fa-solid fa-images text-3xl text-black"></i>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
   </div>
 </div>
-
-
-
-
 
 <div *ngIf="showDisclaimView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
@@ -212,12 +371,12 @@
         </p>
         <p class="font-semibold text-lg dark:text-white">
           "{{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}""
-          (EMP ID - "{{officerObj.fullEmpId}}")
+          (EMP ID - "{{ officerObj.fullEmpId }}")
           <span class="font-normal dark:text-textDark">from centre</span> <br />
           "{{ officerObj.distributedCenterName }}"?
         </p>
 
-      
+
       </div>
 
       <!-- Buttons -->

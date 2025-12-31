@@ -24,6 +24,7 @@ interface FieldAuditHistory {
   status: string;
   assignedOn: string;
   assignedByName: string;
+  assignedOfficer: string;
 }
 
 interface DropdownOption {
@@ -145,7 +146,8 @@ export class ViewJobHistoryComponent implements OnInit {
             onScreenTime: item.onScreenTime || '-',
             status: item.status,
             assignedOn: this.formatDateTime(item.assignedOn),
-            assignedByName: item.assignedByName || '-'
+            assignedByName: item.assignedByName || '-',
+            assignedOfficer: item.assignedOfficer || '-'
           }));
           this.totalItems = this.jobHistory.length;
           this.hasData = this.totalItems > 0;

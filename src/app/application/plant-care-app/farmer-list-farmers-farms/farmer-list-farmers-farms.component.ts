@@ -6,6 +6,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { PlantcareUsersService, Farm } from '../../../services/plant-care/plantcare-users.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 @Component({
   selector: 'app-farmer-list-farmers-farms',
   standalone: true,
@@ -32,7 +34,9 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
   constructor(
     private farmerFarmsService: PlantcareUsersService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   ngOnInit(): void {

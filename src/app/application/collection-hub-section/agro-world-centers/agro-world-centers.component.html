@@ -155,12 +155,24 @@
             </th> -->
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf="
+                  permissionService.hasPermission('View Polygon Centre Dashboard') ||
+                  tokenService.getUserDetails().role === '1'
+                "
             ></th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf="
+                  permissionService.hasPermission('Edit Polygon Collection Centre') ||
+                  tokenService.getUserDetails().role === '1'
+                "
             ></th>
             <th
               class="py-3 font-normal text-textLight dark:text-textDark text-left"
+              *ngIf="
+                  permissionService.hasPermission('Delete Polygon Collection Centre') ||
+                  tokenService.getUserDetails().role === '1'
+                "
             ></th>
           </tr>
         </thead>
@@ -225,7 +237,7 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 *ngIf="
-                  permissionService.hasPermission('View Collection Center') ||
+                  permissionService.hasPermission('View Polygon Centre Dashboard') ||
                   tokenService.getUserDetails().role === '1'
                 "
                 class="w-6 h-6 mr-3 text-blue-500 hover:text-blue-700"
@@ -252,7 +264,7 @@
             <td class=" text-[#367bfa] hover:text-[#83aefd]">
               <button
                 *ngIf="
-                  permissionService.hasPermission('Edit Collection Center') ||
+                  permissionService.hasPermission('Edit Polygon Collection Centre') ||
                   tokenService.getUserDetails().role === '1'
                 "
                 class="text-blue-500 hover:text-blue-700 flex items-center justify-center w-6 h-6"
@@ -278,7 +290,7 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 *ngIf="
-                  permissionService.hasPermission('Delete Collection Center') ||
+                  permissionService.hasPermission('Delete Polygon Collection Centre') ||
                   tokenService.getUserDetails().role === '1'
                 "
                 class="text-red-500 hover:text-red-700"

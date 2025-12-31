@@ -4,8 +4,8 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button *ngIf="
-    (permissionService.hasPermission('Onboard individual collection CO / CCM / DO') ||
+<button *ngIf="(
+  (permissionService.hasPermission('Stakeholders view distribution officer') && permissionService.hasPermission('Onboard distributed officers') ) ||
     tokenService.getUserDetails().role === '1') && this.centerId == null
   " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="navigatePath('/steckholders/action/view-distribution-officers/create-distribution-officer')">
@@ -147,8 +147,7 @@
         </i>
         <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
         <div class="mr-5">
-          <p-dropdown
-          #topfilters
+          <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="selectStatus != null && selectStatus !== ''" placeholder="Status" [(ngModel)]="selectStatus"
@@ -156,8 +155,7 @@
         </div>
 
         <div class="mr-5">
-          <p-dropdown
-          #topfilters
+          <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="centerStatusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
             [showClear]="selectCenterStatus != null && selectCenterStatus !== ''" placeholder="Centre Status"
@@ -165,8 +163,7 @@
         </div>
 
         <div class="mr-5">
-          <p-dropdown
-          #topfilters
+          <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="role != null && role !== ''"
             placeholder="Role" [(ngModel)]="role" (onChange)="applyFilters()"></p-dropdown>
@@ -241,16 +238,10 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Centre Reg Code
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
-                permissionService.hasPermission('Claim collection officer') ||
-                tokenService.getUserDetails().role === '1'
-              ">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Centre Status
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
-                permissionService.hasPermission('Approve collection officer') ||
-                tokenService.getUserDetails().role === '1'
-              ">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Status
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -263,16 +254,16 @@
               Last Modified By
             </th>
             <th *ngIf="
-                permissionService.hasPermission('View individual collection officer') ||
+                permissionService.hasPermission('Stakeholder view individual distribution officers') ||
                 tokenService.getUserDetails().role === '1'
               " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
 
             <th *ngIf="
-                permissionService.hasPermission('Manage CO / CCM / DO') ||
+                permissionService.hasPermission('Stakeholder edit individual distribution officers') ||
                 tokenService.getUserDetails().role === '1'
               " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
             <th *ngIf="
-                permissionService.hasPermission('Delete(remove) CO / CCM / DO') ||
+                permissionService.hasPermission('Stakeholder delete individual distribution officers') ||
                 tokenService.getUserDetails().role === '1'
               " class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
           </tr>
@@ -317,11 +308,11 @@
               <div>
                 <span [class.cursor-pointer]="
                     permissionService.hasPermission(
-                      'Claim collection officer'
+                      'Stakeholder claim distributed officers'
                     ) || tokenService.getUserDetails().role === '1'
                   " (click)="
                     permissionService.hasPermission(
-                      'Claim collection officer'
+                      'Stakeholder claim distributed officers'
                     ) || tokenService.getUserDetails().role === '1'
                       ? handleClaimButtonClick(item)
                       : null
@@ -346,11 +337,11 @@
                   }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
                   [class.cursor-pointer]="
                     permissionService.hasPermission(
-                      'Approve distribution officer'
+                      'Stakeholder approve distribution officers'
                     ) || tokenService.getUserDetails().role === '1'
                   " (click)="
                     permissionService.hasPermission(
-                      'Approve distribution officer'
+                      'Stakeholder approve distribution officers'
                     ) || tokenService.getUserDetails().role === '1'
                       ? openPopup(item)
                       : null
@@ -366,12 +357,12 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.nic }}
             </td>
-             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
-              {{ item.adminModify !== null ?  item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
+            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.adminModify !== null ? item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
             </td>
 
             <td *ngIf="
-                permissionService.hasPermission('View individual collection officer') ||
+                permissionService.hasPermission('Stakeholder view individual distribution officers') ||
                 tokenService.getUserDetails().role === '1'
               " class="px-4 py-3 text-center">
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewCollectiveOfficerProfile(item.id)">
@@ -384,7 +375,7 @@
             </td>
 
             <td *ngIf="
-                permissionService.hasPermission('Manage DIO / DCM') ||
+                permissionService.hasPermission('Stakeholder edit individual distribution officers') ||
                 tokenService.getUserDetails().role === '1'
               " class="py-3 text-center">
               <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"
@@ -399,7 +390,7 @@
             </td>
 
             <td *ngIf="
-                permissionService.hasPermission('Delete(remove) CO / CCM / DO') ||
+                permissionService.hasPermission('Stakeholder delete individual distribution officers') ||
                 tokenService.getUserDetails().role === '1'
               " class="text-center">
               <button class="text-[#fc3636] hover:text-[#f38f8f]" (click)="deleteDistributionOfficer(item.id)">

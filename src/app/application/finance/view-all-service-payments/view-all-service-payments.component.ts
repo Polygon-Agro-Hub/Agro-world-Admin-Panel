@@ -50,6 +50,7 @@ export class ViewAllServicePaymentsComponent implements OnInit {
 
   maxDate: Date = new Date(); // Today's date
   minDate: Date | null = null; // No minimum date restriction
+  maxFromDate: Date | null = null; // Add max date for From Date
 
   constructor(
     private router: Router,
@@ -65,10 +66,24 @@ export class ViewAllServicePaymentsComponent implements OnInit {
     if (this.fromDate) {
       // Set minDate to the selected fromDate for the "To" field
       this.minDate = new Date(this.fromDate);
+      
+      // If toDate is set and is before fromDate, reset it
+      if (this.toDate && this.toDate < this.fromDate) {
+        this.toDate = null;
+      }
     } else {
       // If no fromDate is selected, remove the minDate restriction
       this.minDate = null;
-      this.toDate = null;
+    }
+  }
+
+  onToDateSelect() {
+    if (this.toDate) {
+      // Set maxFromDate to the selected toDate for the "From" field
+      this.maxFromDate = new Date(this.toDate);
+    } else {
+      // If no toDate is selected, remove the maxFromDate restriction
+      this.maxFromDate = null;
     }
   }
 
@@ -184,6 +199,8 @@ export class ViewAllServicePaymentsComponent implements OnInit {
     this.searchTerm = '';
     this.fromDate = null;
     this.toDate = null;
+    this.minDate = null;
+    this.maxFromDate = null;
     this.page = 1;
     this.hasData = false;
     this.isFilterApplied = false;

@@ -40,6 +40,7 @@ export class AddCertificateDetailsComponent implements OnInit {
   uploadedLogo: File | null = null;
   logoPreview: string | ArrayBuffer | null = null;
   logoError: string = '';
+  fileSizeError: string = ''; // Added for PDF file size validation
 
   @ViewChild('logoInput', { static: false })
   logoInput!: ElementRef<HTMLInputElement>;
@@ -109,9 +110,9 @@ export class AddCertificateDetailsComponent implements OnInit {
       accreditation: ['', Validators.required],
       serviceAreas: [[], Validators.required],
       price: [
-        '', 
+        '',
         [
-          Validators.required, 
+          Validators.required,
           Validators.min(0),
           Validators.pattern(/^\d*\.?\d*$/)
         ]
@@ -128,9 +129,9 @@ export class AddCertificateDetailsComponent implements OnInit {
       ],
       scope: ['', Validators.required],
       noOfVisit: [
-        '', 
+        '',
         [
-          Validators.required, 
+          Validators.required,
           Validators.min(0),
           Validators.pattern(/^\d+$/)
         ]
@@ -139,15 +140,26 @@ export class AddCertificateDetailsComponent implements OnInit {
       logo: [null, Validators.required],
     });
 
-    // Load crop groups for dropdown
-    this.loadCropGroups();
+    // Enable realtime validation
+    this.enableRealtimeValidation();
 
-    // Load certificate companies for dropdown
+    this.loadCropGroups();
     this.loadCompanies();
 
-    // Watch for applicable changes
     this.certificateForm.get('applicable')?.valueChanges.subscribe((value) => {
       this.onApplicableChange();
+    });
+  }
+
+  // Add this new method for realtime validation
+  enableRealtimeValidation(): void {
+    Object.keys(this.certificateForm.controls).forEach(key => {
+      const control = this.certificateForm.get(key);
+      control?.valueChanges.subscribe(() => {
+        if (control.touched || control.dirty) {
+          control.updateValueAndValidity({ emitEvent: false });
+        }
+      });
     });
   }
 
@@ -172,25 +184,40 @@ export class AddCertificateDetailsComponent implements OnInit {
     }
 
     const file = input.files[0];
-
-    // Validate file type (image only)
-    if (!file.type.startsWith('image/')) {
-      this.logoError =
-        'Please select a valid image file (JPEG, JPG, PNG, WebP).';
-      this.uploadedLogo = null;
-      this.logoPreview = null;
-      this.certificateForm.patchValue({ logo: null });
-      return;
+    const fileName = file.name.toLowerCase();
+    
+    // Validate file type (only JPG, JPEG, PNG, WebP allowed)
+    const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    
+    // Get file extension
+    const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+    
+    // Check if file type is allowed
+    const isMimeTypeValid = allowedMimeTypes.includes(file.type.toLowerCase());
+    const isExtensionValid = allowedExtensions.includes(fileExtension.toLowerCase());
+    
+    if (!isMimeTypeValid && !isExtensionValid) {
+        this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
+        this.uploadedLogo = null;
+        this.logoPreview = null;
+        this.certificateForm.patchValue({ logo: null });
+        
+        // Reset the file input
+        if (this.logoInput && this.logoInput.nativeElement) {
+            this.logoInput.nativeElement.value = '';
+        }
+        return;
     }
 
     // Check file size (5MB limit)
     const maxSizeBytes = 5 * 1024 * 1024;
     if (file.size > maxSizeBytes) {
-      this.logoError = 'Logo must be smaller than 5 MB.';
-      this.uploadedLogo = null;
-      this.logoPreview = null;
-      this.certificateForm.patchValue({ logo: null });
-      return;
+        this.logoError = 'Logo must be smaller than 5 MB.';
+        this.uploadedLogo = null;
+        this.logoPreview = null;
+        this.certificateForm.patchValue({ logo: null });
+        return;
     }
 
     // All good
@@ -201,7 +228,7 @@ export class AddCertificateDetailsComponent implements OnInit {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.logoPreview = reader.result;
+        this.logoPreview = reader.result;
     };
     reader.readAsDataURL(file);
   }
@@ -223,25 +250,37 @@ export class AddCertificateDetailsComponent implements OnInit {
 
   onFileUpload(event: any): void {
     const file = event.target.files[0];
+    this.fileSizeError = ''; // Clear previous error
+    
     if (file) {
       // Validate PDF file type
       if (file.type !== 'application/pdf') {
-        Swal.fire({
-          icon: 'error',
-          title: 'Invalid File',
-          text: 'Please select a PDF file for Payment Terms.',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
+        this.fileSizeError = 'Please select a PDF file for Payment Terms.';
+        this.resetFileInput(event);
         return;
       }
 
+      // Validate file size (1MB limit)
+      const maxSizeBytes = 1 * 1024 * 1024; // 1MB in bytes
+      if (file.size > maxSizeBytes) {
+        this.fileSizeError = 'File size exceeds 1MB. Please upload a file smaller than 1MB.';
+        this.resetFileInput(event);
+        return;
+      }
+
+      // All good
       this.uploadedFile = file;
       this.certificateForm.patchValue({ tearmsFile: file });
       this.certificateForm.get('tearmsFile')?.markAsTouched();
     }
+  }
+
+  // Helper method to reset file input
+  private resetFileInput(event: any): void {
+    event.target.value = '';
+    this.uploadedFile = null;
+    this.certificateForm.patchValue({ tearmsFile: null });
+    this.certificateForm.get('tearmsFile')?.markAsTouched();
   }
 
   loadCropGroups(): void {
@@ -366,6 +405,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       }
     });
   }
+
   onSubmit(): void {
     this.certificateForm.markAllAsTouched();
 
@@ -423,6 +463,22 @@ export class AddCertificateDetailsComponent implements OnInit {
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    // Double-check file size in submit (optional extra validation)
+    const maxSizeBytes = 1 * 1024 * 1024;
+    if (this.uploadedFile.size > maxSizeBytes) {
+      this.fileSizeError = 'File size exceeds 1MB. Please upload a file smaller than 1MB.';
+      Swal.fire({
+        icon: 'error',
+        title: 'File Too Large',
+        text: 'File size exceeds 1MB. Please upload a file smaller than 1MB.',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
         },
       });
       return;
@@ -600,11 +656,12 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Prevent any other key
     event.preventDefault();
   }
-
-  trimLeadingSpaces(event: any, varibleName: string) {
+  
+  trimLeadingSpaces(event: any, fieldName: string) {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(/^\s+/, '');
-    this.certificateForm.get(varibleName)?.setValue(input.value);
+    const control = this.certificateForm.get(fieldName);
+    control?.setValue(input.value);
+    control?.markAsTouched();
   }
-
 }

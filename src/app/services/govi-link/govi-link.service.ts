@@ -11,7 +11,7 @@ export class GoviLinkService {
   private apiUrl = `${environment.API_URL}govi-link/`;
   private authUrl = `${environment.API_URL}auth/`;
   private token = this.tokenService.getToken();
-  
+
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   saveOfficerService(data: {
@@ -122,7 +122,7 @@ export class GoviLinkService {
     });
   }
 
-  getOfficersByJobRole(jobRole: string, scheduleDate: string) {
+  getOfficersByJobRole(jobRole: string, scheduleDate: string, jobId: number) {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -131,7 +131,8 @@ export class GoviLinkService {
 
     let params = new HttpParams()
       .set('jobRole', jobRole)
-      .set('scheduleDate', scheduleDate);
+      .set('scheduleDate', scheduleDate)
+      .set('jobId', jobId.toString());
 
     return this.http.get<any>(`${this.apiUrl}get-officers-by-jobrole`, {
       headers,
@@ -222,7 +223,10 @@ export class GoviLinkService {
   /**
    * Reply to field officer complain
    */
-  replyFieldOfficerComplain(id: string | number, reply: string): Observable<any> {
+  replyFieldOfficerComplain(
+    id: string | number,
+    reply: string
+  ): Observable<any> {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -233,6 +237,34 @@ export class GoviLinkService {
 
     return this.http.put<any>(
       `${this.apiUrl}reply-field-officer-complain/${id}`,
+      body,
+      { headers }
+    );
+  }
+
+  getDriverComplainById(id: string | number): Observable<any> {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<any>(`${this.apiUrl}get-driver-complain/${id}`, {
+      headers,
+    });
+  }
+
+  replyDriverComplain(id: string | number, reply: string): Observable<any> {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    const body = { reply };
+
+    return this.http.put<any>(
+      `${this.apiUrl}reply-driver-complain/${id}`,
       body,
       { headers }
     );

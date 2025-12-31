@@ -9,35 +9,23 @@
       Edit Coupon
     </p>
     <div>
-    <button type="button" (click)="onCancel()"
+      <button type="button" (click)="onCancel()"
         class="px-4 w-30 py-2 bg-[#74788D] border border-gray-300 rounded-md text-[#D3D3D3] focus:outline-none focus:ring-2 focus:ring-blue-500">
         Cancel
       </button>
-      <span
-        class="bg-[#3980C0] text-lg text-white px-5 py-2 rounded-lg mx-2 cursor-pointer"
-        (click)="onSubmit()"
-      >
+      <span class="bg-[#3980C0] text-lg text-white px-5 py-2 rounded-lg mx-2 cursor-pointer" (click)="onSubmit()">
         Save
       </span>
     </div>
   </div>
 
   <div class="flex flex-row justify-between">
-    <div
-      class="bg-[#FFFFFF] dark:bg-tileBlack px-20 pt-12 pb-12 shadow-md rounded-md w-[60%] h-full"
-    >
-       <div class="mb-8">
+    <div class="bg-[#FFFFFF] dark:bg-tileBlack px-20 pt-12 pb-12 shadow-md rounded-md w-[60%] h-full">
+      <div class="mb-8">
         <label class="text-[#534E4E] dark:text-textDark">Code *</label>
-        <input
-          type="text"
-          id="code"
-          name="code"
-          [(ngModel)]="coupenObj.code"
-          #codeInput="ngModel"
-          required
+        <input type="text" id="code" name="code" [(ngModel)]="coupenObj.code" #codeInput="ngModel" required
           (input)="onCodeInput($event)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="codeInput.touched && codeInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Code is required.
         </div>
@@ -48,72 +36,36 @@
         <div class="flex items-center space-x-4 mt-3">
           <div class="flex items-center space-x-2">
             <!-- With Discount Radio Button -->
-            <input
-              class="w-5 h-5 cursor-pointer accent-[#0021F5]"
-              type="radio"
-              id="type"
-              name="type"
-              [value]="'Percentage'"
-              [(ngModel)]="coupenObj.type"
-            />
-            <label
-              for="Percentage"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
+            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="type" name="type"
+              [value]="'Percentage'" [(ngModel)]="coupenObj.type" />
+            <label for="Percentage" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Percentage
             </label>
           </div>
           <div class="flex items-center space-x-2">
-            <input
-              class="w-5 h-5 cursor-pointer accent-[#0021F5]"
-              type="radio"
-              id="type"
-              name="type"
-              [value]="'Fixed Amount'"
-              [(ngModel)]="coupenObj.type"
-            />
-            <label
-              for="noDiscount"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
+            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="type" name="type"
+              [value]="'Fixed Amount'" [(ngModel)]="coupenObj.type" />
+            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Fixed Amount
             </label>
           </div>
 
           <div class="flex items-center space-x-2">
-            <input
-              class="w-5 h-5 cursor-pointer accent-[#0021F5]"
-              type="radio"
-              id="type"
-              name="type"
-              [(ngModel)]="coupenObj.type"
-              [value]="'Free Delivary'"
-            />
-            <label
-              for="noDiscount"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
-            >
+            <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="type" name="type"
+              [(ngModel)]="coupenObj.type" [value]="'Free Delivery'" />
+            <label for="noDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
               Free Delivary
             </label>
           </div>
         </div>
       </div>
 
-     <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
+      <div *ngIf="coupenObj.type === 'Percentage'" class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Discount Percentage *</label>
-        <input
-          type="number"
-          id="percentage"
-          name="percentage"
-          [(ngModel)]="coupenObj.percentage"
-          #percentageInput="ngModel"
-          required
-          min="0"
-          max="100"
-          (input)="validateDecimalInput($event, 'percentage')"
+        <input type="number" id="percentage" name="percentage" [(ngModel)]="coupenObj.percentage"
+          #percentageInput="ngModel" required min="0" max="100" (input)="validateDecimalInput($event, 'percentage')"
           (change)="checkPrecentageValue(coupenObj.percentage)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="percentageInput.touched && percentageInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Discount percentage is required.
         </div>
@@ -122,30 +74,18 @@
 
       <div *ngIf="coupenObj.type === 'Fixed Amount'" class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Discount Amount *</label>
-        <input
-          type="number"
-          id="fixDiscount"
-          name="fixDiscount"
-          [(ngModel)]="coupenObj.fixDiscount"
-             (input)="validateDecimalInput($event, 'fixDiscount')"
-          min="0"
+        <input type="number" id="fixDiscount" name="fixDiscount" [(ngModel)]="coupenObj.fixDiscount"
+          (input)="validateDecimalInput($event, 'fixDiscount')" min="0"
           (change)="checkFixAmountValue(coupenObj.fixDiscount)"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div class="text-red-500 text-sm mt-1">
           <div>{{ checkfixAmountValueMessage }}</div>
         </div>
       </div>
 
       <div class="flex flex-row mb-6">
-        <input
-          type="checkbox"
-          id="checkLimit"
-          name="checkLimit"
-          [(ngModel)]="coupenObj.checkLimit"
-          [value]="true"
-          class="mr-6 ml-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack transform scale-150 cursor-pointer accent-[#0021F5]"
-        />
+        <input type="checkbox" id="checkLimit" name="checkLimit" [(ngModel)]="coupenObj.checkLimit" [value]="true"
+          class="mr-6 ml-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack transform scale-150 cursor-pointer accent-[#0021F5]" />
 
         <label for="chekLimit" class="text-[#534E4E] dark:text-textDark">
           Set Price Limit (ex : This Coupon valid only for more than Rs.5000
@@ -155,17 +95,9 @@
 
       <div *ngIf="coupenObj.checkLimit" class="mb-6">
         <label class="text-[#534E4E] dark:text-textDark">Price Limit *</label>
-        <input
-          type="number"
-          id="priceLimit"
-          name="priceLimit"
-          [(ngModel)]="coupenObj.priceLimit"
-          #priceLimitInput="ngModel"
-          required
-          min="0"
-          (input)="validateDecimalInput($event, 'priceLimit')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-        />
+        <input type="number" id="priceLimit" name="priceLimit" [(ngModel)]="coupenObj.priceLimit"
+          #priceLimitInput="ngModel" required min="0" (input)="validateDecimalInput($event, 'priceLimit')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <div *ngIf="priceLimitInput.touched && priceLimitInput.errors?.['required']" class="text-red-500 text-sm mt-1">
           Price limit is required.
         </div>
@@ -173,120 +105,64 @@
     </div>
 
     <div class="flex flex-col justify-start px-6 w-[40%]">
-      <div
-        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-8"
-      >
-        <label class="text-[#000000] dark:text-textDark font-normal text-1xl"
-          >Status *</label
-        >
+      <div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-8">
+        <label class="text-[#000000] dark:text-textDark font-normal text-1xl">Status *</label>
         <div class="flex items-center space-x-2 my-5">
           <!-- With Discount Radio Button -->
-          <input
-            class="w-5 h-5 cursor-pointer accent-[#0021F5]"
-            type="radio"
-            id="status"
-            name="status"
-            [value]="'Enabled'"
-            [(ngModel)]="coupenObj.status"
-          />
-          <label
-            for="withDiscount"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
+          <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="status" name="status"
+            [value]="'Enabled'" [(ngModel)]="coupenObj.status" />
+          <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Enabled
           </label>
         </div>
 
         <div class="flex items-center space-x-2 my-5">
-          <input
-            class="w-5 h-5 cursor-pointer accent-[#0021F5]"
-            type="radio"
-            id="status"
-            name="status"
-            [value]="'Disabled'"
-            [(ngModel)]="coupenObj.status"
-          />
-          <label
-            for="withDiscount"
-            class="block text-sm font-medium text-gray-700 dark:text-textDark"
-          >
+          <input class="w-5 h-5 cursor-pointer accent-[#0021F5]" type="radio" id="status" name="status"
+            [value]="'Disabled'" [(ngModel)]="coupenObj.status" />
+          <label for="withDiscount" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Disabled
           </label>
         </div>
       </div>
 
-      <div
-        class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-8 mt-4"
-      >
-        <label class="text-[#000000] dark:text-textDark font-normal text-1xl"
-          >Shedule</label
-        >
+      <div class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-lg px-12 py-8 mt-4">
+        <label class="text-[#000000] dark:text-textDark font-normal text-1xl">Shedule</label>
         <p class="text-[#838383] dark:text-textDark text-sm mt-2 mb-5">
           Settings to limit the coupon expiration date.
         </p>
 
         <div class="mb-6">
-          <label class="text-textLight dark:text-textDark font-medium"
-            >Start Date *</label
-          >
-          <p-calendar
-            id="startDate"
-            name="startDate"
-            [(ngModel)]="coupenObj.startDate"
-            (onSelect)="checkStartDate()"
-            placeholder="Start Date"
-            [showIcon]="true"
-            [showClear]="true"
-                  #startDateInput="ngModel"
-          required
-            [showButtonBar]="true"
-            iconDisplay="input"
-            [style]="{ width: '100%' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+          <label class="text-textLight dark:text-textDark font-medium">Start Date *</label>
+          <p-calendar id="startDate" name="startDate" [(ngModel)]="coupenObj.startDate" (onSelect)="checkStartDate()"
+            placeholder="Start Date" [showIcon]="true" [showClear]="true" #startDateInput="ngModel" required
+            [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
            [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
            [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
            [&_.p-datepicker-header]:dark:bg-[#2d354d] 
            [&_.p-datepicker-header]:dark:text-white
            [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
             inputStyleClass="mt-2 block w-full p-2 cursor-pointer border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [appendTo]="'body'"
-            dateFormat="yy-mm-dd"
-          />
-             <div *ngIf="startDateInput.touched && startDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-          Start date is required.
-        </div>
+            [appendTo]="'body'" dateFormat="yy-mm-dd"/>
+          <div *ngIf="startDateInput.touched && startDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            Start date is required.
+          </div>
         </div>
 
         <div class="mb-6">
-          <label class="text-textLight dark:text-textDark font-medium"
-            >Expire Date *</label
-          >
-          <p-calendar
-            id="endDate"
-            name="endDate"
-            [(ngModel)]="coupenObj.endDate"
-            (onSelect)="checkExpireDate()"
-            placeholder="Expire Date"
-            [showIcon]="true"
-            [showClear]="true"
-                #endDateInput="ngModel"
-          required
-            [showButtonBar]="true"
-            iconDisplay="input"
-            [style]="{ width: '100%' }"
-            panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+          <label class="text-textLight dark:text-textDark font-medium">Expire Date *</label>
+          <p-calendar id="endDate" name="endDate" [(ngModel)]="coupenObj.endDate" (onSelect)="checkExpireDate()"
+            placeholder="Expire Date" [showIcon]="true" [showClear]="true" #endDateInput="ngModel" required
+            [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
            [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
            [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
            [&_.p-datepicker-header]:dark:bg-[#2d354d] 
            [&_.p-datepicker-header]:dark:text-white
            [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]"
             inputStyleClass="mt-2 block w-full cursor-pointer p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            [appendTo]="'body'"
-            dateFormat="yy-mm-dd"
-          />
-               <div *ngIf="endDateInput.touched && endDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
-          Expire date is required.
-        </div>
+            [appendTo]="'body'" dateFormat="yy-mm-dd" [minDate]="DateConverter(coupenObj.startDate)"/>
+          <div *ngIf="endDateInput.touched && endDateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+            Expire date is required.
+          </div>
         </div>
       </div>
     </div>

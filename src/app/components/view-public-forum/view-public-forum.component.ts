@@ -129,6 +129,7 @@ export class ViewPublicForumComponent implements OnInit {
 
   openPopup(id: number) {
     this.isPopupVisible = true;
+    this.publiForum = [];
     this.fetchPostAllReply(id);
     this.selectPostId = id;
   }

@@ -36,7 +36,7 @@ export class TransportReasonsToHoldComponent implements OnInit {
     private fb: FormBuilder,
     private location: Location,
     private distributionService: DistributionHubService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.reasonForm = this.fb.group({
@@ -165,7 +165,7 @@ export class TransportReasonsToHoldComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: error.error?.message || 'Failed to add reason. Please try again.',
+          text: error.error?.error === `Data too long for column 'rsnEnglish' at row 1` ? 'The message is too long. Please limit it to a maximum of 250 words.' : 'Failed to add reason. Please try again.',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',

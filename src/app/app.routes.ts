@@ -244,7 +244,7 @@ import { TransportReasonsToReturnComponent } from './application/distribution-hu
 import { ViewDriverComponent } from './application/steckholders-section/view-driver/view-driver.component';
 import { PreviewDriverComponent } from './application/steckholders-section/preview-driver/preview-driver.component';
 import { EditDriverComponent } from './application/steckholders-section/edit-driver/edit-driver.component';
-import { TodaysDeliveriesComponent } from './application/distribution-hub/todays-deliveries/todays-deliveries.component';
+import { TodaysDeliveriesComponent } from './application/distribution-hub/today-deliveries/todays-deliveries/todays-deliveries.component';
 import { TransportReasonsToHoldComponent } from './application/distribution-hub/transport-reasons-to-hold/transport-reasons-to-hold.component';
 import { DriverComplainComponent } from './application/Complaints/driver-complain/driver-complain.component';
 import { ViewDriverComplaintsComponent } from './application/Complaints/view-driver-complaints/view-driver-complaints.component';
@@ -1651,13 +1651,6 @@ export const routes: Routes = [
             data: { permission: 'GoviLink Complaint' },
           },
           {
-            path: 'driver-complain/:id',
-            component: DriverComplainComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Reply Driver complaint' },
-          },
-
-          {
             path: 'driver-complaints',
             canActivate: [PermissionGuard],
             data: { permission: 'driver Complaints' },
@@ -1667,6 +1660,12 @@ export const routes: Routes = [
                 component: ViewDriverComplaintsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'view driver Complaints' },
+              },
+              {
+                path: 'view-each-complain/:id',
+                component: DriverComplainComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Reply Driver complaint' },
               },
             ],
           },
@@ -1860,4 +1859,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

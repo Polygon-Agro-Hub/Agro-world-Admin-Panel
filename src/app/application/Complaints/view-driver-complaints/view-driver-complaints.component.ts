@@ -140,7 +140,7 @@ export class ViewDriverComplaintsComponent {
 
   navigateSelectComplain(id: string) {
     this.router.navigate([
-      `/complaints/distributed-center-complains/view-complain/${id}`,
+      `/complaints/driver-complaints/view-each-complain/${id}`,
     ]);
   }
 

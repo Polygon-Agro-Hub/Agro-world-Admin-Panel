@@ -80,6 +80,14 @@
     </button>
   </div>
 
+  <!-- Pending Farmers Notice -->
+  <div *ngIf="pendingFarmersToAdd.length > 0" class="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+    <p class="text-yellow-800 dark:text-yellow-200 font-medium">
+      <i class="fa-solid fa-info-circle mr-2"></i>
+      {{ pendingFarmersToAdd.length }} farmer(s) pending to be added. Click "Update" to save all changes.
+    </p>
+  </div>
+
   <!-- Members Table -->
   <div *ngIf="hasData || isLoading">
     <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg border">

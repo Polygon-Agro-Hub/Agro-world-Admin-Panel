@@ -357,4 +357,24 @@ export class DestributionService {
 
     return this.http.get<{ total: number; items: any[] }>(url, { headers });
   }
+
+
+  getReturnRecievedData(
+    sheduleDate?: string,
+    centerId?: number,
+    searchText?: string
+  ): Observable<{ total: number; items: any[]; grandTotal: number }> {
+    const headers = this.getHeaders();
+    console.log('data')
+    let url = `${this.apiUrl}distribution/get-return-recieved-data?sheduleDate=${sheduleDate}`;
+
+    if (typeof centerId === 'number') {
+      url += `&centerId=${centerId}`;
+    }
+    if (searchText) {
+      url += `&searchText=${encodeURIComponent(searchText)}`;
+    }
+
+    return this.http.get<{ total: number; items: any[]; grandTotal: number }>(url, { headers });
+  }
 }

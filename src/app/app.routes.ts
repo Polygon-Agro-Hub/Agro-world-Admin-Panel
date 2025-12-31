@@ -252,6 +252,7 @@ import { MarketManageSeoComponent } from './application/marketplace/market-manag
 import { DistributionViewCustomerOrdersComponent } from './application/distribution-hub/distribution-view-customer-orders/distribution-view-customer-orders.component';
 import { AuditPersonalInfoComponent } from './application/finance/govi-capital-inspection/audit-personal-info/audit-personal-info.component';
 import { ViewAllAuditedGovicareRequestsComponent } from './application/finance/view-all-audited-govicare-requests/view-all-audited-govicare-requests.component';
+import { RecievedReturnsComponent } from './application/distribution-hub/recieved-returns/recieved-returns.component';
 
 export const routes: Routes = [
   {
@@ -1706,7 +1707,7 @@ export const routes: Routes = [
               },
               {
                 path: 'reasons-to-hold',
-                component: TransportReasonsToHoldComponent,
+                component: RecievedReturnsComponent,
               },
               {
                 path: 'create-company',

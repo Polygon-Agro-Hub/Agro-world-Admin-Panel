@@ -75,6 +75,7 @@ export class EditFarmerClusterComponent implements OnInit {
   formSubmitted: boolean = false;
   certificates: Certificate[] = [];
   isInitializing: boolean = false;
+  pendingFarmersToAdd: { nic: string; farmId: string }[] = [];
 
   districts: District[] = [
     { name: 'Ampara', value: 'Ampara' },
@@ -194,7 +195,8 @@ export class EditFarmerClusterComponent implements OnInit {
     return (
       this.clusterName !== this.originalClusterName ||
       this.selectedDistrict !== this.originalDistrict ||
-      this.selectedCertificateId !== this.originalCertificateId
+      this.selectedCertificateId !== this.originalCertificateId ||
+      this.pendingFarmersToAdd.length > 0
     );
   }
 
@@ -243,88 +245,175 @@ export class EditFarmerClusterComponent implements OnInit {
   }
 
   updateCluster() {
-    this.formSubmitted = true;
-    this.nameError = '';
+  this.formSubmitted = true;
+  this.nameError = '';
 
-    // Validate required fields
-    if (!this.clusterName.trim()) {
-      this.nameError = 'Cluster name is required';
-      return;
-    }
+  // Validate required fields
+  if (!this.clusterName.trim()) {
+    this.nameError = 'Cluster name is required';
+    return;
+  }
 
-    if (!this.selectedDistrict) {
-      Swal.fire({
-        title: 'Validation Error',
-        text: 'District is required',
-        icon: 'error',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
-      return;
-    }
-
-    if (!this.selectedCertificateId) {
-      Swal.fire({
-        title: 'Validation Error',
-        text: 'Certificate selection is required',
-        icon: 'error',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      });
-      return;
-    }
-
-    this.isLoading = true;
-    const updateData = {
-      clusterName: this.clusterName.trim(),
-      district: this.selectedDistrict,
-      certificateId: this.selectedCertificateId,
-    };
+  if (!this.selectedDistrict) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: ' Do you really want to update this cluster?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Update',
-      cancelButtonText: 'No, Cancel',
+      title: 'Validation Error',
+      text: 'District is required',
+      icon: 'error',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.farmerClusterService
-          .updateFarmerCluster(this.clusterId, updateData)
-          .subscribe(
-            (response: any) => {
-              this.isLoading = false;
+    });
+    return;
+  }
+
+  if (!this.selectedCertificateId) {
+    Swal.fire({
+      title: 'Validation Error',
+      text: 'Certificate selection is required',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
+  const updateData: any = {
+    clusterName: this.clusterName.trim(),
+    district: this.selectedDistrict,
+    certificateId: this.selectedCertificateId,
+  };
+
+  // Add pending farmers if any
+  if (this.pendingFarmersToAdd.length > 0) {
+    updateData.farmersToAdd = this.pendingFarmersToAdd;
+  }
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: this.pendingFarmersToAdd.length > 0 
+      ? `Do you really want to update this cluster and add ${this.pendingFarmersToAdd.length} farmer(s)?`
+      : 'Do you really want to update this cluster?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Update',
+    cancelButtonText: 'No, Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+      
+      this.farmerClusterService
+        .updateFarmerCluster(this.clusterId, updateData)
+        .subscribe(
+          (response: any) => {
+            this.isLoading = false;
+            
+            // Build success message
+            let successMessage = response.message || 'Cluster updated successfully';
+            
+            // Check for farmer errors
+            if (response.farmerErrors && response.farmerErrors.length > 0) {
+              const errorDetails = response.farmerErrors
+                .map((err: any) => `• ${err.nic} (${err.farmId}): ${err.error}`)
+                .join('\n');
+              
               Swal.fire({
-                title: 'Success!',
-                text: response.message || 'Cluster updated successfully',
-                icon: 'success',
+                title: 'Partial Success',
+                html: `
+                  <div class="text-left">
+                    <p class="mb-2">${successMessage}</p>
+                    <p class="font-semibold mt-4 mb-2">Failed to add some farmers:</p>
+                    <pre class="text-sm">${errorDetails}</pre>
+                  </div>
+                `,
+                icon: 'warning',
                 customClass: {
-                  popup:
-                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               }).then(() => {
+                this.pendingFarmersToAdd = [];
+                this.fetchClusterUsers();
+              });
+            } else {
+              Swal.fire({
+                title: 'Success!',
+                text: successMessage,
+                icon: 'success',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold text-lg',
+                },
+              }).then(() => {
+                this.pendingFarmersToAdd = [];
                 this.goBack();
               });
-            },
-            (error) => {
-              this.isLoading = false;
-              this.nameError = error.error?.message || 'Failed to update cluster';
             }
-          );
-      }
-      this.isLoading = false;
+          },
+          (error) => {
+            this.isLoading = false;
+            const errorMessage = error.error?.message || 'Failed to update cluster';
+            Swal.fire({
+              title: 'Error',
+              text: errorMessage,
+              icon: 'error',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        );
+    }
+  });
+}
 
-    });
+  addPendingFarmers() {
+    const farmer = this.pendingFarmersToAdd[0]; // Get first farmer
 
+    this.farmerClusterService
+      .addFarmerToCluster(this.clusterId, farmer)
+      .subscribe(
+        (response: any) => {
+          // Remove the added farmer from pending list
+          this.pendingFarmersToAdd.shift();
+
+          // If no more farmers to add, show success and go back
+          if (this.pendingFarmersToAdd.length === 0) {
+            this.isLoading = false;
+            Swal.fire({
+              title: 'Success!',
+              text: 'Cluster and farmers updated successfully',
+              icon: 'success',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            }).then(() => {
+              this.goBack();
+            });
+          }
+        },
+        (error) => {
+          this.isLoading = false;
+          const errorMessage = error.error?.message || 'Failed to add farmer';
+          Swal.fire({
+            title: 'Error',
+            text: `Failed to add farmer (NIC: ${farmer.nic}): ${errorMessage}`,
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      );
   }
 
   onSearch() {
@@ -350,27 +439,28 @@ export class EditFarmerClusterComponent implements OnInit {
   }
 
   onCancel() {
-    if (this.hasChanges()) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'You have unsaved changes. Do you want to cancel without saving?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Cancel',
-        cancelButtonText: 'No, Continue Editing',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold text-lg',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.goBack();
-        }
-      });
-    } else {
-      this.goBack();
-    }
+  if (this.hasChanges()) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You have unsaved changes. Do you want to cancel without saving?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Continue Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.pendingFarmersToAdd = []; // Clear pending farmers
+        this.goBack();
+      }
+    });
+  } else {
+    this.goBack();
   }
+}
 
   goBack() {
     this.location.back();
@@ -583,44 +673,23 @@ export class EditFarmerClusterComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
-
-    const addFarmerData = {
+    // Store the farmer data temporarily
+    this.pendingFarmersToAdd.push({
       nic: this.newFarmerNIC.trim(),
       farmId: this.newFarmerFarmId.trim()
-    };
+    });
 
-    this.farmerClusterService
-      .addFarmerToCluster(this.clusterId, addFarmerData)
-      .subscribe(
-        (response: any) => {
-          this.isLoading = false;
-          Swal.fire({
-            title: 'Success!',
-            text: response.message || 'Farmer added successfully',
-            icon: 'success',
-            customClass: {
-              popup:
-                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-          this.fetchClusterUsers();
-          this.closeAddFarmerModal();
-        },
-        (error) => {
-          this.isLoading = false;
-          const errorMessage = error.error?.message || 'Failed to add farmer';
+    Swal.fire({
+      title: 'Success!',
+      text: 'Farmer added to pending list. Click Update to save changes.',
+      icon: 'success',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
 
-          if (errorMessage.toLowerCase().includes('nic')) {
-            this.nicError = errorMessage;
-          } else if (errorMessage.toLowerCase().includes('farm')) {
-            this.farmIdError = errorMessage;
-          } else {
-            this.nicError = errorMessage;
-          }
-        }
-      );
+    this.closeAddFarmerModal();
   }
 
   isAddFarmerFormValid(): boolean {

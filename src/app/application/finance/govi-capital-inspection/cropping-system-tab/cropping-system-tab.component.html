@@ -1,46 +1,46 @@
 <div class="space-y-10 p-10">
 
     <!-- 01. Opportunities -->
-    <div class="bg-[#F9FAFC] p-5 rounded-xl">
-        <label class="block text-sm text-[#4A4A4A] mb-2">
-            <span class="text-[#4A4A4A]">01.</span>
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">01.</span>
             An opportunity to go for :
         </label>
         <input type="text"
             [value]='croppingData.opportunity.join(", ") + (croppingData.otherOpportunity ? ", Other : \"" + croppingData.otherOpportunity + "\"" : "")'
             readonly
-            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
     </div>
 
     <!-- 02. Knowledge -->
-    <div class="bg-[#F9FAFC] p-5 rounded-xl">
-        <label class="block text-sm text-[#4A4A4A] mb-2">
-            <span class="text-[#4A4A4A]">02.</span>
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">02.</span>
             Does the farmer has knowledge on cropping system management?
         </label>
         <input type="text" [value]="croppingData.hasKnowlage === 1 ? 'Yes' : 'No'" readonly
-            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
     </div>
 
     <!-- 03. Previous Experience -->
-    <div class="bg-[#F9FAFC] p-5 rounded-xl">
-        <label class="block text-sm text-[#4A4A4A] mb-2">
-            <span class="text-[#4A4A4A]">03.</span>
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">03.</span>
             What is your previous experience with regard to the crop / cropping systems that farmer is planning to
             choose?
         </label>
         <input type="text" [value]="croppingData.prevExperince" readonly
-            class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 focus:outline-none" />
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
     </div>
 
     <!-- 04. Opinion -->
-    <div class="bg-[#F9FAFC] p-5 rounded-xl">
-        <label class="block text-sm text-[#4A4A4A] mb-2">
-            <span class="text-[#4A4A4A]">04.</span>
+    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-400 dark:text-textDark">04.</span>
             What is the general opinion of your friends, neighborhood farmers on proposed crop / cropping systems?
         </label>
 
-        <div class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-gray-900 min-h-[80px]">
+        <div class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark min-h-[80px]">
             {{ croppingData.opinion }}
         </div>
     </div>

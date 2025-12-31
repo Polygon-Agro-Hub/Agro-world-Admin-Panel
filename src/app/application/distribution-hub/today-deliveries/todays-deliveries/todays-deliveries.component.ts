@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
 import { AllTodaysDeleveriesComponent } from '../all-todays-deleveries/all-todays-deleveries.component';
@@ -9,7 +9,7 @@ import { HoldTodaysDeleveriesComponent } from '../hold-todays-deleveries/hold-to
 import { ReturnTodaysDeleveriesComponent } from '../return-todays-deleveries/return-todays-deleveries.component';
 import { DeliveredTodaysDeleveriesComponent } from '../delivered-todays-deleveries/delivered-todays-deleveries.component';
 import { FormsModule } from '@angular/forms';
-import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
+import { DistributionHubService } from '../../../../services/distribution-hub/distribution-hub.service';
 
 interface Delivery {
   invNo: string;

@@ -54,10 +54,14 @@ export class ViewCustomerOrdersComponent implements OnInit {
     delivered: 'Delivered',
     ontheway: 'Out For Delivery',
     cancelled: 'Cancelled',
-    failed: 'Faild',
-    "Out For Delivery": "Out For Delivery",
-    "Ready to Pickup": "Ready to Pickup",
-    "Picked up": "Picked up"
+    collected: 'Collected',
+    hold: 'Hold',
+    return: 'Return',
+    returnReceived: 'Return Received',
+    'Out For Delivery': 'Out For Delivery',
+    'Ready to Pickup': 'Ready to Pickup',
+    'Picked up': 'Picked up',
+    'On the way': 'On the way'
   };
 
   constructor(
@@ -126,16 +130,26 @@ export class ViewCustomerOrdersComponent implements OnInit {
       });
   }
 
-  getStatusClass(status: string): string {
-    const statusClasses: { [key: string]: string } = {
-      Assinged: 'bg-[#E6F0FF] text-[#415CFF]',
-      Processing: 'bg-[#FFF8E6] text-[#FFB800]',
-      Delivered: 'bg-[#E6FFEE] text-[#00A441]',
-      'Out For Delivery': 'bg-[#F3E6FF] text-[#8A3FFC]',
-      Cancelled: 'bg-[#FFE6E6] text-[#FF0000]',
-      Faild: 'bg-[#FFE6E6] text-[#FF0000]',
-    };
-    return statusClasses[status] || 'bg-gray-100 text-gray-800';
+  getPaymentStatusClass(paymentMethod: string, isPaid: number): string {
+    if (isPaid === 1) {
+      if (paymentMethod?.toLowerCase() === 'card' || paymentMethod?.toLowerCase() === 'debit/credit') {
+        return 'bg-[#BBFFC6] text-[#308233] rounded-xl px-7 py-2';
+      } else if (paymentMethod?.toLowerCase() === 'cash' || paymentMethod?.toLowerCase() === 'cash on delivery') {
+        return 'bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2';
+      }
+    }
+    return 'bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-4 py-2';
+  }
+
+  getPaymentStatusText(paymentMethod: string, isPaid: number): string {
+    if (isPaid === 1) {
+      if (paymentMethod?.toLowerCase() === 'card' || paymentMethod?.toLowerCase() === 'debit/credit') {
+        return 'Paid';
+      } else if (paymentMethod?.toLowerCase() === 'cash' || paymentMethod?.toLowerCase() === 'cash on delivery') {
+        return 'Received';
+      }
+    }
+    return 'Pending';
   }
 
   downloadInvoice(id: number, tableInvoiceNo: string): void {

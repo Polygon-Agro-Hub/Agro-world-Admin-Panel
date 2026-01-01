@@ -16,8 +16,8 @@
   </button>
 </div>
 
-<div class="overflow-x-auto">
-  <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5 min-w-[1600px]">
+<div class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto p-5 min-w-[1600px] ">
     <div>
       <div class="flex justify-between items-center mb-8">
         <!-- Left Title -->
@@ -183,7 +183,7 @@
             <td class="text-center mt-3 space-x-3" *ngIf=" permissionService.hasPermission('View field officer profile') || tokenService.getUserDetails().role === '1'">
               <div class=" flex justify-center items-center">
                 <button class="w-6 h-6 text-blue-500 hover:text-blue-700" (click)="viewInspector(inspector.id)"
-                title="View Company">
+                title="View Field Officer Profile">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"

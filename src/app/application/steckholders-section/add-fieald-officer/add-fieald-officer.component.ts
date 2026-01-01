@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
@@ -76,11 +76,24 @@ export class AddFiealdOfficerComponent implements OnInit {
   selectedBackNicImage: string | ArrayBuffer | null = null;
   selectedPassbookImage: string | ArrayBuffer | null = null;
   selectedContractImage: string | ArrayBuffer | null = null;
+  readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB constant
+
+  // Add properties for English name validation
+  englishNameErrors = {
+    firstName: false,
+    lastName: false
+  };
+
+  englishNameTouched = {
+    firstName: false,
+    lastName: false
+  };
 
   constructor(
     private router: Router,
     private stakeHolderSrv: StakeholderService,
     private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   jobRoles = ['Field Officer', 'Chief Field Officer'];
@@ -190,8 +203,9 @@ export class AddFiealdOfficerComponent implements OnInit {
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
-      if (file.size > 5000000) {
-        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+      // Validate file size (10MB limit)
+      if (file.size > this.MAX_FILE_SIZE) {
+        Swal.fire('Error', 'File size exceeds 10MB. Please upload a smaller image.', 'error');
         return;
       }
 
@@ -290,8 +304,29 @@ export class AddFiealdOfficerComponent implements OnInit {
       return !value || (Array.isArray(value) && value.length === 0);
     }
 
+    // Special handling for email field - check validation even if touched
+    if (fieldName === 'email' && value) {
+      return !this.isValidEmail(value);
+    }
+
     // Default validation for other fields
     return !value;
+  }
+
+  // New method to specifically check email validation
+  isEmailInvalid(): boolean {
+    const email = this.personalData.email;
+    const isTouched = !!this.touchedFields['email'];
+    
+    if (!isTouched) {
+      return false;
+    }
+    
+    if (!email) {
+      return true; // Required field is empty
+    }
+    
+    return !this.isValidEmail(email);
   }
 
   toggleDropdown() {
@@ -372,20 +407,91 @@ export class AddFiealdOfficerComponent implements OnInit {
     }
   }
 
+  // New method to validate English names
+  validateEnglishName(fieldName: 'firstName' | 'lastName'): void {
+    this.markFieldAsTouched(fieldName);
+    this.englishNameTouched[fieldName] = true;
+    
+    const value = this.personalData[fieldName];
+    
+    if (!value) {
+      this.englishNameErrors[fieldName] = false;
+      return;
+    }
+    
+    // Check if the name contains non-English characters
+    // This regex allows only English letters (a-z, A-Z), spaces, hyphens, and apostrophes
+    const englishOnlyRegex = /^[A-Za-z\s\-']+$/;
+    
+    // Additional check for Sinhala and Tamil characters
+    const sinhalaRegex = /[\u0D80-\u0DFF]/; // Sinhala Unicode range
+    const tamilRegex = /[\u0B80-\u0BFF]/;   // Tamil Unicode range
+    
+    if (sinhalaRegex.test(value) || tamilRegex.test(value)) {
+      this.englishNameErrors[fieldName] = true;
+    } else if (!englishOnlyRegex.test(value)) {
+      this.englishNameErrors[fieldName] = true;
+    } else {
+      this.englishNameErrors[fieldName] = false;
+    }
+  }
+
+  // New method to check for non-English characters
+  hasNonEnglishCharacters(fieldName: 'firstName' | 'lastName'): boolean {
+    const value = this.personalData[fieldName];
+    
+    if (!value || !this.englishNameTouched[fieldName]) {
+      return false;
+    }
+    
+    return this.englishNameErrors[fieldName];
+  }
+
   preventSpecialCharacters(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
-    const char = String.fromCharCode(event.which);
-
+    const char = String.fromCharCode(event.which || event.keyCode);
+    
     // Block space if it's at the start (cursor at position 0)
     if (char === ' ' && input.selectionStart === 0) {
       event.preventDefault();
       return;
     }
-
-    // Allow only letters (a-z, A-Z) and spaces elsewhere
-    if (!/[a-zA-Z\s]/.test(char)) {
+    
+    // Allow only English letters, spaces, hyphens, and apostrophes
+    // Also prevent Sinhala and Tamil characters
+    const allowedPattern = /^[A-Za-z\s\-']$/;
+    
+    // Check for Sinhala and Tamil characters specifically
+    const isSinhala = /[\u0D80-\u0DFF]/.test(char);
+    const isTamil = /[\u0B80-\u0BFF]/.test(char);
+    
+    if (isSinhala || isTamil || !allowedPattern.test(char)) {
       event.preventDefault();
     }
+  }
+
+  // New method to validate English names when pasting
+  onEnglishNamePaste(event: ClipboardEvent, fieldName: 'firstName' | 'lastName'): void {
+    event.preventDefault();
+    
+    // Get pasted text
+    const pastedText = event.clipboardData?.getData('text') || '';
+    
+    // Filter out non-English characters
+    const englishOnly = pastedText.replace(/[^A-Za-z\s\-']/g, '');
+    
+    // Update the value
+    if (fieldName === 'firstName') {
+      this.personalData.firstName = englishOnly;
+    } else {
+      this.personalData.lastName = englishOnly;
+    }
+    
+    // Trigger validation
+    this.validateEnglishName(fieldName);
+    
+    // Trigger capitalization
+    this.capitalizeNames();
   }
 
   // New methods for Sinhala and Tamil character validation
@@ -557,6 +663,8 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       this.personalData.email = value;
     }
+    // Mark email as touched when user types
+    this.markFieldAsTouched('email');
   }
 
   isValidEmail(email: string): boolean {
@@ -665,10 +773,14 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       if (!this.personalData.firstName) {
         missingFields.push('First Name in English is Required');
+      } else if (this.hasNonEnglishCharacters('firstName')) {
+        missingFields.push('First Name should only contain English letters');
       }
 
       if (!this.personalData.lastName) {
         missingFields.push('Last Name in English is Required');
+      } else if (this.hasNonEnglishCharacters('lastName')) {
+        missingFields.push('Last Name should only contain English letters');
       }
 
       // Validate Sinhala and Tamil names
@@ -759,6 +871,9 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Navigate to the selected page
     this.selectedPage = page;
+    
+    // Scroll to top after page change
+    this.scrollToTop();
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
@@ -804,6 +919,28 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Navigate to the selected page if validation passes
     this.selectedPage = page;
+    
+    // Scroll to top after page change
+    this.scrollToTop();
+  }
+
+  // Add this method to scroll to top
+  scrollToTop(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      // Use setTimeout to ensure DOM has updated
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        
+        // Also try scrolling the container div
+        const container = document.querySelector('.mx-auto.p-6') as HTMLElement;
+        if (container) {
+          container.scrollTop = 0;
+        }
+      }, 100);
+    }
   }
 
   markPageOneFieldsAsTouched(): void {
@@ -830,6 +967,10 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
+    
+    // Mark English name fields as touched
+    this.englishNameTouched.firstName = true;
+    this.englishNameTouched.lastName = true;
   }
 
   onTrimInput(event: Event, modelRef: any, fieldName: string): void {
@@ -844,6 +985,11 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
+    
+    // Mark field as touched when user types
+    if (fieldName === 'email') {
+      this.markFieldAsTouched('email');
+    }
   }
 
   preventAddressSpecialCharacters(event: KeyboardEvent): void {
@@ -1190,9 +1336,9 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   handleFileUpload(file: File, fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
-    // Validate file size (5MB limit)
-    if (file.size > 5000000) {
-      Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+    // Validate file size (10MB limit)
+    if (file.size > this.MAX_FILE_SIZE) {
+      Swal.fire('Error', 'File size exceeds 10MB. Please upload a smaller image.', 'error');
       return;
     }
 
@@ -1324,10 +1470,14 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     if (!this.personalData.firstName) {
       missingFields.push('First Name (in English) is Required');
+    } else if (this.hasNonEnglishCharacters('firstName')) {
+      missingFields.push('First Name should only contain English letters');
     }
 
     if (!this.personalData.lastName) {
       missingFields.push('Last Name (in English) is Required');
+    } else if (this.hasNonEnglishCharacters('lastName')) {
+      missingFields.push('Last Name should only contain English letters');
     }
 
     // Validate Sinhala and Tamil names
@@ -1440,6 +1590,22 @@ export class AddFiealdOfficerComponent implements OnInit {
       missingFields.push('Signed Contract is Required');
     }
 
+    // Add file size validation before submitting
+    const filesToCheck = [
+      { file: this.selectedFile, name: 'Profile Picture' },
+      { file: this.selectedFrontNicFile, name: 'NIC Front Image' },
+      { file: this.selectedBackNicFile, name: 'NIC Back Image' },
+      { file: this.selectedPassbookFile, name: 'Bank Passbook' },
+      { file: this.selectedContractFile, name: 'Signed Contract' }
+    ];
+
+    for (const item of filesToCheck) {
+      if (item.file && item.file.size > this.MAX_FILE_SIZE) {
+        Swal.fire('Error', `${item.name} exceeds 10MB. Please upload a smaller image.`, 'error');
+        return;
+      }
+    }
+
     // If errors, show list and stop - validation messages will now be visible
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
@@ -1525,7 +1691,7 @@ export class AddFiealdOfficerComponent implements OnInit {
             let errorMessage = 'An unexpected error occurred';
             let messages: string[] = [];
 
-                     if (error.error && Array.isArray(error.error.errors)) {
+            if (error.error && Array.isArray(error.error.errors)) {
               // Map backend error keys to user-friendly messages
               messages = error.error.errors.map((err: string) => {
                 switch (err) {
@@ -1616,6 +1782,10 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
+    
+    // Mark English name fields as touched
+    this.englishNameTouched.firstName = true;
+    this.englishNameTouched.lastName = true;
   }
 
 }

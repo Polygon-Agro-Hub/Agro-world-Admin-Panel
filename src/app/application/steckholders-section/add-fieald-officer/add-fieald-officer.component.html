@@ -14,13 +14,13 @@
         <div class="relative">
           <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
           <div *ngIf="!selectedImage"
-            class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60">
-            <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
+            class="flex rounded-full border-solid border-2 justify-center items-center w-36 h-36">
+            <i class="fa-regular fa-user text-7xl dark:text-textDark"></i>
           </div>
-          <img *ngIf="selectedImage" class="rounded-full w-60 h-60 object-cover" [src]="selectedImage"
+          <img *ngIf="selectedImage" class="rounded-full w-60 h-60object-cover" [src]="selectedImage"
             alt="Profile Picture" />
           <span (click)="triggerFileInput($event)"
-            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
+            class="absolute bottom-2 right-2 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-10 h-10  flex items-center justify-center rounded-full cursor-pointer">
             <i class="fa-solid fa-pen text-lg text-white"></i>
           </span>
         </div>

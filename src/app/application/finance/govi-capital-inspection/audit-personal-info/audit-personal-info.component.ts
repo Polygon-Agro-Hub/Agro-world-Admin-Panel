@@ -237,6 +237,14 @@ allowDecimalOnly(event: KeyboardEvent) {
   }
 }
 
+devideSharesPopUp() {
+this.openDevideSharesPopUp = true;
+}
+
+editSharesPopUp() {
+
+}
+
 }
 
 interface Inspection {
@@ -268,6 +276,14 @@ class Shares {
   empId!: string;
   officerPhone!: string;
   totalValue: string = '';
+  devideData: DevideData | null = null;
+}
+
+class DevideData {
+  totValue!: number
+  defineShares!: number
+  maxShare!: number
+  minShare!: number
 }
 
 class DevideRequest {

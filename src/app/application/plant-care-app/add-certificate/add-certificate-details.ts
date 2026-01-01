@@ -99,7 +99,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     private certificateCompanyService: CertificateCompanyService
   ) { }
 
-  ngOnInit(): void {
+ ngOnInit(): void {
     this.certificateForm = this.fb.group({
       srtName: ['', Validators.required],
       srtNameSinhala: ['', Validators.required],
@@ -113,7 +113,7 @@ export class AddCertificateDetailsComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.min(0),
+          Validators.min(0.01), // Changed from 0 to 0.01
           Validators.pattern(/^\d*\.?\d*$/)
         ]
       ],
@@ -122,7 +122,7 @@ export class AddCertificateDetailsComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.min(0),
+          Validators.min(0.01), // Changed from 0 to 0.01
           Validators.max(100),
           Validators.pattern(/^\d*\.?\d*$/),
         ],
@@ -173,7 +173,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     }
   }
 
-  onLogoSelected(event: Event): void {
+onLogoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input || !input.files || input.files.length === 0) {
       this.logoError = 'Please select a valid image file.';
@@ -190,8 +190,25 @@ export class AddCertificateDetailsComponent implements OnInit {
     const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
     
+    // Blocked file types that need explicit error messages
+    const blockedExtensions = ['.tiff', '.tif', '.svg'];
+    
     // Get file extension
     const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+    
+    // Check if it's a blocked format
+    if (blockedExtensions.includes(fileExtension.toLowerCase())) {
+        this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
+        this.uploadedLogo = null;
+        this.logoPreview = null;
+        this.certificateForm.patchValue({ logo: null });
+        
+        // Reset the file input
+        if (this.logoInput && this.logoInput.nativeElement) {
+            this.logoInput.nativeElement.value = '';
+        }
+        return;
+    }
     
     // Check if file type is allowed
     const isMimeTypeValid = allowedMimeTypes.includes(file.type.toLowerCase());

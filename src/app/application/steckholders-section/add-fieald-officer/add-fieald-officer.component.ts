@@ -290,8 +290,29 @@ export class AddFiealdOfficerComponent implements OnInit {
       return !value || (Array.isArray(value) && value.length === 0);
     }
 
+    // Special handling for email field - check validation even if touched
+    if (fieldName === 'email' && value) {
+      return !this.isValidEmail(value);
+    }
+
     // Default validation for other fields
     return !value;
+  }
+
+  // New method to specifically check email validation
+  isEmailInvalid(): boolean {
+    const email = this.personalData.email;
+    const isTouched = !!this.touchedFields['email'];
+    
+    if (!isTouched) {
+      return false;
+    }
+    
+    if (!email) {
+      return true; // Required field is empty
+    }
+    
+    return !this.isValidEmail(email);
   }
 
   toggleDropdown() {
@@ -557,6 +578,8 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       this.personalData.email = value;
     }
+    // Mark email as touched when user types
+    this.markFieldAsTouched('email');
   }
 
   isValidEmail(email: string): boolean {
@@ -844,6 +867,11 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
+    
+    // Mark field as touched when user types
+    if (fieldName === 'email') {
+      this.markFieldAsTouched('email');
+    }
   }
 
   preventAddressSpecialCharacters(event: KeyboardEvent): void {
@@ -1525,7 +1553,7 @@ export class AddFiealdOfficerComponent implements OnInit {
             let errorMessage = 'An unexpected error occurred';
             let messages: string[] = [];
 
-                     if (error.error && Array.isArray(error.error.errors)) {
+            if (error.error && Array.isArray(error.error.errors)) {
               // Map backend error keys to user-friendly messages
               messages = error.error.errors.map((err: string) => {
                 switch (err) {

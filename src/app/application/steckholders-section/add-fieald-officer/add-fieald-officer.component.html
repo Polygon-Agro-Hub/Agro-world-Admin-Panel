@@ -253,7 +253,7 @@
 
               <input type="tel" id="phoneNumber1" name="phoneNumber1" [(ngModel)]="personalData.phoneNumber1"
                 placeholder="7XXXXXXX" #phone01Input="ngModel" maxlength="9" (input)="formatPhoneNumber('phoneNumber1')"
-                (keypress)="preventNonNumeric($event, 'phoneNumber1')" [class]="
+                (keypress)="preventNonNumeric($event, 'phoneNumber1')" (blur)="markFieldAsTouched('phoneNumber1')" [class]="
                   'dark:text-textDark bg-tileLight dark:bg-tileBlack flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
                   (touchedFields.phoneNumber1 &&
                   !isValidPhoneNumber(personalData.phoneNumber1)
@@ -336,7 +336,7 @@
         <div>
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
           <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="validateNICInput($event)"
-            (input)="formatNIC()" placeholder="123456789012 or 123456789V"
+            (input)="formatNIC()" (blur)="markFieldAsTouched('nic')" placeholder="123456789012 or 123456789V"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="
               touchedFields.nic &&
@@ -354,9 +354,11 @@
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
-            (keypress)="preventEmailInvalidCharacters($event)" (input)="formatEmail()" placeholder="example@domain.com"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="touchedFields.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
+            (keypress)="preventEmailInvalidCharacters($event)" (input)="formatEmail()" (blur)="markFieldAsTouched('email')" 
+            placeholder="example@domain.com"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+            [ngClass]="{ 'border-red-500': isEmailInvalid() }" />
+          <span *ngIf="isEmailInvalid()" class="text-red-600 text-sm">
             {{ getEmailErrorMessage(personalData.email) }}
           </span>
         </div>
@@ -382,7 +384,8 @@
           <label for="house" class="block text-sm font-medium text-gray-700 dark:text-textDark">House / Plot Number
             *</label>
           <input id="house" name="house" [(ngModel)]="personalData.house"
-            (input)="onTrimInput($event, personalData, 'house')" (keypress)="preventAddressSpecialCharacters($event)"
+            (input)="onTrimInput($event, personalData, 'house')" (blur)="markFieldAsTouched('house')"
+            (keypress)="preventAddressSpecialCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('house')" class="text-red-600 text-sm">House Number is a required field</span>
         </div>
@@ -390,7 +393,8 @@
         <div class="pb-6">
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
           <input id="street" name="street" [(ngModel)]="personalData.street"
-            (input)="onTrimInput($event, personalData, 'street')" (keypress)="preventAddressSpecialCharacters($event)"
+            (input)="onTrimInput($event, personalData, 'street')" (blur)="markFieldAsTouched('street')"
+            (keypress)="preventAddressSpecialCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('street')" class="text-red-600 text-sm">Street Name is a required field</span>
         </div>
@@ -398,7 +402,8 @@
         <div class="pb-6">
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
           <input id="city" name="city" [(ngModel)]="personalData.city"
-            (input)="onTrimInput($event, personalData, 'city')" (keypress)="preventAddressSpecialCharacters($event)"
+            (input)="onTrimInput($event, personalData, 'city')" (blur)="markFieldAsTouched('city')"
+            (keypress)="preventAddressSpecialCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm">City is a required field</span>
         </div>
@@ -478,7 +483,7 @@
         <label for="accHolderName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Holder's
           Name *</label>
         <input id="accName" name="accName" [(ngModel)]="personalData.accName"
-          (input)="onTrimInput($event, personalData, 'accName')"
+          (input)="onTrimInput($event, personalData, 'accName')" (blur)="markFieldAsTouched('accName')"
           (keypress)="preventAccountHolderSpecialCharacters($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="isFieldInvalid('accName')" class="text-red-600 text-sm">Account Holder's Name is a required
@@ -493,6 +498,7 @@
         </label>
         <input id="accNumber" name="accNumber" [(ngModel)]="personalData.accNumber"
           (keypress)="preventAccountNumberInvalidCharacters($event)" (input)="formatAccountNumber('accNumber')"
+          (blur)="markFieldAsTouched('accNumber')"
           maxlength="16"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="isFieldInvalid('accNumber')" class="text-red-600 text-sm">

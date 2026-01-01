@@ -78,6 +78,17 @@ export class AddFiealdOfficerComponent implements OnInit {
   selectedContractImage: string | ArrayBuffer | null = null;
   readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB constant
 
+  // Add properties for English name validation
+  englishNameErrors = {
+    firstName: false,
+    lastName: false
+  };
+
+  englishNameTouched = {
+    firstName: false,
+    lastName: false
+  };
+
   constructor(
     private router: Router,
     private stakeHolderSrv: StakeholderService,
@@ -396,20 +407,91 @@ export class AddFiealdOfficerComponent implements OnInit {
     }
   }
 
+  // New method to validate English names
+  validateEnglishName(fieldName: 'firstName' | 'lastName'): void {
+    this.markFieldAsTouched(fieldName);
+    this.englishNameTouched[fieldName] = true;
+    
+    const value = this.personalData[fieldName];
+    
+    if (!value) {
+      this.englishNameErrors[fieldName] = false;
+      return;
+    }
+    
+    // Check if the name contains non-English characters
+    // This regex allows only English letters (a-z, A-Z), spaces, hyphens, and apostrophes
+    const englishOnlyRegex = /^[A-Za-z\s\-']+$/;
+    
+    // Additional check for Sinhala and Tamil characters
+    const sinhalaRegex = /[\u0D80-\u0DFF]/; // Sinhala Unicode range
+    const tamilRegex = /[\u0B80-\u0BFF]/;   // Tamil Unicode range
+    
+    if (sinhalaRegex.test(value) || tamilRegex.test(value)) {
+      this.englishNameErrors[fieldName] = true;
+    } else if (!englishOnlyRegex.test(value)) {
+      this.englishNameErrors[fieldName] = true;
+    } else {
+      this.englishNameErrors[fieldName] = false;
+    }
+  }
+
+  // New method to check for non-English characters
+  hasNonEnglishCharacters(fieldName: 'firstName' | 'lastName'): boolean {
+    const value = this.personalData[fieldName];
+    
+    if (!value || !this.englishNameTouched[fieldName]) {
+      return false;
+    }
+    
+    return this.englishNameErrors[fieldName];
+  }
+
   preventSpecialCharacters(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
-    const char = String.fromCharCode(event.which);
-
+    const char = String.fromCharCode(event.which || event.keyCode);
+    
     // Block space if it's at the start (cursor at position 0)
     if (char === ' ' && input.selectionStart === 0) {
       event.preventDefault();
       return;
     }
-
-    // Allow only letters (a-z, A-Z) and spaces elsewhere
-    if (!/[a-zA-Z\s]/.test(char)) {
+    
+    // Allow only English letters, spaces, hyphens, and apostrophes
+    // Also prevent Sinhala and Tamil characters
+    const allowedPattern = /^[A-Za-z\s\-']$/;
+    
+    // Check for Sinhala and Tamil characters specifically
+    const isSinhala = /[\u0D80-\u0DFF]/.test(char);
+    const isTamil = /[\u0B80-\u0BFF]/.test(char);
+    
+    if (isSinhala || isTamil || !allowedPattern.test(char)) {
       event.preventDefault();
     }
+  }
+
+  // New method to validate English names when pasting
+  onEnglishNamePaste(event: ClipboardEvent, fieldName: 'firstName' | 'lastName'): void {
+    event.preventDefault();
+    
+    // Get pasted text
+    const pastedText = event.clipboardData?.getData('text') || '';
+    
+    // Filter out non-English characters
+    const englishOnly = pastedText.replace(/[^A-Za-z\s\-']/g, '');
+    
+    // Update the value
+    if (fieldName === 'firstName') {
+      this.personalData.firstName = englishOnly;
+    } else {
+      this.personalData.lastName = englishOnly;
+    }
+    
+    // Trigger validation
+    this.validateEnglishName(fieldName);
+    
+    // Trigger capitalization
+    this.capitalizeNames();
   }
 
   // New methods for Sinhala and Tamil character validation
@@ -691,10 +773,14 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       if (!this.personalData.firstName) {
         missingFields.push('First Name in English is Required');
+      } else if (this.hasNonEnglishCharacters('firstName')) {
+        missingFields.push('First Name should only contain English letters');
       }
 
       if (!this.personalData.lastName) {
         missingFields.push('Last Name in English is Required');
+      } else if (this.hasNonEnglishCharacters('lastName')) {
+        missingFields.push('Last Name should only contain English letters');
       }
 
       // Validate Sinhala and Tamil names
@@ -881,6 +967,10 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
+    
+    // Mark English name fields as touched
+    this.englishNameTouched.firstName = true;
+    this.englishNameTouched.lastName = true;
   }
 
   onTrimInput(event: Event, modelRef: any, fieldName: string): void {
@@ -1380,10 +1470,14 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     if (!this.personalData.firstName) {
       missingFields.push('First Name (in English) is Required');
+    } else if (this.hasNonEnglishCharacters('firstName')) {
+      missingFields.push('First Name should only contain English letters');
     }
 
     if (!this.personalData.lastName) {
       missingFields.push('Last Name (in English) is Required');
+    } else if (this.hasNonEnglishCharacters('lastName')) {
+      missingFields.push('Last Name should only contain English letters');
     }
 
     // Validate Sinhala and Tamil names
@@ -1688,6 +1782,10 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
+    
+    // Mark English name fields as touched
+    this.englishNameTouched.firstName = true;
+    this.englishNameTouched.lastName = true;
   }
 
 }

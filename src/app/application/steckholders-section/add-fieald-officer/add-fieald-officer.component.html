@@ -287,13 +287,20 @@
             name="firstName"
             (input)="capitalizeNames()"
             (keypress)="preventSpecialCharacters($event)"
+            (paste)="onEnglishNamePaste($event, 'firstName')"
+            (blur)="validateEnglishName('firstName')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [ngClass]="{'border-red-500': hasNonEnglishCharacters('firstName')}"
           />
           <span *ngIf="isFieldInvalid('firstName')" class="text-red-600 text-sm"
             >First Name is a required field</span
           >
-          <!-- <span *ngIf="hasInvalidNameCharacters('firstNameEnglish')" class="text-red-600 text-sm">First Name should only
-            contain English letters</span> -->
+          <span 
+            *ngIf="hasNonEnglishCharacters('firstName')" 
+            class="text-red-600 text-sm block mt-1"
+          >
+            First Name should only contain English letters (A-Z, a-z)
+          </span>
         </div>
         <div>
           <label
@@ -307,13 +314,20 @@
             [(ngModel)]="personalData.lastName"
             (input)="capitalizeNames()"
             (keypress)="preventSpecialCharacters($event)"
+            (paste)="onEnglishNamePaste($event, 'lastName')"
+            (blur)="validateEnglishName('lastName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            [ngClass]="{'border-red-500': hasNonEnglishCharacters('lastName')}"
           />
           <span *ngIf="isFieldInvalid('lastName')" class="text-red-600 text-sm"
             >Last Name is a required field</span
           >
-          <!-- <span *ngIf="hasInvalidNameCharacters('lastNameEnglish')" class="text-red-600 text-sm">Last Name should only
-            contain English letters</span> -->
+          <span 
+            *ngIf="hasNonEnglishCharacters('lastName')" 
+            class="text-red-600 text-sm block mt-1"
+          >
+            Last Name should only contain English letters (A-Z, a-z)
+          </span>
         </div>
 
         <!-- New Fields: Sinhala and Tamil Names -->
@@ -328,6 +342,7 @@
             [(ngModel)]="personalData.firstNameSinhala"
             name="firstNameSinhala"
             (input)="onTrimInput($event, personalData, 'firstNameSinhala')"
+            (keypress)="allowSinhalaCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -347,6 +362,7 @@
             [(ngModel)]="personalData.lastNameSinhala"
             name="lastNameSinhala"
             (input)="onTrimInput($event, personalData, 'lastNameSinhala')"
+            (keypress)="allowSinhalaCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -366,6 +382,7 @@
             [(ngModel)]="personalData.firstNameTamil"
             name="firstNameTamil"
             (input)="onTrimInput($event, personalData, 'firstNameTamil')"
+            (keypress)="allowTamilCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -385,6 +402,7 @@
             [(ngModel)]="personalData.lastNameTamil"
             name="lastNameTamil"
             (input)="onTrimInput($event, personalData, 'lastNameTamil')"
+            (keypress)="allowTamilCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span

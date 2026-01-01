@@ -22,10 +22,11 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   // Status Filter
   selectStatus: string = '';
   isStatusDropdownOpen: boolean = false;
-  statusDropdownOptions: string[] = ['Assigned', 'Not Assigned'];
+  statusDropdownOptions = ['Assigned', 'Not Assigned'];
 
   // Search
   search: string = '';
+  Farmer_ID: any;
 
   // Details Modal
   showDetailsModal: boolean = false;
@@ -172,7 +173,7 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       // Load officers for the district and role
       if (this.selectedOfficerRole) {
         const district = request.district;
-        this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, request.empId);
+        this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, request.Farmer_ID, request.empId);
       }
     }
 
@@ -204,17 +205,17 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       const currentEmpId = this.selectedGovicareRequest.Status === 'Assigned'
         ? this.selectedGovicareRequest.empId
         : undefined;
-      this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, currentEmpId);
+      this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, this.selectedGovicareRequest.Farmer_ID, currentEmpId);
     }
   }
 
   // Load officers by district and role
-  loadOfficersByDistrictAndRole(district: string, role: string, currentEmpId?: string): void {
+  loadOfficersByDistrictAndRole(district: string, role: string, Farmer_ID: any, currentEmpId?: string): void {
     this.isLoadingOfficers = true;
     this.assignError = '';
 
     this.FinanceService
-      .getOfficersByDistrictAndRoleForInvestment(district, role)
+      .getOfficersByDistrictAndRoleForInvestment(district, role, Farmer_ID)
       .subscribe({
         next: (response) => {
           this.isLoadingOfficers = false;
@@ -352,9 +353,15 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   // Open image in new window
   openImage(imageUrl: string): void {
     if (imageUrl) {
-      window.open(imageUrl, '_blank', 'width=800,height=600,resizable=yes,scrollbars=yes');
+      window.open(imageUrl, '_blank');
     }
   }
+
+  formatNumberWithCommas(value: number | string): string {
+  if (!value) return '0';
+  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  return numValue.toLocaleString('en-US');
+}
 
   // Format currency
   formatCurrency(amount: number): string {

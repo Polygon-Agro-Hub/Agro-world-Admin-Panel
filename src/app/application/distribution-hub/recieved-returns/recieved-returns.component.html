@@ -1,0 +1,247 @@
+<button class="mb-5 text-textLight" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div
+    class="overflow-x-auto scrollbar-thin min-h-screen scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+
+    <div class="pt-5 pr-12 pl-12 pb-4 min-w-full bg-white shadow-lg rounded-lg">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-normal text-[#2B2B2B]">
+                Received Returns ({{ totalItems < 10 ? ('0'+totalItems) : totalItems}})
+            </h2>
+
+            <!-- Filters -->
+            <div class="flex items-center gap-3">
+                <img src="assets/icons/filter_icon.png" alt="Filter" class="w-6 h-6" />
+                <span class="text-gray-500">Filter By</span>
+
+                <p-calendar [(ngModel)]="deliveryDateModel" placeholder="Delivery Date" dateFormat="yy-mm-dd"
+                    (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()"
+                    styleClass="w-full"
+                    inputStyleClass=" h-10 px-4 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 ">
+                </p-calendar>
+
+                <!-- Centre dropdown (id) with clear handler -->
+                <p-dropdown
+                    styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+                    [options]="centreOptions" optionLabel="label" optionValue="value" [showClear]="!!centerId"
+                    placeholder="Centre" [(ngModel)]="centerId" (onChange)="applyFilters()">
+                </p-dropdown>
+
+                <!-- Search -->
+                <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">
+                    <input type="text" placeholder="Search by..."
+                        class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+                        [(ngModel)]="searchText" (keydown.enter)="searchOrders()" />
+                    <button class="text-gray-500 mr-2" (click)="searchOrders()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <button *ngIf="searchText" class="text-gray-500" (click)="clearSearch()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <h3 class=" text-[#5C5C5C] mb-6">
+            Total Value : <span class="text-[#2B2B2B] font-semibold" >{{ totalValue | number:'1.2-2' }}</span>
+        </h3>
+
+        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
+            <p class="text-[#494949] my-6 dark:text-white">
+                --No Data Available--
+            </p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
+
+
+        <div class="overflow-x-auto">
+            <table class="w-full" *ngIf="hasData">
+              <thead>
+                <tr class="border-b border-gray-200 dark:border-gray-700">
+                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">No
+                  </th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    Order ID</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    Value (Rs.)</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    Reason</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    Customer Contact</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    Centre Code</th>
+                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    Centre Name</th>
+                  <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    Details</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of driverData; let i = index"
+                  class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+    
+                  <!-- No -->
+                  <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                    {{ i + 1 | number:'2.0' }}
+                  </td>
+    
+                  <!-- Request ID -->
+                  <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                    {{ data.invNO }}
+                  </td>
+    
+                  <!-- Farmer Name -->
+                  <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                    {{ data.total }}
+                  </td>
+
+                  <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                    {{ data.reason === 'Other' ? 'Other : Customer Refused' : data.reason }}
+                  </td>
+    
+                  <!-- Phone Number -->
+                  <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                    {{ data.phoneCode1 }} {{data.phone1}}
+                  </td>
+
+                  <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                    {{ data.regCode }}
+                  </td>
+
+                  <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                    {{ data.centerName }}
+                  </td>
+
+                  <td class="px-4 py-4 text-center">
+                    <button (click)="viewDetails(data)"
+                      class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </button>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+
+    </div>
+</div>
+
+
+<div *ngIf="showDetailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="closeDetailsModal()">
+
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-md mx-4" (click)="$event.stopPropagation()">
+
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-[#5C5C5C] dark:border-[#5C5C5C]">
+      <h2 class="text-lg font-semibold text-center text-textLight dark:text-textDark">
+        Order ID : {{ dataObject.invNO }}
+      </h2>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+
+      <!-- Farmer Name -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Value</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ dataObject.total }}
+        </span>
+      </div>
+
+      <!-- NIC Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Customer Contact</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ dataObject.phoneCode1 }} {{ dataObject.phone1 }}
+        </span>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Centre Code</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ dataObject.regCode }}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Centre Name</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ dataObject.centerName }}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Order Scheduled Date</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1 whitespace-nowrap">
+          {{ dataObject.sheduleDate | date:'hh:mm a on MMMM d, y' }}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Order Returned At</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1 whitespace-nowrap">
+          {{ dataObject.returnAt | date:'hh:mm a on MMMM d, y' }}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Order Recieved At</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1 whitespace-nowrap">
+            {{ dataObject.receivedTime | date:'hh:mm a on MMMM d, y' }}
+        </span>
+      </div>
+
+      <!-- Crop -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Returned By</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ dataObject.empId }}
+        </span>
+      </div>
+
+      <!-- Extent -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Reason to Return</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+            {{ dataObject.reason === 'Other' ? 'The Customer claimed that the order is not for him.' : dataObject.reason }}
+        </span>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-center">
+      <button (click)="closeDetailsModal()"
+        class="px-12 py-2 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium text-sm">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

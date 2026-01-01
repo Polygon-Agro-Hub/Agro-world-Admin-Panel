@@ -253,6 +253,7 @@ import { DistributionViewCustomerOrdersComponent } from './application/distribut
 import { AuditPersonalInfoComponent } from './application/finance/govi-capital-inspection/audit-personal-info/audit-personal-info.component';
 import { ViewAllAuditedGovicareRequestsComponent } from './application/finance/view-all-audited-govicare-requests/view-all-audited-govicare-requests.component';
 import { ViewVehiclesComponent } from './application/distribution-hub/view-vehicles/view-vehicles.component';
+import { RecievedReturnsComponent } from './application/distribution-hub/recieved-returns/recieved-returns.component';
 
 export const routes: Routes = [
   {
@@ -1704,9 +1705,20 @@ export const routes: Routes = [
                 path: 'todays-deliveries',
                 component: TodaysDeliveriesComponent,
               },
+              
+              {
+                path: 'reasons-to-hold',
+                component: RecievedReturnsComponent,
+              },
+
               {
                 path: 'reasons-to-hold',
                 component: TransportReasonsToHoldComponent,
+              },
+              
+              {
+                path: 'view-vehicles',
+                component: ViewVehiclesComponent,
               },
               {
                 path: 'view-vehicles',

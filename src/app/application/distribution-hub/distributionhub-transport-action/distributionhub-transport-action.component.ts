@@ -53,6 +53,13 @@ export class DistributionhubTransportActionComponent {
     });
   }
 
+  navigateTorecievedReturns(): void {
+    this.isLoading = true;
+    this.router.navigate(['/distribution-hub/action/recieved-returns']).then(() => {
+      this.isLoading = false;
+    });
+  }
+
   back(): void{
     this.isLoading= true;
      this.router.navigate(['/distribution-hub/action'], {

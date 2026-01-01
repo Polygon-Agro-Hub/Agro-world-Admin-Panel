@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
@@ -82,6 +82,7 @@ export class AddFiealdOfficerComponent implements OnInit {
     private router: Router,
     private stakeHolderSrv: StakeholderService,
     private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   jobRoles = ['Field Officer', 'Chief Field Officer'];
@@ -784,6 +785,9 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Navigate to the selected page
     this.selectedPage = page;
+    
+    // Scroll to top after page change
+    this.scrollToTop();
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
@@ -829,6 +833,28 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Navigate to the selected page if validation passes
     this.selectedPage = page;
+    
+    // Scroll to top after page change
+    this.scrollToTop();
+  }
+
+  // Add this method to scroll to top
+  scrollToTop(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      // Use setTimeout to ensure DOM has updated
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        
+        // Also try scrolling the container div
+        const container = document.querySelector('.mx-auto.p-6') as HTMLElement;
+        if (container) {
+          container.scrollTop = 0;
+        }
+      }, 100);
+    }
   }
 
   markPageOneFieldsAsTouched(): void {

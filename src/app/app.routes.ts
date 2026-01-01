@@ -1707,7 +1707,7 @@ export const routes: Routes = [
               },
               
               {
-                path: 'reasons-to-hold',
+                path: 'recieved-returns',
                 component: RecievedReturnsComponent,
               },
 
@@ -1715,7 +1715,7 @@ export const routes: Routes = [
                 path: 'reasons-to-hold',
                 component: TransportReasonsToHoldComponent,
               },
-              
+
               {
                 path: 'view-vehicles',
                 component: ViewVehiclesComponent,

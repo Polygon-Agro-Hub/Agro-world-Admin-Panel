@@ -76,6 +76,7 @@ export class AddFiealdOfficerComponent implements OnInit {
   selectedBackNicImage: string | ArrayBuffer | null = null;
   selectedPassbookImage: string | ArrayBuffer | null = null;
   selectedContractImage: string | ArrayBuffer | null = null;
+  readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB constant
 
   constructor(
     private router: Router,
@@ -190,8 +191,9 @@ export class AddFiealdOfficerComponent implements OnInit {
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
-      if (file.size > 5000000) {
-        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+      // Validate file size (10MB limit)
+      if (file.size > this.MAX_FILE_SIZE) {
+        Swal.fire('Error', 'File size exceeds 10MB. Please upload a smaller image.', 'error');
         return;
       }
 
@@ -1218,9 +1220,9 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   handleFileUpload(file: File, fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
-    // Validate file size (5MB limit)
-    if (file.size > 5000000) {
-      Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+    // Validate file size (10MB limit)
+    if (file.size > this.MAX_FILE_SIZE) {
+      Swal.fire('Error', 'File size exceeds 10MB. Please upload a smaller image.', 'error');
       return;
     }
 
@@ -1466,6 +1468,22 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     if (!this.selectedContractFile) {
       missingFields.push('Signed Contract is Required');
+    }
+
+    // Add file size validation before submitting
+    const filesToCheck = [
+      { file: this.selectedFile, name: 'Profile Picture' },
+      { file: this.selectedFrontNicFile, name: 'NIC Front Image' },
+      { file: this.selectedBackNicFile, name: 'NIC Back Image' },
+      { file: this.selectedPassbookFile, name: 'Bank Passbook' },
+      { file: this.selectedContractFile, name: 'Signed Contract' }
+    ];
+
+    for (const item of filesToCheck) {
+      if (item.file && item.file.size > this.MAX_FILE_SIZE) {
+        Swal.fire('Error', `${item.name} exceeds 10MB. Please upload a smaller image.`, 'error');
+        return;
+      }
     }
 
     // If errors, show list and stop - validation messages will now be visible

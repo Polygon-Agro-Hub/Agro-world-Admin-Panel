@@ -28,6 +28,7 @@ interface Delivery {
   orderId?: string;
   centre?: string;
   deliveryTime?: string;
+  collectTime?: string;
 }
 
 @Component({

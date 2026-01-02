@@ -12,6 +12,7 @@ interface DeliveryItem {
   startedTime: string;
   status: string;
   // These might be needed for formatting
+  collectTime?: string;
   sheduleTime?: string;
   outDlvrTime?: string;
   createdAt?: string;

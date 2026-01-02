@@ -173,6 +173,12 @@
                                     class="w-32 h-8 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">{{
                                     item.status }}</span>
                             </div>
+
+                            <div *ngIf="item.status === 'Assigned'">
+                                <span
+                                  class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{
+                                  item.status }}</span>
+                              </div>
                         </td>
                         <td *ngIf="permissionService.hasPermission('Reply Driver complaint') || tokenService.getUserDetails().role === '1'"
                             class="py-3 dark:text-textDark text-center">

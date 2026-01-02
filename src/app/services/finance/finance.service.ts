@@ -292,6 +292,7 @@ export interface GoviCareRequest {
   publishStatus: string;
   Request_Date_Time: string;
   approvedDetails: any;
+  Farmer_ID:any;
 }
 
 export interface GoviCareRequestsResponse {
@@ -725,14 +726,16 @@ export class FinanceService {
 
   getOfficersByDistrictAndRoleForInvestment(
     distrct: string,
-    role: string
+    role: string,
+    Farmer_ID: any
   ): Observable<any> {
     return this.http.get<any>(
       `${this.apiUrl}finance/officers`,
       {
         params: {
           district: distrct,
-          jobRole: role
+          jobRole: role,
+          Farmer_ID: Farmer_ID
         }
       }
     );

@@ -9,52 +9,23 @@
       <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <path
-            d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s14.3-32-32-32L265.3 64z"
-          />
+            d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s14.3-32-32-32L265.3 64z" />
         </svg>
       </i>
       <p class="text-textLight dark:text-textDark mr-6">Filter By</p>
       <div class="mr-5">
-        <p-dropdown
-          #topfilters
+        <p-dropdown #topfilters
           styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-          [options]="statusOptions"
-          [(ngModel)]="selectedStatus"
-          (onChange)="onStatusChange()"
-          [checkmark]="true"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Status"
-        ></p-dropdown>
+          [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onStatusChange()" [checkmark]="true"
+          optionLabel="label" optionValue="value" placeholder="Status"></p-dropdown>
       </div>
-      <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-      >
-        <input
-          type="text"
-          placeholder="Search by Order ID"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          [(ngModel)]="searchText"
-          (input)="onSearchChange()"
-        />
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none"
-          (click)="clearSearch()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
+      <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+        <input type="text" placeholder="Search by Order ID"
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchText"
+          (input)="onSearchChange()" />
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -64,43 +35,29 @@
     <table class="min-w-full divide-y divide-gray-200 table-auto">
       <thead>
         <tr>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             No
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             Order ID
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             Centre
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             Delivery Time Slot
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Status
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Details
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let delivery of displayedDeliveries; let i = index"
-          class="border-b border-gray-200 dark:border-gray-700"
-        >
+        <tr *ngFor="let delivery of displayedDeliveries; let i = index"
+          class="border-b border-gray-200 dark:border-gray-700">
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ i + 1 | number : "2.0" }}
           </td>
@@ -111,46 +68,40 @@
             {{ delivery.regCode || "N/A" }}
           </td>
           <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-             {{ formatTimeRange(delivery.sheduleTime) }}
+            {{ formatTimeRange(delivery.sheduleTime) }}
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <span
-              class="inline-block w-32 px-3 py-1 rounded-full text-sm font-medium text-center {{
+            <span class="inline-block w-32 px-3 py-1 rounded-full text-sm font-medium text-center {{
                 getStatusClass(delivery.status)
-              }}"
-            >
+              }}">
               {{ delivery.status }}
             </span>
           </td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-            <button
-              class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+          <td class="px-4 py-3 text-center">
+            <button 
+              (click)="openDetailsPopup(delivery)"
+              class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+              <svg class="w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
           </td>
         </tr>
         <tr *ngIf="displayedDeliveries.length === 0">
-          <td
-            colspan="7"
-            class="px-4 py-8 text-center text-textLight dark:text-textDark"
-          >
+          <td colspan="7" class="px-4 py-8 text-center text-textLight dark:text-textDark">
             No deliveries found
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <!-- Details Popup -->
+  <app-today-deliveries-view-details-popup
+    [visible]="showDetailsPopup"
+    [deliveryId]="selectedDeliveryId"
+    (closePopup)="closeDetailsPopup()">
+  </app-today-deliveries-view-details-popup>
 </div>

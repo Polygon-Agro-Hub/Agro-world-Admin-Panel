@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
+import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface Delivery {
+  id?: number;
   invNo: string;
   regCode: string;
   sheduleTime: string;  // This will be like "Within 8-12 PM"
@@ -14,7 +16,7 @@ interface Delivery {
 @Component({
   selector: 'app-all-todays-deleveries',
   standalone: true,
-  imports: [CommonModule, DropdownModule, FormsModule],
+  imports: [CommonModule, DropdownModule, FormsModule, TodayDeliveriesViewDetailsPopupComponent],
   templateUrl: './all-todays-deleveries.component.html',
   styleUrl: './all-todays-deleveries.component.css',
 })
@@ -22,6 +24,8 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   @Input() deliveries: Delivery[] = [];
 
   displayedDeliveries: Delivery[] = [];
+  showDetailsPopup: boolean = false;
+  selectedDeliveryId!: number;
 
   statusOptions = [
     { label: 'All', value: null },
@@ -100,6 +104,22 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   clearSearch(): void {
     this.searchText = '';
     this.filterDeliveries();
+  }
+
+  // Open details popup
+
+  openDetailsPopup(delivery: Delivery): void {
+    if (delivery.id == null) {
+      console.warn('Delivery id is missing for selected row:', delivery);
+      return; 
+    }
+    this.selectedDeliveryId = delivery.id;
+    this.showDetailsPopup = true;
+  }
+
+  // Close details popup
+  closeDetailsPopup(): void {
+    this.showDetailsPopup = false;
   }
 
   // Format the schedule time to remove "Within " if you just want "8-12 PM"

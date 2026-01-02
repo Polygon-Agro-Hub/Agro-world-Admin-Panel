@@ -74,6 +74,18 @@
         Out for Delivery
       </button>
       <button
+        (click)="selectTab('collected')"
+        [ngClass]="{
+          'border border-[#415CFF] text-[#415CFF]': activeTab === 'collected',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'collected'
+        }"
+        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'collected'" class="fa fa-check"></i>
+        Collected
+      </button>
+      <button
         (click)="selectTab('on-the-way')"
         [ngClass]="{
           'border border-[#415CFF] text-[#415CFF]': activeTab === 'on-the-way',
@@ -134,6 +146,9 @@
       <app-out-for-delivery-todays-deleveries
         [deliveries]="outForDeliveryData"
       ></app-out-for-delivery-todays-deleveries>
+    </div>
+    <div *ngIf="activeTab === 'collected'">
+      <app-collected [deliveries]="collectedData"></app-collected>
     </div>
     <div *ngIf="activeTab === 'on-the-way'">
       <app-on-the-way-todays-deleveries

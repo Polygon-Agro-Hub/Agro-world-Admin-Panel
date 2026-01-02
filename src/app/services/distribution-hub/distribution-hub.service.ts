@@ -656,6 +656,16 @@ getTodaysDeliveries(regCode?: string, invNo?: string, searchType: string = 'part
     });
     return this.http.get<any>(`${this.apiUrl}distribution/get-distributed-vehicles?page=1&limit=1000`, { headers });
   }
+
+  // Get today delivery tracking details by ID
+  getTodayDeliveryTracking(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<any>(`${this.apiUrl}distribution/get-today-delivery-tracking/${id}`, { headers });
+  }
+
 }
 
 

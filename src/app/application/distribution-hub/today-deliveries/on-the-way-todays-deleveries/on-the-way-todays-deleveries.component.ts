@@ -38,21 +38,23 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
   }
   
   transformDeliveryData(): void {
-    // Transform the backend data to match the frontend interface
-    this.deliveryData = this.deliveries.map((delivery, index) => ({
-      no: index + 1,
-      invNo: delivery.invNo || '',
-      regCode: delivery.regCode || '',
-      driver: delivery.driver || 'N/A', // This should come from backend
-      phoneNumber: delivery.phoneNumber || 'N/A', // This should come from backend
-      deliveryTimeSlot: this.formatTimeSlot(delivery.sheduleTime),
-      startedTime: this.formatTime(delivery.outDlvrTime || delivery.createdAt),
-      status: delivery.status || '',
-      sheduleTime: delivery.sheduleTime,
-      outDlvrTime: delivery.outDlvrTime,
-      createdAt: delivery.createdAt
-    }));
-  }
+  // Transform the backend data to match the frontend interface
+  this.deliveryData = this.deliveries.map((delivery, index) => ({
+    no: index + 1,
+    invNo: delivery.invNo || '',
+    regCode: delivery.regCode || '',
+    driver: delivery.driver || delivery.driverEmpId || 'N/A', // Use driverEmpId if driver not provided
+    phoneNumber: delivery.phoneNumber || 'N/A',
+    deliveryTimeSlot: this.formatTimeSlot(delivery.sheduleTime),
+    // UPDATED: Use startedTime from parent (which maps to driverStartTime from backend)
+    startedTime: delivery.startedTime || this.formatTime(delivery.driverStartTime || delivery.outDlvrTime || delivery.createdAt),
+    status: delivery.status || '',
+    sheduleTime: delivery.sheduleTime,
+    outDlvrTime: delivery.outDlvrTime,
+    createdAt: delivery.createdAt,
+    driverStartTime: delivery.driverStartTime // Keep this for reference
+  }));
+}
   
   formatTimeSlot(timeString: string): string {
     if (!timeString) return 'N/A';

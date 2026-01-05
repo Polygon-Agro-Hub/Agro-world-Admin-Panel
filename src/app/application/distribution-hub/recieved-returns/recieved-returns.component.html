@@ -216,10 +216,10 @@
 
       <!-- Order Scheduled Date -->
       <div class="flex items-start">
-        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Order Scheduled Date</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Order Scheduled On</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1 whitespace-nowrap">
-          {{ dataObject.sheduleDate | date:'hh:mm a on MMMM d, y' }}
+          {{ dataObject.sheduleDate | date:' MMMM d, y' }}
         </span>
       </div>
 

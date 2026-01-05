@@ -9,7 +9,7 @@
 
 <div class="mx-auto">
   <!-- Add Reason Form -->
-  <div class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg p-6 mb-6">
+  <div *ngIf="permissionService.hasPermission('Add reason to hold') || tokenService.getUserDetails().role === '1'" class="bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg p-6 mb-6">
     <h2 class="text-xl font-normal text-textLight text-center dark:text-textDark mb-6">
       Add a Reason (For Holding Orders)
     </h2>
@@ -166,6 +166,7 @@
       *ngIf="reasons.length > 0"
       cdkDropList
       (cdkDropListDropped)="drop($event)"
+      [cdkDropListDisabled]="!(permissionService.hasPermission('Change reason to hold') || tokenService.getUserDetails().role === '1')"
       class="space-y-3"
     >
       <div
@@ -190,7 +191,7 @@
         </div>
 
         <!-- Delete Button (Outside the border) -->
-        <button
+        <button *ngIf="permissionService.hasPermission('Delete reason to hold') || tokenService.getUserDetails().role === '1'"
           type="button"
           (click)="onDelete(reason.id)"
           [disabled]="reason.id === 1"

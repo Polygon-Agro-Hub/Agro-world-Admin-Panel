@@ -27,11 +27,15 @@
                     placeholder="Centre" [(ngModel)]="centerId" (onChange)="applyFilters()">
                 </p-dropdown>
 
-                <p-calendar [(ngModel)]="deliveryDateModel" placeholder="Delivery Date" dateFormat="yy-mm-dd"
-                    (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()"
-                    styleClass="w-full"
-                    inputStyleClass=" h-10 px-4 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 ">
-                </p-calendar>
+                <p-calendar 
+  [(ngModel)]="deliveryDateModel" 
+  placeholder="Delivery Date" 
+  dateFormat="yy-mm-dd"
+  (onSelect)="onDateSelected($event)" 
+  (onClear)="clearDateFilter()"
+  styleClass="w-full small-calendar"
+  inputStyleClass="h-10 px-4 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500">
+</p-calendar>
 
                 <!-- Search -->
                 <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-distributionhub-transport-action',
@@ -14,7 +16,9 @@ export class DistributionhubTransportActionComponent {
   isLoading = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   navigateToViewVehicles(): void {
@@ -44,7 +48,7 @@ export class DistributionhubTransportActionComponent {
     });
   }
 
-    navigateToResonsHold(): void {
+  navigateToResonsHold(): void {
     this.isLoading = true;
     this.router.navigate(['/distribution-hub/action/reasons-to-hold'], {
       queryParams: { type: 'distribution' }
@@ -60,9 +64,9 @@ export class DistributionhubTransportActionComponent {
     });
   }
 
-  back(): void{
-    this.isLoading= true;
-     this.router.navigate(['/distribution-hub/action'], {
+  back(): void {
+    this.isLoading = true;
+    this.router.navigate(['/distribution-hub/action'], {
       queryParams: { type: 'distribution' }
     }).then(() => {
       this.isLoading = false;

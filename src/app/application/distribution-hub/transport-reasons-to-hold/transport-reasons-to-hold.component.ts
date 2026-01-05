@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 interface Reason {
   id: number;
@@ -35,7 +37,9 @@ export class TransportReasonsToHoldComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private location: Location,
-    private distributionService: DistributionHubService
+    private distributionService: DistributionHubService,
+    public permissionService: PermissionService,
+    public tokenService: TokenService
   ) { }
 
   ngOnInit(): void {

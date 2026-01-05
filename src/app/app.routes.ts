@@ -1700,29 +1700,33 @@ export const routes: Routes = [
               {
                 path: 'reasons-to-return',
                 component: TransportReasonsToReturnComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation reason to return' },
               },
               {
                 path: 'todays-deliveries',
                 component: TodaysDeliveriesComponent,
               },
-              
+
               {
                 path: 'recieved-returns',
                 component: RecievedReturnsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation received returns' },
               },
 
               {
                 path: 'reasons-to-hold',
                 component: TransportReasonsToHoldComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation reason to hold' },
               },
 
               {
                 path: 'view-vehicles',
                 component: ViewVehiclesComponent,
-              },
-              {
-                path: 'view-vehicles',
-                component: ViewVehiclesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation view vehicles' },
               },
               {
                 path: 'create-company',
@@ -1742,6 +1746,8 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: DistributionhubTransportActionComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Distribution Hub transpotation' },
                   },
                 ],
               },

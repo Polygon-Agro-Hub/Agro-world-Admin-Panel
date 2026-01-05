@@ -63,7 +63,7 @@
         </div>
 
         <h3 class="text-[#5C5C5C] dark:text-gray-400 mb-6">
-            Total Value : <span class="text-[#2B2B2B] dark:text-textDark font-semibold">{{ totalValue | number:'1.2-2' }}</span>
+            Total Value : <span class="text-[#2B2B2B] dark:text-textDark font-semibold">Rs {{ totalValue | number:'1.2-2' }}</span>
         </h3>
 
         <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">

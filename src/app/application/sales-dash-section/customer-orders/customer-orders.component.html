@@ -7,7 +7,7 @@
 
 <div
     class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-    <div class="pt-5 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="pt-5 pb-5 min-w-max bg-white dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
             <button
                 *ngIf="permissionService.hasPermission('Dash customers order assigned tab') || tokenService.getUserDetails().role === '1'"

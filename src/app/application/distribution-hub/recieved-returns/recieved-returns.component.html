@@ -39,15 +39,19 @@
 </p-calendar>
 
                 <!-- Search -->
-                <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">
-    <input type="text" placeholder="Search by..." title="Search by Order ID, Contact Number, Centre Name"
-        class="bg-transparent outline-none w-full text-textLight dark:text-textDark placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF]"
-        [(ngModel)]="searchText" (keydown.enter)="searchOrders()" />
+                <!-- Search -->
+<div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">
+    <input type="text" 
+           placeholder="Search by Order ID, Contact, Centre Code..." 
+           title="Search by Order ID, Contact Number, Centre Code, Centre Name"
+           class="bg-transparent outline-none w-full text-textLight dark:text-textDark placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF]"
+           [(ngModel)]="searchText" 
+           (keydown.enter)="searchOrders()" />
     
     <!-- Search button with tooltip -->
     <button class="text-gray-500 dark:text-gray-400 mr-2" 
             (click)="searchOrders()"
-            [title]="'Search by Order ID, Contact Number, Centre Name'">
+            [title]="'Search by Order ID, Contact Number, Centre Code, Centre Name'">
         <i class="fa-solid fa-magnifying-glass"></i>
     </button>
     

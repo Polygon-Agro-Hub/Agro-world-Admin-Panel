@@ -29,6 +29,11 @@ interface Delivery {
   centre?: string;
   deliveryTime?: string;
   collectTime?: string;
+  // Add backend properties
+  driverEmpId?: string;
+  driverStartTime?: string;
+  // Add startedTime for child components
+  startedTime?: string;
 }
 
 @Component({
@@ -109,36 +114,50 @@ export class TodaysDeliveriesComponent implements OnInit {
       });
   }
 
-  prepareDeliveryData(): void {
-    this.allDeliveries = this.allDeliveries.map((delivery, index) => {
-      // Format return time from createdAt or outDlvrTime
-      const returnTime = this.formatToReturnTime(
-        delivery.createdAt || delivery.outDlvrTime
-      );
+  // In TodaysDeliveriesComponent's prepareDeliveryData() method, update it like this:
 
-      // Format delivery time slot from sheduleTime
-      const deliveryTimeSlot = this.formatDeliveryTimeSlot(
-        delivery.sheduleTime
-      );
+prepareDeliveryData(): void {
+  this.allDeliveries = this.allDeliveries.map((delivery, index) => {
+    // Format return time from createdAt or outDlvrTime
+    const returnTime = this.formatToReturnTime(
+      delivery.returnTime || delivery.createdAt || delivery.outDlvrTime
+    );
 
-      // Format delivery time for delivered items (use outDlvrTime or createdAt)
-      const deliveryTime = this.formatToReturnTime(
-        delivery.outDlvrTime || delivery.createdAt
-      );
+    // Format delivery time slot from sheduleTime
+    const deliveryTimeSlot = this.formatDeliveryTimeSlot(
+      delivery.sheduleTime
+    );
 
-      return {
-        ...delivery,
-        no: index + 1,
-        driver: 'DIV000001', // Placeholder - update with actual data if available
-        phoneNumber: '0781112300', // Placeholder - update with actual data if available
-        returnTime: returnTime,
-        deliveryTimeSlot: deliveryTimeSlot,
-        deliveryTime: deliveryTime, // Add deliveryTime for delivered tab
-        orderId: delivery.invNo, // Map invNo to orderId
-        centre: delivery.regCode, // Map regCode to centre
-      };
-    });
-  }
+    // Format delivery time for delivered items (use outDlvrTime or createdAt)
+    const deliveryTime = this.formatToReturnTime(
+      delivery.deliveryTime || delivery.outDlvrTime || delivery.createdAt
+    );
+
+    // Format driver start time (NEW: use driverStartTime from backend)
+    const driverStartTime = this.formatToReturnTime(
+      delivery.driverStartTime || ''
+    );
+
+    // Format collect time for collected tab
+    const collectTime = this.formatToReturnTime(
+      delivery.collectTime ?? ''
+    );
+
+    return {
+      ...delivery,
+      no: index + 1,
+      driver: delivery.driverEmpId || 'DIV000001', // Use driverEmpId from backend if available
+      phoneNumber: '0781112300', // Placeholder - update with actual data if available
+      returnTime: returnTime,
+      deliveryTimeSlot: deliveryTimeSlot,
+      deliveryTime: deliveryTime,
+      collectTime: collectTime, // Add for collected tab
+      startedTime: driverStartTime, // NEW: Add startedTime using driverStartTime
+      orderId: delivery.invNo,
+      centre: delivery.regCode,
+    };
+  });
+}
 
   private formatToReturnTime(timeString: string): string {
     if (!timeString) return 'N/A';

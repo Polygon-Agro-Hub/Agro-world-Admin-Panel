@@ -52,7 +52,7 @@ export class GovicarePackagesMainComponent implements OnInit {
   }
   
     back(): void {
-    this.router.navigate(['/finance/action']); 
+    this.router.navigate(['/finance/action/govicare-finance']); 
   }
   
   

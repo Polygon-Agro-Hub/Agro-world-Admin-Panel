@@ -25,6 +25,10 @@
     </div>
 
     <div
+      *ngIf="
+        permissionService.hasPermission('View GoViCare Packages') ||
+        tokenService.getUserDetails().role === '1'
+      "
       (click)="govicarePackages()"
       class="flex justify-center cursor-pointer"
     >

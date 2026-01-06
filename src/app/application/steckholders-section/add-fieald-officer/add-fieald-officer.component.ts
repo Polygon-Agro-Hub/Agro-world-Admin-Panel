@@ -407,35 +407,6 @@ export class AddFiealdOfficerComponent implements OnInit {
     }
   }
 
-  // New method to validate English names
-  validateEnglishName(fieldName: 'firstName' | 'lastName'): void {
-    this.markFieldAsTouched(fieldName);
-    this.englishNameTouched[fieldName] = true;
-    
-    const value = this.personalData[fieldName];
-    
-    if (!value) {
-      this.englishNameErrors[fieldName] = false;
-      return;
-    }
-    
-    // Check if the name contains non-English characters
-    // This regex allows only English letters (a-z, A-Z), spaces, hyphens, and apostrophes
-    const englishOnlyRegex = /^[A-Za-z\s\-']+$/;
-    
-    // Additional check for Sinhala and Tamil characters
-    const sinhalaRegex = /[\u0D80-\u0DFF]/; // Sinhala Unicode range
-    const tamilRegex = /[\u0B80-\u0BFF]/;   // Tamil Unicode range
-    
-    if (sinhalaRegex.test(value) || tamilRegex.test(value)) {
-      this.englishNameErrors[fieldName] = true;
-    } else if (!englishOnlyRegex.test(value)) {
-      this.englishNameErrors[fieldName] = true;
-    } else {
-      this.englishNameErrors[fieldName] = false;
-    }
-  }
-
   // New method to check for non-English characters
   hasNonEnglishCharacters(fieldName: 'firstName' | 'lastName'): boolean {
     const value = this.personalData[fieldName];
@@ -487,45 +458,10 @@ export class AddFiealdOfficerComponent implements OnInit {
       this.personalData.lastName = englishOnly;
     }
     
-    // Trigger validation
-    this.validateEnglishName(fieldName);
-    
     // Trigger capitalization
     this.capitalizeNames();
   }
 
-  // New methods for Sinhala and Tamil character validation
-  allowSinhalaCharacters(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    const char = String.fromCharCode(event.which);
-
-    // Block space if it's at the start (cursor at position 0)
-    if (char === ' ' && input.selectionStart === 0) {
-      event.preventDefault();
-      return;
-    }
-
-    // Allow Sinhala Unicode range: \u0D80-\u0DFF
-    if (!/[\u0D80-\u0DFF\s]/.test(char)) {
-      event.preventDefault();
-    }
-  }
-
-  allowTamilCharacters(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    const char = String.fromCharCode(event.which);
-
-    // Block space if it's at the start (cursor at position 0)
-    if (char === ' ' && input.selectionStart === 0) {
-      event.preventDefault();
-      return;
-    }
-
-    // Allow Tamil Unicode range: \u0B80-\u0BFF
-    if (!/[\u0B80-\u0BFF\s]/.test(char)) {
-      event.preventDefault();
-    }
-  }
 
   isValidPhoneNumber(phone: string): boolean {
     if (!phone) return false;

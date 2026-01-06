@@ -595,7 +595,12 @@ export const routes: Routes = [
             path: 'action',
             children: [
               { path: '', component: FinanceActionMainComponent },
-              { path: 'govicare-finance', component: FinanceActionComponent },
+              {
+                path: 'govicare-finance',
+                component: FinanceActionComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View GoViCare Finance' },
+              },
               {
                 path: 'govicare-packages',
                 component: GovicarePackagesMainComponent,
@@ -689,7 +694,7 @@ export const routes: Routes = [
                   {
                     path: 'reject-requests/audit-personal-infor/:requestId',
                     component: AuditPersonalInfoComponent,
-                  }
+                  },
                 ],
               },
               {
@@ -1877,4 +1882,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

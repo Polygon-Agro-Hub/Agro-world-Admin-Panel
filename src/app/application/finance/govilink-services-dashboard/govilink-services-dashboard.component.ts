@@ -16,6 +16,8 @@ import {
 } from '../../../services/finance/finance.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface ChartPoint {
   x: number;
@@ -68,7 +70,9 @@ export class GovilinkServicesDashboardComponent
   constructor(
     private location: Location,
     private financeService: FinanceService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   ngOnInit(): void {
@@ -409,31 +413,31 @@ export class GovilinkServicesDashboardComponent
 
   // Helper method to get arrow and color based on income status
   getIncomeChangeDisplay(): { icon: string; color: string; text: string } {
-  // Clamp the percentage value between 0 and 100
-  const clampedPercent = Math.max(0, Math.min(100, this.incomeChangePercent));
-  // Round to 1 decimal place for cleaner display
-  const formattedPercent = parseFloat(clampedPercent.toFixed(1));
-  
-  if (this.incomeStatus === 'increased') {
-    return {
-      icon: 'fa-arrow-trend-up',
-      color: 'text-teal-600',
-      text: `${formattedPercent}%`, // Removed the + sign
-    };
-  } else if (this.incomeStatus === 'decreased') {
-    return {
-      icon: 'fa-arrow-trend-down',
-      color: 'text-red-600',
-      text: `${formattedPercent}%`, // Removed the - sign
-    };
-  } else {
-    return {
-      icon: 'fa-arrow-right-long',
-      color: 'text-gray-500',
-      text: `${formattedPercent}%`,
-    };
+    // Clamp the percentage value between 0 and 100
+    const clampedPercent = Math.max(0, Math.min(100, this.incomeChangePercent));
+    // Round to 1 decimal place for cleaner display
+    const formattedPercent = parseFloat(clampedPercent.toFixed(1));
+
+    if (this.incomeStatus === 'increased') {
+      return {
+        icon: 'fa-arrow-trend-up',
+        color: 'text-teal-600',
+        text: `${formattedPercent}%`, // Removed the + sign
+      };
+    } else if (this.incomeStatus === 'decreased') {
+      return {
+        icon: 'fa-arrow-trend-down',
+        color: 'text-red-600',
+        text: `${formattedPercent}%`, // Removed the - sign
+      };
+    } else {
+      return {
+        icon: 'fa-arrow-right-long',
+        color: 'text-gray-500',
+        text: `${formattedPercent}%`,
+      };
+    }
   }
-}
 
   ViewAll(): void {
     this.router.navigate(['/finance/action/view-all-service-payments']);

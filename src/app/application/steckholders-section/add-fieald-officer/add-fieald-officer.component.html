@@ -288,7 +288,6 @@
             (input)="capitalizeNames()"
             (keypress)="preventSpecialCharacters($event)"
             (paste)="onEnglishNamePaste($event, 'firstName')"
-            (blur)="validateEnglishName('firstName')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [ngClass]="{'border-red-500': hasNonEnglishCharacters('firstName')}"
           />
@@ -315,7 +314,6 @@
             (input)="capitalizeNames()"
             (keypress)="preventSpecialCharacters($event)"
             (paste)="onEnglishNamePaste($event, 'lastName')"
-            (blur)="validateEnglishName('lastName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             [ngClass]="{'border-red-500': hasNonEnglishCharacters('lastName')}"
           />
@@ -342,7 +340,6 @@
             [(ngModel)]="personalData.firstNameSinhala"
             name="firstNameSinhala"
             (input)="onTrimInput($event, personalData, 'firstNameSinhala')"
-            (keypress)="allowSinhalaCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -362,7 +359,6 @@
             [(ngModel)]="personalData.lastNameSinhala"
             name="lastNameSinhala"
             (input)="onTrimInput($event, personalData, 'lastNameSinhala')"
-            (keypress)="allowSinhalaCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -382,7 +378,6 @@
             [(ngModel)]="personalData.firstNameTamil"
             name="firstNameTamil"
             (input)="onTrimInput($event, personalData, 'firstNameTamil')"
-            (keypress)="allowTamilCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span
@@ -402,7 +397,6 @@
             [(ngModel)]="personalData.lastNameTamil"
             name="lastNameTamil"
             (input)="onTrimInput($event, personalData, 'lastNameTamil')"
-            (keypress)="allowTamilCharacters($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           />
           <span

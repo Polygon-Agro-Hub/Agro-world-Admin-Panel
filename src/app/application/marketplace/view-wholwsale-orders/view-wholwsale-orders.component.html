@@ -110,10 +110,12 @@
             <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
               STATUS
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center"
+              *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
               PRE-INVOICE
             </th>
-            <th class="whitespace-nowrap px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center" *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
+            <th class="whitespace-nowrap px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center"
+              *ngIf="permissionService.hasPermission('Download retail invoice') || tokenService.getUserDetails().role === '1'">
               POST-INVOICE
             </th>
           </tr>
@@ -170,7 +172,7 @@
 
 
             <td class="px-4 py-3 text-center dark:text-textDark">
-              <span class="inline-block min-w-24 font-normal rounded-2xl border px-2 py-1" [ngClass]="{
+              <!-- <span class="inline-block min-w-24 font-normal rounded-2xl border px-2 py-1" [ngClass]="{
                   'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
                   'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]':
                     item.status === 'Delivered',
@@ -188,45 +190,59 @@
                   'text-[#00818A] bg-[#ACFBFF]':
                     item.status === 'Ready to Pickup'
                     
-                }">
+                }"> -->
+              <span class="inline-block min-w-36 text-center font-normal rounded-2xl border px-3 py-1 truncate"
+                [ngClass]="{
+                'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
+                'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]': item.status === 'Delivered' ||  item.status === 'Picked Up',
+                'text-[#80118A] bg-[#FCD4FF] border-[#FCD4FF]': item.status === 'Out For Delivery',
+                'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]': item.status === 'Processing',
+                'text-[#D17A00] bg-[#FFEDCF] border-[#FFEDCF]': item.status === 'On the way',
+                'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]': item.status === 'Failed',
+                'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]': item.status === 'Cancelled',
+                'text-[#7E8700] bg-[#F8FEA5] border-[#DFDFDF]': item.status === 'Collected',
+                'text-[#D17A00] bg-[#FFEDCF] ': item.status === 'Hold',
+                'text-[#00818A] bg-[#ACFBFF] border-[#00818A]': item.status === 'Ready to Pickup', 
+                'text-[#FF1100] bg-[#FFDCDA]': item.status === 'Return Received' || item.status === 'Return'
+              }">
                 {{ item.status === 'Ordered' ? 'Assigned' : item.status }}
               </span>
             </td>
 
-            <td class="px-4 py-3 text-center dark:text-textDark" *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
+            <td class="px-4 py-3 text-center dark:text-textDark"
+              *ngIf="permissionService.hasPermission('Download wholesale invoice') || tokenService.getUserDetails().role === '1'">
               <button class="text-textLight dark:text-textDark gap-1"
                 (click)="downloadInvoice(item.orderId, item.invNo)">
                 <i class="fa-solid fa-file-lines text-2xl"></i>
               </button>
             </td>
-            <td class="px-4 py-3 text-center dark:text-textDark" 
-    *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
-  
-  <div class="relative inline-block">
-    <button 
-      class="text-textLight dark:text-textDark gap-1"
-      [class.opacity-50]="!isPostInvoiceEnabled(item.status)"
-      [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.status)"
-      [class.cursor-pointer]="isPostInvoiceEnabled(item.status)"
-      [disabled]="!isPostInvoiceEnabled(item.status)"
-      (click)="isPostInvoiceEnabled(item.status) ? downloadPostInvoice(item.orderId, item.invNo) : null">
-      <i class="fa-solid fa-file-lines text-2xl"></i>
-    </button>
-  </div>
-</td>
+            <td class="px-4 py-3 text-center dark:text-textDark"
+              *ngIf="permissionService.hasPermission('Download retail post invoice') || tokenService.getUserDetails().role === '1'">
+
+              <div class="relative inline-block">
+                <button class="text-textLight dark:text-textDark gap-1"
+                  [class.opacity-50]="!isPostInvoiceEnabled(item.status)"
+                  [class.cursor-not-allowed]="!isPostInvoiceEnabled(item.status)"
+                  [class.cursor-pointer]="isPostInvoiceEnabled(item.status)"
+                  [disabled]="!isPostInvoiceEnabled(item.status)"
+                  (click)="isPostInvoiceEnabled(item.status) ? downloadPostInvoice(item.orderId, item.invNo) : null">
+                  <i class="fa-solid fa-file-lines text-2xl"></i>
+                </button>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div *ngIf="hasData"  class="dark:bg-[#262f45]">
+    <div *ngIf="hasData" class="dark:bg-[#262f45]">
       <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
         [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
         [screenReaderCurrentLabel]="'Youre on page'">
       </pagination-controls>
     </div>
     <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
-        <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-      </div>
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
   </div>
 </div>

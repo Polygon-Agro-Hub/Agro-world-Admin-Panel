@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { FinanceService } from '../../../services/finance/finance.service';
 import { HttpClient } from '@angular/common/http';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface FarmerPayment {
   id: number;
@@ -65,7 +67,9 @@ export class FarmerPaymentsComponent implements OnInit {
   constructor(
     private router: Router,
     private financeService: FinanceService,
-    private http: HttpClient // Add HttpClient
+    private http: HttpClient, // Add HttpClient
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) {}
 
   ngOnInit(): void {

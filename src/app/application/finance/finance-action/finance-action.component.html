@@ -46,6 +46,10 @@
     </div>
 
     <div
+      *ngIf="
+        permissionService.hasPermission('View Certifications') ||
+        tokenService.getUserDetails().role === '1'
+      "
       (click)="govicareCertificates()"
       class="flex justify-center cursor-pointer"
     >

@@ -67,6 +67,10 @@
     </div>
 
     <div
+    *ngIf="
+        permissionService.hasPermission('View GoViLink Services') ||
+        tokenService.getUserDetails().role === '1'
+      "
       (click)="govilinkServices()"
       class="flex justify-center cursor-pointer"
     >

@@ -17,7 +17,7 @@
         <p-dropdown #topfilters
           styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
           [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onStatusChange()" [checkmark]="true"
-          optionLabel="label" optionValue="value" placeholder="Status"></p-dropdown>
+          optionLabel="label" optionValue="value" placeholder="Status" [showClear]="true"></p-dropdown>
       </div>
       <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
         <input type="text" placeholder="Search by Order ID"
@@ -38,13 +38,13 @@
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             No
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Order ID
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Centre
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Delivery Time Slot
           </th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -61,13 +61,13 @@
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ i + 1 | number : "2.0" }}
           </td>
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ delivery.invNo || "N/A" }}
           </td>
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ delivery.regCode || "N/A" }}
           </td>
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ formatTimeRange(delivery.sheduleTime) }}
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
@@ -78,8 +78,7 @@
             </span>
           </td>
           <td class="px-4 py-3 text-center">
-            <button 
-              (click)="openDetailsPopup(delivery)"
+            <button (click)="openDetailsPopup(delivery)"
               class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
               <svg class="w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -90,8 +89,13 @@
           </td>
         </tr>
         <tr *ngIf="displayedDeliveries.length === 0">
-          <td colspan="7" class="px-4 py-8 text-center text-textLight dark:text-textDark">
-            No deliveries found
+          <td colspan="8" class="text-center py-12">
+            <div class="flex flex-col items-center justify-center space-y-4 text-gray-400">
+              <i class="fas fa-table text-3xl"></i>
+              <p class="text-ms text-textLight dark:text-textDark">
+                No deliveries found
+              </p>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -99,9 +103,7 @@
   </div>
 
   <!-- Details Popup -->
-  <app-today-deliveries-view-details-popup
-    [visible]="showDetailsPopup"
-    [deliveryId]="selectedDeliveryId"
+  <app-today-deliveries-view-details-popup [visible]="showDetailsPopup" [deliveryId]="selectedDeliveryId"
     (closePopup)="closeDetailsPopup()">
   </app-today-deliveries-view-details-popup>
 </div>

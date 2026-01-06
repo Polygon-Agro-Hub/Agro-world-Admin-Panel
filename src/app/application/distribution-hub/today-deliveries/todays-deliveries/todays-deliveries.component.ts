@@ -11,10 +11,12 @@ import { DeliveredTodaysDeleveriesComponent } from '../delivered-todays-deleveri
 import { FormsModule } from '@angular/forms';
 import { DistributionHubService } from '../../../../services/distribution-hub/distribution-hub.service';
 import { CollectedComponent } from '../collected/collected.component';
+import { CollectionService } from '../../../../services/collection.service';
 
 interface Delivery {
   invNo: string;
   regCode: string;
+  centerName?: string;
   sheduleTime: string;
   createdAt: string;
   status: string;
@@ -34,6 +36,11 @@ interface Delivery {
   driverStartTime?: string;
   // Add startedTime for child components
   startedTime?: string;
+}
+
+interface CenterOption {
+  code: string;
+  name: string;
 }
 
 @Component({
@@ -60,9 +67,12 @@ export class TodaysDeliveriesComponent implements OnInit {
   activeTab: string = 'all';
 
   // Search parameters
-  regCode: string = '';
   invNo: string = '';
   searchType: string = 'partial';
+
+  // Center dropdown options
+  centerOptions: CenterOption[] = [];
+  regCode: string = '';
 
   // Data from backend
   allDeliveries: Delivery[] = [];
@@ -76,10 +86,15 @@ export class TodaysDeliveriesComponent implements OnInit {
   returnData: Delivery[] = [];
   deliveredData: Delivery[] = []; // This will hold Delivered status data
 
-  constructor(private distributionService: DistributionHubService) {}
+  constructor(
+    private distributionService: DistributionHubService,
+    private collectionService: CollectionService
+  ) {}
 
   ngOnInit(): void {
+    this.fetchCenters();
     this.fetchDeliveries();
+    this.selectTab('all');
   }
 
   back(): void {
@@ -114,50 +129,82 @@ export class TodaysDeliveriesComponent implements OnInit {
       });
   }
 
+  fetchCenters(): void {
+    // Load unique centres from centers API (not deliveries)
+    this.distributionService.getTodaysDeliveries().subscribe({
+      next: (response) => {
+        if (response?.status && Array.isArray(response.data)) {
+          const seen = new Set<string>();
+          const options: CenterOption[] = [];
+
+          for (const center of response.data) {
+            const code: string =
+              center?.regCode ?? center?.centerNumber ?? center?.code ?? '';
+            const name: string = center?.centerName ?? center?.name ?? '';
+            if (!code) continue;
+            if (seen.has(code)) continue;
+            seen.add(code);
+            options.push({ code, name });
+          }
+
+          this.centerOptions = options;
+        } else {
+          this.centerOptions = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching centers:', error);
+        this.centerOptions = [];
+      },
+    });
+  }
+
   // In TodaysDeliveriesComponent's prepareDeliveryData() method, update it like this:
+  prepareDeliveryData(): void {
+    this.allDeliveries = this.allDeliveries.map((delivery, index) => {
+      // Format return time from createdAt or outDlvrTime
+      const returnTime = this.formatToReturnTime(
+        delivery.returnTime || delivery.createdAt || delivery.outDlvrTime
+      );
 
-prepareDeliveryData(): void {
-  this.allDeliveries = this.allDeliveries.map((delivery, index) => {
-    // Format return time from createdAt or outDlvrTime
-    const returnTime = this.formatToReturnTime(
-      delivery.returnTime || delivery.createdAt || delivery.outDlvrTime
-    );
+      // Format delivery time slot from sheduleTime
+      const deliveryTimeSlot = this.formatDeliveryTimeSlot(
+        delivery.sheduleTime
+      );
 
-    // Format delivery time slot from sheduleTime
-    const deliveryTimeSlot = this.formatDeliveryTimeSlot(
-      delivery.sheduleTime
-    );
+      // Format delivery time for delivered items (use outDlvrTime or createdAt)
+      const deliveryTime = this.formatToReturnTime(
+        delivery.deliveryTime || delivery.outDlvrTime || delivery.createdAt
+      );
 
-    // Format delivery time for delivered items (use outDlvrTime or createdAt)
-    const deliveryTime = this.formatToReturnTime(
-      delivery.deliveryTime || delivery.outDlvrTime || delivery.createdAt
-    );
+      // Format driver start time (NEW: use driverStartTime from backend)
+      const driverStartTime = this.formatToReturnTime(
+        delivery.driverStartTime || ''
+      );
 
-    // Format driver start time (NEW: use driverStartTime from backend)
-    const driverStartTime = this.formatToReturnTime(
-      delivery.driverStartTime || ''
-    );
+      // Format collect time for collected tab
+      const collectTime = this.formatToReturnTime(delivery.collectTime ?? '');
 
-    // Format collect time for collected tab
-    const collectTime = this.formatToReturnTime(
-      delivery.collectTime ?? ''
-    );
+      // Format centre display with code and name
+      const centreDisplay = delivery.centerName
+        ? `${delivery.regCode} - ${delivery.centerName}`
+        : delivery.regCode;
 
-    return {
-      ...delivery,
-      no: index + 1,
-      driver: delivery.driverEmpId || 'DIV000001', // Use driverEmpId from backend if available
-      phoneNumber: '0781112300', // Placeholder - update with actual data if available
-      returnTime: returnTime,
-      deliveryTimeSlot: deliveryTimeSlot,
-      deliveryTime: deliveryTime,
-      collectTime: collectTime, // Add for collected tab
-      startedTime: driverStartTime, // NEW: Add startedTime using driverStartTime
-      orderId: delivery.invNo,
-      centre: delivery.regCode,
-    };
-  });
-}
+      return {
+        ...delivery,
+        no: index + 1,
+        driver: delivery.driverEmpId || 'DIV000001', // Use driverEmpId from backend if available
+        phoneNumber: '0781112300', // Placeholder - update with actual data if available
+        returnTime: returnTime,
+        deliveryTimeSlot: deliveryTimeSlot,
+        deliveryTime: deliveryTime,
+        collectTime: collectTime, // Add for collected tab
+        startedTime: driverStartTime, // NEW: Add startedTime using driverStartTime
+        orderId: delivery.invNo,
+        centre: centreDisplay, // Show code and name
+      };
+    });
+  }
 
   private formatToReturnTime(timeString: string): string {
     if (!timeString) return 'N/A';

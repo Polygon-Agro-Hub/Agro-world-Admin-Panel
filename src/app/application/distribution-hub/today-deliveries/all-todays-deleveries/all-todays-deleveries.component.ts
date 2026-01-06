@@ -28,7 +28,7 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   selectedDeliveryId!: number;
 
   statusOptions = [
-    { label: 'All', value: null },
+    { label: 'All', value: 'ALL' },
     { label: 'Out for Delivery', value: 'Out For Delivery' },
     { label: 'Delivered', value: 'Delivered' },
     { label: 'Collected', value: 'Collected' },
@@ -37,7 +37,7 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
     { label: 'Hold', value: 'Hold' },
   ];
 
-  selectedStatus: any = null;
+  selectedStatus: string | null = null;
   searchText: string = '';
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,8 +68,8 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   filterDeliveries(): void {
     let filtered = [...this.deliveries];
 
-    // Apply status filter
-    if (this.selectedStatus) {
+    // Apply status filter only when a specific status (not 'ALL') is selected
+    if (this.selectedStatus && this.selectedStatus !== 'ALL') {
       filtered = filtered.filter(
         (delivery) => delivery.status === this.selectedStatus
       );
@@ -97,12 +97,18 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
     this.filterDeliveries();
   }
 
-  getOrderCount(): number {
-    return this.displayedDeliveries.length;
-  }
+  getOrderCount(): string {
+  const count = this.displayedDeliveries.length;
+  return count < 10 ? `0${count}` : `${count}`;
+}
 
   clearSearch(): void {
     this.searchText = '';
+    this.filterDeliveries();
+  }
+
+  clearStatusFilter(): void {
+    this.selectedStatus = null;
     this.filterDeliveries();
   }
 

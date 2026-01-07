@@ -90,6 +90,18 @@ export class MainDashboardLayoutComponent implements OnInit {
     );
   }
 
+  driversVehicles() {
+
+  }
+
+  homeDeliveryOtherRecords() {
+    
+  }
+
+  pickUpOrderRecords() {
+    
+  }
+
   back(): void{
     this.isLoading= true;
      this.router.navigate(['/distribution-hub/action/view-polygon-centers']).then(() => {

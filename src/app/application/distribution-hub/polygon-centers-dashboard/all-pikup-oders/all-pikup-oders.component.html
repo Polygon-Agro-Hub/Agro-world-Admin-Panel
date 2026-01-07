@@ -3,12 +3,14 @@
   <div>
     <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark"></h2>
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          WPCK-02 Kollupitiya Central
+        </h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All
+            All ({{ orders.length }})
           </h2>
         </div>
 
@@ -70,7 +72,7 @@
           >
             <input
               type="text"
-              placeholder="Search by Order ID"
+              placeholder="Search by Order ID, Phone Numbers..."
               name="searchText"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             />
@@ -153,7 +155,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Receiver’s Info
+              Receiver's Info
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -173,44 +175,62 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark"
-            ></td>
-            <td class="px-4 py-3 text-left">
-              <!-- Updated Delivery Time Slot with color function -->
-            </td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
-          </tr>
-          <tr>
-            <td
-              colspan="8"
-              class="px-4 py-6 text-center text-textLight dark:text-textDark"
-            ></td>
-          </tr>
+          <ng-container *ngIf="hasData; else noData">
+            <tr 
+              *ngFor="let order of orders" 
+              class="hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.no }}
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                {{ order.orderId }}
+              </td>
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.value }}
+              </td>
+              <td class="px-4 py-3 text-left">
+                <span [class]="getStatusClass(order.status)">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                {{ order.customerPhone }}
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                {{ order.receiverPhone }}
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                {{ order.receiversInfo }}
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                {{ order.scheduledTimeSlot }}
+              </td>
+              <td class="px-4 py-3 text-center">
+                <span [class]="getPaymentClass(order.payment)">
+                  {{ order.payment }}
+                </span>
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                ⬆
+              </td>
+            </tr>
+          </ng-container>
+          
+          <ng-template #noData>
+            <tr>
+              <td colspan="10" class="px-4 py-6 text-center text-textLight dark:text-textDark">
+                <div class="flex flex-col items-center w-full px-10 py-7">
+                  <p class="text-[#494949] my-6 dark:text-textDark">
+                    --No Data Available--
+                  </p>
+                  <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+                </div>
+              </td>
+            </tr>
+          </ng-template>
         </tbody>
       </table>
-
-      <!-- <div
-        *ngIf="!hasData"
-        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
-      >
-        <p class="text-[#494949] my-6 dark:text-textDark">
-          --No Data Available--
-        </p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-      </div> -->
     </div>
   </div>
 </div>

@@ -89,7 +89,7 @@ export class FarmerFarmsComponent implements OnInit {
             no: index + 1,
             farmId: farm.farmId,
             farmName: farm.farmName,
-            area: farm.farmIndex ?? '-',
+            area: farm.area ?? '-',
             district: farm.farmDistrict,
             staffCount: farm.staffCount ?? 0,
             cultivationCount: farm.cultivationCount,

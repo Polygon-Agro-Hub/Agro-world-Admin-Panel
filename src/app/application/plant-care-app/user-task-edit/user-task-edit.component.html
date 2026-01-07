@@ -420,9 +420,10 @@
       >
     
  <input
-  type="text"
+  type="number"
   id="reqImages"
-  formControlName="reqImages"
+  [(ngModel)]="taskItems.reqImages"
+  name="reqImages"
   (input)="allowOnlyNumbers($event)"
   class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
 />

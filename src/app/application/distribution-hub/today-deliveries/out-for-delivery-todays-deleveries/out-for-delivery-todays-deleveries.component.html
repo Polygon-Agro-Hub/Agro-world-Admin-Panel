@@ -2,58 +2,23 @@
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        All ({{ filteredDeliveries.length }})
+        All ({{ filteredDeliveries.length | number: '2.0-0' }})
       </h2>
     </div>
     <div class="flex items-center mr-5">
-      <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
-      >
-        <input
-          type="text"
-          placeholder="Search by Order ID, Centre"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
-          [(ngModel)]="searchTerm"
-          (input)="search()"
-        />
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-          (click)="search()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
-            />
+      <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+        <input type="text" placeholder="Search by Order ID"
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchTerm"
+          (input)="search()" />
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="search()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
           </svg>
         </button>
-        <button
-          type="button"
-          class="text-gray-500 hover:text-gray-700 focus:outline-none"
-          (click)="clearSearch()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
+        <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -63,48 +28,36 @@
     <table class="min-w-full divide-y divide-gray-200 table-auto">
       <thead>
         <tr>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             No
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Order ID
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Centre
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Delivery Time Slot
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Out Time
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let delivery of filteredDeliveries; let i = index"
-          class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-        >
+        <tr *ngFor="let delivery of filteredDeliveries; let i = index"
+          class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ i + 1 | number : "2.0" }}
           </td>
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ delivery.invNo }}
           </td>
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ delivery.regCode }}
           </td>
-          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             {{ formatTimeSlot(delivery.sheduleTime) }}
           </td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
@@ -114,11 +67,13 @@
 
         <!-- Show message when no results found -->
         <tr *ngIf="filteredDeliveries.length === 0">
-          <td
-            colspan="5"
-            class="px-4 py-8 text-center text-textLight dark:text-textDark"
-          >
-            No out for delivery items found.
+          <td colspan="8" class="text-center py-12">
+            <div class="flex flex-col items-center justify-center space-y-4 text-gray-400">
+              <i class="fas fa-table text-3xl"></i>
+              <p class="text-ms text-textLight dark:text-textDark">
+                No out for delivery items found.
+              </p>
+            </div>
           </td>
         </tr>
       </tbody>

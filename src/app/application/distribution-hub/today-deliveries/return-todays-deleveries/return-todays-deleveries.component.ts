@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface DeliveryItem {
+  id?: number; 
   no: number;
   orderId: string;
   centre: string;
@@ -10,21 +12,24 @@ interface DeliveryItem {
   phoneNumber: string;
   deliveryTimeSlot: string;
   returnTime: string;
+  driverStartTime?: string;
 }
 
 @Component({
   selector: 'app-return-todays-deleveries',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TodayDeliveriesViewDetailsPopupComponent],
   templateUrl: './return-todays-deleveries.component.html',
   styleUrl: './return-todays-deleveries.component.css',
 })
 export class ReturnTodaysDeleveriesComponent implements OnChanges {
   @Input() deliveries: any[] = [];
-  
+
   // Processed data for display
   processedDeliveries: DeliveryItem[] = [];
-  
+  showDetailsPopup: boolean = false;
+  selectedDeliveryId!: number;
+
   // For search functionality
   searchTerm: string = '';
 
@@ -36,20 +41,22 @@ export class ReturnTodaysDeleveriesComponent implements OnChanges {
 
   private processDeliveryData(): void {
     // Transform the input data to match the DeliveryItem interface
-    this.processedDeliveries = this.deliveries.map(delivery => ({
+    this.processedDeliveries = this.deliveries.map((delivery) => ({
+      id: delivery.id, 
       no: delivery.no || 0,
       orderId: delivery.orderId || delivery.invNo || 'N/A',
       centre: delivery.centre || delivery.regCode || 'N/A',
       driver: delivery.driver || 'N/A',
       phoneNumber: delivery.phoneNumber || 'N/A',
       deliveryTimeSlot: delivery.deliveryTimeSlot || 'N/A',
-      returnTime: delivery.returnTime || 'N/A'
+      returnTime: delivery.returnTime || 'N/A',
+      driverStartTime: delivery.driverStartTime || 'N/A',
     }));
   }
 
   // Get the total count of processed deliveries
-  get totalCount(): number {
-    return this.processedDeliveries.length;
+  get totalCount(): string {
+    return this.filteredDeliveries.length.toString().padStart(2, '0');
   }
 
   // Method to filter deliveries based on search term
@@ -74,7 +81,20 @@ export class ReturnTodaysDeleveriesComponent implements OnChanges {
 
   // Method to handle search (optional - can be used for button click)
   onSearch(): void {
-    // You can add additional search logic here if needed
     console.log('Searching for:', this.searchTerm);
+  }
+
+  viewDetails(delivery: DeliveryItem): void {
+    if (delivery?.id == null) {
+      console.warn('Delivery id is missing for selected row:', delivery);
+      return;
+    }
+
+    this.selectedDeliveryId = delivery.id;
+    this.showDetailsPopup = true;
+  }
+
+  closeDetailsPopup(): void {
+    this.showDetailsPopup = false;
   }
 }

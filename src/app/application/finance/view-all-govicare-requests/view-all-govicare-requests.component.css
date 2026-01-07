@@ -8,6 +8,7 @@
   display: inline-flex !important;
 }
 
+
 ::ng-deep .dark .p-dropdown-panel {
   background-color: #2d354d !important;
   color: #B1B1B1 !important;
@@ -28,4 +29,13 @@
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
   background-color: #2d354d !important;
   color: #B1B1B1 !important;
+}
+
+/* Add this to your existing styles */
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+  font-size: 0.875rem !important; /* or your desired size */
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  font-size: 0.875rem !important;
 }

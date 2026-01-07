@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface DeliveryItem {
+  id?: number;
   no: number;
   invNo: string; // Changed from orderId to invNo to match backend
   regCode: string; // Changed from centre to regCode to match backend
@@ -14,58 +16,70 @@ interface DeliveryItem {
   sheduleTime?: string;
   outDlvrTime?: string;
   createdAt?: string;
+  driverStartTime?: string; // keep backend value if needed
 }
 
 @Component({
   selector: 'app-on-the-way-todays-deleveries',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TodayDeliveriesViewDetailsPopupComponent,
+  ],
   templateUrl: './on-the-way-todays-deleveries.component.html',
   styleUrl: './on-the-way-todays-deleveries.component.css',
 })
 export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
   @Input() deliveries: any[] = [];
-  
+
   searchQuery: string = '';
-  
+  showDetailsPopup: boolean = false;
+  selectedDeliveryId!: number;
+
   // Transformed delivery data for the table
   deliveryData: DeliveryItem[] = [];
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['deliveries'] && this.deliveries) {
       this.transformDeliveryData();
     }
   }
-  
+
   transformDeliveryData(): void {
-  // Transform the backend data to match the frontend interface
-  this.deliveryData = this.deliveries.map((delivery, index) => ({
-    no: index + 1,
-    invNo: delivery.invNo || '',
-    regCode: delivery.regCode || '',
-    driver: delivery.driver || delivery.driverEmpId || 'N/A', // Use driverEmpId if driver not provided
-    phoneNumber: delivery.phoneNumber || 'N/A',
-    deliveryTimeSlot: this.formatTimeSlot(delivery.sheduleTime),
-    // UPDATED: Use startedTime from parent (which maps to driverStartTime from backend)
-    startedTime: delivery.startedTime || this.formatTime(delivery.driverStartTime || delivery.outDlvrTime || delivery.createdAt),
-    status: delivery.status || '',
-    sheduleTime: delivery.sheduleTime,
-    outDlvrTime: delivery.outDlvrTime,
-    createdAt: delivery.createdAt,
-    driverStartTime: delivery.driverStartTime // Keep this for reference
-  }));
-}
-  
+    // Transform the backend data to match the frontend interface
+    this.deliveryData = this.deliveries.map((delivery, index) => ({
+      id: delivery.id, // ensure id is preserved for details popup
+      no: index + 1,
+      invNo: delivery.invNo || '',
+      regCode: delivery.regCode || '',
+      driver: delivery.driver || delivery.driverEmpId || 'N/A', // Use driverEmpId if driver not provided
+      phoneNumber: delivery.phoneNumber || 'N/A',
+      deliveryTimeSlot: this.formatTimeSlot(delivery.sheduleTime),
+      // UPDATED: Use startedTime from parent (which maps to driverStartTime from backend)
+      startedTime:
+        delivery.startedTime ||
+        this.formatTime(
+          delivery.driverStartTime || delivery.outDlvrTime || delivery.createdAt
+        ),
+      status: delivery.status || '',
+      sheduleTime: delivery.sheduleTime,
+      outDlvrTime: delivery.outDlvrTime,
+      createdAt: delivery.createdAt,
+      driverStartTime: delivery.driverStartTime,
+    }));
+  }
+
   formatTimeSlot(timeString: string): string {
     if (!timeString) return 'N/A';
-    
+
     try {
       // Assuming timeString is in format 'HH:MM:SS'
       const time = new Date(`2000-01-01T${timeString}`);
       const hours = time.getHours();
       const ampm = hours >= 12 ? 'PM' : 'AM';
       const formattedHours = hours % 12 || 12;
-      
+
       // Create time slot (assuming 6-hour slots as per your dummy data)
       if (hours < 14) {
         return `8AM - 2PM`;
@@ -76,17 +90,17 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
       return timeString;
     }
   }
-  
+
   formatTime(timeString: string): string {
     if (!timeString) return 'N/A';
-    
+
     try {
       const time = new Date(`2000-01-01T${timeString}`);
       const hours = time.getHours();
       const minutes = time.getMinutes();
       const ampm = hours >= 12 ? 'PM' : 'AM';
       const formattedHours = hours % 12 || 12;
-      
+
       return `${formattedHours}.${minutes.toString().padStart(2, '0')}${ampm}`;
     } catch {
       // Try to extract time from datetime string
@@ -107,12 +121,13 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
     if (!this.searchQuery.trim()) {
       return this.deliveryData;
     }
-    
+
     const query = this.searchQuery.toLowerCase();
-    return this.deliveryData.filter(delivery =>
-      delivery.invNo.toLowerCase().includes(query) ||
-      delivery.regCode.toLowerCase().includes(query) ||
-      (delivery.driver && delivery.driver.toLowerCase().includes(query))
+    return this.deliveryData.filter(
+      (delivery) =>
+        delivery.invNo.toLowerCase().includes(query) ||
+        delivery.regCode.toLowerCase().includes(query) ||
+        (delivery.driver && delivery.driver.toLowerCase().includes(query))
     );
   }
 
@@ -129,12 +144,20 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
 
   // Handle details button click
   onDetailsClick(delivery: DeliveryItem): void {
-    console.log('Viewing details for invoice:', delivery.invNo);
-    // You can implement navigation or modal opening here
+    if (delivery.id == null) {
+      console.warn('Delivery id is missing for selected row:', delivery);
+      return;
+    }
+    this.selectedDeliveryId = delivery.id;
+    this.showDetailsPopup = true;
   }
 
   // Get total count
-  get totalCount(): number {
-    return this.deliveryData.length;
+  get totalCount(): string {
+    return this.filteredDeliveries.length.toString().padStart(2, '0');
+  }
+
+  closeDetailsPopup(): void {
+    this.showDetailsPopup = false;
   }
 }

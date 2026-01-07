@@ -595,7 +595,12 @@ export const routes: Routes = [
             path: 'action',
             children: [
               { path: '', component: FinanceActionMainComponent },
-              { path: 'govicare-finance', component: FinanceActionComponent },
+              {
+                path: 'govicare-finance',
+                component: FinanceActionComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'View GoViCare Finance' },
+              },
               {
                 path: 'govicare-packages',
                 component: GovicarePackagesMainComponent,
@@ -689,7 +694,7 @@ export const routes: Routes = [
                   {
                     path: 'reject-requests/audit-personal-infor/:requestId',
                     component: AuditPersonalInfoComponent,
-                  }
+                  },
                 ],
               },
               {
@@ -1700,29 +1705,33 @@ export const routes: Routes = [
               {
                 path: 'reasons-to-return',
                 component: TransportReasonsToReturnComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation reason to return' },
               },
               {
                 path: 'todays-deliveries',
                 component: TodaysDeliveriesComponent,
               },
-              
+
               {
                 path: 'recieved-returns',
                 component: RecievedReturnsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation received returns' },
               },
 
               {
                 path: 'reasons-to-hold',
                 component: TransportReasonsToHoldComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation reason to hold' },
               },
 
               {
                 path: 'view-vehicles',
                 component: ViewVehiclesComponent,
-              },
-              {
-                path: 'view-vehicles',
-                component: ViewVehiclesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation view vehicles' },
               },
               {
                 path: 'create-company',
@@ -1742,6 +1751,8 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: DistributionhubTransportActionComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Distribution Hub transpotation' },
                   },
                 ],
               },
@@ -1871,4 +1882,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

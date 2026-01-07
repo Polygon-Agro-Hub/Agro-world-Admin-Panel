@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center mb-8">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        All ({{ filteredData.length }})
+        All ({{ filteredData.length | number: '2.0-0' }})
       </h2>
     </div>
     <div class="flex items-center mr-5">
@@ -67,19 +67,19 @@
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             No
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Order ID
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Centre
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Delivery Time Slot
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Driver
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Collected Time
           </th>
         </tr>
@@ -94,19 +94,19 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.no }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.invNo }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.regCode }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.deliveryTimeSlot }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.driver }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.collectTime || 'N/A' }}
             </td>
           </tr>

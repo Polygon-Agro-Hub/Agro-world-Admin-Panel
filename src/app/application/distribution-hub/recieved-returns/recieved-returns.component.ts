@@ -8,7 +8,7 @@ import { DistributionHubService } from '../../../services/distribution-hub/distr
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
 import { NgxPaginationModule } from 'ngx-pagination';
-
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-recieved-returns',
@@ -23,7 +23,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NgxPaginationModule,
   ],
   templateUrl: './recieved-returns.component.html',
-  styleUrl: './recieved-returns.component.css'
+  styleUrls: ['./recieved-returns.component.css']
 })
 export class RecievedReturnsComponent implements OnInit {
   isLoading = false;
@@ -45,18 +45,155 @@ export class RecievedReturnsComponent implements OnInit {
 
   centreOptions: Array<{ label: string; value: number }> = [];
 
+  // Add debounce subject for search
+  private searchSubject = new Subject<string>();
+
   constructor(
     private distService: DestributionService,
     private distHubService: DistributionHubService
   ) {}
 
+  ngOnInit() {
+    this.fetchCentreOptions();
+    this.deliveryDateModel = new Date();
+    this.deliveryDate = new Date().toISOString().split('T')[0];
+    
+    // Setup debounced search
+    this.searchSubject
+      .pipe(
+        debounceTime(300), // Wait 300ms after user stops typing
+        distinctUntilChanged() // Only emit if value changed
+      )
+      .subscribe(searchTerm => {
+        this.performSearch(searchTerm);
+      });
+    
+    this.loadData();
+  }
+
   searchOrders() {
     const trimmed = this.searchText.trim();
     if (!trimmed) {
       this.searchText = '';
+      this.loadData();
       return;
     }
-    this.loadData();
+    // Trigger the debounced search
+    this.searchSubject.next(trimmed);
+  }
+
+  // Perform actual search
+  performSearch(searchTerm: string) {
+    this.isLoading = true;
+    
+    // First, check if it's a phone number search (remove spaces and special characters)
+    const cleanSearch = searchTerm.replace(/[+\s\-()]/g, '');
+    
+    // Check if search term looks like a phone number
+    const isPhoneSearch = /^\d+$/.test(cleanSearch) && cleanSearch.length >= 6;
+    
+    // Check if search term looks like a centre code (alphanumeric, usually short)
+    const isCentreCodeSearch = /^[A-Za-z0-9]{3,10}$/.test(searchTerm);
+    
+    this.distService
+      .getReturnRecievedData(
+        this.deliveryDate,
+        this.centerId,
+        searchTerm // Send the search term to backend
+      )
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.driverData = response.items || [];
+          this.totalValue = response.grandTotal;
+          this.hasData = this.driverData.length > 0;
+          this.totalItems = response.total || this.driverData.length || 0;
+          
+          // If no results from backend, try client-side filtering as fallback
+          if (this.driverData.length === 0 && (isPhoneSearch || isCentreCodeSearch)) {
+            this.applyClientSideFilter(searchTerm, isPhoneSearch, isCentreCodeSearch);
+          }
+        },
+        error: () => {
+          this.isLoading = false;
+          // On error, try client-side filtering
+          this.applyClientSideFilter(searchTerm, isPhoneSearch, isCentreCodeSearch);
+        },
+      });
+  }
+
+  // Client-side filtering as fallback
+  applyClientSideFilter(searchTerm: string, isPhoneSearch: boolean, isCentreCodeSearch: boolean) {
+    // This assumes you have all data loaded
+    // You might need to load all data first without filters
+    if (!this.allDataLoaded) {
+      // Load all data first
+      this.loadAllDataForClientSideFilter(searchTerm);
+      return;
+    }
+
+    const filtered = this.allDriverData.filter(item => {
+      const searchLower = searchTerm.toLowerCase();
+      
+      // Check Order ID
+      if (item.invNO?.toLowerCase().includes(searchLower)) {
+        return true;
+      }
+      
+      // Check Customer Contact
+      const fullPhone = `${item.phoneCode1 || ''}${item.phone1 || ''}`;
+      if (fullPhone.includes(searchTerm.replace(/\D/g, ''))) {
+        return true;
+      }
+      
+      // Check Centre Code
+      if (item.regCode?.toLowerCase().includes(searchLower)) {
+        return true;
+      }
+      
+      // Check Centre Name
+      if (item.centerName?.toLowerCase().includes(searchLower)) {
+        return true;
+      }
+      
+      return false;
+    });
+    
+    this.driverData = filtered;
+    this.hasData = filtered.length > 0;
+    this.totalItems = filtered.length;
+    this.calculateTotalValue();
+  }
+
+  // Calculate total value for filtered data
+  calculateTotalValue() {
+    this.totalValue = this.driverData.reduce((sum, item) => {
+      return sum + (item.total || 0);
+    }, 0);
+  }
+
+  // Load all data for client-side filtering
+  loadAllDataForClientSideFilter(searchTerm: string) {
+    this.isLoading = true;
+    this.distService
+      .getReturnRecievedData(undefined, undefined, undefined) // Get all data
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.allDriverData = response.items || [];
+          this.applyClientSideFilter(searchTerm, 
+            /^\d+$/.test(searchTerm.replace(/[+\s\-()]/g, '')), 
+            /^[A-Za-z0-9]{3,10}$/.test(searchTerm)
+          );
+        },
+        error: () => {
+          this.isLoading = false;
+          this.driverData = [];
+          this.hasData = false;
+          this.totalItems = 0;
+          this.totalValue = 0;
+        },
+      });
   }
 
   clearSearch() {
@@ -66,14 +203,6 @@ export class RecievedReturnsComponent implements OnInit {
 
   back() {
     window.history.back();
-  }
-
-  ngOnInit() {
-    this.fetchCentreOptions();
-    this.deliveryDateModel = new Date()
-    this.deliveryDate = new Date().toISOString().split('T')[0];
-    console.log('this.deliveryDate', this.deliveryDate)
-    this.loadData();
   }
   
   onDateSelected(date: Date) {
@@ -95,17 +224,15 @@ export class RecievedReturnsComponent implements OnInit {
       .getReturnRecievedData(
         this.deliveryDate,
         this.centerId,
-        this.searchText?.trim()
+        this.searchText?.trim() || undefined
       )
       .subscribe({
         next: (response) => {
           this.isLoading = false;
           this.driverData = response.items || [];
           this.totalValue = response.grandTotal;
-          console.log('driverData', this.driverData)
           this.hasData = this.driverData.length > 0;
           this.totalItems = response.total || this.driverData.length || 0;
-
         },
         error: () => {
           this.driverData = [];
@@ -145,6 +272,10 @@ export class RecievedReturnsComponent implements OnInit {
   closeDetailsModal(): void {
     this.showDetailsModal = false;
   }
+
+  // Add these properties
+  private allDriverData: DriverData[] = [];
+  private allDataLoaded = false;
 }
 
 class DriverData {
@@ -159,6 +290,6 @@ class DriverData {
   reason!: string;
   phoneCode1!: string;
   returnAt!: Date;
-  receivedTime!: Date
-  handOverOfficer!: number
+  receivedTime!: Date;
+  handOverOfficer!: number;
 }

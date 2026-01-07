@@ -230,17 +230,21 @@
               <div>
                 <span [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
-                      item.paymentStatus === 1,
+                      item.paymentStatus === 1 && item.paymentMethod === 'Card',
+                      'font-bold px-3 py-1 text-sm bg-[#F5FF85] text-[#878216] rounded-3xl':
+                      item.paymentStatus === 1 && item.paymentMethod === 'Cash',
                     'font-bold px-3 py-1 text-sm bg-[#DFDFDF] text-[#5C5C5C] rounded-3xl':
                       item.paymentStatus === 0
                   }" class="inline-block font-medium rounded-2xl min-w-28 px-4 py-2 text-xs  text-center">
-                  {{ item.paymentStatus == 1 ? "Paid" : "Pending" }}
+                  {{ (item.paymentStatus == 1 && item.paymentMethod === 'Card') ? "Paid" : 
+                  (item.paymentStatus == 1 && item.paymentMethod === 'Cash') ? 'Recived' : 
+                  "Pending" }}
                 </span>
               </div>
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.fullTotal - item.fullDiscount | number : "1.2-2" }}
+              {{ item.fullTotal | number : "1.2-2" }}
             </td>
 
             <td class="px-3 py-3 text-center text-textLight dark:text-textDark">

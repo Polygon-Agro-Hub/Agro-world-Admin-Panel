@@ -3,12 +3,12 @@
   <div>
     <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark"></h2>
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Ready to Pickup Orders</h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All
+            All ({{orders.length}})
           </h2>
         </div>
 
@@ -148,7 +148,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
-              Receiver’s Info
+              Receiver's Info
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
@@ -168,43 +168,82 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark"
-            ></td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark"
-            ></td>
-            <td class="px-4 py-3 text-left">
-              <!-- Updated Delivery Time Slot with color function -->
+          <!-- Updated rows with dummy data -->
+          <tr *ngFor="let order of orders" class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ order.no }}
             </td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
-            <td class="px-4 py-3 text-center"></td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ order.orderId }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ order.value }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ order.customerPhone }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ order.receiverPhone }}
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              {{ order.scheduledTimeSlot }}
+            </td>
+            <td class="px-4 py-3 text-center">
+              <span [ngClass]="{
+                'text-green-600': order.payment === 'Paid',
+                'text-yellow-600': order.payment === 'Pending',
+                'text-red-600': order.payment === 'Failed'
+              }">
+                {{ order.payment }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+            </td>
           </tr>
-          <tr>
+          
+          <!-- Empty state when no orders -->
+          <tr *ngIf="orders.length === 0">
             <td
-              colspan="8"
+              colspan="9"
               class="px-4 py-6 text-center text-textLight dark:text-textDark"
-            ></td>
+            >
+              No orders available
+            </td>
           </tr>
         </tbody>
       </table>
-
-      <!-- <div
-        *ngIf="!hasData"
-        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
-      >
-        <p class="text-[#494949] my-6 dark:text-textDark">
-          --No Data Available--
-        </p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-      </div> -->
     </div>
   </div>
 </div>

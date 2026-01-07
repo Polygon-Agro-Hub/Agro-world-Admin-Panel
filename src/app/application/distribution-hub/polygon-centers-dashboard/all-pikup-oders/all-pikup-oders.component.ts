@@ -7,7 +7,12 @@ import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/
 @Component({
   selector: 'app-all-pikup-oders',
   standalone: true,
-  imports: [CommonModule, DropdownModule, CalendarModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    DropdownModule,
+    CalendarModule,
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './all-pikup-oders.component.html',
   styleUrl: './all-pikup-oders.component.css',
 })

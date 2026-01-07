@@ -28,7 +28,7 @@ class CropTask {
   'taskDescriptionEnglish': string;
   'taskDescriptionSinhala': string;
   'taskDescriptionTamil': string;
-  'reqImages': any;
+  'reqImages': number;
   'videoLinkEnglish': any;
   'videoLinkSinhala': any;
   'videoLinkTamil': any;
@@ -125,6 +125,9 @@ getTaskById(id: any) {
         !!this.taskItems.videoLinkEnglish ||
         !!this.taskItems.videoLinkSinhala ||
         !!this.taskItems.videoLinkTamil;
+
+      console.log(this.taskItems.reqImages);
+      
 
       // Set default value of 0 if reqImages is null/undefined
       if (this.taskItems.reqImages == null || this.taskItems.reqImages === undefined) {

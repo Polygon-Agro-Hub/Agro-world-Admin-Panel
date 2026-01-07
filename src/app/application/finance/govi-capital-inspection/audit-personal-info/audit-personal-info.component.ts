@@ -349,7 +349,7 @@ interface IFinance {
   bank: string;
   branch: string;
   debtsOfFarmer: string;
-  noOfDepartments: number;
+  noOfDependents: number;
   assetsLand: { Land: string[] };
   assetsBuilding: { Building: string[] };
   assetsVehicle: { Vehicle: string[] };

@@ -3,12 +3,14 @@
   <div>
     <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">Ready to Pickup Orders</h2>
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          Ready to Pickup Orders
+        </h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All ({{orders.length}})
+            All ({{ orders.length }})
           </h2>
         </div>
 
@@ -169,40 +171,73 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr *ngFor="let order of orders" class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark"
-            >
-              {{order.no}}
+          <tr
+            *ngFor="let order of orders"
+            class="hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ order.no }}
             </td>
             <td
               class="px-4 py-3 text-center text-textLight dark:text-textDark font-medium"
             >
-              {{order.orderId}}
+              {{ order.orderId }}
             </td>
             <td
               class="px-4 py-3 text-left text-textLight dark:text-textDark font-semibold"
             >
-              {{order.value}}
+              {{ order.value }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{order.customerPhone}}
+              {{ order.customerPhone }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{order.receiverPhone1}}
+              {{ order.receiverPhone1 }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{order.receiverInfo}}
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
             </td>
-            <td class="px-4 py-3 text-center" [ngClass]="getDeliveryTimeColor(order.scheduledTime)">
-              {{order.scheduledTime}}
+            <td
+              class="px-4 py-3 text-center"
+              [ngClass]="getDeliveryTimeColor(order.scheduledTime)"
+            >
+              {{ order.scheduledTime }}
             </td>
-            <td class="px-4 py-3 text-center font-medium" [ngClass]="getPaymentColor(order.paymentStatus)">
-              {{order.payment}}
+            <td
+              class="px-4 py-3 text-center font-medium"
+              [ngClass]="getPaymentColor(order.paymentStatus)"
+            >
+              {{ order.payment }}
             </td>
             <td class="px-4 py-3 text-center">
-              <button class="text-blue-600 dark:text-blue-400 hover:underline">
-                View Details
+              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </button>
             </td>
           </tr>

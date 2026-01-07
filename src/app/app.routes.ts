@@ -255,6 +255,7 @@ import { ViewAllAuditedGovicareRequestsComponent } from './application/finance/v
 import { ViewVehiclesComponent } from './application/distribution-hub/view-vehicles/view-vehicles.component';
 import { RecievedReturnsComponent } from './application/distribution-hub/recieved-returns/recieved-returns.component';
 import { DriversAndVehiclesComponent } from './application/distribution-hub/polygon-centers-dashboard/drivers-and-vehicles/drivers-and-vehicles.component';
+import { PikupOderRecordsMainComponent } from './application/distribution-hub/polygon-centers-dashboard/pikup-oder-records-main/pikup-oder-records-main.component';
 
 export const routes: Routes = [
   {
@@ -1811,6 +1812,10 @@ export const routes: Routes = [
                   {
                     path: 'view-distribution-drivers',
                     component: DriversAndVehiclesComponent,
+                  },
+                  {
+                    path: 'pikup-oder-records-main',
+                    component: PikupOderRecordsMainComponent,
                   },
                 ],
               },

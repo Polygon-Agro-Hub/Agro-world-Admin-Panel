@@ -1,66 +1,57 @@
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
-  <i class="fa-solid fa-arrow-left"></i>
-  Back
+
+<div *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+<button class="mb-5 ml-10 text-textLight dark:text-textDark" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
 </button>
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex space-x-4 pb-5 border-b border-gray-300">
-      <button *ngIf="
-        permissionService.hasPermission('Polygon centres view dashboard progress tab') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="setActiveTab('Progress')" [ngClass]="
-          activeTab === 'Progress'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Progress'" class="fa fa-check"></i>
-        Progress
-      </button>
+<div class="flex flex-col justify-start items-start pl-10">
 
-      <button *ngIf="
-        permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="setActiveTab('Out for Delivery')" [ngClass]="
-          activeTab === 'Out for Delivery'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Out for Delivery'" class="fa fa-check"></i>
-        Out for Delivery
-      </button>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-16 pb-8 ">
 
-      <button *ngIf="
-        permissionService.hasPermission('Polygon centres view dashboard officers tab') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="setActiveTab('Officers')" [ngClass]="
-          activeTab === 'Officers'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Officers'" class="fa fa-check"></i>
-        Officers
-      </button>
+    <div class="relative flex justify-center shadow-lg rounded-lg items-center">
+      <div
+        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[60px] px-4 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500" >
+        <div class="flex items-center">
+          <span class="ml-24 font-bold text-[#030308]">{{centerObj.centerRegCode}}</span>
+        </div>
+    
+      </div>
 
-      <button *ngIf="
-        permissionService.hasPermission('Polygon centres view dashboard officer target tab') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="setActiveTab('Officer Target')" [ngClass]="
-          activeTab === 'Officer Target'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Officer Target'" class="fa fa-check"></i>
-        Officer Target
-      </button>
     </div>
-    <div class="h-5"></div>
-    <div class="tab-content">
-      <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress' && (permissionService.hasPermission('Polygon centres view dashboard progress tab') || tokenService.getUserDetails().role === '1')"></app-progress>
-      <app-out-of-delivery [centerObj]="centerObj" *ngIf="activeTab === 'Out for Delivery' && (permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') || tokenService.getUserDetails().role === '1')"></app-out-of-delivery>
-      <app-officers [centerObj]="centerObj" *ngIf="activeTab === 'Officers' && (permissionService.hasPermission('Polygon centres view dashboard officers tab') || tokenService.getUserDetails().role === '1')"></app-officers>
-      <app-officer-target [centerObj]="centerObj" *ngIf="activeTab === 'Officer Target' && (permissionService.hasPermission('Polygon centres view dashboard officer target tab') || tokenService.getUserDetails().role === '1')"></app-officer-target>
-    </div>
+
+    <div class="relative flex justify-center shadow-lg rounded-lg items-center cursor-pointer">
+      <div
+        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[60px] px-4 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500" 
+        (click)="officersTargets()">
+        <div class="flex items-center">
+          <span class="ml-8 text-[#292929] font-semibold">Officers & Targets</span>
+        </div>
+        <i class="fa-solid fa-arrow-up-right-from-square" style="color: #4a90e2"></i>
+      </div>
+
+  </div>
+
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-16 pb-44 ">
+
+    <div class=" cursor-pointer shadow-lg w-[310px] h-[180px] transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight  bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500 relative" (click)="packingProgress()"> <!-- Added 'relative' here -->
+        
+      <div class="flex flex-col items-center justify-center mx-5 gap-5 mt-6">
+          <div class="bg-[#EDF5FC] p-3 w-12 h-12 flex items-center justify-center rounded-full">
+              <i class="fa-solid fa-bag-shopping text-[#415CFF] text-lg"></i>
+          </div>
+          
+          <div class="flex flex-col justify-center items-center text-center">
+              <span class="text-[#292929] font-semibold dark:text-white block">Order Packing</span>
+              <span class="text-[#292929] font-semibold dark:text-white block">Progress</span>
+          </div>
+      </div>
+      <div class="absolute bottom-1 right-2"> <!-- Changed to absolute positioning -->
+          <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF]"></i>
+      </div>
   </div>
 </div>

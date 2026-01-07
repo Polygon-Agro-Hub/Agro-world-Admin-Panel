@@ -1,1 +1,216 @@
-<p>all-pikup-oders works!</p>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<div class="overflow-x-auto">
+  <div>
+    <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
+      <div class="mb-2">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark"></h2>
+      </div>
+      <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center">
+          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+            All
+          </h2>
+        </div>
+
+        <div class="flex items-center flex-wrap gap-4">
+          <i
+            class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path
+                d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
+              />
+            </svg>
+          </i>
+          <p class="text-gray-500 dark:text-textDark text-lg mr-5">Filter By</p>
+
+          <div>
+            <div>
+              <div>
+                <p-calendar
+                  id="date"
+                  placeholder="Date"
+                  [showIcon]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  dateFormat="yy-mm-dd"
+                  [monthNavigator]="true"
+                  [yearNavigator]="true"
+                  yearRange="1900:2030"
+                  iconDisplay="input"
+                  [style]="{ width: '16rem', height: '2rem' }"
+                  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+       [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+       [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+       [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+       [&_.p-datepicker-header]:dark:text-white
+       [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+       [&_.p-button:hover]:dark:bg-[#6b7280]"
+                  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                  [appendTo]="'body'"
+                >
+                </p-calendar>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              [checkmark]="true"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Time Slot"
+            >
+            </p-dropdown>
+          </div>
+
+          <div
+            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+          >
+            <input
+              type="text"
+              placeholder="Search by Order ID"
+              name="searchText"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            />
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Order ID
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Value (Rs.)
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Status
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Customer Phone
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Receiver Phone-1
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Receiver’s Info
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Scheduled Time Slot
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Payment
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Details
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            ></td>
+            <td
+              class="px-4 py-3 text-left text-textLight dark:text-textDark"
+            ></td>
+            <td class="px-4 py-3 text-left">
+              <!-- Updated Delivery Time Slot with color function -->
+            </td>
+            <td class="px-4 py-3 text-center"></td>
+            <td class="px-4 py-3 text-center"></td>
+            <td class="px-4 py-3 text-center"></td>
+            <td class="px-4 py-3 text-center"></td>
+            <td class="px-4 py-3 text-center"></td>
+            <td class="px-4 py-3 text-center"></td>
+          </tr>
+          <tr>
+            <td
+              colspan="8"
+              class="px-4 py-6 text-center text-textLight dark:text-textDark"
+            ></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <div
+        *ngIf="!hasData"
+        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
+      >
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          --No Data Available--
+        </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div> -->
+    </div>
+  </div>
+</div>

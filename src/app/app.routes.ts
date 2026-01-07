@@ -254,6 +254,7 @@ import { AuditPersonalInfoComponent } from './application/finance/govi-capital-i
 import { ViewAllAuditedGovicareRequestsComponent } from './application/finance/view-all-audited-govicare-requests/view-all-audited-govicare-requests.component';
 import { ViewVehiclesComponent } from './application/distribution-hub/view-vehicles/view-vehicles.component';
 import { RecievedReturnsComponent } from './application/distribution-hub/recieved-returns/recieved-returns.component';
+import { DriversAndVehiclesComponent } from './application/distribution-hub/polygon-centers-dashboard/drivers-and-vehicles/drivers-and-vehicles.component';
 
 export const routes: Routes = [
   {
@@ -1806,6 +1807,10 @@ export const routes: Routes = [
                   {
                     path: 'distributed-officer-profile/:id',
                     component: ViewCollectiveOfficerProfileComponent,
+                  },
+                  {
+                    path: 'view-distribution-drivers',
+                    component: DriversAndVehiclesComponent,
                   },
                 ],
               },

@@ -4,13 +4,13 @@
     <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Ready to Pickup Orders
+          {{ centerObj.centerRegCode }} {{ centerObj.centerName }}
         </h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All ({{ orders.length }})
+            All ({{ orderCount }})
           </h2>
         </div>
 
@@ -28,34 +28,32 @@
 
           <div>
             <div>
-              <div>
-                <p-calendar
-                  [(ngModel)]="selectedDate"
-                  (onSelect)="onDateChange()"
-                  (onClear)="onDateChange()"
-                  id="date"
-                  placeholder="Date"
-                  [showIcon]="true"
-                  [showClear]="true"
-                  [showButtonBar]="true"
-                  dateFormat="yy-mm-dd"
-                  [monthNavigator]="true"
-                  [yearNavigator]="true"
-                  yearRange="1900:2030"
-                  iconDisplay="input"
-                  [style]="{ width: '16rem', height: '2rem' }"
-                  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+              <p-calendar
+                [(ngModel)]="selectedDate"
+                (onSelect)="onDateChange()"
+                (onClear)="onDateChange()"
+                id="date"
+                placeholder="Date"
+                [showIcon]="true"
+                [showClear]="true"
+                [showButtonBar]="true"
+                dateFormat="yy-mm-dd"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1900:2030"
+                iconDisplay="input"
+                [style]="{ width: '16rem', height: '2rem' }"
+                panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
        [&_.p-datepicker-header]:dark:bg-[#2d354d] 
        [&_.p-datepicker-header]:dark:text-white
        [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
        [&_.p-button:hover]:dark:bg-[#6b7280]"
-                  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-                  [appendTo]="'body'"
-                >
-                </p-calendar>
-              </div>
+                inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                [appendTo]="'body'"
+              >
+              </p-calendar>
             </div>
           </div>
 
@@ -63,7 +61,7 @@
             <p-dropdown
               [(ngModel)]="selectedTimeSlot"
               (onChange)="onTimeSlotChange()"
-              [options]="timeSlots"
+              [options]="timeSlotOptions"
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [checkmark]="true"
               optionLabel="label"
@@ -168,7 +166,7 @@
               Scheduled Time Slot
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Payment
             </th>
@@ -205,7 +203,10 @@
                 {{ order.receiverPhone }}
               </td>
               <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <button 
+                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                  (click)="viewReceiverInfo(order)"
+                >
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -223,18 +224,19 @@
               </td>
               <td
                 class="px-4 py-3 text-center"
-                [ngClass]="getDeliveryTimeColor(order.scheduledTimeSlot)"
               >
                 {{ order.scheduledTimeSlot }}
               </td>
               <td
-                class="px-4 py-3 text-center font-medium"
-                [ngClass]="getPaymentColor(order.payment)"
+                class="px-4 py-3 text-left font-medium"
               >
                 {{ order.payment }}
               </td>
               <td class="px-4 py-3 text-center">
-                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <button 
+                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                  (click)="viewOrderDetails(order)"
+                >
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"

@@ -28,7 +28,6 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   selectedDeliveryId!: number;
 
   statusOptions = [
-    { label: 'All', value: 'ALL' },
     { label: 'Out for Delivery', value: 'Out For Delivery' },
     { label: 'Delivered', value: 'Delivered' },
     { label: 'Collected', value: 'Collected' },

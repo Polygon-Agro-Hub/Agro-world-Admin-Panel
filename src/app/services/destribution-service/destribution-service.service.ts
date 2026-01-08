@@ -377,10 +377,9 @@ export class DestributionService {
     if (searchText) {
       url += `&searchText=${encodeURIComponent(searchText)}`;
     }
-    
+
     return this.http.get<{ total: number; items: any[] }>(url, { headers });
   }
-
 
   getReturnRecievedData(
     sheduleDate?: string,
@@ -388,8 +387,14 @@ export class DestributionService {
     searchText?: string
   ): Observable<{ total: number; items: any[]; grandTotal: number }> {
     const headers = this.getHeaders();
-    console.log('data')
-    let url = `${this.apiUrl}distribution/get-return-recieved-data?sheduleDate=${sheduleDate}`;
+    console.log('data');
+    let url = `${this.apiUrl}distribution/get-return-recieved-data`;
+
+    if (sheduleDate) {
+      url += `?sheduleDate=${sheduleDate}`;
+    } else {
+      url += `?`;
+    }
 
     if (typeof centerId === 'number') {
       url += `&centerId=${centerId}`;
@@ -398,6 +403,9 @@ export class DestributionService {
       url += `&searchText=${encodeURIComponent(searchText)}`;
     }
 
-    return this.http.get<{ total: number; items: any[]; grandTotal: number }>(url, { headers });
+    return this.http.get<{ total: number; items: any[]; grandTotal: number }>(
+      url,
+      { headers }
+    );
   }
 }

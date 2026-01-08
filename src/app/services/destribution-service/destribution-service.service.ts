@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 import { formatDate } from '@angular/common';
@@ -411,29 +411,40 @@ export class DestributionService {
 
   // In your service file
 // distribution.service.ts
-getDistributedCenterPickupOrders(
-  companycenterId: number,
-  time: string = '',
-  date: string = '',
-  searchText: string = ''
-): Observable<ApiResponse> {
-  let url = `${this.apiUrl}distribution/get-distributed-center-pickup-orders?companycenterId=${companycenterId}`;
+getDistributedCenterPickupOrders(searchParams: {
+  companycenterId: number;
+  sheduleTime?: string;
+  date?: string;
+  searchText?: string;
+  activeTab?: 'ready-to-pickup' | 'picked-up';
+}): Observable<ApiResponse> {
+  // Build query parameters
+  const params = new HttpParams()
+    .set('companycenterId', searchParams.companycenterId.toString());
   
-  if (time && time.trim() !== '') {
-    url += `&time=${encodeURIComponent(time.trim())}`;
+  // Add optional parameters if they exist
+  if (searchParams.sheduleTime && searchParams.sheduleTime.trim() !== '') {
+    params.set('time', searchParams.sheduleTime.trim());
   }
-
-  if (date && date.trim() !== '') {
-    const formattedDate = this.formatDateForApi(date);
-    url += `&date=${encodeURIComponent(formattedDate)}`;
+  
+  if (searchParams.date && searchParams.date.trim() !== '') {
+    const formattedDate = this.formatDateForApi(searchParams.date);
+    params.set('date', formattedDate);
   }
-
-  if (searchText && searchText.trim() !== '') {
-    url += `&searchText=${encodeURIComponent(searchText.trim())}`;
+  
+  if (searchParams.searchText && searchParams.searchText.trim() !== '') {
+    params.set('searchText', searchParams.searchText.trim());
   }
-
+  
+  if (searchParams.activeTab) {
+    params.set('activeTab', searchParams.activeTab);
+  }
+  
+  const url = `${this.apiUrl}distribution/get-distributed-center-pickup-orders`;
+  
   return this.http.get<ApiResponse>(url, {
     headers: this.getHeaders(),
+    params: params
   });
 }
 

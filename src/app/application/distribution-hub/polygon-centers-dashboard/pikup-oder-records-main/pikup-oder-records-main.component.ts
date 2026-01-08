@@ -14,8 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     CommonModule,
     HttpClientModule,
     AllPikupOdersComponent,
-    ReadyToPikupComponent,
-    PikupOdersComponent,
+    // Remove the other components since we're using AllPikupOdersComponent for all tabs
   ],
   templateUrl: './pikup-oder-records-main.component.html',
   styleUrl: './pikup-oder-records-main.component.css',

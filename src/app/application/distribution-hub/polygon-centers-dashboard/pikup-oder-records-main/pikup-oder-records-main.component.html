@@ -51,11 +51,21 @@
     </div>
     <div class="h-5"></div>
     <div class="tab-content">
-      <app-all-pikup-oders [centerObj]="centerObj"  *ngIf="activeTab === 'All'"></app-all-pikup-oders>
-      <app-ready-to-pikup
-        *ngIf="activeTab === 'Ready to Pickup'"
-      ></app-ready-to-pikup>
-      <app-pikup-oders *ngIf="activeTab === 'Picked Up'"></app-pikup-oders>
+      <app-all-pikup-oders 
+        [centerObj]="centerObj" 
+        [activeTab]="activeTab"
+        *ngIf="activeTab === 'All'">
+      </app-all-pikup-oders>
+      <app-all-pikup-oders 
+        [centerObj]="centerObj" 
+        [activeTab]="activeTab"
+        *ngIf="activeTab === 'Ready to Pickup'">
+      </app-all-pikup-oders>
+      <app-all-pikup-oders 
+        [centerObj]="centerObj" 
+        [activeTab]="activeTab"
+        *ngIf="activeTab === 'Picked Up'">
+      </app-all-pikup-oders>
     </div>
   </div>
 </div>

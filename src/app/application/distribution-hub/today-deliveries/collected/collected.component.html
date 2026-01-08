@@ -14,7 +14,8 @@
           placeholder="Search by Order ID"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
           [(ngModel)]="searchQuery"
-          (input)="onSearch()"
+          name="searchQuery"
+          (click)="onSearch()"
         />
         <button
           type="button"
@@ -67,19 +68,19 @@
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             No
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             Order ID
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             Centre
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             Delivery Time Slot
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             Driver
           </th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             Collected Time
           </th>
         </tr>
@@ -88,26 +89,26 @@
         <!-- Show data when available -->
         <ng-container *ngIf="filteredData.length > 0">
           <tr
-            *ngFor="let item of filteredData"
+            *ngFor="let item of filteredData; let i = index"
             class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.no }}
+              {{ i + 1 | number: '2.0' }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.invNo }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.regCode }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.deliveryTimeSlot }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ cleanTimeSlotText(item.sheduleTime) }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.driver }}
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ item.driverEmpId || '-' }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ item.collectTime || 'N/A' }}
+            <td class="px-4 py-3 text-left text-[#3E3E3E] dark:text-textDark">
+              {{ item.collectTime | date: 'HH:mm' }}
             </td>
           </tr>
         </ng-container>
@@ -118,9 +119,9 @@
             colspan="6"
             class="px-4 py-8 text-center text-textLight dark:text-textDark"
           >
-            <div *ngIf="originalData.length === 0">No collected deliveries found</div>
-            <div *ngIf="originalData.length > 0 && filteredData.length === 0">
-              No collected deliveries found matching "{{ searchQuery }}"
+            <div *ngIf="filteredData.length === 0">No collected filteredData found</div>
+            <div *ngIf="filteredData.length > 0 && filteredData.length === 0">
+              No collected filteredData found matching "{{ searchQuery }}"
             </div>
           </td>
         </tr>

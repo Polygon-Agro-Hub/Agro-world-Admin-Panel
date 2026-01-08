@@ -3,12 +3,20 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface DeliveryItem {
-  invNo: string;
-  regCode: string;
-  sheduleTime: string;
-  createdAt: string;
-  status: string;
-  outDlvrTime: string;
+  id:number
+  invNo:string 
+  regCode:string 
+  centerName:string
+  sheduleTime:string 
+  sheduleDate:string 
+  createdAt:string 
+  status:string 
+  outDlvrTime:string 
+  collectTime:string 
+  driverEmpId:string 
+  driverStartTime:string 
+  returnTime:string 
+  deliveryTime:string 
 }
 
 @Component({

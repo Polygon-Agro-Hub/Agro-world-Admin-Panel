@@ -8,8 +8,7 @@
     <div class="flex items-center mr-5">
       <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
         <input type="text" placeholder="Search by Order ID"
-          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchTerm"
-          (input)="onSearch()" />
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchTerm" name="searchTerm"/>
         <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -30,26 +29,26 @@
       <thead>
         <tr>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">No</th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Order ID</th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Centre</th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Driver</th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Phone Number</th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Delivery Time Slot</th>
-          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Hold Time</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Order ID</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Centre</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Driver</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Phone Number</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Delivery Time Slot</th>
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">Hold Time</th>
           <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">Details</th>
         </tr>
       </thead>
       <tbody>
         <!-- Data rows -->
-        <tr *ngFor="let item of filteredData"
+        <tr *ngFor="let item of filteredData; let i = index"
           class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.no | number:'2.0-0' }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.orderId }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.centre }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.driver }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneNumber }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.deliveryTimeSlot }}</td>
-          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.heldTime }}</td>
+          <td class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ i + 1 | number:"2.0" }}</td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.invNo }}</td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.regCode }}</td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.driverEmpId }}</td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.driverPhone }}</td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ cleanTimeSlotText(item.sheduleTime) }}</td>
+          <td class="px-4 py-3 text-left text-textLight dark:text-textDark">{{ item.holdTime | date:'HH:mm' }}</td>
           <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
             <button class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
               (click)="viewDetails(item)">

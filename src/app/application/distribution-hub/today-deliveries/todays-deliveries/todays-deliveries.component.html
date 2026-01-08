@@ -108,26 +108,26 @@
     <div class="h-5"></div>
 
     <div *ngIf="activeTab === 'all'">
-      <app-all-todays-deleveries [deliveries]="allFilteredDeliveries"></app-all-todays-deleveries>
+      <app-all-todays-deleveries [deliveries]="deliveryArr"></app-all-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'out-for-delivery'">
       <app-out-for-delivery-todays-deleveries
-        [deliveries]="outForDeliveryData"></app-out-for-delivery-todays-deleveries>
+        [deliveries]="deliveryArr"></app-out-for-delivery-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'collected'">
-      <app-collected [deliveries]="collectedData"></app-collected>
+      <app-collected [deliveries]="deliveryArr"></app-collected>
     </div>
     <div *ngIf="activeTab === 'on-the-way'">
-      <app-on-the-way-todays-deleveries [deliveries]="onTheWayData"></app-on-the-way-todays-deleveries>
+      <app-on-the-way-todays-deleveries [deliveries]="deliveryArr"></app-on-the-way-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'hold'">
-      <app-hold-todays-deleveries [holdDeliveries]="holdData"></app-hold-todays-deleveries>
+      <app-hold-todays-deleveries [holdDeliveries]="deliveryArr"></app-hold-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'return'">
-      <app-return-todays-deleveries [deliveries]="returnData"></app-return-todays-deleveries>
+      <app-return-todays-deleveries [deliveries]="deliveryArr"></app-return-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'delivered'">
-      <app-delivered-todays-deleveries [deliveries]="deliveredData"></app-delivered-todays-deleveries>
+      <app-delivered-todays-deleveries [deliveries]="deliveryArr"></app-delivered-todays-deleveries>
     </div>
   </div>
 </div>

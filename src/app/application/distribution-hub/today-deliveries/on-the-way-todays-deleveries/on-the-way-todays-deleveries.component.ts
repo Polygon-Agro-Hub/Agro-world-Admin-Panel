@@ -4,20 +4,23 @@ import { FormsModule } from '@angular/forms';
 import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface DeliveryItem {
-  id?: number;
-  no: number;
-  invNo: string; // Changed from orderId to invNo to match backend
-  regCode: string; // Changed from centre to regCode to match backend
-  driver: string;
-  phoneNumber: string;
-  deliveryTimeSlot: string; // This will come from sheduleTime
-  startedTime: string; // This will come from outDlvrTime or createdAt
-  status: string;
-  sheduleTime?: string;
-  outDlvrTime?: string;
-  createdAt?: string;
-  driverStartTime?: string; // keep backend value if needed
+  id: number
+  invNo: string
+  regCode: string
+  centerName: string
+  sheduleTime: string
+  sheduleDate: string
+  createdAt: string
+  status: string
+  outDlvrTime: string
+  collectTime: string
+  driverEmpId: string
+  driverStartTime: string
+  returnTime: string
+  deliveryTime: string
+  driverPhone: string
 }
+
 
 @Component({
   selector: 'app-on-the-way-todays-deleveries',
@@ -31,116 +34,52 @@ interface DeliveryItem {
   styleUrl: './on-the-way-todays-deleveries.component.css',
 })
 export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
-  @Input() deliveries: any[] = [];
+  @Input() deliveries: DeliveryItem[] = [];
 
   searchQuery: string = '';
   showDetailsPopup: boolean = false;
   selectedDeliveryId!: number;
 
   // Transformed delivery data for the table
-  deliveryData: DeliveryItem[] = [];
+  filteredData: DeliveryItem[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['deliveries'] && this.deliveries) {
-      this.transformDeliveryData();
-    }
+    // if (changes['deliveries'] && this.deliveries) {
+    //   // this.transformDeliveryData();
+    // }
+    this.filteredData = [...this.deliveries];
+
   }
 
-  transformDeliveryData(): void {
-    // Transform the backend data to match the frontend interface
-    this.deliveryData = this.deliveries.map((delivery, index) => ({
-      id: delivery.id, // ensure id is preserved for details popup
-      no: index + 1,
-      invNo: delivery.invNo || '',
-      regCode: delivery.regCode || '',
-      driver: delivery.driver || delivery.driverEmpId || 'N/A', // Use driverEmpId if driver not provided
-      phoneNumber: delivery.phoneNumber || 'N/A',
-      deliveryTimeSlot: this.formatTimeSlot(delivery.sheduleTime),
-      // UPDATED: Use startedTime from parent (which maps to driverStartTime from backend)
-      startedTime:
-        delivery.startedTime ||
-        this.formatTime(
-          delivery.driverStartTime || delivery.outDlvrTime || delivery.createdAt
-        ),
-      status: delivery.status || '',
-      sheduleTime: delivery.sheduleTime,
-      outDlvrTime: delivery.outDlvrTime,
-      createdAt: delivery.createdAt,
-      driverStartTime: delivery.driverStartTime,
-    }));
+
+  cleanTimeSlotText(text: string): string {
+    if (!text) return 'N/A';
+    // Remove "Within" and any extra spaces (case-insensitive)
+    return text.replace(/Within\s*/gi, '').trim();
   }
 
-  formatTimeSlot(timeString: string): string {
-    if (!timeString) return 'N/A';
-
-    try {
-      // Assuming timeString is in format 'HH:MM:SS'
-      const time = new Date(`2000-01-01T${timeString}`);
-      const hours = time.getHours();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const formattedHours = hours % 12 || 12;
-
-      // Create time slot (assuming 6-hour slots as per your dummy data)
-      if (hours < 14) {
-        return `8AM - 2PM`;
-      } else {
-        return `2PM - 8PM`;
-      }
-    } catch {
-      return timeString;
-    }
-  }
-
-  formatTime(timeString: string): string {
-    if (!timeString) return 'N/A';
-
-    try {
-      const time = new Date(`2000-01-01T${timeString}`);
-      const hours = time.getHours();
-      const minutes = time.getMinutes();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const formattedHours = hours % 12 || 12;
-
-      return `${formattedHours}.${minutes.toString().padStart(2, '0')}${ampm}`;
-    } catch {
-      // Try to extract time from datetime string
-      const timeMatch = timeString.match(/(\d{1,2}):(\d{2})/);
-      if (timeMatch) {
-        const hours = parseInt(timeMatch[1]);
-        const minutes = timeMatch[2];
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const formattedHours = hours % 12 || 12;
-        return `${formattedHours}.${minutes}${ampm}`;
-      }
-      return timeString;
-    }
-  }
-
-  // Filtered deliveries based on search
-  get filteredDeliveries(): DeliveryItem[] {
+  onSearch(): void {
     if (!this.searchQuery.trim()) {
-      return this.deliveryData;
+      this.filteredData = [...this.deliveries];
+      return;
     }
 
-    const query = this.searchQuery.toLowerCase();
-    return this.deliveryData.filter(
-      (delivery) =>
-        delivery.invNo.toLowerCase().includes(query) ||
-        delivery.regCode.toLowerCase().includes(query) ||
-        (delivery.driver && delivery.driver.toLowerCase().includes(query))
+    const query = this.searchQuery.toLowerCase().trim();
+    this.filteredData = this.deliveries.filter(
+      (item) =>
+        item.invNo.toLowerCase().includes(query) ||
+        item.regCode.toLowerCase().includes(query) ||
+        item.driverEmpId.toLowerCase().includes(query)
     );
   }
 
   // Clear search
   clearSearch(): void {
     this.searchQuery = '';
+    this.filteredData = [...this.deliveries];
   }
 
-  // Handle search button click
-  onSearch(): void {
-    // The filteredDeliveries getter will automatically update with the searchQuery
-    console.log('Searching for:', this.searchQuery);
-  }
+
 
   // Handle details button click
   onDetailsClick(delivery: DeliveryItem): void {
@@ -152,10 +91,6 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
     this.showDetailsPopup = true;
   }
 
-  // Get total count
-  get totalCount(): string {
-    return this.filteredDeliveries.length.toString().padStart(2, '0');
-  }
 
   closeDetailsPopup(): void {
     this.showDetailsPopup = false;

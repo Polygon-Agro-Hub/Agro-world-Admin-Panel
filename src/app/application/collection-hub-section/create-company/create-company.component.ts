@@ -582,7 +582,7 @@ export class CreateCompanyComponent implements OnInit {
     this.companyData.logo = '';
     this.selectedLogoFile = null;
     this.companyData.logoFile = undefined;
-    const logoInput = document.getElementById('logoUploadEdit') as HTMLInputElement;
+    const logoInput = document.getElementById('logoUpload') as HTMLInputElement;
     if (logoInput) logoInput.value = '';
     this.touchedFields['logo'] = true;
   }
@@ -591,7 +591,7 @@ export class CreateCompanyComponent implements OnInit {
     event.stopPropagation();
     this.companyData.favicon = '';
     this.selectedFaviconFile = null;
-    const faviconInput = document.getElementById('faviconUploadEdit') as HTMLInputElement;
+    const faviconInput = document.getElementById('faviconUpload') as HTMLInputElement;
     if (faviconInput) faviconInput.value = '';
     this.touchedFields['favicon'] = true;
   }

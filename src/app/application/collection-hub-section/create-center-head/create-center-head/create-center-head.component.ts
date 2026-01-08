@@ -52,6 +52,7 @@ interface FieldConfig {
   styleUrl: './create-center-head.component.css',
 })
 export class CreateCenterHeadComponent implements OnInit {
+  companyId: number | null = null;
   isLoading = false;
   empType!: string;
   personalData: Personal = new Personal();
@@ -154,11 +155,19 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe((params) => {
+      this.companyId = params['companyId'] ? +params['companyId'] : null;
+      
+    });
+
+    this.personalData.companyId = this.companyId
+    console.log('coompanyId', this.personalData.companyId)
+
     this.getAllCompanies();
     this.EpmloyeIdCreate();
     this.loadBanks();
     this.loadBranches();
-
     this.districtOptions = this.districts.map(district => ({
       label: district.name,
       value: district.name,

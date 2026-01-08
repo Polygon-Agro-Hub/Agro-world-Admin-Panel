@@ -5,12 +5,20 @@ import { FormsModule } from '@angular/forms';
 import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface Delivery {
-  id?: number;
-  invNo: string;
-  regCode: string;
-  sheduleTime: string;  // This will be like "Within 8-12 PM"
-  createdAt: string;
-  status: string;
+  id:number
+  invNo:string 
+  regCode:string 
+  centerName:string
+  sheduleTime:string 
+  sheduleDate:string 
+  createdAt:string 
+  status:string 
+  outDlvrTime:string 
+  collectTime:string 
+  driverEmpId:string 
+  driverStartTime:string 
+  returnTime:string 
+  deliveryTime:string 
 }
 
 @Component({
@@ -28,7 +36,6 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   selectedDeliveryId!: number;
 
   statusOptions = [
-    { label: 'All', value: 'ALL' },
     { label: 'Out for Delivery', value: 'Out For Delivery' },
     { label: 'Delivered', value: 'Delivered' },
     { label: 'Collected', value: 'Collected' },
@@ -41,9 +48,12 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   searchText: string = '';
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['deliveries']) {
-      this.filterDeliveries();
-    }
+    // if (changes['deliveries']) {
+    //   this.filterDeliveries();
+    // }
+    this.filterDeliveries();
+    console.log(this.deliveries);
+    
   }
 
   getStatusClass(status: string): string {
@@ -87,6 +97,8 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
     }
 
     this.displayedDeliveries = filtered;
+    console.log("displayedDeliveries",this.displayedDeliveries);
+    
   }
 
   onStatusChange(): void {

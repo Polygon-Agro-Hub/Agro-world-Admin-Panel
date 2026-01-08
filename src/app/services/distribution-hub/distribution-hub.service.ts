@@ -687,9 +687,10 @@ export class DistributionHubService {
   }
 
   getTodaysDeliveries(
-    regCode?: string,
-    invNo?: string,
-    searchType: string = 'partial'
+    activeTab: string,
+    regCode: string,
+    invNo: string,
+    // searchType: string
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -706,7 +707,7 @@ export class DistributionHubService {
       params = params.set('invNo', invNo);
     }
 
-    params = params.set('searchType', searchType);
+    params = params.set('activeTab', activeTab);
 
     return this.http.get<any>(
       `${this.apiUrl}distribution/get-todays-deliveries`,

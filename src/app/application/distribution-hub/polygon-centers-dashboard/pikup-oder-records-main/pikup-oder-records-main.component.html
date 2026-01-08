@@ -51,7 +51,7 @@
     </div>
     <div class="h-5"></div>
     <div class="tab-content">
-      <app-all-pikup-oders *ngIf="activeTab === 'All'"></app-all-pikup-oders>
+      <app-all-pikup-oders [centerObj]="centerObj"  *ngIf="activeTab === 'All'"></app-all-pikup-oders>
       <app-ready-to-pikup
         *ngIf="activeTab === 'Ready to Pickup'"
       ></app-ready-to-pikup>

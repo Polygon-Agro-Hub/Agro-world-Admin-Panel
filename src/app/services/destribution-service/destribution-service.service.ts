@@ -400,4 +400,47 @@ export class DestributionService {
 
     return this.http.get<{ total: number; items: any[]; grandTotal: number }>(url, { headers });
   }
+
+  // In your service file
+// distribution.service.ts
+getDistributedCenterPickupOrders(
+  companycenterId: number,
+  time: string = '',
+  date: string = '',
+  searchText: string = ''
+): Observable<ApiResponse> {
+  let url = `${this.apiUrl}distribution/get-distributed-center-pickup-orders?companycenterId=${companycenterId}`;
+  
+  if (time && time.trim() !== '') {
+    url += `&time=${encodeURIComponent(time.trim())}`;
+  }
+
+  if (date && date.trim() !== '') {
+    const formattedDate = this.formatDateForApi(date);
+    url += `&date=${encodeURIComponent(formattedDate)}`;
+  }
+
+  if (searchText && searchText.trim() !== '') {
+    url += `&searchText=${encodeURIComponent(searchText.trim())}`;
+  }
+
+  return this.http.get<ApiResponse>(url, {
+    headers: this.getHeaders(),
+  });
+}
+
+private formatDateForApi(dateInput: string | Date): string {
+  if (dateInput instanceof Date) {
+    return dateInput.toISOString().split('T')[0];
+  }
+  
+  if (typeof dateInput === 'string') {
+    const date = new Date(dateInput);
+    if (!isNaN(date.getTime())) {
+      return date.toISOString().split('T')[0];
+    }
+  }
+  
+  return dateInput.toString();
+}
 }

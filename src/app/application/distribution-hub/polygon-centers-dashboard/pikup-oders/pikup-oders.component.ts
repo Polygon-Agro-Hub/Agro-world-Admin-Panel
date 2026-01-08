@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { FormsModule } from '@angular/forms';
 
 interface Order {
   no: number;
@@ -24,69 +25,81 @@ interface Order {
     DropdownModule,
     CalendarModule,
     LoadingSpinnerComponent,
+    FormsModule
   ],
   templateUrl: './pikup-oders.component.html',
   styleUrl: './pikup-oders.component.css',
 })
-export class PikupOdersComponent {
-  isLoading = false;
-  
-  // Dummy data from the image
-  orders: Order[] = [
-    {
-      no: 1,
-      orderId: 'ORD-001234',
-      value: '2,450.00',
-      customerPhone: '+94 77 123 4567',
-      receiverPhone: '+94 71 987 6543',
-      receiverInfo: '⭕',
-      scheduledTimeSlot: '10:00 AM - 12:00 PM',
-      payment: 'Paid',
-      details: '⭕'
-    },
-    {
-      no: 2,
-      orderId: 'ORD-001235',
-      value: '1,850.50',
-      customerPhone: '+94 76 234 5678',
-      receiverPhone: '+94 72 876 5432',
-      receiverInfo: '⭕',
-      scheduledTimeSlot: '2:00 PM - 4:00 PM',
-      payment: 'Pending',
-      details: '⭕'
-    },
-    {
-      no: 3,
-      orderId: 'ORD-001236',
-      value: '3,200.00',
-      customerPhone: '+94 75 345 6789',
-      receiverPhone: '+94 70 765 4321',
-      receiverInfo: '⭕',
-      scheduledTimeSlot: '11:00 AM - 1:00 PM',
-      payment: 'Paid',
-      details: '⭕'
-    },
-    {
-      no: 4,
-      orderId: 'ORD-001237',
-      value: '950.75',
-      customerPhone: '+94 78 456 7890',
-      receiverPhone: '+94 76 654 3210',
-      receiverInfo: '⭕',
-      scheduledTimeSlot: '4:00 PM - 6:00 PM',
-      payment: 'Failed',
-      details: '⭕'
-    },
-    {
-      no: 5,
-      orderId: 'ORD-001238',
-      value: '5,600.25',
-      customerPhone: '+94 77 567 8901',
-      receiverPhone: '+94 71 543 2109',
-      receiverInfo: '⭕',
-      scheduledTimeSlot: '9:00 AM - 11:00 AM',
-      payment: 'Paid',
-      details: '⭕'
-    }
+export class PikupOdersComponent implements OnInit, OnChanges {
+  @Input() orders: Order[] = [];
+  @Input() isLoading: boolean = false;
+  @Output() filterChanged = new EventEmitter<any>();
+  @Output() searchChanged = new EventEmitter<string>();
+
+  // Filter states
+  selectedDate: Date | null = null;
+  selectedTimeSlot: any = null;
+  searchText: string = '';
+
+  // Time slot options
+  timeSlots = [
+    { label: 'Morning (8AM - 12PM)', value: 'morning' },
+    { label: 'Afternoon (12PM - 4PM)', value: 'afternoon' },
+    { label: 'Evening (4PM - 8PM)', value: 'evening' },
+    { label: 'Night (8PM - 12AM)', value: 'night' }
   ];
+
+  ngOnInit() {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['orders']) {
+      // Update logic if needed
+    }
+  }
+
+  // Handle date change
+  onDateChange() {
+    const filters = {
+      date: this.selectedDate ? this.formatDate(this.selectedDate) : '',
+      time: this.selectedTimeSlot?.value || ''
+    };
+    this.filterChanged.emit(filters);
+  }
+
+  // Handle time slot change
+  onTimeSlotChange() {
+    const filters = {
+      date: this.selectedDate ? this.formatDate(this.selectedDate) : '',
+      time: this.selectedTimeSlot?.value || ''
+    };
+    this.filterChanged.emit(filters);
+  }
+
+  // Handle search
+  onSearch() {
+    if (this.searchText.trim() || this.searchText === '') {
+      this.searchChanged.emit(this.searchText);
+    }
+  }
+
+  // Clear search
+  clearSearch() {
+    this.searchText = '';
+    this.searchChanged.emit('');
+  }
+
+  // Format date for API
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+  // Function to get payment color
+  getPaymentColor(payment: string): string {
+    switch(payment) {
+      case 'Paid': return 'text-green-600 font-semibold';
+      case 'Pending': return 'text-yellow-600 font-semibold';
+      case 'Failed': return 'text-red-600 font-semibold';
+      default: return 'text-textLight dark:text-textDark';
+    }
+  }
 }

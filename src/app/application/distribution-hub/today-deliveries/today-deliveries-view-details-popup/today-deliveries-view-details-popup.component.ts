@@ -80,6 +80,7 @@ export class TodayDeliveriesViewDetailsPopupComponent
   constructor(private distributionService: DistributionHubService) {}
 
   ngOnInit(): void {
+    console.log('deliveryId', this.deliveryId)
     if (this.visible) {
       this.loadTrackingDetails();
     }

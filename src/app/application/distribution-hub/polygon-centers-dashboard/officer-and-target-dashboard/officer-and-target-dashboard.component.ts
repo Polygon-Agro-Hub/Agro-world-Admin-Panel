@@ -8,10 +8,9 @@ import { OfficersComponent } from '../officers/officers.component';
 import { OfficerTargetComponent } from "../officer-target/officer-target.component";
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
-import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
 
 @Component({
-  selector: 'app-main-dashboard-layout',
+  selector: 'app-officer-and-target-dashboard',
   standalone: true,
   imports: [
     CommonModule,
@@ -19,20 +18,18 @@ import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/
     ProgressComponent,
     OutOfDeliveryComponent,
     OfficersComponent,
-    OfficerTargetComponent,
-    LoadingSpinnerComponent
-],
-  templateUrl: './main-dashboard-layout.component.html',
-  styleUrl: './main-dashboard-layout.component.css',
+    OfficerTargetComponent
+  ],
+  templateUrl: './officer-and-target-dashboard.component.html',
+  styleUrl: './officer-and-target-dashboard.component.css'
 })
-export class MainDashboardLayoutComponent implements OnInit {
+export class OfficerAndTargetDashboardComponent implements OnInit {
   activeTab: string = 'Progress';
   centerObj: CenterDetails = {
-    centerId: null,
+    centerId: 0,
     centerName: '',
     centerRegCode: ''
   };
-  isLoading: boolean = false;
 
   constructor(private router: Router, private route: ActivatedRoute, public tokenService: TokenService,
       public permissionService: PermissionService) { }
@@ -46,7 +43,7 @@ export class MainDashboardLayoutComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       // Set tab based on query parameter
       const tab = params['tab'];
-      if (tab && ['Progress', 'Out for Delivery', 'Officers', 'Officer Target'].includes(tab)) {
+      if (tab && ['Officers', 'Officer Target'].includes(tab)) {
         this.activeTab = tab;
       }
       
@@ -68,51 +65,10 @@ export class MainDashboardLayoutComponent implements OnInit {
     });
   }
 
-  packingProgress() {
-    const id = this.centerObj.centerId
-    const name = this.centerObj.centerName
-    const regCode = this.centerObj.centerRegCode
-    this.router.navigate([`/distribution-hub/action/view-polygon-centers/order-packing-progress-dashboard/${id}`],
-    {
-      queryParams: { name, regCode }
-    }
-    );
-  }
-
-  officersTargets() {
-    const id = this.centerObj.centerId
-    const name = this.centerObj.centerName
-    const regCode = this.centerObj.centerRegCode
-    this.router.navigate([`/distribution-hub/action/view-polygon-centers/officer-and-target-dashboard/${id}`],
-    {
-      queryParams: { name, regCode }
-    }
-    );
-  }
-
-  driversVehicles() {
-
-  }
-
-  homeDeliveryOtherRecords() {
-    
-  }
-
-  pickUpOrderRecords() {
-    
-  }
-
-  back(): void{
-    this.isLoading= true;
-     this.router.navigate(['/distribution-hub/action/view-polygon-centers']).then(() => {
-      this.isLoading = false;
-    });
-  }
-
 }
 
 interface CenterDetails {
-  centerId: number | null;
+  centerId: number;
   centerName: string;
   centerRegCode: string;
 }

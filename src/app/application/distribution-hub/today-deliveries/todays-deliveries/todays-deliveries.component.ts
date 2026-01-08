@@ -64,7 +64,7 @@ export class TodaysDeliveriesComponent implements OnInit {
   invNo: string = '';
 
   // Center dropdown options
-  centerOptions: CenterOption[] = [];
+  centreOptions: Array<{ label: string; value: number }> = [];
   regCode: string = '';
 
   // Data from backend
@@ -78,7 +78,7 @@ export class TodaysDeliveriesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.fetchCenters();
+    this.fetchCentreOptions();
     this.fetchDeliveries();
     this.selectTab('all');
   }
@@ -114,34 +114,21 @@ export class TodaysDeliveriesComponent implements OnInit {
       });
   }
 
-  fetchCenters(): void {
-    // Load unique centres from centers API (not deliveries)
-    // this.distributionService.getTodaysDeliveries().subscribe({
-    //   next: (response) => {
-    //     if (response?.status && Array.isArray(response.data)) {
-    //       const seen = new Set<string>();
-    //       const options: CenterOption[] = [];
-
-    //       for (const center of response.data) {
-    //         const code: string =
-    //           center?.regCode ?? center?.centerNumber ?? center?.code ?? '';
-    //         const name: string = center?.centerName ?? center?.name ?? '';
-    //         if (!code) continue;
-    //         if (seen.has(code)) continue;
-    //         seen.add(code);
-    //         options.push({ code, name });
-    //       }
-
-    //       this.centerOptions = options;
-    //     } else {
-    //       this.centerOptions = [];
-    //     }
-    //   },
-    //   error: (error) => {
-    //     console.error('Error fetching centers:', error);
-    //     this.centerOptions = [];
-    //   },
-    // });
+  fetchCentreOptions() {
+    this.distributionService.getDistributionCenterNames().subscribe({
+      next: (res) => {
+        const items = res || [];
+        this.centreOptions = items
+          .map((it: any) => ({
+            label: `${it.regCode} - ${it.centerName}`,
+            value: it.id,
+          }))
+          .sort((a: any, b: any) => a.label.localeCompare(b.label));
+      },
+      error: () => {
+        this.centreOptions = [];
+      },
+    });
   }
 
   // In TodaysDeliveriesComponent's prepareDeliveryData() method, update it like this:

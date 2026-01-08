@@ -44,11 +44,9 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
   filteredData: DeliveryItem[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    // if (changes['deliveries'] && this.deliveries) {
-    //   // this.transformDeliveryData();
-    // }
-    this.filteredData = [...this.deliveries];
-
+    if (changes['deliveries'] && this.deliveries) {
+      this.filteredData = [...this.deliveries];
+    }
   }
 
 

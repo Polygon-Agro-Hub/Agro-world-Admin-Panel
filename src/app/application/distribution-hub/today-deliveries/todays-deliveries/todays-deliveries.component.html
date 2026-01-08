@@ -10,29 +10,11 @@
     <label for="regCode"
       class="text-gray-600 dark:text-textDark font-medium flex items-center justify-center align-middle w-40 mr-5">Filter
       By Centre :</label>
-    <p-dropdown 
-      [options]="centerOptions" 
-      [(ngModel)]="regCode" 
-      placeholder="Select Centre" 
-      optionLabel="name"
-      optionValue="code" 
-      [filter]="false" 
-      [showClear]="true" 
-      (onClear)="clearSearch()"
-      class="w-full" 
-      styleClass="w-full border rounded-lg 
+    <p-dropdown [options]="centreOptions" [(ngModel)]="regCode" placeholder="Select Centre" optionLabel="label"
+      optionValue="value" [filter]="false" [showClear]="!!regCode" (onClear)="clearSearch()" class="w-full" styleClass="w-full border rounded-lg 
               bg-[#F1F1F1] dark:bg-[#272F45]
               text-gray-800 dark:text-gray-200
-              border-[#D9D9D9] dark:border-gray-700"
-    >
-      <!-- Item template: show CODE - Name -->
-      <ng-template let-opt pTemplate="item">
-        <span>{{ opt.code }} - {{ opt.name }}</span>
-      </ng-template>
-      <!-- Selected template: show CODE - Name -->
-      <ng-template let-opt pTemplate="selectedItem">
-        <span *ngIf="opt">{{ opt.code }} - {{ opt.name }}</span>
-      </ng-template>
+              border-[#D9D9D9] dark:border-gray-700">
     </p-dropdown>
 
     <button (click)="onSearch()"
@@ -111,8 +93,7 @@
       <app-all-todays-deleveries [deliveries]="deliveryArr"></app-all-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'out-for-delivery'">
-      <app-out-for-delivery-todays-deleveries
-        [deliveries]="deliveryArr"></app-out-for-delivery-todays-deleveries>
+      <app-out-for-delivery-todays-deleveries [deliveries]="deliveryArr"></app-out-for-delivery-todays-deleveries>
     </div>
     <div *ngIf="activeTab === 'collected'">
       <app-collected [deliveries]="deliveryArr"></app-collected>

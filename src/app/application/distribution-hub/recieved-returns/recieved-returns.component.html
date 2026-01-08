@@ -1,173 +1,165 @@
 <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
-    <i class="fa-solid fa-arrow-left"></i>
-    Back
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
 </button>
 
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div
-    class="overflow-x-auto scrollbar-thin min-h-screen scrollbar-thumb-[#FACD07] dark:scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full dark:scrollbar-track-transparent">
+  class="overflow-x-auto scrollbar-thin min-h-screen scrollbar-thumb-[#FACD07] dark:scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full dark:scrollbar-track-transparent">
 
-    <div class="pt-5 pr-12 pl-12 pb-4 min-w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-4 min-w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg">
 
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-normal text-[#2B2B2B] dark:text-textDark">
-                Received Returns ({{ totalItems < 10 ? ('0'+totalItems) : totalItems}})
-            </h2>
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-normal text-[#2B2B2B] dark:text-textDark">
+        Received Returns ({{ totalItems < 10 ? ('0'+totalItems) : totalItems}}) </h2>
 
-            <!-- Filters -->
-            <div class="flex items-center gap-3">
-                <img src="assets/icons/filter_icon.png" alt="Filter" class="w-6 h-6 dark:invert dark:brightness-200" />
-                <span class="text-gray-500 dark:text-gray-400">Filter By</span>
+          <!-- Filters -->
+          <div class="flex items-center gap-3">
+            <img src="assets/icons/filter_icon.png" alt="Filter" class="w-6 h-6 dark:invert dark:brightness-200" />
+            <span class="text-gray-500 dark:text-gray-400">Filter By</span>
 
-                <p-dropdown
-                    styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                    [options]="centreOptions" optionLabel="label" optionValue="value" [showClear]="!!centerId"
-                    placeholder="Centre" [(ngModel)]="centerId" (onChange)="applyFilters()">
-                </p-dropdown>
+            <p-dropdown
+              styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+              [options]="centreOptions" optionLabel="label" optionValue="value" [showClear]="!!centerId"
+              placeholder="Centre" [(ngModel)]="centerId" (onChange)="applyFilters()">
+            </p-dropdown>
 
-                <p-calendar 
-  [(ngModel)]="deliveryDateModel" 
-  placeholder="Delivery Date" 
-  dateFormat="yy-mm-dd"
-  (onSelect)="onDateSelected($event)" 
-  (onClear)="clearDateFilter()"
-  styleClass="w-full small-calendar dark-calendar"
-  inputStyleClass="h-10 px-4 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
-  panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white">
-</p-calendar>
+            <p-calendar [(ngModel)]="deliveryDateModel" placeholder="Delivery Date" dateFormat="yy-mm-dd"
+              (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()"
+              styleClass="calendar-compact dark-calendar"
+              [inputStyle]="{ width: '140px', padding: '0.5rem 2.2rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+              inputStyleClass="h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+              panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white">
+            </p-calendar>
 
-                <!-- Search -->
-                <!-- Search -->
-<div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">
-    <input type="text" 
-           placeholder="Search by Order ID, Contact, Centre Code..." 
-           title="Search by Order ID, Contact Number, Centre Code, Centre Name"
-           class="bg-transparent outline-none w-full text-textLight dark:text-textDark placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF]"
-           [(ngModel)]="searchText" 
-           (keydown.enter)="searchOrders()" />
-    
-    <!-- Search button with tooltip -->
-    <button class="text-gray-500 dark:text-gray-400 mr-2" 
-            (click)="searchOrders()"
-            [title]="'Search by Order ID, Contact Number, Centre Code, Centre Name'">
-        <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
-    
-    <!-- Clear button with tooltip -->
-    <button *ngIf="searchText" 
-            class="text-gray-500 dark:text-gray-400" 
-            (click)="clearSearch()"
-            title="Clear search">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
-</div>
+            <!-- Search -->
+            <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96">
+              <input type="text" placeholder="Search by Order ID, Contact, Centre Name"
+                title="Search by Order ID, Contact Number, Centre Name"
+                class="bg-transparent outline-none w-full text-textLight dark:text-textDark placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF]"
+                [(ngModel)]="searchText" (keydown.enter)="searchOrders()" />
+
+              <!-- Search button with tooltip -->
+              <button class="text-gray-500 dark:text-gray-400 mr-2" (click)="searchOrders()"
+                [title]="'Search by Order ID, Contact Number, Centre Code, Centre Name'">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+
+              <!-- Clear button with tooltip -->
+              <button *ngIf="searchText" class="text-gray-500 dark:text-gray-400" (click)="clearSearch()"
+                title="Clear search">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
             </div>
-        </div>
-
-        <h3 class="text-[#5C5C5C] dark:text-gray-400 mb-6">
-            Total Value : <span class="text-[#2B2B2B] dark:text-textDark font-semibold">Rs {{ totalValue | number:'1.2-2' }}</span>
-        </h3>
-
-        <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
-            <p class="text-[#494949] dark:text-gray-300 my-6">
-                --No Data Available--
-            </p>
-            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:invert dark:brightness-90" />
-        </div>
-
-
-        <div class="overflow-x-auto">
-            <table class="w-full" *ngIf="hasData">
-              <thead>
-                <tr class="border-b border-gray-200 dark:border-gray-700">
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    No
-                  </th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    Order ID
-                  </th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    Value (Rs.)
-                  </th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    Reason
-                  </th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    Customer Contact
-                  </th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    Centre Code
-                  </th>
-                  <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    Centre Name
-                  </th>
-                  <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                    Details
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let data of driverData; let i = index"
-                  class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-150">
-    
-                  <!-- No -->
-                  <td class="px-4 py-4 text-sm text-textLight dark:text-gray-300">
-                    {{ i + 1 | number:'2.0' }}
-                  </td>
-    
-                  <!-- Order ID -->
-                  <td class="px-4 py-4 text-sm text-textLight dark:text-gray-300">
-                    {{ data.invNO }}
-                  </td>
-    
-                  <!-- Value -->
-                  <td class="px-4 py-4 text-sm text-textLight dark:text-gray-300">
-                    {{ data.total }}
-                  </td>
-
-                  <!-- Reason -->
-                  <td class="px-4 py-4 text-sm text-textLight dark:text-gray-300">
-                    {{ data.reason === 'Other' ? 'Other : Customer Refused' : data.reason }}
-                  </td>
-    
-                  <!-- Phone Number -->
-                  <td class="px-4 py-4 text-sm text-textLight dark:text-gray-300">
-                    {{ data.phoneCode1 }} {{data.phone1}}
-                  </td>
-
-                  <!-- Centre Code -->
-                  <td class="px-4 py-4 text-sm text-textLight dark:text-gray-300">
-                    {{ data.regCode }}
-                  </td>
-
-                  <!-- Centre Name -->
-                  <td class="px-4 py-4 text-sm text-textLight dark:text-gray-300">
-                    {{ data.centerName }}
-                  </td>
-
-                  <!-- Details Button -->
-                  <td class="px-4 py-4 text-center">
-                    <button (click)="viewDetails(data)"
-                      class="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors w-6 h-6 inline-block">
-                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
-                    </button>
-                  </td>
-
-                </tr>
-              </tbody>
-            </table>
           </div>
     </div>
+
+    <h3 class="text-[#5C5C5C] dark:text-gray-400 mb-6">
+      Total Value : <span class="text-[#2B2B2B] dark:text-textDark font-semibold">Rs {{ totalValue | number:'1.2-2'
+        }}</span>
+    </h3>
+
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
+      <p class="text-[#494949] dark:text-gray-300 my-6">
+        --No Data Available--
+      </p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:invert dark:brightness-90" />
+    </div>
+
+
+    <div class="overflow-x-auto">
+      <table class="w-full" *ngIf="hasData">
+        <thead>
+          <tr class="border-b border-gray-200 dark:border-gray-700">
+            <th class="px-4 py-3 text-left text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              No
+            </th>
+            <th class="px-4 py-3 text-left text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              Order ID
+            </th>
+            <th class="px-4 py-3 text-left text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              Value (Rs.)
+            </th>
+            <th class="px-4 py-3 text-left text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              Reason
+            </th>
+            <th class="px-4 py-3 text-left text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              Customer Contact
+            </th>
+            <th class="px-4 py-3 text-left text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              Centre Code
+            </th>
+            <th class="px-4 py-3 text-left text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              Centre Name
+            </th>
+            <th class="px-4 py-3 text-center text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              Details
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of driverData; let i = index"
+            class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-150">
+
+            <!-- No -->
+            <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
+              {{ i + 1 | number:'2.0' }}
+            </td>
+
+            <!-- Order ID -->
+            <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
+              {{ data.invNO }}
+            </td>
+
+            <!-- Value -->
+            <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
+              {{ formatNumber(data.total) }}
+            </td>
+
+            <!-- Reason -->
+            <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
+              {{ data.reason === 'Other' ? 'Other : Customer Refused' : data.reason }}
+            </td>
+
+            <!-- Phone Number -->
+            <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
+              {{ data.phoneCode1 }} {{data.phone1}}
+            </td>
+
+            <!-- Centre Code -->
+            <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
+              {{ data.regCode }}
+            </td>
+
+            <!-- Centre Name -->
+            <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
+              {{ data.centerName }}
+            </td>
+
+            <!-- Details Button -->
+            <td class="px-4 py-4 text-center">
+              <button (click)="viewDetails(data)"
+                class="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors w-6 h-6 inline-block">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 
-<div *ngIf="showDetailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 dark:bg-opacity-70"
+<div *ngIf="showDetailsModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 dark:bg-opacity-70"
   (click)="closeDetailsModal()">
 
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-md mx-4" (click)="$event.stopPropagation()">
@@ -241,7 +233,7 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Order Received At</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1 whitespace-nowrap">
-            {{ dataObject.receivedTime | date:'hh:mm a on MMMM d, y' }}
+          {{ dataObject.receivedTime | date:'hh:mm a on MMMM d, y' }}
         </span>
       </div>
 
@@ -259,7 +251,8 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Reason to Return</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
-            {{ dataObject.reason === 'Other' ? 'The Customer claimed that the order is not for him.' : dataObject.reason }}
+          {{ dataObject.reason === 'Other' ? 'The Customer claimed that the order is not for him.' : dataObject.reason
+          }}
         </span>
       </div>
 

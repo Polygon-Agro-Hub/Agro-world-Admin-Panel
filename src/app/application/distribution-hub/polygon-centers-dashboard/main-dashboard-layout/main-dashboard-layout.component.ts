@@ -91,7 +91,8 @@ export class MainDashboardLayoutComponent implements OnInit {
   }
 
   driversVehicles() {
-
+    const id = this.centerObj.centerId;
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/view-distribution-drivers/${id}`]);
   }
 
   homeDeliveryOtherRecords() {

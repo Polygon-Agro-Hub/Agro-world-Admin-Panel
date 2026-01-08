@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { DistributionHubService } from '../../../../services/distribution-hub/distribution-hub.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 interface DriverVehicle {
@@ -45,8 +45,8 @@ export class DriversAndVehiclesComponent implements OnInit {
   limit = 10;
   totalItems = 0;
 
-  // Center ID - can be fetched from route params
-  distributedCompanyCenterId = 66; // TODO: Get from ActivatedRoute
+  // Center ID - from route params
+  distributedCompanyCenterId: number = 0;
 
   selectStatus: string | null = null;
   selectVehicleType: string | null = null;
@@ -102,68 +102,31 @@ export class DriversAndVehiclesComponent implements OnInit {
 
   constructor(
     private distributionHubService: DistributionHubService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
-  statusOptions: { label: string; value: string }[] = [];
+  statusOptions = [
+    { label: 'Approved', value: 'Approved' },
+    { label: 'Rejected', value: 'Rejected' },
+    { label: 'Not Approved', value: 'Not Approved' },
+  ];
 
-  vehicleTypeOptions: { label: string; value: string }[] = [];
+  vehicleTypeOptions = [
+    { label: 'Dimo Batta', value: 'Dimo Batta' },
+    { label: 'Mahindra Bolero', value: 'Mahindra Bollero' },
+    { label: 'Three Wheeler', value: 'Three Wheeler' },
+  ];
 
   ngOnInit(): void {
-    this.fetchFiltersData();
-    this.fetchDriversAndVehicles();
+    // Get center ID from route params
+    this.route.params.subscribe(params => {
+      this.distributedCompanyCenterId = +params['id']; // Convert to number
+      this.fetchDriversAndVehicles();
+    });
   }
 
-  fetchFiltersData(): void {
-    this.distributionHubService
-      .getDistributedDriversAndVehicles(
-        this.distributedCompanyCenterId,
-        1,
-        1000,
-        undefined,
-        undefined,
-        undefined
-      )
-      .subscribe({
-        next: (res) => {
-          if (res.success && res.data) {
-            const uniqueStatuses = new Set<string>();
-            const uniqueVehicleTypes = new Set<string>();
-
-            res.data.forEach((officer: DriverVehicle) => {
-              if (officer.status && officer.status.trim()) {
-                uniqueStatuses.add(officer.status.trim());
-              }
-
-              if (officer.vehicleType && officer.vehicleType.trim()) {
-                uniqueVehicleTypes.add(officer.vehicleType.trim());
-              }
-            });
-
-            this.statusOptions = Array.from(uniqueStatuses)
-              .sort()
-              .map((status) => ({
-                label: status,
-                value: status,
-              }));
-
-            this.vehicleTypeOptions = Array.from(uniqueVehicleTypes)
-              .sort()
-              .map((type) => ({
-                label: type,
-                value: type,
-              }));
-
-            console.log('Loaded status options:', this.statusOptions);
-            console.log('Loaded vehicle types:', this.vehicleTypeOptions);
-          }
-        },
-        error: (err) => {
-          console.error('Error fetching filter data:', err);
-        },
-      });
-  }
-
+  // Pagination handler
   onPageChange(pageNumber: number): void {
     this.page = pageNumber;
     this.fetchDriversAndVehicles();

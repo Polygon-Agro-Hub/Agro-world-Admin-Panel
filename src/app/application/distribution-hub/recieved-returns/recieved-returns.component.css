@@ -20,6 +20,27 @@
   font-size: 0.8rem !important;
 }
 
+/* Reduce the size of selected date (blue highlight) */
+::ng-deep .p-datepicker .p-datepicker-calendar td > span.p-highlight {
+  width: 2rem !important;
+  height: 2rem !important;
+  font-size: 0.75rem !important;
+  line-height: 2rem !important;
+}
+
+/* Reduce size of today's date marker */
+::ng-deep .p-datepicker .p-datepicker-calendar td.p-datepicker-today > span {
+  width: 2rem !important;
+  height: 2rem !important;
+  font-size: 0.75rem !important;
+}
+
+/* Reduce size when both today and selected */
+::ng-deep .p-datepicker .p-datepicker-calendar td.p-datepicker-today > span.p-highlight {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
 ::ng-deep .p-calendar .p-datepicker .p-datepicker-header {
   padding: 0.3rem !important;
   font-size: 0.9rem !important;
@@ -208,4 +229,21 @@
 
 ::ng-deep .dark .p-dropdown-header {
   background-color: #4b5563;
+}
+
+/* Compact calendar input width */
+::ng-deep .calendar-compact .p-inputtext {
+  width: 140px !important;
+}
+
+/* Ensure container does not stretch */
+::ng-deep .calendar-compact.p-calendar {
+  width: 140px !important;
+  max-width: 140px !important;
+}
+
+/* Reduce panel size slightly for consistency */
+::ng-deep .calendar-compact .p-datepicker {
+  transform: scale(0.85);
+  transform-origin: top left;
 }

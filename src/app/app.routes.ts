@@ -1823,7 +1823,7 @@ export const routes: Routes = [
                     component: ViewCollectiveOfficerProfileComponent,
                   },
                   {
-                    path: 'view-distribution-drivers',
+                    path: 'view-distribution-drivers/:id',
                     component: DriversAndVehiclesComponent,
                   },
                   {

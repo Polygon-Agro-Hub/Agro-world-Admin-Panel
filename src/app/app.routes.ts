@@ -1827,7 +1827,7 @@ export const routes: Routes = [
                     component: DriversAndVehiclesComponent,
                   },
                   {
-                    path: 'pikup-oder-records-main',
+                    path: 'pikup-oder-records-main/:id',
                     component: PikupOderRecordsMainComponent,
                   },
                 ],

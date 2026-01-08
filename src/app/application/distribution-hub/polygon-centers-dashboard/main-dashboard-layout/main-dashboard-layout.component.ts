@@ -99,7 +99,14 @@ export class MainDashboardLayoutComponent implements OnInit {
   }
 
   pickUpOrderRecords() {
-    
+    const id = this.centerObj.centerId
+    const name = this.centerObj.centerName
+    const regCode = this.centerObj.centerRegCode
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/pikup-oder-records-main/${id}`],
+    {
+      queryParams: { name, regCode }
+    }
+    );
   }
 
   back(): void{

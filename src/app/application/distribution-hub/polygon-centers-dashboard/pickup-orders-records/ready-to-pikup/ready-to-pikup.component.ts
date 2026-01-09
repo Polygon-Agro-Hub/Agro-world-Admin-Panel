@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { DestributionService } from '../../../../services/destribution-service/destribution-service.service';
+import { DestributionService } from '../../../../../services/destribution-service/destribution-service.service';
 
 interface Order {
   no: number;

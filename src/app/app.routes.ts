@@ -255,7 +255,7 @@ import { ViewAllAuditedGovicareRequestsComponent } from './application/finance/v
 import { ViewVehiclesComponent } from './application/distribution-hub/view-vehicles/view-vehicles.component';
 import { RecievedReturnsComponent } from './application/distribution-hub/recieved-returns/recieved-returns.component';
 import { DriversAndVehiclesComponent } from './application/distribution-hub/polygon-centers-dashboard/drivers-and-vehicles/drivers-and-vehicles.component';
-import { PikupOderRecordsMainComponent } from './application/distribution-hub/polygon-centers-dashboard/pikup-oder-records-main/pikup-oder-records-main.component';
+import { PikupOderRecordsMainComponent } from './application/distribution-hub/polygon-centers-dashboard/pickup-orders-records/pikup-oder-records-main/pikup-oder-records-main.component';
 import { OrderPackingProgressDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/order-packing-progress-dashboard/order-packing-progress-dashboard.component';
 import { OfficerAndTargetDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/officer-and-target-dashboard/officer-and-target-dashboard.component';
 

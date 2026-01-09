@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ProgressComponent } from '../progress/progress.component';
+import { ProgressComponent } from '../../progress/progress.component';
 import { AllPikupOdersComponent } from '../all-pikup-oders/all-pikup-oders.component';
 import { ReadyToPikupComponent } from '../ready-to-pikup/ready-to-pikup.component';
 import { PikupOdersComponent } from '../pikup-oders/pikup-oders.component';

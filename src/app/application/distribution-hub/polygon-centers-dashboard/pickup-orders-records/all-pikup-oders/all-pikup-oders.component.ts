@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
-import { DestributionService } from '../../../../services/destribution-service/destribution-service.service';
+import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
+import { DestributionService } from '../../../../../services/destribution-service/destribution-service.service';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 

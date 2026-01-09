@@ -112,47 +112,76 @@
       <p class="text-lg">No reasons added yet</p>
     </div>
 
-    <!-- Reasons Cards -->
-    <div *ngIf="reasons.length > 0" cdkDropList
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListDisabled]="!(permissionService.hasPermission('Change reason to return') || tokenService.getUserDetails().role === '1')"
-      class="space-y-3">
-      <div *ngFor="let reason of reasons" cdkDrag class="flex items-center gap-4">
-        <!-- Index Number (Outside the border) -->
-        <div
-          class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-md font-semibold text-textLight dark:text-textDark">
-          {{ reason.indexNo < 10 ? '0' + reason.indexNo : reason.indexNo }} </div>
+    <!-- Reasons List -->
+    <div *ngIf="reasons.length > 0" class="space-y-3">
+      
+      <!-- Draggable Reasons -->
+      <div *ngIf="draggableReasons.length > 0"
+        cdkDropList
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListDisabled]="!(permissionService.hasPermission('Change reason to return') || tokenService.getUserDetails().role === '1')"
+        class="space-y-3 ">
+        <div *ngFor="let reason of draggableReasons" cdkDrag class="flex items-center gap-4 ">
+          <!-- Index Number -->
+          <div
+            class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-md font-semibold text-textLight dark:text-textDark">
+            {{ reason.indexNo < 10 ? '0' + reason.indexNo : reason.indexNo }}
+          </div>
 
-            <!-- Reason Text (With border) -->
-            <div
-              class="flex-grow p-4 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 hover:shadow-md transition-shadow cursor-move">
-              <p class="text-textLight dark:text-textDark line-clamp-2">
-                {{ reason.rsnEnglish }}
-              </p>
-            </div>
+          <!-- Reason Text -->
+          <div
+            class="flex-grow p-4 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 hover:shadow-md transition-shadow cursor-move">
+            <p class="text-textLight dark:text-textDark line-clamp-2">
+              {{ reason.rsnEnglish }}
+            </p>
+          </div>
 
-            <!-- Delete Button (Outside the border) -->
-            <button
-              *ngIf="permissionService.hasPermission('Delete reason to return') || tokenService.getUserDetails().role === '1'"
-              type="button" (click)="onDelete(reason.id)" [disabled]="reason.id === 1"
-              class="flex-shrink-0 w-10 h-10 flex items-center justify-center transition-colors" [ngClass]="{
-            'text-[#8B1A10] hover:text-red-700 cursor-pointer': reason.id !== 1,
-            'text-gray-300 dark:text-gray-600 cursor-not-allowed': reason.id === 1
-          }">
-              <i class="fa-solid fa-trash text-lg"></i>
-            </button>
+          <!-- Delete Button -->
+          <button
+            *ngIf="permissionService.hasPermission('Delete reason to return') || tokenService.getUserDetails().role === '1'"
+            type="button" (click)="onDelete(reason.id)"
+            class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-[#8B1A10] hover:text-red-700 cursor-pointer transition-colors">
+            <i class="fa-solid fa-trash text-lg"></i>
+          </button>
 
-            <!-- Drag Handle (Hidden but functional) -->
-            <div class="cdk-drag-handle opacity-0">
-              <i class="fa-solid fa-grip-vertical"></i>
-            </div>
+          <!-- Drag Handle (Hidden but functional) -->
+          <div class="cdk-drag-handle opacity-0">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </div>
         </div>
       </div>
 
-      <!-- Drag Hint -->
-      <div *ngIf="reasons.length > 1" class="mt-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-        <i class="fa-solid fa-info-circle"></i>
-        <span>Drag and drop to reorder reasons</span>
+      <!-- Fixed Reason (ID = 1) - Non-draggable, always at bottom -->
+      <div *ngIf="fixedReason" class="flex items-center gap-4 opacity-75 mt-3">
+        <!-- Index Number -->
+        <div
+          class="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-gray-200 dark:bg-gray-600 rounded-md font-semibold text-textLight dark:text-textDark">
+          {{ fixedReason.indexNo < 10 ? '0' + fixedReason.indexNo : fixedReason.indexNo }}
+        </div>
+
+        <!-- Reason Text (Non-draggable styling) -->
+        <div
+          class="flex-grow p-4 border-2 border-dashed border-gray-400 dark:border-gray-500 rounded-md bg-gray-50 dark:bg-gray-750">
+          <p class="text-textLight dark:text-textDark line-clamp-2">
+            {{ fixedReason.rsnEnglish }}
+          </p>
+        </div>
+
+        <!-- Delete Button (Disabled) -->
+        <button
+          *ngIf="permissionService.hasPermission('Delete reason to return') || tokenService.getUserDetails().role === '1'"
+          type="button"
+          disabled
+          class="flex-shrink-0 ml-0 mr-6 w-10 h-10 flex items-center justify-center text-gray-300 dark:text-gray-600 cursor-not-allowed">
+          <i class="fa-solid fa-trash text-lg"></i>
+        </button>
       </div>
+
+      <!-- Drag Hint -->
+      <!-- <div *ngIf="draggableReasons.length > 1" class="mt-4 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+        <i class="fa-solid fa-info-circle"></i>
+        <span>Drag and drop to reorder reasons (default reason is fixed at bottom)</span>
+      </div> -->
     </div>
   </div>
+</div>

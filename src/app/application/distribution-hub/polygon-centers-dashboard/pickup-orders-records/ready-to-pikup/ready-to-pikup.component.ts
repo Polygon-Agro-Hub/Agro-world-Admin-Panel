@@ -12,6 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { PikupOderRecordDetailsComponent } from "../popup-component/pikup-oder-record-details/pikup-oder-record-details.component";
 
 interface Order {
   no: number;
@@ -25,6 +26,7 @@ interface Order {
   payment: string;
   scheduleDate?: string;
   timeSlot?: string;
+  originalData?: any;
 }
 
 @Component({
@@ -36,6 +38,7 @@ interface Order {
     CalendarModule,
     LoadingSpinnerComponent,
     FormsModule,
+    PikupOderRecordDetailsComponent
   ],
   templateUrl: './ready-to-pikup.component.html',
   styleUrl: './ready-to-pikup.component.css',
@@ -69,6 +72,10 @@ export class ReadyToPikupComponent implements OnChanges {
   hasData: boolean = false;
   orderCount: number = 0;
   transformedOrders: Order[] = [];
+  showDetailsPopup: boolean = false;
+  selectedOrderId: number | undefined;
+  selectedOrderDisplayId: string = '';
+  selectedOrderData: any = null;
 
   constructor(private datePipe: DatePipe) {}
 
@@ -79,36 +86,44 @@ export class ReadyToPikupComponent implements OnChanges {
   }
 
   private transformData(): void {
+    console.log('Transforming data, orders count:', this.orders?.length);
     if (this.orders && this.orders.length > 0) {
       this.transformedOrders = this.transformApiData(this.orders);
       this.orderCount = this.transformedOrders.length;
       this.hasData = this.orderCount > 0;
+      console.log('Transformed orders:', this.transformedOrders);
     } else {
       this.transformedOrders = [];
       this.orderCount = 0;
       this.hasData = false;
+      console.log('No orders to transform');
     }
   }
 
   // Filter methods - emit events to parent
   onDateSelect(): void {
+    console.log('Date selected:', this.selectedDate);
     this.dateChange.emit(this.selectedDate);
   }
 
   onDateClear(): void {
+    console.log('Date cleared');
     this.selectedDate = null;
     this.clearDate.emit();
   }
 
   onTimeSlotSelect(): void {
+    console.log('Time slot selected:', this.selectedTimeSlot);
     this.timeSlotChange.emit(this.selectedTimeSlot);
   }
 
   onSearch(): void {
+    console.log('Search triggered with:', this.searchText);
     this.searchChange.emit(this.searchText);
   }
 
   onClearSearch(): void {
+    console.log('Search cleared');
     this.searchText = '';
     this.clearSearch.emit();
   }
@@ -135,6 +150,7 @@ export class ReadyToPikupComponent implements OnChanges {
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
+      originalData: item, // CRITICAL: Preserve original data for popup
     }));
   }
 
@@ -261,6 +277,14 @@ export class ReadyToPikupComponent implements OnChanges {
   // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
     console.log('View receiver info for:', order);
+    if (order.originalData) {
+      console.log('Receiver info details:', {
+        name: order.originalData.receiverName,
+        address: order.originalData.receiverAddress,
+        phone: order.receiverPhone,
+        fullData: order.originalData
+      });
+    }
   }
 
   viewOrderDetails(order: Order): void {
@@ -279,6 +303,87 @@ export class ReadyToPikupComponent implements OnChanges {
       default:
         return 'text-textLight dark:text-textDark';
     }
+  }
+
+  openOrderDetails(order: Order): void {
+    console.log('=== openOrderDetails triggered ===');
+    console.log('Order clicked:', order);
+    console.log('Order has originalData:', !!order.originalData);
+    
+    if (order.originalData) {
+      console.log('Original data keys:', Object.keys(order.originalData));
+      console.log('Full original data:', order.originalData);
+    }
+    
+    // For display in popup header (show invoice/order number)
+    this.selectedOrderDisplayId = order.orderId;
+    console.log('Display ID set to:', this.selectedOrderDisplayId);
+    
+    // For API call (use processOrderId from original data)
+    if (order.originalData) {
+      // Try to get the processOrderId from original data
+      const processOrderId = order.originalData.processOrderId || 
+                            order.originalData.id || 
+                            order.originalData.orderId ||
+                            this.extractOrderIdFromDisplay(order.orderId); // Fallback
+      
+      console.log('Extracted processOrderId:', processOrderId);
+      
+      if (processOrderId) {
+        // Convert to number if needed
+        const numericId = typeof processOrderId === 'string' 
+          ? parseInt(processOrderId, 10) 
+          : processOrderId;
+        
+        if (!isNaN(numericId) && numericId !== 0) {
+          this.selectedOrderId = numericId;
+        } else {
+          // If it's a string ID or 0, keep it as is
+          this.selectedOrderId = processOrderId;
+        }
+        
+        this.selectedOrderData = order.originalData;
+        this.showDetailsPopup = true;
+        
+        console.log('Popup opened successfully');
+        console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
+        console.log('- API ID (processOrderId):', this.selectedOrderId);
+        console.log('- Original data type:', typeof this.selectedOrderData);
+        console.log('- showDetailsPopup set to:', this.showDetailsPopup);
+      } else {
+        console.warn('No valid processOrderId found in original data');
+        console.warn('Original data:', order.originalData);
+        this.showErrorMessage('Unable to open order details: No valid order ID found.');
+      }
+    } else {
+      console.warn('No original data available for order:', order);
+      this.showErrorMessage('Unable to open order details: No data available.');
+    }
+  }
+
+  // Helper method to extract numeric ID from display ID
+  private extractOrderIdFromDisplay(displayId: string): number | null {
+    // Try to extract numbers from display ID like "ORD-1234"
+    const match = displayId.match(/\d+/);
+    if (match) {
+      return parseInt(match[0], 10);
+    }
+    return null;
+  }
+
+  // Helper method to show error messages
+  private showErrorMessage(message: string): void {
+    console.error(message);
+    // You can also implement a toast notification or alert here
+    alert(message);
+  }
+
+  closeDetailsPopup(): void {
+    console.log('Closing details popup');
+    this.showDetailsPopup = false;
+    this.selectedOrderId = undefined;
+    this.selectedOrderData = null;
+    this.selectedOrderDisplayId = '';
   }
 }
 

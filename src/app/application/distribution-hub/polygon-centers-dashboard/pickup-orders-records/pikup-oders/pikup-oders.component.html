@@ -240,7 +240,7 @@
                 class="px-4 py-3 text-center text-textLight dark:text-textDark"
               >
                 <button
-                  (click)="viewOrderDetails(order)"
+                  (click)="openOrderDetails(order)"
                   class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 >
                   <svg
@@ -287,4 +287,11 @@
       </table>
     </div>
   </div>
+  <app-pikup-oder-record-details
+    [visible]="showDetailsPopup"
+    [orderId]="selectedOrderId"  
+    [displayOrderId]="selectedOrderDisplayId"
+    (close)="closeDetailsPopup()"
+  >
+  </app-pikup-oder-record-details>
 </div>

@@ -12,6 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
+import { PikupOderRecordDetailsComponent } from "../popup-component/pikup-oder-record-details/pikup-oder-record-details.component";
 
 interface Order {
   no: number;
@@ -25,6 +26,7 @@ interface Order {
   payment: string;
   scheduleDate?: string;
   timeSlot?: string;
+  originalData?: any;
 }
 
 interface CenterDetails {
@@ -42,6 +44,7 @@ interface CenterDetails {
     CalendarModule,
     LoadingSpinnerComponent,
     FormsModule,
+    PikupOderRecordDetailsComponent
   ],
   templateUrl: './pikup-oders.component.html',
   styleUrl: './pikup-oders.component.css',
@@ -75,6 +78,10 @@ export class PikupOdersComponent implements OnChanges {
   hasData: boolean = false;
   orderCount: number = 0;
   transformedOrders: Order[] = [];
+  showDetailsPopup: boolean = false;
+  selectedOrderId: number | undefined;
+  selectedOrderDisplayId: string = '';
+  selectedOrderData: any = null;
 
   constructor(private datePipe: DatePipe) {}
 
@@ -141,6 +148,8 @@ export class PikupOdersComponent implements OnChanges {
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
+      // CRITICAL FIX: Add originalData property
+      originalData: item
     }));
   }
 
@@ -285,5 +294,56 @@ export class PikupOdersComponent implements OnChanges {
       default:
         return 'text-textLight dark:text-textDark';
     }
+  }
+
+  openOrderDetails(order: Order): void {
+    console.log('Button clicked! Opening order details for:', order);
+    
+    // For display in popup header (show invoice/order number)
+    this.selectedOrderDisplayId = order.orderId;
+    
+    // For API call (use processOrderId from original data)
+    if (order.originalData) {
+      // Debug: Log all available fields
+      console.log('Original data fields:', Object.keys(order.originalData));
+      console.log('Full original data:', order.originalData);
+      
+      // Try to get the processOrderId from original data
+      const processOrderId = order.originalData.processOrderId || 
+                            order.originalData.id || 
+                            order.originalData.orderId;
+      
+      if (processOrderId) {
+        // Pass the processOrderId directly to API
+        this.selectedOrderId = processOrderId;
+        this.selectedOrderData = order.originalData;
+        this.showDetailsPopup = true;
+        
+        console.log('Popup opened with:');
+        console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
+        console.log('- API ID (processOrderId):', this.selectedOrderId);
+        console.log('- Popup visible flag set to:', this.showDetailsPopup);
+      } else {
+        console.warn('No processOrderId found in:', order.originalData);
+        // Fallback: try to use any available ID
+        const possibleId = order.originalData.id || order.originalData.orderId;
+        if (possibleId) {
+          this.selectedOrderId = possibleId;
+          this.selectedOrderData = order.originalData;
+          this.showDetailsPopup = true;
+        }
+      }
+    } else {
+      console.warn('No original data available for order:', order);
+      console.log('Order object structure:', order);
+    }
+  }
+
+  closeDetailsPopup(): void {
+    console.log('Closing details popup');
+    this.showDetailsPopup = false;
+    this.selectedOrderId = undefined;
+    this.selectedOrderData = null;
+    this.selectedOrderDisplayId = '';
   }
 }

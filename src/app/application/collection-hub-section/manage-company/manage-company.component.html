@@ -71,10 +71,10 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               No
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
               Company Name
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
               Company Email
             </th>
             <!-- <th
@@ -82,19 +82,19 @@
             >
               Status
             </th> -->
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               No. of Centres
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               CCH Profiles
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               CCM Profiles
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               COO Profiles
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               CUO Profiles
             </th>
             <th class="py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
@@ -110,17 +110,17 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of companies; let i = index">
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
               {{ i + 1 }}
             </td>
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
               {{ item.companyName }}
             </td>
-            <td *ngIf="item.companyEmail" class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td *ngIf="item.companyEmail" class="px-2 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
               {{ item.companyEmail }}
             </td>
             <td *ngIf="!item.companyEmail"
-              class="px-2 py-3 text-center text-textLight dark:text-textDark font-bold italic">
+              class="px-2 py-3 text-center whitespace-nowrap text-textLight dark:text-textDark font-bold italic">
               Email added by default
             </td>
 
@@ -141,22 +141,22 @@
               </div>
             </td> -->
 
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfCenters }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfHead }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfManagers }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfOfficers }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfCustomerOfficers }}
             </td>
-            <td class="pt-1 pr-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="pt-1 pr-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               <button *ngIf="
               ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Company Head Portals') )||
               ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder view collection Head Portals') )||

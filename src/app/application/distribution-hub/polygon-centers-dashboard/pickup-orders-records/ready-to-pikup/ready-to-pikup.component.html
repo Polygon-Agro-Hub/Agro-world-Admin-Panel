@@ -4,13 +4,13 @@
     <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Ready to Pickup Orders
+          {{ centerObj.centerRegCode }} {{ centerObj.centerName }}
         </h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All ({{ orders.length }})
+            All ({{ orderCount }})
           </h2>
         </div>
 
@@ -28,37 +28,40 @@
 
           <div>
             <div>
-              <div>
-                <p-calendar
-                  id="date"
-                  placeholder="Date"
-                  [showIcon]="true"
-                  [showClear]="true"
-                  [showButtonBar]="true"
-                  dateFormat="yy-mm-dd"
-                  [monthNavigator]="true"
-                  [yearNavigator]="true"
-                  yearRange="1900:2030"
-                  iconDisplay="input"
-                  [style]="{ width: '16rem', height: '2rem' }"
-                  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+              <p-calendar
+                [(ngModel)]="selectedDate"
+                (onSelect)="onDateChange()"
+                (onClear)="onDateChange()"
+                id="date"
+                placeholder="Date"
+                [showIcon]="true"
+                [showClear]="true"
+                [showButtonBar]="true"
+                dateFormat="yy-mm-dd"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1900:2030"
+                iconDisplay="input"
+                [style]="{ width: '16rem', height: '2rem' }"
+                panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
        [&_.p-datepicker-header]:dark:bg-[#2d354d] 
        [&_.p-datepicker-header]:dark:text-white
        [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
        [&_.p-button:hover]:dark:bg-[#6b7280]"
-                  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-                  [appendTo]="'body'"
-                >
-                </p-calendar>
-              </div>
+                inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                [appendTo]="'body'"
+              >
+              </p-calendar>
             </div>
           </div>
 
           <div>
             <p-dropdown
-              [options]="timeSlots"
+              [(ngModel)]="selectedTimeSlot"
+              (onChange)="onTimeSlotChange()"
+              [options]="timeSlotOptions"
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [checkmark]="true"
               optionLabel="label"
@@ -73,12 +76,15 @@
           >
             <input
               type="text"
-              placeholder="Search by Order ID"
+              [(ngModel)]="searchText"
+              (keyup.enter)="onSearch()"
+              placeholder="Search by Order ID, Phone Numbers..."
               name="searchText"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             />
             <button
               type="button"
+              (click)="onSearch()"
               class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             >
               <svg
@@ -98,6 +104,7 @@
             </button>
             <button
               type="button"
+              (click)="clearSearch()"
               class="text-gray-500 hover:text-gray-700 focus:outline-none"
             >
               <svg
@@ -159,7 +166,7 @@
               Scheduled Time Slot
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Payment
             </th>
@@ -171,88 +178,107 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr
-            *ngFor="let order of orders"
-            class="hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ order.no }}
-            </td>
-            <td
-              class="px-4 py-3 text-center text-textLight dark:text-textDark font-medium"
+          <ng-container *ngIf="hasData && !isLoading; else noData">
+            <tr
+              *ngFor="let order of orders"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700"
             >
-              {{ order.orderId }}
-            </td>
-            <td
-              class="px-4 py-3 text-left text-textLight dark:text-textDark font-semibold"
-            >
-              {{ order.value }}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ order.customerPhone }}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{ order.receiverPhone1 }}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                {{ order.no }}
+              </td>
+              <td
+                class="px-4 py-3 text-center text-textLight dark:text-textDark font-medium"
+              >
+                {{ order.orderId }}
+              </td>
+              <td
+                class="px-4 py-3 text-left text-textLight dark:text-textDark font-semibold"
+              >
+                {{ order.value }}
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                {{ order.customerPhone }}
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                {{ order.receiverPhone }}
+              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                <button 
+                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                  (click)="viewReceiverInfo(order)"
                 >
-                  <path
-                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            </td>
-            <td
-              class="px-4 py-3 text-center"
-              [ngClass]="getDeliveryTimeColor(order.scheduledTime)"
-            >
-              {{ order.scheduledTime }}
-            </td>
-            <td
-              class="px-4 py-3 text-center font-medium"
-              [ngClass]="getPaymentColor(order.paymentStatus)"
-            >
-              {{ order.payment }}
-            </td>
-            <td class="px-4 py-3 text-center">
-              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </td>
+              <td
+                class="px-4 py-3 text-center"
+              >
+                {{ order.scheduledTimeSlot }}
+              </td>
+              <td
+                class="px-4 py-3 text-left font-medium"
+              >
+                {{ order.payment }}
+              </td>
+              <td class="px-4 py-3 text-center">
+                <button 
+                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                  (click)="viewOrderDetails(order)"
                 >
-                  <path
-                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+
+          <ng-template #noData>
+            <tr>
+              <td
+                colspan="9"
+                class="px-4 py-6 text-center text-textLight dark:text-textDark"
+              >
+                <div *ngIf="!isLoading" class="flex flex-col items-center w-full px-10 py-7">
+                  <p class="text-[#494949] my-6 dark:text-textDark">
+                    --No Data Available--
+                  </p>
+                  <img
+                    src="assets/images/NoData.png"
+                    alt="No Data"
+                    class="w-20 h-20"
                   />
-                </svg>
-              </button>
-            </td>
-          </tr>
+                </div>
+                <div *ngIf="isLoading" class="py-6">
+                  <!-- Loading will be handled by the loading spinner component -->
+                </div>
+              </td>
+            </tr>
+          </ng-template>
         </tbody>
       </table>
-
-      <div
-        *ngIf="!hasData"
-        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
-      >
-        <p class="text-[#494949] my-6 dark:text-textDark">
-          --No Data Available--
-        </p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-      </div>
     </div>
   </div>
 </div>

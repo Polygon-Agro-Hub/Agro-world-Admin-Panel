@@ -29,6 +29,7 @@ export class CurrentAssetRecordComponent {
   name: string = '';
   category: string = '';
   asset: string = '';
+  farmName!: string;
   unit: string = '';
   unitPrice: string = '';
   batchNumber : string = '';
@@ -49,6 +50,7 @@ export class CurrentAssetRecordComponent {
       this.unit = params['unit'] ? params['unit'] : null;
       this.unitPrice = params['unitPrice'] ? params['unitPrice'] : null;
       this.batchNumber = params['batchNumber'] ? params['batchNumber'] : null;
+      this.farmName = params['farmName'] ? params['farmName'] : null;
     });
     this.loadAssetsRecords(this.assetId);
   }

@@ -11,20 +11,36 @@
   <div
     class="pt-5 pr-12 pl-12 pb-10 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    <div class="flex flex-col items-center mb-8">
-      <h3 class="flex dark:text-textDark">
-        Farmer:
-        <p class="pl-3 dark:text-textDark">{{ this.name }}</p>
-      </h3>
-      <h3 class="flex dark:text-textDark">
-        Category:
-        <p class="pl-3 dark:text-textDark">{{ this.category }}</p>
-      </h3>
-      <h3 class="flex dark:text-textDark">
-        Asset Name:
-        <p class="pl-3 dark:text-textDark">{{ this.asset }}</p>
-      </h3>
+
+
+  <div class="flex flex-row gap-x-76">
+    <!-- Left: Farmer -->
+    <div class="flex items-center space-x-1">
+      <span class="font-medium dark:text-textDark">Farmer:</span>
+      <span class="font-semibold dark:text-textDark">{{ name || 'NULL' }}</span>
     </div>
+  
+    <!-- Right: Category -->
+    <div class="flex items-center space-x-1">
+      <span class="font-medium dark:text-textDark">Category:</span>
+      <span class="font-semibold dark:text-textDark">{{ category || 'NULL' }}</span>
+    </div>
+  </div>
+
+  <div class="flex flex-row gap-x-96">
+    <!-- Left: Farmer -->
+    <div class="flex items-center space-x-1">
+      <span class="font-medium dark:text-textDark">farm:</span>
+      <span class="font-semibold dark:text-textDark">{{ farmName || 'NULL' }}</span>
+    </div>
+  
+    <!-- Right: Category -->
+    <div class="flex items-center space-x-1">
+      <span class="font-medium dark:text-textDark">Asset:</span>
+      <span class="font-semibold dark:text-textDark">{{ asset || 'NULL' }}</span>
+    </div>
+  </div>
+
 
     <div *ngIf="!hasData" class="text-center py-8">
       <p class="text-gray-500 text-lg">No data to display</p>
@@ -35,13 +51,13 @@
         <thead>
           <tr>
             <th
-              class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left"
             >
               Batch Number
             </th>
-            <th class="py-3 font-normal text-gray-500 text-left"></th>
+            
             <th
-              class="py-3 font-normal text-gray-500 dark:text-textDark text-left"
+              class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left"
             >
            No.of Units
             </th>
@@ -64,7 +80,7 @@
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
-              Total
+            Total Price
             </th>
             <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
@@ -83,22 +99,27 @@
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-left">
               {{ this.batchNumber }}
             </td>
-            <td class="py-3 text-green-700">
-              <div class="overflow-x-auto">
-                <!-- Show the up/down arrow based on numOfMinUnit -->
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2">
+                <!-- Up arrow -->
                 <i
                   *ngIf="item.numOfMinUnit === '0.00'"
-                  class="fa-solid fa-arrow-trend-up"
+                  class="fa-solid fa-arrow-trend-up text-green-700"
                 ></i>
+            
+                <!-- Down arrow -->
                 <i
                   *ngIf="item.numOfMinUnit !== '0.00' && item.numOfMinUnit != null"
                   class="fa-solid fa-arrow-trend-down text-red-500"
                 ></i>
+            
+                <!-- Value -->
+                <span class="text-green-700">
+                  {{ item.numOfPlusUnit | number }}
+                </span>
               </div>
             </td>
-            <td class="py-3 text-green-700">
-              {{ item.numOfPlusUnit | number }}
-            </td>
+            
             <!-- <td class="px-4 py-3 text-center text-red-700">
               {{ item.numOfMinUnit | number }}
             </td> -->

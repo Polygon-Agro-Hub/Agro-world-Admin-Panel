@@ -1,0 +1,112 @@
+<div
+  *ngIf="visible"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="closePopup()"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-hidden flex flex-col"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+      <h2
+        class="text-xl font-semibold text-center text-textLight dark:text-textDark"
+      >
+        Order Details : {{ displayOrderId || "Loading..." }}
+      </h2>
+    </div>
+
+    <!-- ================= CONTENT ================= -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <!-- Loading -->
+      <div *ngIf="loading" class="p-12 text-center">
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"
+        ></div>
+        <p class="text-textLight dark:text-textDark">
+          Loading pickup order details...
+        </p>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="error && !loading" class="p-8 text-center">
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <p class="text-red-500 dark:text-red-300">{{ error }}</p>
+        </div>
+      </div>
+
+      <!-- ================= SIMPLE NUMBERED LIST ================= -->
+      <div *ngIf="!loading && !error && steps.length > 0" class="py-4">
+        <div class="space-y-6">
+          <ng-container *ngFor="let step of steps; let idx = index">
+            <!-- READY FOR PICKUP -->
+            <div *ngIf="step.type === 'ready'" class="flex">
+              <div class="flex-shrink-0 mr-4">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                  {{ idx + 1 }}
+                </div>
+              </div>
+              <div class="flex-1">
+                <p class="text-gray-800 dark:text-gray-200">
+                  Marked as Ready to Pickup at 
+                  {{ formatTime(step.payload.time) }} on 
+                  {{ formatDate(step.payload.time) }}, by {{ step.payload.officer }}.
+                </p>
+              </div>
+            </div>
+
+            <!-- PICKED UP -->
+            <div *ngIf="step.type === 'picked_up'" class="flex">
+              <div class="flex-shrink-0 mr-4">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                  {{ idx + 1 }}
+                </div>
+              </div>
+              <div class="flex-1">
+                <p class="text-gray-800 dark:text-gray-200">
+                  Customer picked up the order from the centre at 
+                  {{ formatTime(step.payload.time) }} on 
+                  {{ formatDate(step.payload.time) }}.
+                </p>
+              </div>
+            </div>
+
+            <!-- NO STATUS AVAILABLE -->
+            <div *ngIf="step.type === 'not_available'" class="flex">
+              <div class="flex-shrink-0 mr-4">
+                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center font-semibold">
+                  !
+                </div>
+              </div>
+              <div class="flex-1">
+                <p class="text-yellow-600 dark:text-yellow-400 italic">
+                  {{ step.payload.message }}
+                </p>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- No Data State -->
+      <div *ngIf="!loading && !error && steps.length === 0" class="text-center py-12">
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <p class="text-yellow-800 dark:text-yellow-300">
+            No pickup information available for this order.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+    <div
+      class="border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-center"
+    >
+      <button
+        (click)="closePopup()"
+        class="px-8 py-2.5 rounded-lg font-medium transition-colors bg-[#74788D] text-[#D3D3D3] hover:bg-[#6a6f82]"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

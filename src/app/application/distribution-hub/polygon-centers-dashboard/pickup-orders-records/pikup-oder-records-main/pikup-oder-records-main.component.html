@@ -51,21 +51,40 @@
     </div>
     <div class="h-5"></div>
     <div class="tab-content">
+      <!-- In parent component HTML, update child component bindings -->
       <app-all-pikup-oders
         [centerObj]="centerObj"
+        [orders]="getFilteredOrders()"
         [activeTab]="activeTab"
-        *ngIf="activeTab === 'All'"
+        (dateChange)="onDateChangeFromChild($event)"
+        (timeSlotChange)="onTimeSlotChangeFromChild($event)"
+        (searchChange)="onSearchChangeFromChild($event)"
+        (clearSearch)="onClearSearchFromChild()"
+        (clearDate)="onClearDateFromChild()"
+        *ngIf="activeTab === 'All' && !isLoading"
       >
       </app-all-pikup-oders>
 
       <app-ready-to-pikup
         [centerObj]="centerObj"
-        *ngIf="activeTab === 'Ready to Pickup'"
+        [orders]="getFilteredOrders()"
+        (dateChange)="onDateChangeFromChild($event)"
+        (timeSlotChange)="onTimeSlotChangeFromChild($event)"
+        (searchChange)="onSearchChangeFromChild($event)"
+        (clearSearch)="onClearSearchFromChild()"
+        (clearDate)="onClearDateFromChild()"
+        *ngIf="activeTab === 'Ready to Pickup' && !isLoading"
       ></app-ready-to-pikup>
 
       <app-pikup-oders
         [centerObj]="centerObj"
-        *ngIf="activeTab === 'Picked Up'"
+        [orders]="getFilteredOrders()"
+        (dateChange)="onDateChangeFromChild($event)"
+        (timeSlotChange)="onTimeSlotChangeFromChild($event)"
+        (searchChange)="onSearchChangeFromChild($event)"
+        (clearSearch)="onClearSearchFromChild()"
+        (clearDate)="onClearDateFromChild()"
+        *ngIf="activeTab === 'Picked Up' && !isLoading"
       ></app-pikup-oders>
     </div>
   </div>

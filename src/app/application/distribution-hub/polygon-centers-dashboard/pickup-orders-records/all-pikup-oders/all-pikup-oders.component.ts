@@ -1,11 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
-import { DestributionService } from '../../../../../services/destribution-service/destribution-service.service';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { PikupOderRecordDetailsComponent } from "../popup-component/pikup-oder-record-details/pikup-oder-record-details.component";
 
 interface Order {
   no: number;
@@ -19,6 +26,7 @@ interface Order {
   payment: string;
   scheduleDate?: string;
   timeSlot?: string;
+  originalData?: any; // Store original API data for popup
 }
 
 @Component({
@@ -30,6 +38,7 @@ interface Order {
     CalendarModule,
     LoadingSpinnerComponent,
     FormsModule,
+    PikupOderRecordDetailsComponent
   ],
   templateUrl: './all-pikup-oders.component.html',
   styleUrl: './all-pikup-oders.component.css',
@@ -37,131 +46,79 @@ interface Order {
 })
 export class AllPikupOdersComponent implements OnChanges {
   @Input() centerObj!: CenterDetails;
-  @Input() activeTab: string = 'All'; // Receive activeTab from parent
+  @Input() activeTab: string = 'All';
+  @Input() orders: any[] = []; // Orders from parent
 
-  isLoading = false;
-  hasData: boolean = false;
-  orderCount: number = 0;
-  orders: Order[] = [];
+  // Output events for parent to handle filters
+  @Output() dateChange = new EventEmitter<Date | null>();
+  @Output() timeSlotChange = new EventEmitter<string>();
+  @Output() searchChange = new EventEmitter<string>();
+  @Output() clearSearch = new EventEmitter<void>();
+  @Output() clearDate = new EventEmitter<void>();
 
-  // Filter properties
+  // Local filter properties for child component
   selectedDate: Date | null = null;
   selectedTimeSlot: string = '';
   searchText: string = '';
 
   // Time slot options for dropdown
   timeSlotOptions = [
-    { label: 'Morning (8AM-12PM)', value: 'morning' },
-    { label: 'Afternoon (12PM-4PM)', value: 'afternoon' },
-    { label: 'Evening (4PM-8PM)', value: 'evening' },
-    { label: 'Night (8PM-12AM)', value: 'night' },
+    { label: '8AM-12PM' },
+    { label: '12PM-4PM' },
   ];
 
-  constructor(
-    private destributionService: DestributionService,
-    private datePipe: DatePipe
-  ) {}
+  isLoading = false; // Not used for API calls anymore
+  hasData: boolean = false;
+  orderCount: number = 0;
+  transformedOrders: Order[] = [];
 
-  ngOnChanges(): void {
-    this.fetchData();
+  // Popup control
+  showDetailsPopup: boolean = false;
+  selectedOrderId: number | undefined; // This should be processOrderId for API
+  selectedOrderDisplayId: string = ''; // This is for display (invoice/order number)
+  selectedOrderData: any = null;
+
+  constructor(private datePipe: DatePipe) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['orders'] || changes['activeTab']) {
+      this.transformData();
+    }
   }
 
-  fetchData(): void {
-    this.isLoading = true;
-
-    // Format date for API
-    let formattedDate = '';
-    if (this.selectedDate) {
-      const year = this.selectedDate.getFullYear();
-      const month = (this.selectedDate.getMonth() + 1)
-        .toString()
-        .padStart(2, '0');
-      const day = this.selectedDate.getDate().toString().padStart(2, '0');
-      formattedDate = `${year}-${month}-${day}`;
+  private transformData(): void {
+    if (this.orders && this.orders.length > 0) {
+      this.transformedOrders = this.transformApiData(this.orders);
+      this.orderCount = this.transformedOrders.length;
+      this.hasData = this.orderCount > 0;
+    } else {
+      this.transformedOrders = [];
+      this.orderCount = 0;
+      this.hasData = false;
     }
-
-    // Map the activeTab to the service parameter
-    let activeTabParam: 'ready-to-pickup' | 'picked-up' | undefined;
-    
-    if (this.activeTab === 'Ready to Pickup') {
-      activeTabParam = 'ready-to-pickup';
-    } else if (this.activeTab === 'Picked Up') {
-      activeTabParam = 'picked-up';
-    }
-    // If activeTab is 'All', we don't pass activeTab parameter (show both statuses)
-
-    // Call the service with new signature
-    this.destributionService
-      .getDistributedCenterPickupOrders({
-        companycenterId: this.centerObj.centerId,
-        sheduleTime: this.selectedTimeSlot,
-        date: formattedDate,
-        searchText: this.searchText,
-        activeTab: activeTabParam
-      })
-      .subscribe({
-        next: (res) => {
-          if (res && res.data) {
-            const dataArray = Array.isArray(res.data) ? res.data : [res.data];
-            const transformedOrders = this.transformApiData(dataArray);
-            
-            // Filter based on activeTab if not 'All'
-            if (this.activeTab !== 'All') {
-              this.orders = this.filterOrdersByActiveTab(transformedOrders);
-            } else {
-              this.orders = this.filterOrdersByStatus(transformedOrders);
-            }
-            
-            this.orderCount = this.orders.length;
-            this.hasData = this.orderCount > 0;
-          } else {
-            this.orders = [];
-            this.orderCount = 0;
-            this.hasData = false;
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching pickup orders:', error);
-          this.orders = [];
-          this.orderCount = 0;
-          this.hasData = false;
-          this.isLoading = false;
-        },
-      });
   }
 
-  // Filter orders based on active tab
-  private filterOrdersByActiveTab(orders: Order[]): Order[] {
-    if (this.activeTab === 'Ready to Pickup') {
-      return orders.filter(order => 
-        order.status === 'Ready to Pickup' || 
-        order.status.toLowerCase().includes('ready')
-      );
-    } else if (this.activeTab === 'Picked Up') {
-      return orders.filter(order => 
-        order.status === 'Picked Up' || 
-        order.status.toLowerCase().includes('picked')
-      );
-    }
-    return orders;
+  // Filter methods - emit events to parent
+  onDateSelect(): void {
+    this.dateChange.emit(this.selectedDate);
   }
 
-  // Original filter method (for All tab)
-  private filterOrdersByStatus(orders: Order[]): Order[] {
-    const allowedStatuses = [
-      'Picked Up',
-      'Ready to Pickup',
-      'Ready for Pickup',
-      'Pending',
-    ];
+  onDateClear(): void {
+    this.selectedDate = null;
+    this.clearDate.emit();
+  }
 
-    return orders.filter((order) => {
-      const isAllowedStatus = allowedStatuses.some((status) =>
-        order.status.toLowerCase().includes(status.toLowerCase())
-      );
-      return isAllowedStatus;
-    });
+  onTimeSlotSelect(): void {
+    this.timeSlotChange.emit(this.selectedTimeSlot);
+  }
+
+  onSearch(): void {
+    this.searchChange.emit(this.searchText);
+  }
+
+  onClearSearch(): void {
+    this.searchText = '';
+    this.clearSearch.emit();
   }
 
   // Transform API data to match your Order interface
@@ -186,58 +143,76 @@ export class AllPikupOdersComponent implements OnChanges {
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
+      originalData: item, // Store original API data for popup
     }));
   }
 
-  // Format scheduled time slot to match the image format: "8AM - 2PM, June 2, 2025"
+  // Format scheduled time slot
   private formatScheduledTimeSlot(item: any): string {
     const scheduleDate = item.scheduleDate || item.sheduleDate;
     const timeSlot = item.timeSlot || item.sheduleTime;
-    
+
     if (!scheduleDate) {
       return this.getFormattedTimeSlotForDisplay(timeSlot) || 'N/A';
     }
-    
+
     const formattedDate = this.formatDisplayDate(scheduleDate);
     const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
-    
+
     return `${formattedTimeSlot}, ${formattedDate}`;
   }
 
   // Helper method to format time slot for display
   private getFormattedTimeSlotForDisplay(timeSlot: string): string {
     if (!timeSlot) return '';
-    
+
     const timeSlotLower = timeSlot.toLowerCase();
-    
-    if (timeSlotLower.includes('8-12') || timeSlotLower.includes('8am-12pm') || timeSlotLower.includes('morning')) {
+
+    if (
+      timeSlotLower.includes('8-12') ||
+      timeSlotLower.includes('8am-12pm') ||
+      timeSlotLower.includes('morning')
+    ) {
       return '8AM - 12PM';
-    } else if (timeSlotLower.includes('12-4') || timeSlotLower.includes('12pm-4pm') || timeSlotLower.includes('afternoon')) {
+    } else if (
+      timeSlotLower.includes('12-4') ||
+      timeSlotLower.includes('12pm-4pm') ||
+      timeSlotLower.includes('afternoon')
+    ) {
       return '12PM - 4PM';
-    } else if (timeSlotLower.includes('4-8') || timeSlotLower.includes('4pm-8pm') || timeSlotLower.includes('evening')) {
+    } else if (
+      timeSlotLower.includes('4-8') ||
+      timeSlotLower.includes('4pm-8pm') ||
+      timeSlotLower.includes('evening')
+    ) {
       return '4PM - 8PM';
-    } else if (timeSlotLower.includes('8pm-12am') || timeSlotLower.includes('night')) {
+    } else if (
+      timeSlotLower.includes('8pm-12am') ||
+      timeSlotLower.includes('night')
+    ) {
       return '8PM - 12AM';
     }
-    
-    const timeRange = timeSlot.match(/(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i);
+
+    const timeRange = timeSlot.match(
+      /(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i
+    );
     if (timeRange) {
       const startTime = this.formatTimeComponent(timeRange[1]);
       const endTime = this.formatTimeComponent(timeRange[2]);
       return `${startTime} - ${endTime}`;
     }
-    
+
     return timeSlot;
   }
 
   // Helper method to format time components
   private formatTimeComponent(time: string): string {
     time = time.trim().toUpperCase();
-    
+
     if (time.includes('AM') || time.includes('PM')) {
       return time.replace(/\s+/g, '').replace(/(\d+)(AM|PM)/i, '$1$2');
     }
-    
+
     const hour = parseInt(time);
     if (!isNaN(hour)) {
       if (hour === 0) return '12AM';
@@ -245,7 +220,7 @@ export class AllPikupOdersComponent implements OnChanges {
       if (hour === 12) return '12PM';
       return `${hour - 12}PM`;
     }
-    
+
     return time;
   }
 
@@ -312,33 +287,60 @@ export class AllPikupOdersComponent implements OnChanges {
     return this.datePipe.transform(dateString, 'MMM d, yyyy') || 'N/A';
   }
 
-  // Filter methods
-  clearDate(): void {
-    this.selectedDate = null;
-    this.fetchData();
-  }
-
-  clearTimeSlot(): void {
-    this.selectedTimeSlot = '';
-    this.fetchData();
-  }
-
-  onSearch(): void {
-    this.fetchData();
-  }
-
-  clearSearch(): void {
-    this.searchText = '';
-    this.fetchData();
-  }
-
   // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
     console.log('View receiver info for:', order);
+    // You can implement a popup for receiver info if needed
   }
 
-  viewOrderDetails(order: Order): void {
+  // Open order details popup
+  openOrderDetails(order: Order): void {
     console.log('View order details for:', order);
+    
+    // For display in popup header (show invoice/order number)
+    this.selectedOrderDisplayId = order.orderId;
+    
+    // For API call (use processOrderId from original data)
+    if (order.originalData) {
+      // Debug: Log all available fields
+      console.log('Original data fields:', Object.keys(order.originalData));
+      console.log('Full original data:', order.originalData);
+      
+      // Try to get the processOrderId from original data
+      const processOrderId = order.originalData.processOrderId || 
+                            order.originalData.id || 
+                            order.originalData.orderId;
+      
+      if (processOrderId) {
+        // Pass the processOrderId directly to API
+        this.selectedOrderId = processOrderId;
+        this.selectedOrderData = order.originalData;
+        this.showDetailsPopup = true;
+        
+        console.log('Popup opened with:');
+        console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
+        console.log('- API ID (processOrderId):', this.selectedOrderId);
+      } else {
+        console.warn('No processOrderId found in:', order.originalData);
+        // Fallback: try to use any available ID
+        const possibleId = order.originalData.id || order.originalData.orderId;
+        if (possibleId) {
+          this.selectedOrderId = possibleId;
+          this.selectedOrderData = order.originalData;
+          this.showDetailsPopup = true;
+        }
+      }
+    } else {
+      console.warn('No original data available for order:', order);
+    }
+  }
+
+  // Close the details popup
+  closeDetailsPopup(): void {
+    this.showDetailsPopup = false;
+    this.selectedOrderId = undefined;
+    this.selectedOrderData = null;
+    this.selectedOrderDisplayId = '';
   }
 
   // Get status badge class
@@ -353,12 +355,12 @@ export class AllPikupOdersComponent implements OnChanges {
 
   // Get payment badge class
   getPaymentClass(payment: string): string {
-    const paymentClasses: { [key: string]: string } = {
-      Paid: 'text-black dark:text-white',
-      Pending: 'text-black dark:text-white',
-    };
-
-    return paymentClasses[payment] || 'bg-gray-100 text-gray-800';
+    if (payment === 'Paid') {
+      return '   dark:text-white';
+    } else if (payment === 'Pending') {
+      return '   dark:text-white';
+    }
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
   }
 }
 

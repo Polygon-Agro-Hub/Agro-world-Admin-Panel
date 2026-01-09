@@ -39,6 +39,7 @@ export class CurrentAssetsViewComponent {
   category: string = '';
   hasData: boolean = true;
   farmId: any | null = null;
+  farmName!: string;
 
   constructor(
     private assetService: AssetsService,
@@ -53,6 +54,7 @@ export class CurrentAssetsViewComponent {
       this.name = params['fullName'] ? params['fullName'] : null;
       this.farmId = params['farmId'] ? params['farmId'] : null;
       this.category = params['category'] ? params['category'] : null;
+      this.farmName = params['farmName'] ? params['farmName'] : null;
     });
 
     this.loadAssets(this.userId, this.category ,this.farmId);
@@ -85,7 +87,7 @@ export class CurrentAssetsViewComponent {
     this.router.navigate(
       ['/plant-care/action/report-farmer-current-assert/record-view'],
       {
-        queryParams: { id, name, category, asset, unit, unitPrice, batchNumber },
+        queryParams: { id, name, category, asset, unit, unitPrice, batchNumber, farmName: this.farmName },
       }
     );
   }

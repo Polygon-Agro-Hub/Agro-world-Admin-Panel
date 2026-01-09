@@ -357,7 +357,7 @@ export class ComplaintsService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get(`${this.apiUrl}complain/get-distributed-complain-by-id/${id}`, {
+    return this.http.get(`${this.apiUrl}complain/get-driver-complain-by-id/${id}`, {
       headers,
     });
   }

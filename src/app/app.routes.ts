@@ -398,7 +398,7 @@ export const routes: Routes = [
                 data: { permission: 'View farms assets' },
               },
               {
-                path: 'report-farmer-current-assert/:userId/:name/:farmId',
+                path: 'report-farmer-current-assert/:userId/:name/:farmId/:farmName',
                 component: ReportCurrentAssertsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'View farms current assets' },

@@ -54,19 +54,13 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
       text: "You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
       confirmButtonText: 'Yes, delete it!',
-      // Dark mode styling
-      background: '#1f2937', // Dark background
-      color: '#f9fafb', // Light text
       customClass: {
-        popup: 'dark-popup',
-        title: 'dark-title',
-        htmlContainer: 'dark-text',
-        confirmButton: 'dark-confirm-btn',
-        cancelButton: 'dark-cancel-btn'
-      }
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+        cancelButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2'
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.farmerFarmsService.deleteFarm(farmId).subscribe({
@@ -79,10 +73,8 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
               background: '#1f2937',
               color: '#f9fafb',
               customClass: {
-                popup: 'dark-popup',
-                title: 'dark-title',
-                htmlContainer: 'dark-text',
-                confirmButton: 'dark-success-btn'
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
               }
             });
             this.farms = this.farms.filter((f) => f.id !== farmId); // filter out deleted farm
@@ -99,10 +91,8 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
               background: '#1f2937',
               color: '#f9fafb',
               customClass: {
-                popup: 'dark-popup',
-                title: 'dark-title',
-                htmlContainer: 'dark-text',
-                confirmButton: 'dark-error-btn'
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
               }
             });
           },
@@ -164,7 +154,7 @@ export class FarmerListFarmersFarmsComponent implements OnInit {
   viewCurrentAsset(userId: number, firstName: string, lastName: string, farmName: string, farmId: number) {
     let userName = firstName + ' ' + lastName;
     this.navigatePath(
-      `/plant-care/action/report-farmer-current-assert/${userId}/${userName}/${farmId}`
+      `/plant-care/action/report-farmer-current-assert/${userId}/${userName}/${farmId}/${farmName}`
     );
   }
 

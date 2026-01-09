@@ -12,6 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { PikupOderRecordDetailsComponent } from "../popup-component/pikup-oder-record-details/pikup-oder-record-details.component";
 
 interface Order {
   no: number;
@@ -25,6 +26,7 @@ interface Order {
   payment: string;
   scheduleDate?: string;
   timeSlot?: string;
+  originalData?: any; // Store original API data for popup
 }
 
 @Component({
@@ -36,6 +38,7 @@ interface Order {
     CalendarModule,
     LoadingSpinnerComponent,
     FormsModule,
+    PikupOderRecordDetailsComponent
   ],
   templateUrl: './all-pikup-oders.component.html',
   styleUrl: './all-pikup-oders.component.css',
@@ -70,6 +73,12 @@ export class AllPikupOdersComponent implements OnChanges {
   hasData: boolean = false;
   orderCount: number = 0;
   transformedOrders: Order[] = [];
+
+  // Popup control
+  showDetailsPopup: boolean = false;
+  selectedOrderId: number | undefined; // This should be processOrderId for API
+  selectedOrderDisplayId: string = ''; // This is for display (invoice/order number)
+  selectedOrderData: any = null;
 
   constructor(private datePipe: DatePipe) {}
 
@@ -136,6 +145,7 @@ export class AllPikupOdersComponent implements OnChanges {
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
+      originalData: item, // Store original API data for popup
     }));
   }
 
@@ -282,10 +292,57 @@ export class AllPikupOdersComponent implements OnChanges {
   // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
     console.log('View receiver info for:', order);
+    // You can implement a popup for receiver info if needed
   }
 
-  viewOrderDetails(order: Order): void {
+  // Open order details popup
+  openOrderDetails(order: Order): void {
     console.log('View order details for:', order);
+    
+    // For display in popup header (show invoice/order number)
+    this.selectedOrderDisplayId = order.orderId;
+    
+    // For API call (use processOrderId from original data)
+    if (order.originalData) {
+      // Debug: Log all available fields
+      console.log('Original data fields:', Object.keys(order.originalData));
+      console.log('Full original data:', order.originalData);
+      
+      // Try to get the processOrderId from original data
+      const processOrderId = order.originalData.processOrderId || 
+                            order.originalData.id || 
+                            order.originalData.orderId;
+      
+      if (processOrderId) {
+        // Pass the processOrderId directly to API
+        this.selectedOrderId = processOrderId;
+        this.selectedOrderData = order.originalData;
+        this.showDetailsPopup = true;
+        
+        console.log('Popup opened with:');
+        console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
+        console.log('- API ID (processOrderId):', this.selectedOrderId);
+      } else {
+        console.warn('No processOrderId found in:', order.originalData);
+        // Fallback: try to use any available ID
+        const possibleId = order.originalData.id || order.originalData.orderId;
+        if (possibleId) {
+          this.selectedOrderId = possibleId;
+          this.selectedOrderData = order.originalData;
+          this.showDetailsPopup = true;
+        }
+      }
+    } else {
+      console.warn('No original data available for order:', order);
+    }
+  }
+
+  // Close the details popup
+  closeDetailsPopup(): void {
+    this.showDetailsPopup = false;
+    this.selectedOrderId = undefined;
+    this.selectedOrderData = null;
+    this.selectedOrderDisplayId = '';
   }
 
   // Get status badge class
@@ -300,12 +357,12 @@ export class AllPikupOdersComponent implements OnChanges {
 
   // Get payment badge class
   getPaymentClass(payment: string): string {
-    const paymentClasses: { [key: string]: string } = {
-      Paid: 'text-black dark:text-white',
-      Pending: 'text-black dark:text-white',
-    };
-
-    return paymentClasses[payment] || 'bg-gray-100 text-gray-800';
+    if (payment === 'Paid') {
+      return '   dark:text-white';
+    } else if (payment === 'Pending') {
+      return '   dark:text-white';
+    }
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
   }
 }
 

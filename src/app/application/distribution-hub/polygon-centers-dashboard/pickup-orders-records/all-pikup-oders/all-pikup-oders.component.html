@@ -261,7 +261,7 @@
               >
                 <button
                   class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
-                  (click)="viewOrderDetails(order)"
+                  (click)="openOrderDetails(order)"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -304,4 +304,13 @@
       </table>
     </div>
   </div>
+  
+  <!-- Details Popup Component -->
+  <app-pikup-oder-record-details
+    [visible]="showDetailsPopup"
+    [orderId]="selectedOrderId"  
+    [displayOrderId]="selectedOrderDisplayId"
+    (close)="closeDetailsPopup()"
+  >
+  </app-pikup-oder-record-details>
 </div>

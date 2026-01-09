@@ -20,7 +20,6 @@ import { LoadingSpinnerComponent } from '../../../../../components/loading-spinn
     FormsModule,
     CalendarModule,
     DropdownModule,
-    LoadingSpinnerComponent,
     AllPikupOdersComponent,
     ReadyToPikupComponent,
     PikupOdersComponent,

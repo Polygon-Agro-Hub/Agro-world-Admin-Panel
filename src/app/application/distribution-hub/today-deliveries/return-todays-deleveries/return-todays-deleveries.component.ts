@@ -60,11 +60,12 @@ export class ReturnTodaysDeleveriesComponent implements OnChanges {
       return;
     }
 
-    const query = this.searchTerm.toLowerCase().trim();
+    this.searchTerm = this.searchTerm.trim();
+    const query = this.searchTerm.toLowerCase();
     this.filteredDeliveries = this.deliveries.filter(
       (item) =>
-        item.invNo.toLowerCase().includes(query) ||
-        item.regCode.toLowerCase().includes(query)
+        (item.invNo && item.invNo.toLowerCase().includes(query)) ||
+        (item.regCode && item.regCode.toLowerCase().includes(query))
     );
   }
 

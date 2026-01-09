@@ -43,16 +43,17 @@ export class DeliveredTodaysDeleveriesComponent implements OnChanges {
   }
 
   onSearch(): void {
-    if (!this.searchTerm.trim()) {
+    if (!this.searchTerm) {
       this.filteredDeliveries = [...this.deliveries];
     } else {
+      this.searchTerm = this.searchTerm.trim();
       const term = this.searchTerm.toLowerCase();
       this.filteredDeliveries = this.deliveries.filter(
         (delivery) =>
-          delivery.invNo.toLowerCase().includes(term) ||
-          delivery.regCode.toLowerCase().includes(term) ||
-          delivery.driverEmpId.toLowerCase().includes(term) ||
-          delivery.driverPhone.includes(term)
+          (delivery.invNo && delivery.invNo.toLowerCase().includes(term)) ||
+          (delivery.regCode && delivery.regCode.toLowerCase().includes(term)) ||
+          (delivery.driverEmpId && delivery.driverEmpId.toLowerCase().includes(term)) ||
+          (delivery.driverPhone && delivery.driverPhone.includes(term))
       );
     }
   }

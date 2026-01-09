@@ -3,20 +3,20 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface DeliveryItem {
-  id:number
-  invNo:string 
-  regCode:string 
-  centerName:string
-  sheduleTime:string 
-  sheduleDate:string 
-  createdAt:string 
-  status:string 
-  outDlvrTime:string 
-  collectTime:string 
-  driverEmpId:string 
-  driverStartTime:string 
-  returnTime:string 
-  deliveryTime:string 
+  id: number
+  invNo: string
+  regCode: string
+  centerName: string
+  sheduleTime: string
+  sheduleDate: string
+  createdAt: string
+  status: string
+  outDlvrTime: string
+  collectTime: string
+  driverEmpId: string
+  driverStartTime: string
+  returnTime: string
+  deliveryTime: string
 }
 
 @Component({
@@ -28,10 +28,10 @@ interface DeliveryItem {
 })
 export class OutForDeliveryTodaysDeleveriesComponent implements OnChanges {
   @Input() deliveries: DeliveryItem[] = [];
-  
+
   searchTerm: string = '';
   filteredDeliveries: DeliveryItem[] = [];
-  
+
   // Local copy of deliveries for filtering
   localDeliveries: DeliveryItem[] = [];
 
@@ -43,15 +43,16 @@ export class OutForDeliveryTodaysDeleveriesComponent implements OnChanges {
   }
 
   search() {
-    if (!this.searchTerm.trim()) {
+    this.searchTerm = this.searchTerm.trim();
+    if (!this.searchTerm) {
       this.filteredDeliveries = [...this.localDeliveries];
     } else {
       const term = this.searchTerm.toLowerCase();
       this.filteredDeliveries = this.localDeliveries.filter(
         (item) =>
-          item.invNo.toLowerCase().includes(term) ||
-          item.regCode.toLowerCase().includes(term) ||
-          item.sheduleTime.toLowerCase().includes(term) ||
+          (item.invNo && item.invNo.toLowerCase().includes(term)) ||
+          (item.regCode && item.regCode.toLowerCase().includes(term)) ||
+          (item.sheduleTime && item.sheduleTime.toLowerCase().includes(term)) ||
           (item.outDlvrTime && item.outDlvrTime.toLowerCase().includes(term))
       );
     }
@@ -65,7 +66,7 @@ export class OutForDeliveryTodaysDeleveriesComponent implements OnChanges {
   // Helper method to format the out time
   formatOutTime(outTime: string): string {
     if (!outTime) return '';
-    
+
     // Remove seconds if present (HH:MM:SS -> HH:MM)
     const timeParts = outTime.split(':');
     if (timeParts.length >= 2) {
@@ -81,11 +82,11 @@ export class OutForDeliveryTodaysDeleveriesComponent implements OnChanges {
   // Helper method to format time slot
   formatTimeSlot(scheduleTime: string): string {
     if (!scheduleTime) return '';
-    
+
     try {
       const date = new Date(scheduleTime);
       const hours = date.getHours();
-      
+
       if (hours < 12) {
         return '8AM - 2PM';
       } else if (hours < 18) {

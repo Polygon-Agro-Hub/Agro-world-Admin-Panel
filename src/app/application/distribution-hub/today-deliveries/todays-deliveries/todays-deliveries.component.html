@@ -5,20 +5,23 @@
   Back
 </button>
 
-<div class="flex w-full mb-10">
-  <div class="flex w-full pt-5 px-40 pb-5 bg-white dark:bg-tileBlack shadow-lg rounded-lg items-center">
-    <label for="regCode"
-      class="text-gray-600 dark:text-textDark font-medium flex items-center justify-center align-middle w-40 mr-5">Filter
-      By Centre :</label>
-    <p-dropdown [options]="centreOptions" [(ngModel)]="regCode" placeholder="Select Centre" optionLabel="label"
-      optionValue="value" [filter]="false" [showClear]="!!regCode" (onClear)="clearSearch()" class="w-full" styleClass="w-full border rounded-lg 
-              bg-[#F1F1F1] dark:bg-[#272F45]
+<div class="mb-10">
+  <div class="flex items-center justify-center gap-4 p-5 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
+    <label for="regCode" class="whitespace-nowrap text-gray-600 dark:text-textDark font-medium">
+      Filter By Centre:
+    </label>
+
+    <p-dropdown [options]="centreOptions" [(ngModel)]="regCode" name="regCode" placeholder="--Select Centre--"
+      optionLabel="label" optionValue="value" [filter]="true" filterBy="label" [showClear]="!!regCode"
+      (onClear)="clearSearch()" class="w-[45%]" styleClass="w-full border rounded-lg 
+              bg-white dark:bg-[#272F45]
               text-gray-800 dark:text-gray-200
-              border-[#D9D9D9] dark:border-gray-700">
+              border-[#D9D9D9] dark:border-gray-700
+              ">
     </p-dropdown>
 
     <button (click)="onSearch()"
-      class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-200 ease-in-out ml-4 whitespace-nowrap">
+      class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 whitespace-nowrap flex-shrink-0">
       Go
     </button>
   </div>

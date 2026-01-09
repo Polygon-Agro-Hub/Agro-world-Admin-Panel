@@ -12,10 +12,14 @@
     border-radius: 6px !important; 
     overflow: hidden; 
   }
-  
+  ::ng-deep .p-dropdown-panel .p-dropdown-item {
+    padding-left: 0.05rem !important;
+  }
+
   ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
+    padding-left: 0.05rem !important;
   }
   
   ::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {

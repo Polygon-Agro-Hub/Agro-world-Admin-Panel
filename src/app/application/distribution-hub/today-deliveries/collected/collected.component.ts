@@ -76,17 +76,17 @@ export class CollectedComponent implements OnChanges {
 
 
   onSearch(): void {
-    if (!this.searchQuery.trim()) {
+    if (!this.searchQuery) {
       this.filteredData = [...this.deliveries];
       return;
     }
-
-    const query = this.searchQuery.toLowerCase().trim();
+    this.searchQuery = this.searchQuery.trim();
+    const query = this.searchQuery.toLowerCase();
     this.filteredData = this.deliveries.filter(
-      (item) =>
-        item.invNo.toLowerCase().includes(query) ||
-        item.regCode.toLowerCase().includes(query)
-    );
+    (item) =>
+      (item.invNo && item.invNo.toLowerCase().includes(query)) ||
+      (item.regCode && item.regCode.toLowerCase().includes(query))
+  );
   }
 
   clearSearch(): void {

@@ -83,43 +83,57 @@ export class PikupOderRecordsMainComponent implements OnInit {
   }
 
   // Main method to fetch all orders
-  fetchAllOrders(): void {
-    this.isLoading = true;
+  // Main method to fetch all orders
+fetchAllOrders(): void {
+  this.isLoading = true;
 
-    // Format date for API
-    let formattedDate = '';
-    if (this.selectedDate) {
-      const year = this.selectedDate.getFullYear();
-      const month = (this.selectedDate.getMonth() + 1)
-        .toString()
-        .padStart(2, '0');
-      const day = this.selectedDate.getDate().toString().padStart(2, '0');
-      formattedDate = `${year}-${month}-${day}`;
-    }
-
-    this.destributionService
-      .getDistributedCenterPickupOrders({
-        companycenterId: this.centerObj.centerId,
-        sheduleTime: this.selectedTimeSlot,
-        date: formattedDate,
-        searchText: this.searchText,
-      })
-      .subscribe({
-        next: (res) => {
-          if (res && res.data) {
-            this.allOrders = Array.isArray(res.data) ? res.data : [res.data];
-          } else {
-            this.allOrders = [];
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching pickup orders:', error);
-          this.allOrders = [];
-          this.isLoading = false;
-        },
-      });
+  // Format date for API
+  let formattedDate = '';
+  if (this.selectedDate) {
+    const year = this.selectedDate.getFullYear();
+    const month = (this.selectedDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0');
+    const day = this.selectedDate.getDate().toString().padStart(2, '0');
+    formattedDate = `${year}-${month}-${day}`;
   }
+
+  // Map activeTab to backend parameter
+  let backendTabParam = '';
+  if (this.activeTab === 'Ready to Pickup') {
+    backendTabParam = 'ready-to-pickup';
+  } else if (this.activeTab === 'Picked Up') {
+    backendTabParam = 'picked-up';
+  } else if (this.activeTab === 'All') {
+    backendTabParam = 'all';
+  }
+
+  this.destributionService
+    .getDistributedCenterPickupOrders({
+      companycenterId: this.centerObj.centerId,
+      sheduleTime: this.selectedTimeSlot,
+      date: formattedDate,
+      searchText: this.searchText,
+      activeTab: backendTabParam
+    })
+    .subscribe({
+      next: (res) => {
+        console.log('API Response:', res);
+        if (res && res.data) {
+          this.allOrders = Array.isArray(res.data) ? res.data : [res.data];
+          console.log('Filtered orders count:', this.allOrders.length);
+        } else {
+          this.allOrders = [];
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching pickup orders:', error);
+        this.allOrders = [];
+        this.isLoading = false;
+      },
+    });
+}
 
   // Event handlers for child component filter changes
   onDateChangeFromChild(date: Date | null): void {

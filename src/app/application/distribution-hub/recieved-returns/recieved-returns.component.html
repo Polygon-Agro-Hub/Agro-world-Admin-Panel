@@ -27,7 +27,7 @@
             </p-dropdown>
 
             <p-calendar [(ngModel)]="deliveryDateModel" placeholder="Delivery Date" dateFormat="yy-mm-dd"
-              (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()"
+              (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()" [showClear]="true" [showIcon]="false"
               styleClass="calendar-compact dark-calendar"
               [inputStyle]="{ width: '140px', padding: '0.5rem 2.2rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
               inputStyleClass="h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
@@ -94,7 +94,8 @@
             <th class="px-4 py-3 text-left text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
               Centre Name
             </th>
-            <th class="px-4 py-3 text-center text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            <th
+              class="px-4 py-3 text-center text-[16px] font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
               Details
             </th>
           </tr>
@@ -120,12 +121,12 @@
 
             <!-- Reason -->
             <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
-              {{ data.reason === 'Other' ? 'Other : Customer Refused' : data.reason }}
+              {{ data.reason === 'Other' ? ('Other: ' + (data.other || 'N/A')) : data.reason }}
             </td>
 
             <!-- Phone Number -->
             <td class="px-4 py-4 text-[16px] text-textLight dark:text-gray-300">
-              {{ data.phoneCode1 }} {{data.phone1}}
+              {{ data.phoneCode }} {{data.phoneNumber}}
             </td>
 
             <!-- Centre Code -->
@@ -149,7 +150,6 @@
                 </svg>
               </button>
             </td>
-
           </tr>
         </tbody>
       </table>
@@ -179,7 +179,7 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Value</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
-          {{ dataObject.total }}
+          {{ formatNumber(dataObject.total ?? 0) }}
         </span>
       </div>
 
@@ -188,7 +188,7 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Customer Contact</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
-          {{ dataObject.phoneCode1 }} {{ dataObject.phone1 }}
+          {{ dataObject.phoneCode }} {{ dataObject.phoneNumber }}
         </span>
       </div>
 
@@ -251,8 +251,7 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Reason to Return</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
-          {{ dataObject.reason === 'Other' ? 'The Customer claimed that the order is not for him.' : dataObject.reason
-          }}
+          {{ dataObject.reason === 'Other' ? (dataObject.other || 'N/A') : dataObject.reason }}
         </span>
       </div>
 

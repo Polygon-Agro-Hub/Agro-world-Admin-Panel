@@ -44,58 +44,39 @@ export class ViewVehiclesComponent {
   searchText = '';
 
   centreOptions: { label: string; value: string }[] = [];
-  vehicleTypeOptions: { label: string; value: string }[] = [];
+  
+  vehicleTypeOptions = [
+    { label: 'Dimo Batta', value: 'Dimo Batta' },
+    { label: 'Mahindra Bolero', value: 'Mahindra Bolero' },
+    { label: 'Three Wheeler', value: 'Three Wheeler' },
+  ];
 
-  constructor(private distService: DestributionService,private distHubService: DistributionHubService) {}
+  constructor(
+    private distService: DestributionService,
+    private distHubService: DistributionHubService
+  ) {}
 
   ngOnInit(): void {
     this.loadCenters();
-    this.loadVehicleTypes();
     this.loadData();
   }
 
   loadCenters() {
-    this.distHubService.getAllCentersForVehicles().subscribe({
+    this.distHubService.getDistributionCenterNames().subscribe({
       next: (res) => {
-        if (res && res.items && res.items.length > 0) {
-          const uniqueCenters = [...new Set(
-            res.items
-              .map((item: any) => item.centerName)
-              .filter((name: string) => name !== null && name !== undefined && name !== '')
-          )] as string[];
-          
-          this.centreOptions = uniqueCenters.map((name) => ({
-            label: name,
-            value: name
-          }));
+        if (res && Array.isArray(res)) {
+          this.centreOptions = res
+            .filter((center: any) => center.centerName && center.regCode)
+            .map((center: any) => ({
+              label: `${center.centerName}`,
+              value: center.centerName
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label));
         }
       },
       error: (err) => {
         console.error('Error loading centers:', err);
         this.centreOptions = [];
-      }
-    });
-  }
-
-  loadVehicleTypes() {
-    this.distHubService.getAllVehicleTypes().subscribe({
-      next: (res) => {
-        if (res && res.items && res.items.length > 0) {
-          const uniqueTypes = [...new Set(
-            res.items
-              .map((item: any) => item.vType)
-              .filter((type: string) => type !== null && type !== undefined && type !== '')
-          )] as string[];
-          
-          this.vehicleTypeOptions = uniqueTypes.map((type) => ({
-            label: type,
-            value: type
-          }));
-        }
-      },
-      error: (err) => {
-        console.error('Error loading vehicle types:', err);
-        this.vehicleTypeOptions = [];
       }
     });
   }

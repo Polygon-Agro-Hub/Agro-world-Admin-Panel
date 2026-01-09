@@ -382,7 +382,7 @@ export class DestributionService {
   }
 
   getReturnRecievedData(
-    sheduleDate?: string,
+    receivedTime?: string,
     centerId?: number,
     searchText?: string
   ): Observable<{ total: number; items: any[]; grandTotal: number }> {
@@ -390,8 +390,8 @@ export class DestributionService {
     console.log('data');
     let url = `${this.apiUrl}distribution/get-return-recieved-data`;
 
-    if (sheduleDate) {
-      url += `?sheduleDate=${sheduleDate}`;
+    if (receivedTime) {
+      url += `?receivedTime=${receivedTime}`;
     } else {
       url += `?`;
     }
@@ -416,31 +416,43 @@ getDistributedCenterPickupOrders(searchParams: {
   sheduleTime?: string;
   date?: string;
   searchText?: string;
-  activeTab?: 'ready-to-pickup' | 'picked-up';
+  activeTab?: string;
 }): Observable<ApiResponse> {
   // Build query parameters
-  const params = new HttpParams()
+  let params = new HttpParams()
     .set('companycenterId', searchParams.companycenterId.toString());
   
   // Add optional parameters if they exist
   if (searchParams.sheduleTime && searchParams.sheduleTime.trim() !== '') {
-    params.set('time', searchParams.sheduleTime.trim());
+    params = params.set('time', searchParams.sheduleTime.trim());
   }
   
   if (searchParams.date && searchParams.date.trim() !== '') {
-    const formattedDate = this.formatDateForApi(searchParams.date);
-    params.set('date', formattedDate);
+    params = params.set('date', searchParams.date.trim());
   }
   
   if (searchParams.searchText && searchParams.searchText.trim() !== '') {
-    params.set('searchText', searchParams.searchText.trim());
+    params = params.set('searchText', searchParams.searchText.trim());
   }
   
   if (searchParams.activeTab) {
-    params.set('activeTab', searchParams.activeTab);
+    let backendTabParam = '';
+    if (searchParams.activeTab === 'Ready to Pickup') {
+      backendTabParam = 'ready-to-pickup';
+    } else if (searchParams.activeTab === 'Picked Up') {
+      backendTabParam = 'picked-up';
+    } else if (searchParams.activeTab === 'All') {
+      // For "All" tab, backend needs to know which statuses to include
+      backendTabParam = 'all';
+    }
+    if (backendTabParam) {
+      params = params.set('activeTab', backendTabParam);
+    }
   }
   
   const url = `${this.apiUrl}distribution/get-distributed-center-pickup-orders`;
+  
+  console.log('Service call params:', params.toString());
   
   return this.http.get<ApiResponse>(url, {
     headers: this.getHeaders(),
@@ -448,18 +460,14 @@ getDistributedCenterPickupOrders(searchParams: {
   });
 }
 
-private formatDateForApi(dateInput: string | Date): string {
-  if (dateInput instanceof Date) {
-    return dateInput.toISOString().split('T')[0];
-  }
-  
-  if (typeof dateInput === 'string') {
-    const date = new Date(dateInput);
-    if (!isNaN(date.getTime())) {
-      return date.toISOString().split('T')[0];
-    }
-  }
-  
-  return dateInput.toString();
+getPickupOrderRecords(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+  return this.http.get<any>(
+    `${this.apiUrl}distribution/get-pickup-order-records/${id}`,
+    { headers }
+  );
 }
 }

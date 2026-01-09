@@ -2,10 +2,6 @@
 ::ng-deep .p-calendar .p-datepicker {
   transform: scale(0.85);
   transform-origin: top left;
-}
-
-/* Alternatively, set specific dimensions */
-::ng-deep .p-calendar .p-datepicker {
   width: 280px !important;
   min-width: 280px !important;
 }
@@ -36,7 +32,11 @@
 }
 
 /* Reduce size when both today and selected */
-::ng-deep .p-datepicker .p-datepicker-calendar td.p-datepicker-today > span.p-highlight {
+::ng-deep
+  .p-datepicker
+  .p-datepicker-calendar
+  td.p-datepicker-today
+  > span.p-highlight {
   width: 2rem !important;
   height: 2rem !important;
 }
@@ -65,24 +65,6 @@
   color: white;
 }
 
-/* Calendar input padding to make room for icons */
-::ng-deep .p-calendar .p-inputtext {
-  padding-right: 3rem !important;
-}
-
-/* Clear icon positioning */
-::ng-deep .p-calendar .p-calendar-clear-icon {
-  right: 1.2rem !important;
-  top: 8.2px !important;
-  order: 1;
-}
-
-/* Calendar trigger icon positioning */
-::ng-deep .p-calendar .p-datepicker-trigger {
-  right: 0.5rem !important;
-  order: 2;
-}
-
 /* Light mode placeholder */
 :host ::ng-deep .p-calendar .p-inputtext::placeholder {
   color: #6c6c6c;
@@ -90,36 +72,7 @@
 
 /* Dark mode placeholder */
 :host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
-  color: #8B8B8B;
-}
-
-/* Making popup small */
-::ng-deep .calendar-popup-small {
-  width: 320px !important;
-  min-width: 280px !important;
-}
-
-::ng-deep .calendar-popup-small .p-datepicker-calendar {
-  font-size: 0.875rem;
-}
-
-::ng-deep .calendar-popup-small .p-datepicker-calendar td {
-  padding: 0.25rem !important;
-}
-
-::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
-  width: 1.5rem !important;
-  height: 1.5rem !important;
-  line-height: 1.5rem !important;
-}
-
-/* Shrink calendar icon */
-:host ::ng-deep .p-calendar .p-datepicker-trigger {
-  width: 1rem !important;
-  height: 1rem !important;
-  font-size: 0.75rem !important;
-  right: 0.3rem !important;
-  top: 0.3rem !important;
+  color: #8b8b8b;
 }
 
 /* Reduce calendar popup size */
@@ -136,6 +89,51 @@
   height: 1.75rem !important;
 }
 
+/* ===== COMPACT CALENDAR STYLES - FIXED ===== */
+/* Compact calendar container positioning */
+::ng-deep .calendar-compact {
+  position: relative !important;
+  width: 140px !important;
+  max-width: 140px !important;
+}
+
+::ng-deep .calendar-compact .p-calendar {
+  position: relative !important;
+}
+
+/* Compact calendar input */
+::ng-deep .calendar-compact .p-inputtext {
+  width: 140px !important;
+  padding-right: 2.5rem !important;
+}
+
+/* Clear icon positioning - FIXED to be inside input */
+::ng-deep .calendar-compact .p-calendar-clear-icon {
+  position: absolute !important;
+  right: 0.5rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin-top: 0 !important;
+  z-index: 1 !important;
+  cursor: pointer !important;
+}
+
+/* Dark mode clear icon color */
+::ng-deep .dark-calendar .p-calendar-clear-icon {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark-calendar .p-calendar-clear-icon:hover {
+  color: #313030 !important;
+}
+
+/* Reduce panel size for compact calendar */
+::ng-deep .calendar-compact .p-datepicker {
+  transform: scale(0.85);
+  transform-origin: top left;
+}
+
+/* ===== DROPDOWN STYLES ===== */
 /* Hides clear icon when dropdown has no selected value */
 ::ng-deep .p-dropdown .p-dropdown-clear {
   display: none;
@@ -149,14 +147,14 @@
 /* Dark mode dropdown styles */
 ::ng-deep .dark .p-dropdown-panel {
   background-color: #2d354d !important;
-  color: #B1B1B1 !important;
+  color: #b1b1b1 !important;
   border-radius: 6px !important;
   overflow: hidden;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
   background-color: #2d354d !important;
-  color: #B1B1B1 !important;
+  color: #b1b1b1 !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
@@ -166,10 +164,8 @@
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
   background-color: #2d354d !important;
-  color: #B1B1B1 !important;
+  color: #b1b1b1 !important;
 }
-
-
 
 /* Dark mode fix for dropdown filter search input */
 ::ng-deep .dark .p-dropdown-filter {
@@ -201,49 +197,7 @@
   border-color: #6b7280 !important;
   outline: none;
 }
-::ng-deep .dark .p-dropdown-filter {
-  border-color: #6b7280;
-  background-color: #4b5563 !important;
-  color: #f9fafb !important;
-}
-
-::ng-deep .dark .p-dropdown-filter::placeholder {
-  color: #9ca3af !important;
-}
-
-::ng-deep .dark .p-dropdown-filter-container {
-  background-color: #374151 !important;
-  border-bottom-color: #6b7280 !important;
-}
-
-::ng-deep .dark .p-dropdown-filter:focus {
-  background-color: #4b5563 !important;
-  color: #f9fafb !important;
-  border-color: #6b7280 !important;
-  outline: none;
-}
-
-::ng-deep .dark .p-dropdown-filter-icon {
-  color: #9ca3af !important;
-}
 
 ::ng-deep .dark .p-dropdown-header {
   background-color: #4b5563;
-}
-
-/* Compact calendar input width */
-::ng-deep .calendar-compact .p-inputtext {
-  width: 140px !important;
-}
-
-/* Ensure container does not stretch */
-::ng-deep .calendar-compact.p-calendar {
-  width: 140px !important;
-  max-width: 140px !important;
-}
-
-/* Reduce panel size slightly for consistency */
-::ng-deep .calendar-compact .p-datepicker {
-  transform: scale(0.85);
-  transform-origin: top left;
 }

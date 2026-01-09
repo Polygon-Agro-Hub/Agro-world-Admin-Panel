@@ -12,7 +12,7 @@
   <div
     class="pt-5 pr-12 pl-12 pb-10 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
-<div class="flex items-center mb-4 gap-[27rem]">
+<div class="flex flex-row justify-between">
   <!-- Left: Farmer -->
   <div class="flex items-center space-x-1">
     <span class="font-medium dark:text-textDark">Farmer:</span>
@@ -25,6 +25,13 @@
     <span class="font-semibold dark:text-textDark">{{ category || 'NULL' }}</span>
   </div>
 </div>
+
+<div class="flex items-center space-x-1">
+  <span class="font-medium dark:text-textDark">Farm:</span>
+  <span class="font-semibold dark:text-textDark">{{ farmName || 'NULL' }}</span>
+</div>
+
+
 
 
 
@@ -47,10 +54,10 @@
             <th class="py-3 font-normal text-gray-500 dark:text-textDark text-left">
               Asset Name
             </th>
-            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left whitespace-nowrap">
               Brand
             </th>
-            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left whitespace-nowrap">
               Batch No.
             </th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
@@ -79,10 +86,10 @@
         <tbody>
           <tr *ngFor="let item of currentAsset" class="border-b">
             <td class="py-3 dark:text-textDark">{{ item.asset }}</td>
-            <td class="px-4 py-3 dark:text-textDark text-center">
+            <td class="px-4 py-3 dark:text-textDark text-left whitespace-nowrap">
               {{ item.brand }}
             </td>
-            <td class="px-4 py-3 dark:text-textDark text-center">
+            <td class="px-4 py-3 dark:text-textDark text-left whitespace-nowrap">
               {{ item.batchNum }}
             </td>
             <td class="px-4 py-3 dark:text-textDark text-center">

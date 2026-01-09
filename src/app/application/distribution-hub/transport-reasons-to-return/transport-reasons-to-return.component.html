@@ -49,7 +49,7 @@
           <label for="rsnSinhala" class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
             Reason (in Sinhala)
           </label>
-          <textarea id="rsnSinhala" formControlName="rsnSinhala" (keydown)="preventLeadingSpace($event)" rows="3"
+          <textarea id="rsnSinhala" formControlName="rsnSinhala" (keydown)="preventLeadingSpace($event)" rows="3" maxlength="250"
             class="block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
             [ngClass]="{
               'border-red-500':
@@ -69,7 +69,7 @@
           <label for="rsnTamil" class="block text-sm font-medium text-textLight dark:text-textDark mb-2">
             Reason (in Tamil)
           </label>
-          <textarea id="rsnTamil" formControlName="rsnTamil" (keydown)="preventLeadingSpace($event)" rows="3"
+          <textarea id="rsnTamil" formControlName="rsnTamil" (keydown)="preventLeadingSpace($event)" rows="3"  maxlength="250"
             class="block w-full p-2 border rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
             [ngClass]="{
               'border-red-500':

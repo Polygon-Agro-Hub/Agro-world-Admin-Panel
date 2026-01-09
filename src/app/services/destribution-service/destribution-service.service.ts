@@ -382,7 +382,7 @@ export class DestributionService {
   }
 
   getReturnRecievedData(
-    sheduleDate?: string,
+    receivedTime?: string,
     centerId?: number,
     searchText?: string
   ): Observable<{ total: number; items: any[]; grandTotal: number }> {
@@ -390,8 +390,8 @@ export class DestributionService {
     console.log('data');
     let url = `${this.apiUrl}distribution/get-return-recieved-data`;
 
-    if (sheduleDate) {
-      url += `?sheduleDate=${sheduleDate}`;
+    if (receivedTime) {
+      url += `?receivedTime=${receivedTime}`;
     } else {
       url += `?`;
     }

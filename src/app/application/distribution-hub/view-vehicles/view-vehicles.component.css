@@ -30,6 +30,16 @@
     color: #B1B1B1 !important;
   }
 
+::ng-deep .vehicle-type-panel {
+  max-width: 160px;      /* 🔥 THIS is the key */
+  overflow-x: auto;
+}
+
+/* text wrap වෙන්න එපා */
+::ng-deep .vehicle-type-panel .p-dropdown-item {
+  white-space: nowrap;
+  min-width: max-content; /* 🔥 forces overflow */
+}
 
   /* Dark mode styles for PrimeNG Calendar */
 .dark .custom-calendar .p-datepicker {

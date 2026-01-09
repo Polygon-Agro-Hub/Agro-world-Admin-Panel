@@ -223,8 +223,11 @@
             </table>
         </div>
         <div class="dark:bg-[#262f45]">
-            <pagination-controls></pagination-controls>
-        </div>
+            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+              [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+              [screenReaderCurrentLabel]="'Youre on page'">
+            </pagination-controls>
+          </div>
     </div>
 </div>
 
@@ -281,13 +284,9 @@
             </p>
 
             <p class="mt-3">
-                {{ selectedLanguage === 'Tamil' ? 'இதற்கு' :
-                selectedLanguage === 'Sinhala' ? 'මෙයට' : 'Sincerely' }},
+                Sincerely,
                 <br />
-                <span *ngIf="selectedLanguage === 'English'">Polygon Customer Support Team</span>
-                <span *ngIf="selectedLanguage === 'Sinhala'">Polygon පාරිභෝගික සහාය කණ්ඩායම</span>
-                <span *ngIf="selectedLanguage === 'Tamil'">Polygon வாடிக்கையாளர் ஆதரவு குழு</span>
-
+                Polygon Customer Support Team
             </p>
         </div>
 

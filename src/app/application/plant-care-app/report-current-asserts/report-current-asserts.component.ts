@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssetsService } from '../../../services/plant-care/assets.service';
+import { Location } from '@angular/common';
 
 class AssertReport {
   'category': string;
@@ -31,19 +32,22 @@ export class ReportCurrentAssertsComponent implements OnInit {
   name!: string;
   assertReport!: AssertReport[];
   farmId!: number;
+  farmName!: string;
 
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     private assertService: AssetsService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.params['userId'];
     this.name = this.route.snapshot.params['name'];
     this.farmId = this.route.snapshot.params['farmId'];
+    this.farmName = this.route.snapshot.params['farmName'];
     console.log("userId", this.userId);
     console.log("name", this.name);
     console.log("farmId", this.farmId);
@@ -60,11 +64,15 @@ export class ReportCurrentAssertsComponent implements OnInit {
 
   viewList(id: any, category: any) {
     this.router.navigate(['/plant-care/action/current-assets-view'], {
-      queryParams: { id, category, fullName: this.name , farmId:this.farmId },
+      queryParams: { id, category, fullName: this.name , farmId:this.farmId, farmName: this.farmName },
     });
   }
 
   navigatePath(path: string) {
     this.router.navigate([path]);
+  }
+
+  back() {
+    this.location.back();
   }
 }

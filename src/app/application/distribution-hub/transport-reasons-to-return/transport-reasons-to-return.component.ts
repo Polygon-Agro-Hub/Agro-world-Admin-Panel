@@ -32,6 +32,8 @@ interface Reason {
 export class TransportReasonsToReturnComponent implements OnInit {
   reasonForm!: FormGroup;
   reasons: Reason[] = [];
+  draggableReasons: Reason[] = [];
+  fixedReason: Reason | null = null;
   isLoading = false;
 
   constructor(
@@ -61,6 +63,7 @@ export class TransportReasonsToReturnComponent implements OnInit {
         this.isLoading = false;
         if (response.status) {
           this.reasons = response.data;
+          this.separateReasons();
           this.updateFormIndexNo();
         }
       },
@@ -78,6 +81,18 @@ export class TransportReasonsToReturnComponent implements OnInit {
         });
       },
     });
+  }
+
+  // Separate fixed reason (id=1) from draggable reasons and reorder
+  private separateReasons(): void {
+    this.fixedReason = this.reasons.find(r => r.id === 1) || null;
+    this.draggableReasons = this.reasons.filter(r => r.id !== 1);
+    
+    // Sort draggable reasons by indexNo to maintain order
+    this.draggableReasons.sort((a, b) => a.indexNo - b.indexNo);
+    
+    // Recalculate indexes: draggable reasons get 1 to n, fixed reason gets n+1
+    this.updateIndexes();
   }
 
   onBack(): void {
@@ -161,6 +176,11 @@ export class TransportReasonsToReturnComponent implements OnInit {
           });
           this.loadReasons();
           this.reasonForm.reset();
+          
+          // After loading, send updated indexes to backend
+          setTimeout(() => {
+            this.saveIndexesToBackend();
+          }, 500);
         }
       },
       error: (error) => {
@@ -272,15 +292,27 @@ export class TransportReasonsToReturnComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<Reason[]>): void {
-    moveItemInArray(this.reasons, event.previousIndex, event.currentIndex);
-    this.updateIndexes();
-    this.saveIndexesToBackend();
+    // Only allow drop if it's within the draggable reasons
+    if (event.previousIndex !== event.currentIndex) {
+      moveItemInArray(this.draggableReasons, event.previousIndex, event.currentIndex);
+      this.updateIndexes();
+      this.saveIndexesToBackend();
+    }
   }
 
   private updateIndexes(): void {
-    this.reasons.forEach((reason, i) => {
+    // Update indexes for draggable reasons
+    this.draggableReasons.forEach((reason, i) => {
       reason.indexNo = i + 1;
     });
+    
+    // Fixed reason (id=1) always gets the last index
+    if (this.fixedReason) {
+      this.fixedReason.indexNo = this.draggableReasons.length + 1;
+    }
+    
+    // Combine for the full reasons array
+    this.reasons = [...this.draggableReasons, ...(this.fixedReason ? [this.fixedReason] : [])];
   }
 
   private saveIndexesToBackend(): void {

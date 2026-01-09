@@ -4,15 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface DeliveryData {
-  id?: number; 
-  no: number;
-  orderId: string;
-  centre: string;
-  driver: string;
-  phoneNumber: string;
-  deliveryTimeSlot: string;
-  heldTime: string;
+  id: number
+  invNo: string
+  regCode: string
+  centerName: string
+  sheduleTime: string
+  sheduleDate: string
+  createdAt: string
+  status: string
+  outDlvrTime: string
+  collectTime: string
+  driverEmpId: string
+  driverStartTime: string
+  returnTime: string
+  deliveryTime: string;
+  driverPhone: string
+  holdTime: string
 }
+
 
 @Component({
   selector: 'app-hold-todays-deleveries',
@@ -26,7 +35,7 @@ interface DeliveryData {
   styleUrl: './hold-todays-deleveries.component.css',
 })
 export class HoldTodaysDeleveriesComponent implements OnChanges {
-  @Input() holdDeliveries: any[] = [];
+  @Input() holdDeliveries: DeliveryData[] = [];
 
   searchTerm: string = '';
 
@@ -36,76 +45,34 @@ export class HoldTodaysDeleveriesComponent implements OnChanges {
   showDetailsPopup: boolean = false;
   selectedDeliveryId!: number;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['holdDeliveries'] && this.holdDeliveries) {
-      this.processDeliveryData();
-      this.onSearch(); // Apply search filter if any
-    }
-  }
+  ngOnChanges(): void {
+    this.filteredData = [...this.holdDeliveries];
 
-  // Convert backend data to the format needed by the template
-  private processDeliveryData(): void {
-    this.processedData = this.holdDeliveries.map((delivery) => {
-      // Convert scheduleTime to delivery time slot format (e.g., "8AM - 2PM")
-      const deliveryTimeSlot = this.formatToTimeSlot(delivery.sheduleTime);
-
-      return {
-        id: delivery.id, // keep id
-        no: delivery.no || 0,
-        orderId: delivery.invNo || 'N/A',
-        centre: delivery.regCode || 'N/A',
-        driver: delivery.driver || 'N/A',
-        phoneNumber: delivery.phoneNumber || 'N/A',
-        deliveryTimeSlot: deliveryTimeSlot,
-        heldTime: delivery.heldTime || 'N/A',
-      };
-    });
-
-    this.filteredData = [...this.processedData];
-  }
-
-  // Helper method to format schedule time to time slot
-  private formatToTimeSlot(scheduleTime: string): string {
-    if (!scheduleTime) return 'N/A';
-
-    try {
-      // Assuming scheduleTime is in format like "08:00:00" or similar
-      const [hours, minutes] = scheduleTime.split(':');
-      const hourNum = parseInt(hours, 10);
-
-      if (hourNum < 12) {
-        return '8AM - 2PM'; // Morning slot
-      } else {
-        return '2PM - 8PM'; // Afternoon slot
-      }
-    } catch (error) {
-      return 'N/A';
-    }
   }
 
   // Search function
   onSearch(): void {
     if (!this.searchTerm.trim()) {
-      this.filteredData = [...this.processedData];
+      this.filteredData = [...this.holdDeliveries];
       return;
     }
 
     const term = this.searchTerm.toLowerCase().trim();
-    this.filteredData = this.processedData.filter(
+    this.filteredData = this.holdDeliveries.filter(
       (item) =>
-        item.orderId.toLowerCase().includes(term) ||
-        item.centre.toLowerCase().includes(term) ||
-        item.driver.toLowerCase().includes(term) ||
-        item.phoneNumber.toLowerCase().includes(term) ||
-        item.deliveryTimeSlot.toLowerCase().includes(term) ||
-        item.heldTime.toLowerCase().includes(term)
+        item.invNo.toLowerCase().includes(term) ||
+        item.regCode.toLowerCase().includes(term) ||
+        item.driverEmpId.toLowerCase().includes(term) ||
+        item.driverPhone.toLowerCase().includes(term) ||
+        item.sheduleTime.toLowerCase().includes(term) ||
+        item.holdTime.toLowerCase().includes(term)
     );
   }
 
   // Clear search
   clearSearch(): void {
     this.searchTerm = '';
-    this.filteredData = [...this.processedData];
+    this.filteredData = [...this.holdDeliveries];
   }
 
   // View details
@@ -121,5 +88,11 @@ export class HoldTodaysDeleveriesComponent implements OnChanges {
 
   closeDetailsPopup(): void {
     this.showDetailsPopup = false;
+  }
+
+  cleanTimeSlotText(text: string): string {
+    if (!text) return 'N/A';
+    // Remove "Within" and any extra spaces (case-insensitive)
+    return text.replace(/Within\s*/gi, '').trim();
   }
 }

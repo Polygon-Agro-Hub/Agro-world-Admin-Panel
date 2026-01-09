@@ -4,15 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface DeliveryItem {
-  id?: number; 
-  no: number;
-  orderId: string;
-  centre: string;
-  driver: string;
-  phoneNumber: string;
-  deliveryTimeSlot: string;
-  returnTime: string;
-  driverStartTime?: string;
+  id: number
+  invNo: string
+  regCode: string
+  centerName: string
+  sheduleTime: string
+  sheduleDate: string
+  createdAt: string
+  status: string
+  outDlvrTime: string
+  collectTime: string
+  driverEmpId: string
+  driverStartTime: string
+  returnTime: string
+  deliveryTime: string;
+  driverPhone: string
+  holdTime: string
 }
 
 @Component({
@@ -23,66 +30,50 @@ interface DeliveryItem {
   styleUrl: './return-todays-deleveries.component.css',
 })
 export class ReturnTodaysDeleveriesComponent implements OnChanges {
-  @Input() deliveries: any[] = [];
+  @Input() deliveries: DeliveryItem[] = [];
 
   // Processed data for display
-  processedDeliveries: DeliveryItem[] = [];
   showDetailsPopup: boolean = false;
   selectedDeliveryId!: number;
+  filteredDeliveries: DeliveryItem[] = [];
 
   // For search functionality
   searchTerm: string = '';
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['deliveries'] && this.deliveries) {
-      this.processDeliveryData();
-    }
+  ngOnChanges(): void {
+    this.filteredDeliveries = [...this.deliveries];
   }
 
-  private processDeliveryData(): void {
-    // Transform the input data to match the DeliveryItem interface
-    this.processedDeliveries = this.deliveries.map((delivery) => ({
-      id: delivery.id, 
-      no: delivery.no || 0,
-      orderId: delivery.orderId || delivery.invNo || 'N/A',
-      centre: delivery.centre || delivery.regCode || 'N/A',
-      driver: delivery.driver || 'N/A',
-      phoneNumber: delivery.phoneNumber || 'N/A',
-      deliveryTimeSlot: delivery.deliveryTimeSlot || 'N/A',
-      returnTime: delivery.returnTime || 'N/A',
-      driverStartTime: delivery.driverStartTime || 'N/A',
-    }));
+
+  // Helper method to remove "Within" text from time slot strings
+  cleanTimeSlotText(text: string): string {
+    if (!text) return 'N/A';
+    // Remove "Within" and any extra spaces (case-insensitive)
+    return text.replace(/Within\s*/gi, '').trim();
   }
 
-  // Get the total count of processed deliveries
-  get totalCount(): string {
-    return this.filteredDeliveries.length.toString().padStart(2, '0');
-  }
 
-  // Method to filter deliveries based on search term
-  get filteredDeliveries(): DeliveryItem[] {
+
+  onSearch(): void {
     if (!this.searchTerm.trim()) {
-      return this.processedDeliveries;
+      this.filteredDeliveries = [...this.deliveries];
+      return;
     }
 
-    const term = this.searchTerm.toLowerCase();
-    return this.processedDeliveries.filter(
+    const query = this.searchTerm.toLowerCase().trim();
+    this.filteredDeliveries = this.deliveries.filter(
       (item) =>
-        item.orderId.toLowerCase().includes(term) ||
-        item.centre.toLowerCase().includes(term) ||
-        item.driver.toLowerCase().includes(term)
+        item.invNo.toLowerCase().includes(query) ||
+        item.regCode.toLowerCase().includes(query)
     );
   }
 
   // Method to clear search
   clearSearch(): void {
     this.searchTerm = '';
+    this.filteredDeliveries = [...this.deliveries];
   }
 
-  // Method to handle search (optional - can be used for button click)
-  onSearch(): void {
-    console.log('Searching for:', this.searchTerm);
-  }
 
   viewDetails(delivery: DeliveryItem): void {
     if (delivery?.id == null) {

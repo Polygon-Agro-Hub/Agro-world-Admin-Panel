@@ -4,13 +4,13 @@
     <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          WPCK-02 Kollupitiya Central
+          {{ centerObj.centerRegCode }} {{ centerObj.centerName }}
         </h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All ({{ orders.length }})
+            All ({{ orderCount }})
           </h2>
         </div>
 
@@ -28,36 +28,40 @@
 
           <div>
             <div>
-              <div>
-                <p-calendar
-                  id="date"
-                  placeholder="Date"
-                  [showIcon]="true"
-                  [showClear]="true"
-                  [showButtonBar]="true"
-                  dateFormat="yy-mm-dd"
-                  [monthNavigator]="true"
-                  [yearNavigator]="true"
-                  yearRange="1900:2030"
-                  iconDisplay="input"
-                  [style]="{ width: '16rem', height: '2rem' }"
-                  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-       [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-       [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-       [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-       [&_.p-datepicker-header]:dark:text-white
-       [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-       [&_.p-button:hover]:dark:bg-[#6b7280]"
-                  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-                  [appendTo]="'body'"
-                >
-                </p-calendar>
-              </div>
+              <p-calendar
+                [(ngModel)]="selectedDate"
+                (onSelect)="onDateChange()"
+                (onClear)="onDateChange()"
+                id="date"
+                placeholder="Date"
+                [showIcon]="true"
+                [showClear]="true"
+                [showButtonBar]="true"
+                dateFormat="yy-mm-dd"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1900:2030"
+                iconDisplay="input"
+                [style]="{ width: '16rem', height: '2rem' }"
+                panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+     [&_.p-datepicker-header]:dark:text-white
+     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+     [&_.p-button:hover]:dark:bg-[#6b7280]"
+                inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                [appendTo]="'body'"
+              >
+              </p-calendar>
             </div>
           </div>
 
           <div>
             <p-dropdown
+              [(ngModel)]="selectedTimeSlot"
+              (onChange)="onTimeSlotChange()"
+              [options]="timeSlotOptions"
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [checkmark]="true"
               optionLabel="label"
@@ -72,12 +76,15 @@
           >
             <input
               type="text"
+              [(ngModel)]="searchText"
+              (keyup.enter)="onSearch()"
               placeholder="Search by Order ID, Phone Numbers..."
               name="searchText"
               class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
             />
             <button
               type="button"
+              (click)="onSearch()"
               class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
             >
               <svg
@@ -97,6 +104,7 @@
             </button>
             <button
               type="button"
+              (click)="clearSearch()"
               class="text-gray-500 hover:text-gray-700 focus:outline-none"
             >
               <svg
@@ -138,11 +146,6 @@
               Value (Rs.)
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-            >
-              Status
-            </th>
-            <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
             >
               Customer Phone
@@ -163,7 +166,7 @@
               Scheduled Time Slot
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Payment
             </th>
@@ -175,7 +178,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <ng-container *ngIf="hasData; else noData">
+          <ng-container *ngIf="hasData && !isLoading; else noData">
             <tr
               *ngFor="let order of orders"
               class="hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -191,11 +194,6 @@
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.value }}
               </td>
-              <td class="px-4 py-3 text-left">
-                <span [class]="getStatusClass(order.status)">
-                  {{ order.status }}
-                </span>
-              </td>
               <td
                 class="px-4 py-3 text-center text-textLight dark:text-textDark"
               >
@@ -209,7 +207,10 @@
               <td
                 class="px-4 py-3 text-center text-textLight dark:text-textDark"
               >
-                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <button
+                  (click)="viewReceiverInfo(order)"
+                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                >
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -230,15 +231,18 @@
               >
                 {{ order.scheduledTimeSlot }}
               </td>
-              <td class="px-4 py-3 text-center">
-                <span [class]="getPaymentClass(order.payment)">
+              <td class="px-4 py-3 text-left">
+                <span>
                   {{ order.payment }}
                 </span>
               </td>
               <td
                 class="px-4 py-3 text-center text-textLight dark:text-textDark"
               >
-                <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+                <button
+                  (click)="viewOrderDetails(order)"
+                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                >
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -260,10 +264,13 @@
           <ng-template #noData>
             <tr>
               <td
-                colspan="10"
+                colspan="9"
                 class="px-4 py-6 text-center text-textLight dark:text-textDark"
               >
-                <div class="flex flex-col items-center w-full px-10 py-7">
+                <div
+                  *ngIf="!isLoading"
+                  class="flex flex-col items-center w-full px-10 py-7"
+                >
                   <p class="text-[#494949] my-6 dark:text-textDark">
                     --No Data Available--
                   </p>

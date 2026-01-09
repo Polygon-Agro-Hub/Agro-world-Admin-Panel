@@ -194,15 +194,14 @@
               <span class="inline-block min-w-36 text-center font-normal rounded-2xl border px-3 py-1 truncate"
                 [ngClass]="{
                 'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]': item.status === 'Assigned' || item.status === 'Ordered',
-                'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]': item.status === 'Delivered' ||  item.status === 'Picked Up',
+                'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]': item.status === 'Delivered' ||  item.status === 'Picked up',
                 'text-[#80118A] bg-[#FCD4FF] border-[#FCD4FF]': item.status === 'Out For Delivery',
                 'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]': item.status === 'Processing',
-                'text-[#D17A00] bg-[#FFEDCF] border-[#FFEDCF]': item.status === 'On the way',
                 'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]': item.status === 'Failed',
                 'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]': item.status === 'Cancelled',
-                'text-[#7E8700] bg-[#F8FEA5] border-[#DFDFDF]': item.status === 'Collected',
-                'text-[#D17A00] bg-[#FFEDCF] ': item.status === 'Hold',
-                'text-[#00818A] bg-[#ACFBFF] border-[#00818A]': item.status === 'Ready to Pickup', 
+                'text-[#7E8700] bg-[#F8FEA5] border-[#F8FEA5]': item.status === 'Collected',
+                'text-[#D17A00] bg-[#FFEDCF] ': item.status === 'Hold' || item.status === 'On the way',
+                'text-[#00818A] bg-[#ACFBFF] border-[#ACFBFF]': item.status === 'Ready to Pickup',
                 'text-[#FF1100] bg-[#FFDCDA]': item.status === 'Return Received' || item.status === 'Return'
               }">
                 {{ item.status === 'Ordered' ? 'Assigned' : item.status }}

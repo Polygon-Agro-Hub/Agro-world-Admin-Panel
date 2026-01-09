@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TokenService } from '../token/services/token.service';
 import { formatDate } from '@angular/common';
@@ -377,10 +377,9 @@ export class DestributionService {
     if (searchText) {
       url += `&searchText=${encodeURIComponent(searchText)}`;
     }
-    
+
     return this.http.get<{ total: number; items: any[] }>(url, { headers });
   }
-
 
   getReturnRecievedData(
     sheduleDate?: string,
@@ -388,8 +387,14 @@ export class DestributionService {
     searchText?: string
   ): Observable<{ total: number; items: any[]; grandTotal: number }> {
     const headers = this.getHeaders();
-    console.log('data')
-    let url = `${this.apiUrl}distribution/get-return-recieved-data?sheduleDate=${sheduleDate}`;
+    console.log('data');
+    let url = `${this.apiUrl}distribution/get-return-recieved-data`;
+
+    if (sheduleDate) {
+      url += `?sheduleDate=${sheduleDate}`;
+    } else {
+      url += `?`;
+    }
 
     if (typeof centerId === 'number') {
       url += `&centerId=${centerId}`;
@@ -398,6 +403,63 @@ export class DestributionService {
       url += `&searchText=${encodeURIComponent(searchText)}`;
     }
 
-    return this.http.get<{ total: number; items: any[]; grandTotal: number }>(url, { headers });
+    return this.http.get<{ total: number; items: any[]; grandTotal: number }>(
+      url,
+      { headers }
+    );
   }
+
+  // In your service file
+// distribution.service.ts
+getDistributedCenterPickupOrders(searchParams: {
+  companycenterId: number;
+  sheduleTime?: string;
+  date?: string;
+  searchText?: string;
+  activeTab?: 'ready-to-pickup' | 'picked-up';
+}): Observable<ApiResponse> {
+  // Build query parameters
+  const params = new HttpParams()
+    .set('companycenterId', searchParams.companycenterId.toString());
+  
+  // Add optional parameters if they exist
+  if (searchParams.sheduleTime && searchParams.sheduleTime.trim() !== '') {
+    params.set('time', searchParams.sheduleTime.trim());
+  }
+  
+  if (searchParams.date && searchParams.date.trim() !== '') {
+    const formattedDate = this.formatDateForApi(searchParams.date);
+    params.set('date', formattedDate);
+  }
+  
+  if (searchParams.searchText && searchParams.searchText.trim() !== '') {
+    params.set('searchText', searchParams.searchText.trim());
+  }
+  
+  if (searchParams.activeTab) {
+    params.set('activeTab', searchParams.activeTab);
+  }
+  
+  const url = `${this.apiUrl}distribution/get-distributed-center-pickup-orders`;
+  
+  return this.http.get<ApiResponse>(url, {
+    headers: this.getHeaders(),
+    params: params
+  });
+}
+
+private formatDateForApi(dateInput: string | Date): string {
+  if (dateInput instanceof Date) {
+    return dateInput.toISOString().split('T')[0];
+  }
+  
+  if (typeof dateInput === 'string') {
+    const date = new Date(dateInput);
+    if (!isNaN(date.getTime())) {
+      return date.toISOString().split('T')[0];
+    }
+  }
+  
+  return dateInput.toString();
+}
 }

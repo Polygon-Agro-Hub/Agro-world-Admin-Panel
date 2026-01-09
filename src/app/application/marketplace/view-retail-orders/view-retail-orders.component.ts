@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -58,8 +57,10 @@ export class ViewRetailOrdersComponent implements OnInit {
   statusOptions = [
     { label: 'Assigned', value: 'Ordered' },
     { label: 'Delivered', value: 'Delivered' },
+    { label: 'Hold', value: 'Hold' },
     { label: 'Out For Delivery', value: 'Out For Delivery' },
-    { label: 'Picked Up', value: 'Picked Up' },
+    { label: 'Picked Up', value: 'Picked up' },
+    { label: 'On the Way', value: 'On the way' },
     { label: 'Processing', value: 'Processing' },
     { label: 'Ready to Pickup', value: 'Ready to Pickup' },
   ];
@@ -96,7 +97,6 @@ export class ViewRetailOrdersComponent implements OnInit {
       formattedDate
     ).subscribe(
       (response) => {
-
         this.isLoading = false;
         this.retailordersArr = response.items;
         this.hasData = this.retailordersArr.length > 0;
@@ -157,13 +157,12 @@ export class ViewRetailOrdersComponent implements OnInit {
   }
 
   dateFilter() {
- 
     this.applyDateFilter();
   }
 
   onDateClear() {
     this.formattedDate = '';
-    this.fetchAllRetailOrders(); 
+    this.fetchAllRetailOrders();
   }
 
   navigateDashboard(id: number) {
@@ -171,68 +170,68 @@ export class ViewRetailOrdersComponent implements OnInit {
   }
 
   downloadInvoice(id: number, tableInvoiceNo: string): void {
-  this.isLoading = true;
+    this.isLoading = true;
 
-  this.finalInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
-    .then(() => {
-      // Success case - no action needed unless you want to show a success message
-    })
-    .catch((error) => {
-      console.error('Error generating invoice:', error);
-      this.errorMessage = 'Failed to download invoice';
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to download invoice. Please try again.',
-        confirmButtonColor: '#3085d6',
+    this.finalInvoiceService
+      .generateAndDownloadInvoice(id, tableInvoiceNo)
+      .then(() => {
+        // Success case - no action needed unless you want to show a success message
+      })
+      .catch((error) => {
+        console.error('Error generating invoice:', error);
+        this.errorMessage = 'Failed to download invoice';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
-    })
-    .finally(() => {
-      this.isLoading = false;
-    });
-}
+  }
 
-downloadPostInvoice(id: number, tableInvoiceNo: string): void {
-  this.isLoading = true;
+  downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+    this.isLoading = true;
 
-  this.postInvoiceService.generateAndDownloadInvoice(id, tableInvoiceNo)
-    .then(() => {
-      // Success case - no action needed unless you want to show a success message
-    })
-    .catch((error) => {
-      console.error('Error generating invoice:', error);
-      this.errorMessage = 'Failed to download invoice';
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to download invoice. Please try again.',
-        confirmButtonColor: '#3085d6',
+    this.postInvoiceService
+      .generateAndDownloadInvoice(id, tableInvoiceNo)
+      .then(() => {
+        // Success case - no action needed unless you want to show a success message
+      })
+      .catch((error) => {
+        console.error('Error generating invoice:', error);
+        this.errorMessage = 'Failed to download invoice';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
-    })
-    .finally(() => {
-      this.isLoading = false;
-    });
-}
+  }
 
-isPostInvoiceEnabled(status: string): boolean {
-  // Define the statuses that allow post-invoice download
-  const enabledStatuses = [
-    'Out For Delivery', 
-    'Delivered', 
-    'Picked Up', 
-    'On the way', 
-    'Failed'
-  ];
-  
-  return enabledStatuses.includes(status);
-}
+  isPostInvoiceEnabled(status: string): boolean {
+    // Define the statuses that allow post-invoice download
+    const enabledStatuses = [
+      'Out For Delivery',
+      'Delivered',
+      'Picked up',
+      'On the way',
+      'Failed',
+    ];
 
-
+    return enabledStatuses.includes(status);
+  }
 }
 
 class RetailOrders {
   id!: number;
-  orderId!:number;
+  orderId!: number;
   customerName!: string;
   method!: number;
   amount!: number;

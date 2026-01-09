@@ -59,10 +59,11 @@ export class ViewWholwsaleOrdersComponent implements OnInit {
 
   statusOptions = [
     { label: 'Delivered', value: 'Delivered' },
-    { label: 'On the way', value: 'On the way' },
+    { label: 'On the Way', value: 'On the way' },
     { label: 'Assigned', value: 'Ordered' },
     { label: 'Out For Delivery', value: 'Out For Delivery' },
-    { label: 'Picked Up', value: 'Picked Up' },
+    { label: 'Hold', value: 'Hold' },
+    { label: 'Picked Up', value: 'Picked up' },
     { label: 'Processing', value: 'Processing' },
     { label: 'Cancelled', value: 'Cancelled' },
     { label: 'Ready to Pickup', value: 'Ready to Pickup' },
@@ -199,7 +200,7 @@ isPostInvoiceEnabled(status: string): boolean {
   const enabledStatuses = [
     'Out For Delivery', 
     'Delivered', 
-    'Picked Up', 
+    'Picked up', 
     'On the way', 
     'Failed'
   ];

@@ -4,16 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface DeliveryRecord {
-  id?: number;
-  no: number;
-  orderId: string;
-  centre: string;
-  driver: string;
-  phoneNumber: string;
-  deliveryTimeSlot: string;
+  id: number
+  invNo: string
+  regCode: string
+  centerName: string
+  sheduleTime: string
+  sheduleDate: string
+  createdAt: string
+  status: string
+  outDlvrTime: string
+  collectTime: string
+  driverEmpId: string
+  driverStartTime: string
+  returnTime: string
   deliveryTime: string;
-   driverStartTime?: string;
+  driverPhone: string
+  holdTime: string
 }
+
 
 @Component({
   selector: 'app-delivered-todays-deleveries',
@@ -23,64 +31,42 @@ interface DeliveryRecord {
   styleUrl: './delivered-todays-deleveries.component.css',
 })
 export class DeliveredTodaysDeleveriesComponent implements OnChanges {
-  @Input() deliveries: any[] = [];
+  @Input() deliveries: DeliveryRecord[] = [];
 
   searchTerm: string = '';
-  deliveryRecords: DeliveryRecord[] = [];
   filteredDeliveries: DeliveryRecord[] = [];
   showDetailsPopup: boolean = false;
   selectedDeliveryId!: number;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['deliveries'] && this.deliveries) {
-      this.transformDeliveryData();
-      this.filteredDeliveries = [...this.deliveryRecords];
-    }
-  }
-
-  private transformDeliveryData(): void {
-    // Transform parent data to match child component interface
-    this.deliveryRecords = this.deliveries.map((delivery) => ({
-      id: delivery.id, 
-      no: delivery.no || 0,
-      orderId: delivery.orderId || delivery.invNo || 'N/A',
-      centre: delivery.centre || delivery.regCode || 'N/A',
-      driver: delivery.driver || 'N/A',
-      phoneNumber: delivery.phoneNumber || 'N/A',
-      deliveryTimeSlot: delivery.deliveryTimeSlot || 'N/A',
-      deliveryTime: delivery.deliveryTime || delivery.outDlvrTime || 'N/A',
-      driverStartTime: delivery.driverStartTime,
-    }));
+  ngOnChanges(): void {
+    this.filteredDeliveries = [...this.deliveries];
   }
 
   onSearch(): void {
     if (!this.searchTerm.trim()) {
-      this.filteredDeliveries = [...this.deliveryRecords];
+      this.filteredDeliveries = [...this.deliveries];
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredDeliveries = this.deliveryRecords.filter(
+      this.filteredDeliveries = this.deliveries.filter(
         (delivery) =>
-          delivery.orderId.toLowerCase().includes(term) ||
-          delivery.centre.toLowerCase().includes(term) ||
-          delivery.driver.toLowerCase().includes(term) ||
-          delivery.phoneNumber.includes(term)
+          delivery.invNo.toLowerCase().includes(term) ||
+          delivery.regCode.toLowerCase().includes(term) ||
+          delivery.driverEmpId.toLowerCase().includes(term) ||
+          delivery.driverPhone.includes(term)
       );
     }
   }
 
   clearSearch(): void {
     this.searchTerm = '';
-    this.filteredDeliveries = [...this.deliveryRecords];
+    this.filteredDeliveries = [...this.deliveries];
   }
 
-  get totalCount(): string {
-    return this.filteredDeliveries.length.toString().padStart(2, '0');
-  }
 
   viewDetails(delivery: DeliveryRecord): void {
-     if (delivery.id == null) {
+    if (delivery.id == null) {
       console.warn('Delivery id is missing for selected row:', delivery);
-      return; 
+      return;
     }
     this.selectedDeliveryId = delivery.id;
     this.showDetailsPopup = true;
@@ -88,5 +74,11 @@ export class DeliveredTodaysDeleveriesComponent implements OnChanges {
 
   closeDetailsPopup(): void {
     this.showDetailsPopup = false;
+  }
+
+  cleanTimeSlotText(text: string): string {
+    if (!text) return 'N/A';
+    // Remove "Within" and any extra spaces (case-insensitive)
+    return text.replace(/Within\s*/gi, '').trim();
   }
 }

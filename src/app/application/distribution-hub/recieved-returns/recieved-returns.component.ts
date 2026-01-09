@@ -181,6 +181,7 @@ export class RecievedReturnsComponent implements OnInit {
         next: (response) => {
           this.isLoading = false;
           this.allDriverData = response.items || [];
+          this.allDataLoaded = true;
           this.applyClientSideFilter(searchTerm, 
             /^\d+$/.test(searchTerm.replace(/[+\s\-()]/g, '')), 
             /^[A-Za-z0-9]{3,10}$/.test(searchTerm)
@@ -272,6 +273,14 @@ export class RecievedReturnsComponent implements OnInit {
   closeDetailsModal(): void {
     this.showDetailsModal = false;
   }
+
+  formatNumber(value: number): string {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'decimal',   
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
+}
 
   // Add these properties
   private allDriverData: DriverData[] = [];

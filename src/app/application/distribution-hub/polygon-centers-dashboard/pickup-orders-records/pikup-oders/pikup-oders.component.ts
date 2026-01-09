@@ -68,10 +68,8 @@ export class PikupOdersComponent implements OnChanges {
 
   // Time slot options for dropdown
   timeSlotOptions = [
-    { label: 'Morning (8AM-12PM)', value: 'morning' },
-    { label: 'Afternoon (12PM-4PM)', value: 'afternoon' },
-    { label: 'Evening (4PM-8PM)', value: 'evening' },
-    { label: 'Night (8PM-12AM)', value: 'night' },
+    { label: '8AM-12PM' },
+    { label: '12PM-4PM' },
   ];
 
   isLoading = false;

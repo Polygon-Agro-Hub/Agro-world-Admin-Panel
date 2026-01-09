@@ -10,7 +10,7 @@
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
           <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All ({{ orderCount }})
+            {{ activeTab }} ({{ orderCount }})
           </h2>
         </div>
 
@@ -28,34 +28,32 @@
 
           <div>
             <div>
-              <div>
-                <p-calendar
-                  id="date"
-                  placeholder="Date"
-                  [showIcon]="true"
-                  [showClear]="true"
-                  [showButtonBar]="true"
-                  dateFormat="yy-mm-dd"
-                  [monthNavigator]="true"
-                  [yearNavigator]="true"
-                  yearRange="1900:2030"
-                  iconDisplay="input"
-                  [style]="{ width: '16rem', height: '2rem' }"
-                  panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                   [&_.p-datepicker-header]:dark:text-white
-                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                   [&_.p-button:hover]:dark:bg-[#6b7280]"
-                  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-                  [appendTo]="'body'"
-                  [(ngModel)]="selectedDate"
-                  (onSelect)="fetchData()"
-                  (onClear)="clearDate()"
-                >
-                </p-calendar>
-              </div>
+              <p-calendar
+                id="date"
+                placeholder="Date"
+                [showIcon]="true"
+                [showClear]="true"
+                [showButtonBar]="true"
+                dateFormat="yy-mm-dd"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1900:2030"
+                iconDisplay="input"
+                [style]="{ width: '16rem', height: '2rem' }"
+                panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                 [&_.p-datepicker-header]:dark:text-white
+                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                 [&_.p-button:hover]:dark:bg-[#6b7280]"
+                inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                [appendTo]="'body'"
+                [(ngModel)]="selectedDate"
+                (onSelect)="onDateSelect()"
+                (onClear)="onDateClear()"
+              >
+              </p-calendar>
             </div>
           </div>
 
@@ -68,7 +66,7 @@
               placeholder="Time Slot"
               [options]="timeSlotOptions"
               [(ngModel)]="selectedTimeSlot"
-              (onChange)="fetchData()"
+              (onChange)="onTimeSlotSelect()"
             >
             </p-dropdown>
           </div>
@@ -107,7 +105,7 @@
             <button
               type="button"
               class="text-gray-500 hover:text-gray-700 focus:outline-none"
-              (click)="clearSearch()"
+              (click)="onClearSearch()"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -187,7 +185,7 @@
         <tbody class="divide-y divide-gray-200">
           <ng-container *ngIf="hasData; else noData">
             <tr
-              *ngFor="let order of orders"
+              *ngFor="let order of transformedOrders"
               class="hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">

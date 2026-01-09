@@ -1,11 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
-import { DestributionService } from '../../../../../services/destribution-service/destribution-service.service';
 
 interface Order {
   no: number;
@@ -43,13 +49,16 @@ interface CenterDetails {
 })
 export class PikupOdersComponent implements OnChanges {
   @Input() centerObj!: CenterDetails;
+  @Input() orders: any[] = []; // Orders from parent
 
-  isLoading = false;
-  hasData: boolean = false;
-  orderCount: number = 0;
-  orders: Order[] = [];
+  // Output events for parent to handle filters
+  @Output() dateChange = new EventEmitter<Date | null>();
+  @Output() timeSlotChange = new EventEmitter<string>();
+  @Output() searchChange = new EventEmitter<string>();
+  @Output() clearSearch = new EventEmitter<void>();
+  @Output() clearDate = new EventEmitter<void>();
 
-  // Filter properties
+  // Local filter properties for child component
   selectedDate: Date | null = null;
   selectedTimeSlot: string = '';
   searchText: string = '';
@@ -62,90 +71,52 @@ export class PikupOdersComponent implements OnChanges {
     { label: 'Night (8PM-12AM)', value: 'night' },
   ];
 
-  constructor(
-    private destributionService: DestributionService,
-    private datePipe: DatePipe
-  ) {}
+  isLoading = false;
+  hasData: boolean = false;
+  orderCount: number = 0;
+  transformedOrders: Order[] = [];
+
+  constructor(private datePipe: DatePipe) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['centerObj'] && this.centerObj && this.centerObj.centerId > 0) {
-      this.fetchPickedUpOrders();
+    if (changes['orders'] || changes['centerObj']) {
+      this.transformData();
     }
   }
 
-  // FETCH ONLY PICKED UP ORDERS
-  fetchPickedUpOrders(): void {
-    this.isLoading = true;
-
-    // Format date for API
-    let formattedDate = '';
-    if (this.selectedDate) {
-      formattedDate = this.formatDateForApi(this.selectedDate);
+  private transformData(): void {
+    if (this.orders && this.orders.length > 0) {
+      this.transformedOrders = this.transformApiData(this.orders);
+      this.orderCount = this.transformedOrders.length;
+      this.hasData = this.orderCount > 0;
+    } else {
+      this.transformedOrders = [];
+      this.orderCount = 0;
+      this.hasData = false;
     }
-
-    // Fetch all orders from API (without activeTab parameter)
-    this.destributionService
-      .getDistributedCenterPickupOrders({
-        companycenterId: this.centerObj.centerId,
-        sheduleTime: this.selectedTimeSlot,
-        date: formattedDate,
-        searchText: this.searchText
-        // DO NOT pass activeTab parameter
-      })
-      .subscribe({
-        next: (res) => {
-          if (res && res.data) {
-            const dataArray = Array.isArray(res.data) ? res.data : [res.data];
-            
-            // CRITICAL: Filter for ONLY PICKED UP orders on client side
-            const pickedUpData = this.filterOnlyPickedUp(dataArray);
-            
-            // Transform only the filtered data
-            this.orders = this.transformApiData(pickedUpData);
-            this.orderCount = this.orders.length;
-            this.hasData = this.orderCount > 0;
-          } else {
-            this.orders = [];
-            this.orderCount = 0;
-            this.hasData = false;
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching orders:', error);
-          this.orders = [];
-          this.orderCount = 0;
-          this.hasData = false;
-          this.isLoading = false;
-        },
-      });
   }
 
-  // Filter ONLY for Picked Up orders (exclude Ready to Pickup)
-  private filterOnlyPickedUp(apiData: any[]): any[] {
-    return apiData.filter(item => {
-      const status = (item.status || item.orderStatus || '').toLowerCase().trim();
-      
-      // Include only orders with "picked up" status (not "ready")
-      const isPickedUp = status.includes('picked') || 
-                        status.includes('picked_up') || 
-                        status.includes('picked up') ||
-                        status.includes('collected') ||
-                        status.includes('delivered_to_customer');
-      
-      const isReady = status.includes('ready') || 
-                     status.includes('ready_for_pickup') || 
-                     status.includes('ready to pickup');
-      
-      return isPickedUp && !isReady;
-    });
+  // Filter methods - emit events to parent
+  onDateSelect(): void {
+    this.dateChange.emit(this.selectedDate);
   }
 
-  private formatDateForApi(date: Date): string {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  onDateClear(): void {
+    this.selectedDate = null;
+    this.clearDate.emit();
+  }
+
+  onTimeSlotSelect(): void {
+    this.timeSlotChange.emit(this.selectedTimeSlot);
+  }
+
+  onSearch(): void {
+    this.searchChange.emit(this.searchText);
+  }
+
+  onClearSearch(): void {
+    this.searchText = '';
+    this.clearSearch.emit();
   }
 
   // Transform API data to match your Order interface
@@ -177,51 +148,68 @@ export class PikupOdersComponent implements OnChanges {
   private formatScheduledTimeSlot(item: any): string {
     const scheduleDate = item.scheduleDate || item.sheduleDate;
     const timeSlot = item.timeSlot || item.sheduleTime;
-    
+
     if (!scheduleDate) {
       return this.getFormattedTimeSlotForDisplay(timeSlot) || 'N/A';
     }
-    
+
     const formattedDate = this.formatDisplayDate(scheduleDate);
     const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
-    
+
     return `${formattedTimeSlot}, ${formattedDate}`;
   }
 
   // Helper method to format time slot for display
   private getFormattedTimeSlotForDisplay(timeSlot: string): string {
     if (!timeSlot) return '';
-    
+
     const timeSlotLower = timeSlot.toLowerCase();
-    
-    if (timeSlotLower.includes('8-12') || timeSlotLower.includes('8am-12pm') || timeSlotLower.includes('morning')) {
+
+    if (
+      timeSlotLower.includes('8-12') ||
+      timeSlotLower.includes('8am-12pm') ||
+      timeSlotLower.includes('morning')
+    ) {
       return '8AM - 12PM';
-    } else if (timeSlotLower.includes('12-4') || timeSlotLower.includes('12pm-4pm') || timeSlotLower.includes('afternoon')) {
+    } else if (
+      timeSlotLower.includes('12-4') ||
+      timeSlotLower.includes('12pm-4pm') ||
+      timeSlotLower.includes('afternoon')
+    ) {
       return '12PM - 4PM';
-    } else if (timeSlotLower.includes('4-8') || timeSlotLower.includes('4pm-8pm') || timeSlotLower.includes('evening')) {
+    } else if (
+      timeSlotLower.includes('4-8') ||
+      timeSlotLower.includes('4pm-8pm') ||
+      timeSlotLower.includes('evening')
+    ) {
       return '4PM - 8PM';
-    } else if (timeSlotLower.includes('8pm-12am') || timeSlotLower.includes('night')) {
+    } else if (
+      timeSlotLower.includes('8pm-12am') ||
+      timeSlotLower.includes('night')
+    ) {
       return '8PM - 12AM';
     }
-    
-    const timeRange = timeSlot.match(/(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i);
+
+    const timeRange = timeSlot.match(
+      /(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i
+    );
     if (timeRange) {
       const startTime = this.formatTimeComponent(timeRange[1]);
       const endTime = this.formatTimeComponent(timeRange[2]);
       return `${startTime} - ${endTime}`;
     }
-    
+
     return timeSlot;
   }
 
   // Helper method to format time components
   private formatTimeComponent(time: string): string {
     time = time.trim().toUpperCase();
-    
+
     if (time.includes('AM') || time.includes('PM')) {
       return time.replace(/\s+/g, '').replace(/(\d+)(AM|PM)/i, '$1$2');
     }
-    
+
     const hour = parseInt(time);
     if (!isNaN(hour)) {
       if (hour === 0) return '12AM';
@@ -229,7 +217,7 @@ export class PikupOdersComponent implements OnChanges {
       if (hour === 12) return '12PM';
       return `${hour - 12}PM`;
     }
-    
+
     return time;
   }
 
@@ -276,42 +264,26 @@ export class PikupOdersComponent implements OnChanges {
     return this.datePipe.transform(dateString, 'MMM d, yyyy') || 'N/A';
   }
 
-  // Filter methods
-  onDateChange(): void {
-    this.fetchPickedUpOrders();
-  }
-
-  onTimeSlotChange(): void {
-    this.fetchPickedUpOrders();
-  }
-
-  onSearch(): void {
-    this.fetchPickedUpOrders();
-  }
-
-  clearSearch(): void {
-    this.searchText = '';
-    this.fetchPickedUpOrders();
-  }
-
   // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
     console.log('View receiver info for:', order);
-    // Implement your modal or navigation logic here
   }
 
   viewOrderDetails(order: Order): void {
     console.log('View order details for:', order);
-    // Implement your modal or navigation logic here
   }
 
   // Function to get payment status color
   getPaymentColor(payment: string): string {
-    switch(payment) {
-      case 'Paid': return 'text-green-600 dark:text-green-400 font-semibold';
-      case 'Pending': return 'text-yellow-600 dark:text-yellow-400 font-semibold';
-      case 'Failed': return 'text-red-600 dark:text-red-400 font-semibold';
-      default: return 'text-textLight dark:text-textDark';
+    switch (payment) {
+      case 'Paid':
+        return 'text-green-600 dark:text-green-400 font-semibold';
+      case 'Pending':
+        return 'text-yellow-600 dark:text-yellow-400 font-semibold';
+      case 'Failed':
+        return 'text-red-600 dark:text-red-400 font-semibold';
+      default:
+        return 'text-textLight dark:text-textDark';
     }
   }
 }

@@ -161,10 +161,10 @@
 
   
   /* Change the text color of the active/selected option inside the panel */
-  ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
-    color: #16a34a !important; /* Tailwind's green-600 equivalent */
-    background-color: #f0fdf4; /* optional, like Tailwind bg-green-50 */
-  }
+  /* ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    color: #16a34a !important; 
+    background-color: #f0fdf4; 
+  } */
 
   ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;

@@ -55,7 +55,7 @@ export class CollectiveofficersPersonalComponent implements OnInit {
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
-  selectedPage: 'pageOne' | 'pageTwo' = 'pageTwo';
+  selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
   personalData: Personal = new Personal();
 
   collectionCenterData: CollectionCenter[] = [];

@@ -673,23 +673,53 @@ export class EditFarmerClusterComponent implements OnInit {
       return;
     }
 
-    // Store the farmer data temporarily
-    this.pendingFarmersToAdd.push({
+    this.isLoading = true;
+
+    const addFarmerData = {
       nic: this.newFarmerNIC.trim(),
       farmId: this.newFarmerFarmId.trim()
-    });
+    };
 
-    Swal.fire({
-      title: 'Success!',
-      text: 'Farmer added to pending list. Click Update to save changes.',
-      icon: 'success',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
+    this.farmerClusterService
+      .checkBeforeAddFarmerToCluster(this.clusterId, addFarmerData)
+      .subscribe(
+        (response: any) => {
+          this.isLoading = false;
+          Swal.fire({
+            title: 'Success!',
+            text: 'Farmer added to pending list. Click Update to save changes.',
+            icon: 'success',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
 
-    this.closeAddFarmerModal();
+          this.pendingFarmersToAdd.push({
+            nic: this.newFarmerNIC.trim(),
+            farmId: this.newFarmerFarmId.trim()
+          });
+          // this.fetchClusterUsers(this.searchTerm);
+          this.closeAddFarmerModal();
+        },
+        (error) => {
+          this.isLoading = false;
+          const errorMessage = error.error?.message || 'Failed to add farmer';
+
+          // Check if error is specifically for NIC or Farm ID
+          if (errorMessage.toLowerCase().includes('nic')) {
+            this.nicError = errorMessage;
+          } else if (errorMessage.toLowerCase().includes('farm')) {
+            this.farmIdError = errorMessage;
+          } else {
+            this.nicError = errorMessage;
+          }
+
+          console.log('errors',  this.nicError,  this.farmIdError )
+        }
+      );
+
   }
 
   isAddFarmerFormValid(): boolean {

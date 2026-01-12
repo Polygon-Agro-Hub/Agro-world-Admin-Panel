@@ -53,6 +53,7 @@ export class AddFarmerClustersComponent implements OnInit {
   certificates: Certificate[] = [];
   formSubmitted = false;
   hasLeadingOrTrailingSpaces: boolean = false;
+  missingRegCodesP: any[] = [];
 
   districts: District[] = [
     { name: 'Ampara', value: 'Ampara' },
@@ -567,6 +568,7 @@ export class AddFarmerClustersComponent implements OnInit {
         if (duplicates.length > 0) {
           this.isLoading = false;
           this.duplicateEntries = duplicates;
+          console.log('duplicateEntries', this.duplicateEntries)
           this.downloadDuplicateCSV(duplicates);
           this.showDuplicateErrorPopup(duplicates);
           return;
@@ -692,7 +694,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `duplicate_entries_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `Duplicate_entries_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -729,7 +731,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `unregistered_users_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `Unregistered_users_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -746,7 +748,7 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private downloadMismatchedFarmersCSV(mismatchedFarmers: any[]): void {
     try {
-      const headers = ['NIC', 'Registration Code'];
+      const headers = ['NIC', 'Farm ID'];
 
       // Force both columns to be text using ="value"
       const csvContent = [
@@ -768,7 +770,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `mismatched_farmers_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `Mismatched_farmers_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';
@@ -929,7 +931,7 @@ export class AddFarmerClustersComponent implements OnInit {
       <div class="text-center mb-6">
         <div class="flex items-center justify-center mb-4">
           <h2 class="text-2xl">
-            Error : Mis-matching Farm IDs found in the CSV file!
+            Error : Mismatching Farm IDs found in the CSV file!
           </h2>
         </div>
         <p class="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2">
@@ -946,7 +948,7 @@ export class AddFarmerClustersComponent implements OnInit {
           id="downloadMismatchedCSVBtn"
           class="text-[#3980C0] hover:text-blue-700 hover:underline cursor-pointer flex items-center gap-2 bg-transparent border-0">
               <i class="fa-regular fa-circle-check"></i>
-          File with mis-matching Farm IDs downloaded
+          File with mismatching Farm IDs downloaded
         </button>
       </div>
 
@@ -958,7 +960,7 @@ export class AddFarmerClustersComponent implements OnInit {
               <th></th>
               <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">No</th>
               <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">NIC</th>
-              <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">Registration Code</th>
+              <th class="px-4 py-3 text-center text-gray-800 dark:text-gray-200">Farm ID</th>
             </tr>
           </thead>
           <tbody class="w-full border-collapse border border-gray-300 dark:border-gray-600">
@@ -1032,25 +1034,32 @@ export class AddFarmerClustersComponent implements OnInit {
 
   private handleError(error: any): void {
     this.isLoading = false;
+    console.log('error', error)
 
     let errorMessage = 'Failed to upload file. Please try again.';
 
     if (error.error?.missingNICs) {
       const missingNICs = error.error.missingNICs;
       this.showMissingNicsErrorPopup(missingNICs);
+      this.downloadMissingNicsCSV(missingNICs);
       return;
     }
 
     if (error.error?.missingRegCodes) {
+
+      console.log('missingRegCodeDetails', error.error?.missingRegCodes)
       // Handle the new response structure with missingRegCodeDetails
       const missingRegCodeDetails = error.error.missingRegCodeDetails || [];
+      this.missingRegCodesP = error.error?.missingRegCodes;
       this.showMissingRegCodesErrorPopup(missingRegCodeDetails);
+      this.downloadMissingRegCodesCSV(error.error?.missingRegCodes);
       return;
     }
 
     if (error.error?.mismatchedFarmers) {
       const mismatchedFarmers = error.error.mismatchedFarmers;
       this.showMismatchedFarmersErrorPopup(mismatchedFarmers);
+      this.downloadMismatchedFarmersCSV(mismatchedFarmers);
       return;
     }
 
@@ -1224,7 +1233,7 @@ export class AddFarmerClustersComponent implements OnInit {
         );
         if (downloadButton) {
           downloadButton.addEventListener('click', () => {
-            this.downloadMissingRegCodesCSV(missingRegCodeDetails);
+            this.downloadMissingRegCodesCSV(this.missingRegCodesP);
           });
         }
       },
@@ -1311,8 +1320,10 @@ export class AddFarmerClustersComponent implements OnInit {
   `;
   }
 
+
   private downloadMissingRegCodesCSV(missingRegCodes: string[]): void {
     try {
+      console.log('missingRegCodes', missingRegCodes)
       const headers = ['No', 'Farm ID'];
 
       // Force Excel to treat Farm ID column as text using ="value"
@@ -1335,7 +1346,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `invalid_farm_ids_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
+        `Invalid_farm_ids_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
         }.csv`
       );
       link.style.visibility = 'hidden';

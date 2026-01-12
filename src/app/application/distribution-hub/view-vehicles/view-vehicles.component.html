@@ -8,15 +8,15 @@
 <div
     class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
 
-    <div class="pt-5 pr-12 pl-12 pb-5 min-w-full bg-white dark:bg-[#1E1E2D] shadow-lg rounded-lg">
+    <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-white dark:bg-[#1E1E2D] shadow-lg rounded-lg">
         <!-- Header -->
-        <div class="flex justify-between items-center mb-6">
+        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
             <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
                 Vehicles ({{ totalItems | number }})
             </h2>
 
             <!-- Filters -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-wrap">
                 <img src="assets/icons/filter_icon.png" alt="Filter" class="w-6 h-6" />
                 <span class="text-gray-500 dark:text-gray-300">Filter By</span>
 
@@ -24,14 +24,16 @@
                 <p-dropdown
                     styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#E5E5E5] dark:border-[#AFAFAF]"
                     [options]="centreOptions" optionLabel="label" optionValue="value" [showClear]="!!centerName"
-                    placeholder="Centre" [(ngModel)]="centerName" (onChange)="applyFilters()">
+                    placeholder="Centre" [(ngModel)]="centerName" (onChange)="applyFilters()" 
+                    [virtualScroll]="true" [virtualScrollItemSize]="38">
                 </p-dropdown>
 
                 <!-- Vehicle Type -->
                 <p-dropdown
                     styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#E5E5E5] dark:border-[#AFAFAF]"
                     [options]="vehicleTypeOptions" optionLabel="label" optionValue="value" [showClear]="!!vehicleType"
-                    placeholder="Vehicle Type" [(ngModel)]="vehicleType" (onChange)="applyFilters()">
+                    placeholder="Vehicle Type" [(ngModel)]="vehicleType" (onChange)="applyFilters()"
+                    [virtualScroll]="true" [virtualScrollItemSize]="38">
                 </p-dropdown>
 
                 <!-- Search -->
@@ -47,14 +49,6 @@
                     </button>
                 </div>
             </div>
-        </div>
-
-        <!-- No Data -->
-        <div *ngIf="!items || items.length === 0" class="flex flex-col items-center w-full h-screen mt-6">
-            <p class="text-[#494949] dark:text-textDark my-6">
-                --No Data Available--
-            </p>
-            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>
 
         <!-- Table -->
@@ -80,13 +74,24 @@
                     <td class="px-3 py-3 text-textLight dark:text-textDark">{{ it.insNo || '--' }}</td>
                     <td class="px-3 py-3 text-textLight dark:text-textDark">{{ it.empId }}</td>
                     <td class="px-3 py-3 text-textLight dark:text-textDark">{{ it.vType || '--' }}</td>
-                    <td class="px-3 py-3 text-textLight dark:text-textDark">{{ it.vCapacity || '--' }}</td>
+                    <td class="px-3 py-3 text-textLight dark:text-textDark">
+                        <span *ngIf="it.vCapacity">{{ it.vCapacity }} kg</span>
+                        <span *ngIf="!it.vCapacity">--</span>
+                    </td>
                     <td class="px-3 py-3 text-textLight dark:text-textDark">{{ it.regCode || '--' }}</td>
                     <td class="px-3 py-3 text-textLight dark:text-textDark">{{ it.centerName || '--' }}</td>
                     <td class="px-3 py-3 text-textLight dark:text-textDark">{{ it.createdAt | date:'d MMM, y' }}</td>
                 </tr>
             </tbody>
         </table>
+
+        <!-- No Data -->
+        <div *ngIf="!items || items.length === 0" class="flex flex-col items-center w-full h-screen mt-6">
+            <p class="text-[#494949] dark:text-textDark my-6">
+                --No Data Available--
+            </p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+        </div>
 
         <!-- Pagination -->
         <div class="dark:bg-[#262f45] pt-4" *ngIf="totalItems > 0">

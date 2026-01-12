@@ -52,20 +52,21 @@ export class HoldTodaysDeleveriesComponent implements OnChanges {
 
   // Search function
   onSearch(): void {
-    if (!this.searchTerm.trim()) {
+    if (!this.searchTerm) {
       this.filteredData = [...this.holdDeliveries];
       return;
     }
 
+    this.searchTerm = this.searchTerm.trim();
     const term = this.searchTerm.toLowerCase().trim();
     this.filteredData = this.holdDeliveries.filter(
       (item) =>
-        item.invNo.toLowerCase().includes(term) ||
-        item.regCode.toLowerCase().includes(term) ||
-        item.driverEmpId.toLowerCase().includes(term) ||
-        item.driverPhone.toLowerCase().includes(term) ||
-        item.sheduleTime.toLowerCase().includes(term) ||
-        item.holdTime.toLowerCase().includes(term)
+        (item.invNo && item.invNo.toLowerCase().includes(term)) ||
+        (item.regCode && item.regCode.toLowerCase().includes(term)) ||
+        (item.driverEmpId && item.driverEmpId.toLowerCase().includes(term)) ||
+        (item.driverPhone && item.driverPhone.toLowerCase().includes(term)) ||
+        (item.sheduleTime && item.sheduleTime.toLowerCase().includes(term)) ||
+        (item.holdTime && item.holdTime.toLowerCase().includes(term))
     );
   }
 

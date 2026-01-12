@@ -141,7 +141,7 @@ export class RecievedReturnsComponent implements OnInit {
       }
       
       // Check Customer Contact
-      const fullPhone = `${item.phoneCode1 || ''}${item.phone1 || ''}`;
+      const fullPhone = `${item.phoneCode || ''}${item.phoneNumber || ''}`;
       if (fullPhone.includes(searchTerm.replace(/\D/g, ''))) {
         return true;
       }
@@ -295,9 +295,10 @@ class DriverData {
   regCode!: string;
   centerName!: string;
   sheduleDate!: Date;
-  phone1!: string;
+  phoneNumber!: string;
   reason!: string;
-  phoneCode1!: string;
+  other?: string;
+  phoneCode!: string;
   returnAt!: Date;
   receivedTime!: Date;
   handOverOfficer!: number;

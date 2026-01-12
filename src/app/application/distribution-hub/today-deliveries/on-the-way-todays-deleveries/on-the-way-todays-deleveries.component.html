@@ -9,7 +9,7 @@
       <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
         <input type="text" placeholder="Search by Order ID"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchQuery" name="searchQuery"
-          (keyup.enter)="onSearch()" />
+          (keyup.enter)="onSearch()" (keyup.escape)="clearSearch()"/>
         <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -24,7 +24,7 @@
       </div>
     </div>
   </div>
-  <div class="w-full">
+  <div *ngIf="filteredData && filteredData.length !== 0" class="w-full">
     <table class="min-w-full divide-y divide-gray-200 table-auto">
       <thead>
         <tr>
@@ -89,18 +89,6 @@
             </button>
           </td>
         </tr>
-
-        <!-- Show message when no results found -->
-        <tr *ngIf="filteredData.length === 0" class="border-b border-gray-200 dark:border-gray-700">
-          <td colspan="8" class="px-4 py-8 text-left text-textLight dark:text-textDark">
-            <div *ngIf="filteredData.length === 0">
-              No "On the way" deliveries found
-            </div>
-            <div *ngIf="filteredData.length > 0 && filteredData.length === 0">
-              No deliveries found matching "{{ searchQuery }}"
-            </div>
-          </td>
-        </tr>
       </tbody>
     </table>
 
@@ -109,4 +97,9 @@
       (closePopup)="closeDetailsPopup()">
     </app-today-deliveries-view-details-popup>
 
+  </div>
+
+   <div *ngIf="!filteredData || filteredData.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+    <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
   </div>

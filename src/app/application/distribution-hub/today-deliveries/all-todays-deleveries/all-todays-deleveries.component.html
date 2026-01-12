@@ -19,7 +19,29 @@
           [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onStatusChange()" [checkmark]="true"
           optionLabel="label" optionValue="value" placeholder="Status" [showClear]="true"></p-dropdown>
       </div>
-      <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+
+      <div class="flex items-center mr-5">
+        <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+          <input type="text" placeholder="Search by Order ID"
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchText"
+            name="searchText" (keyup.enter)="onSearchChange()" (keyup.escape)="clearSearch()" />
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearchChange()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+            </svg>
+          </button>
+          <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
         <input type="text" placeholder="Search by Order ID"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchText"
           (input)="onSearchChange()" />
@@ -28,10 +50,10 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
-  <div class="w-full">
+  <div *ngIf="displayedDeliveries && displayedDeliveries.length !== 0" class="w-full">
     <table class="min-w-full divide-y divide-gray-200 table-auto">
       <thead>
         <tr>
@@ -88,18 +110,12 @@
             </button>
           </td>
         </tr>
-        <tr *ngIf="displayedDeliveries.length === 0">
-          <td colspan="8" class="text-center py-12">
-            <div class="flex flex-col items-center justify-center space-y-4 text-gray-400">
-              <i class="fas fa-table text-3xl"></i>
-              <p class="text-ms text-textLight dark:text-textDark">
-                No deliveries found
-              </p>
-            </div>
-          </td>
-        </tr>
       </tbody>
     </table>
+  </div>
+  <div *ngIf="!displayedDeliveries || displayedDeliveries.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+    <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
   </div>
 
   <!-- Details Popup -->

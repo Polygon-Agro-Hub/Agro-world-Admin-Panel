@@ -5,20 +5,20 @@ import { FormsModule } from '@angular/forms';
 import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface Delivery {
-  id:number
-  invNo:string 
-  regCode:string 
-  centerName:string
-  sheduleTime:string 
-  sheduleDate:string 
-  createdAt:string 
-  status:string 
-  outDlvrTime:string 
-  collectTime:string 
-  driverEmpId:string 
-  driverStartTime:string 
-  returnTime:string 
-  deliveryTime:string 
+  id: number
+  invNo: string
+  regCode: string
+  centerName: string
+  sheduleTime: string
+  sheduleDate: string
+  createdAt: string
+  status: string
+  outDlvrTime: string
+  collectTime: string
+  driverEmpId: string
+  driverStartTime: string
+  returnTime: string
+  deliveryTime: string
 }
 
 @Component({
@@ -53,7 +53,7 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
     // }
     this.filterDeliveries();
     console.log(this.deliveries);
-    
+
   }
 
   getStatusClass(status: string): string {
@@ -87,18 +87,19 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
 
     // Apply search filter
     if (this.searchText) {
+      this.searchText = this.searchText.trim();
       const searchLower = this.searchText.toLowerCase();
       filtered = filtered.filter(
         (delivery) =>
-          delivery.invNo.toLowerCase().includes(searchLower) ||
-          delivery.regCode.toLowerCase().includes(searchLower) ||
-          delivery.sheduleTime.toLowerCase().includes(searchLower)
+          (delivery.invNo && delivery.invNo.toLowerCase().includes(searchLower)) ||
+          (delivery.regCode && delivery.regCode.toLowerCase().includes(searchLower)) ||
+          (delivery.sheduleTime && delivery.sheduleTime.toLowerCase().includes(searchLower))
       );
     }
 
     this.displayedDeliveries = filtered;
-    console.log("displayedDeliveries",this.displayedDeliveries);
-    
+    console.log("displayedDeliveries", this.displayedDeliveries);
+
   }
 
   onStatusChange(): void {
@@ -110,9 +111,9 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   }
 
   getOrderCount(): string {
-  const count = this.displayedDeliveries.length;
-  return count < 10 ? `0${count}` : `${count}`;
-}
+    const count = this.displayedDeliveries.length;
+    return count < 10 ? `0${count}` : `${count}`;
+  }
 
   clearSearch(): void {
     this.searchText = '';
@@ -129,7 +130,7 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   openDetailsPopup(delivery: Delivery): void {
     if (delivery.id == null) {
       console.warn('Delivery id is missing for selected row:', delivery);
-      return; 
+      return;
     }
     this.selectedDeliveryId = delivery.id;
     this.showDetailsPopup = true;
@@ -143,25 +144,25 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   // Format the schedule time to remove "Within " if you just want "8-12 PM"
   formatTimeSlot(sheduleTime: string): string {
     if (!sheduleTime) return 'N/A';
-    
+
     // If it starts with "Within ", remove it
     if (sheduleTime.startsWith('Within ')) {
       return sheduleTime.substring(7); // Remove "Within "
     }
-    
+
     return sheduleTime;
   }
 
   // Alternative: If you want to convert to format "8AM - 12PM"
   formatTimeRange(sheduleTime: string): string {
     if (!sheduleTime) return 'N/A';
-    
+
     // Remove "Within " prefix if present
     let timeRange = sheduleTime;
     if (timeRange.startsWith('Within ')) {
       timeRange = timeRange.substring(7);
     }
-    
+
     // Convert "8-12 PM" to "8AM - 12PM"
     // Handle various formats
     if (timeRange.includes('AM') || timeRange.includes('PM')) {
@@ -173,22 +174,22 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
       if (parts.length === 2) {
         const start = parts[0].trim();
         const end = parts[1].trim();
-        
+
         // Determine AM/PM based on the hour
         const startNum = parseInt(start);
         const endNum = parseInt(end);
-        
+
         const startSuffix = startNum < 12 ? 'AM' : 'PM';
         const endSuffix = endNum < 12 ? 'AM' : 'PM';
-        
+
         // Convert to 12-hour format if needed
         const startHour = startNum > 12 ? startNum - 12 : startNum;
         const endHour = endNum > 12 ? endNum - 12 : endNum;
-        
+
         return `${startHour}${startSuffix} - ${endHour}${endSuffix}`;
       }
     }
-    
+
     return timeRange;
   }
 }

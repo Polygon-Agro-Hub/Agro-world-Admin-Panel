@@ -643,9 +643,9 @@ export class AddFarmerClustersComponent implements OnInit {
     // Try different possible column names for Registration Code
     const regCode =
       row['RegCode'] ||
-      row['regcode'] ||
+      row['regcode'] || row['Farm ID'] ||
       row['Registration Code'] ||
-      row['RegistrationCode'] ||
+      row['RegistrationCode'] || 
       row['Reg Code'];
     if (!regCode) {
       console.log('No Registration Code found in row:', row);

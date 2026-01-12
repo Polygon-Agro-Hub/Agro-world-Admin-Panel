@@ -215,8 +215,8 @@ export class UserBulkUploadComponent {
       icon: 'warning',
       title: 'Error : Duplicate Entries Found in Excel Sheet!',
       html: isDarkMode 
-        ? this.buildDuplicationDarkModeTable(duplicateEntries, `Add Plant Care Users - ${this.selectedFile.name}`)
-        : this.buildDuplicationLightModeTable(duplicateEntries, `Add Plant Care Users - ${this.selectedFile.name}`),
+        ? this.buildDuplicationDarkModeTable(duplicateEntries, `Add GoVi Care user  - ${this.selectedFile.name}`)
+        : this.buildDuplicationLightModeTable(duplicateEntries, `Add GoVi Care user - ${this.selectedFile.name}`),
       width: '700px',
       showConfirmButton: true,
       confirmButtonText: 'Close & Go Back',
@@ -263,8 +263,8 @@ export class UserBulkUploadComponent {
       icon: 'warning',
       title: 'Error : User Redundancy!',
       html: isDarkMode 
-        ? this.buildRedundancyDarkModeTable(errorEntries, `Add Plant Care Users - ${this.selectedFile.name}`)
-        : this.buildRedundancyLightModeTable(errorEntries, `Add Plant Care Users - ${this.selectedFile.name}`),
+        ? this.buildRedundancyDarkModeTable(errorEntries, `Add GoVi Care user - ${this.selectedFile.name}`)
+        : this.buildRedundancyLightModeTable(errorEntries, `Add GoVi Care user - ${this.selectedFile.name}`),
       width: '700px',
       showConfirmButton: true,
       confirmButtonText: 'Close & Go Back',

@@ -17,7 +17,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1850px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -67,7 +67,7 @@
       <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
         <thead>
           <tr>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Company Name
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -125,12 +125,12 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of companies; let i = index">
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               {{ item.companyNameEnglish }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               <ng-container *ngIf="item.id === 2; else normalEmail">
-                <span class="px-2 py-3 text-center text-textLight dark:text-textDark font-bold italic">
+                <span class="px-2 py-3 text-left text-textLight dark:text-textDark font-bold italic">
                   Email added by default
                 </span>
               </ng-container>

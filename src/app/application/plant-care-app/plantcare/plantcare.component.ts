@@ -165,7 +165,7 @@ export class PlantcareComponent {
     this.isLoading = true;
 
     // 1. Define the header row with two columns
-    const header = ['RegCode', 'NIC'];
+    const header = ['Farm ID', 'NIC'];
 
     // 2. Define sample empty data rows
     const numberOfRowsToGenerate = 10000;
@@ -215,7 +215,7 @@ export class PlantcareComponent {
     XLSX.utils.book_append_sheet(wb, ws, 'FarmerClusterTemplate');
 
     // Write to XLSX file
-    XLSX.writeFile(wb, 'farmer_cluster_template.xlsx');
+    XLSX.writeFile(wb, 'Farmer_cluster_template.xlsx');
 
     this.isLoading = false;
   }

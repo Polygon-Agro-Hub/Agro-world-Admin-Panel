@@ -166,10 +166,26 @@ export class TransportReasonsToHoldComponent implements OnInit {
       error: (error) => {
         this.isLoading = false;
         console.error('Error creating reason:', error);
+
+        const errorMessage = error.error?.error || '';
+        let userErrorMessage = 'Failed to add reason. Please try again.';
+
+        // Check for data too long errors
+        if (errorMessage.includes(`Data too long for column 'rsnEnglish' at row 1`)) {
+          userErrorMessage = 'The Reason (in English) is too long. Please limit it to a maximum of 250 words.';
+        } else if (errorMessage.includes(`Data too long for column 'rsnSinhala' at row 1`)) {
+          userErrorMessage = 'The Reason (in Sinhala) is too long. Please limit it to a maximum of 250 words.';
+        } else if (errorMessage.includes(`Data too long for column 'rsnTamil' at row 1`)) {
+          userErrorMessage = 'The Reason (in Tamil) is too long. Please limit it to a maximum of 250 words.';
+        } else if (errorMessage.includes('Data too long for column')) {
+          // Generic data too long error
+          userErrorMessage = 'The message is too long. Please limit it to a maximum of 250 words.';
+        }
+
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: error.error?.error === `Data too long for column 'rsnEnglish' at row 1` ? 'The message is too long. Please limit it to a maximum of 250 words.' : 'Failed to add reason. Please try again.',
+          text: userErrorMessage,
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',

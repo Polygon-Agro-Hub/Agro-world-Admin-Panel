@@ -17,7 +17,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -94,9 +94,9 @@
             <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               COO Profiles
             </th>
-            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
+            <!-- <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               CUO Profiles
-            </th>
+            </th> -->
             <th class="py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
               ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Company Head Portals') )||
               ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder view collection Head Portals') )||
@@ -120,7 +120,7 @@
               {{ item.companyEmail }}
             </td>
             <td *ngIf="!item.companyEmail"
-              class="px-2 py-3 text-center whitespace-nowrap text-textLight dark:text-textDark font-bold italic">
+              class="px-2 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark font-bold italic">
               Email added by default
             </td>
 
@@ -153,9 +153,9 @@
             <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfOfficers }}
             </td>
-            <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
+            <!-- <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfCustomerOfficers }}
-            </td>
+            </td> -->
             <td class="pt-1 pr-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               <button *ngIf="
               ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Company Head Portals') )||

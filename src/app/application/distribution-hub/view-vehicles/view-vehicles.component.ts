@@ -32,6 +32,7 @@ interface DistributedVehicle {
 })
 export class ViewVehiclesComponent {
   isLoading = false;
+  hasData: boolean = true;
 
   items: DistributedVehicle[] = [];
 
@@ -44,7 +45,7 @@ export class ViewVehiclesComponent {
   searchText = '';
 
   centreOptions: { label: string; value: string }[] = [];
-  
+
   vehicleTypeOptions = [
     { label: 'Dimo Batta', value: 'Dimo Batta' },
     { label: 'Mahindra Bolero', value: 'Mahindra Bolero' },
@@ -68,8 +69,8 @@ export class ViewVehiclesComponent {
           this.centreOptions = res
             .filter((center: any) => center.centerName && center.regCode)
             .map((center: any) => ({
-              label: `${center.centerName}`,
-              value: center.centerName
+              label: `${center.regCode} - ${center.centerName}`,
+              value: center.centerName, 
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
         }
@@ -77,7 +78,7 @@ export class ViewVehiclesComponent {
       error: (err) => {
         console.error('Error loading centers:', err);
         this.centreOptions = [];
-      }
+      },
     });
   }
 
@@ -97,6 +98,7 @@ export class ViewVehiclesComponent {
           this.items = res.items || [];
           this.totalItems = res.total || 0;
           this.isLoading = false;
+          this.hasData = this.items.length > 0;
         },
         error: () => {
           this.items = [];

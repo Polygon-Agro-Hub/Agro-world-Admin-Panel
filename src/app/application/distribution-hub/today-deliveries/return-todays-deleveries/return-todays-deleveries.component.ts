@@ -44,15 +44,11 @@ export class ReturnTodaysDeleveriesComponent implements OnChanges {
     this.filteredDeliveries = [...this.deliveries];
   }
 
-
-  // Helper method to remove "Within" text from time slot strings
   cleanTimeSlotText(text: string): string {
     if (!text) return 'N/A';
     // Remove "Within" and any extra spaces (case-insensitive)
     return text.replace(/Within\s*/gi, '').trim();
   }
-
-
 
   onSearch(): void {
     if (!this.searchTerm.trim()) {

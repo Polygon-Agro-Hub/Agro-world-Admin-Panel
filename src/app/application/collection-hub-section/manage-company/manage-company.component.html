@@ -68,13 +68,13 @@
       <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
         <thead>
           <tr>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               No
             </th>
-            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               Company Name
             </th>
-            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               Company Email
             </th>
             <!-- <th
@@ -110,17 +110,17 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of companies; let i = index">
-            <td class="px-2 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-textLight dark:text-textDark text-center">
               {{ i + 1 }}
             </td>
-            <td class="px-2 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
+            <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.companyName }}
             </td>
-            <td *ngIf="item.companyEmail" class="px-2 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
+            <td *ngIf="item.companyEmail" class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.companyEmail }}
             </td>
             <td *ngIf="!item.companyEmail"
-              class="px-2 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark font-bold italic">
+              class="px-2 py-3 text-center whitespace-nowrap text-textLight dark:text-textDark font-bold italic">
               Email added by default
             </td>
 

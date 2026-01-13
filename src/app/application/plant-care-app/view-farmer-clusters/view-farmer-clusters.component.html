@@ -108,11 +108,11 @@
             </td>
             <td class="px-4 py-3 text-center">
               <button *ngIf="cluster.status === 'Started'" [disabled]="!permissionService.hasPermission('Cluster start') && tokenService.getUserDetails().role !== '1'"
-                class="bg-[#BBFFC6] text-[#308233] px-3 py-1 rounded-lg text-sm cursor-default w-36">
+                class="bg-[#BBFFC6] text-[#308233] px-3 py-1 rounded-lg text-sm cursor-default w-36 shadow-lg">
                 Started
               </button>
               <button *ngIf="cluster.status !== 'Started'" (click)="openStatusConfirmation(cluster)" [disabled]="!permissionService.hasPermission('Cluster start') && tokenService.getUserDetails().role !== '1'"
-                class="bg-[#F8FFA6] text-[#A8A100] px-3 py-1 rounded-lg text-sm transition-colors w-36">
+                class="bg-[#F8FFA6] text-[#A8A100] px-3 py-1 rounded-lg text-sm transition-colors w-36 shadow-lg">
                 {{ cluster.status || "Not Started" }}
               </button>
             </td>

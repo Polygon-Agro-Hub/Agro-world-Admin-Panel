@@ -140,8 +140,8 @@ export class PikupOdersComponent implements OnChanges {
         item.customerPhoneNumber
       ),
       receiverPhone: this.formatPhoneNumber(
-        item.receiverPhoneCode,
-        item.receiverPhone
+        item.receiverPhoneCode1,
+        item.receiverPhone1
       ),
       receiversInfo: this.getReceiverInfo(item),
       scheduledTimeSlot: this.formatScheduledTimeSlot(item),
@@ -283,8 +283,8 @@ export class PikupOdersComponent implements OnChanges {
       receiverName: `${order.originalData.customerTitle || ''} ${order.originalData.fillName || ''} ${order.originalData.lastName || ''}`.trim() ||
                    order.originalData.receiverName,
       receiverPhone1: this.formatPhoneNumber(
-        order.originalData.phonecode1, 
-        order.originalData.phone1
+        order.originalData.receiverPhoneCode1, 
+        order.originalData.receiverPhone1
       ),
       // Check if phone2 exists before formatting, otherwise return "--"
       receiverPhone2: (order.originalData.phone2 || order.originalData.phonecode2) 

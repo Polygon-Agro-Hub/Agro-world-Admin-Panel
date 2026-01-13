@@ -12,7 +12,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { PikupOderRecordDetailsComponent } from "../popup-component/pikup-oder-record-details/pikup-oder-record-details.component";
+import { PikupOderRecordDetailsComponent } from '../popup-component/pikup-oder-record-details/pikup-oder-record-details.component';
+import { ReciverinfoPopupComponent } from '../reciverinfo-popup/reciverinfo-popup.component';
 
 interface Order {
   no: number;
@@ -38,7 +39,8 @@ interface Order {
     CalendarModule,
     LoadingSpinnerComponent,
     FormsModule,
-    PikupOderRecordDetailsComponent
+    PikupOderRecordDetailsComponent,
+    ReciverinfoPopupComponent,
   ],
   templateUrl: './all-pikup-oders.component.html',
   styleUrl: './all-pikup-oders.component.css',
@@ -62,10 +64,7 @@ export class AllPikupOdersComponent implements OnChanges {
   searchText: string = '';
 
   // Time slot options for dropdown
-  timeSlotOptions = [
-    { label: '8AM-12PM' },
-    { label: '12PM-4PM' },
-  ];
+  timeSlotOptions = [{ label: '8AM-12PM' }, { label: '12PM-4PM' }];
 
   isLoading = false; // Not used for API calls anymore
   hasData: boolean = false;
@@ -77,6 +76,9 @@ export class AllPikupOdersComponent implements OnChanges {
   selectedOrderId: number | undefined; // This should be processOrderId for API
   selectedOrderDisplayId: string = ''; // This is for display (invoice/order number)
   selectedOrderData: any = null;
+
+  showReceiverPopup: boolean = false;
+  selectedReceiverInfo: any = null;
 
   constructor(private datePipe: DatePipe) {}
 
@@ -287,36 +289,84 @@ export class AllPikupOdersComponent implements OnChanges {
     return this.datePipe.transform(dateString, 'MMM d, yyyy') || 'N/A';
   }
 
-  // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
-    console.log('View receiver info for:', order);
-    // You can implement a popup for receiver info if needed
+  console.log('View receiver info for:', order);
+  
+  if (order.originalData) {
+    this.selectedReceiverInfo = {
+      orderId: order.orderId,
+      receiverName: `${order.originalData.customerTitle || ''} ${order.originalData.fillName || ''} ${order.originalData.lastName || ''}`.trim() ||
+                   order.originalData.receiverName,
+      receiverPhone1: this.formatPhoneNumber(
+        order.originalData.phonecode1, 
+        order.originalData.phone1
+      ),
+      // Check if phone2 exists before formatting, otherwise return "--"
+      receiverPhone2: (order.originalData.phone2 || order.originalData.phonecode2) 
+        ? this.formatPhoneNumber(order.originalData.phonecode2, order.originalData.phone2)
+        : "--",
+      customerName: `${order.originalData.title || ''} ${order.originalData.firstName || ''} ${order.originalData.lastName || ''}`.trim(),
+      customerPhone: this.formatPhoneNumber(
+        order.originalData.customerPhoneCode, 
+        order.originalData.customerPhoneNumber
+      ),
+      platform: order.originalData.orderApp || 'Salesdash',
+      orderPlaced: this.formatOrderDate(order.originalData.orderCreatedAt),
+      scheduledTime: this.formatScheduledTime(order.originalData),
+    };
+    this.showReceiverPopup = true;
   }
+}
+
+private formatOrderDate(dateString: string): string {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return this.datePipe.transform(date, 'h:mm a \'on\' MMMM dd, yyyy') || 'N/A';
+}
+
+private formatScheduledTime(item: any): string {
+  const scheduleDate = item.scheduleDate || item.sheduleDate;
+  const timeSlot = item.timeSlot || item.sheduleTime;
+  
+  if (!scheduleDate) return 'N/A';
+  
+  const date = new Date(scheduleDate);
+  const formattedDate = this.datePipe.transform(date, 'MMMM dd, yyyy') || '';
+  const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
+  
+  return `${formattedTimeSlot} on ${formattedDate}`;
+}
+
+closeReceiverPopup(): void {
+  this.showReceiverPopup = false;
+  this.selectedReceiverInfo = null;
+}
 
   // Open order details popup
   openOrderDetails(order: Order): void {
     console.log('View order details for:', order);
-    
+
     // For display in popup header (show invoice/order number)
     this.selectedOrderDisplayId = order.orderId;
-    
+
     // For API call (use processOrderId from original data)
     if (order.originalData) {
       // Debug: Log all available fields
       console.log('Original data fields:', Object.keys(order.originalData));
       console.log('Full original data:', order.originalData);
-      
+
       // Try to get the processOrderId from original data
-      const processOrderId = order.originalData.processOrderId || 
-                            order.originalData.id || 
-                            order.originalData.orderId;
-      
+      const processOrderId =
+        order.originalData.processOrderId ||
+        order.originalData.id ||
+        order.originalData.orderId;
+
       if (processOrderId) {
         // Pass the processOrderId directly to API
         this.selectedOrderId = processOrderId;
         this.selectedOrderData = order.originalData;
         this.showDetailsPopup = true;
-        
+
         console.log('Popup opened with:');
         console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
         console.log('- API ID (processOrderId):', this.selectedOrderId);

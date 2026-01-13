@@ -1,0 +1,145 @@
+<div
+  *ngIf="visible"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+  (click)="onClose()"
+>
+  <div
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+    (click)="onPopupClick($event)"
+  >
+    <!-- Header -->
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex justify-center items-center">
+        <h4 class="text-lg font-medium text-gray-900 dark:text-white">
+          Order ID: {{ receiverInfo.orderId }}
+        </h4>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6">
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Customer Name
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+              >
+                : {{ receiverInfo?.customerName || "--" }}
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Customer Phone Number
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+              >
+                : {{ receiverInfo?.customerPhone || "--" }}
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Platform
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+              >
+                : {{ receiverInfo?.platform || "--" }}
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Order Placed
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+              >
+                : At {{ receiverInfo?.orderPlaced || "--" }}
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Scheduled Time
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+              >
+                : Within {{ receiverInfo?.scheduledTime || "--" }}
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Receiver's Name
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+              >
+                : {{ receiverInfo?.receiverName || "--" }}
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Receiver's Phone Number - 1
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+              >
+                : {{ receiverInfo?.receiverPhone1 || "-" }}
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Receiver's Phone Number - 2
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
+              >
+                : {{ receiverInfo?.receiverPhone2 || "-" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+      <div class="flex justify-center">
+        <button
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
+          (click)="onClose()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

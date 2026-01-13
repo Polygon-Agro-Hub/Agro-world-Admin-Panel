@@ -13,6 +13,7 @@ import { LoadingSpinnerComponent } from '../../../../../components/loading-spinn
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { PikupOderRecordDetailsComponent } from "../popup-component/pikup-oder-record-details/pikup-oder-record-details.component";
+import { ReciverinfoPopupComponent } from "../reciverinfo-popup/reciverinfo-popup.component";
 
 interface Order {
   no: number;
@@ -38,8 +39,9 @@ interface Order {
     CalendarModule,
     LoadingSpinnerComponent,
     FormsModule,
-    PikupOderRecordDetailsComponent
-  ],
+    PikupOderRecordDetailsComponent,
+    ReciverinfoPopupComponent
+],
   templateUrl: './ready-to-pikup.component.html',
   styleUrl: './ready-to-pikup.component.css',
   providers: [DatePipe],
@@ -74,6 +76,9 @@ export class ReadyToPikupComponent implements OnChanges {
   selectedOrderId: number | undefined;
   selectedOrderDisplayId: string = '';
   selectedOrderData: any = null;
+
+  showReceiverPopup: boolean = false;
+  selectedReceiverInfo: any = null;
 
   constructor(private datePipe: DatePipe) {}
 
@@ -274,16 +279,57 @@ export class ReadyToPikupComponent implements OnChanges {
 
   // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
-    console.log('View receiver info for:', order);
-    if (order.originalData) {
-      console.log('Receiver info details:', {
-        name: order.originalData.receiverName,
-        address: order.originalData.receiverAddress,
-        phone: order.receiverPhone,
-        fullData: order.originalData
-      });
-    }
+  console.log('View receiver info for:', order);
+  
+  if (order.originalData) {
+    this.selectedReceiverInfo = {
+      orderId: order.orderId,
+      receiverName: `${order.originalData.customerTitle || ''} ${order.originalData.fillName || ''} ${order.originalData.lastName || ''}`.trim() ||
+                   order.originalData.receiverName,
+      receiverPhone1: this.formatPhoneNumber(
+        order.originalData.phonecode1, 
+        order.originalData.phone1
+      ),
+      // Check if phone2 exists before formatting, otherwise return "--"
+      receiverPhone2: (order.originalData.phone2 || order.originalData.phonecode2) 
+        ? this.formatPhoneNumber(order.originalData.phonecode2, order.originalData.phone2)
+        : "--",
+      customerName: `${order.originalData.title || ''} ${order.originalData.firstName || ''} ${order.originalData.lastName || ''}`.trim(),
+      customerPhone: this.formatPhoneNumber(
+        order.originalData.customerPhoneCode, 
+        order.originalData.customerPhoneNumber
+      ),
+      platform: order.originalData.orderApp || 'Salesdash',
+      orderPlaced: this.formatOrderDate(order.originalData.orderCreatedAt),
+      scheduledTime: this.formatScheduledTime(order.originalData),
+    };
+    this.showReceiverPopup = true;
   }
+}
+
+private formatOrderDate(dateString: string): string {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return this.datePipe.transform(date, 'h:mm a \'on\' MMMM dd, yyyy') || 'N/A';
+}
+
+private formatScheduledTime(item: any): string {
+  const scheduleDate = item.scheduleDate || item.sheduleDate;
+  const timeSlot = item.timeSlot || item.sheduleTime;
+  
+  if (!scheduleDate) return 'N/A';
+  
+  const date = new Date(scheduleDate);
+  const formattedDate = this.datePipe.transform(date, 'MMMM dd, yyyy') || '';
+  const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
+  
+  return `${formattedTimeSlot} on ${formattedDate}`;
+}
+
+closeReceiverPopup(): void {
+  this.showReceiverPopup = false;
+  this.selectedReceiverInfo = null;
+}
 
   viewOrderDetails(order: Order): void {
     console.log('View order details for:', order);

@@ -158,6 +158,8 @@ export class TodayDeliveriesViewDetailsPopupComponent
     if (d.completeTime) {
       steps.push({ type: 'delivered', payload: { completeTime: d.completeTime } });
     }
+    console.log('Built Steps:', steps);
+    
 
     return steps;
   }

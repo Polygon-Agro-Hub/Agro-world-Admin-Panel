@@ -28,17 +28,19 @@
             <div *ngIf="!loading && !error && trackingDetails" class="p-8">
                 <div class="relative">
 
-                    <!-- Vertical Line -->
-                    <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-blue-400"></div>
-
                     <ng-container *ngIf="steps?.length; else noSteps">
 
                         <div *ngFor="let step of steps; let idx = index"
                             class="relative flex items-start mb-8 last:mb-0">
 
+                            <!-- Vertical Line (only if not last step) -->
+                            <div *ngIf="idx < steps.length - 1" class="absolute left-4 top-8 w-0.5 bg-blue-400"
+                                [style.height]="'calc(100% + 2rem)'">
+                            </div>
+
                             <!-- Step Number -->
                             <div
-                                class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                                class="relative z-10 w-8 h-8 rounded-full bg-[#3980C0] text-white flex items-center justify-center text-sm font-semibold shrink-0">
                                 {{ idx + 1 }}
                             </div>
 
@@ -69,11 +71,12 @@
 
                                 <!-- HOLD -->
                                 <ng-container *ngIf="step.type === 'hold'">
-                                    Order marked as <strong>Hold</strong> at {{ formatTime(step.payload.holdTime) }} on
+                                    Driver marked this order’s status as <strong>Hold</strong> at {{
+                                    formatTime(step.payload.holdTime) }} on
                                     {{ formatDate(step.payload.holdTime) }}.
-                                    <div class="mt-1  dark:text-gray-400">
+                                    <div class="mt-1 dark:text-gray-400">
                                         Reason:
-                                        <strong><span>{{ step.payload.holdReason }}</span></strong>
+                                        <strong>"{{ step.payload.holdReason }}"</strong>
                                     </div>
                                 </ng-container>
 
@@ -86,17 +89,20 @@
 
                                 <!-- RETURN -->
                                 <ng-container *ngIf="step.type === 'return'">
-                                    Driver marked this order's status as <strong>Return</strong> at {{
-                                    formatTime(step.payload.returnTime) }} on {{ formatDate(step.payload.returnTime) }}.
+                                    Driver marked this order's status as <strong>Return</strong> at
+                                    {{ formatTime(step.payload.returnTime) }} on {{ formatDate(step.payload.returnTime)
+                                    }}.
                                     <div class="mt-1 dark:text-gray-400">
                                         Reason:
-                                        <strong><span>{{ step.payload.returnReson }} : </span></strong><ng-container
-                                            *ngIf="step.payload.returnReson === 'Other'; else normalReturnReason">
-                                            <strong><span>{{ step.payload.returnNote }}</span></strong>
-                                        </ng-container>
-                                        <ng-template #normalReturnReason>
-                                            <strong><span>{{ step.payload.returnReson }}</span></strong>
-                                        </ng-template>
+                                        <strong>
+                                            <ng-container
+                                                *ngIf="step.payload.returnReson === 'Other'; else normalReturnReason">
+                                                "{{ step.payload.returnNote }}"
+                                            </ng-container>
+                                            <ng-template #normalReturnReason>
+                                                "{{ step.payload.returnReson }}"
+                                            </ng-template>
+                                        </strong>
                                     </div>
                                 </ng-container>
 

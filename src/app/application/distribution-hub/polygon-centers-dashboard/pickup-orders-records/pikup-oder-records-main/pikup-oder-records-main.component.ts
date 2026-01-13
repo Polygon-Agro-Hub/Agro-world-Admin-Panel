@@ -23,6 +23,7 @@ import { LoadingSpinnerComponent } from '../../../../../components/loading-spinn
     AllPikupOdersComponent,
     ReadyToPikupComponent,
     PikupOdersComponent,
+    LoadingSpinnerComponent
   ],
   templateUrl: './pikup-oder-records-main.component.html',
   styleUrl: './pikup-oder-records-main.component.css',
@@ -35,11 +36,10 @@ export class PikupOderRecordsMainComponent implements OnInit {
     centerRegCode: '',
   };
 
-  // Data management
   allOrders: any[] = [];
   isLoading = false;
+  isInitializing = true;
 
-  // Filter properties (kept in sync with child components)
   selectedDate: Date | null = null;
   selectedTimeSlot: string = '';
   searchText: string = '';
@@ -51,26 +51,25 @@ export class PikupOderRecordsMainComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get route parameters
     this.route.params.subscribe((params) => {
       this.centerObj.centerId = params['id'];
+
+      this.route.queryParams.subscribe((queryParams) => {
+        const tab = queryParams['tab'];
+        if (tab && ['All', 'Ready to Pickup', 'Picked Up'].includes(tab)) {
+          this.activeTab = tab;
+        }
+
+        this.centerObj.centerName = queryParams['name'] || '';
+        this.centerObj.centerRegCode = queryParams['regCode'] || '';
+
+        if (this.centerObj.centerId > 0) {
+          this.fetchAllOrders();
+        } else {
+          this.isInitializing = false;
+        }
+      });
     });
-
-    // Get query parameters
-    this.route.queryParams.subscribe((params) => {
-      const tab = params['tab'];
-      if (tab && ['All', 'Ready to Pickup', 'Picked Up'].includes(tab)) {
-        this.activeTab = tab;
-      }
-
-      this.centerObj.centerName = params['name'] || '';
-      this.centerObj.centerRegCode = params['regCode'] || '';
-    });
-
-    // Fetch initial data after getting center details
-    if (this.centerObj.centerId > 0) {
-      this.fetchAllOrders();
-    }
   }
 
   setActiveTab(tab: string) {
@@ -82,60 +81,54 @@ export class PikupOderRecordsMainComponent implements OnInit {
     });
   }
 
-  // Main method to fetch all orders
-  // Main method to fetch all orders
-fetchAllOrders(): void {
-  this.isLoading = true;
+  fetchAllOrders(): void {
+    this.isLoading = true;
+    this.isInitializing = false;
 
-  // Format date for API
-  let formattedDate = '';
-  if (this.selectedDate) {
-    const year = this.selectedDate.getFullYear();
-    const month = (this.selectedDate.getMonth() + 1)
-      .toString()
-      .padStart(2, '0');
-    const day = this.selectedDate.getDate().toString().padStart(2, '0');
-    formattedDate = `${year}-${month}-${day}`;
-  }
+    let formattedDate = '';
+    if (this.selectedDate) {
+      const year = this.selectedDate.getFullYear();
+      const month = (this.selectedDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0');
+      const day = this.selectedDate.getDate().toString().padStart(2, '0');
+      formattedDate = `${year}-${month}-${day}`;
+    }
 
-  // Map activeTab to backend parameter
-  let backendTabParam = '';
-  if (this.activeTab === 'Ready to Pickup') {
-    backendTabParam = 'ready-to-pickup';
-  } else if (this.activeTab === 'Picked Up') {
-    backendTabParam = 'picked-up';
-  } else if (this.activeTab === 'All') {
-    backendTabParam = 'all';
-  }
+    let backendTabParam = '';
+    if (this.activeTab === 'Ready to Pickup') {
+      backendTabParam = 'ready-to-pickup';
+    } else if (this.activeTab === 'Picked Up') {
+      backendTabParam = 'picked-up';
+    } else if (this.activeTab === 'All') {
+      backendTabParam = 'all';
+    }
 
-  this.destributionService
-    .getDistributedCenterPickupOrders({
-      companycenterId: this.centerObj.centerId,
-      sheduleTime: this.selectedTimeSlot,
-      date: formattedDate,
-      searchText: this.searchText,
-      activeTab: backendTabParam
-    })
-    .subscribe({
-      next: (res) => {
-        console.log('API Response:', res);
-        if (res && res.data) {
-          this.allOrders = Array.isArray(res.data) ? res.data : [res.data];
-          console.log('Filtered orders count:', this.allOrders.length);
-        } else {
+    this.destributionService
+      .getDistributedCenterPickupOrders({
+        companycenterId: this.centerObj.centerId,
+        sheduleTime: this.selectedTimeSlot,
+        date: formattedDate,
+        searchText: this.searchText,
+        activeTab: backendTabParam
+      })
+      .subscribe({
+        next: (res) => {
+          if (res && res.data) {
+            this.allOrders = Array.isArray(res.data) ? res.data : [res.data];
+          } else {
+            this.allOrders = [];
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error fetching pickup orders:', error);
           this.allOrders = [];
-        }
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching pickup orders:', error);
-        this.allOrders = [];
-        this.isLoading = false;
-      },
-    });
-}
+          this.isLoading = false;
+        },
+      });
+  }
 
-  // Event handlers for child component filter changes
   onDateChangeFromChild(date: Date | null): void {
     this.selectedDate = date;
     this.fetchAllOrders();
@@ -161,21 +154,11 @@ fetchAllOrders(): void {
     this.fetchAllOrders();
   }
 
-  // Get filtered orders for current tab
   getFilteredOrders(): any[] {
     if (!this.allOrders || this.allOrders.length === 0) {
       return [];
     }
-
-    switch (this.activeTab) {
-      case 'Ready to Pickup':
-        return this.filterReadyToPickupOrders();
-      case 'Picked Up':
-        return this.filterPickedUpOrders();
-      case 'All':
-      default:
-        return this.filterAllOrders();
-    }
+    return this.allOrders;
   }
 
   private filterAllOrders(): any[] {
@@ -222,7 +205,6 @@ fetchAllOrders(): void {
     });
   }
 
-  // Get count for each tab
   getAllCount(): number {
     return this.filterAllOrders().length;
   }

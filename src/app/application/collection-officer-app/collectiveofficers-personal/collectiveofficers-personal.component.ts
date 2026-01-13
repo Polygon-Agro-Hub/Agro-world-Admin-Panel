@@ -733,8 +733,9 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
     (res) => {
       this.collectionCenterData = res;
+      // Modify this line to include regCode in the label
       this.centerOptions = this.collectionCenterData.map(center => ({
-        label: center.centerName,
+        label: center.regCode ? `${center.regCode} ${center.centerName}` : center.centerName,
         value: center.id
       }));
       this.loaded = true;
@@ -1530,6 +1531,7 @@ class Personal {
 
 class CollectionCenter {
   id!: number;
+  regCode!: string;
   centerName!: string;
 }
 

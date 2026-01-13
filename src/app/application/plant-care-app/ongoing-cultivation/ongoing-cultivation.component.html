@@ -20,14 +20,6 @@
         </h2>
       </div>
       <div class="flex items-center">
-        <!-- <i class="mr-6 w-6 h-6 fill-current text-gray-500">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-            <path
-              d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
-            />
-          </svg>
-        </i> -->
-
         <div class="mr-8">
           <div
             class="flex items-center rounded-full bg-gray-100 px-4 py-2 w-96 dark:bg-[#272F45]"
@@ -85,17 +77,22 @@
       </div>
     </div>
 
-    <div
-      *ngIf="!hasData"
-      class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
-    >
-      <p class="text-[#494949] my-6 dark:text-textDark">
-        --No Data Available--
-      </p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    <!-- Show no data message when no data -->
+    <div *ngIf="!isLoading && !hasData">
+      <div class="flex flex-col justify-center items-center py-20 shadow-lg">
+        <p class="text-[#494949] dark:text-textDark mb-4">
+          -- No Data Available --
+        </p>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 mb-4"
+        />
+      </div>
     </div>
 
-    <div *ngIf="hasData">
+    <!-- Show table when there's data -->
+    <div *ngIf="!isLoading && hasData">
       <table class="w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
@@ -125,26 +122,16 @@
               Phone Number
             </th>
             <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               No. of Farms
             </th>
             <th
-              *ngIf="permissionService.hasPermission('View ongoing cultivation farms') ||tokenService.getUserDetails().role === '1'" 
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
+              *ngIf="permissionService.hasPermission('View ongoing cultivation farms') || tokenService.getUserDetails().role === '1'" 
+              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Farms
             </th>
-            <!-- <th
-              *ngIf="
-                permissionService.hasPermission(
-                  'View each farmer’s enrolled crop calendars'
-                ) || tokenService.getUserDetails().role === '1'
-              "
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser"
-            >
-              Cultivations
-            </th> -->
           </tr>
         </thead>
         <tbody>
@@ -179,7 +166,7 @@
             <td class="px-4 py-3 dark:text-textDark text-center">
               {{ item.FarmCount }}
             </td>
-            <td *ngIf="permissionService.hasPermission('View ongoing cultivation farms') ||tokenService.getUserDetails().role === '1'"  class="px-4 py-3 text-center">
+            <td *ngIf="permissionService.hasPermission('View ongoing cultivation farms') || tokenService.getUserDetails().role === '1'"  class="px-4 py-3 text-center">
               <button
                 class="w-5 h-5 text-blue-500 hover:text-blue-700"
                 (click)="
@@ -206,24 +193,6 @@
                 </svg>
               </button>
             </td>
-            <!-- <td class="px-4 py-3 text-center">
-  <button
-    class="w-5 h-5 text-blue-500 hover:text-blue-700"
-    (click)="viewTaskByUsers(item.cultivationId, item.userId, item.firstName + ' ' + item.lastName)"
-    [disabled]="!item.cultivationId"
-    title="View Tasks"
-  >
-    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  </button>
-</td> -->
           </tr>
         </tbody>
       </table>

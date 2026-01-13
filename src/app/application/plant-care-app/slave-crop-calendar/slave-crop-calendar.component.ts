@@ -102,7 +102,24 @@ export class SlaveCropCalendarComponent implements OnInit {
 
   calculateProgressPercentage(totalTasks: number, completedTasks: number): number {
     if (totalTasks === 0) return 0;
-    return (completedTasks / totalTasks) * 100;
+    const percentage = (completedTasks / totalTasks) * 100;
+    
+    // For the progress bar, return the actual percentage
+    return percentage;
+  }
+
+  getDisplayPercentage(totalTasks: number, completedTasks: number): string {
+    if (totalTasks === 0) return '0';
+    
+    const percentage = (completedTasks / totalTasks) * 100;
+    
+    // For display, show at least 1% if there's any progress but less than 1%
+    if (percentage > 0 && percentage < 1) {
+      return '1';
+    }
+    
+    // Use rounding to show integer percentage
+    return Math.round(percentage).toString();
   }
 
   getCultivation(cultivationId: number, userId: number) {
@@ -149,7 +166,6 @@ export class SlaveCropCalendarComponent implements OnInit {
     cropName: any,
     ongCultivationId:number
   ) {
-    // let ongCultivationId = this.ongCultivationId;
     if (cropCalendarId) {
       this.router.navigate(
         ['/plant-care/action/view-crop-task-by-user/user-task-list'],

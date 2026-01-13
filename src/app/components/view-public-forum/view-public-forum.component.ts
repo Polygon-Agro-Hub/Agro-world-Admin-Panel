@@ -171,7 +171,6 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   deletePost(id: number) {
-    this.isLoading = true;
     this.activeDeleteMenu = null;
 
     Swal.fire({

@@ -60,7 +60,7 @@
               </th>
               <th *ngIf="
                   permissionService.hasPermission(
-                    'View each farmer’s crop calendar task list'
+                    'View each farmer\'s crop calendar task list'
                   ) || tokenService.getUserDetails().role === '1'
                 " class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-centser">
                 Calendar
@@ -100,28 +100,6 @@
               <td class="px-4 py-3 dark:text-textDark text-left">
                 <div class="flex items-center space-x-2 justify-center">
                   <!-- Progress bar -->
-
-                  <!-- <div
-                    class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"
-                  >
-                    <div
-                      class="bg-blue-600 h-2.5 rounded-full"
-                      [ngClass]="{
-                        'min-w-[15px]':
-                          calculateProgressPercentage(
-                            item.totalTasks,
-                            item.completedTasks
-                          ) < 5
-                      }"
-                      [style.width.%]="
-                        calculateProgressPercentage(
-                          item.totalTasks,
-                          item.completedTasks
-                        )
-                      "
-                    ></div>
-                  </div> -->
-
                   <mat-progress-bar class="rounded-full" mode="determinate" [value]="
                       calculateProgressPercentage(
                         item.totalTasks,
@@ -129,17 +107,11 @@
                       )
                     " color="primary"></mat-progress-bar>
 
-                 
                   <span class="text-sm">
-                    {{
-                    (item.completedTasks / item.totalTasks) * 100
-                    | number : "1.0-0"
-                    }}
-                    %
+                    {{ getDisplayPercentage(item.totalTasks, item.completedTasks) }}%
                   </span>
                 </div>
               </td>
-               
 
               <td class="px-4 py-3 dark:text-textDark text-center">
                 <a *ngIf="item.longitude" href="https://www.google.com/maps?q={{ item.latitude }},{{
@@ -155,7 +127,7 @@
               </td>
               <td *ngIf="
                   permissionService.hasPermission(
-                    'View each farmer’s crop calendar task list'
+                    'View each farmer\'s crop calendar task list'
                   ) || tokenService.getUserDetails().role === '1'
                 " class="px-4 py-3 dark:text-textDark text-center">
                 <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="
@@ -174,10 +146,11 @@
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
+              </td>
             
-             <td class="px-4 py-3 dark:text-textDark text-center">
-  {{ item.modifyBy || '--' }}
-</td>
+              <td class="px-4 py-3 dark:text-textDark text-center">
+                {{ item.modifyBy || '--' }}
+              </td>
 
               <td>
                 <button *ngIf="

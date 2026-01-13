@@ -159,7 +159,7 @@
             <td class="px-4 py-3 text-center">
               <button [disabled]="!permissionService.hasPermission('Audit farm cluster assign officers') && tokenService.getUserDetails().role !== '1'"
                 [class]="getAssignClass(audit.officerFirstName ?? null)"
-                class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
+                class="flex shadow-xl text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
                 (click)="onAssignStatusClick(audit)"
                 title="Click to assign or view officer"
               >
@@ -225,7 +225,7 @@
   (click)="assignPopupClose()"
 >
   <div
-    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center w-1/4 p-10"
     (click)="$event.stopPropagation()"
   >
     <!-- Popup Header -->

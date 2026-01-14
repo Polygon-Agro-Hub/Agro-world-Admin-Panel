@@ -313,4 +313,11 @@
     (close)="closeDetailsPopup()"
   >
   </app-pikup-oder-record-details>
+
+  <app-reciverinfo-popup
+  [visible]="showReceiverPopup"
+  [receiverInfo]="selectedReceiverInfo"
+  (close)="closeReceiverPopup()"
+>
+</app-reciverinfo-popup>
 </div>

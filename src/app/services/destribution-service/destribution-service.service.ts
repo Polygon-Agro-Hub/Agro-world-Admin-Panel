@@ -435,24 +435,20 @@ getDistributedCenterPickupOrders(searchParams: {
     params = params.set('searchText', searchParams.searchText.trim());
   }
   
+  // Send activeTab parameter to backend
   if (searchParams.activeTab) {
-    let backendTabParam = '';
-    if (searchParams.activeTab === 'Ready to Pickup') {
-      backendTabParam = 'ready-to-pickup';
-    } else if (searchParams.activeTab === 'Picked Up') {
-      backendTabParam = 'picked-up';
-    } else if (searchParams.activeTab === 'All') {
-      // For "All" tab, backend needs to know which statuses to include
-      backendTabParam = 'all';
-    }
-    if (backendTabParam) {
-      params = params.set('activeTab', backendTabParam);
-    }
+    params = params.set('activeTab', searchParams.activeTab.trim());
+    
+    console.log('Sending activeTab to backend:', searchParams.activeTab);
   }
   
   const url = `${this.apiUrl}distribution/get-distributed-center-pickup-orders`;
   
-  console.log('Service call params:', params.toString());
+  console.log('Service call with params:', {
+    url: url,
+    params: params.toString(),
+    activeTab: searchParams.activeTab
+  });
   
   return this.http.get<ApiResponse>(url, {
     headers: this.getHeaders(),

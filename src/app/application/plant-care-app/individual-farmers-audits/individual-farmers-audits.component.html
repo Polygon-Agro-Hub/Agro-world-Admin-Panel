@@ -119,7 +119,7 @@
             </td>
             <td class="px-4 py-3 text-center">
               <button [class]="getAssignClass(audit.officerFirstName ?? null)" [disabled]="!permissionService.hasPermission('Audit individual farmers assign officers') && tokenService.getUserDetails().role !== '1'"
-                class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
+                class="flex shadow-lg text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
                 (click)="onAssignStatusClick(audit)" title="Click to assign or view officer">
                 {{ getAssignText(audit.officerFirstName ?? null) }}
               </button>
@@ -129,7 +129,7 @@
             </td>
 
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ audit.officerEmpId }}
+              {{ audit.officerEmpId || "--"}}
             </td>
           </tr>
         </tbody>
@@ -211,7 +211,7 @@
 <div *ngIf="isAssignPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="assignPopupClose()">
   <div
-    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center w-1/4 p-10"
     (click)="$event.stopPropagation()">
     <!-- Popup Header -->
     <div class="flex justify-center items-center mb-4 px-10">
@@ -225,7 +225,7 @@
       </label>
       <p-calendar id="scheduleDate" [(ngModel)]="selectedScheduleDate" (onSelect)="onScheduleDateChange()"
         (onClear)="onScheduleDateClear()" placeholder="Select Schedule Date" [showIcon]="true" [showClear]="false"
-        [showButtonBar]="true" [minDate]="minDate" iconDisplay="input" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+        [showButtonBar]="true" iconDisplay="input" [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                    [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
                    [&_.p-datepicker-header]:dark:bg-[#2d354d] 

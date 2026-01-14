@@ -3,6 +3,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
+import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
 
 interface Delivery {
   id: number
@@ -24,7 +25,7 @@ interface Delivery {
 @Component({
   selector: 'app-all-todays-deleveries',
   standalone: true,
-  imports: [CommonModule, DropdownModule, FormsModule, TodayDeliveriesViewDetailsPopupComponent],
+  imports: [CommonModule, DropdownModule, FormsModule, TodayDeliveriesViewDetailsPopupComponent, LoadingSpinnerComponent],
   templateUrl: './all-todays-deleveries.component.html',
   styleUrl: './all-todays-deleveries.component.css',
 })
@@ -34,6 +35,7 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   displayedDeliveries: Delivery[] = [];
   showDetailsPopup: boolean = false;
   selectedDeliveryId!: number;
+  isLoading = false;
 
   statusOptions = [
     { label: 'Out for Delivery', value: 'Out For Delivery' },
@@ -59,48 +61,50 @@ export class AllTodaysDeleveriesComponent implements OnChanges {
   getStatusClass(status: string): string {
     switch (status) {
       case 'Out For Delivery':
-        return 'bg-[#FCD4FF] text-[#80118A] dark:bg-[#424B5F] dark:text-[#E3E3E3]';
+        return 'bg-[#FCD4FF] text-[#80118A]';
       case 'Delivered':
-        return 'bg-[#BBFFC6] text-[#308233] dark:bg-[#1C4332] dark:text-[#D1FADF]';
+        return 'bg-[#BBFFC6] text-[#308233]';
       case 'Collected':
-        return 'bg-[#F8FEA5] text-[#7E8700] dark:bg-[#1C4332] dark:text-[#D1FADF]';
+        return 'bg-[#F8FEA5] text-[#7E8700]';
       case 'On the way':
-        return 'bg-[#FFEDCF] text-[#D17A00] dark:bg-[#5C4109] dark:text-[#FEF0C7]';
+        return 'bg-[#FFEDCF] text-[#D17A00]';
       case 'Return':
-        return 'bg-[#FFDFDF] text-[#FF0004] dark:bg-[#5C2A25] dark:text-[#FEE4E2]';
+        return 'bg-[#FFDFDF] text-[#FF0004]';
       case 'Hold':
-        return 'bg-[#FFEDCF] text-[#D17A00] dark:bg-[#0C4A6E] dark:text-[#E0F2FE]';
+        return 'bg-[#FFEDCF] text-[#D17A00]';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   }
 
   filterDeliveries(): void {
+  this.isLoading = true;
+  
+  setTimeout(() => {
+
     let filtered = [...this.deliveries];
 
-    // Apply status filter only when a specific status (not 'ALL') is selected
     if (this.selectedStatus && this.selectedStatus !== 'ALL') {
       filtered = filtered.filter(
         (delivery) => delivery.status === this.selectedStatus
       );
     }
 
-    // Apply search filter
     if (this.searchText) {
-      this.searchText = this.searchText.trim();
-      const searchLower = this.searchText.toLowerCase();
+      const searchLower = this.searchText.trim().toLowerCase();
       filtered = filtered.filter(
         (delivery) =>
-          (delivery.invNo && delivery.invNo.toLowerCase().includes(searchLower)) ||
-          (delivery.regCode && delivery.regCode.toLowerCase().includes(searchLower)) ||
-          (delivery.sheduleTime && delivery.sheduleTime.toLowerCase().includes(searchLower))
+          delivery.invNo?.toLowerCase().includes(searchLower) ||
+          delivery.regCode?.toLowerCase().includes(searchLower) ||
+          delivery.sheduleTime?.toLowerCase().includes(searchLower)
       );
     }
 
     this.displayedDeliveries = filtered;
-    console.log("displayedDeliveries", this.displayedDeliveries);
+    this.isLoading = false;
 
-  }
+  }, 200); 
+}
 
   onStatusChange(): void {
     this.filterDeliveries();

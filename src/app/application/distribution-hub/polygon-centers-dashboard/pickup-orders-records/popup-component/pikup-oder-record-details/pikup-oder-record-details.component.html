@@ -34,56 +34,63 @@
         </div>
       </div>
 
-      <!-- ================= SIMPLE NUMBERED LIST ================= -->
+      <!-- ================= SIMPLE NUMBERED LIST WITH VERTICAL LINE ================= -->
       <div *ngIf="!loading && !error && steps.length > 0" class="py-4">
-        <div class="space-y-6">
-          <ng-container *ngFor="let step of steps; let idx = index">
-            <!-- READY FOR PICKUP -->
-            <div *ngIf="step.type === 'ready'" class="flex">
-              <div class="flex-shrink-0 mr-4">
-                <div class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
-                  {{ idx + 1 }}
-                </div>
-              </div>
-              <div class="flex-1">
-                <p class="text-gray-800 dark:text-gray-200">
-                  Marked as Ready to Pickup at 
-                  {{ formatTime(step.payload.time) }} on 
-                  {{ formatDate(step.payload.time) }}, by {{ step.payload.officer }}.
-                </p>
-              </div>
-            </div>
+        <div class="relative">
+          <!-- Vertical Line Container -->
+          <div class="absolute left-4 top-0 bottom-0 w-0.5 -translate-x-1/2">
+            <div class="h-full w-full bg-blue-300 dark:bg-blue-600"></div>
+          </div>
 
-            <!-- PICKED UP -->
-            <div *ngIf="step.type === 'picked_up'" class="flex">
-              <div class="flex-shrink-0 mr-4">
-                <div class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
-                  {{ idx + 1 }}
+          <div class="space-y-6">
+            <ng-container *ngFor="let step of steps; let idx = index; let last = last">
+              <!-- READY FOR PICKUP -->
+              <div *ngIf="step.type === 'ready'" class="flex">
+                <div class="flex-shrink-0 mr-4 relative">
+                  <div class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                    {{ idx + 1 }}
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <p class="text-gray-800 dark:text-gray-200">
+                    Marked as Ready to Pickup at 
+                    {{ formatTime(step.payload.time) }} on 
+                    {{ formatDate(step.payload.time) }}, by {{ step.payload.officer }}.
+                  </p>
                 </div>
               </div>
-              <div class="flex-1">
-                <p class="text-gray-800 dark:text-gray-200">
-                  Customer picked up the order from the centre at 
-                  {{ formatTime(step.payload.time) }} on 
-                  {{ formatDate(step.payload.time) }}.
-                </p>
-              </div>
-            </div>
 
-            <!-- NO STATUS AVAILABLE -->
-            <div *ngIf="step.type === 'not_available'" class="flex">
-              <div class="flex-shrink-0 mr-4">
-                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center font-semibold">
-                  !
+              <!-- PICKED UP -->
+              <div *ngIf="step.type === 'picked_up'" class="flex">
+                <div class="flex-shrink-0 mr-4 relative">
+                  <div class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                    {{ idx + 1 }}
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <p class="text-gray-800 dark:text-gray-200">
+                    Customer picked up the order from the centre at 
+                    {{ formatTime(step.payload.time) }} on 
+                    {{ formatDate(step.payload.time) }}.
+                  </p>
                 </div>
               </div>
-              <div class="flex-1">
-                <p class="text-yellow-600 dark:text-yellow-400 italic">
-                  {{ step.payload.message }}
-                </p>
+
+              <!-- NO STATUS AVAILABLE -->
+              <div *ngIf="step.type === 'not_available'" class="flex">
+                <div class="flex-shrink-0 mr-4 relative">
+                  <div class="relative z-10 w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center font-semibold">
+                    !
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <p class="text-yellow-600 dark:text-yellow-400 italic">
+                    {{ step.payload.message }}
+                  </p>
+                </div>
               </div>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
       </div>
 

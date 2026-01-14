@@ -9,83 +9,91 @@
   <div
     class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
-    <div class="flex space-x-4 pb-5 border-b border-gray-300">
-      <button
-        (click)="setActiveTab('All')"
-        [ngClass]="
-          activeTab === 'All'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        "
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
-        <i *ngIf="activeTab === 'All'" class="fa fa-check"></i>
-        All
-      </button>
+    <app-loading-spinner *ngIf="isInitializing"></app-loading-spinner>
+    
+    <div *ngIf="!isInitializing">
+      <div class="flex space-x-4 pb-5 border-b border-gray-300">
+        <button
+          (click)="setActiveTab('All')"
+          [ngClass]="
+            activeTab === 'All'
+              ? 'border border-[#415CFF] text-[#415CFF]'
+              : 'border border-gray-300 text-textLight dark:text-textDark'
+          "
+          class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        >
+          <i *ngIf="activeTab === 'All'" class="fa fa-check"></i>
+          All
+        </button>
 
-      <button
-        (click)="setActiveTab('Ready to Pickup')"
-        [ngClass]="
-          activeTab === 'Ready to Pickup'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        "
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
-        <i *ngIf="activeTab === 'Ready to Pickup'" class="fa fa-check"></i>
-        Ready to Pickup
-      </button>
+        <button
+          (click)="setActiveTab('Ready to Pickup')"
+          [ngClass]="
+            activeTab === 'Ready to Pickup'
+              ? 'border border-[#415CFF] text-[#415CFF]'
+              : 'border border-gray-300 text-textLight dark:text-textDark'
+          "
+          class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        >
+          <i *ngIf="activeTab === 'Ready to Pickup'" class="fa fa-check"></i>
+          Ready to Pickup
+        </button>
 
-      <button
-        (click)="setActiveTab('Picked Up')"
-        [ngClass]="
-          activeTab === 'Picked Up'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        "
-        class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
-      >
-        <i *ngIf="activeTab === 'Picked Up'" class="fa fa-check"></i>
-        Picked Up
-      </button>
-    </div>
-    <div class="h-5"></div>
-    <div class="tab-content">
-      <!-- In parent component HTML, update child component bindings -->
-      <app-all-pikup-oders
-        [centerObj]="centerObj"
-        [orders]="getFilteredOrders()"
-        [activeTab]="activeTab"
-        (dateChange)="onDateChangeFromChild($event)"
-        (timeSlotChange)="onTimeSlotChangeFromChild($event)"
-        (searchChange)="onSearchChangeFromChild($event)"
-        (clearSearch)="onClearSearchFromChild()"
-        (clearDate)="onClearDateFromChild()"
-        *ngIf="activeTab === 'All' && !isLoading"
-      >
-      </app-all-pikup-oders>
+        <button
+          (click)="setActiveTab('Picked Up')"
+          [ngClass]="
+            activeTab === 'Picked Up'
+              ? 'border border-[#415CFF] text-[#415CFF]'
+              : 'border border-gray-300 text-textLight dark:text-textDark'
+          "
+          class="h-10 px-5 flex items-center justify-center rounded-full gap-2"
+        >
+          <i *ngIf="activeTab === 'Picked Up'" class="fa fa-check"></i>
+          Picked Up
+        </button>
+      </div>
+      
+      <div class="h-5"></div>
+      <div class="tab-content">
+        <div class="relative">
+          <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+          
+          <app-all-pikup-oders
+            [centerObj]="centerObj"
+            [orders]="getFilteredOrders()"
+            [activeTab]="activeTab"
+            (dateChange)="onDateChangeFromChild($event)"
+            (timeSlotChange)="onTimeSlotChangeFromChild($event)"
+            (searchChange)="onSearchChangeFromChild($event)"
+            (clearSearch)="onClearSearchFromChild()"
+            (clearDate)="onClearDateFromChild()"
+            *ngIf="activeTab === 'All'"
+          >
+          </app-all-pikup-oders>
 
-      <app-ready-to-pikup
-        [centerObj]="centerObj"
-        [orders]="getFilteredOrders()"
-        (dateChange)="onDateChangeFromChild($event)"
-        (timeSlotChange)="onTimeSlotChangeFromChild($event)"
-        (searchChange)="onSearchChangeFromChild($event)"
-        (clearSearch)="onClearSearchFromChild()"
-        (clearDate)="onClearDateFromChild()"
-        *ngIf="activeTab === 'Ready to Pickup' && !isLoading"
-      ></app-ready-to-pikup>
+          <app-ready-to-pikup
+            [centerObj]="centerObj"
+            [orders]="getFilteredOrders()"
+            (dateChange)="onDateChangeFromChild($event)"
+            (timeSlotChange)="onTimeSlotChangeFromChild($event)"
+            (searchChange)="onSearchChangeFromChild($event)"
+            (clearSearch)="onClearSearchFromChild()"
+            (clearDate)="onClearDateFromChild()"
+            *ngIf="activeTab === 'Ready to Pickup'"
+          ></app-ready-to-pikup>
 
-      <app-pikup-oders
-        [centerObj]="centerObj"
-        [orders]="getFilteredOrders()"
-        (dateChange)="onDateChangeFromChild($event)"
-        (timeSlotChange)="onTimeSlotChangeFromChild($event)"
-        (searchChange)="onSearchChangeFromChild($event)"
-        (clearSearch)="onClearSearchFromChild()"
-        (clearDate)="onClearDateFromChild()"
-        *ngIf="activeTab === 'Picked Up' && !isLoading"
-      ></app-pikup-oders>
+          <app-pikup-oders
+            [centerObj]="centerObj"
+            [orders]="getFilteredOrders()"
+            (dateChange)="onDateChangeFromChild($event)"
+            (timeSlotChange)="onTimeSlotChangeFromChild($event)"
+            (searchChange)="onSearchChangeFromChild($event)"
+            (clearSearch)="onClearSearchFromChild()"
+            (clearDate)="onClearDateFromChild()"
+            *ngIf="activeTab === 'Picked Up'"
+          ></app-pikup-oders>
+        </div>
+      </div>
     </div>
   </div>
 </div>

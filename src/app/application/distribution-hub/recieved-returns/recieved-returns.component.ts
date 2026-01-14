@@ -23,7 +23,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
     NgxPaginationModule,
   ],
   templateUrl: './recieved-returns.component.html',
-  styleUrls: ['./recieved-returns.component.css']
+  styleUrls: ['./recieved-returns.component.css'],
 })
 export class RecievedReturnsComponent implements OnInit {
   isLoading = false;
@@ -32,8 +32,8 @@ export class RecievedReturnsComponent implements OnInit {
 
   dataObject: Partial<DriverData> = {};
 
-  deliveryDate?: string;
-  deliveryDateModel: Date | null = null;
+  receivedDate?: string;
+  receivedDateModel: Date | null = null;
   centerId?: number;
 
   searchText: string = '';
@@ -55,49 +55,43 @@ export class RecievedReturnsComponent implements OnInit {
 
   ngOnInit() {
     this.fetchCentreOptions();
-    this.deliveryDateModel = new Date();
-    this.deliveryDate = new Date().toISOString().split('T')[0];
-    
+    this.receivedDateModel = new Date();
+    this.receivedDate = new Date().toISOString().split('T')[0];
+    this.loadData();
+
     // Setup debounced search
     this.searchSubject
       .pipe(
         debounceTime(300), // Wait 300ms after user stops typing
         distinctUntilChanged() // Only emit if value changed
       )
-      .subscribe(searchTerm => {
+      .subscribe((searchTerm) => {
         this.performSearch(searchTerm);
       });
-    
+
     this.loadData();
   }
 
   searchOrders() {
-    const trimmed = this.searchText.trim();
-    if (!trimmed) {
-      this.searchText = '';
-      this.loadData();
-      return;
-    }
-    // Trigger the debounced search
-    this.searchSubject.next(trimmed);
+    this.loadData();
   }
 
   // Perform actual search
   performSearch(searchTerm: string) {
     this.isLoading = true;
-    
+
     // First, check if it's a phone number search (remove spaces and special characters)
     const cleanSearch = searchTerm.replace(/[+\s\-()]/g, '');
-    
+
     // Check if search term looks like a phone number
     const isPhoneSearch = /^\d+$/.test(cleanSearch) && cleanSearch.length >= 6;
-    
+
     // Check if search term looks like a centre code (alphanumeric, usually short)
     const isCentreCodeSearch = /^[A-Za-z0-9]{3,10}$/.test(searchTerm);
-    
+
     this.distService
       .getReturnRecievedData(
-        this.deliveryDate,
+        this.receivedDate,
         this.centerId,
         searchTerm // Send the search term to backend
       )
@@ -108,22 +102,37 @@ export class RecievedReturnsComponent implements OnInit {
           this.totalValue = response.grandTotal;
           this.hasData = this.driverData.length > 0;
           this.totalItems = response.total || this.driverData.length || 0;
-          
+
           // If no results from backend, try client-side filtering as fallback
-          if (this.driverData.length === 0 && (isPhoneSearch || isCentreCodeSearch)) {
-            this.applyClientSideFilter(searchTerm, isPhoneSearch, isCentreCodeSearch);
+          if (
+            this.driverData.length === 0 &&
+            (isPhoneSearch || isCentreCodeSearch)
+          ) {
+            this.applyClientSideFilter(
+              searchTerm,
+              isPhoneSearch,
+              isCentreCodeSearch
+            );
           }
         },
         error: () => {
           this.isLoading = false;
           // On error, try client-side filtering
-          this.applyClientSideFilter(searchTerm, isPhoneSearch, isCentreCodeSearch);
+          this.applyClientSideFilter(
+            searchTerm,
+            isPhoneSearch,
+            isCentreCodeSearch
+          );
         },
       });
   }
 
   // Client-side filtering as fallback
-  applyClientSideFilter(searchTerm: string, isPhoneSearch: boolean, isCentreCodeSearch: boolean) {
+  applyClientSideFilter(
+    searchTerm: string,
+    isPhoneSearch: boolean,
+    isCentreCodeSearch: boolean
+  ) {
     // This assumes you have all data loaded
     // You might need to load all data first without filters
     if (!this.allDataLoaded) {
@@ -132,33 +141,33 @@ export class RecievedReturnsComponent implements OnInit {
       return;
     }
 
-    const filtered = this.allDriverData.filter(item => {
+    const filtered = this.allDriverData.filter((item) => {
       const searchLower = searchTerm.toLowerCase();
-      
+
       // Check Order ID
       if (item.invNO?.toLowerCase().includes(searchLower)) {
         return true;
       }
-      
+
       // Check Customer Contact
       const fullPhone = `${item.phoneCode || ''}${item.phoneNumber || ''}`;
       if (fullPhone.includes(searchTerm.replace(/\D/g, ''))) {
         return true;
       }
-      
+
       // Check Centre Code
       if (item.regCode?.toLowerCase().includes(searchLower)) {
         return true;
       }
-      
+
       // Check Centre Name
       if (item.centerName?.toLowerCase().includes(searchLower)) {
         return true;
       }
-      
+
       return false;
     });
-    
+
     this.driverData = filtered;
     this.hasData = filtered.length > 0;
     this.totalItems = filtered.length;
@@ -182,8 +191,9 @@ export class RecievedReturnsComponent implements OnInit {
           this.isLoading = false;
           this.allDriverData = response.items || [];
           this.allDataLoaded = true;
-          this.applyClientSideFilter(searchTerm, 
-            /^\d+$/.test(searchTerm.replace(/[+\s\-()]/g, '')), 
+          this.applyClientSideFilter(
+            searchTerm,
+            /^\d+$/.test(searchTerm.replace(/[+\s\-()]/g, '')),
             /^[A-Za-z0-9]{3,10}$/.test(searchTerm)
           );
         },
@@ -205,17 +215,33 @@ export class RecievedReturnsComponent implements OnInit {
   back() {
     window.history.back();
   }
-  
+
   onDateSelected(date: Date) {
     if (!date) return;
+
     const tzFixed = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    this.deliveryDate = tzFixed.toISOString().slice(0, 10);
+    this.receivedDate = tzFixed.toISOString().slice(0, 10);
     this.applyFilters();
   }
 
+  onDateChange(value: Date | null) {
+    if (!value) {
+      this.clearDateFilter();
+    }
+  }
+
   clearDateFilter() {
-    this.deliveryDateModel = null;
-    this.deliveryDate = undefined;
+    this.receivedDateModel = new Date();
+    this.receivedDate = undefined;
+    this.applyFilters();
+  }
+
+  private setDateAndApply(date: Date) {
+    this.receivedDateModel = date;
+
+    const tzFixed = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    this.receivedDate = tzFixed.toISOString().slice(0, 10);
+
     this.applyFilters();
   }
 
@@ -223,7 +249,7 @@ export class RecievedReturnsComponent implements OnInit {
     this.isLoading = true;
     this.distService
       .getReturnRecievedData(
-        this.deliveryDate,
+        this.receivedDate,
         this.centerId,
         this.searchText?.trim() || undefined
       )
@@ -275,12 +301,12 @@ export class RecievedReturnsComponent implements OnInit {
   }
 
   formatNumber(value: number): string {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'decimal',   
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
-}
+    return new Intl.NumberFormat('en-IN', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  }
 
   // Add these properties
   private allDriverData: DriverData[] = [];

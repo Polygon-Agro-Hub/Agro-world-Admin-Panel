@@ -8,7 +8,7 @@
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300 overflow-x-auto">
+    <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300 overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <button [ngClass]="
           activeButton === 'assigned'
             ? 'border border-[#415CFF] text-[#415CFF]'
@@ -181,7 +181,7 @@
               <td class="px-3 py-3 text-center dark:text-textDark">
                 {{ order.fullTotal | number : "1.2-2" }}
               </td>
-              <td class="px-3 py-3 text-center">
+              <td class="px-3 py-3 text-center whitespace-nowrap">
                 <span *ngIf="activeButton === 'assigned'"
                   class="bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2">Assigned</span>
                 <span *ngIf="activeButton === 'processing'"

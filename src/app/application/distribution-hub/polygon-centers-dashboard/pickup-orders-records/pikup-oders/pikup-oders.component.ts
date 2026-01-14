@@ -12,7 +12,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
-import { PikupOderRecordDetailsComponent } from "../popup-component/pikup-oder-record-details/pikup-oder-record-details.component";
+import { PikupOderRecordDetailsComponent } from '../popup-component/pikup-oder-record-details/pikup-oder-record-details.component';
+import { ReciverinfoPopupComponent } from '../reciverinfo-popup/reciverinfo-popup.component';
 
 interface Order {
   no: number;
@@ -44,7 +45,8 @@ interface CenterDetails {
     CalendarModule,
     LoadingSpinnerComponent,
     FormsModule,
-    PikupOderRecordDetailsComponent
+    PikupOderRecordDetailsComponent,
+    ReciverinfoPopupComponent,
   ],
   templateUrl: './pikup-oders.component.html',
   styleUrl: './pikup-oders.component.css',
@@ -67,10 +69,7 @@ export class PikupOdersComponent implements OnChanges {
   searchText: string = '';
 
   // Time slot options for dropdown
-  timeSlotOptions = [
-    { label: '8AM-12PM' },
-    { label: '12PM-4PM' },
-  ];
+  timeSlotOptions = [{ label: '8AM-12PM' }, { label: '12PM-4PM' }];
 
   isLoading = false;
   hasData: boolean = false;
@@ -80,6 +79,9 @@ export class PikupOdersComponent implements OnChanges {
   selectedOrderId: number | undefined;
   selectedOrderDisplayId: string = '';
   selectedOrderData: any = null;
+
+  showReceiverPopup: boolean = false;
+  selectedReceiverInfo: any = null;
 
   constructor(private datePipe: DatePipe) {}
 
@@ -138,8 +140,8 @@ export class PikupOdersComponent implements OnChanges {
         item.customerPhoneNumber
       ),
       receiverPhone: this.formatPhoneNumber(
-        item.receiverPhoneCode,
-        item.receiverPhone
+        item.receiverPhoneCode1,
+        item.receiverPhone1
       ),
       receiversInfo: this.getReceiverInfo(item),
       scheduledTimeSlot: this.formatScheduledTimeSlot(item),
@@ -147,7 +149,7 @@ export class PikupOdersComponent implements OnChanges {
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
       // CRITICAL FIX: Add originalData property
-      originalData: item
+      originalData: item,
     }));
   }
 
@@ -273,7 +275,56 @@ export class PikupOdersComponent implements OnChanges {
 
   // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
-    console.log('View receiver info for:', order);
+  console.log('View receiver info for:', order);
+  
+  if (order.originalData) {
+    this.selectedReceiverInfo = {
+      orderId: order.orderId,
+      receiverName: `${order.originalData.customerTitle || ''} ${order.originalData.fillName || ''} ${order.originalData.lastName || ''}`.trim() ||
+                   order.originalData.receiverName,
+      receiverPhone1: this.formatPhoneNumber(
+        order.originalData.receiverPhoneCode1, 
+        order.originalData.receiverPhone1
+      ),
+      // Check if phone2 exists before formatting, otherwise return "--"
+      receiverPhone2: (order.originalData.phone2 || order.originalData.phonecode2) 
+        ? this.formatPhoneNumber(order.originalData.phonecode2, order.originalData.phone2)
+        : "--",
+      customerName: `${order.originalData.title || ''} ${order.originalData.firstName || ''} ${order.originalData.lastName || ''}`.trim(),
+      customerPhone: this.formatPhoneNumber(
+        order.originalData.customerPhoneCode, 
+        order.originalData.customerPhoneNumber
+      ),
+      platform: order.originalData.orderApp || 'Salesdash',
+      orderPlaced: this.formatOrderDate(order.originalData.orderCreatedAt),
+      scheduledTime: this.formatScheduledTime(order.originalData),
+    };
+    this.showReceiverPopup = true;
+  }
+}
+
+  private formatOrderDate(dateString: string): string {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return this.datePipe.transform(date, "h:mm a 'on' MMMM dd, yyyy") || 'N/A';
+  }
+
+  private formatScheduledTime(item: any): string {
+    const scheduleDate = item.scheduleDate || item.sheduleDate;
+    const timeSlot = item.timeSlot || item.sheduleTime;
+
+    if (!scheduleDate) return 'N/A';
+
+    const date = new Date(scheduleDate);
+    const formattedDate = this.datePipe.transform(date, 'MMMM dd, yyyy') || '';
+    const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
+
+    return `${formattedTimeSlot} on ${formattedDate}`;
+  }
+
+  closeReceiverPopup(): void {
+    this.showReceiverPopup = false;
+    this.selectedReceiverInfo = null;
   }
 
   viewOrderDetails(order: Order): void {
@@ -296,27 +347,28 @@ export class PikupOdersComponent implements OnChanges {
 
   openOrderDetails(order: Order): void {
     console.log('Button clicked! Opening order details for:', order);
-    
+
     // For display in popup header (show invoice/order number)
     this.selectedOrderDisplayId = order.orderId;
-    
+
     // For API call (use processOrderId from original data)
     if (order.originalData) {
       // Debug: Log all available fields
       console.log('Original data fields:', Object.keys(order.originalData));
       console.log('Full original data:', order.originalData);
-      
+
       // Try to get the processOrderId from original data
-      const processOrderId = order.originalData.processOrderId || 
-                            order.originalData.id || 
-                            order.originalData.orderId;
-      
+      const processOrderId =
+        order.originalData.processOrderId ||
+        order.originalData.id ||
+        order.originalData.orderId;
+
       if (processOrderId) {
         // Pass the processOrderId directly to API
         this.selectedOrderId = processOrderId;
         this.selectedOrderData = order.originalData;
         this.showDetailsPopup = true;
-        
+
         console.log('Popup opened with:');
         console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
         console.log('- API ID (processOrderId):', this.selectedOrderId);

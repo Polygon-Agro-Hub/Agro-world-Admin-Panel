@@ -25,6 +25,13 @@ interface DuplicationEntry {
   phoneNumber: string;
 }
 
+interface ExistingUser {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  NICnumber: string;
+}
+
 @Component({
   selector: 'app-user-bulk-upload',
   standalone: true,
@@ -43,6 +50,7 @@ export class UserBulkUploadComponent {
   successMessage: string = '';
   isLoading = false;
   duplicateEntries: UserErrorEntry[] = [];
+  existingUsers: ExistingUser[] = [];
 
   // Check if dark mode is enabled
   private isDarkMode(): boolean {
@@ -66,6 +74,7 @@ export class UserBulkUploadComponent {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
+    console.log('file', file)
     this.validateFile(file);
   }
 
@@ -92,6 +101,7 @@ export class UserBulkUploadComponent {
 
     if (fileExtension && allowedExtensions.includes(`.${fileExtension}`)) {
       this.selectedFile = file;
+      console.log('selectedFile', this.selectedFile)
       this.errorMessage = '';
     } else {
       this.errorMessage =
@@ -112,6 +122,7 @@ export class UserBulkUploadComponent {
 
   onUpload(): void {
     if (!this.selectedFile) {
+      console.log('no')
       Swal.fire({
         icon: 'warning',
         title: 'Warning',
@@ -125,11 +136,77 @@ export class UserBulkUploadComponent {
       return;
     }
 
+    console.log('yes')
+
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    const formData = new FormData();
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      try {
+        const data = e.target.result;
+        console.log('data', data)
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        const phoneNumbers = new Map();
+        const nicNumbers = new Map();
+        const duplicates: ExistingUser[] = [];
+
+        for (let i = 0; i < jsonData.length; i++) {
+          const row = jsonData[i];
+          const phoneNumber = String(
+            (row as { [key: string]: any })['Phone Number']
+          );
+          const nicNumber = String(
+            (row as { [key: string]: any })['NIC Number']
+          );
+          const firstName = String(
+            (row as { [key: string]: any })['First Name']
+          );
+          const lastName = String((row as { [key: string]: any })['Last Name']);
+
+          if (phoneNumbers.has(phoneNumber)) {
+            duplicates.push({
+              firstName,
+              lastName,
+              phoneNumber,
+              NICnumber: nicNumber,
+            });
+          } else {
+            phoneNumbers.set(phoneNumber, i);
+          }
+
+          if (nicNumbers.has(nicNumber)) {
+            if (
+              !duplicates.some(
+                (d) =>
+                  d.phoneNumber === phoneNumber && d.NICnumber === nicNumber
+              )
+            ) {
+              duplicates.push({
+                firstName,
+                lastName,
+                phoneNumber,
+                NICnumber: nicNumber,
+              });
+            }
+          } else {
+            nicNumbers.set(nicNumber, i);
+          }
+        }
+
+        if (duplicates.length > 0) {
+          console.log('duplicates', duplicates)
+          this.isLoading = false;
+          this.handleDuplicateEntries(duplicates)
+          return;
+        }
+
+        const formData = new FormData();
     formData.append('file', this.selectedFile);
 
     this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
@@ -189,6 +266,21 @@ export class UserBulkUploadComponent {
         this.handleError(error);
       },
     });
+      } catch (error) {
+        this.isLoading = false;
+        this.handleError(
+          new Error('Failed to process the file. Please check the file format.')
+        );
+      }
+    };
+
+    reader.onerror = () => {
+      this.isLoading = false;
+      this.handleError(new Error('Error reading the file. Please try again.'));
+    };
+
+    reader.readAsArrayBuffer(this.selectedFile);
+
   }
 
   // Helper method to handle duplicate entries
@@ -207,7 +299,7 @@ export class UserBulkUploadComponent {
       };
     });
     
-    this.downloadDuplicationExcel(duplicateEntries, 'duplicate_entries.xlsx');
+    this.downloadDuplicationExcel(duplicateEntries, 'Duplicate_entries.xlsx');
     
     const isDarkMode = this.isDarkMode();
     
@@ -255,7 +347,7 @@ export class UserBulkUploadComponent {
       };
     });
 
-    this.downloadErrorExcel(errorEntries, 'existing_users.xlsx');
+    this.downloadErrorExcel(errorEntries, 'Existing_users.xlsx');
     
     const isDarkMode = this.isDarkMode();
     
@@ -590,23 +682,34 @@ export class UserBulkUploadComponent {
     this.isLoading = false;
     this.selectedFile = null;
 
-    let errorMessage = 'Failed to upload file. Please try again.';
+    let errorMessage = error.error?.error || 'Failed to upload file. Please try again.';
     if (error.status === 400) {
       errorMessage = error.error?.error || 'Invalid file or data format.';
-    } else if (error.status === 413) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Upload Failed',
+        text: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+          title: 'dark:text-white',
+        }
+      });
+    } 
+    else if (error.status === 413) {
       errorMessage = 'File size too large. Please upload a smaller file.';
     }
 
-    Swal.fire({
-      icon: 'error',
-      title: 'Upload Failed',
-      text: errorMessage,
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-        title: 'dark:text-white',
-      }
-    });
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Upload Failed',
+    //   text: errorMessage,
+    //   confirmButtonText: 'OK',
+    //   customClass: {
+    //     popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+    //     title: 'dark:text-white',
+    //   }
+    // });
   }
 
   onCancel() {

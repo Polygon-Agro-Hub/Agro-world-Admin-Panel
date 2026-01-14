@@ -230,7 +230,6 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   deleteReply(id: number) {
-  this.isLoading = true;
 
   Swal.fire({
     title: 'Are you sure?',

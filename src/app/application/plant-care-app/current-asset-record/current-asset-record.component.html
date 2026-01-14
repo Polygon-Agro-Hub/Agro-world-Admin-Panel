@@ -12,30 +12,31 @@
     class="pt-5 pr-12 pl-12 pb-10 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
   >
 
-  <div class="flex flex-row gap-x-80 mb-3">
+
+  <div class="flex flex-row gap-x-[400px] mb-2">
     <!-- Left: Farmer -->
     <div class="flex items-center space-x-1">
-      <span class="font-medium dark:text-textDark">Farmer :</span>
-      <span class="font-semibold dark:text-textDark">{{ name || 'NULL' }}</span>
+      <span class=" dark:text-textDark">Farmer:</span>
+      <span class="font-medium dark:text-textDark">{{ name || 'NULL' }}</span>
     </div>
   
     <!-- Right: Category -->
     <div class="flex items-center space-x-1">
-      <span class="font-medium dark:text-textDark">Category :</span>
+      <span class=" dark:text-textDark">Category:</span>
       <span class="font-semibold dark:text-textDark">{{ category || 'NULL' }}</span>
     </div>
   </div>
 
-  <div class="flex flex-row gap-x-96 mt-2 mb-8">
+  <div class="flex flex-row gap-x-[465px] mb-2">
     <!-- Left: Farmer -->
     <div class="flex items-center space-x-1">
-      <span class="font-medium dark:text-textDark">Farm :</span>
+      <span class=" dark:text-textDark">Farm:</span>
       <span class="font-semibold dark:text-textDark">{{ farmName || 'NULL' }}</span>
     </div>
   
     <!-- Right: Category -->
     <div class="flex items-center space-x-1">
-      <span class="font-medium dark:text-textDark">Asset :</span>
+      <span class=" dark:text-textDark">Asset:</span>
       <span class="font-semibold dark:text-textDark">{{ asset || 'NULL' }}</span>
     </div>
   </div>
@@ -45,7 +46,7 @@
       <p class="text-gray-500 text-lg">No data to display</p>
     </div>
 
-    <div *ngIf="hasData" class="overflow-x-auto">
+    <div *ngIf="hasData" class="overflow-x-auto mt-10">
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>

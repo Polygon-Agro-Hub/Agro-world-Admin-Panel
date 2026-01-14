@@ -1460,61 +1460,65 @@ export class UpdateDistributionOfficerComponent {
 
   // Update getAllCollectionCetnter method
   getAllCollectionCetnter() {
-    this.distributionOfficerServ
-      .getDistributionCentreList(
-        this.personalData.companyId,
+  this.distributionOfficerServ
+    .getDistributionCentreList(
+      this.personalData.companyId,
+    )
+    .subscribe((res) => {
+      this.collectionCenterData = res;
 
-      )
-      .subscribe((res) => {
-        this.collectionCenterData = res;
-
-        // Convert to dropdown options format
-        this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.centerName,
-          value: center.id,
-        }));
-      });
-  }
+      // Convert to dropdown options format with regCode
+      this.centerOptions = this.collectionCenterData.map((center) => ({
+        label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
+        value: center.id,
+        // Store original data if needed
+        originalLabel: center.centerName,
+        regCode: center.regCode
+      }));
+    });
+}
 
   getAllCollectionCenters() {
-    //miss func
-    this.collectionCenterData = []
-    this.personalData.centerId = null;
-    this.managerOptions = [];
-    this.personalData.irmId = null;
-    this.distributionOfficerServ
-      .getDistributionCentreList(
-        this.personalData.companyId,
+  // Reset center data
+  this.collectionCenterData = []
+  this.personalData.centerId = null;
+  this.managerOptions = [];
+  this.personalData.irmId = null;
+  
+  this.distributionOfficerServ
+    .getDistributionCentreList(
+      this.personalData.companyId,
+    )
+    .subscribe((res) => {
+      this.collectionCenterData = res;
 
-      )
-      .subscribe((res) => {
-        this.collectionCenterData = res;
-
-        // Convert to dropdown options format
-        this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.centerName,
-          value: center.id,
-        }));
-      });
-  }
+      // Convert to dropdown options format with regCode
+      this.centerOptions = this.collectionCenterData.map((center) => ({
+        label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
+        value: center.id,
+        originalLabel: center.centerName,
+        regCode: center.regCode
+      }));
+    });
+}
 
   // Update getAllCollectionManagers method
   getAllCollectionManagers() {
-    this.distributionOfficerServ
-      .getAllManagerList(
-        this.personalData.companyId,
-        this.personalData.centerId
-      )
-      .subscribe((res) => {
-        this.collectionManagerData = res;
+  this.distributionOfficerServ
+    .getAllManagerList(
+      this.personalData.companyId,
+      this.personalData.centerId
+    )
+    .subscribe((res) => {
+      this.collectionManagerData = res;
 
-        // Convert to dropdown options format
-        this.managerOptions = this.collectionManagerData.map((manager) => ({
-          label: manager.firstNameEnglish,
-          value: manager.id,
-        }));
-      });
-  }
+      // Convert to dropdown options format
+      this.managerOptions = this.collectionManagerData.map((manager) => ({
+        label: manager.firstNameEnglish,
+        value: manager.id,
+      }));
+    });
+}
   onCheckboxChange(language: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
@@ -2227,6 +2231,7 @@ class Personal {
 class CollectionCenter {
   id!: number;
   centerName!: string;
+  regCode!: string;
 }
 
 class CollectionManager {

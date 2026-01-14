@@ -25,8 +25,8 @@
     <div *ngIf="hasData" class="overflow-x-auto">
       <table class="w-full divide-y divide-gray-200 table-auto">
         <thead>
-          <tr>
-            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">No ({{ totalItems }})</th>
+          <tr *ngFor="let farm of farms | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index">
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">No ({{ (page - 1) * itemsPerPage + i + 1 | number:'2.0' }})</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Farm Name</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">District</th>
             <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View farms current assets') ||tokenService.getUserDetails().role === '1'" >Current</th>
@@ -45,8 +45,8 @@
             let i = index
           ">
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
-              {{ (page - 1) * itemsPerPage + i + 1 }}
-            </td>
+  {{ ((page - 1) * itemsPerPage + i + 1) < 10 ? '0' + ((page - 1) * itemsPerPage + i + 1) : ((page - 1) * itemsPerPage + i + 1) }}
+</td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ farm.farmName || 'No Farm Name' }}
             </td>

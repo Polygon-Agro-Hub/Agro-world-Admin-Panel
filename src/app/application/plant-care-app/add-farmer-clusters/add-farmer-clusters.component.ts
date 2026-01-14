@@ -770,8 +770,7 @@ export class AddFarmerClustersComponent implements OnInit {
       link.setAttribute('href', url);
       link.setAttribute(
         'download',
-        `Mismatched_farmers_${this.selectedFile?.name.replace(/\.[^/.]+$/, '') || 'file'
-        }.csv`
+        `Mismatched_farmers.csv`
       );
       link.style.visibility = 'hidden';
 
@@ -935,7 +934,7 @@ export class AddFarmerClustersComponent implements OnInit {
           </h2>
         </div>
         <p class="text-gray-700 dark:text-gray-300 text-lg font-semibold mb-2">
-          Please Note: Cluster creation cannot proceed because the uploaded CSV file contains Farm IDs that do not belong to the mentioned farmers.
+          Please Note: Cluster creation cannot proceed because the uploaded XLSX file contains Farm IDs that do not belong to the mentioned farmers.
         </p>
       </div>
 

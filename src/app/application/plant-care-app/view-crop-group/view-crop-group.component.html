@@ -20,7 +20,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          All Crop Groups ({{ this.totalItems }})
+          All Crop Groups ({{ this.totalItems | number :'2.0'}})
         </h2>
       </div>
       <div class="flex items-center mr-5">
@@ -89,19 +89,19 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Image
             </th>
-            <th class="px-2 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-2 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
               No. of Varieties
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Category
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Varieties
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Cost per acre(Rs.)
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Income per acre(Rs.)
             </th>
             <th class="px-4 py-3 font-normal"></th>
@@ -146,7 +146,7 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.category }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               <div *ngIf="item.varietyList.length != 0">
                 <span *ngFor="let variety of item.varietyList; let last = last">
                   {{ variety }}<span *ngIf="!last">, </span>

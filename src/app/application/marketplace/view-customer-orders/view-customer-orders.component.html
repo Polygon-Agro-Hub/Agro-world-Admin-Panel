@@ -137,13 +137,13 @@
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
               Invoice No
             </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
               Order Time
             </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Schedule
             </th>
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Payment
             </th>
             <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -168,11 +168,11 @@
           <ng-container *ngIf="orders && orders.length > 0; else noData">
             <tr *ngFor="let order of orders" class="border-b border-gray-200 dark:border-[#4B555A]">
               <td class="px-3 py-3 text-left dark:text-textDark">{{ order.invNo }}</td>
-              <td class="px-3 py-3 text-center dark:text-textDark">
+              <td class="px-3 py-3 text-center dark:text-textDark whitespace-nowrap">
                 {{ order.sheduleDate | date : "d MMM, y h:mm a" }}
               </td>
-              <td class="px-3 py-3 text-left dark:text-textDark">{{ order.sheduleType }}</td>
-              <td class="px-3 py-3 text-left dark:text-textDark">{{ order.paymentMethod === 'Card' ? 'Debit/Credit' : 'Cash on Delivery' }}</td>
+              <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">{{ order.sheduleType }}</td>
+              <td class="px-3 py-3 text-left dark:text-textDark whitespace-nowrap">{{ order.paymentMethod === 'Card' ? 'Debit/Credit' : 'Cash on Delivery' }}</td>
               <td class="px-3 py-3 text-center">
                 <span [ngClass]="getPaymentStatusClass(order.paymentMethod, order.isPaid)">
                   {{ getPaymentStatusText(order.paymentMethod, order.isPaid) }}

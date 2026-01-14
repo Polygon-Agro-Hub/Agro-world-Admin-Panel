@@ -83,7 +83,6 @@
               <i class="fa-solid fa-magnifying-glass text-sm"></i>
             </button>
           </div>
-
         </div>
       </div>
       <!-- Table Section - Only show if there's data -->
@@ -269,7 +268,9 @@
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Header -->
-    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg">
+    <div
+      class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg"
+    >
       <h2
         class="text-lg font-semibold text-center text-textLight dark:text-textDark"
       >
@@ -359,7 +360,9 @@
         <span
           class="text-sm text-textLight dark:text-textDark font-medium flex-1"
         >
-          {{ formatNumberWithCommas(selectedRequest?.Expected_Investment || 0) }}
+          {{
+            formatNumberWithCommas(selectedRequest?.Expected_Investment || 0)
+          }}
         </span>
       </div>
 
@@ -462,7 +465,7 @@
   (click)="assignPopupClose()"
 >
   <div
-    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md flex flex-col justify-center items-center max-w-lg p-10"
     (click)="$event.stopPropagation()"
   >
     <!-- Popup Header -->

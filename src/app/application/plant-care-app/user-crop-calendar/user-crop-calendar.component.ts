@@ -9,7 +9,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
-import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
+import { CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 
 interface TaskList {
   id: any;
@@ -25,7 +25,7 @@ interface TaskList {
   videoLinkTamil: string;
   status: string;
   cropCalendarId: any;
-  onCulscropID: number
+  onCulscropID: number;
 }
 
 @Component({
@@ -37,8 +37,7 @@ interface TaskList {
     FormsModule,
     NgxPaginationModule,
     LoadingSpinnerComponent,
-    CdkDragPlaceholder
-],
+  ],
   templateUrl: './user-crop-calendar.component.html',
   styleUrl: './user-crop-calendar.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -54,12 +53,12 @@ export class UserCropCalendarComponent {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   isLoading = true;
-  swiper: any;
   isModalOpen = false;
   selectedImages: string[] = [];
   firstStartingDate: string | null = null;
   cropName: string = '';
   ongCultivationId: number | null = null;
+  currentImageIndex: number = 0;
 
   constructor(
     private ongoingCultivationService: OngoingCultivationService,
@@ -68,7 +67,7 @@ export class UserCropCalendarComponent {
     private route: ActivatedRoute,
     public permissionService: PermissionService,
     public tokenService: TokenService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -83,8 +82,10 @@ export class UserCropCalendarComponent {
         ? +params['cultivationId']
         : null;
       this.cropName = params['cropName'] ? params['cropName'] : '';
-      this.ongCultivationId = params['ongCultivationId'] === 'null' ? null : params['ongCultivationId'];
-
+      this.ongCultivationId =
+        params['ongCultivationId'] === 'null'
+          ? null
+          : params['ongCultivationId'];
     });
 
     console.log('onCulscropID', this.onCulscropID, 'cropName', this.cropName); // Updated log
@@ -157,7 +158,8 @@ export class UserCropCalendarComponent {
                   timer: 2000,
                   showConfirmButton: false,
                   customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                     title: 'font-semibold text-lg',
                   },
                 });
@@ -169,7 +171,8 @@ export class UserCropCalendarComponent {
                 text: 'There was an error deleting the crop calendar.',
                 icon: 'error',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
@@ -179,44 +182,101 @@ export class UserCropCalendarComponent {
     });
   }
 
-  updateStatus(id: number) {
-    this.ongoingCultivationService.updateUserTaskStatus(id).subscribe(
-      () => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'Status updated successfully!',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-        this.getchUserTaskList(this.cropCalendarId, this.userId);
+  updateStatus(id: number, currentStatus: string) {
+    // Show confirmation popup
+    Swal.fire({
+      text: `Are you sure you want to update this task as "${
+        currentStatus === 'pending' ? 'Completed' : 'Pending'
+      }"?`,
+      html: `<div class="px-4 py-4">
+            <p class="mb-2 text-center">Are you sure you want to update this task as <strong>"${
+              currentStatus === 'pending' ? 'Completed' : 'Pending'
+            }"</strong>?</p>
+            <p class="text-sm text-gray-600 italic text-center mt-3">Note: Past-due tasks will be marked as "Due".</p>
+          </div>`,
+      showCancelButton: true,
+      confirmButtonColor: '#3b82f6',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Update',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true, // This will put "Cancel" on left and "Update" on right
+      customClass: {
+        popup:
+          'bg-tileLight dark:bg-tileBlack text-black dark:text-white !py-4',
+        title: 'font-semibold text-lg text-left',
+        htmlContainer: 'text-left px-4 !mb-0',
+        actions: 'mt-2 px-4 !justify-end gap-3', // Added gap between buttons
+        confirmButton: 'px-6 py-2 text-sm font-medium rounded-md',
+        cancelButton:
+          'px-6 py-2 text-sm font-medium rounded-md border border-gray-300 dark:border-gray-600',
       },
-      (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Unsuccess',
-          text: 'Error updating status',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If user confirms, call the API
+        this.ongoingCultivationService.updateUserTaskStatus(id).subscribe(
+          () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Status updated successfully!',
+              showConfirmButton: false,
+              timer: 1500,
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white !py-4',
+                title: 'font-semibold text-lg px-4',
+                htmlContainer: 'px-4',
+              },
+            });
+            this.getchUserTaskList(this.cropCalendarId, this.userId);
           },
-        });
+          (error) => {
+            Swal.fire({
+              title: 'Error',
+              text: 'Error updating status',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white !py-4',
+                title: 'font-semibold text-lg px-4',
+                htmlContainer: 'px-4',
+              },
+            });
+          }
+        );
       }
-    );
+    });
   }
 
-  editCropTask(id: any) {
-    this.router.navigate(
-      [
-        '/plant-care/action/view-crop-task-by-user/user-task-list/edit-user-task',
-      ],
-      {
-        queryParams: { id },
-      }
-    );
+  editCropTask(task: TaskList) {
+  // Check if task is editable
+  if (this.isTaskEditable(task)) {
+    // Show error message for disabled tasks
+    Swal.fire({
+      title: 'Edit Not Allowed',
+      text: task.status === 'completed' 
+        ? 'Completed tasks cannot be edited!' 
+        : 'Due tasks cannot be edited!',
+      icon: 'warning',
+      confirmButtonColor: '#3b82f6',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
   }
+  
+  // Navigate to edit page for editable tasks
+  this.router.navigate(
+    [
+      '/plant-care/action/view-crop-task-by-user/user-task-list/edit-user-task',
+    ],
+    {
+      queryParams: { id: task.slavecropcalendardaysId },
+    }
+  );
+}
 
   addNewTask(
     cropId: string,
@@ -248,18 +308,56 @@ export class UserCropCalendarComponent {
     });
   }
 
+  showStatusChangeError() {
+  Swal.fire({
+    title: 'Status Change Not Allowed!',
+    text: 'The status of Pending or Due tasks cannot be changed!',
+    confirmButtonColor: '#ECECEC',
+    confirmButtonText: 'Close',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white !py-4',
+      title: 'font-semibold text-lg px-4',
+      htmlContainer: 'px-4',
+    },
+  });
+}
+
   openImageSlider(images: string[]) {
-    this.selectedImages = images;
-    this.isModalOpen = true;
-  }
+  this.selectedImages = images;
+  this.currentImageIndex = 0; // Reset to first image
+  this.isModalOpen = true;
+}
 
   closeImageSlider() {
-    this.isModalOpen = false;
-  }
+  this.isModalOpen = false;
+  this.currentImageIndex = 0; // Reset index when closing
+}
 
   checkDueStatus(taskDate: string): boolean {
     const today = new Date();
     const taskDueDate = new Date(taskDate);
     return taskDueDate < today;
   }
+
+  isTaskEditable(task: TaskList): boolean {
+  // Returns true if task should be disabled (non-editable)
+  return task.status === 'completed' || this.checkDueStatus(task.startingDate);
+}
+
+prevImage() {
+  if (this.currentImageIndex > 0) {
+    this.currentImageIndex--;
+  }
+}
+
+nextImage() {
+  if (this.currentImageIndex < this.selectedImages.length - 1) {
+    this.currentImageIndex++;
+  }
+}
+
+handleImageError(event: Event) {
+  const imgElement = event.target as HTMLImageElement;
+  imgElement.src = 'assets/images/image-not-found.jpg'; // Add a fallback image
+}
 }

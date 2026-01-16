@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
 interface OrderMetric {
@@ -15,10 +16,10 @@ interface OrderMetric {
   templateUrl: './received-cash-today.component.html',
   styleUrl: './received-cash-today.component.css',
 })
-export class ReceivedCashTodayComponent {
+export class ReceivedCashTodayComponent implements OnInit {
   isLoading = false;
   
-  storeName = 'D-WPCK-02 Kollupitiya Central';
+  storeName = '';
   receivedDate = 'Received Cash on June 2, 2026 (09)';
   
   totalPickupIncome = 1000000.00;
@@ -41,6 +42,27 @@ export class ReceivedCashTodayComponent {
     { label: "Today's Scheduled Deliveries", count: 10, color: '#00BCFB' },
     { label: 'Overdue Deliveries - Today', count: 0, color: '#FFA202' }
   ];
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.setStoreNameFromQueryParams();
+  }
+  
+  private setStoreNameFromQueryParams(): void {
+    this.route.queryParams.subscribe(params => {
+      const centerName = params['name'];
+      const centerRegCode = params['regCode'];
+      
+      if (centerRegCode && centerName) {
+        this.storeName = `${centerRegCode} ${centerName}`;
+      } else if (centerName) {
+        this.storeName = centerName;
+      } else {
+        this.storeName = 'Unknown Store';
+      }
+    });
+  }
   
   formatCurrency(amount: number): string {
     return `Rs. ${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;

@@ -126,15 +126,27 @@
                 Approved By</th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Approved Time</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View approved request NIC') || tokenService.getUserDetails().role === '1'">
                 NIC Front Image</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View approved request NIC') || tokenService.getUserDetails().role === '1'">
                 NIC Back Image</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View approved request other details') || tokenService.getUserDetails().role === '1'"
+                >
                 Details</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View approved request audit result') || tokenService.getUserDetails().role === '1'">
                 Audit Results</th>
-              <th class="px-8 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-8 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('Publish approved request') || tokenService.getUserDetails().role === '1'"
+              >
               </th>
             </tr>
           </thead>
@@ -188,12 +200,11 @@
 
               <!-- Status -->
               <td class="px-4 py-4 text-center">
-                <button [class]="getStatusClass(request.publishStatus)"
-                  class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
-                  (click)="onStatusClick(request)"
+                <span [class]="getStatusClass(request.publishStatus)"
+                  class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity w-28 mx-auto"
                   [title]="request.publishStatus === 'Published' ? 'Cannot change published status' : 'Click to publish to GoViCapital'">
                   {{ request.publishStatus }}
-                </button>
+              </span>
               </td>
 
               <!-- Approved By -->
@@ -207,7 +218,9 @@
               </td>
 
               <!-- NIC Front Image -->
-              <td class="px-4 py-4 text-center">
+              <td 
+                class="px-4 py-4 text-center" 
+                *ngIf=" permissionService.hasPermission('View approved request NIC') || tokenService.getUserDetails().role === '1'">
                 <button (click)="openImage(request.NIC_Front_Image)"
                   class="text-blue-500 hover:text-blue-600 transition">
                   <i class="fa-regular fa-image text-2xl"></i>
@@ -215,7 +228,10 @@
               </td>
 
               <!-- NIC Back Image -->
-              <td class="px-4 py-4 text-center">
+              <td 
+              class="px-4 py-4 text-center"
+              *ngIf=" permissionService.hasPermission('View approved request NIC') || tokenService.getUserDetails().role === '1'"
+              >
                 <button (click)="openImage(request.NIC_Back_Image)"
                   class="text-blue-500 hover:text-blue-600 transition">
                   <i class="fa-regular fa-image text-2xl"></i>
@@ -223,7 +239,10 @@
               </td>
 
               <!-- Details (Eye Icon) -->
-              <td class="px-4 py-4 text-center">
+              <td 
+                class="px-4 py-4 text-center"
+                 *ngIf=" permissionService.hasPermission('View approved request other details') || tokenService.getUserDetails().role === '1'"
+                >
                 <button (click)="viewDetails(request.Request_ID)"
                   class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -234,13 +253,17 @@
                 </button>
               </td>
 
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center">
+              <td 
+                class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center"
+                *ngIf=" permissionService.hasPermission('View approved request audit result') || tokenService.getUserDetails().role === '1'">
                 <button (click)="auditResults(request.No)">
                   <i class="fa-solid fa-arrow-up-right-from-square text-xl text-[#3980C0]"></i>
                 </button>
               </td>
 
-              <td class="px-8 py-4 text-sm text-center">
+              <td 
+                class="px-8 py-4 text-sm text-center"
+                *ngIf=" permissionService.hasPermission('Publish approved request') || tokenService.getUserDetails().role === '1'">
                 <button class="bg-[#3980C0] text-white px-4 py-2 rounded-lg whitespace-nowrap"
                   [ngClass]="{'pointer-events-none opacity-50 cursor-not-allowed': request.approvedDetails === null}"
                   [disabled]="request.approvedDetails === null"
@@ -421,7 +444,9 @@
 
       <p class="mr-12 font-semibold dark:text-white">Request ID : {{selectedShares.Request_ID}}</p>
 
-      <button class="flex flex-row gap-x-3 bg-[#3980C0] text-white px-4 py-2 rounded-lg">
+      <button 
+        *ngIf=" permissionService.hasPermission('Edit divided shares') || tokenService.getUserDetails().role === '1'"
+        class="flex flex-row gap-x-3 bg-[#3980C0] text-white px-4 py-2 rounded-lg">
         <i class="fa-solid fa-pen-to-square"></i>
         <p>Edit</p>
       </button>

@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { FinanceService, GoviCareRequest, GoviCareRequestDetail, InvestmentOfficer } from '../../../services/finance/finance.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-all-govicare-requests',
@@ -57,7 +59,9 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
   constructor(
     private FinanceService: FinanceService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -358,10 +362,10 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   }
 
   formatNumberWithCommas(value: number | string): string {
-  if (!value) return '0';
-  const numValue = typeof value === 'string' ? parseFloat(value) : value;
-  return numValue.toLocaleString('en-US');
-}
+    if (!value) return '0';
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    return numValue.toLocaleString('en-US');
+  }
 
   // Format currency
   formatCurrency(amount: number): string {

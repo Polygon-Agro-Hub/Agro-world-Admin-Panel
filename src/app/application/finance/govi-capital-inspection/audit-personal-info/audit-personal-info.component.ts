@@ -16,6 +16,8 @@ import { LabourTabComponent } from '../labour-tab/labour-tab.component';
 import { HarvestStorageTabComponent } from '../harvest-storage-tab/harvest-storage-tab.component';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-audit-personal-info',
@@ -57,7 +59,13 @@ export class AuditPersonalInfoComponent implements OnInit {
   sharesData: Partial<Shares> = {};
   lastSegment!: string;
 
-  constructor(private financeService: FinanceService, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private financeService: FinanceService,
+    private router: Router,
+    private route: ActivatedRoute,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
 
@@ -67,7 +75,7 @@ export class AuditPersonalInfoComponent implements OnInit {
 
     const segments = this.route.snapshot.url;
     this.lastSegment = segments[segments.length - 3]?.path;
-  
+
     console.log('Last route part:', this.lastSegment);
 
     this.fetchData();
@@ -221,29 +229,29 @@ export class AuditPersonalInfoComponent implements OnInit {
     })
   }
 
-allowDecimalOnly(event: KeyboardEvent) {
-  const allowedKeys = ['0','1','2','3','4','5','6','7','8','9','.'];
-  const key = event.key;
+  allowDecimalOnly(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    const key = event.key;
 
-  // Block everything except numbers and dot
-  if (!allowedKeys.includes(key)) {
-    event.preventDefault();
-    return;
+    // Block everything except numbers and dot
+    if (!allowedKeys.includes(key)) {
+      event.preventDefault();
+      return;
+    }
+
+    // Prevent multiple dots
+    if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+      event.preventDefault();
+    }
   }
 
-  // Prevent multiple dots
-  if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
-    event.preventDefault();
+  devideSharesPopUp() {
+    this.openDevideSharesPopUp = true;
   }
-}
 
-devideSharesPopUp() {
-this.openDevideSharesPopUp = true;
-}
+  editSharesPopUp() {
 
-editSharesPopUp() {
-
-}
+  }
 
 }
 
@@ -413,20 +421,20 @@ interface ILabor {
 }
 
 export interface ICultivation {
-  temperature: number;         
-  rainfall: number;            
-  sunShine: number;            
-  humidity: number;            
-  windVelocity: number;        
-  windDirection: number;       
+  temperature: number;
+  rainfall: number;
+  sunShine: number;
+  humidity: number;
+  windVelocity: number;
+  windDirection: number;
   zone: number;
-  isCropSuitale: number;       
-  ph: number;                  
+  isCropSuitale: number;
+  ph: number;
   soilType: string;
   soilfertility: string;
   waterSources: string[];
-  waterImage: string[]; 
-  isRecevieRainFall: number;   
+  waterImage: string[];
+  isRecevieRainFall: number;
   isRainFallSuitableCrop: number;
   isRainFallSuitableCultivation: number;
   isElectrocityAvailable: number;

@@ -37,7 +37,6 @@ interface TaskList {
     FormsModule,
     NgxPaginationModule,
     LoadingSpinnerComponent,
-    CdkDragPlaceholder,
   ],
   templateUrl: './user-crop-calendar.component.html',
   styleUrl: './user-crop-calendar.component.css',
@@ -54,12 +53,12 @@ export class UserCropCalendarComponent {
   totalItems: number = 0;
   itemsPerPage: number = 10;
   isLoading = true;
-  swiper: any;
   isModalOpen = false;
   selectedImages: string[] = [];
   firstStartingDate: string | null = null;
   cropName: string = '';
   ongCultivationId: number | null = null;
+  currentImageIndex: number = 0;
 
   constructor(
     private ongoingCultivationService: OngoingCultivationService,
@@ -324,13 +323,15 @@ export class UserCropCalendarComponent {
 }
 
   openImageSlider(images: string[]) {
-    this.selectedImages = images;
-    this.isModalOpen = true;
-  }
+  this.selectedImages = images;
+  this.currentImageIndex = 0; // Reset to first image
+  this.isModalOpen = true;
+}
 
   closeImageSlider() {
-    this.isModalOpen = false;
-  }
+  this.isModalOpen = false;
+  this.currentImageIndex = 0; // Reset index when closing
+}
 
   checkDueStatus(taskDate: string): boolean {
     const today = new Date();
@@ -341,5 +342,22 @@ export class UserCropCalendarComponent {
   isTaskEditable(task: TaskList): boolean {
   // Returns true if task should be disabled (non-editable)
   return task.status === 'completed' || this.checkDueStatus(task.startingDate);
+}
+
+prevImage() {
+  if (this.currentImageIndex > 0) {
+    this.currentImageIndex--;
+  }
+}
+
+nextImage() {
+  if (this.currentImageIndex < this.selectedImages.length - 1) {
+    this.currentImageIndex++;
+  }
+}
+
+handleImageError(event: Event) {
+  const imgElement = event.target as HTMLImageElement;
+  imgElement.src = 'assets/images/image-not-found.jpg'; // Add a fallback image
 }
 }

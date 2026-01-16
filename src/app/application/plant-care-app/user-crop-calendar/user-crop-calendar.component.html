@@ -119,19 +119,71 @@
             </td>
 
             <!-- Modal for Image Slider -->
-            <div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div class="bg-white dark:bg-black p-4 rounded-lg h-screen w-full relative">
-                <button (click)="closeImageSlider()" class="absolute top-2 right-2 text-red-400 text-3xl">
-                  &times;
-                </button>
-                <swiper-container [slidesPerView]="1" [navigation]="true"
-                  [pagination]="{ clickable: true, dynamicBullets: true }" [space-between]="10" class="w-full h-full">
-                  <swiper-slide *ngFor="let img of selectedImages">
-                    <img [src]="img" class="w-full h-full object-contain" />
-                  </swiper-slide>
-                </swiper-container>
-              </div>
-            </div>
+            <div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+  <!-- Modal Box -->
+  <div class="relative bg-white dark:bg-tileBlack rounded-[20px] p-4  w-[90%] max-w-md shadow-lg">
+    <!-- Close Button -->
+    <button
+      (click)="closeImageSlider()"
+      class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full"
+      style="background-color: #d9d9d9; border: none"
+      aria-label="Close"
+    >
+      <i class="fa-solid fa-xmark text-sm dark:text-red-600"></i>
+    </button>
+
+    <!-- Modal Content -->
+    <div *ngIf="selectedImages.length > 0" class="pt-2 pb-4">
+      <h3 class="text-md text-center font-semibold text-gray-800 dark:text-textDark mb-2">
+        <span *ngIf="selectedImages.length > 1">{{ selectedImages.length }}</span>
+        Photo<span *ngIf="selectedImages.length > 1">s</span> were provided
+      </h3>
+      <p class="text-sm text-center text-gray-500 dark:text-textDark mb-4">
+        {{ currentImageIndex + 1 }} out of {{ selectedImages.length }}
+      </p>
+
+      <!-- Image Navigation -->
+      <div class="relative flex items-center justify-center">
+        <!-- Left Arrow - Only show if more than 1 image -->
+        <button
+          *ngIf="selectedImages.length > 1"
+          class="absolute left-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
+          (click)="prevImage()"
+          [disabled]="currentImageIndex === 0"
+          aria-label="Previous Image"
+        >
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- Image Box -->
+        <div class="rounded-md border border-[#D9D9D9] dark:border-[#444444] p-2 inline-block">
+          <img
+            [src]="selectedImages[currentImageIndex]"
+            alt="Task image"
+            class="max-w-[250px] max-h-[250px] object-contain rounded shadow-md"
+            (error)="handleImageError($event)"
+          />
+        </div>
+
+        <!-- Right Arrow - Only show if more than 1 image -->
+        <button
+          *ngIf="selectedImages.length > 1"
+          class="absolute right-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
+          (click)="nextImage()"
+          [disabled]="currentImageIndex === selectedImages.length - 1"
+          aria-label="Next Image"
+        >
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- No Image Message -->
+    <div *ngIf="selectedImages.length === 0">
+      <p class="text-gray-500 dark:text-textDark text-center">No images available</p>
+    </div>
+  </div>
+</div>
 
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <ng-container *ngIf="task.imageLink; else noImage">

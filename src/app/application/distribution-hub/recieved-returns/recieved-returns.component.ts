@@ -61,10 +61,7 @@ export class RecievedReturnsComponent implements OnInit {
 
     // Setup debounced search
     this.searchSubject
-      .pipe(
-        debounceTime(300), // Wait 300ms after user stops typing
-        distinctUntilChanged() // Only emit if value changed
-      )
+      .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm) => {
         this.performSearch(searchTerm);
       });
@@ -216,7 +213,7 @@ export class RecievedReturnsComponent implements OnInit {
     window.history.back();
   }
 
-  onDateSelected(date: Date) {
+  onReceivedDateSelected(date: Date) {
     if (!date) return;
 
     const tzFixed = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
@@ -224,24 +221,9 @@ export class RecievedReturnsComponent implements OnInit {
     this.applyFilters();
   }
 
-  onDateChange(value: Date | null) {
-    if (!value) {
-      this.clearDateFilter();
-    }
-  }
-
-  clearDateFilter() {
-    this.receivedDateModel = new Date();
+  clearReceivedDateFilter() {
+    this.receivedDateModel = null;
     this.receivedDate = undefined;
-    this.applyFilters();
-  }
-
-  private setDateAndApply(date: Date) {
-    this.receivedDateModel = date;
-
-    const tzFixed = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-    this.receivedDate = tzFixed.toISOString().slice(0, 10);
-
     this.applyFilters();
   }
 

@@ -289,6 +289,20 @@ export class UserCropCalendarComponent {
     });
   }
 
+  showStatusChangeError() {
+  Swal.fire({
+    title: 'Status Change Not Allowed!',
+    text: 'The status of Pending or Due tasks cannot be changed!',
+    confirmButtonColor: '#ECECEC',
+    confirmButtonText: 'Close',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white !py-4',
+      title: 'font-semibold text-lg px-4',
+      htmlContainer: 'px-4',
+    },
+  });
+}
+
   openImageSlider(images: string[]) {
     this.selectedImages = images;
     this.isModalOpen = true;

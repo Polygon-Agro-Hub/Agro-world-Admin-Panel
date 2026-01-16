@@ -258,6 +258,7 @@ import { DriversAndVehiclesComponent } from './application/distribution-hub/poly
 import { PikupOderRecordsMainComponent } from './application/distribution-hub/polygon-centers-dashboard/pickup-orders-records/pikup-oder-records-main/pikup-oder-records-main.component';
 import { OrderPackingProgressDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/order-packing-progress-dashboard/order-packing-progress-dashboard.component';
 import { OfficerAndTargetDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/officer-and-target-dashboard/officer-and-target-dashboard.component';
+import { ReceivedCashTodayComponent } from './application/distribution-hub/polygon-centers-dashboard/received-cash-today/received-cash-today.component';
 
 export const routes: Routes = [
   {
@@ -1844,6 +1845,10 @@ export const routes: Routes = [
                     path: 'pikup-oder-records-main/:id',
                     component: PikupOderRecordsMainComponent,
                   },
+                  {
+                    path: 'received-cash-today/:id',
+                    component: ReceivedCashTodayComponent
+                  }
                 ],
               },
               {

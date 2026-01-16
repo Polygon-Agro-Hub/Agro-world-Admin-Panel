@@ -248,16 +248,36 @@ export class UserCropCalendarComponent {
     });
   }
 
-  editCropTask(id: any) {
-    this.router.navigate(
-      [
-        '/plant-care/action/view-crop-task-by-user/user-task-list/edit-user-task',
-      ],
-      {
-        queryParams: { id },
-      }
-    );
+  editCropTask(task: TaskList) {
+  // Check if task is editable
+  if (this.isTaskEditable(task)) {
+    // Show error message for disabled tasks
+    Swal.fire({
+      title: 'Edit Not Allowed',
+      text: task.status === 'completed' 
+        ? 'Completed tasks cannot be edited!' 
+        : 'Due tasks cannot be edited!',
+      icon: 'warning',
+      confirmButtonColor: '#3b82f6',
+      confirmButtonText: 'OK',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
   }
+  
+  // Navigate to edit page for editable tasks
+  this.router.navigate(
+    [
+      '/plant-care/action/view-crop-task-by-user/user-task-list/edit-user-task',
+    ],
+    {
+      queryParams: { id: task.slavecropcalendardaysId },
+    }
+  );
+}
 
   addNewTask(
     cropId: string,
@@ -317,4 +337,9 @@ export class UserCropCalendarComponent {
     const taskDueDate = new Date(taskDate);
     return taskDueDate < today;
   }
+
+  isTaskEditable(task: TaskList): boolean {
+  // Returns true if task should be disabled (non-editable)
+  return task.status === 'completed' || this.checkDueStatus(task.startingDate);
+}
 }

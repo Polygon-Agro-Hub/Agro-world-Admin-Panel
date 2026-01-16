@@ -603,7 +603,7 @@ export const routes: Routes = [
                 path: 'govicare-finance',
                 component: FinanceActionComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'View GoViCare Finance' },
+                data: { permission: 'GoViCare Finance' },
               },
               {
                 path: 'govicare-packages',
@@ -629,6 +629,8 @@ export const routes: Routes = [
               {
                 path: 'commission-range',
                 component: CommissionRangeComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Commission Range' }
               },
               {
                 path: 'view-all-service-payments',
@@ -641,14 +643,20 @@ export const routes: Routes = [
               {
                 path: 'add-new-payment',
                 component: PaymentHistoryAddNewComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add payment history' }
               },
               {
                 path: 'update-payment/:id',
                 component: PaymentHistoryUpdateComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit payment history' },
               },
               {
                 path: 'viewAll-payments',
                 component: ViewAllPaymentHistoryComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Finance Payment History' },
               },
               {
                 path: 'finance-govicapital',
@@ -1905,4 +1913,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

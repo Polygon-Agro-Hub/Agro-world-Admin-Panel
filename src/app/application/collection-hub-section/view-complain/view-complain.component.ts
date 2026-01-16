@@ -86,7 +86,7 @@ export class ViewComplainComponent implements OnInit {
       { id: 1, type: "Agriculture" },
       { id: 2, type: "Finance" },
       { id: 3, type: "Call Center" },
-      { id: 4, type: "Procuiment" },
+      { id: 4, type: "Procurement" },
     ];
 
     if (this.tokenService.getUserDetails().role === "2") {
@@ -98,7 +98,7 @@ export class ViewComplainComponent implements OnInit {
       this.filterCategory.type = "Call Center";
     }
     else if (this.tokenService.getUserDetails().role === "5") {
-      this.filterCategory.type = "Procuiment";
+      this.filterCategory.type = "Procurement";
     }
 
 

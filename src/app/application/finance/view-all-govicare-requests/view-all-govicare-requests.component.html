@@ -122,11 +122,13 @@
               </th>
               <th
                 class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
               >
                 NIC Front Image
               </th>
               <th
                 class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                 *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
               >
                 NIC Back Image
               </th>
@@ -137,6 +139,7 @@
               </th>
               <th
                 class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('Govicare request view other details') || tokenService.getUserDetails().role === '1'"
               >
                 Details
               </th>
@@ -179,6 +182,7 @@
                   class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
                   (click)="onAssignStatusClick(request)"
                   title="Click to assign or view officer"
+                  [disabled]="!permissionService.hasPermission('Govicare request assign officer') && tokenService.getUserDetails().role !== '1'"
                 >
                   {{ getAssignText(request.Status) }}
                 </button>
@@ -189,7 +193,10 @@
               </td>
 
               <!-- NIC Front Image -->
-              <td class="px-4 py-4 text-center">
+              <td 
+                class="px-4 py-4 text-center"
+                *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
+                >
                 <button
                   (click)="openImage(request.NIC_Front_Image)"
                   class="text-blue-500 hover:text-blue-600 transition"
@@ -199,7 +206,10 @@
               </td>
 
               <!-- NIC Back Image -->
-              <td class="px-4 py-4 text-center">
+              <td 
+                class="px-4 py-4 text-center"
+                 *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
+                >
                 <button
                   (click)="openImage(request.NIC_Back_Image)"
                   class="text-blue-500 hover:text-blue-600 transition"
@@ -214,7 +224,10 @@
               </td>
 
               <!-- Details (Eye Icon) -->
-              <td class="px-4 py-4 text-center">
+              <td 
+                class="px-4 py-4 text-center"
+                 *ngIf=" permissionService.hasPermission('Govicare request view other details') || tokenService.getUserDetails().role === '1'"
+                >
                 <button
                   (click)="viewDetails(request.Request_ID)"
                   class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block"

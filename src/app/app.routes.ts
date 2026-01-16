@@ -668,14 +668,20 @@ export const routes: Routes = [
                   {
                     path: 'viewAll-Govicare-requests',
                     component: ViewAllGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'GoViCare Request' }
                   },
                   {
                     path: 'view-Govicare-approved-requests',
                     component: ViewAllApprovedGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Approved Requests' }
                   },
                   {
                     path: 'viewAll-Govicare-AuditedRequests',
                     component: ViewAllAuditedGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Audited Request' }
                   },
                   {
                     path: 'reject-requests',

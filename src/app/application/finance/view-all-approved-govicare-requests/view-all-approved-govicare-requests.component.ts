@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FinanceService, GoviCareRequest, GoviCareRequestDetail } from '../../../services/finance/finance.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-all-approved-govicare-requests',
@@ -40,7 +42,9 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
 
   constructor(
     private financeService: FinanceService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {

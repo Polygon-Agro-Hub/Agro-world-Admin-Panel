@@ -3,20 +3,20 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface DeliveryItem {
-  id: number
-  invNo: string
-  regCode: string
-  centerName: string
-  sheduleTime: string
-  sheduleDate: string
-  createdAt: string
-  status: string
-  outDlvrTime: string
-  collectTime: string
-  driverEmpId: string
-  driverStartTime: string
-  returnTime: string
-  deliveryTime: string
+  id: number;
+  invNo: string;
+  regCode: string;
+  centerName: string;
+  sheduleTime: string;
+  sheduleDate: string;
+  createdAt: string;
+  status: string;
+  outDlvrTime: string;
+  collectTime: string;
+  driverEmpId: string;
+  driverStartTime: string;
+  returnTime: string;
+  deliveryTime: string;
 }
 
 @Component({
@@ -63,22 +63,6 @@ export class OutForDeliveryTodaysDeleveriesComponent implements OnChanges {
     this.filteredDeliveries = [...this.localDeliveries];
   }
 
-  // Helper method to format the out time
-  formatOutTime(outTime: string): string {
-    if (!outTime) return '';
-
-    // Remove seconds if present (HH:MM:SS -> HH:MM)
-    const timeParts = outTime.split(':');
-    if (timeParts.length >= 2) {
-      const hours = parseInt(timeParts[0]);
-      const minutes = timeParts[1];
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const formattedHours = hours % 12 || 12;
-      return `${formattedHours}.${minutes}${ampm}`;
-    }
-    return outTime;
-  }
-
   // Helper method to format time slot
   formatTimeSlot(scheduleTime: string): string {
     if (!scheduleTime) return '';
@@ -88,11 +72,11 @@ export class OutForDeliveryTodaysDeleveriesComponent implements OnChanges {
       const hours = date.getHours();
 
       if (hours < 12) {
-        return '8AM - 2PM';
+        return '8 AM - 2 PM';
       } else if (hours < 18) {
-        return '2PM - 8PM';
+        return '2 PM - 8 PM';
       } else {
-        return '8PM - 12AM';
+        return '8 PM - 12 AM';
       }
     } catch (e) {
       return scheduleTime;

@@ -87,7 +87,10 @@
 ::ng-deep .p-dropdown .p-dropdown-clear-icon {
   display: inline-flex !important;
   color: #6b7280 !important;
-  margin-right: 0.5rem !important;
+  margin-right: 0.2rem !important;
+  position: relative !important;
+  margin-top: 0.01rem !important;
+  right: 0 !important;
 }
 
 ::ng-deep .dark .p-dropdown .p-dropdown-clear-icon {

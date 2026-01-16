@@ -3,20 +3,20 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface DeliveryItem {
-  id: number
-  invNo: string
-  regCode: string
-  centerName: string
-  sheduleTime: string
-  sheduleDate: string
-  createdAt: string
-  status: string
-  outDlvrTime: string
-  collectTime: string
-  driverEmpId: string
-  driverStartTime: string
-  returnTime: string
-  deliveryTime: string
+  id: number;
+  invNo: string;
+  regCode: string;
+  centerName: string;
+  sheduleTime: string;
+  sheduleDate: string;
+  createdAt: string;
+  status: string;
+  outDlvrTime: string;
+  collectTime: string;
+  driverEmpId: string;
+  driverStartTime: string;
+  returnTime: string;
+  deliveryTime: string;
 }
 
 @Component({
@@ -69,11 +69,15 @@ export class CollectedComponent implements OnChanges {
   // Helper method to remove "Within" text from time slot strings
   cleanTimeSlotText(text: string): string {
     if (!text) return 'N/A';
-    // Remove "Within" and any extra spaces (case-insensitive)
-    return text.replace(/Within\s*/gi, '').trim();
+
+    let cleaned = text.replace(/Within\s*/gi, '').trim();
+
+    const parts = cleaned.split('-').map((part) => {
+      return part.trim().replace(/(\d)(AM|PM)/i, '$1 $2');
+    });
+
+    return parts.join(' - ');
   }
-
-
 
   onSearch(): void {
     if (!this.searchQuery) {
@@ -83,10 +87,10 @@ export class CollectedComponent implements OnChanges {
     this.searchQuery = this.searchQuery.trim();
     const query = this.searchQuery.toLowerCase();
     this.filteredData = this.deliveries.filter(
-    (item) =>
-      (item.invNo && item.invNo.toLowerCase().includes(query)) ||
-      (item.regCode && item.regCode.toLowerCase().includes(query))
-  );
+      (item) =>
+        (item.invNo && item.invNo.toLowerCase().includes(query)) ||
+        (item.regCode && item.regCode.toLowerCase().includes(query))
+    );
   }
 
   clearSearch(): void {

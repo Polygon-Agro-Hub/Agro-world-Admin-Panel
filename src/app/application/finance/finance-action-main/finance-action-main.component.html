@@ -1,7 +1,7 @@
 <div class="flex justify-center items-center pb-52">
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16">
     <div *ngIf="
-        permissionService.hasPermission('View GoViCare Finance') ||
+        permissionService.hasPermission('GoViCare Finance') ||
         tokenService.getUserDetails().role === '1'
       " class="flex justify-center cursor-pointer">
       <div
@@ -19,7 +19,7 @@
 
     <div *ngIf="
         permissionService.hasPermission(
-          'View and download collection report'
+          'Employee Salary'
         ) || tokenService.getUserDetails().role === '1'
       " (click)="govicarePackages()" class="flex justify-center cursor-pointer">
       <div
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div *ngIf="tokenService.getUserDetails().role === '1'" (click)="PaymentHistoryNavigation()"
+    <div *ngIf="permissionService.hasPermission('Finance Payment History') ||tokenService.getUserDetails().role === '1'" (click)="PaymentHistoryNavigation()"
       class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
@@ -48,10 +48,7 @@
       </div>
     </div>
 
-    <div *ngIf="
-        permissionService.hasPermission('View and download district report') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="govilinkServices()" class="flex justify-center cursor-pointer">
+    <div class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
         <div class="flex items-center">
@@ -64,7 +61,7 @@
       </div>
     </div>
 
-    <div *ngIf="tokenService.getUserDetails().role === '1'" (click)="commissionRangeNavigation()"
+    <div *ngIf="permissionService.hasPermission('Commission Range') ||tokenService.getUserDetails().role === '1'" (click)="commissionRangeNavigation()"
       class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">

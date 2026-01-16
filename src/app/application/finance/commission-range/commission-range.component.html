@@ -22,7 +22,7 @@
       <div class="flex gap-3">
         <!-- Edit Button - Show in default state -->
         <button
-          *ngIf="!isEditing"
+          *ngIf="!isEditing && (permissionService.hasPermission('Edit commission range') ||tokenService.getUserDetails().role === '1')"
           type="button"
           (click)="onEdit()"
           class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -33,7 +33,7 @@
 
         <!-- Add New Button - Show in edit state -->
         <button
-          *ngIf="isEditing"
+          *ngIf="isEditing && (permissionService.hasPermission('Add commission range') ||tokenService.getUserDetails().role === '1')"
           type="button"
           (click)="onAddNew()"
           class="px-6 py-2 bg-[#3980C0] text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -213,6 +213,7 @@
                       placeholder="Rs."
                       step="0.01"
                       min="0"
+                      [readonly]="!permissionService.hasPermission('Edit commission value') && tokenService.getUserDetails().role !== '1'"
                     />
                     <div
                       *ngIf="
@@ -248,6 +249,7 @@
                   class="px-6 py-4 whitespace-nowrap text-md font-medium"
                 >
                   <button
+                    *ngIf="permissionService.hasPermission('Delete commission range') || tokenService.getUserDetails().role === '1'"
                     type="button"
                     (click)="onDelete(i)"
                     class="text-red-600 hover:text-red-900 dark:hover:text-red-400 transition-colors"
@@ -261,7 +263,6 @@
                       fill="none"
                       viewBox="0 0 24 24"
                     >
-                      <title>Delete</title>
                       <path
                         stroke="currentColor"
                         stroke-linecap="round"
@@ -299,7 +300,12 @@
           Cancel
         </button>
         <!-- Action button - changes based on context -->
-        <button
+        <button 
+          *ngIf="
+            ( !isEditing && permissionService.hasPermission('Edit commission value') ) ||
+            ( isEditing && permissionService.hasPermission('Edit commission range') ) ||
+            ( !isEditing && permissionService.hasPermission('Add commission range') ) ||
+            tokenService.getUserDetails().role === '1'"
           type="button"
           (click)="onAction()"
           class="px-6 py-2 rounded-lg transition-colors w-32 text-white"

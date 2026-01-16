@@ -4,23 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { TodayDeliveriesViewDetailsPopupComponent } from '../today-deliveries-view-details-popup/today-deliveries-view-details-popup.component';
 
 interface DeliveryItem {
-  id: number
-  invNo: string
-  regCode: string
-  centerName: string
-  sheduleTime: string
-  sheduleDate: string
-  createdAt: string
-  status: string
-  outDlvrTime: string
-  collectTime: string
-  driverEmpId: string
-  driverStartTime: string
-  returnTime: string
-  deliveryTime: string
-  driverPhone: string
+  id: number;
+  invNo: string;
+  regCode: string;
+  centerName: string;
+  sheduleTime: string;
+  sheduleDate: string;
+  createdAt: string;
+  status: string;
+  outDlvrTime: string;
+  collectTime: string;
+  driverEmpId: string;
+  driverStartTime: string;
+  returnTime: string;
+  deliveryTime: string;
+  driverPhone: string;
 }
-
 
 @Component({
   selector: 'app-on-the-way-todays-deleveries',
@@ -49,11 +48,15 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
     }
   }
 
-
   cleanTimeSlotText(text: string): string {
     if (!text) return 'N/A';
-    // Remove "Within" and any extra spaces (case-insensitive)
-    return text.replace(/Within\s*/gi, '').trim();
+    let cleaned = text.replace(/Within\s*/gi, '').trim();
+
+    const parts = cleaned.split('-').map((part) => {
+      return part.trim().replace(/(\d)(AM|PM)/i, '$1 $2');
+    });
+
+    return parts.join(' - ');
   }
 
   onSearch(): void {
@@ -66,9 +69,9 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
     const query = this.searchQuery.toLowerCase();
     this.filteredData = this.deliveries.filter(
       (item) =>
-        (item.invNo && item.invNo.toLowerCase().includes(query) ) ||
-        (item.regCode && item.regCode.toLowerCase().includes(query) ) ||
-        (item.driverEmpId && item.driverEmpId.toLowerCase().includes(query) )
+        (item.invNo && item.invNo.toLowerCase().includes(query)) ||
+        (item.regCode && item.regCode.toLowerCase().includes(query)) ||
+        (item.driverEmpId && item.driverEmpId.toLowerCase().includes(query))
     );
   }
 
@@ -77,8 +80,6 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
     this.searchQuery = '';
     this.filteredData = [...this.deliveries];
   }
-
-
 
   // Handle details button click
   onDetailsClick(delivery: DeliveryItem): void {
@@ -89,7 +90,6 @@ export class OnTheWayTodaysDeleveriesComponent implements OnChanges {
     this.selectedDeliveryId = delivery.id;
     this.showDetailsPopup = true;
   }
-
 
   closeDetailsPopup(): void {
     this.showDetailsPopup = false;

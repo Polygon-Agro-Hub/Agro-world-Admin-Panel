@@ -6,6 +6,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { FinanceService, PaymentHistoryListItem } from '../../../services/finance/finance.service';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface ReceiverOption {
   label: string;
@@ -50,7 +52,9 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
 
   constructor(
     private financeService: FinanceService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {

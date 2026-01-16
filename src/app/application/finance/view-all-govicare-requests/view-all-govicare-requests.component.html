@@ -83,7 +83,6 @@
               <i class="fa-solid fa-magnifying-glass text-sm"></i>
             </button>
           </div>
-
         </div>
       </div>
       <!-- Table Section - Only show if there's data -->
@@ -92,57 +91,57 @@
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700">
               <th
-                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 No
               </th>
               <th
-                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Request_ID
               </th>
               <th
-                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Farmer Name
               </th>
               <th
-                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Phone number
               </th>
               <th
-                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Status
               </th>
               <th
-                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Officer ID
               </th>
               <th
-                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 NIC Front Image
               </th>
               <th
-                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 NIC Back Image
               </th>
               <th
-                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Requested On
               </th>
               <th
-                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Details
               </th>
               <th
-                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Assigned By
               </th>
@@ -154,22 +153,22 @@
               class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
             >
               <!-- No -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+              <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ i + 1 | number : "3.0-0" }}
               </td>
 
               <!-- Request ID -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+              <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Request_ID }}
               </td>
 
               <!-- Farmer Name -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+              <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Farmer_Name }}
               </td>
 
               <!-- Phone Number -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+              <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Phone_number }}
               </td>
 
@@ -185,7 +184,7 @@
                 </button>
               </td>
               <!-- Officer ID -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+              <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Officer_ID }}
               </td>
 
@@ -210,7 +209,7 @@
               </td>
 
               <!-- Requested On -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+              <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Requested_On }}
               </td>
 
@@ -237,7 +236,7 @@
               </td>
 
               <!-- Assigned By -->
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+              <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Assigned_By }}
               </td>
             </tr>
@@ -269,7 +268,9 @@
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Header -->
-    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg">
+    <div
+      class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg"
+    >
       <h2
         class="text-lg font-semibold text-center text-textLight dark:text-textDark"
       >
@@ -359,7 +360,9 @@
         <span
           class="text-sm text-textLight dark:text-textDark font-medium flex-1"
         >
-          {{ formatNumberWithCommas(selectedRequest?.Expected_Investment || 0) }}
+          Rs. {{
+            formatNumberWithCommas(selectedRequest?.Expected_Investment || 0)
+          }}
         </span>
       </div>
 
@@ -373,7 +376,7 @@
         <span
           class="text-sm text-textLight dark:text-textDark font-medium flex-1"
         >
-          {{ formatNumberWithCommas(selectedRequest?.Expected_Yield || 0) }}
+         Kg {{ formatNumberWithCommas(selectedRequest?.Expected_Yield || 0) }}
         </span>
       </div>
 
@@ -462,7 +465,7 @@
   (click)="assignPopupClose()"
 >
   <div
-    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md flex flex-col justify-center items-center max-w-lg min-h-[70%] p-10"
     (click)="$event.stopPropagation()"
   >
     <!-- Popup Header -->

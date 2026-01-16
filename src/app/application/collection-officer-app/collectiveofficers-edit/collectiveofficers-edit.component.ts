@@ -1021,39 +1021,35 @@ export class CollectiveofficersEditComponent {
   }
 
   getAllCollectionCetnter() {
-    this.collectionCenterSrv
-      .getAllCentreList(
-        this.personalData.companyId,
-
-      )
-      .subscribe((res) => {
-        this.collectionCenterData = res;
-
-        this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.centerName,
-          value: center.id,
-        }));
-      });
-  }
+  this.collectionCenterSrv
+    .getAllCentreList(this.personalData.companyId)
+    .subscribe((res) => {
+      this.collectionCenterData = res;
+      this.centerOptions = this.collectionCenterData.map((center) => ({
+        label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`, // Combine regCode with name
+        value: center.id,
+        regCode: center.regCode // Keep regCode if needed
+      }));
+    });
+}
 
   getAllCollectionCenters() {
-    this.collectionCenterData = []
-    this.personalData.centerId = null;
-    this.managerOptions = [];
-    this.personalData.irmId = null;
-    this.collectionCenterSrv
-      .getAllCentreList(
-        this.personalData.companyId,
-
-      )
-      .subscribe((res) => {
-        this.collectionCenterData = res;
-        this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.centerName,
-          value: center.id,
-        }));
-      });
-  }
+  this.collectionCenterData = [];
+  this.personalData.centerId = null;
+  this.managerOptions = [];
+  this.personalData.irmId = null;
+  
+  this.collectionCenterSrv
+    .getAllCentreList(this.personalData.companyId)
+    .subscribe((res) => {
+      this.collectionCenterData = res;
+      this.centerOptions = this.collectionCenterData.map((center) => ({
+        label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`, // Combine regCode with name
+        value: center.id,
+        regCode: center.regCode // Keep regCode if needed
+      }));
+    });
+}
 
 
   getAllCollectionManagers() {
@@ -1500,6 +1496,7 @@ class Personal {
 class CollectionCenter {
   id!: number;
   centerName!: string;
+  regCode!: string;
 }
 
 class CollectionManager {

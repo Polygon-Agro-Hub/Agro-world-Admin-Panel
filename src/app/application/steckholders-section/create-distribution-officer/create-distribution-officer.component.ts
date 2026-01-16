@@ -866,26 +866,26 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   }
 
   getAllCollectionCetnter(id: number) {
-    this.loaded = false;
-    this.personalData.centerId = '';
-    this.personalData.irmId = '';
-    this.distributionOfficerServ.getAllDistributionCenterByCompany(id).subscribe(
-      (res) => {
-        this.distributionCenterData = res;
-        // Convert to dropdown options format
-        this.centerOptions = this.distributionCenterData.map(center => ({
-          label: center.centerName,
-          value: center.id
-        }));
-        this.loaded = true;
-      },
-      (error) => {
-        this.distributionCenterData = [];
-        this.centerOptions = [];
-        this.loaded = true;
-      }
-    );
-  }
+  this.loaded = false;
+  this.personalData.centerId = '';
+  this.personalData.irmId = '';
+  this.distributionOfficerServ.getAllDistributionCenterByCompany(id).subscribe(
+    (res) => {
+      this.distributionCenterData = res;
+      // Convert to dropdown options format with regCode in front
+      this.centerOptions = this.distributionCenterData.map(center => ({
+        label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`,
+        value: center.id
+      }));
+      this.loaded = true;
+    },
+    (error) => {
+      this.distributionCenterData = [];
+      this.centerOptions = [];
+      this.loaded = true;
+    }
+  );
+}
 
   getAllCompanies() {
     this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
@@ -2152,6 +2152,7 @@ class Personal {
 class DistributionCenter {
   id!: number;
   centerName!: string;
+  regCode!: string;
 }
 
 class CollectionManager {

@@ -325,3 +325,15 @@
   height: 1.5rem !important;
   line-height: 1.5rem !important;
 }
+
+/* In your component's CSS file */
+.p-dropdown-custom .p-dropdown {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Or more specific selector */
+:host ::ng-deep .p-dropdown-custom .p-dropdown {
+  background-color: transparent !important;
+  background: transparent !important;
+}

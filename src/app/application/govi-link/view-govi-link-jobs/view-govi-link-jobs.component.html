@@ -5,16 +5,16 @@
   Back
 </button>
 
-<div class="w-full">
-  <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-5">
+<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  <div class="min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-5">
     <!-- Header and filters section -->
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex flex-row items-center justify-between mb-4">
       <h2 class="text-xl text-left text-textLight dark:text-textDark font-bold">
         GoVi Link Jobs
         {{ hasData ? "(" + (jobs.length | number : "2.0") + ")" : "" }}
       </h2>
 
-      <div class="flex flex-row gap-x-3 items-center justify-center flex-wrap">
+      <div class="flex flex-row gap-x-3 items-center justify-center">
         <!-- District Filter -->
         <p-dropdown
           styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
@@ -232,7 +232,7 @@
 <div *ngIf="isAssignPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="assignPopupClose()">
   <div
-    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md overflow-y-auto flex flex-col justify-center items-center max-w-lg p-10"
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md flex flex-col justify-center items-center max-w-lg p-10"
     (click)="$event.stopPropagation()">
     <!-- Popup Header -->
     <div class="flex justify-center items-center mb-4 px-10 min-w-96">

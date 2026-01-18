@@ -110,6 +110,17 @@ export class MainDashboardLayoutComponent implements OnInit {
     );
   }
 
+  homeDeliveryOrderRecords() {
+    const id = this.centerObj.centerId
+    const name = this.centerObj.centerName
+    const regCode = this.centerObj.centerRegCode
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/home-delivery-order-records`],
+    {
+      queryParams: { type: 'distribution', id, name, regCode }
+    }
+    );
+  }
+
   back(): void{
     this.isLoading= true;
      this.router.navigate(['/distribution-hub/action/view-polygon-centers']).then(() => {

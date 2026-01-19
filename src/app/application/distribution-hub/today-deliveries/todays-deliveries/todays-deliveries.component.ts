@@ -89,33 +89,10 @@ export class TodaysDeliveriesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Get the path without query parameters
-    const pathWithoutQuery = this.router.url.split('?')[0];
 
-    // Then get the last segment
-    const segments = pathWithoutQuery.split('/').filter(segment => segment.length > 0);
-    this.urlSegment = segments.length > 0 ? segments[segments.length - 1] : '';
-
-    console.log('urlSegment', this.urlSegment)
-
-    this.centerFetchDeliveries()
-
-    // if (this.urlSegment === 'home-delivery-order-records') {
-    //   this.route.params.subscribe(params => {
-    //     // this.centerId = params['id'];
-    //     this.centerName = params['name'] || '';
-    //     this.centerRegCode = params['regCode'] || '';
-
-    //     console.log('centerId', this.centerId);
-
-    //     this.centerFetchDeliveries();
-    //     this.selectTab('all');
-    //   });
-    // } else {
-    //     this.fetchCentreOptions();
-    //     this.fetchDeliveries();
-    //     this.selectTab('all');
-    // }
+    this.fetchCentreOptions();
+    this.fetchDeliveries();
+    this.selectTab('all');
     
   }
 
@@ -135,26 +112,6 @@ export class TodaysDeliveriesComponent implements OnInit {
         this.activeTab,
         this.regCode,
         this.invNo
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.status && response.data) {
-            this.deliveryArr = response.data;
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching deliveries:', error);
-          this.isLoading = false;
-        },
-      });
-  }
-
-  centerFetchDeliveries(activeTab: string = this.activeTab, centerId: number = this.centerId, status: string = this.selectedStatus, searchText: string = this.searchText, date: string | Date | null = this.selectedDate): void {
-    this.isLoading = true;
-    this.distributionService
-      .getcenterHomeDeliveryOrders(
-        activeTab, centerId, status, searchText, date
       )
       .subscribe({
         next: (response) => {

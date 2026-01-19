@@ -259,6 +259,7 @@ import { PikupOderRecordsMainComponent } from './application/distribution-hub/po
 import { OrderPackingProgressDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/order-packing-progress-dashboard/order-packing-progress-dashboard.component';
 import { OfficerAndTargetDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/officer-and-target-dashboard/officer-and-target-dashboard.component';
 import { ReceivedCashTodayComponent } from './application/distribution-hub/polygon-centers-dashboard/received-cash-today/received-cash-today.component';
+import { CenterHomeDeliveryOrdersComponent } from './application/distribution-hub/polygon-centers-dashboard/center-home-delivery-orders/center-home-delivery-orders.component';
 
 export const routes: Routes = [
   {
@@ -1849,6 +1850,11 @@ export const routes: Routes = [
                     path: 'received-cash-today/:id',
                     component: ReceivedCashTodayComponent
                   }
+
+                  {
+                    path: 'home-delivery-order-records',
+                    component: CenterHomeDeliveryOrdersComponent,
+                  },
                 ],
               },
               {

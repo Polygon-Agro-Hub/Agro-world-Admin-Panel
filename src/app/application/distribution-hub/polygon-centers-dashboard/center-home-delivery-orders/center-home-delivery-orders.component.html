@@ -1,0 +1,472 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+
+
+<div>
+    <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back
+      </button>
+  
+        <div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg overflow-x-auto">
+          
+          <div
+    class="pt-5 pb-5 bg-white dark:bg-tileBlack rounded-lg"
+  >
+    <div class="flex space-x-4 pb-5 pr-12 border-b border-gray-300">
+      <button
+        (click)="selectTab('all')"
+        [ngClass]="{
+          'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'all',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'all'
+        }"
+        class="h-10 whitespace-nowrap px-5 flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'all'" class="fa fa-check"></i>
+        All
+      </button>
+
+      
+      <button
+        (click)="selectTab('out-for-delivery')"
+        [ngClass]="{
+          'border-2 border-[#415CFF] text-[#415CFF]':
+            activeTab === 'out-for-delivery',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'out-for-delivery'
+        }"
+        class="h-10 px-5 whitespace-nowrap flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'out-for-delivery'" class="fa fa-check"></i>
+        Out for Delivery
+      </button>
+
+      <button
+        (click)="selectTab('Collected')"
+        [ngClass]="{
+          'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'Collected',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Collected'
+        }"
+        class="h-10 px-5 whitespace-nowrap flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Collected'" class="fa fa-check"></i>
+        Collected
+      </button>
+
+      <button
+        (click)="selectTab('on-the-way')"
+        [ngClass]="{
+          'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'on-the-way',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'on-the-way'
+        }"
+        class="h-10 px-5 whitespace-nowrap flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'on-the-way'" class="fa fa-check"></i>
+        On the way
+      </button>
+      <button
+        (click)="selectTab('hold')"
+        [ngClass]="{
+          'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'hold',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'hold'
+        }"
+        class="h-10 px-5 whitespace-nowrap flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'hold'" class="fa fa-check"></i>
+        Hold
+      </button>
+      <button
+        (click)="selectTab('return')"
+        [ngClass]="{
+          'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'return',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'return'
+        }"
+        class="h-10 px-5 whitespace-nowrap flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'return'" class="fa fa-check"></i>
+        Return
+      </button>
+
+      <button
+        (click)="selectTab('delivered')"
+        [ngClass]="{
+          'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'delivered',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'delivered'
+        }"
+        class="h-10 px-5 whitespace-nowrap flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'delivered'" class="fa fa-check"></i>
+        Delivered
+      </button>
+
+      <button
+        (click)="selectTab('Return Received')"
+        [ngClass]="{
+          'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'Return Received',
+          'border border-gray-300 text-textLight dark:text-textDark':
+            activeTab !== 'Return Received'
+        }"
+        class="h-10 px-5 whitespace-nowrap flex items-center justify-center rounded-full gap-2"
+      >
+        <i *ngIf="activeTab === 'Return Received'" class="fa fa-check"></i>
+        Return Received
+      </button>
+    </div>
+
+    <div class="h-5"></div>
+
+  </div>
+
+          <div class="flex justify-between items-center mb-8">
+            <div class="flex justify-start items-center">
+              <h2 class="text-lg font-semibold text-textLight dark:text-textDark">
+        All ({{ allDeliveries.length < 10 ? ('0' + allDeliveries.length) : allDeliveries.length }})
+              </h2>
+            </div>
+            <div class="flex flex-row items-center gap-x-5">
+              <i *ngIf="activeTab === 'all' || activeTab === 'out-for-delivery' || activeTab === 'Return Received' " class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                  <path
+                    d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s14.3-32-32-32L265.3 64z" />
+                </svg>
+              </i>
+              <p *ngIf="activeTab === 'all' || activeTab === 'out-for-delivery' || activeTab === 'Return Received'" class="text-textLight dark:text-textDark ">Filter By</p>
+        
+              <div *ngIf="activeTab === 'all'" class="mr-5 text-textLight dark:text-textDark">
+                <p-dropdown #topfilters
+                  styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D1D1] dark:border-[#AFAFAF]"
+                  [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onStatusChange()" [showClear]="!!selectedStatus"
+                  [checkmark]="true" optionLabel="label" optionValue="value" placeholder="Status">
+                </p-dropdown>
+              </div>
+
+              <div class="flex items-center gap-2 h-8 ml-2" *ngIf="activeTab === 'all' || activeTab === 'out-for-delivery' || activeTab === 'Return Received' ">
+                <p-calendar id="toDate" [(ngModel)]="selectedDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
+                [placeholder]="placeholderDate" [showIcon]="true" [showClear]="true" [showButtonBar]="true"
+                  iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                                 [&_.p-datepicker-header]:dark:text-white
+                                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                                 
+                                 [&_.p-button:hover]:dark:bg-[#6b7280]"
+                  inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
+                  [appendTo]="'body'" />
+              </div>
+    
+        
+              <!-- <div class="mr-5">
+                <p-dropdown #topfilters
+                  styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+                  [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onStatusChange()" [checkmark]="true"
+                  optionLabel="label" optionValue="value" placeholder="Status"></p-dropdown>
+              </div> -->
+        
+              <div
+                            class="flex items-center md:w-96 lg:w-72 text-[#95A1AC] rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]">
+                            <input type="text" [placeholder]="searchPlaceHolder" [(ngModel)]="searchText" (keyup.enter)="onSearchChange()"
+                                (keyup.esc)="onSearchChange()"
+                                class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+                            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                                (click)="onSearchChange()">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                                </svg>
+                            </button>
+                            <button *ngIf="this.searchText" type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                                (click)="clearSearch()">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+        
+              
+            </div>
+          </div>
+
+          <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
+            <p class="text-[#494949] my-6 dark:text-white">--No deliveries found--</p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+          </div>
+        
+          <div *ngIf="hasData" class="min-w-max mt-8 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
+            <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
+              <thead >
+                <tr>
+                  <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    No
+                  </th>
+                  <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                    Order ID
+                  </th>
+        
+                  <th *ngIf="activeTab === 'all'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    Status
+                  </th>
+        
+                  <th *ngIf="activeTab !== 'all'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                    Value (Rs.)
+                  </th>
+        
+                  <th *ngIf="activeTab !== 'all' && activeTab !== 'delivered' && activeTab !== 'Return Received'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                    Customer Phone
+                  </th>
+        
+                  <th *ngIf="activeTab !== 'all' && activeTab !== 'delivered' && activeTab !== 'Return Received'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                    Receiver Phone-1
+                  </th>
+        
+                  <th *ngIf="activeTab !== 'all'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    Receiver's Info
+                  </th>
+        
+                  <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    Scheduled Time Slot
+                  </th>
+        
+                  <th *ngIf="activeTab === 'Return Received'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    Recieved Time
+                  </th>
+        
+                  <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    Payment
+                  </th>
+
+                  <th *ngIf="activeTab === 'all'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+                    Value (Rs.)
+                  </th>
+
+                  <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+                    Details
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="border-b border-gray-200 dark:border-[#4B555A]">
+                <tr *ngFor="let delivery of allDeliveries; let i = index"
+                  >
+                  <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                    {{ i + 1 | number : "2.0" }}
+                  </td>
+                  <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                    {{ delivery.invNo || "N/A" }}
+                  </td>
+        
+                  <td *ngIf="activeTab === 'all'" class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                    <span class="inline-block w-32 px-3 py-2 rounded-lg text-sm font-medium text-center whitespace-nowrap {{
+                        getStatusClass(delivery.status)
+                      }}">
+                      {{ delivery.status }}
+                    </span>
+                  </td>
+        
+                  <td *ngIf="activeTab !== 'all'" class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                    {{delivery.total}}
+                  </td>
+        
+                  <td *ngIf="activeTab !== 'all' && activeTab !== 'delivered' && activeTab !== 'Return Received'" class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                    {{ delivery.customerPhone || '--' }}
+                  </td>
+        
+                  <td *ngIf="activeTab !== 'all' && activeTab !== 'delivered' && activeTab !== 'Return Received'" class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                    {{ delivery?.phone1 ? (delivery.phoneCode1 + ' ' + delivery.phone1) : '--' }}
+                  </td>
+        
+                  <td *ngIf="activeTab !== 'all'" class="px-4 py-3 text-center">
+                    <button 
+                      (click)="openInfoPopup(delivery)"
+                      class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                      <svg class="w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </button>
+                  </td>
+        
+                  <!-- <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                    {{ delivery.regCode || "N/A" }}
+                  </td> -->
+        
+                  <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                   <p> {{ formatTimeRange(delivery.sheduleTime) }}</p>
+                   <p>{{delivery.sheduleDate | date:'MMMM d, y'}}</p> 
+                  </td>
+        
+                  <td *ngIf="activeTab === 'Return Received'" class="px-4 py-3 text-center text-textLight dark:text-textDark">
+                   <p> {{ delivery.receivedTime | date:'h:mm a' }}</p>
+                   <p>{{delivery.receivedTime | date:'MMMM d, y'}}</p> 
+                  </td>
+        
+                  <td class="px-4 py-3 text-center">
+                    <div class="flex items-center justify-center h-full">
+                        <span *ngIf="delivery.isPaid === 0"
+                            class="px-3 py-1"
+                            [ngClass]="{
+                                'text-[#EB3223]': delivery.status === 'Return Received' && activeTab !== 'all'
+                              }">
+                            Pending
+                        </span>
+        
+                        <span *ngIf="delivery.isPaid === 1 && delivery.paymentMethod === 'Cash'"
+                            class="px-3 py-1">
+                            Recieved
+                        </span>
+        
+                        <span *ngIf="delivery.isPaid === 1 && delivery.paymentMethod === 'Card'"
+                            class="px-3 py-1"
+                            [ngClass]="{
+                                'text-[#415CFF]': delivery.status === 'Ready to Pickup' && activeTab !== 'all'
+                              }">
+                            Paid
+                        </span>
+                    </div>
+                </td>
+
+                <td *ngIf="activeTab === 'all'" class="px-4 py-3 text-left text-textLight dark:text-textDark">
+                  {{delivery.total}}
+                </td>
+        
+                  <td class="px-4 py-3 text-center">
+                    <button 
+                      (click)="openDetailsPopup(delivery)"
+                      class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+                      <svg class="w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+            
+              </tbody>
+            </table>
+
+            <!-- <app-today-deliveries-view-popup
+                [visible]="showDetailsPopup"
+                [deliveryId]="selectedDeliveryId"
+                (closePopup)="closeDetailsPopup()">
+              </app-today-deliveries-view-popup> -->
+          </div>
+
+        </div>
+
+</div>
+
+
+<div *ngIf="showInfoModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="closeInfoPopup()">
+
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl  mx-4" (click)="$event.stopPropagation()">
+
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-[#5C5C5C] dark:border-[#5C5C5C]">
+      <h2 class="text-lg font-semibold text-center text-textLight dark:text-textDark">
+        Order ID : {{ deliveryObj.invNo }}
+      </h2>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+
+      <!-- Farmer Name -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Customer Name</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+            {{deliveryObj.title}} {{ deliveryObj.customerName }}
+        </span>
+      </div>
+
+
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Customer Phone Number</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ deliveryObj.customerPhone }}
+        </span>
+      </div>
+
+      <!-- NIC Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Platform</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ deliveryObj.orderApp }}
+        </span>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Order Placed</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1 whitespace-nowrap">
+          {{ deliveryObj.createdAt | date:'At hh:mm a on MMMM d, y' }}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Scheduled Time</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1 whitespace-nowrap">
+          {{ deliveryObj.sheduleTime }} {{ deliveryObj.sheduleDate | date:'on MMMM d, y'}}
+        </span>
+      </div>
+
+      <!-- <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Order Scheduled Date</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1 whitespace-nowrap">
+          {{ deliveryObj.sheduleDate | date:'hh:mm a on MMMM d, y' }}
+        </span>
+      </div> -->
+
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Receiver’s Name</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1 whitespace-nowrap">
+          {{deliveryObj.recieverTitle}} {{ deliveryObj.fullName }}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Receiver’s Phone Number - 1</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1 whitespace-nowrap">
+            {{ deliveryObj.phoneCode1 }} {{ deliveryObj.phone1 }}
+        </span>
+      </div>
+
+      <!-- Crop -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Receiver’s Phone Number - 2</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          {{ deliveryObj.phone2 ? (deliveryObj.phoneCode2 + ' ' + deliveryObj.phone2) : '--' }}
+        </span>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-center">
+      <button (click)="closeInfoPopup()"
+        class="px-12 py-2 text-[#6B7D8C] bg-[#F6F7F9] border border-[#95A1AC] rounded-lg transition font-medium text-sm">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+</div>

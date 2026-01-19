@@ -799,4 +799,34 @@ export class DistributionHubService {
       }
     );
   }
+
+  getcenterHomeDeliveryOrders(
+    activeTab: string = '', centerId: number,  status: string = '', searchText: string = '', date: string | Date | null = '' 
+    // searchType: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    console.log('centerId', centerId)
+
+    let url = `${this.apiUrl}distribution/get-center-home-delivery-orders?activeTab=${activeTab}&centerId=${centerId}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    if (date) {
+      url += `&date=${date}`;
+    }
+
+    return this.http.get(url, { headers });
+  }
 }
+
+

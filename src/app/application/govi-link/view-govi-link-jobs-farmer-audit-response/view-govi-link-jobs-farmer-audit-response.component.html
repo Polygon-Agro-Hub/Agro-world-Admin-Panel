@@ -1,0 +1,151 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+
+    <!-- Main White Container -->
+    <div class="bg-white dark:bg-[#272F45] rounded-lg border border-gray-200 dark:border-[#394157] shadow-sm">
+
+        <!-- Job Header -->
+        <div class="bg-[#F8F9FA] dark:bg-[#061E2C] rounded-t-lg p-6">
+            <div class="flex justify-between items-start gap-8">
+                <div class="space-y-2">
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Job ID : <span
+                            class="font-semibold text-gray-900 dark:text-white">{{ jobData.jobId }}</span></p>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Farm ID : <span
+                            class="font-semibold text-gray-900 dark:text-white">{{ jobData.farmId }}</span></p>
+                </div>
+                <div class="text-right space-y-2 flex-shrink-0">
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Completed : <span
+                            class="font-semibold text-gray-900 dark:text-white">{{ jobData.completedQuestions }}</span>
+                    </p>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">Certificate : <span
+                            class="font-semibold text-gray-900 dark:text-white">{{ jobData.certificate }} for farm</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions List -->
+        <div class="p-6 space-y-3 dark:bg-[#061E2C]">
+            <div *ngFor="let question of questions"
+                class="bg-white dark:bg-[#394157] rounded-lg border border-gray-200 dark:border-[#394157] shadow-sm overflow-hidden">
+                <!-- Question Header -->
+                <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-[#272F45]">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base font-bold text-gray-900 dark:text-white">{{ question.id }}</span>
+                        <span class="text-sm text-gray-600 dark:text-[#FFFFFF]">{{ question.type }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button *ngIf="question.hasPhoto" (click)="openModal(question.photoUrl || '', question.type)"
+                            class="px-4 py-2 bg-[#000000] dark:bg-[#000000] text-[#FFFFFF] text-sm rounded-md flex items-center gap-2 hover:bg-gray-800 dark:hover:bg-gray-600 transition">
+                            <i class="fa-solid fa-eye"></i>
+                            View Photo
+                        </button>
+                        <span *ngIf="question.status === 'Completed'"
+                            class="px-3 py-1 bg-[#BBFFC6] dark:bg-[#BBFFC6] text-green-700 dark:text-[#308233] rounded text-sm font-medium">
+                            Completed
+                        </span>
+                        <span *ngIf="question.status === 'Incomplete'"
+                            class="px-3 py-1 bg-[#FFE6E0] dark:bg-[#FFE6E0] text-[#E52A00] dark:text-[#E52A00] rounded text-sm font-medium">
+                            Incomplete
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Question Text -->
+                <div class="p-4 bg-[#F8F9FA] dark:bg-[#061E2C]">
+                    <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{{ question.question }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Horizontal Divider Line -->
+        <div class="border-t border-gray-300 dark:border-[#394157] mx-6"></div>
+
+        <!-- Identified Problems Section -->
+        <div class="p-6">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white mb-6">
+                Identified Problems & Suggested Solutions ({{ problems.length.toString().padStart(2, '0') }})
+            </h3>
+
+            <div *ngIf="problems.length > 0; else noProblems" class="space-y-4">
+                <div *ngFor="let problem of problems; let i = index"
+                    class="bg-white dark:bg-[#394157] rounded-lg border border-gray-300 dark:border-[#394157] overflow-hidden">
+
+                    <div class="flex items-start gap-2 p-4 bg-white dark:bg-[#394157]">
+                        <span class="text-base font-bold text-gray-900 dark:text-white flex-shrink-0">
+                            {{ problem.id }})
+                        </span>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">{{ problem.problem }}</p>
+                    </div>
+
+                    <div class="px-4 py-4 bg-[#F8F9FA] dark:bg-[#061E2C]">
+                        <p class="text-sm text-gray-700 dark:text-gray-300 ml-7">
+                            <span class="font-bold text-gray-900 dark:text-white">Solution : </span>{{ problem.solution
+                            }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noProblems>
+                <p class="text-center text-gray-500 dark:text-gray-400">
+                    --No problems have been reported--
+                </p>
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
+    (click)="closeModal()">
+    <!-- Modal Container -->
+    <div (click)="$event.stopPropagation()"
+        class="bg-white dark:bg-gray-800 rounded-[20px] w-[700px] h-[700px] p-6 relative flex items-center justify-center shadow-2xl">
+        <!-- Title -->
+        <div class="absolute top-6 left-0 w-full text-center">
+            <h2 class="text-base font-semibold text-gray-900 dark:text-white">
+                {{ modalTitle }}
+            </h2>
+        </div>
+
+        <!-- Image Frame -->
+        <div class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 
+             rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative">
+            <img [src]="modalImage" [style.transform]="'scale(' + scale + ')'"
+                class="max-w-[545px] max-h-[545px] object-contain transition-transform duration-200"
+                alt="Photo Proof" />
+
+            <!-- Zoom Buttons -->
+            <div class="absolute right-4 bottom-4 flex flex-col gap-2">
+                <button (click)="zoomOut()" class="w-12 h-12 rounded-md bg-white dark:bg-gray-600 
+                 border border-gray-300 dark:border-gray-500 shadow-md text-xl 
+                 text-gray-700 dark:text-white
+                 hover:bg-gray-50 dark:hover:bg-gray-500 transition
+                 flex items-center justify-center font-bold">
+                    −
+                </button>
+                <button (click)="zoomIn()" class="w-12 h-12 rounded-md bg-white dark:bg-gray-600 
+                 border border-gray-300 dark:border-gray-500 shadow-md text-xl 
+                 text-gray-700 dark:text-white
+                 hover:bg-gray-50 dark:hover:bg-gray-500 transition
+                 flex items-center justify-center font-bold">
+                    +
+                </button>
+            </div>
+        </div>
+
+        <!-- Close Button -->
+        <button (click)="closeModal()" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 
+             hover:text-gray-700 dark:hover:text-white text-2xl w-8 h-8
+             flex items-center justify-center transition">
+            ✕
+        </button>
+    </div>
+</div>

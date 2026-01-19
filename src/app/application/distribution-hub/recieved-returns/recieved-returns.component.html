@@ -27,7 +27,7 @@
             </p-dropdown>
 
             <p-calendar [(ngModel)]="receivedDateModel" placeholder="Received Date" dateFormat="yy-mm-dd"
-              (onSelect)="onReceivedDateSelected($event)" (onClear)="clearReceivedDateFilter()"
+              (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()" (ngModelChange)="onDateChange($event)"
               [showClear]="true" [showIcon]="false" styleClass="calendar-compact dark-calendar"
               [style]="{ width: '145px' }"
               [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"

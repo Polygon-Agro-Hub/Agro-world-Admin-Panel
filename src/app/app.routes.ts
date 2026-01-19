@@ -688,18 +688,26 @@ export const routes: Routes = [
                   {
                     path: 'reject-requests',
                     component: GovicapitalFinanceComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'GoViCare Reject Request' }
                   },
                   {
                     path: 'project-investments',
                     component: ProjectInvestmentsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Project Investments' }
                   },
                   {
                     path: 'project-investments-transactions/:id',
                     component: ProjectInvestmentsTransactionsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'View each investment transaction' }
                   },
                   {
                     path: 'published-projects',
                     component: PublishedProjectsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'GoViCare Publish Request' }
                   },
                   {
                     path: 'viewAll-Govicare-AuditedRequests/audit-personal-infor/:requestId',

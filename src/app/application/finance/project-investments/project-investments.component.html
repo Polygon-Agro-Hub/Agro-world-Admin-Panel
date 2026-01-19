@@ -13,7 +13,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Project Investments ({{ totalCount }})
+          Project Investments ({{ totalCount | number:'2.0' }})
         </h2>
       </div>
 
@@ -82,7 +82,7 @@
         *ngFor="let project of filteredProjects"
         class="bg-white dark:bg-cardDark rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700"
       >
-        <div class="border-b border-gray-200 dark:border-gray-700 cursor-pointer" (click)="viewDetails(project.id)">
+        <div class="border-b border-gray-200 dark:border-gray-700 cursor-pointer" (click)="(permissionService.hasPermission('View each investment transaction') || tokenService.getUserDetails().role === '1') && viewDetails(project.id)">
           <div class="flex justify-center items-center p-5 h-48">
             <!-- Image Container -->
             <div class="relative w-full h-full flex justify-center items-center">

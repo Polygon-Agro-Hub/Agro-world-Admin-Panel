@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FinanceService } from '../../../services/finance/finance.service';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-project-investments-transactions',
@@ -33,7 +35,9 @@ export class ProjectInvestmentsTransactionsComponent {
   constructor(
     private router: Router,
     private financeService: FinanceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +48,7 @@ export class ProjectInvestmentsTransactionsComponent {
 
   fetchAllInvestments(id: number, status: string = this.statusFilter, search: string = this.searchText): void {
     this.isLoading = true;
-    
+
     this.financeService.getAllInvestments(
       id, status, search
     )
@@ -54,7 +58,7 @@ export class ProjectInvestmentsTransactionsComponent {
           if (response) {
             this.investmentsArr = response.items;
             this.hasData = this.investmentsArr.length > 0;
-            
+
           } else {
             this.hasData = false;
             this.investmentsArr = [];
@@ -73,11 +77,11 @@ export class ProjectInvestmentsTransactionsComponent {
     console.log(this.statusFilter);
     this.fetchAllInvestments(
       this.id,
-      this.statusFilter, 
+      this.statusFilter,
     );
   }
 
-  
+
   // Method to format currency
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-US', {
@@ -116,7 +120,7 @@ export class ProjectInvestmentsTransactionsComponent {
 
   rejectInvestmentStatus(id: number): void {
     this.isLoading = true;
-    
+
     this.financeService.rejectInvestmentStatus(id)
       .subscribe({
         next: (response) => {
@@ -132,9 +136,9 @@ export class ProjectInvestmentsTransactionsComponent {
                 title: 'font-semibold',
                 confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
               },
-              
+
             })
-            
+
           } else {
             Swal.fire({
               icon: 'error',
@@ -146,7 +150,7 @@ export class ProjectInvestmentsTransactionsComponent {
                 title: 'font-semibold',
                 confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
               },
-              
+
             })
           }
           this.fetchAllInvestments(this.id)
@@ -163,7 +167,7 @@ export class ProjectInvestmentsTransactionsComponent {
               title: 'font-semibold',
               confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
             },
-            
+
           })
           this.fetchAllInvestments(this.id)
         }
@@ -177,13 +181,13 @@ export class ProjectInvestmentsTransactionsComponent {
 
   approveInvestmentStatus(id: number): void {
     this.isLoading = true;
-    
+
     this.financeService.approveInvestmentStatus(id)
       .subscribe({
         next: (response) => {
           this.isLoading = false;
           console.log('response', response)
-          
+
           if (response.success) {
             Swal.fire({
               icon: 'success',
@@ -195,9 +199,9 @@ export class ProjectInvestmentsTransactionsComponent {
                 title: 'font-semibold',
                 confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
               },
-              
+
             })
-            
+
           } else {
             Swal.fire({
               icon: 'error',
@@ -209,7 +213,7 @@ export class ProjectInvestmentsTransactionsComponent {
                 title: 'font-semibold',
                 confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
               },
-              
+
             })
           }
           this.fetchAllInvestments(this.id)
@@ -226,7 +230,7 @@ export class ProjectInvestmentsTransactionsComponent {
               title: 'font-semibold',
               confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
             },
-            
+
           })
           this.fetchAllInvestments(this.id)
         }
@@ -257,7 +261,7 @@ export class ProjectInvestmentsTransactionsComponent {
   viewBankSlip(url: string) {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
-     
+
 }
 class Investments {
   id!: number;

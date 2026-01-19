@@ -140,22 +140,26 @@
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request NIC') || tokenService.getUserDetails().role === '1'"
             >
               NIC Front Image
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request NIC') || tokenService.getUserDetails().role === '1'"
             >
               NIC Back Image
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request other details') || tokenService.getUserDetails().role === '1'"
             >
               Details
             </th>
 
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request audit result') || tokenService.getUserDetails().role === '1'"
             >
               Audit Results
             </th>
@@ -184,7 +188,9 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ formatDate(request.rejectedAt) }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              *ngIf=" permissionService.hasPermission('View reject request NIC') || tokenService.getUserDetails().role === '1'">
               <button
                 *ngIf="request.nicFront"
                 class="text-blue-600 hover:text-blue-800 underline"
@@ -194,7 +200,9 @@
               </button>
               <span *ngIf="!request.nicFront">N/A</span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            *ngIf=" permissionService.hasPermission('View reject request NIC') || tokenService.getUserDetails().role === '1'">
               <button
                 *ngIf="request.nicBack"
                 class="text-blue-600 hover:text-blue-800 underline"
@@ -204,7 +212,9 @@
               </button>
               <span *ngIf="!request.nicBack">N/A</span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            *ngIf=" permissionService.hasPermission('View reject request other details') || tokenService.getUserDetails().role === '1'">
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="viewDetails(request)"
@@ -225,7 +235,9 @@
               </button>
             </td>
 
-            <td class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center">
+            <td 
+              class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request audit result') || tokenService.getUserDetails().role === '1'"  >
               <button (click)="auditResults(request.id)">
                 <i class="fa-solid fa-arrow-up-right-from-square text-xl text-[#3980C0]"></i>
               </button>

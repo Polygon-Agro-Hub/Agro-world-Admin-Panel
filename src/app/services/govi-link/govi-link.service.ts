@@ -269,4 +269,17 @@ export class GoviLinkService {
       { headers }
     );
   }
+
+  getFieldAudit(jobId: string, farmId: string) {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}get-field-audit-history-response/${jobId}/${farmId}`,
+      { headers }
+    );
+  }
 }

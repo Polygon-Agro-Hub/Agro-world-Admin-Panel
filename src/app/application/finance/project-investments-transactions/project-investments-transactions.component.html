@@ -98,16 +98,19 @@
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View investor NIC') || tokenService.getUserDetails().role === '1'"
             >
               NIC Front Image
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View investor NIC') || tokenService.getUserDetails().role === '1'"
             >
               NIC Back Image
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View investor bank slip') || tokenService.getUserDetails().role === '1'"
             >
               Bank Slip
             </th>
@@ -144,19 +147,25 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{item.createdAt | date: "hh:mma 'on' MMMM dd, yyyy"}}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              *ngIf=" permissionService.hasPermission('View investor NIC') || tokenService.getUserDetails().role === '1'">
               <button (click)="viewNicFront(item.nicFront)" *ngIf="item.nicFront" class="text-blue-600 hover:text-blue-800 underline">
                 <i class="fa-solid fa-image"></i>
               </button>
               <span *ngIf="!item.nicFront">-</span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              *ngIf=" permissionService.hasPermission('View investor NIC') || tokenService.getUserDetails().role === '1'">
               <button (click)="viewNicBack(item.nicBack)" *ngIf="item.nicBack" class="text-blue-600 hover:text-blue-800 underline">
                 <i class="fa-solid fa-image"></i>
               </button>
               <span *ngIf="!item.nicBack">-</span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              *ngIf=" permissionService.hasPermission('View investor bank slip') || tokenService.getUserDetails().role === '1'">
               <button (click)="viewBankSlip(item.bankSlip)" *ngIf="item.bankSlip" class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
                 <svg
                   viewBox="0 0 24 24"
@@ -175,11 +184,13 @@
               <span *ngIf="!item.bankSlip">-</span>
             </td>
             <td  class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <span (click)="openPopUp(item.id)"
-                class="px-3 py-1 rounded-full text-xs font-medium cursor-pointer {{getStatusClass(item.invtStatus)}}"
+              <button 
+                (click)="openPopUp(item.id)"
+                [disabled]="!permissionService.hasPermission('Approve or Reject invester request') && tokenService.getUserDetails().role !== '1'"
+                class="px-3 py-2 rounded-lg font-medium cursor-pointer {{getStatusClass(item.invtStatus)}}"
               >
                 {{item.invtStatus}}
-              </span>
+            </button>
             </td>
           </tr>
         </tbody>

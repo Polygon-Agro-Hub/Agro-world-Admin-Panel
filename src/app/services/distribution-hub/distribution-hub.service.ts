@@ -827,6 +827,17 @@ export class DistributionHubService {
 
     return this.http.get(url, { headers });
   }
+
+    getPolygonCenterDashbordDetails(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<any>(
+      `${this.apiUrl}distribution/polygon-center-dashbord-details/${id}`,
+      { headers }
+    );
+  }
 }
 
 

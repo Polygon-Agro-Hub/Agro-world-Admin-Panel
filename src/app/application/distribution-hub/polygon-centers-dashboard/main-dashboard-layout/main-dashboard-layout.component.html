@@ -179,8 +179,8 @@
             <span class="text-white font-semibold text-xl"
               >Received Cash Today</span
             >
-            <span class="text-white font-semibold text-xl">0 Orders</span>
-            <span class="text-white font-semibold text-2xl">Rs. 0.00</span>
+            <span class="text-white font-semibold text-xl">{{cashPriceObj.total_orders}} Orders</span>
+            <span class="text-white font-semibold text-2xl"> Rs. {{cashPriceObj.total_price | number:'1.2-2'}}</span>
           </div>
           <div class="absolute bottom-3 right-3 text-white">
             <!-- Changed to absolute positioning -->

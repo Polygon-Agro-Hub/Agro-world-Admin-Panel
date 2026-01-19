@@ -4,6 +4,8 @@ import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinanceService } from '../../../services/finance/finance.service';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface RejectedInvestmentRequest {
   id: string;
@@ -63,8 +65,10 @@ export class GovicapitalFinanceComponent implements OnInit {
   constructor(
     private location: Location,
     private financeService: FinanceService,
-    private router: Router
-  ) {}
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.loadRejectedRequests();

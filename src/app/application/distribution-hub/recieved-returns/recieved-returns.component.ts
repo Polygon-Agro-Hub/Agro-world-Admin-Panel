@@ -213,7 +213,7 @@ export class RecievedReturnsComponent implements OnInit {
     window.history.back();
   }
 
-  onReceivedDateSelected(date: Date) {
+  onDateSelected(date: Date) {
     if (!date) return;
 
     const tzFixed = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
@@ -221,11 +221,22 @@ export class RecievedReturnsComponent implements OnInit {
     this.applyFilters();
   }
 
-  clearReceivedDateFilter() {
-    this.receivedDateModel = null;
-    this.receivedDate = undefined;
-    this.applyFilters();
+  onDateChange(value: Date | null) {
+    if (!value) {
+      this.clearDateFilter();
+    }
   }
+
+  clearDateFilter() {
+  const today = new Date();
+
+  this.receivedDateModel = today;
+
+  const tzFixed = new Date(today.getTime() - today.getTimezoneOffset() * 60000);
+  this.receivedDate = tzFixed.toISOString().slice(0, 10);
+
+  this.applyFilters();
+}
 
   loadData() {
     this.isLoading = true;

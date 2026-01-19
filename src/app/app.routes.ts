@@ -1849,7 +1849,7 @@ export const routes: Routes = [
                   {
                     path: 'received-cash-today/:id',
                     component: ReceivedCashTodayComponent
-                  }
+                  },
 
                   {
                     path: 'home-delivery-order-records',

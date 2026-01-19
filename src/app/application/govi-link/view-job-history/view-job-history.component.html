@@ -86,19 +86,25 @@
               </th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Visit
                 Purpose</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Farmer
-                NIC</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">District
-              </th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
-                Scheduled Date</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
-                Completed Date</th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">On
                 Screen Time</th>
 
                 <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Status
                 </th>
+              
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
+                Scheduled Date</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
+                Completed Date</th>
+
+                <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Response</th>
+
+
+                <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Farmer
+                NIC</th>
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">District
+              </th>
+              
               
               
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Assigned
@@ -139,24 +145,41 @@
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
                 {{ item.visitPurpose }}
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.farmerNIC }}
-              </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.district }}
-              </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.scheduledDate }}
-              </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.completedDate }}
-              </td>
+
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
                 {{ item.onScreenTime }}
               </td>
               <td class="px-6 py-3 text-center text-sm font-medium whitespace-nowrap" [ngClass]="getStatusClass(item.status)">
                 {{ item.status }}
               </td>
+              
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.scheduledDate }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.completedDate }}
+              </td>
+
+              <td
+              class="px-3 py-3 text-center whitespace-nowrap">
+              <!-- VIEW -->
+              <button class="w-6 h-6 text-blue-500 hover:text-blue-700 inline-flex items-center justify-center"
+                title="View Job" [disabled]="isLoading" (click)="viewResponse(item.jobId, item.visitPurpose)">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </td>
+
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.farmerNIC }}
+              </td>
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+                {{ item.district }}
+              </td>
+              
               
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
                 {{ item.assignedByName }}

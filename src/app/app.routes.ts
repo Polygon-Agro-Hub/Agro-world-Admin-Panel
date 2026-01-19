@@ -260,6 +260,7 @@ import { OrderPackingProgressDashboardComponent } from './application/distributi
 import { OfficerAndTargetDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/officer-and-target-dashboard/officer-and-target-dashboard.component';
 import { ReceivedCashTodayComponent } from './application/distribution-hub/polygon-centers-dashboard/received-cash-today/received-cash-today.component';
 import { CenterHomeDeliveryOrdersComponent } from './application/distribution-hub/polygon-centers-dashboard/center-home-delivery-orders/center-home-delivery-orders.component';
+import { GoviLinkJobsServiceRequestResponseComponent } from './application/govi-link/govi-link-jobs-service-request-response/govi-link-jobs-service-request-response.component';
 
 export const routes: Routes = [
   {
@@ -1916,6 +1917,11 @@ export const routes: Routes = [
               {
                 path: 'view-job-history',
                 component: ViewJobHistoryComponent,
+              },
+
+              {
+                path: 'view-job-history/service-request-response',
+                component: GoviLinkJobsServiceRequestResponseComponent,
               },
             ],
           },

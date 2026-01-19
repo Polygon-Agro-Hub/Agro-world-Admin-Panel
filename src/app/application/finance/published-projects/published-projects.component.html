@@ -74,17 +74,23 @@
                 Published Time
             </th>
 
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th 
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View publish request NIC') || tokenService.getUserDetails().role === '1'">
                 NIC
                 Front Image
             </th>
 
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th 
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View publish request NIC') || tokenService.getUserDetails().role === '1'">
                 NIC
                 Back Image
             </th>
 
-            <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th 
+              class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View publish request other details') || tokenService.getUserDetails().role === '1'">
                 Details
             </th>
             
@@ -129,19 +135,25 @@
               {{ item.publishDate | date:'hh:mm a \'on\' MMMM dd, yyyy' }}
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+              *ngIf=" permissionService.hasPermission('View publish request NIC') || tokenService.getUserDetails().role === '1'">
                 <button (click)="viewNicFront(item.nicFront)">
                     <i class="text-lg fa-solid fa-image text-[#3980C0]"></i>
                 </button>
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+              class="px-3 py-3 text-center text-textLight dark:text-textDark"
+              *ngIf=" permissionService.hasPermission('View publish request NIC') || tokenService.getUserDetails().role === '1'">
                 <button (click)="viewNicBack(item.nicBack)">
                     <i class="text-lg fa-solid fa-image text-[#3980C0]"></i>
                 </button> 
             </td>
 
-            <td class="px-3 py-3 text-center ">
+            <td 
+              class="px-3 py-3 text-center "
+              *ngIf=" permissionService.hasPermission('View publish request other details') || tokenService.getUserDetails().role === '1'">
                 <!-- VIEW -->
                 <button
                   class="w-6 h-6 mt-2 text-[#3980C0] hover:text-[#3980C0]"
@@ -227,22 +239,22 @@
       </div>
 
       <!-- Variety -->
-      <div class="flex items-start">
+      <!-- <div class="flex items-start">
         <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Variety</span>
         <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
         <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
           {{ itemDetailsToViewObj.varietyNameEnglish }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Certificate -->
-      <div class="flex items-start">
+      <!-- <div class="flex items-start">
         <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Certificate</span>
         <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
         <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
           {{ itemDetailsToViewObj.srtName }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Extent -->
       <div class="flex items-start">

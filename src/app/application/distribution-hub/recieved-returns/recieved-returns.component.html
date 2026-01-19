@@ -27,9 +27,10 @@
             </p-dropdown>
 
             <p-calendar [(ngModel)]="receivedDateModel" placeholder="Received Date" dateFormat="yy-mm-dd"
-              (onSelect)="onDateSelected($event)" (onClear)="clearDateFilter()" (ngModelChange)="onDateChange($event)"
+              (onSelect)="onReceivedDateSelected($event)" (onClear)="clearReceivedDateFilter()"
               [showClear]="true" [showIcon]="false" styleClass="calendar-compact dark-calendar"
-              [inputStyle]="{ width: '140px', padding: '0.5rem 2.2rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+              [style]="{ width: '145px' }"
+              [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
               inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
               panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white">
             </p-calendar>
@@ -230,7 +231,7 @@
 
       <!-- Order Received At -->
       <div class="flex items-start">
-        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Order Received At</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Return Received At</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1 whitespace-nowrap">
           {{ dataObject.receivedTime | date:'hh:mm a on MMMM d, y' }}

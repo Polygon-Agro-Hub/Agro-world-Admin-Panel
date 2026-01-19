@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-investment-requests',
@@ -13,6 +14,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
 export class InvestmentRequestsComponent {
   constructor(
     private router: Router,
+    public tokenService: TokenService,
     public permissionService: PermissionService
   ) { }
 

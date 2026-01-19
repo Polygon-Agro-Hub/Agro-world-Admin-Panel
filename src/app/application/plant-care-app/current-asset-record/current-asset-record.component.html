@@ -1,46 +1,35 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <div>
-  <button
-    class="mb-5 text-textLight dark:text-textDark"
-    onclick="history.back()"
-  >
+  <button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
-  <div
-    class="pt-5 pr-12 pl-12 pb-10 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg"
-  >
+  <div class="pt-5 pr-12 pl-12 pb-10 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
 
+    <div class="flex flex-row justify-between mb-3">
+      <!-- Left: Farmer -->
+      <div class="flex items-center space-x-1">
+        <span class="font-medium dark:text-textDark">Farmer:</span>
+        <span class="font-semibold dark:text-textDark">{{ name || 'NULL' }}</span>
+      </div>
 
-  <div class="flex flex-row gap-x-[400px] mb-2">
-    <!-- Left: Farmer -->
-    <div class="flex items-center space-x-1">
-      <span class=" dark:text-textDark">Farmer:</span>
-      <span class="font-medium dark:text-textDark">{{ name || 'NULL' }}</span>
+      <!-- Right: Category -->
+      <div class="flex items-center space-x-1" >
+        <span class="font-medium dark:text-textDark">Category:</span>
+        <span class="font-semibold dark:text-textDark">{{ category || 'NULL' }}</span>
+      </div>
     </div>
-  
-    <!-- Right: Category -->
-    <div class="flex items-center space-x-1">
-      <span class=" dark:text-textDark">Category:</span>
-      <span class="font-semibold dark:text-textDark">{{ category || 'NULL' }}</span>
-    </div>
-  </div>
 
-  <div class="flex flex-row gap-x-[465px] mb-2">
-    <!-- Left: Farmer -->
-    <div class="flex items-center space-x-1">
-      <span class=" dark:text-textDark">Farm:</span>
+    <div class="flex items-center space-x-1 mb-3">
+      <span class="font-medium dark:text-textDark">Farm:</span>
       <span class="font-semibold dark:text-textDark">{{ farmName || 'NULL' }}</span>
     </div>
-  
-    <!-- Right: Category -->
-    <div class="flex items-center space-x-1">
-      <span class=" dark:text-textDark">Asset:</span>
+
+    <div class="flex items-center space-x-1 mb-8">
+      <span class="font-medium dark:text-textDark">Asset :</span>
       <span class="font-semibold dark:text-textDark">{{ asset || 'NULL' }}</span>
     </div>
-  </div>
-
 
     <div *ngIf="!hasData" class="text-center py-8">
       <p class="text-gray-500 text-lg">No data to display</p>
@@ -50,46 +39,32 @@
       <table class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
-            <th
-              class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left"
-            >
+            <th class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left">
               Batch Number
             </th>
-            
-            <th
-              class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left"
-            >
-           No.of Units
+
+            <th class="py-3 px-4 font-normal text-gray-500 dark:text-textDark text-left">
+              No.of Units
             </th>
             <!-- <th
               class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
             >
               Number of units (-)
             </th> -->
-                        <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Unit Price
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Unit
             </th>
 
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
-            Total Price
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
+              Total Price
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Date
             </th>
-            <th
-              class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
-            >
+            <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">
               Time
             </th>
           </tr>
@@ -102,34 +77,29 @@
             <td class="py-3 px-4">
               <div class="flex items-center gap-2">
                 <!-- Up arrow -->
-                <i
-                  *ngIf="item.numOfMinUnit === '0.00'"
-                  class="fa-solid fa-arrow-trend-up text-green-700"
-                ></i>
-            
+                <i *ngIf="item.numOfMinUnit === '0.00'" class="fa-solid fa-arrow-trend-up text-green-700"></i>
+
                 <!-- Down arrow -->
-                <i
-                  *ngIf="item.numOfMinUnit !== '0.00' && item.numOfMinUnit != null"
-                  class="fa-solid fa-arrow-trend-down text-red-500"
-                ></i>
-            
+                <i *ngIf="item.numOfMinUnit !== '0.00' && item.numOfMinUnit != null"
+                  class="fa-solid fa-arrow-trend-down text-red-500"></i>
+
                 <!-- Value -->
                 <span class="text-green-700">
                   {{ item.numOfPlusUnit | number }}
                 </span>
               </div>
             </td>
-            
+
             <!-- <td class="px-4 py-3 text-center text-red-700">
               {{ item.numOfMinUnit | number }}
             </td> -->
-                <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
+            <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ this.unitPrice | number:'1.2-2' }}
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ this.unit }}
             </td>
-        
+
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               {{ item.totalPrice | number:'1.2-2' }}
             </td>

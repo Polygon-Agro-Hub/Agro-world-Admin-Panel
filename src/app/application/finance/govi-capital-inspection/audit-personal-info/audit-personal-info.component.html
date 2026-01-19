@@ -24,13 +24,15 @@
     </div>
     <div *ngIf="lastSegment === 'viewAll-Govicare-AuditedRequests' " class="flex flex-col gap-4">
       <div class="flex gap-4">
-        <button
+        <button 
+        *ngIf=" permissionService.hasPermission('Approve govicare request') || tokenService.getUserDetails().role === '1'"
           class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
           (click)="openApprovePopUp()">
           Approve
         </button>
 
         <button
+          *ngIf=" permissionService.hasPermission('Reject govicare request') || tokenService.getUserDetails().role === '1'"
           class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md hover:bg-[#980808] transition-colors duration-200 shadow-sm"
           (click)="openRejectPopUp()">
           Reject

@@ -79,13 +79,20 @@
                   Audited By</th>
                 <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                   Audit Date</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th 
+                  class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                  *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'"
+                  >
                   NIC Front Image</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'"
+                >
                   NIC Back Image</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View audit request result') || tokenService.getUserDetails().role === '1'">
                   Audit Results</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                 *ngIf=" permissionService.hasPermission('Audited request other details') || tokenService.getUserDetails().role === '1'">
                   Details</th>
               </tr>
             </thead>
@@ -124,7 +131,9 @@
                 </td>
   
                 <!-- NIC Front Image -->
-                <td class="px-4 py-4 text-center">
+                <td 
+                  class="px-4 py-4 text-center"
+                  *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'">
                     <ng-container *ngIf="request.NIC_Front_Image; else noImage">
                       <button
                         (click)="openImage(request.NIC_Front_Image)"
@@ -140,7 +149,9 @@
                 </td>
 
 
-                <td class="px-4 py-4 text-center">
+                <td 
+                class="px-4 py-4 text-center"
+                *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'">
                     <ng-container *ngIf="request.NIC_Back_Image; else noImage">
                       <button
                         (click)="openImage(request.NIC_Back_Image)"
@@ -155,7 +166,10 @@
                     </ng-template>
                 </td>
 
-                <td class="px-4 py-4 text-center">
+                <td 
+                  class="px-4 py-4 text-center"
+                  *ngIf=" permissionService.hasPermission('View audit request result') || tokenService.getUserDetails().role === '1'"
+                  >
                     <button (click)="auditResults(request.No)"
                       class="text-blue-500 hover:text-blue-600 transition">
                       <i class="fa-solid fa-arrow-up-right-from-square text-xl"></i>
@@ -163,7 +177,10 @@
                   </td>
                   
                 <!-- Details (Eye Icon) -->
-                <td class="px-4 py-4 text-center">
+                <td 
+                  class="px-4 py-4 text-center"
+                  *ngIf=" permissionService.hasPermission('Audited request other details') || tokenService.getUserDetails().role === '1'"
+                  >
                   <button (click)="viewDetails(request.Request_ID)"
                     class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

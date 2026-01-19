@@ -258,6 +258,8 @@ import { DriversAndVehiclesComponent } from './application/distribution-hub/poly
 import { PikupOderRecordsMainComponent } from './application/distribution-hub/polygon-centers-dashboard/pickup-orders-records/pikup-oder-records-main/pikup-oder-records-main.component';
 import { OrderPackingProgressDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/order-packing-progress-dashboard/order-packing-progress-dashboard.component';
 import { OfficerAndTargetDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/officer-and-target-dashboard/officer-and-target-dashboard.component';
+import { ReceivedCashTodayComponent } from './application/distribution-hub/polygon-centers-dashboard/received-cash-today/received-cash-today.component';
+import { CenterHomeDeliveryOrdersComponent } from './application/distribution-hub/polygon-centers-dashboard/center-home-delivery-orders/center-home-delivery-orders.component';
 
 export const routes: Routes = [
   {
@@ -668,14 +670,20 @@ export const routes: Routes = [
                   {
                     path: 'viewAll-Govicare-requests',
                     component: ViewAllGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'GoViCare Request' }
                   },
                   {
                     path: 'view-Govicare-approved-requests',
                     component: ViewAllApprovedGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Approved Requests' }
                   },
                   {
                     path: 'viewAll-Govicare-AuditedRequests',
                     component: ViewAllAuditedGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Audited Request' }
                   },
                   {
                     path: 'reject-requests',
@@ -1837,6 +1845,15 @@ export const routes: Routes = [
                   {
                     path: 'pikup-oder-records-main/:id',
                     component: PikupOderRecordsMainComponent,
+                  },
+                  {
+                    path: 'received-cash-today/:id',
+                    component: ReceivedCashTodayComponent
+                  },
+
+                  {
+                    path: 'home-delivery-order-records',
+                    component: CenterHomeDeliveryOrdersComponent,
                   },
                 ],
               },

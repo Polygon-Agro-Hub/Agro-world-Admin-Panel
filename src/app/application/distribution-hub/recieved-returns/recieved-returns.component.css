@@ -1,9 +1,9 @@
 /* Make the calendar popup smaller */
 ::ng-deep .p-calendar .p-datepicker {
-  transform: scale(0.85);
+  transform: scale(0.9);
   transform-origin: top left;
-  width: 280px !important;
-  min-width: 280px !important;
+  width: 300px !important;
+  min-width: 300px !important;
 }
 
 ::ng-deep .p-calendar .p-datepicker table td {
@@ -93,8 +93,8 @@
 /* Compact calendar container positioning */
 ::ng-deep .calendar-compact {
   position: relative !important;
-  width: 140px !important;
-  max-width: 140px !important;
+  width: auto !important;
+  max-width: none !important;
 }
 
 ::ng-deep .calendar-compact .p-calendar {
@@ -103,7 +103,6 @@
 
 /* Compact calendar input */
 ::ng-deep .calendar-compact .p-inputtext {
-  width: 140px !important;
   padding-right: 2.5rem !important;
 }
 
@@ -129,8 +128,9 @@
 
 /* Reduce panel size for compact calendar */
 ::ng-deep .calendar-compact .p-datepicker {
-  transform: scale(0.85);
+  transform: scale(0.9);
   transform-origin: top left;
+  width: 300px !important;
 }
 
 /* ===== DROPDOWN STYLES ===== */

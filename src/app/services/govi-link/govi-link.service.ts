@@ -282,4 +282,18 @@ export class GoviLinkService {
       { headers }
     );
   }
+
+  getServiceRequestResponse(jobId: string): Observable<any> {
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    console.log('fetchiing')
+
+    return this.http.get<any>(`${this.apiUrl}get-service-request-response/${jobId}`, {
+      headers
+    });
+  }
 }

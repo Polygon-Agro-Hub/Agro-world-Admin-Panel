@@ -250,4 +250,10 @@ export class ViewJobHistoryComponent implements OnInit {
   back(): void {
     this.router.navigate(['/govi-link']);
   }
+
+  viewResponse(jobId: string, purpose: string) {
+    this.router.navigate(['/govi-link/action/view-job-history/service-request-response'], {
+      queryParams: { jobId, purpose },
+    });
+  }
 }

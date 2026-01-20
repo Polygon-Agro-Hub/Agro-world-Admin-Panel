@@ -721,6 +721,16 @@ export const routes: Routes = [
                     path: 'view-Govicare-approved-requests/audit-personal-infor/:requestId',
                     component: AuditPersonalInfoComponent,
                   },
+                  {
+                    //for edit define shares
+                    path: 'view-Govicare-approved-requests/edit-audit-personal-infor/:requestId',
+                    component: AuditPersonalInfoComponent,
+                  },
+                  {
+                    //for approve define shares
+                    path: 'view-Govicare-approved-requests/approve-audit-personal-infor/:requestId',
+                    component: AuditPersonalInfoComponent,
+                  },
 
                   {
                     path: 'reject-requests/audit-personal-infor/:requestId',

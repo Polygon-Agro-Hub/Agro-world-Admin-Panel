@@ -37,15 +37,23 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
     this.isLoading = true;
 
     const jobId = 'FA20251203003';
-    const farmId = '197';
 
-    this.service.getFieldAudit(jobId, farmId).subscribe({
+    this.service.getFieldAudit(jobId).subscribe({
       next: (res) => {
         const api = res.data;
 
         this.jobData.jobId = api.jobId;
-        this.jobData.farmId = api.farmId;
-        this.jobData.certificate = api.srtName;
+        this.jobData.farmId = api.regCode;
+        
+        const payType = (api.payType || '').toLowerCase();
+        const cropName = api.cropNameEnglish?.trim();
+        if (payType === 'farm' || !cropName) {
+          this.jobData.certificate = `${api.srtName} for farm`;
+        } else if (payType === 'crop' && cropName) {
+          this.jobData.certificate = `${api.srtName} for ${cropName}`;
+        } else {
+          this.jobData.certificate = api.srtName;
+        }
 
         this.questions = api.data.map((q: ApiItem, index: number) => {
           const isPhoto = q.type.toLowerCase().includes('photo');

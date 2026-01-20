@@ -263,6 +263,7 @@ import { CenterHomeDeliveryOrdersComponent } from './application/distribution-hu
 import { ViewGoviLinkJobsFarmerAuditResponseComponent } from './application/govi-link/view-govi-link-jobs-farmer-audit-response/view-govi-link-jobs-farmer-audit-response.component';
 import { GoviLinkJobsServiceRequestResponseComponent } from './application/govi-link/govi-link-jobs-service-request-response/govi-link-jobs-service-request-response.component';
 import { ViewJobHistoryFarmerClusterAuditResponseComponent } from './application/govi-link/view-job-history-farmer-cluster-audit-response/view-job-history-farmer-cluster-audit-response.component';
+import { ViewPikupCashRevenueComponent } from './application/distribution-hub/polygon-centers-dashboard/view-pikup-cash-revenue/view-pikup-cash-revenue.component';
 
 export const routes: Routes = [
   {
@@ -1861,10 +1862,13 @@ export const routes: Routes = [
                     path: 'received-cash-today/:id',
                     component: ReceivedCashTodayComponent
                   },
-
                   {
                     path: 'home-delivery-order-records',
                     component: CenterHomeDeliveryOrdersComponent,
+                  },
+                  {
+                    path: 'view-pikup-chash-revenue/:id',
+                    component:ViewPikupCashRevenueComponent
                   },
                 ],
               },

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router'; // Added Router import
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 
 interface OrderMetric {
@@ -18,6 +18,11 @@ interface OrderMetric {
 })
 export class ReceivedCashTodayComponent implements OnInit {
   isLoading = false;
+  centerObj: CenterDetails = {
+    centerId: null,
+    centerName: '',
+    centerRegCode: ''
+  };
   
   storeName = '';
   receivedDate = 'Received Cash on June 2, 2026 (09)';
@@ -43,10 +48,14 @@ export class ReceivedCashTodayComponent implements OnInit {
     { label: 'Overdue Deliveries - Today', count: 0, color: '#FFA202' }
   ];
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router // Added Router to constructor
+  ) {}
 
   ngOnInit(): void {
     this.setStoreNameFromQueryParams();
+    this.setCenterDetails();
   }
   
   private setStoreNameFromQueryParams(): void {
@@ -64,15 +73,43 @@ export class ReceivedCashTodayComponent implements OnInit {
     });
   }
   
+  private setCenterDetails(): void {
+    this.route.params.subscribe(params => {
+      this.centerObj.centerId = params['id'] || null;
+    });
+
+    this.route.queryParams.subscribe(params => {
+      this.centerObj.centerName = params['name'] || '';
+      this.centerObj.centerRegCode = params['regCode'] || '';
+    });
+  }
+  
   formatCurrency(amount: number): string {
     return `Rs. ${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
   
   viewPickupRevenue(): void {
-    console.log('View Pickup Revenue clicked');
+    const id = this.centerObj.centerId;
+    const name = this.centerObj.centerName;
+    const regCode = this.centerObj.centerRegCode;
+    
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/view-pikup-chash-revenue/${id}`], {
+      queryParams: { name, regCode }
+    });
   }
   
   viewDeliveryRevenue(): void {
     console.log('View Delivery Revenue clicked');
   }
+}
+
+interface CenterDetails {
+  centerId: number | null;
+  centerName: string;
+  centerRegCode: string;
+}
+
+interface CashPrice {
+  total_price: number;
+  total_orders: number;
 }

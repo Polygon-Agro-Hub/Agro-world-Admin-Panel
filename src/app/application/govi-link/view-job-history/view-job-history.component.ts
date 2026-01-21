@@ -14,6 +14,7 @@ interface FieldAuditHistory {
   jobId: string;
   empId: string;
   farmId: string;
+  farmCode: string;
   regCode: string;
   visitPurpose: string;
   farmerNIC: string;
@@ -137,6 +138,7 @@ export class ViewJobHistoryComponent implements OnInit {
             jobId: item.jobId,
             empId: item.empId,
             farmId: item.farmId,
+            farmCode: item.farmCode,
             regCode: item.regCode,
             visitPurpose: this.formatVisitPurpose(item.visitPurpose),
             farmerNIC: item.farmerNIC,
@@ -251,9 +253,22 @@ export class ViewJobHistoryComponent implements OnInit {
     this.router.navigate(['/govi-link']);
   }
 
-  viewResponse(jobId: string, purpose: string) {
-    this.router.navigate(['/govi-link/action/view-job-history/service-request-response'], {
-      queryParams: { jobId, purpose },
+  
+viewResponse(jobId: string, purpose: string) {
+
+  if (jobId && jobId.startsWith("FA")) {
+    this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-audit-response'], {
+      queryParams: { jobId },
+    });
+  } else if (jobId && jobId.startsWith("CA")) {
+    this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-cluster-audit-response'], {
+      queryParams: { jobId },
+    });
+  } else if (jobId && jobId.startsWith("SR")) {
+    this.router.navigate(['/govi-link/action/view-govi-link-jobs-service-request-response'], {
+      queryParams: { jobId },
     });
   }
+  
+}
 }

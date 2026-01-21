@@ -1929,16 +1929,16 @@ export const routes: Routes = [
                 component: ViewJobHistoryComponent,
               },
               {
-                path: 'view-govi-link-jobs-farmer-audit-response/:id',
+                path: 'view-govi-link-jobs-farmer-audit-response',
                 component: ViewGoviLinkJobsFarmerAuditResponseComponent,
               },
 
               {
-                path: 'view-job-history/service-request-response',
+                path: 'view-govi-link-jobs-service-request-response',
                 component: GoviLinkJobsServiceRequestResponseComponent,
               },
               {
-                path: 'view-govi-link-jobs-farmer-cluster-audit-response/:id',
+                path: 'view-govi-link-jobs-farmer-cluster-audit-response',
                 component: ViewJobHistoryFarmerClusterAuditResponseComponent,
               },
             ],

@@ -17,6 +17,8 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
   modalTitle = '';
   scale = 1;
 
+  jobId!: string;
+
   // --- Sample Data (Matches Screenshot) ---
 
   // Job Header Info

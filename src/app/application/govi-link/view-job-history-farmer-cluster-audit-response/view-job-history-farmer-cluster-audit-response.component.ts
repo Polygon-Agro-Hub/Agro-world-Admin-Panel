@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-job-history-farmer-cluster-audit-response',
@@ -12,13 +13,14 @@ import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
 })
 export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit {
 
-  constructor(private goviLinkService: GoviLinkService) { }
+  constructor(private goviLinkService: GoviLinkService, private router: Router, private route: ActivatedRoute) { }
 
   isLoading = false;
   isModalOpen = false;
   modalImage = '';
   modalTitle = '';
   scale = 1;
+  jobId!: string;
 
   jobData = {
     jobId: '',
@@ -40,23 +42,40 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
   farmsData: FarmData[] = [];
 
   ngOnInit(): void {
-    this.loadData();
+     this.route.queryParams.subscribe(queryParams => {
+      this.jobId = queryParams['jobId'] || '';
+      console.log('jobId', this.jobId);
+  
+      this.loadData();
+    });
   }
 
   loadData() {
     this.isLoading = true;
 
-    const jobId = 'CA20251124003';
+    if (!this.jobId) {
+      console.error('No jobId provided');
+      this.isLoading = false;
+      return;
+    }
 
-    this.goviLinkService.getFarmerClusterAudith(jobId).subscribe({
+    this.goviLinkService.getFarmerClusterAudith(this.jobId).subscribe({
       next: (res) => {
-        const api = res;
-        const header = api.header;
+        console.log('API Response:', res);
+
+        if (!res.success) {
+          console.error('API returned success: false');
+          this.isLoading = false;
+          return;
+        }
+
+        const header = res.header;
+        const farms = res.farms;
 
         this.jobData.jobId = header.jobId;
         this.jobData.certificate = `${header.srtName} for farmer cluster`;
 
-        this.farmsData = api.farms.map((farm: ApiFarm) => {
+        this.farmsData = farms.map((farm: ApiFarm) => {
           const questions = farm.questions.map((q: ApiQuestion, index: number) => {
             const isPhoto = q.type.toLowerCase().includes('photo');
             let completed = false;
@@ -114,7 +133,8 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
 
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
+        console.error('API Error:', err);
         this.isLoading = false;
       },
     });

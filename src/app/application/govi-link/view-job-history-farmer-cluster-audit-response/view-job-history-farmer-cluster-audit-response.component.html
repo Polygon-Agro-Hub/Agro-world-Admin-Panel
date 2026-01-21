@@ -1,191 +1,190 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
-    <i class="fa-solid fa-arrow-left"></i>
-    Back
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
 </button>
 
 <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
 
-    <!-- Main Container -->
-    <div class="bg-white dark:bg-[#272F45] rounded-lg border border-gray-200 dark:border-[#394157] shadow-sm">
+  <!-- Main Container -->
+  <div class="bg-white dark:bg-[#061E2C] rounded-lg border border-gray-200 dark:border-[#394157] shadow-sm">
 
-        <!-- 1. Header -->
-        <div class="p-8 border-b border-gray-100 dark:border-[#394157]">
-            <div class="flex justify-between items-start">
+    <!-- 1. Header -->
+    <div class="p-8 border-b border-gray-100 dark:border-[#394157]">
+      <div class="flex justify-between items-start">
 
-                <div class="space-y-2">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                        Job ID :
-                        <span class="font-bold text-gray-900 dark:text-white text-base">{{ jobData.jobId }}</span>
-                    </p>
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                        Completed :
-                        <span class="font-semibold text-gray-900 dark:text-white">{{ jobData.completedFarms }}</span>
-                    </p>
-                </div>
-
-                <div class="text-right">
-                    <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                        Certificate :
-                        <span class="font-bold text-gray-900 dark:text-white">{{ jobData.certificate }}</span>
-                    </p>
-                </div>
-            </div>
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
+            Job ID :
+            <span class="font-bold text-gray-900 dark:text-white text-base">{{ jobData.jobId }}</span>
+          </p>
+          <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
+            Completed :
+            <span class="font-semibold text-gray-900 dark:text-white">{{ jobData.completedFarms }}</span>
+          </p>
         </div>
 
-        <!-- 2. Farm Navigation -->
-        <div
-            class="px-8 py-4 border-b border-gray-200 dark:border-[#394157] bg-white dark:bg-[#061E2C] flex items-center justify-between">
-
-            <div class="flex items-center gap-4 text-sm font-medium text-gray-700 dark:text-gray-300 w-1/3">
-                <button (click)="prevFarm()" [disabled]="farmNav.current === 1"
-                    class="text-blue-500 disabled:text-gray-500 hover:text-blue-700 transition">
-                    <i class="fa-solid fa-chevron-left text-lg"></i>
-                </button>
-
-                <span>Farm [ {{ farmNav.current }} / {{ farmNav.total }} ]</span>
-
-                <button (click)="nextFarm()" [disabled]="farmNav.current === farmNav.total"
-                    class="text-blue-500 disabled:text-gray-500 hover:text-blue-700 transition">
-                    <i class="fa-solid fa-chevron-right text-lg"></i>
-                </button>
-            </div>
-
-            <div class="text-center w-1/3">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                    Farm ID :
-                    <span class="font-bold text-gray-900 dark:text-white">{{ farmNav.farmId }}</span>
-                </p>
-            </div>
-
-            <div class="text-right w-1/3">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                    Completed :
-                    <span class="font-semibold text-gray-800 dark:text-white">{{ farmNav.completedQuestions }}</span>
-                </p>
-            </div>
+        <div class="text-right">
+          <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
+            Certificate :
+            <span class="font-bold text-gray-900 dark:text-white">{{ jobData.certificate }}</span>
+          </p>
         </div>
-
-        <!-- 3. Questions -->
-        <div class="p-8 space-y-5">
-            <div *ngFor="let question of questions"
-                class="bg-white dark:bg-[#394157] rounded-lg border border-gray-200 dark:border-[#394157] p-2">
-
-                <div class="flex justify-between items-center p-2 mb-1">
-                    <div class="flex items-center gap-4">
-                        <span class="text-base font-bold text-gray-900 dark:text-white">{{ question.id }}</span>
-
-                        <span
-                            class="px-3 py-1 bg-gray-50 dark:bg-[#272F45] text-gray-500 dark:text-gray-300 rounded-md text-sm font-medium border border-gray-100 dark:border-[#394157]">
-                            {{ question.type }}
-                        </span>
-                    </div>
-
-                    <div class="flex items-center gap-3">
-                        <button *ngIf="question.hasPhoto" (click)="openModal(question.photoUrl || '', question.type)"
-                            class="px-3 py-1.5 bg-black text-white text-xs font-medium rounded flex items-center gap-2 hover:bg-gray-800 transition">
-                            <i class="fa-solid fa-eye"></i>
-                            View Photo
-                        </button>
-
-                        <span *ngIf="question.status === 'Completed'"
-                            class="px-3 py-1 bg-[#BBFFC6] text-[#246227] rounded text-sm font-medium">
-                            Completed
-                        </span>
-
-                        <span *ngIf="question.status === 'Incomplete'"
-                            class="px-3 py-1 bg-[#FFE6E0] text-[#D82C0D] rounded text-sm font-medium">
-                            Incomplete
-                        </span>
-                    </div>
-                </div>
-
-                <div class="p-4 bg-[#F8F9FA] dark:bg-[#061E2C] rounded-[4px] mx-2 mb-2">
-                    <p class="text-sm text-gray-800 dark:text-gray-300 font-medium leading-relaxed">
-                        {{ question.question }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Divider -->
-        <div class="border-t border-gray-200 dark:border-[#394157] mx-8"></div>
-
-        <!-- 4. Problems -->
-        <div class="p-8">
-            <h3 *ngIf="problems.length > 0" class="text-sm font-bold text-gray-900 dark:text-white mb-6">
-                Identified Problems & Suggested Solutions ({{ problems.length.toString().padStart(2, '0') }})
-            </h3>
-
-            <div *ngIf="problems.length > 0; else noProblems" class="space-y-4">
-                <div *ngFor="let problem of problems"
-                    class="bg-white dark:bg-[#394157] rounded-lg border border-gray-200 dark:border-[#394157] overflow-hidden">
-
-                    <div class="flex items-start gap-2 p-5 bg-white dark:bg-[#394157]">
-                        <span class="text-sm font-bold text-gray-900 dark:text-white flex-shrink-0">
-                            {{ problem.id }} )
-                        </span>
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">
-                            {{ problem.problem }}
-                        </p>
-                    </div>
-
-                    <div
-                        class="px-5 py-5 bg-[#F8F9FA] dark:bg-[#061E2C] border-t border-gray-100 dark:border-[#394157]">
-                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                            <span class="font-bold text-gray-500 dark:text-gray-200">Solution : </span>
-                            {{ problem.solution }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <ng-template #noProblems>
-                <div class="py-8 text-center">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                        --No problems have been reported--
-                    </p>
-                </div>
-            </ng-template>
-        </div>
+      </div>
     </div>
+
+    <!-- 2. Farm Navigation -->
+    <div
+      class="px-8 py-4 border-b border-gray-200 dark:border-[#394157] bg-white dark:bg-[#061E2C] flex items-center justify-between">
+
+      <div class="flex items-center gap-4 text-sm font-medium text-gray-700 dark:text-gray-300 w-1/3">
+        <button (click)="prevFarm()" [disabled]="farmNav.current === 1"
+          class="text-blue-500 disabled:text-gray-500 hover:text-blue-700 transition">
+          <i class="fa-solid fa-chevron-left text-lg"></i>
+        </button>
+
+        <span>Farm [ {{ farmNav.current }} / {{ farmNav.total }} ]</span>
+
+        <button (click)="nextFarm()" [disabled]="farmNav.current === farmNav.total"
+          class="text-blue-500 disabled:text-gray-500 hover:text-blue-700 transition">
+          <i class="fa-solid fa-chevron-right text-lg"></i>
+        </button>
+      </div>
+
+      <div class="text-center w-1/3">
+        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
+          Farm ID :
+          <span class="font-bold text-gray-900 dark:text-white">{{ farmNav.farmId }}</span>
+        </p>
+      </div>
+
+      <div class="text-right w-1/3">
+        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
+          Completed :
+          <span class="font-semibold text-gray-800 dark:text-white">{{ farmNav.completedQuestions }}</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 3. Questions -->
+    <div class="p-8 space-y-5">
+      <div *ngFor="let question of questions"
+        class="bg-white dark:bg-[#394157] rounded-lg border border-gray-200 dark:border-[#394157] p-2">
+
+        <div class="flex justify-between items-center p-2 mb-1">
+          <div class="flex items-center gap-4">
+            <span class="text-base font-bold text-gray-900 dark:text-white">{{ question.id }}</span>
+
+            <span
+              class="px-3 py-1 bg-gray-50 dark:bg-[#272F45] text-gray-500 dark:text-gray-300 rounded-md text-sm font-medium border border-gray-100 dark:border-[#394157]">
+              {{ question.type }}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button *ngIf="question.hasPhoto" (click)="openModal(question.photoUrl || '', question.type)"
+              class="px-3 py-1.5 bg-black text-white text-xs font-medium rounded flex items-center gap-2 hover:bg-gray-800 transition">
+              <i class="fa-solid fa-eye"></i>
+              View Photo
+            </button>
+
+            <span *ngIf="question.status === 'Completed'"
+              class="px-3 py-1 bg-[#BBFFC6] text-[#246227] rounded text-sm font-medium">
+              Completed
+            </span>
+
+            <span *ngIf="question.status === 'Incomplete'"
+              class="px-3 py-1 bg-[#FFE6E0] text-[#D82C0D] rounded text-sm font-medium">
+              Incomplete
+            </span>
+          </div>
+        </div>
+
+        <div class="p-4 bg-[#F8F9FA] dark:bg-[#061E2C] rounded-[4px] mx-2 mb-2">
+          <p class="text-sm text-gray-800 dark:text-gray-300 font-medium leading-relaxed">
+            {{ question.question }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-gray-200 dark:border-[#394157] mx-8"></div>
+
+    <!-- 4. Problems -->
+    <div class="p-8">
+      <h3 *ngIf="problems.length > 0" class="text-sm font-bold text-gray-900 dark:text-white mb-6">
+        Identified Problems & Suggested Solutions ({{ problems.length.toString().padStart(2, '0') }})
+      </h3>
+
+      <div *ngIf="problems.length > 0; else noProblems" class="space-y-4">
+        <div *ngFor="let problem of problems"
+          class="bg-white dark:bg-[#394157] rounded-lg border border-gray-200 dark:border-[#394157] overflow-hidden">
+
+          <div class="flex items-start gap-2 p-5 bg-white dark:bg-[#394157]">
+            <span class="text-sm font-bold text-gray-900 dark:text-white flex-shrink-0">
+              {{ problem.id }} )
+            </span>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">
+              {{ problem.problem }}
+            </p>
+          </div>
+
+          <div class="px-5 py-5 bg-[#F8F9FA] dark:bg-[#061E2C] border-t border-gray-100 dark:border-[#394157]">
+            <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              <span class="font-bold text-gray-500 dark:text-gray-200">Solution : </span>
+              {{ problem.solution }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noProblems>
+        <div class="py-8 text-center">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            --No problems have been reported--
+          </p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL -->
 <div *ngIf="isModalOpen" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
-    (click)="closeModal()">
+  (click)="closeModal()">
 
-    <div (click)="$event.stopPropagation()"
-        class="bg-white dark:bg-gray-800 rounded-[10px] w-[700px] h-[700px] p-6 relative flex items-center justify-center shadow-2xl">
+  <div (click)="$event.stopPropagation()"
+    class="bg-white dark:bg-gray-800 rounded-[10px] w-[700px] h-[700px] p-6 relative flex items-center justify-center shadow-2xl">
 
-        <div class="absolute top-6 left-0 w-full text-center">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                {{ modalTitle }}
-            </h2>
-        </div>
-
-        <div
-            class="bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-[8px] w-[600px] h-[600px] flex items-center justify-center overflow-hidden relative">
-            <img [src]="modalImage" [style.transform]="'scale(' + scale + ')'"
-                class="max-w-[550px] max-h-[550px] object-contain transition-transform duration-200" />
-
-            <div class="absolute right-4 bottom-4 flex flex-col gap-2">
-                <button (click)="zoomOut()"
-                    class="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow text-xl text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 flex items-center justify-center">
-                    −
-                </button>
-                <button (click)="zoomIn()"
-                    class="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow text-xl text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 flex items-center justify-center">
-                    +
-                </button>
-            </div>
-        </div>
-
-        <button (click)="closeModal()"
-            class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white text-2xl w-8 h-8 flex items-center justify-center">
-            ✕
-        </button>
+    <div class="absolute top-6 left-0 w-full text-center">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        Uploaded Photo
+      </h2>
     </div>
+
+    <div
+      class="bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 top-3 rounded-[8px] w-[600px] h-[600px] flex items-center justify-center overflow-hidden relative">
+      <img [src]="modalImage" [style.transform]="'scale(' + scale + ')'"
+        class="max-w-[550px] max-h-[550px] object-contain transition-transform duration-200" />
+
+      <div class="absolute right-4 bottom-4 flex flex-col gap-2">
+        <button (click)="zoomOut()"
+          class="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow text-xl text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 flex items-center justify-center">
+          −
+        </button>
+        <button (click)="zoomIn()"
+          class="w-10 h-10 rounded bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 shadow text-xl text-gray-600 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-500 flex items-center justify-center">
+          +
+        </button>
+      </div>
+    </div>
+
+    <button (click)="closeModal()"
+      class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white text-2xl w-8 h-8 flex items-center justify-center">
+      ✕
+    </button>
+  </div>
 </div>

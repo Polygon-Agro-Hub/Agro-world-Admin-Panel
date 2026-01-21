@@ -296,4 +296,18 @@ export class GoviLinkService {
       headers
     });
   }
+
+  getFarmerClusterAudith(jobId: string){
+    const token = this.tokenService.getToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.get<any>(
+      `${this.apiUrl}get-field-audit-history-cluster-response/${jobId}`,
+      {headers}
+    );
+  }
+
 }

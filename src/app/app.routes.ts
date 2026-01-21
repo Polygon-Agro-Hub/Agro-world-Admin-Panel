@@ -262,6 +262,8 @@ import { ReceivedCashTodayComponent } from './application/distribution-hub/polyg
 import { CenterHomeDeliveryOrdersComponent } from './application/distribution-hub/polygon-centers-dashboard/center-home-delivery-orders/center-home-delivery-orders.component';
 import { ViewGoviLinkJobsFarmerAuditResponseComponent } from './application/govi-link/view-govi-link-jobs-farmer-audit-response/view-govi-link-jobs-farmer-audit-response.component';
 import { GoviLinkJobsServiceRequestResponseComponent } from './application/govi-link/govi-link-jobs-service-request-response/govi-link-jobs-service-request-response.component';
+import { ViewJobHistoryFarmerClusterAuditResponseComponent } from './application/govi-link/view-job-history-farmer-cluster-audit-response/view-job-history-farmer-cluster-audit-response.component';
+import { ViewPikupCashRevenueComponent } from './application/distribution-hub/polygon-centers-dashboard/view-pikup-cash-revenue/view-pikup-cash-revenue.component';
 
 export const routes: Routes = [
   {
@@ -718,6 +720,16 @@ export const routes: Routes = [
 
                   {
                     path: 'view-Govicare-approved-requests/audit-personal-infor/:requestId',
+                    component: AuditPersonalInfoComponent,
+                  },
+                  {
+                    //for edit define shares
+                    path: 'view-Govicare-approved-requests/edit-audit-personal-infor/:requestId',
+                    component: AuditPersonalInfoComponent,
+                  },
+                  {
+                    //for approve define shares
+                    path: 'view-Govicare-approved-requests/approve-audit-personal-infor/:requestId',
                     component: AuditPersonalInfoComponent,
                   },
 
@@ -1860,10 +1872,13 @@ export const routes: Routes = [
                     path: 'received-cash-today/:id',
                     component: ReceivedCashTodayComponent
                   },
-
                   {
                     path: 'home-delivery-order-records',
                     component: CenterHomeDeliveryOrdersComponent,
+                  },
+                  {
+                    path: 'view-pikup-chash-revenue/:id',
+                    component:ViewPikupCashRevenueComponent
                   },
                 ],
               },
@@ -1928,13 +1943,17 @@ export const routes: Routes = [
                 component: ViewJobHistoryComponent,
               },
               {
-                path: 'view-govi-link-jobs-farmer-audit-response/:id',
+                path: 'view-govi-link-jobs-farmer-audit-response',
                 component: ViewGoviLinkJobsFarmerAuditResponseComponent,
               },
 
               {
-                path: 'view-job-history/service-request-response',
+                path: 'view-govi-link-jobs-service-request-response',
                 component: GoviLinkJobsServiceRequestResponseComponent,
+              },
+              {
+                path: 'view-govi-link-jobs-farmer-cluster-audit-response',
+                component: ViewJobHistoryFarmerClusterAuditResponseComponent,
               },
             ],
           },

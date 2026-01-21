@@ -947,6 +947,24 @@ export class FinanceService {
       }
     );
   }
+
+  approveRequest(
+    id: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.patch<any>(
+      `${this.apiUrl}finance/approve-request`,
+      {
+        reqId: id,
+      },
+      {
+        headers
+      }
+    );
+  }
 }
 
 

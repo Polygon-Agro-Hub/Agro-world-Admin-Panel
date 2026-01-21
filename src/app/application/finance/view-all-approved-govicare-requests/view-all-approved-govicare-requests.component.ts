@@ -276,6 +276,6 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   }
 
   auditResults(requestId: number) {
-    this.router.navigate(['finance/action/finance-govicapital/view-Govicare-approved-requests/audit-personal-infor', String(requestId)]);
+    this.router.navigate(['finance/action/finance-govicapital/view-Govicare-approved-requests/edit-audit-personal-infor', String(requestId)]);
   }
 }

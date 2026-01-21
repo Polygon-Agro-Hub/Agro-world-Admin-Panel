@@ -270,7 +270,7 @@ export class GoviLinkService {
     );
   }
 
-  getFieldAudit(jobId: string, farmId: string) {
+  getFieldAudit(jobId: string) {
     const token = this.tokenService.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -278,7 +278,7 @@ export class GoviLinkService {
     });
 
     return this.http.get<any>(
-      `${this.apiUrl}get-field-audit-history-response/${jobId}/${farmId}`,
+      `${this.apiUrl}get-field-audit-history-response/${jobId}`,
       { headers }
     );
   }

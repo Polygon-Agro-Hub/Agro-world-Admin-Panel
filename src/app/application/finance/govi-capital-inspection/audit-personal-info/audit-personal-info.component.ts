@@ -57,6 +57,7 @@ export class AuditPersonalInfoComponent implements OnInit {
   maximumShare!: number;
 
   sharesData: Partial<Shares> = {};
+  devideRequestObj: Partial<DevideRequest> = {};
   lastSegment!: string;
 
   constructor(
@@ -74,7 +75,7 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.reqId = Number(requestId);
 
     const segments = this.route.snapshot.url;
-    this.lastSegment = segments[segments.length - 3]?.path;
+    this.lastSegment = segments[segments.length - 2]?.path;
 
     console.log('Last route part:', this.lastSegment);
 
@@ -99,7 +100,16 @@ export class AuditPersonalInfoComponent implements OnInit {
         console.log('sharesData', this.sharesData);
         console.log(res.data);
 
-        console.log(this.inspectionArray);
+        if (this.sharesData.devideData) {
+          this.minimumShare = this.sharesData.devideData.minShare;
+          this.maximumShare = this.sharesData.devideData.maxShare;
+          this.numShares = this.sharesData.devideData.defineShares;
+          this.shareValue = Number(this.sharesData.totalValue) / this.numShares;
+        }
+
+        console.log('--------------------------------------');
+
+        console.log(res.shares.divideData);
 
         this.isLoading = false;
       });
@@ -133,8 +143,33 @@ export class AuditPersonalInfoComponent implements OnInit {
   }
 
   ApproveRequest() {
-    this.approvePopUpOpen = false;
-    this.openDevideSharesPopUp = true;
+    this.financeService.approveRequest(this.reqId).subscribe(
+      (res)=>{
+        if(res.status){
+          Swal.fire({
+            title: 'Success',
+            text: `Request Approved Successfully`,
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+          this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests']);
+        }else if(!res.status){ 
+          Swal.fire({
+            title: 'error',
+            text: `Failed to Approve the Request`,
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      }
+    )
+    // this.openDevideSharesPopUp = true;
   }
 
   RejectRequest() {
@@ -189,20 +224,19 @@ export class AuditPersonalInfoComponent implements OnInit {
 
     this.isLoading = true;
 
-    let devideRequestObj: Partial<DevideRequest> = {};
 
-    devideRequestObj.totalValue = this.sharesData.totalValue;
-    devideRequestObj.numShares = this.numShares;
-    devideRequestObj.shareValue = Number(this.shareValue.toFixed(2));
-    devideRequestObj.minimumShare = this.minimumShare;
-    devideRequestObj.maximumShare = this.maximumShare;
-    devideRequestObj.id = this.sharesData.id;
-    devideRequestObj.jobId = this.sharesData.jobId;
-    devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime;
-    devideRequestObj.empId = this.sharesData.empId;
-    console.log('devideRequestObj', devideRequestObj);
+    this.devideRequestObj.totalValue = this.sharesData.totalValue;
+    this.devideRequestObj.numShares = this.numShares;
+    this.devideRequestObj.shareValue = Number(this.shareValue.toFixed(2));
+    this.devideRequestObj.minimumShare = this.minimumShare;
+    this.devideRequestObj.maximumShare = this.maximumShare;
+    this.devideRequestObj.id = this.sharesData.id;
+    this.devideRequestObj.jobId = this.sharesData.jobId;
+    this.devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime;
+    this.devideRequestObj.empId = this.sharesData.empId;
+    console.log('devideRequestObj', this.devideRequestObj);
 
-    this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
+    this.financeService.devideSharesRequest(this.devideRequestObj).subscribe((res: any) => {
 
       if (res.status) {
         Swal.fire({
@@ -245,8 +279,9 @@ export class AuditPersonalInfoComponent implements OnInit {
     }
   }
 
-  devideSharesPopUp() {
+  devideSharesPopUp(devideType: 'Create' | 'Edit') {
     this.openDevideSharesPopUp = true;
+    this.devideRequestObj.devideType = devideType;
   }
 
   editSharesPopUp() {
@@ -304,6 +339,7 @@ class DevideRequest {
   shareValue!: number;
   minimumShare!: number;
   maximumShare!: number;
+  devideType: 'Create' | 'Edit' = 'Create';
 }
 
 interface IPersonal {

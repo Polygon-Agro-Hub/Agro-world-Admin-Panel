@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-govi-link-jobs-farmer-audit-response',
@@ -11,7 +12,7 @@ import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
   styleUrl: './view-govi-link-jobs-farmer-audit-response.component.css',
 })
 export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
-  constructor(private service: GoviLinkService) {}
+  constructor(private service: GoviLinkService, private router: Router, private route: ActivatedRoute) {}
 
   isLoading = false;
   isModalOpen = false;
@@ -26,26 +27,42 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
     certificate: '',
   };
 
+  jobId!: string;
+
   questions: Question[] = [];
   problems: Problem[] = [];
 
   ngOnInit(): void {
-    this.loadData();
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.jobId = queryParams['jobId'] || '';
+      console.log('jobId', this.jobId);
+  
+      this.loadData();
+    });
   }
 
   loadData() {
     this.isLoading = true;
 
     const jobId = 'FA20251203003';
-    const farmId = '197';
 
-    this.service.getFieldAudit(jobId, farmId).subscribe({
+    this.service.getFieldAudit(jobId).subscribe({
       next: (res) => {
         const api = res.data;
 
         this.jobData.jobId = api.jobId;
-        this.jobData.farmId = api.farmId;
-        this.jobData.certificate = api.srtName;
+        this.jobData.farmId = api.regCode;
+        
+        const payType = (api.payType || '').toLowerCase();
+        const cropName = api.cropNameEnglish?.trim();
+        if (payType === 'farm' || !cropName) {
+          this.jobData.certificate = `${api.srtName} for farm`;
+        } else if (payType === 'crop' && cropName) {
+          this.jobData.certificate = `${api.srtName} for ${cropName}`;
+        } else {
+          this.jobData.certificate = api.srtName;
+        }
 
         this.questions = api.data.map((q: ApiItem, index: number) => {
           const isPhoto = q.type.toLowerCase().includes('photo');

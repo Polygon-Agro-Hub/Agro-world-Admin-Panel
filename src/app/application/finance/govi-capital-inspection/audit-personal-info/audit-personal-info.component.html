@@ -22,7 +22,7 @@
     <div class="flex flex-col">
       <span class="text-[#7E7E7E]">Audited Date :</span><span>{{sharesData.reqCahangeTime | date: 'MMMM d, yyyy'}}</span>
     </div>
-    <div *ngIf="lastSegment === 'viewAll-Govicare-AuditedRequests' " class="flex flex-col gap-4">
+    <div *ngIf="lastSegment === 'approve-audit-personal-infor'" class="flex flex-col gap-4">
       <div class="flex gap-4">
         <button 
         *ngIf=" permissionService.hasPermission('Approve govicare request') || tokenService.getUserDetails().role === '1'"
@@ -40,19 +40,19 @@
       </div>
     </div>
 
-    <div *ngIf="lastSegment === 'view-Govicare-approved-requests' " class="flex flex-col gap-4">
+    <div *ngIf="lastSegment === 'edit-audit-personal-infor'" class="flex flex-col gap-4">
       <div *ngIf="sharesData.devideData === null" class="flex gap-4">
         <button
           class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
-          (click)="devideSharesPopUp()">
+          (click)="devideSharesPopUp('Create')">
           Divide Shares
         </button>
       </div>
 
-      <div *ngIf="sharesData.devideData" class="flex gap-4">
+      <div *ngIf="sharesData.devideData !== null" class="flex gap-4">
         <button
           class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
-          (click)="devideSharesPopUp()">
+          (click)="devideSharesPopUp('Edit')">
           Edit Shares
         </button>
       </div>
@@ -280,8 +280,7 @@
 </div>
 
 
-<div *ngIf="openDevideSharesPopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-(click)="openDevideSharesPopUp = false">
+<div *ngIf="openDevideSharesPopUp" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 pt-4 pb-10 w-1/4">
 
     <div class="px-4">

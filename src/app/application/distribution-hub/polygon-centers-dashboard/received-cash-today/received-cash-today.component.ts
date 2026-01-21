@@ -97,9 +97,17 @@ export class ReceivedCashTodayComponent implements OnInit {
       queryParams: { name, regCode }
     });
   }
+
+  
   
   viewDeliveryRevenue(): void {
-    console.log('View Delivery Revenue clicked');
+    const id = this.centerObj.centerId;
+    const name = this.centerObj.centerName;
+    const regCode = this.centerObj.centerRegCode;
+    
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/view-delivery-revenue/${id}`], {
+      queryParams: { name, regCode }
+    });
   }
 }
 

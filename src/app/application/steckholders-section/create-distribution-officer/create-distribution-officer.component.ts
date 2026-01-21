@@ -908,7 +908,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
         this.collectionManagerData = res;
         // Convert to dropdown options format
         this.managerOptions = this.collectionManagerData.map(manager => ({
-          label: manager.firstNameEnglish + " " + manager.lastNameEnglish,
+          label: manager.empId + " - " + manager.firstNameEnglish + " " + manager.lastNameEnglish,
           value: manager.id
         }));
       });
@@ -2157,6 +2157,7 @@ class DistributionCenter {
 
 class CollectionManager {
   id!: number;
+  empId!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
 }

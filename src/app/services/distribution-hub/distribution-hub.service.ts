@@ -862,6 +862,14 @@ export class DistributionHubService {
       { headers, params }
     );
   }
+
+  getHomeDeliveryTracking(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<any>(`${this.apiUrl}distribution/get-home-delivery-tracking/${id}`, { headers });
+  }
 }
 
 

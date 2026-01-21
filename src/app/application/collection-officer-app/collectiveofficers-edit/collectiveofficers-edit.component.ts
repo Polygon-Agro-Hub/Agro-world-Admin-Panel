@@ -1062,7 +1062,7 @@ export class CollectiveofficersEditComponent {
         .subscribe((res) => {
           this.collectionManagerData = res;
           this.managerOptions = this.collectionManagerData.map(manager => ({
-            label: manager.firstNameEnglish,
+            label: manager.empId + " - " + manager.firstNameEnglish,
             value: manager.id
           }));
         });
@@ -1501,6 +1501,7 @@ class CollectionCenter {
 
 class CollectionManager {
   id!: number;
+  empId!: string;
   firstNameEnglish!: string;
 }
 

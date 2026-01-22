@@ -23,6 +23,8 @@ export class PaymentHistoryAddNewComponent {
   isUploading: boolean = false;
   uploadedFileNames: Set<string> = new Set(); // Track uploaded file names
 
+  readonly MAX_REFERENCE_LENGTH = 50;
+
   receiverOptions = [
     { label: 'Farmers', value: 'Farmers' }
   ];
@@ -39,6 +41,7 @@ export class PaymentHistoryAddNewComponent {
       this.amount &&
       parseFloat(this.amount.replace(/,/g, '')) > 0 &&
       this.paymentReference.trim() &&
+      this.paymentReference.length <= this.MAX_REFERENCE_LENGTH &&
       this.uploadedFile
     );
   }
@@ -166,6 +169,8 @@ export class PaymentHistoryAddNewComponent {
 
     if (!this.paymentReference.trim()) {
       missingFields.push('Payment Reference');
+    } else if (this.paymentReference.length > this.MAX_REFERENCE_LENGTH) {
+      missingFields.push(`Payment Reference (exceeds ${this.MAX_REFERENCE_LENGTH} characters)`);
     }
 
     if (!this.uploadedFile) {
@@ -354,22 +359,61 @@ export class PaymentHistoryAddNewComponent {
   }
 
   onPaymentReferenceInput(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const cursorPosition = input.selectionStart;
-  
-  // If the input starts with a space, remove leading spaces
-  if (input.value.startsWith(' ')) {
-    // Remove all leading spaces
-    const newValue = input.value.replace(/^\s+/, '');
+    const input = event.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart;
     
-    // Update the model
-    this.paymentReference = newValue;
+    // If the input starts with a space, remove leading spaces
+    if (input.value.startsWith(' ')) {
+      // Remove all leading spaces
+      const newValue = input.value.replace(/^\s+/, '');
+      
+      // Update the model
+      this.paymentReference = newValue;
+      
+      // Restore cursor position (adjust for removed spaces)
+      setTimeout(() => {
+        const newCursorPosition = Math.max(0, (cursorPosition || 0) - (input.value.length - newValue.length));
+        input.setSelectionRange(newCursorPosition, newCursorPosition);
+      });
+      return;
+    }
     
-    // Restore cursor position (adjust for removed spaces)
-    setTimeout(() => {
-      const newCursorPosition = Math.max(0, (cursorPosition || 0) - (input.value.length - newValue.length));
-      input.setSelectionRange(newCursorPosition, newCursorPosition);
+    // Check if character limit is exceeded
+    if (input.value.length > this.MAX_REFERENCE_LENGTH) {
+      // Truncate to max length
+      const truncatedValue = input.value.substring(0, this.MAX_REFERENCE_LENGTH);
+      
+      // Update the model
+      this.paymentReference = truncatedValue;
+      
+      // Show warning if user keeps typing beyond limit
+      if (input.value.length > this.MAX_REFERENCE_LENGTH + 5) { // Show warning after 5 extra characters
+        this.showCharacterLimitWarning();
+      }
+    }
+  }
+
+  private showCharacterLimitWarning(): void {
+    // You can show a small notification or change border color
+    const inputElement = document.querySelector('input[type="text"][(ngModel)]="paymentReference"') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.classList.add('border-red-500');
+      setTimeout(() => {
+        inputElement.classList.remove('border-red-500');
+      }, 2000);
+    }
+    
+    // Or show a toast notification
+    Swal.fire({
+      icon: 'warning',
+      title: 'Character Limit Exceeded',
+      text: `Payment reference cannot exceed ${this.MAX_REFERENCE_LENGTH} characters`,
+      timer: 2000,
+      showConfirmButton: false,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     });
   }
-}
 }

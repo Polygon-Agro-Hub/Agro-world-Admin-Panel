@@ -50,7 +50,12 @@
 <div>
   <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
     Payment Reference <span class="text-gray-700 dark:text-textDark">*</span>
-    <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">
+    <span 
+      class="text-xs ml-2"
+      [ngClass]="{
+        'text-red-500': paymentReference.length > MAX_REFERENCE_LENGTH,
+        'text-gray-500 dark:text-gray-400': paymentReference.length <= MAX_REFERENCE_LENGTH
+      }">
       ({{ paymentReference.length || 0 }}/{{ MAX_REFERENCE_LENGTH }} characters)
     </span>
   </label>

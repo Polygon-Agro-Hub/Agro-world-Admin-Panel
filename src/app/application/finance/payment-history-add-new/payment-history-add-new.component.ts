@@ -138,7 +138,7 @@ export class PaymentHistoryAddNewComponent {
     // Show success notification
     Swal.fire({
       icon: 'success',
-      title: 'File Selected',
+      title: 'Confirm Upload',
       text: `${file.name} has been selected successfully`,
       timer: 2000,
       showConfirmButton: false,
@@ -203,6 +203,30 @@ export class PaymentHistoryAddNewComponent {
       return;
     }
 
+    // Confirmation dialog before proceeding with upload
+    Swal.fire({
+      icon: 'question',
+      title: 'Confirm Upload',
+      html: 'Are you sure you want to upload this file?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, upload',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#3B82F6',
+      cancelButtonColor: '#6B7280',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 hover:bg-blue-600',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.proceedWithUpload();
+      }
+    });
+  }
+
+  private proceedWithUpload(): void {
     // Show loading indicator
     Swal.fire({
       title: 'Uploading...',

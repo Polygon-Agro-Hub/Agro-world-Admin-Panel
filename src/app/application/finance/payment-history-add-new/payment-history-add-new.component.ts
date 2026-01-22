@@ -352,4 +352,24 @@ export class PaymentHistoryAddNewComponent {
       }
     });
   }
+
+  onPaymentReferenceInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const cursorPosition = input.selectionStart;
+  
+  // If the input starts with a space, remove leading spaces
+  if (input.value.startsWith(' ')) {
+    // Remove all leading spaces
+    const newValue = input.value.replace(/^\s+/, '');
+    
+    // Update the model
+    this.paymentReference = newValue;
+    
+    // Restore cursor position (adjust for removed spaces)
+    setTimeout(() => {
+      const newCursorPosition = Math.max(0, (cursorPosition || 0) - (input.value.length - newValue.length));
+      input.setSelectionRange(newCursorPosition, newCursorPosition);
+    });
+  }
+}
 }

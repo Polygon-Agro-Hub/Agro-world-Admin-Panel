@@ -862,6 +862,38 @@ export class DistributionHubService {
       { headers, params }
     );
   }
+
+  getDriverCashRevenue(
+  id: string, 
+  search?: string, 
+  filterDate?: string
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let params = new HttpParams();
+  if (search) {
+    params = params.append('search', search);
+  }
+  if (filterDate) {
+    params = params.append('filterDate', filterDate);
+  }
+
+  return this.http.get<any>(
+    `${this.apiUrl}distribution/get-driver-cash-revenue/${id}`,
+    { headers, params }
+  );
+}
+
+  getHomeDeliveryTracking(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<any>(`${this.apiUrl}distribution/get-home-delivery-tracking/${id}`, { headers });
+  }
 }
 
 

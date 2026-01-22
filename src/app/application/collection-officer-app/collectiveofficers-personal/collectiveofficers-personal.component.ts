@@ -767,7 +767,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       .subscribe((res) => {
         this.collectionManagerData = res;
         this.managerOptions = this.collectionManagerData.map(manager => ({
-          label: manager.firstNameEnglish + " " + manager.lastNameEnglish,
+          label: manager.empId + " - " + manager.firstNameEnglish + " " + manager.lastNameEnglish,
           value: manager.id
         }));
       });
@@ -1537,6 +1537,7 @@ class CollectionCenter {
 
 class CollectionManager {
   id!: number;
+  empId!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
 }

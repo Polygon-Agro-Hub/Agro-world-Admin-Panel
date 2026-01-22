@@ -373,7 +373,7 @@ export class AddFiealdOfficerComponent implements OnInit {
         this.fiealdManagerData = res;
         // Convert to dropdown options format
         this.managerOptions = this.fiealdManagerData.map((manager) => ({
-          label: manager.firstName + ' ' + manager.lastName,
+          label: manager.empId + " - " +  manager.firstName + ' ' + manager.lastName,
           value: manager.id,
         }));
       });
@@ -1774,6 +1774,7 @@ class Company {
 
 class fiealdManager {
   id!: number;
+  empId!: string;
   firstName!: string;
   lastName!: string;
 }

@@ -1,0 +1,146 @@
+<div *ngIf="visible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl
+           w-full max-w-3xl mx-4 max-h-[90vh]
+           overflow-hidden flex flex-col">
+        <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+            <h2 class="text-xl font-semibold text-center text-textLight dark:text-textDark">
+                Order ID : {{ trackingDetails?.centerDetails?.invNo || 'Loading...' }}
+            </h2>
+        </div>
+
+        <!-- ================= CONTENT ================= -->
+        <div class="flex-1 overflow-y-auto">
+
+            <!-- Loading -->
+            <div *ngIf="loading" class="p-12 text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                <p class="text-textLight dark:text-textDark">
+                    Loading tracking details...
+                </p>
+            </div>
+
+            <!-- Error -->
+            <div *ngIf="error && !loading" class="p-8 text-center">
+                <p class="text-red-500">{{ error }}</p>
+            </div>
+
+            <!-- ================= TIMELINE ================= -->
+            <div *ngIf="!loading && !error && trackingDetails" class="p-8">
+                <div class="relative">
+            
+                    <ng-container *ngIf="steps?.length; else noSteps">
+            
+                        <div *ngFor="let step of steps; let idx = index"
+                            class="relative flex items-start mb-8 last:mb-0">
+            
+                            <!-- Vertical Line connecting to next step (not on last step) -->
+                            <div *ngIf="idx < steps.length - 1" 
+                                 class="absolute left-4 top-8 w-0.5 bg-blue-400" 
+                                 style="height: calc(100% + 2rem);"></div>
+            
+                            <!-- Step Number -->
+                            <div
+                                class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                                {{ idx + 1 }}
+                            </div>
+            
+                            <!-- Step Content -->
+                            <div class="ml-6 text-gray-800 dark:text-gray-200 leading-relaxed">
+            
+                                <!-- OUT FOR DELIVERY -->
+                                <ng-container *ngIf="step.type === 'out' && (trackingDetails?.centerDetails?.centerId === null)">
+                                    Marked as Out For Delivery at {{ step.payload.outDlvrDate | date:'h:mm a on MMMM d, y'}} by {{ step.payload.empId}}
+                                </ng-container>
+            
+                                <ng-container *ngIf="step.type === 'out' && trackingDetails?.centerDetails?.centerId !== null">
+                                    Marked as Ready to Pickup at {{ step.payload.outDlvrDate | date:'h:mm a on MMMM d, y' }} by {{ step.payload.empId}}
+                                </ng-container>
+            
+                                <ng-container *ngIf="step.type === 'pickedup' && trackingDetails?.centerDetails?.centerId !== null ">
+                                    Customer picked up the order at {{ step.payload.deliveredTime | date:'h:mm a on MMMM d, y' }}
+                                </ng-container>
+            
+                                <!-- COLLECTED -->
+                                <ng-container *ngIf="step.type === 'collected'">
+                                    {{ step.payload.empId }} – {{ step.payload.driverName }} – {{
+                                        step.payload.driverPhone }} driver collected the order from the centre
+                                    at
+                                    {{ formatTime(step.payload.collectTime) }} on {{
+                                    formatDate(step.payload.collectTime)
+                                    }}.
+                                </ng-container>
+            
+                                <!-- STARTED -->
+                                <ng-container *ngIf="step.type === 'started'">
+                                    Driver has started the journey at {{ formatTime(step.payload.startTime) }} on {{
+                                    formatDate(step.payload.startTime) }}.
+                                </ng-container>
+            
+                                <!-- HOLD -->
+                                <ng-container *ngIf="step.type === 'hold'">
+                                    Driver marked this order's status as Hold at {{ formatTime(step.payload.holdTime) }} on
+                                    {{ formatDate(step.payload.holdTime) }}.
+                                    <div class="mt-1  dark:text-gray-400">
+                                        Reason:
+                                        <span>{{ step.payload.holdReason }}</span>
+                                    </div>
+                                </ng-container>
+            
+                                <!-- RESTART -->
+                                <ng-container *ngIf="step.type === 'restart'">
+                                    Driver restarted the journey at
+                                    {{ formatTime(step.payload.restartedTime) }}
+                                    on {{ formatDate(step.payload.restartedTime) }}.
+                                </ng-container>
+            
+                                <!-- RETURN -->
+                                <ng-container *ngIf="step.type === 'return'">
+                                    Driver marked this order's status as Return at {{
+                                    formatTime(step.payload.returnTime) }} on {{ formatDate(step.payload.returnTime) }}.
+                                    <div class="mt-1 dark:text-gray-400">
+                                        Reason:
+                                       <ng-container class="font-semibold"
+                                            *ngIf="step.payload.returnReson === 'Other'; else normalReturnReason">
+                                            <span>{{ step.payload.returnNote }}</span>
+                                        </ng-container>
+                                        <ng-template #normalReturnReason class="font-semibold"> 
+                                            <span>{{ step.payload.returnReson }}</span>
+                                        </ng-template>
+                                    </div>
+                                </ng-container>
+            
+                                <!-- DELIVERED -->
+                                <ng-container *ngIf="step.type === 'delivered'">
+                                    Driver delivered the order at {{ formatTime(step.payload.completeTime) }} on {{
+                                    formatDate(step.payload.completeTime) }}.
+                                </ng-container>
+            
+                                <ng-container *ngIf="step.type === 'return recieved'">
+                                    The returned order has been received at {{ formatTime(step.payload.returnRecivedTime) }} on {{
+                                    formatDate(step.payload.returnRecivedTime) }}.
+                                </ng-container>
+            
+                            </div>
+                        </div>
+            
+                    </ng-container>
+            
+                    <ng-template #noSteps>
+                        <p class="text-center text-gray-600 dark:text-gray-400">
+                            No timeline steps available.
+                        </p>
+                    </ng-template>
+            
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= FOOTER ================= -->
+        <div class="border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-center">
+            <button (click)="close()" class="px-8 py-2.5 rounded-lg font-medium transition-colors
+          text-[#6B7D8C] border  border-[#6B7D8C]">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>

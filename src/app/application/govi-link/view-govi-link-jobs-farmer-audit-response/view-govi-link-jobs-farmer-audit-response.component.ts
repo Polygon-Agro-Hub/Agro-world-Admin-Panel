@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-view-govi-link-jobs-farmer-audit-response',
@@ -11,7 +12,7 @@ import { GoviLinkService } from '../../../services/govi-link/govi-link.service';
   styleUrl: './view-govi-link-jobs-farmer-audit-response.component.css',
 })
 export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
-  constructor(private service: GoviLinkService) {}
+  constructor(private service: GoviLinkService, private router: Router, private route: ActivatedRoute) {}
 
   isLoading = false;
   isModalOpen = false;
@@ -26,11 +27,19 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
     certificate: '',
   };
 
+  jobId!: string;
+
   questions: Question[] = [];
   problems: Problem[] = [];
 
   ngOnInit(): void {
-    this.loadData();
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.jobId = queryParams['jobId'] || '';
+      console.log('jobId', this.jobId);
+  
+      this.loadData();
+    });
   }
 
   loadData() {

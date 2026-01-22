@@ -127,7 +127,7 @@
   
                 <!-- Approved Time -->
                 <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                  {{ request.reqCahangeTime | date:'MMMM dd, yyyy'}}
+                  {{ request.reqCahangeTime ? (request.reqCahangeTime | date:'MMMM dd, yyyy') : '--' }}
                 </td>
   
                 <!-- NIC Front Image -->
@@ -263,7 +263,7 @@
           <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Extent</span>
           <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
           <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
-            {{ selectedRequest?.Extent }}
+            {{ selectedRequest?.Extent }} Acres
           </span>
         </div>
   

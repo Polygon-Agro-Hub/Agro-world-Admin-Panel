@@ -34,6 +34,15 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
   hasData: boolean = false;
   serviceRequestResponse: Partial<Response> = {}
 
+  isModalOpen = false;
+  modalImage = '';
+  modalTitle = '';
+  scale = 1;
+
+  questions: Question[] = [];
+  problems: Problem[] = [];
+
+
   constructor(
     private router: Router,
     private goviLinkService: GoviLinkService,
@@ -62,7 +71,13 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
       (response) => {
         this.isLoading = false;
         if (response.success) {
-          this.serviceRequestResponse = response.data
+          console.log('response', response)
+          this.serviceRequestResponse = response.data.auditDetails
+          this.questions = response.data.advices
+          this.problems = response.data.suggestions
+          console.log('serviceRequestResponse', this.serviceRequestResponse)
+          console.log('questions', this.questions)
+          console.log('problems', this.problems)
           this.totalItems = response.data.length;
           this.hasData = this.totalItems > 0;
         } else {
@@ -77,10 +92,64 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
     );
   }
 
+
+  onBack() {
+    history.back();
+  }
+
+  openModal(imageUrl: string) {
+    this.modalImage = imageUrl;
+    this.isModalOpen = true;
+    this.scale = 1;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  zoomIn() {
+    if (this.scale < 3) this.scale += 0.2;
+  }
+
+  zoomOut() {
+    if (this.scale > 0.5) this.scale -= 0.2;
+  }
+
   
 
 }
 
-class Response {
+interface ApiItem {
+  qEnglish: string;
+  type: string;
+  uploadImage: string | null;
+  officerTickResult: number;
+  problem: string | null;
+  solution: string | null;
+}
 
+interface Question {
+  id: string;
+  farmerFeedback: string;
+  advice: string;
+  image: string;
+  type: string;
+  question: string;
+  status: 'Completed' | 'Incomplete';
+  hasPhoto: boolean;
+  photoUrl?: string;
+}
+
+interface Problem {
+  id: number;
+  jobId: string;
+  problem: string;
+  solution: string;
+}
+
+class Response {
+  jobId!: string;
+  farmCode!: string;
+  completedQuestions!: string;
+  serviceName!: string;
 }

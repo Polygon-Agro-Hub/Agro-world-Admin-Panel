@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { DistributionHubService } from '../../../../services/distribution-hub/distribution-hub.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
+import { HomeDeliveryViewPopupComponent } from "../home-delivery-view-popup/home-delivery-view-popup.component";
 
 @Component({
   selector: 'app-center-home-delivery-orders',
@@ -16,8 +17,8 @@ import { CalendarModule } from 'primeng/calendar';
     DropdownModule,
     FormsModule,
     CalendarModule,
-    
-  ],
+    HomeDeliveryViewPopupComponent
+],
   templateUrl: './center-home-delivery-orders.component.html',
   styleUrl: './center-home-delivery-orders.component.css'
 })

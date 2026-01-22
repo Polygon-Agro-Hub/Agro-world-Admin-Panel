@@ -11,7 +11,7 @@
     <!-- Main Container -->
     <div class="bg-white dark:bg-[#272F45] rounded-lg border border-gray-200 dark:border-[#394157] shadow-sm">
 
-        <!-- ================= HEADER (IMPROVED) ================= -->
+        <!-- HEADER (IMPROVED) -->
         <div class="p-6 bg-[#F8F9FA] dark:bg-[#061E2C] border-b border-gray-200 dark:border-[#394157] rounded-t-lg">
             <div class="flex justify-between items-start">
 
@@ -42,7 +42,7 @@
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
                         Certificate :
                         <span class="font-bold text-gray-900 dark:text-white">
-                            {{ jobData.certificate }} 
+                            {{ jobData.certificate }}
                         </span>
                     </p>
                 </div>
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <!-- ================= QUESTIONS ================= -->
+        <!-- QUESTIONS -->
         <div class="p-6 space-y-4 dark:bg-[#061E2C]">
 
             <div *ngFor="let question of questions"
@@ -102,7 +102,7 @@
         <!-- Divider -->
         <div class="border-t border-gray-200 dark:border-[#394157] mx-6"></div>
 
-        <!-- ================= PROBLEMS ================= -->
+        <!-- PROBLEMS -->
         <div class="p-6">
             <h3 class="text-base font-bold text-gray-900 dark:text-white mb-6">
                 Identified Problems & Suggested Solutions ({{ problems.length.toString().padStart(2, '0') }})
@@ -140,7 +140,7 @@
     </div>
 </div>
 
-<!-- ================= MODAL (unchanged logic, styled) ================= -->
+<!-- MODAL -->
 <div *ngIf="isModalOpen" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50"
     (click)="closeModal()">
 

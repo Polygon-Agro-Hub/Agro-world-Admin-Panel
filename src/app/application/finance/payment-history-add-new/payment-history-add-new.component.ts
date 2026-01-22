@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FinanceService } from '../../../services/finance/finance.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-payment-history-add-new',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './payment-history-add-new.component.html',
   styleUrl: './payment-history-add-new.component.css'
 })

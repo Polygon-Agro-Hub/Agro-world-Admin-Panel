@@ -17,7 +17,7 @@
           class="inline-flex h-[60px] w-full items-center justify-between rounded-lg bg-tileLight px-4 text-sm font-medium text-[#495057] transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
         >
           <div class="flex items-center">
-            <span class="ml-4 font-bold text-[#030308] dark:text-white sm:ml-8 lg:ml-24">{{
+            <span class="ml-4 font-bold text-[#030308] dark:text-white sm:ml-8 lg:ml-24 text-[18px]">{{
               centerObj.centerRegCode
             }}</span>
           </div>
@@ -31,7 +31,7 @@
           (click)="officersTargets()"
         >
           <div class="flex items-center">
-            <span class="ml-2 text-sm font-semibold text-[#292929] dark:text-white sm:ml-4 sm:text-base lg:ml-8"
+            <span class="ml-2 text-sm font-semibold text-[#292929] dark:text-white sm:ml-4 sm:text-base lg:ml-8 text-[16px]"
               >Officers & Targets</span
             >
           </div>
@@ -49,7 +49,7 @@
           (click)="driversVehicles()"
         >
           <div class="flex items-center">
-            <span class="ml-2 text-sm font-semibold text-[#292929] dark:text-white sm:ml-4 sm:text-base lg:ml-8"
+            <span class="ml-2 text-sm font-semibold text-[#292929] dark:text-white sm:ml-4 sm:text-base lg:ml-8 text[16px]"
               >Drivers & Vehicles</span
             >
           </div>
@@ -80,10 +80,10 @@
               </div>
 
               <div class="flex flex-col items-center justify-center text-center">
-                <span class="block font-semibold text-[#292929] dark:text-white"
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
                   >Order Packing</span
                 >
-                <span class="block font-semibold text-[#292929] dark:text-white"
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
                   >Progress</span
                 >
               </div>
@@ -108,10 +108,10 @@
               </div>
 
               <div class="flex flex-col items-center justify-center text-center">
-                <span class="block font-semibold text-[#292929] dark:text-white"
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
                   >Home Delivery</span
                 >
-                <span class="block font-semibold text-[#292929] dark:text-white"
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
                   >Order Records</span
                 >
               </div>
@@ -136,10 +136,10 @@
               </div>
 
               <div class="flex flex-col items-center justify-center text-center">
-                <span class="block font-semibold text-[#292929] dark:text-white"
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
                   >Pickup Order</span
                 >
-                <span class="block font-semibold text-[#292929] dark:text-white"
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
                   >Records</span
                 >
               </div>
@@ -163,11 +163,11 @@
             <span class="text-3xl font-semibold text-white sm:text-4xl"
               ><i class="fa-solid fa-coins"></i
             ></span>
-            <span class="text-lg font-semibold text-white sm:text-xl"
+            <span class="text-lg font-semibold text-white sm:text-xl text-[18px]"
               >Received Cash Today</span
             >
-            <span class="text-lg font-semibold text-white sm:text-xl">{{cashPriceObj.total_orders}} Orders</span>
-            <span class="text-xl font-semibold text-white sm:text-2xl"> Rs. {{cashPriceObj.total_price | number:'1.2-2'}}</span>
+            <span class="text-lg font-semibold text-white sm:text-xl text-[16px]">{{cashPriceObj.total_orders}} Orders</span>
+            <span class="text-xl font-semibold text-white sm:text-2xl text-[22px]"> Rs. {{cashPriceObj.total_price | number:'1.2-2'}}</span>
           </div>
           <div class="absolute bottom-3 right-3 text-white">
             <span class="mr-2 underline">View All</span>

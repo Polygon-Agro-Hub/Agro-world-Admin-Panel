@@ -308,7 +308,9 @@ export interface GoviCareRequestDetail {
   Crop: string;
   Variety: string;
   Certificate: string;
-  Extent: string;
+  Extent: number;
+  ExtentH: number;
+  ExtentP: number;
   Expected_Investment: number;
   Expected_Yield: string;
   Expected_Start_Date: string;

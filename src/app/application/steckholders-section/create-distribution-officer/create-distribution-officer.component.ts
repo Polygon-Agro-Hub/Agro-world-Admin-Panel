@@ -551,40 +551,100 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     return roleMapping[jobRole] || 'Distribution Officer';
   }
 
+//   private handleCreateError(error: any) {
+//     let errorMessage = 'An unexpected error occurred';
+
+//     if (error.error && error.error.errors) {
+//         // Handle array of errors
+//         const errors = error.error.errors;
+//         const errorMessages = [];
+
+//         // Map each error code to a user-friendly message
+//         errors.forEach((errorCode: string) => {
+//             switch (errorCode) {
+//                 case 'NIC':
+//                     errorMessages.push('The NIC number is already registered.');
+//                     break;
+//                 case 'email':
+//                     errorMessages.push('The email address is already in use.');
+//                     break;
+//                 case 'phoneNumber01':
+//                     errorMessages.push('The primary phone number is already registered.');
+//                     break;
+//                 case 'phoneNumber02':
+//                     errorMessages.push('The secondary phone number is already registered.');
+//                     break;
+//                 default:
+//                     errorMessages.push(`Error: ${errorCode}`);
+//             }
+//         });
+
+//         // Join multiple errors with line breaks
+//         errorMessage = errorMessages.join('<br>');
+//     } else if (error.error && error.error.error) {
+//         // Handle single string error (for backward compatibility)
+//         switch (error.error.error) {
+//             case 'Invalid file format or file upload error':
+//                 errorMessage = 'Invalid file format or error uploading the file.';
+//                 break;
+//             default:
+//                 errorMessage = error.error.error || 'An unexpected error occurred';
+//         }
+//     }
+
+//     this.errorMessage = errorMessage;
+//     Swal.fire({
+//         title: 'Error',
+//         html: this.errorMessage, // Use 'html' instead of 'text' for line breaks
+//         icon: 'error',
+//         customClass: {
+//             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+//             title: 'font-semibold',
+//         },
+//     });
+// }
+
   private handleCreateError(error: any) {
-    let errorMessage = 'An unexpected error occurred';
+    this.isLoading = false;
+              let errorMessage = 'An unexpected error occurred';
+              let messages: string[] = [];     
+              if (error.error && Array.isArray(error.error.errors)) {
+                messages = error.error.errors.map((err: string) => {
+                  switch (err) {
+                    case 'NIC':
+                      return 'The NIC number is already registered.';
+                    case 'email':
+                      return 'Email already exists.';
+                    case 'phoneNumber01':
+                      return 'Mobile Number 1 already exists.';
+                    case 'phoneNumber02':
+                      return 'Mobile Number 2 already exists.';
+                    default:
+                      return 'Validation error: ' + err;
+                  }
+                });
+              }
 
-    if (error.error && error.error.error) {
-      switch (error.error.error) {
-        case 'NIC already exists':
-          errorMessage = 'The NIC number is already registered.';
-          break;
-        case 'Email already exists':
-          errorMessage = 'The email address is already in use.';
-          break;
-        case 'Primary phone number already exists':
-          errorMessage = 'The primary phone number is already registered.';
-          break;
-        case 'Secondary phone number already exists':
-          errorMessage = 'The secondary phone number is already registered.';
-          break;
-        case 'Invalid file format or file upload error':
-          errorMessage = 'Invalid file format or error uploading the file.';
-          break;
-        default:
-          errorMessage = error.error.error || 'An unexpected error occurred';
-      }
+    if (messages.length > 0) {
+      errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+      messages.forEach(m => {
+        errorMessage += `<li>${m}</li>`;
+      });
+      errorMessage += '</ul></div>';
+      Swal.fire({
+        icon: 'error',
+        title: 'Duplicate Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+          confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
+        },
+      });
+      return;
     }
-
-    this.errorMessage = errorMessage;
-    Swal.fire({
-      title: 'Error', text: this.errorMessage, icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-
-    });
   }
   onCancel() {
     console.log('canceled')

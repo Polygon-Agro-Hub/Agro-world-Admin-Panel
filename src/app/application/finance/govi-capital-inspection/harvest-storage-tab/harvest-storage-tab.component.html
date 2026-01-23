@@ -1,57 +1,74 @@
 <div class="space-y-10 p-10">
 
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">01.</span>
-            Does the farmer own storage facility?
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">01. Does the farmer own storage facility?</span>
         </label>
         <input type="text" [value]="HarvestObj.hasOwnStorage == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
     </div>
 
-    <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">02.</span>
-            If not, does the farmer have access to such facility?
+    <div *ngIf="HarvestObj.hasOwnStorage == 0" class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">02. If not, does the farmer have access to such facility?</span>
         </label>
         <input type="text" [value]="HarvestObj.hasPrimaryProcessingAccess == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
     </div>
 
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">03.</span>
-            Does the farmer has access to primary processing facility?
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">{{ HarvestObj.hasOwnStorage == 0 ? '03' : '02' }}. Does the farmer has access to primary processing facility?</span>
         </label>
         <input type="text" [value]="HarvestObj.ifNotHasFacilityAccess == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
     </div>
 
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">04.</span>
-            Does farmer knows technologies for value addition of your crop?
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">{{ HarvestObj.hasOwnStorage == 0 ? '04' : '03' }}. Does farmer knows technologies for value addition of your crop?</span>
         </label>
         <input type="text" [value]="HarvestObj.knowsValueAdditionTech == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
     </div>
 
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">05.</span>
-            Does the farmer has market linkage for value added products?
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">{{ HarvestObj.hasOwnStorage == 0 ? '05' : '04' }}. Does the farmer has market linkage for value added products?</span>
         </label>
         <input type="text" [value]="HarvestObj.hasValueAddedMarketLinkage == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
     </div>
 
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">06.</span>
-            Is farmer aware about required quality standards of value added products of proposed crops?
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">{{ HarvestObj.hasOwnStorage == 0 ? '06' : '05' }}. Is farmer aware about required quality standards of value added products of proposed crops?</span>
         </label>
         <input type="text" [value]="HarvestObj.awareOfQualityStandards == 1 ? 'Yes' : 'No'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark focus:outline-none" />
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <button
+            (click)="onPreviousPage()"
+            [disabled]="currentPage === 1"
+            class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        
+        <span class="text-sm font-medium text-gray-700 dark:text-textDark">
+            Page [ {{ currentPage }} / {{ totalPages }} ]
+        </span>
+        
+        <button
+            (click)="onNextPage()"
+            [disabled]="currentPage === totalPages"
+            class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
     </div>
 
 </div>

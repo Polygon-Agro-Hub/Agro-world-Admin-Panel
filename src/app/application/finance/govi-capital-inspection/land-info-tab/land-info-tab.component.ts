@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -11,6 +11,10 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class LandInfoTabComponent implements OnDestroy {
   @Input() landlObj!: ILand;
+  @Input() currentPage: number = 4;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
   
   showMapPopup = false;
   showImagePopup = false;
@@ -24,6 +28,14 @@ export class LandInfoTabComponent implements OnDestroy {
   private mapTimeout: any;
 
   constructor(private sanitizer: DomSanitizer) {}
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
+  }
 
   ngOnDestroy(): void {
     if (this.mapTimeout) {

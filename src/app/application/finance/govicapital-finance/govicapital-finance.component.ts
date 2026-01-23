@@ -120,17 +120,27 @@ export class GovicapitalFinanceComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return 'N/A';
+  if (!dateString) return 'N/A';
 
-    const date = new Date(dateString);
+  const date = new Date(dateString);
 
-    // Format as "June 01, 2026"
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: '2-digit',
-    });
-  }
+  // Format time part (12-hour format with AM/PM)
+  const time = date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  // Format date part
+  const formattedDate = date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit'
+  });
+
+  // Combine as "11:00PM on June 01, 2026"
+  return `${time} on ${formattedDate}`;
+}
 
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-LK', {

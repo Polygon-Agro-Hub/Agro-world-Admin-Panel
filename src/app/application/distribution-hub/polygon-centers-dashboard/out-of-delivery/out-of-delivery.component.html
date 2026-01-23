@@ -67,7 +67,7 @@
             
             <!-- Manual clear button as fallback -->
             <button *ngIf="selectDate" 
-                    (click)="clearDate()" 
+                    (click)="onDateClear()" 
                     class="absolute right-8 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none z-10">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

@@ -120,7 +120,7 @@
                         {{item.vehicleType || 'N/A'}}
                     </td>
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark font-medium">
-                        {{item.capacity || '-'}}
+                        {{item.capacity ? item.capacity + ' kg' : '-'}}
                     </td>
                     <td class="px-4 py-3 text-center cursor-pointer">
                         <span *ngIf="item.status === 'Rejected'" (click)="openPopup(item)"

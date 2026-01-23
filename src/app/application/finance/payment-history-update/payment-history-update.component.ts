@@ -125,10 +125,13 @@ export class PaymentHistoryUpdateComponent implements OnInit {
     text: 'You will be redirected to the payments page',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, go to back',
-    cancelButtonText: 'Cancel'
+    confirmButtonText: 'Yes, Go Back',
+    cancelButtonText: 'No, Stay Here',
+    customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
       this.router.navigate(['/finance/action/viewAll-payments']);
@@ -404,41 +407,29 @@ private executeUpdate(): void {
   });
 }
 
-  onCancel(): void {
-  const forceShowDialog = true;
-  
-  if (this.hasChanges() || forceShowDialog) {
-    console.log('Dialog should appear now');
-    Swal.fire({
-      icon: 'question',
-      title: 'Discard Changes?',
-      text: 'You have unsaved changes. Are you sure you want to cancel?',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, discard',
-      cancelButtonText: 'No, keep editing',
-      confirmButtonColor: '#EF4444',
-      cancelButtonColor: '#6B7280',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-        confirmButton: 'bg-red-500 hover:bg-red-600',
-        cancelButton: 'bg-gray-500 hover:bg-gray-600',
-      },
-      showClass: {
-        popup: 'animate__animated animate__fadeInDown'
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp'
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/finance/action/viewAll-payments']);
-      }
-    });
-  } else {
-    this.router.navigate(['/finance/action/viewAll-payments']);
+  onCancel() {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the added data after canceling!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel',
+        cancelButtonText: 'No, Keep Editing',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+        buttonsStyling: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.navigatePath('/finance/action/viewAll-payments');
+        }
+      });
+    }
+
+     navigatePath(path: string) {
+    this.router.navigate([path]);
   }
-}
 
   formatAmount(event: Event): void {
     const input = event.target as HTMLInputElement;

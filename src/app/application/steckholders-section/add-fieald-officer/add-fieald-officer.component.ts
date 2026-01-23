@@ -39,7 +39,7 @@ interface BranchesData {
 })
 export class AddFiealdOfficerComponent implements OnInit {
   isLoading = false;
-  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageThree';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageOne';
   itemId: number | null = null;
   selectedFile: File | null = null;
   personalData: Personal = new Personal();

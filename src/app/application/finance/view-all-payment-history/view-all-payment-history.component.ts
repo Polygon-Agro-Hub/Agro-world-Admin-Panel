@@ -196,19 +196,25 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  formatDateTime(dateString: string): string {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12;
+  getFormattedDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  
+  return `${day} ${month}, ${year}`;
+}
 
-    return `${day} ${month}, ${year}\n${formattedHours}:${minutes} ${ampm}`;
-  }
+getFormattedTime(dateString: string): string {
+  const date = new Date(dateString);
+  const hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const formattedHours = hours % 12 || 12;
+  
+  return `${formattedHours}:${minutes} ${ampm}`;
+}
 
   formatAmount(amount: number | string): string {
     const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;

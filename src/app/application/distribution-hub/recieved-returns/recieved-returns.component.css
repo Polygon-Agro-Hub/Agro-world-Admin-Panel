@@ -211,3 +211,11 @@
 ::ng-deep .p-calendar .p-calendar-clear-icon {
   cursor: pointer !important;
 }
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-month {
+  margin-right: 2px !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
+  margin-left: 2px !important;
+}

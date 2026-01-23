@@ -7,29 +7,21 @@
           {{centerObj.centerRegCode}} {{centerObj.centerName}}
         </h2>
 
-        <div class="relative flex items-center">
+        <div class="relative flex items-center mr-40">
             <p-calendar 
               id="deliveryDate" 
               placeholder="Schedule Date" 
               [showIcon]="true" 
-              [showButtonBar]="true" 
-              dateFormat="yy-mm-dd" 
               [monthNavigator]="true" 
               [yearNavigator]="true"
               yearRange="1900:2030" 
               iconDisplay="input" 
               [(ngModel)]="selectDate" 
               (onSelect)="fetchData()"
-              [style]="{ width: '16rem', height: '2rem' }" 
-              panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                       [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                       [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                       [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                       [&_.p-datepicker-header]:dark:text-white
-                       [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                       [&_.p-button:hover]:dark:bg-[#6b7280]"
-              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-              [appendTo]="'body'" />
+              [style]="{ width: '145px' }" 
+              [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+              panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+              inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"/>
           </div>
       </div>
       <div class="flex justify-between items-center mb-8">

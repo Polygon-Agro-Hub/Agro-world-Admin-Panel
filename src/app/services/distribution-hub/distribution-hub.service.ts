@@ -895,12 +895,12 @@ export class DistributionHubService {
     return this.http.get<any>(`${this.apiUrl}distribution/get-home-delivery-tracking/${id}`, { headers });
   }
 
-  getRecivedCashDashbord(): Observable<any> {
+  getRecivedCashDashbord(id: number | null): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get<any>(`${this.apiUrl}distribution/get-recived-cash-dashbord`, { headers });
+    return this.http.get<any>(`${this.apiUrl}distribution/get-recived-cash-dashbord/${id}`, { headers });
   }
 }
 

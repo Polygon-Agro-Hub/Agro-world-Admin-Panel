@@ -30,8 +30,8 @@ export class ReceivedCashTodayComponent implements OnInit {
   storeName = '';
   receivedDate = 'Received Cash on June 2, 2026 (09)';
 
-  totalPickupIncome = 1000000.00;
-  totalDeliveryIncome = 10000000.00;
+  totalPickupIncome = 0;
+  totalDeliveryIncome = 0;
 
   pickupMetrics: OrderMetric[] = [];
   deliveryMetrics: OrderMetric[] = [];
@@ -103,12 +103,14 @@ export class ReceivedCashTodayComponent implements OnInit {
   }
 
   fetchData() {
+    this.isLoading = true;
     this.distributionHubService.getRecivedCashDashbord().subscribe(
       (res) => {
         console.log(res);
         // this.pickUpObj = res.pickupResult;
         this.assignPickUpOrders(res.pickupResult)
-
+        this.assignDelivaryOrders(res.delivaryResult)
+        this.isLoading = false;
       }
     )
   }
@@ -122,6 +124,8 @@ export class ReceivedCashTodayComponent implements OnInit {
       { label: "Today's Scheduled Pickups", count: data.today_pickup, color: '#00BCFB' },
       { label: 'Overdue Pickups - Today', count: (data.all_pickup - data.today_pickup), color: '#FFA202' }
     ]
+
+    this.totalPickupIncome = data.order_price
   }
 
   assignDelivaryOrders(data: IDelivary) {
@@ -129,10 +133,12 @@ export class ReceivedCashTodayComponent implements OnInit {
       { label: 'All Out For Delivery Orders', count: data.total_today, color: '#EED600' },
       { label: 'Today Out For Delivery Orders', count: data.scheduled_today, color: '#415CFF' },
       { label: 'Overdue Out For Delivery Orders', count: (data.total_today - data.scheduled_today), color: '#FF3D3D' },
-      { label: 'All Deliveries Completed Today', count: 10, color: '#7ED100' },
-      { label: "Today's Scheduled Deliveries", count: 10, color: '#00BCFB' },
-      { label: 'Overdue Deliveries - Today', count: 0, color: '#FFA202' }
+      { label: 'All Deliveries Completed Today', count: data.all_delivary, color: '#7ED100' },
+      { label: "Today's Scheduled Deliveries", count: data.today_delivary, color: '#00BCFB' },
+      { label: 'Overdue Deliveries - Today', count: (data.all_delivary - data.today_delivary), color: '#FFA202' }
     ]
+    this.totalDeliveryIncome = data.order_price
+
   }
 
 }
@@ -154,12 +160,14 @@ interface IPickUp {
   not_scheduled_today: number;
   all_pickup: number;
   today_pickup: number;
+  order_price: number;
 }
 
 interface IDelivary {
   total_today: number;
   scheduled_today: number;
-  all_pickup: number;
-  today_pickup: number;
+  all_delivary: number;
+  today_delivary: number;
   order_price: number;
+
 }

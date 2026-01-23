@@ -1,11 +1,11 @@
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
   
   
   <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    class="fixed-width-container min-w-full scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-white dark:bg-tileBlack shadow-lg rounded-lg">
       <div class="flex space-x-4 pb-5 border-b border-gray-300">
         <button *ngIf="

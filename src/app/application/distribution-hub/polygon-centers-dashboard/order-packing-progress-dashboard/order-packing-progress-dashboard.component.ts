@@ -65,6 +65,10 @@ export class OrderPackingProgressDashboardComponent implements OnInit {
     });
   }
 
+  back() {
+    window.history.back();
+  }
+
 }
 
 interface CenterDetails {

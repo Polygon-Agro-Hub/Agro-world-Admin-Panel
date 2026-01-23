@@ -2,8 +2,8 @@
 
     <!-- 01. Account holder's name -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">01.</span> Account holder's name
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">01. Account holder's name</span>
         </label>
         <input type="text" [value]="financeInfo.accHolder || '-'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
@@ -12,8 +12,8 @@
 
     <!-- 02. Account number -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">02.</span> Account number
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">02. Account number</span>
         </label>
         <input type="text" [value]="financeInfo.accNum || '-'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
@@ -22,8 +22,8 @@
 
     <!-- 04. Bank name -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">04.</span> Bank name
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">04. Bank name</span>
         </label>
         <input type="text" [value]="financeInfo.bank || '-'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
@@ -32,8 +32,8 @@
 
     <!-- 05. Branch name -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">05.</span> Branch name
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">05. Branch name</span>
         </label>
         <input type="text" [value]="financeInfo.branch || '-'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
@@ -42,8 +42,8 @@
 
     <!-- 06. Existing debts -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">06.</span> Existing debts of the farmer
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">06. Existing debts of the farmer</span> 
         </label>
         <input type="text" [value]="financeInfo.debtsOfFarmer || '-'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
@@ -52,8 +52,8 @@
 
     <!-- 07. Dependents -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-2">
-            <span class="text-gray-400 dark:text-textDark">07.</span> No. of Dependents
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">07. No. of Dependents</span>
         </label>
         <input type="text" [value]="financeInfo.noOfDependents || '-'" readonly
             class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-600 
@@ -62,31 +62,31 @@
 
     <!-- 08. Assets -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-xl">
-        <label class="block text-sm text-gray-700 dark:text-textDark mb-3">
-            <span class="text-gray-400 dark:text-textDark">08.</span> Assets owned by the farmer
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+            <span class="text-gray-500 dark:text-textDark">08. Assets owned by the farmer</span>
         </label>
 
         <div class="bg-white dark:bg-tileBlack border border-gray-200 dark:border-gray-600 
                    rounded-lg p-4 text-sm text-gray-800 dark:text-textDark space-y-2">
 
-            <div *ngIf="financeInfo.assetsLand.Land.length" class="dark:text-textDark">
+            <div *ngIf="financeInfo.assetsLand && financeInfo.assetsLand.length > 0" class="dark:text-textDark">
                 <span class="font-semibold w-32 inline-block dark:text-textDark">Land</span> :
-                {{ financeInfo.assetsLand.Land.join(', ') }}
+                {{ financeInfo.assetsLand.join(', ') }}
             </div>
 
-            <div *ngIf="financeInfo.assetsBuilding.Building.length" class="dark:text-textDark">
+            <div *ngIf="financeInfo.assetsBuilding && financeInfo.assetsBuilding.length > 0" class="dark:text-textDark">
                 <span class="font-semibold w-32 inline-block dark:text-textDark">Building</span> :
-                {{ financeInfo.assetsBuilding.Building.join(', ') }}
+                {{ financeInfo.assetsBuilding.join(', ') }}
             </div>
 
-            <div *ngIf="financeInfo.assetsVehicle.Vehicle.length" class="dark:text-textDark">
+            <div *ngIf="financeInfo.assetsVehicle && financeInfo.assetsVehicle.length > 0" class="dark:text-textDark">
                 <span class="font-semibold w-32 inline-block dark:text-textDark">Vehicle</span> :
-                {{ financeInfo.assetsVehicle.Vehicle.join(', ') }}
+                {{ financeInfo.assetsVehicle.join(', ') }}
             </div>
 
-            <div *ngIf="financeInfo.assetsMachinery.Machinery.length" class="dark:text-textDark">
+            <div *ngIf="financeInfo.assetsMachinery && financeInfo.assetsMachinery.length > 0" class="dark:text-textDark">
                 <span class="font-semibold w-32 inline-block dark:text-textDark">Machinery</span> :
-                {{ financeInfo.assetsMachinery.Machinery.join(', ') }}
+                {{ financeInfo.assetsMachinery.join(', ') }}
             </div>
 
             <div *ngIf="financeInfo.assetsFarmTool" class="dark:text-textDark">
@@ -94,7 +94,39 @@
                 {{ financeInfo.assetsFarmTool }}
             </div>
 
+            <div *ngIf="(!financeInfo.assetsLand || financeInfo.assetsLand.length === 0) && 
+                        (!financeInfo.assetsBuilding || financeInfo.assetsBuilding.length === 0) && 
+                        (!financeInfo.assetsVehicle || financeInfo.assetsVehicle.length === 0) && 
+                        (!financeInfo.assetsMachinery || financeInfo.assetsMachinery.length === 0) && 
+                        !financeInfo.assetsFarmTool" 
+                 class="text-gray-500 dark:text-textDark">
+                No assets recorded
+            </div>
+
         </div>
     </div>
 
+</div>
+
+<!-- Pagination -->
+<div class="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <button
+        (click)="onPreviousPage()"
+        [disabled]="currentPage === 1"
+        class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+        <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    
+    <span class="text-sm font-medium text-gray-700 dark:text-textDark">
+        Page [ {{ currentPage }} / {{ totalPages }} ]
+    </span>
+    
+    <button
+        (click)="onNextPage()"
+        [disabled]="currentPage === totalPages"
+        class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
 </div>

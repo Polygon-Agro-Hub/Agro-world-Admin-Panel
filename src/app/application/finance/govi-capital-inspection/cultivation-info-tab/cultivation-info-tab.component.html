@@ -1,8 +1,8 @@
 <div class="space-y-2 p-10">
   <!-- Question 01 - Climatic Parameters Table -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      01. Is the crop / cropping system suitable for overall climatic parameters?
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">01. Is the crop / cropping system suitable for overall climatic parameters?</span>
     </label>
 
     <div class="overflow-x-auto">
@@ -177,8 +177,8 @@
 
   <!-- Question 02 - Suitable for local soil type -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      02. Is the crop / cropping system suitable for local soil type?
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">02. Is the crop / cropping system suitable for local soil type?</span>
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isCropSuitale)"
@@ -189,8 +189,8 @@
 
   <!-- Question 03 - pH -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      03. pH
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">03. pH</span>
     </label>
     <div class="relative">
       <input type="text" [value]="getFormattedPh()"
@@ -201,8 +201,8 @@
 
   <!-- Question 04 - Soil Type -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      04. Soil Type
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">04. Soil Type</span>
     </label>
     <div class="relative">
       <input type="text" [value]="cultivationData.soilType"
@@ -213,8 +213,8 @@
 
   <!-- Question 05 - Overall Soil Fertility -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      05. Overall Soil Fertility
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">05. Overall Soil Fertility</span>
     </label>
     <div class="relative">
       <input type="text" [value]="cultivationData.soilfertility"
@@ -225,8 +225,8 @@
 
   <!-- Question 06 - Water Sources -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      06. Water Sources
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">06. Water Sources</span>
     </label>
     <div class="relative">
       <input type="text" [value]="formattedWaterSources"
@@ -237,8 +237,8 @@
 
   <!-- Question 07 - Images of the water source -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      07. Images of the water source
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">07. Images of the water source</span>
     </label>
     <div>
       <button (click)="openImageModal()"
@@ -252,8 +252,8 @@
 
   <!-- Question 08 - Adequate rainfall -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      08. Does this land receive adequate rainfall?
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      <span class="text-gray-500 dark:text-textDark">08. Does this land receive adequate rainfall?</span>
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isRecevieRainFall)"
@@ -264,8 +264,8 @@
 
   <!-- Question 09 - Rainfall distribution -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      09. Is the distribution of rainfall suitable to grow identified crops?
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      <span class="text-gray-500 dark:text-textDark">09. Is the distribution of rainfall suitable to grow identified crops?</span>
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isRainFallSuitableCrop)"
@@ -276,8 +276,8 @@
 
   <!-- Question 10 - Water quality -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      10. Is the water quality suitable for cultivation?
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      <span class="text-gray-500 dark:text-textDark">10. Is the water quality suitable for cultivation?</span>
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isRainFallSuitableCultivation)"
@@ -288,8 +288,8 @@
 
   <!-- Question 11 - Electricity available -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      11. Is electricity available for lifting the water?
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      <span class="text-gray-500 dark:text-textDark">11. Is electricity available for lifting the water?</span>
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.isElectrocityAvailable)"
@@ -300,8 +300,8 @@
 
   <!-- Question 12 - Pump sets -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-3">
-      12. Is there pump sets, micro irrigation systems?
+    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+      <span class="text-gray-500 dark:text-textDark">12. Is there pump sets, micro irrigation systems?</span>
     </label>
     <div class="relative">
       <input type="text" [value]="getYesNo(cultivationData.ispumpOrirrigation)"
@@ -406,4 +406,27 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Pagination -->
+<div class="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+  <button
+    (click)="onPreviousPage()"
+    [disabled]="currentPage === 1"
+    class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+  >
+    <i class="fa-solid fa-chevron-left"></i>
+  </button>
+  
+  <span class="text-sm font-medium text-gray-700 dark:text-textDark">
+    Page [ {{ currentPage }} / {{ totalPages }} ]
+  </span>
+  
+  <button
+    (click)="onNextPage()"
+    [disabled]="currentPage === totalPages"
+    class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+  >
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
 </div>

@@ -1,9 +1,9 @@
 <div class="space-y-2 p-10">
   <!-- Expected investment by the farmer -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
-    <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      01. Expected investment by the farmer
-    </label>
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">01. Expected investment by the farmer</span>
+      </label>
     <div class="relative">
       <!-- Text Input -->
       <input
@@ -18,7 +18,7 @@
   <!-- Purpose for investment required as per the farmer -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      02. Purpose for investment required as per the farmer
+      <span class="text-gray-500 dark:text-textDark">02. Purpose for investment required as per the farmer</span>
     </label>
     <div class="relative">
       <!-- Text Input -->
@@ -34,7 +34,7 @@
   <!-- Expected repayment period as per the farmer in months -->
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      03. Expected repayment period as per the farmer in months
+      <span class="text-gray-500 dark:text-textDark">03. Expected repayment period as per the farmer in months</span>
     </label>
     <div class="relative">
       <!-- Text Input -->
@@ -45,5 +45,28 @@
         readonly
       />
     </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <button
+      (click)="onPreviousPage()"
+      [disabled]="currentPage === 1"
+      class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    
+    <span class="text-sm font-medium text-gray-700 dark:text-textDark">
+      Page [ {{ currentPage }} / {{ totalPages }} ]
+    </span>
+    
+    <button
+      (click)="onNextPage()"
+      [disabled]="currentPage === totalPages"
+      class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
   </div>
 </div>

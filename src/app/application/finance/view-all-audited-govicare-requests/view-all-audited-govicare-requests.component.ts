@@ -123,7 +123,13 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
   }
 
   auditResults(requestId: number) {
-    this.router.navigate(['finance/action/finance-govicapital/view-Govicare-approved-requests/approve-audit-personal-infor', String(requestId)]);
+    const tree = this.router.createUrlTree([
+      'finance/action/finance-govicapital/view-Govicare-approved-requests/approve-audit-personal-infor',
+      requestId
+    ]);
+    
+    const url = this.router.serializeUrl(tree);
+    window.open(window.location.origin + '/admin' + url, '_blank');
   }
 
   closeDetailsModal(): void {

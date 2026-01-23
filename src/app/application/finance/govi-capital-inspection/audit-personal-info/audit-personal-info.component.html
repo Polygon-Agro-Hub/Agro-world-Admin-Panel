@@ -4,9 +4,10 @@
   Back
 </button>
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10 dark:text-textDark">
+<div class="w-full bg-transparent overflow-hidden">
+
+  <div
+    class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10 dark:text-textDark">
     <div class="flex flex-col">
       <span class="text-[#7E7E7E]">Request_ID :</span><span>{{sharesData.jobId}}</span>
     </div>
@@ -24,8 +25,8 @@
     </div>
     <div *ngIf="lastSegment === 'approve-audit-personal-infor'" class="flex flex-col gap-4">
       <div class="flex gap-4">
-        <button 
-        *ngIf=" permissionService.hasPermission('Approve govicare request') || tokenService.getUserDetails().role === '1'"
+        <button
+          *ngIf=" permissionService.hasPermission('Approve govicare request') || tokenService.getUserDetails().role === '1'"
           class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
           (click)="openApprovePopUp()">
           Approve
@@ -58,151 +59,157 @@
       </div>
     </div>
   </div>
-  <div class="pt-5 pb-5 min-w-[1700px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex whitespace-nowrap space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
-      <button (click)="selectTab('Personal')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Personal',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'Personal'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Personal'" class="fa fa-check"></i>
-        Personal Info
+
+  <div class="relative pt-5 pb-5 w-full bg-white dark:bg-tileBlack shadow-lg rounded-lg overflow-hidden">
+
+    <div
+      class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white dark:from-tileBlack to-transparent pointer-events-none z-10">
+    </div>
+
+    <div
+      class="flex whitespace-nowrap space-x-4 pb-4 pr-20 pl-6 border-b border-gray-200 overflow-x-auto scroll-smooth custom-scrollbar">
+
+      <button (click)="selectTab('Personal')"
+        [ngClass]="activeTab === 'Personal' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2 transition-all">
+        <i *ngIf="activeTab === 'Personal'" class="fa fa-check"></i> Personal Info
       </button>
-      <button (click)="selectTab('IDProof')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'IDProof',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'IDProof'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'IDProof'" class="fa fa-check"></i>
-        ID Proof
+
+      <button (click)="selectTab('IDProof')"
+        [ngClass]="activeTab === 'IDProof' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'IDProof'" class="fa fa-check"></i> ID Proof
       </button>
-      <button (click)="selectTab('Finance')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Finance',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'Finance'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Finance'" class="fa fa-check"></i>
-        Finance Info
+
+      <button (click)="selectTab('Finance')"
+        [ngClass]="activeTab === 'Finance' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'Finance'" class="fa fa-check"></i> Finance Info
       </button>
-      <button (click)="selectTab('Land')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Land',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'Land'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Land'" class="fa fa-check"></i>
-        Land Info
+
+      <button (click)="selectTab('Land')"
+        [ngClass]="activeTab === 'Land' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'Land'" class="fa fa-check"></i> Land Info
       </button>
-      <button (click)="selectTab('Investment')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Investment',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'Investment'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Investment'" class="fa fa-check"></i>
-        Investment Info
+
+      <button (click)="selectTab('Investment')"
+        [ngClass]="activeTab === 'Investment' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'Investment'" class="fa fa-check"></i> Investment Info
       </button>
-      <button (click)="selectTab('Cultivation')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Cultivation',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'Cultivation'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Cultivation'" class="fa fa-check"></i>
-        Cultivation Info
+
+      <button (click)="selectTab('Cultivation')"
+        [ngClass]="activeTab === 'Cultivation' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'Cultivation'" class="fa fa-check"></i> Cultivation Info
       </button>
-      <button (click)="selectTab('CroppingSystems')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]':
-            activeTab === 'CroppingSystems',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'CroppingSystems'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'CroppingSystems'" class="fa fa-check"></i>
-        Cropping Systems
+
+      <button (click)="selectTab('CroppingSystems')"
+        [ngClass]="activeTab === 'CroppingSystems' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'CroppingSystems'" class="fa fa-check"></i> Cropping Systems
       </button>
-      <button (click)="selectTab('ProfitRisk')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'ProfitRisk',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'ProfitRisk'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'ProfitRisk'" class="fa fa-check"></i>
-        Profit & Risk
+
+      <button (click)="selectTab('ProfitRisk')"
+        [ngClass]="activeTab === 'ProfitRisk' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'ProfitRisk'" class="fa fa-check"></i> Profit & Risk
       </button>
-      <button (click)="selectTab('Economical')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Economical',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'Economical'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Economical'" class="fa fa-check"></i>
-        Economical
+
+      <button (click)="selectTab('Economical')"
+        [ngClass]="activeTab === 'Economical' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'Economical'" class="fa fa-check"></i> Economical
       </button>
-      <button (click)="selectTab('Labour')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]': activeTab === 'Labour',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'Labour'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Labour'" class="fa fa-check"></i>
-        Labour
+
+      <button (click)="selectTab('Labour')"
+        [ngClass]="activeTab === 'Labour' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'Labour'" class="fa fa-check"></i> Labour
       </button>
-      <button (click)="selectTab('HarvestStorage')" [ngClass]="{
-          'border border-[#415CFF] text-[#415CFF]':
-            activeTab === 'HarvestStorage',
-          'border border-gray-300 text-textLight dark:text-textDark':
-            activeTab !== 'HarvestStorage'
-        }" class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'HarvestStorage'" class="fa fa-check"></i>
-        Harvest Storage
+
+      <button (click)="selectTab('HarvestStorage')"
+        [ngClass]="activeTab === 'HarvestStorage' ? 'border border-[#415CFF] text-[#415CFF]' : 'border border-gray-300 text-textLight dark:text-textDark'"
+        class="h-10 px-5 flex shrink-0 items-center justify-center rounded-full gap-2">
+        <i *ngIf="activeTab === 'HarvestStorage'" class="fa fa-check"></i> Harvest Storage
       </button>
     </div>
-    <div class="h-5"></div>
-    <!-- //biman -->
-    <div *ngIf="activeTab === 'Personal'">
-      <app-personal-info-tab [personalObj]="inspectionArray.Personal"></app-personal-info-tab>
-    </div>
-    <div *ngIf="activeTab === 'IDProof'">
-      <app-id-proof-tab [idInfo]="inspectionArray.ID"></app-id-proof-tab>
-    </div>
-    <div *ngIf="activeTab === 'Finance'">
-      <app-finance-info-tab [financeInfo]="inspectionArray.Finance"></app-finance-info-tab>
-    </div>
-    <!-- biman -->
-    <div *ngIf="activeTab === 'Land'">
-      <app-land-info-tab [landlObj]="inspectionArray.Land"></app-land-info-tab>
-    </div>
-    <!-- biman -->
-    <div *ngIf="activeTab === 'Investment'">
-      <app-investment-info-tab
-        [investmentObj]="inspectionArray.Investment"
-      ></app-investment-info-tab>
-    </div>
-    <div *ngIf="activeTab === 'Cultivation'">
-      <app-cultivation-info-tab [cultivationData]="inspectionArray.Cultivation"></app-cultivation-info-tab>
-    </div>
-    <div *ngIf="activeTab === 'CroppingSystems'">
-      <app-cropping-system-tab [croppingData]="inspectionArray.Cropping"></app-cropping-system-tab>
-    </div>
-    <!-- ashan -->
-    <div *ngIf="activeTab === 'ProfitRisk'">
-      <app-profit-risk-tab [profitRiskObj]="inspectionArray.ProfitRisk"></app-profit-risk-tab>
-    </div>
-    <!-- ashan -->
-    <div *ngIf="activeTab === 'Economical'">
-      <app-economical-tab [EconomicalObj]="inspectionArray.Economical"></app-economical-tab>
-    </div>
-    <!-- ashan -->
-    <div *ngIf="activeTab === 'Labour'">
-      <app-labour-tab [LaborObj]="inspectionArray.Labor"></app-labour-tab>
-    </div>
-    <!-- ashan -->
-    <div *ngIf="activeTab === 'HarvestStorage'">
-      <app-harvest-storage-tab [HarvestObj]="inspectionArray.Harvest"></app-harvest-storage-tab>
+
+    <div class="p-6">
+      <div *ngIf="activeTab === 'Personal'"><app-personal-info-tab
+          [personalObj]="inspectionArray.Personal"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-personal-info-tab></div>
+      <div *ngIf="activeTab === 'IDProof'"><app-id-proof-tab 
+          [idInfo]="inspectionArray.ID"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-id-proof-tab></div>
+      <div *ngIf="activeTab === 'Finance'"><app-finance-info-tab
+          [financeInfo]="inspectionArray.Finance"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-finance-info-tab></div>
+      <div *ngIf="activeTab === 'Land'"><app-land-info-tab 
+          [landlObj]="inspectionArray.Land"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-land-info-tab></div>
+      <div *ngIf="activeTab === 'Investment'"><app-investment-info-tab
+          [investmentObj]="inspectionArray.Investment"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-investment-info-tab></div>
+      <div *ngIf="activeTab === 'Cultivation'"><app-cultivation-info-tab
+          [cultivationData]="inspectionArray.Cultivation"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-cultivation-info-tab></div>
+      <div *ngIf="activeTab === 'CroppingSystems'"><app-cropping-system-tab
+          [croppingData]="inspectionArray.Cropping"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-cropping-system-tab></div>
+      <div *ngIf="activeTab === 'ProfitRisk'"><app-profit-risk-tab
+          [profitRiskObj]="inspectionArray.ProfitRisk"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-profit-risk-tab></div>
+      <div *ngIf="activeTab === 'Economical'"><app-economical-tab
+          [EconomicalObj]="inspectionArray.Economical"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-economical-tab></div>
+      <div *ngIf="activeTab === 'Labour'"><app-labour-tab 
+          [LaborObj]="inspectionArray.Labor"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-labour-tab></div>
+      <div *ngIf="activeTab === 'HarvestStorage'"><app-harvest-storage-tab
+          [HarvestObj]="inspectionArray.Harvest"
+          [currentPage]="getCurrentTabIndex() + 1"
+          [totalPages]="tabs.length"
+          (nextPage)="goToNextTab()"
+          (previousPage)="goToPreviousTab()"></app-harvest-storage-tab></div>
     </div>
   </div>
 </div>
 
 <!-- pop ups -->
 
-<div
-  *ngIf="approvePopUpOpen"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
+<div *ngIf="approvePopUpOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 py-10 w-1/3">
 
     <div>
@@ -233,10 +240,7 @@
   </div>
 </div>
 
-<div
-  *ngIf="rejectPopUpOpen"
-  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
->
+<div *ngIf="rejectPopUpOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 py-10 w-1/3">
 
     <div>
@@ -285,97 +289,87 @@
 
     <div class="px-4">
       <form #devideForm="ngForm" (ngSubmit)="DevideRequest(devideForm)">
-      <div class="mb-6 text-center font-semibold dark:text-textDark">
-        <p class="text-xl mb-2">
-          Request ID : {{sharesData.jobId}}
-        </p>
-      </div>
-
-      <div class="mb-8">
-        
-        <div>
-          <label class="block mb-2 text-lg dark:text-textDark">
-            Total Value (Rs.)
-          </label>
-          <input id="totalValue" [value]="sharesData.totalValue | number:'1.2-2'" name="totalValue" readonly
-            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            
+        <div class="mb-6 text-center font-semibold dark:text-textDark">
+          <p class="text-xl mb-2">
+            Request ID : {{sharesData.jobId}}
+          </p>
         </div>
 
-        <div>
-          <label class="block mb-2 text-lg dark:text-textDark">
-            Define Number of Shares
-          </label>
-          <input id="numShares" required type="number" [(ngModel)]="numShares" #numSharesInput="ngModel" name="numShares" placeholder="--Enter Here--"
-            (ngModelChange)="onNumSharesChange($event)" (keypress)="allowDecimalOnly($event)"
-            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <span
-            *ngIf="numSharesInput.touched && !numShares "
-            class="text-red-600 text-sm"
-            >This field is required.</span>
-        </div>
+        <div class="mb-8">
 
-        <div>
-          <label class="block mb-2 text-lg dark:text-textDark">
-            Value of One Share (Rs.)
-          </label>
-          <input id="shareValue" [value]="shareValue | number:'1.2-2'" name="shareValue" readonly
-            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-        </div>
+          <div>
+            <label class="block mb-2 text-lg dark:text-textDark">
+              Total Value (Rs.)
+            </label>
+            <input id="totalValue" [value]="sharesData.totalValue | number:'1.2-2'" name="totalValue" readonly
+              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-        <div>
-          <label class="block mb-2 text-lg dark:text-textDark">
-            Minimum Investment Shares
-          </label>
-          <input id="minimumShare" required type="number" [(ngModel)]="minimumShare" #minimumShareInput="ngModel" name="minimumShare"
-            placeholder="--Enter Here--" (keypress)="allowDecimalOnly($event)" pattern="^[1-9]\d*(\.\d+)?$"
-            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <span
-            *ngIf="minimumShareInput.touched && minimumShareInput.errors?.['required']"
-            class="text-red-600 text-sm"
-            >This field is required.</span>
-            <span
-              *ngIf="minimumShareInput.touched && !minimumShareInput.errors?.['required'] && (minimumShare <= 0)" 
-              class="text-red-600 text-sm"
-            >
-            Minimum Investment Shares cannot be 0 or less than 0.
+          </div>
+
+          <div>
+            <label class="block mb-2 text-lg dark:text-textDark">
+              Define Number of Shares
+            </label>
+            <input id="numShares" required type="number" [(ngModel)]="numShares" #numSharesInput="ngModel"
+              name="numShares" placeholder="--Enter Here--" (ngModelChange)="onNumSharesChange($event)"
+              (keypress)="allowDecimalOnly($event)"
+              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="numSharesInput.touched && !numShares " class="text-red-600 text-sm">This field is
+              required.</span>
+          </div>
+
+          <div>
+            <label class="block mb-2 text-lg dark:text-textDark">
+              Value of One Share (Rs.)
+            </label>
+            <input id="shareValue" [value]="shareValue | number:'1.2-2'" name="shareValue" readonly
+              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          </div>
+
+          <div>
+            <label class="block mb-2 text-lg dark:text-textDark">
+              Minimum Investment Shares
+            </label>
+            <input id="minimumShare" required type="number" [(ngModel)]="minimumShare" #minimumShareInput="ngModel"
+              name="minimumShare" placeholder="--Enter Here--" (keypress)="allowDecimalOnly($event)"
+              pattern="^[1-9]\d*(\.\d+)?$"
+              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="minimumShareInput.touched && minimumShareInput.errors?.['required']"
+              class="text-red-600 text-sm">This field is required.</span>
+            <span *ngIf="minimumShareInput.touched && !minimumShareInput.errors?.['required'] && (minimumShare <= 0)"
+              class="text-red-600 text-sm">
+              Minimum Investment Shares cannot be 0 or less than 0.
             </span>
-        </div>
+          </div>
 
-        <div>
-          <label class="block mb-2 text-lg dark:text-textDark">
-            Maximum Investment Shares
-          </label>
-          <input id="maximumShare" required type="number" [(ngModel)]="maximumShare" #maximumShareInput="ngModel" name="maximumShare"
-            placeholder="--Enter Here--" (keypress)="allowDecimalOnly($event)"
-            class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <span
-            *ngIf="maximumShareInput.touched && maximumShareInput.errors?.['required']"
-            class="text-red-600 text-sm"
-            >This field is required.</span>
+          <div>
+            <label class="block mb-2 text-lg dark:text-textDark">
+              Maximum Investment Shares
+            </label>
+            <input id="maximumShare" required type="number" [(ngModel)]="maximumShare" #maximumShareInput="ngModel"
+              name="maximumShare" placeholder="--Enter Here--" (keypress)="allowDecimalOnly($event)"
+              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="maximumShareInput.touched && maximumShareInput.errors?.['required']"
+              class="text-red-600 text-sm">This field is required.</span>
 
-            <span
-              *ngIf="maximumShareInput.touched && !maximumShareInput.errors?.['required'] && (maximumShare <= 0)" 
-              class="text-red-600 text-sm"
-            >
-            Maximum Investment Shares cannot be 0 or less than 0.
+            <span *ngIf="maximumShareInput.touched && !maximumShareInput.errors?.['required'] && (maximumShare <= 0)"
+              class="text-red-600 text-sm">
+              Maximum Investment Shares cannot be 0 or less than 0.
             </span>
+          </div>
         </div>
-      </div>
 
 
-      <!-- Buttons -->
-      <div class="flex justify-between gap-16">
-        <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-6 py-3 rounded-xl shadow-md"
-         type="button" (click)="cancelDevidePopUp()"><span class="text-white">Cancel</span>
-        </button>
-        <button
-          type="submit"
-          class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-xl shadow-md">
-          <span class="text-lg text-white">Devide</span>
-        </button>
-      </div>
-    </form>
+        <!-- Buttons -->
+        <div class="flex justify-between gap-16">
+          <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-6 py-3 rounded-xl shadow-md"
+            type="button" (click)="cancelDevidePopUp()"><span class="text-white">Cancel</span>
+          </button>
+          <button type="submit" class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-xl shadow-md">
+            <span class="text-lg text-white">Devide</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

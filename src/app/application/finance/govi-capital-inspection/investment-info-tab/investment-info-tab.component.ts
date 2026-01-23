@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-investment-info-tab',
@@ -10,6 +10,18 @@ import { Component, Input } from '@angular/core';
 })
 export class InvestmentInfoTabComponent {
   @Input() investmentObj!: IInvestment;
+  @Input() currentPage: number = 5;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
+  }
 
   // Method to format the expected investment value
   formatExpectedInvestment(value: string): string {

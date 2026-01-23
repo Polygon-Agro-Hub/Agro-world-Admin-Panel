@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-personal-info-tab',
@@ -10,11 +10,23 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 })
 export class PersonalInfoTabComponent implements OnChanges {
   @Input() personalObj!: IPersonal;
+  @Input() currentPage: number = 1;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
 
   // sortedPersonalArr: IPersonal[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(this.personalObj);
+  }
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
   }
 }
 

@@ -289,5 +289,28 @@
         />
       </div>
     </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <button
+        (click)="onPreviousPage()"
+        [disabled]="currentPage === 1"
+        class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      
+      <span class="text-sm font-medium text-gray-700 dark:text-textDark">
+        Page [ {{ currentPage }} / {{ totalPages }} ]
+      </span>
+      
+      <button
+        (click)="onNextPage()"
+        [disabled]="currentPage === totalPages"
+        class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
   </div>
 </div>

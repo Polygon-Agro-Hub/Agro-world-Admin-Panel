@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-cultivation-info-tab',
@@ -10,6 +10,10 @@ import { Component, Input, OnDestroy } from '@angular/core';
 })
 export class CultivationInfoTabComponent implements OnDestroy {
   @Input() cultivationData!: ICultivation;
+  @Input() currentPage: number = 6;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
 
   showImageModal = false;
   currentImageIndex = 0;
@@ -17,6 +21,14 @@ export class CultivationInfoTabComponent implements OnDestroy {
   
   imageLoaded = false;
   private imageTimeout: any;
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
+  }
 
   ngOnInit() {
     if (this.cultivationData) {

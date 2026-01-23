@@ -2,9 +2,9 @@
   <div class="block space-y-8">
     <!-- Question 1: Is the land owned by the farmer? -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
-        01. Is the land own by the farmer?
-      </div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">01. Is the land own by the farmer?</span>
+      </label>
       <div class="relative">
         <input type="text" [value]="ownershipDisplay"
           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
@@ -14,9 +14,9 @@
 
     <!-- Question 2: Legal status of ownership -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
-        02. Legal status of the ownership of the land
-      </div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">02. Legal status of the ownership of the land</span>
+      </label>
       <div class="relative">
         <input type="text" [value]="landlObj.ownershipStatus || 'Not provided'"
           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
@@ -26,9 +26,9 @@
 
     <!-- Question 3: Brief description -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
-        03. Brief description to reach the cultivation land
-      </div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">03. Brief description to reach the cultivation land</span>
+      </label>
       <div class="relative">
         <input type="text" [value]="landlObj.landDiscription || 'Not provided'"
           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
@@ -38,9 +38,9 @@
 
     <!-- Question 4: Geo Coordinates -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
-        04. Geo Coordinates of the land
-      </div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">04. Geo Coordinates of the land</span>
+      </label>
       <div>
         <button (click)="openMapPopup()"
           class="inline-flex items-center gap-2 px-5 py-3 bg-[#000000] dark:bg-gray-700 hover:bg-[#2a2a2a] dark:hover:bg-gray-600 text-white dark:text-textDark rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
@@ -53,10 +53,9 @@
 
     <!-- Question 5: Images -->
     <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg">
-      <div class="text-sm text-gray-600 dark:text-textDark mb-1">
-        05. Images of the deed / lease / permit / any other formal document to
-        prove the ownership of the land by the farmer
-      </div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+        <span class="text-gray-500 dark:text-textDark">05. Images of the deed / lease / permit / any other formal document to prove the ownership of the land by the farmer</span>
+      </label>
       <div>
         <button (click)="openImagePopup()"
           class="inline-flex items-center gap-2 px-6 py-3 bg-[#000000] dark:bg-gray-700 hover:bg-[#2a2a2a] dark:hover:bg-gray-600 text-white dark:text-textDark rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
@@ -67,10 +66,28 @@
       </div>
     </div>
   </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <button (click)="onPreviousPage()" [disabled]="currentPage === 1"
+      class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <span class="text-sm font-medium text-gray-700 dark:text-textDark">
+      Page [ {{ currentPage }} / {{ totalPages }} ]
+    </span>
+
+    <button (click)="onNextPage()" [disabled]="currentPage === totalPages"
+      class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
 </div>
 
 <!-- Map Popup Modal -->
-<div *ngIf="showMapPopup" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4 h-full"
+<div *ngIf="showMapPopup"
+  class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4 h-full"
   (click)="closePopup()">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl overflow-hidden flex flex-col"
     (click)="$event.stopPropagation()" style="max-height: 90vh;">
@@ -178,16 +195,18 @@
 </div>
 
 <!-- Image Gallery Popup Modal -->
-<div *ngIf="showImagePopup" class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+<div *ngIf="showImagePopup"
+  class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
     <!-- Header -->
-    <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+    <div
+      class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div class="flex-1 text-center">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-textDark">
           Land Document Images
         </h3>
       </div>
-      <button (click)="closePopup()" 
+      <button (click)="closePopup()"
         class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -199,18 +218,17 @@
       <!-- Image Counter -->
       <div class="mb-3 text-center" *ngIf="currentImages.length > 0">
         <span class="inline-block dark:text-blue-200 px-4 py-2 rounded-lg text-sm font-medium">
-         {{ currentImageIndex + 1 }} out of {{ currentImages.length }}
+          {{ currentImageIndex + 1 }} out of {{ currentImages.length }}
         </span>
       </div>
 
       <!-- Main Image Display -->
-      <div class="h-96 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden mb-4">
+      <div
+        class="h-96 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden mb-4">
         <!-- If we have images -->
         <div *ngIf="currentImages.length > 0" class="relative w-full h-full">
-          <img [src]="currentImages[currentImageIndex]" 
-               [alt]="'Land document ' + (currentImageIndex + 1)"
-               class="w-full h-full object-contain bg-white dark:bg-gray-800"
-               (error)="handleImageError($event)" />
+          <img [src]="currentImages[currentImageIndex]" [alt]="'Land document ' + (currentImageIndex + 1)"
+            class="w-full h-full object-contain bg-white dark:bg-gray-800" (error)="handleImageError($event)" />
 
           <!-- Navigation arrows -->
           <div class="absolute inset-0 flex items-center justify-between p-4">

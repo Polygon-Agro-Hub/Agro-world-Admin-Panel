@@ -90,6 +90,45 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.activeTab = tabName;
   }
 
+  // Tab navigation methods for pagination
+  tabs: string[] = [
+    'Personal',
+    'IDProof',
+    'Finance',
+    'Land',
+    'Investment',
+    'Cultivation',
+    'CroppingSystems',
+    'ProfitRisk',
+    'Economical',
+    'Labour',
+    'HarvestStorage'
+  ];
+
+  getCurrentTabIndex(): number {
+    return this.tabs.indexOf(this.activeTab);
+  }
+
+  goToNextTab(): void {
+    const currentIndex = this.getCurrentTabIndex();
+    if (currentIndex < this.tabs.length - 1) {
+      this.activeTab = this.tabs[currentIndex + 1];
+      this.scrollToTop();
+    }
+  }
+
+  goToPreviousTab(): void {
+    const currentIndex = this.getCurrentTabIndex();
+    if (currentIndex > 0) {
+      this.activeTab = this.tabs[currentIndex - 1];
+      this.scrollToTop();
+    }
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   fetchData() {
     this.isLoading = true;
     this.financeService
@@ -190,6 +229,17 @@ export class AuditPersonalInfoComponent implements OnInit {
                 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
+          }).then(() => {
+            if (window.opener) {
+              window.opener.location.reload();
+              window.close();
+            } else {
+              if (this.lastSegment === 'viewAll-Govicare-AuditedRequests') {
+                this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests']);
+              } else {
+                window.history.back();
+              }
+            }
           });
         } else if (!res.status) {
           Swal.fire({
@@ -394,10 +444,10 @@ interface IFinance {
   branch: string;
   debtsOfFarmer: string;
   noOfDependents: number;
-  assetsLand: { Land: string[] };
-  assetsBuilding: { Building: string[] };
-  assetsVehicle: { Vehicle: string[] };
-  assetsMachinery: { Machinery: string[] };
+  assetsLand: string[] | null;
+  assetsBuilding: string[] | null;
+  assetsVehicle: string[] | null;
+  assetsMachinery: string[] | null;
   assetsFarmTool: string;
 }
 

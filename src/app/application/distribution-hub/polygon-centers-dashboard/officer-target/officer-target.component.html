@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <div *ngIf="!isLoading" class="overflow-x-auto">
   <div>
-    <div class="pt-5 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
+    <div class="pt-5 pb-5 w-full bg-tileLight dark:bg-tileBlack">
       <div class="flex flex-row justify-between items-center mb-2">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           {{centerObj.centerRegCode}} {{centerObj.centerName}}
@@ -10,7 +10,7 @@
         <div class="relative flex items-center">
             <p-calendar 
               id="deliveryDate" 
-              placeholder="Date" 
+              placeholder="Schedule Date" 
               [showIcon]="true" 
               [showButtonBar]="true" 
               dateFormat="yy-mm-dd" 
@@ -40,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div  class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
+    <div  class="w-6/7 overflow-x-auto border-2 border-gray-200 rounded-2xl">
       <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>

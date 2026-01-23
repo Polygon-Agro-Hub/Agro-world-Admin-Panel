@@ -67,7 +67,7 @@ export class OutOfDeliveryComponent implements OnChanges {
 
   onDateClear() {
     console.log('Date clear event triggered');
-    this.clearDate();
+    this.fetchData();
   }
 
   onSearch() {
@@ -79,13 +79,6 @@ export class OutOfDeliveryComponent implements OnChanges {
   clearSearch() {
     console.log('Clearing search');
     this.searchText = '';
-    this.fetchData();
-  }
-
-  clearDate() {
-    console.log('Clearing date, selectDate before:', this.selectDate);
-    this.selectDate = null;
-    console.log('selectDate after:', this.selectDate);
     this.fetchData();
   }
 
@@ -222,20 +215,22 @@ export class OutOfDeliveryComponent implements OnChanges {
     this.isLoading = true;
     
     // Format date properly for API - handle null case
-    const dateParam = this.selectDate ? 
-      this.selectDate.toISOString().split('T')[0] : 
-      '';
+    // const dateParam = this.selectDate ? 
+    //   this.selectDate.toISOString().split('T')[0] : 
+    //   '';
+
+    // console.log('dateParam', dateParam )
     
     console.log('Fetching data with params:', {
       centerId: this.centerObj.centerId,
-      date: dateParam || 'No date filter',
+      // date: dateParam || 'No date filter',
       status: this.selectStatus || 'No status filter',
       search: this.searchText || 'No search filter'
     });
     
     this.DestributionSrv.getCenterOutForDlvryOrders(
       this.centerObj.centerId, 
-      dateParam,
+      this.formatDateForAPI(this.selectDate),
       this.selectStatus, 
       this.searchText
     ).subscribe(
@@ -266,6 +261,16 @@ export class OutOfDeliveryComponent implements OnChanges {
     
     // Optional: Also prevent multiple consecutive spaces
     this.searchText = this.searchText.replace(/\s+/g, ' ');
+  }
+
+  private formatDateForAPI(date: Date | null): string {
+    if (!date) return '';
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`; 
   }
 }
 

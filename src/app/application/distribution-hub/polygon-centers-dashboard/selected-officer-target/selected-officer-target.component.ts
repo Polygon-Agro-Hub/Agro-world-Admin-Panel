@@ -177,6 +177,7 @@ fetchSelectedOfficerTargets(
 }
 
   onSearch() {
+    this.searchText = this.searchText.trimStart();
     this.fetchSelectedOfficerTargets();
 
   }
@@ -188,22 +189,9 @@ fetchSelectedOfficerTargets(
   }
 
   getDisplayDate(scheduleDate: string | Date): string {
-    const today = new Date();
+
     const schedule = new Date(scheduleDate);
 
-    // Normalize times to midnight for accurate date-only comparison
-    today.setHours(0, 0, 0, 0);
-    schedule.setHours(0, 0, 0, 0);
-
-    const diffDays = Math.floor((schedule.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) {
-      return 'Today';
-    } else if (diffDays === 1) {
-      return 'Tomorrow';
-    } else if (diffDays === 2) {
-      return 'Day after tomorrow';
-    } else {
       const day = schedule.getDate();
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -221,7 +209,7 @@ fetchSelectedOfficerTargets(
       }
 
       return `${day}${ordinal(day)} ${month}`;
-    }
+
   }
 
 

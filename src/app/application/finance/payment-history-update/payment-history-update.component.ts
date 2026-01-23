@@ -26,6 +26,8 @@ export class PaymentHistoryUpdateComponent implements OnInit {
   isLoading: boolean = true;
   fileChanged: boolean = false;
 
+  readonly MAX_REFERENCE_LENGTH = 50;
+
   receiverOptions = [
     { label: 'Farmers', value: 'Farmers' }
   ];
@@ -118,8 +120,21 @@ export class PaymentHistoryUpdateComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/finance/action/viewAll-payments']);
-  }
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will be redirected to the payments page',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, go to back',
+    cancelButtonText: 'Cancel'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.router.navigate(['/finance/action/viewAll-payments']);
+    }
+  });
+}
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -193,7 +208,7 @@ export class PaymentHistoryUpdateComponent implements OnInit {
 
     Swal.fire({
       icon: 'success',
-      title: 'File Selected',
+      title: 'Confirm Upload',
       text: `${file.name} will replace the existing file`,
       timer: 2000,
       showConfirmButton: false,
@@ -268,15 +283,116 @@ export class PaymentHistoryUpdateComponent implements OnInit {
   }
 
   onUpdate(): void {
-    if (!this.validateForm()) {
-      return;
-    }
+  if (!this.validateForm()) {
+    return;
+  }
 
-    if (!this.hasChanges()) {
+  if (!this.hasChanges()) {
+    Swal.fire({
+      icon: 'info',
+      title: 'No Changes',
+      text: 'No changes have been made to update',
+      confirmButtonColor: '#3B82F6',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 hover:bg-blue-600',
+      },
+    });
+    return;
+  }
+
+  // Show confirmation dialog before proceeding
+  Swal.fire({
+    icon: 'question',
+    title: 'Confirm Update',
+    html: `
+      <div class="text-left">
+        <p class="mb-2">Are you sure you want to update this payment record?</p>
+        <div class="mt-3 p-2 bg-gray-100 dark:bg-gray-700 rounded text-sm">
+          <p><strong>Receivers:</strong> ${this.receivers}</p>
+          <p><strong>Amount:</strong> ${this.amount}</p>
+          <p><strong>Reference:</strong> ${this.paymentReference}</p>
+        </div>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Yes, update',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#10B981',
+    cancelButtonColor: '#6B7280',
+    reverseButtons: true,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+      confirmButton: 'bg-green-500 hover:bg-green-600 px-4 py-2',
+      cancelButton: 'bg-gray-500 hover:bg-gray-600 px-4 py-2',
+      htmlContainer: 'text-left'
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.executeUpdate();
+    }
+  });
+}
+
+// New method to handle the actual update process
+private executeUpdate(): void {
+  // Show loading
+  Swal.fire({
+    title: 'Updating...',
+    text: 'Please wait while we update the payment record',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+  });
+
+  this.isUploading = true;
+  const cleanAmount = this.amount.replace(/,/g, '');
+
+  this.financeService.updatePaymentHistory(
+    this.paymentId,
+    this.receivers,
+    cleanAmount,
+    this.paymentReference,
+    this.uploadedFile || undefined
+  ).subscribe({
+    next: (response) => {
+      this.isUploading = false;
       Swal.fire({
-        icon: 'info',
-        title: 'No Changes',
-        text: 'No changes have been made to update',
+        icon: 'success',
+        title: 'Success!',
+        text: 'Payment record updated successfully',
+        confirmButtonColor: '#3B82F6',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+          confirmButton: 'bg-blue-500 hover:bg-blue-600',
+        },
+      }).then(() => {
+        this.router.navigate(['/finance/action/viewAll-payments']);
+      });
+    },
+    error: (error) => {
+      this.isUploading = false;
+      console.error('Update error:', error);
+
+      let errorMessage = 'Failed to update payment record. Please try again.';
+
+      if (error.error && error.error.error) {
+        errorMessage = error.error.error;
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Update Failed',
+        text: errorMessage,
         confirmButtonColor: '#3B82F6',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -284,101 +400,45 @@ export class PaymentHistoryUpdateComponent implements OnInit {
           confirmButton: 'bg-blue-500 hover:bg-blue-600',
         },
       });
-      return;
     }
+  });
+}
 
-    // Show loading
+  onCancel(): void {
+  const forceShowDialog = true;
+  
+  if (this.hasChanges() || forceShowDialog) {
+    console.log('Dialog should appear now');
     Swal.fire({
-      title: 'Updating...',
-      text: 'Please wait while we update the payment record',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
+      icon: 'question',
+      title: 'Discard Changes?',
+      text: 'You have unsaved changes. Are you sure you want to cancel?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, discard',
+      cancelButtonText: 'No, keep editing',
+      confirmButtonColor: '#EF4444',
+      cancelButtonColor: '#6B7280',
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold',
+        confirmButton: 'bg-red-500 hover:bg-red-600',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600',
       },
-    });
-
-    this.isUploading = true;
-    const cleanAmount = this.amount.replace(/,/g, '');
-
-    this.financeService.updatePaymentHistory(
-      this.paymentId,
-      this.receivers,
-      cleanAmount,
-      this.paymentReference,
-      this.uploadedFile || undefined
-    ).subscribe({
-      next: (response) => {
-        this.isUploading = false;
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Payment record updated successfully',
-          confirmButtonColor: '#3B82F6',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-            confirmButton: 'bg-blue-500 hover:bg-blue-600',
-          },
-        }).then(() => {
-          this.router.navigate(['/finance/action/viewAll-payments']);
-        });
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown'
       },
-      error: (error) => {
-        this.isUploading = false;
-        console.error('Update error:', error);
-
-        let errorMessage = 'Failed to update payment record. Please try again.';
-
-        if (error.error && error.error.error) {
-          errorMessage = error.error.error;
-        }
-
-        Swal.fire({
-          icon: 'error',
-          title: 'Update Failed',
-          text: errorMessage,
-          confirmButtonColor: '#3B82F6',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-            confirmButton: 'bg-blue-500 hover:bg-blue-600',
-          },
-        });
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/finance/action/viewAll-payments']);
       }
     });
+  } else {
+    this.router.navigate(['/finance/action/viewAll-payments']);
   }
-
-  onCancel(): void {
-    if (this.hasChanges()) {
-      Swal.fire({
-        icon: 'question',
-        title: 'Discard Changes?',
-        text: 'You have unsaved changes. Are you sure you want to cancel?',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, discard',
-        cancelButtonText: 'No, keep editing',
-        confirmButtonColor: '#EF4444',
-        cancelButtonColor: '#6B7280',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-          confirmButton: 'bg-red-500 hover:bg-red-600',
-          cancelButton: 'bg-gray-500 hover:bg-gray-600',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.router.navigate(['/finance/action/viewAll-payments']);
-        }
-      });
-    } else {
-      this.router.navigate(['/finance/action/viewAll-payments']);
-    }
-  }
+}
 
   formatAmount(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -452,4 +512,63 @@ export class PaymentHistoryUpdateComponent implements OnInit {
       },
     });
   }
+
+  onPaymentReferenceInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart;
+    
+    // If the input starts with a space, remove leading spaces
+    if (input.value.startsWith(' ')) {
+      // Remove all leading spaces
+      const newValue = input.value.replace(/^\s+/, '');
+      
+      // Update the model
+      this.paymentReference = newValue;
+      
+      // Restore cursor position (adjust for removed spaces)
+      setTimeout(() => {
+        const newCursorPosition = Math.max(0, (cursorPosition || 0) - (input.value.length - newValue.length));
+        input.setSelectionRange(newCursorPosition, newCursorPosition);
+      });
+      return;
+    }
+    
+    // Check if character limit is exceeded
+    if (input.value.length > this.MAX_REFERENCE_LENGTH) {
+      // Truncate to max length
+      const truncatedValue = input.value.substring(0, this.MAX_REFERENCE_LENGTH);
+      
+      // Update the model
+      this.paymentReference = truncatedValue;
+      
+      // Show warning if user keeps typing beyond limit
+      if (input.value.length > this.MAX_REFERENCE_LENGTH + 5) { // Show warning after 5 extra characters
+        this.showCharacterLimitWarning();
+      }
+    }
+  }
+
+  private showCharacterLimitWarning(): void {
+      // You can show a small notification or change border color
+      const inputElement = document.querySelector('input[type="text"][(ngModel)]="paymentReference"') as HTMLInputElement;
+      if (inputElement) {
+        inputElement.classList.add('border-red-500');
+        setTimeout(() => {
+          inputElement.classList.remove('border-red-500');
+        }, 2000);
+      }
+      
+      // Or show a toast notification
+      Swal.fire({
+        icon: 'warning',
+        title: 'Character Limit Exceeded',
+        text: `Payment reference cannot exceed ${this.MAX_REFERENCE_LENGTH} characters`,
+        timer: 2000,
+        showConfirmButton: false,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      });
+    }
 }

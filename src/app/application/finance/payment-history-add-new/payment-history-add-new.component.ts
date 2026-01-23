@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FinanceService } from '../../../services/finance/finance.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-payment-history-add-new',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './payment-history-add-new.component.html',
   styleUrl: './payment-history-add-new.component.css'
 })
@@ -21,6 +22,8 @@ export class PaymentHistoryAddNewComponent {
   isDragging: boolean = false;
   isUploading: boolean = false;
   uploadedFileNames: Set<string> = new Set(); // Track uploaded file names
+
+  readonly MAX_REFERENCE_LENGTH = 50;
 
   receiverOptions = [
     { label: 'Farmers', value: 'Farmers' }
@@ -38,6 +41,7 @@ export class PaymentHistoryAddNewComponent {
       this.amount &&
       parseFloat(this.amount.replace(/,/g, '')) > 0 &&
       this.paymentReference.trim() &&
+      this.paymentReference.length <= this.MAX_REFERENCE_LENGTH &&
       this.uploadedFile
     );
   }
@@ -134,7 +138,7 @@ export class PaymentHistoryAddNewComponent {
     // Show success notification
     Swal.fire({
       icon: 'success',
-      title: 'File Selected',
+      title: 'Confirm Upload',
       text: `${file.name} has been selected successfully`,
       timer: 2000,
       showConfirmButton: false,
@@ -165,6 +169,8 @@ export class PaymentHistoryAddNewComponent {
 
     if (!this.paymentReference.trim()) {
       missingFields.push('Payment Reference');
+    } else if (this.paymentReference.length > this.MAX_REFERENCE_LENGTH) {
+      missingFields.push(`Payment Reference (exceeds ${this.MAX_REFERENCE_LENGTH} characters)`);
     }
 
     if (!this.uploadedFile) {
@@ -197,6 +203,30 @@ export class PaymentHistoryAddNewComponent {
       return;
     }
 
+    // Confirmation dialog before proceeding with upload
+    Swal.fire({
+      icon: 'question',
+      title: 'Confirm Upload',
+      html: 'Are you sure you want to upload this file?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, upload',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#3B82F6',
+      cancelButtonColor: '#6B7280',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 hover:bg-blue-600',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.proceedWithUpload();
+      }
+    });
+  }
+
+  private proceedWithUpload(): void {
     // Show loading indicator
     Swal.fire({
       title: 'Uploading...',
@@ -349,6 +379,65 @@ export class PaymentHistoryAddNewComponent {
           },
         });
       }
+    });
+  }
+
+  onPaymentReferenceInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart;
+    
+    // If the input starts with a space, remove leading spaces
+    if (input.value.startsWith(' ')) {
+      // Remove all leading spaces
+      const newValue = input.value.replace(/^\s+/, '');
+      
+      // Update the model
+      this.paymentReference = newValue;
+      
+      // Restore cursor position (adjust for removed spaces)
+      setTimeout(() => {
+        const newCursorPosition = Math.max(0, (cursorPosition || 0) - (input.value.length - newValue.length));
+        input.setSelectionRange(newCursorPosition, newCursorPosition);
+      });
+      return;
+    }
+    
+    // Check if character limit is exceeded
+    if (input.value.length > this.MAX_REFERENCE_LENGTH) {
+      // Truncate to max length
+      const truncatedValue = input.value.substring(0, this.MAX_REFERENCE_LENGTH);
+      
+      // Update the model
+      this.paymentReference = truncatedValue;
+      
+      // Show warning if user keeps typing beyond limit
+      if (input.value.length > this.MAX_REFERENCE_LENGTH + 5) { // Show warning after 5 extra characters
+        this.showCharacterLimitWarning();
+      }
+    }
+  }
+
+  private showCharacterLimitWarning(): void {
+    // You can show a small notification or change border color
+    const inputElement = document.querySelector('input[type="text"][(ngModel)]="paymentReference"') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.classList.add('border-red-500');
+      setTimeout(() => {
+        inputElement.classList.remove('border-red-500');
+      }, 2000);
+    }
+    
+    // Or show a toast notification
+    Swal.fire({
+      icon: 'warning',
+      title: 'Character Limit Exceeded',
+      text: `Payment reference cannot exceed ${this.MAX_REFERENCE_LENGTH} characters`,
+      timer: 2000,
+      showConfirmButton: false,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     });
   }
 }

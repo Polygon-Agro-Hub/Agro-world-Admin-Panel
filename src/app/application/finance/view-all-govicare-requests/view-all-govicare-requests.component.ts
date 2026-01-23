@@ -51,6 +51,8 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   assignError: string = '';
   currentAssignedOfficer: any = null;
 
+  totArea!: number;
+
   // Officer Role Options
   officerRoleOptions = [
     { label: 'Field Officer', value: 'Field Officer' },
@@ -134,6 +136,8 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     this.FinanceService.getGoviCareRequestById(requestId).subscribe({
       next: (response) => {
         this.selectedRequest = response.data;
+        console.log('selectedRequest', this.selectedRequest)
+        this.totArea = (this.selectedRequest.ExtentH*2.47105) + this.selectedRequest.Extent + (this.selectedRequest.ExtentP / 160);
         this.showDetailsModal = true;
         this.isLoading = false;
       },

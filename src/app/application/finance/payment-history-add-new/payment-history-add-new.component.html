@@ -21,15 +21,19 @@
           Receivers <span class="text-gray-700 dark:text-textDark">*</span>
         </label>
         <div class="relative">
-          <select [(ngModel)]="receivers" [disabled]="isUploading"
-            class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-textLight dark:text-textDark appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-            <option *ngFor="let option of receiverOptions" [value]="option.value">
-              {{ option.label }}
-            </option>
-          </select>
-          <i
-            class="fa-solid fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
-        </div>
+  <!-- PrimeNG Dropdown -->
+  <p-dropdown 
+    [(ngModel)]="receivers" 
+    [options]="receiverOptions"
+    optionLabel="label"
+    optionValue="value"
+    [disabled]="isUploading"
+    placeholder="Select Receiver"
+    [styleClass]="'w-full'"
+    [panelStyleClass]="'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600'">
+  </p-dropdown>
+</div>
+
       </div>
 
       <!-- Amount Input -->
@@ -37,26 +41,38 @@
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
           Total Amount (Rs.) <span class="text-gray-700 dark:text-textDark">*</span>
         </label>
-        <input type="text" [(ngModel)]="amount" (blur)="formatAmount($event)" [disabled]="isUploading"
+        <input type="number" [(ngModel)]="amount" (blur)="formatAmount($event)" [disabled]="isUploading"
           placeholder="--Enter Total Amount--"
           class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-textLight dark:text-textDark placeholder:italic focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" />
       </div>
     </div>
 
-    <!-- Payment Reference -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-        Payment Reference <span class="text-gray-700 dark:text-textDark">*</span>
-      </label>
-      <input type="text" [(ngModel)]="paymentReference" [disabled]="isUploading"
-        placeholder="--Enter Payment Reference here--"
-        class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-textLight dark:text-textDark placeholder:italic focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" />
-    </div>
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
+    Payment Reference <span class="text-gray-700 dark:text-textDark">*</span>
+    <span 
+      class="text-xs ml-2"
+      [ngClass]="{
+        'text-red-500': paymentReference.length > MAX_REFERENCE_LENGTH,
+        'text-gray-500 dark:text-gray-400': paymentReference.length <= MAX_REFERENCE_LENGTH
+      }">
+      ({{ paymentReference.length || 0 }}/{{ MAX_REFERENCE_LENGTH }} characters)
+    </span>
+  </label>
+  <input 
+    type="text" 
+    [(ngModel)]="paymentReference" 
+    [disabled]="isUploading"
+    [maxlength]="MAX_REFERENCE_LENGTH"
+    (input)="onPaymentReferenceInput($event)"
+    placeholder="--Enter Payment Reference here--"
+    class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-textLight dark:text-textDark placeholder:italic focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed" />
+</div>
 
     <!-- CSV File Upload -->
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-        CSV File <span class="text-gray-700 dark:text-textDark">*</span>
+        File <span class="text-gray-700 dark:text-textDark">*</span>
       </label>
 
       <!-- File Input (Hidden) -->
@@ -93,7 +109,6 @@
       <div *ngIf="uploadedFileName"
         class="mt-3 flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-file-csv text-green-500 text-xl"></i>
           <div>
             <span class="text-sm font-medium text-gray-700 dark:text-textDark">
               {{ uploadedFileName }}

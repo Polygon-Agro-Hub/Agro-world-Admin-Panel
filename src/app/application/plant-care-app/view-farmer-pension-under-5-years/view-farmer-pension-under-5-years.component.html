@@ -11,57 +11,61 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-normal text-[#2B2B2B] dark:text-white">
-                Farmer Pension Under 5 Years (03)
+                Farmer Pension Under 5 Years ({{ totalItems }})
             </h2>
 
             <!-- Search -->
             <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80">
                 <input type="text" placeholder="Search By Farmer NIC..."
                     class="bg-transparent outline-none w-full text-gray-700 dark:text-white placeholder:text-gray-400"
-                    [(ngModel)]="searchText" />
-                <span class="text-gray-500 ml-2">
+                    [(ngModel)]="searchText" (keyup.enter)="onSearch()" />
+                <button *ngIf="searchText" (click)="clearSearch()"
+                    class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+                <button (click)="onSearch()" class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                </span>
+                </button>
             </div>
         </div>
 
         <!-- Table -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" *ngIf="hasData">
             <table class="w-full border-collapse">
                 <thead>
                     <tr class="border-b border-gray-200 dark:border-gray-700">
-                        <th class="px-4 py-3 text-left text-sm text-gray-500">No</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-500">Farmer Name</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-500">Farmer NIC</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-500">Current Status (Rs.)</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-500">Days more</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-500">Approved By</th>
-                        <th class="px-4 py-3 text-left text-sm text-gray-500">Approved Date & Time</th>
-                        <th class="px-4 py-3 text-center text-sm text-gray-500">Details</th>
+                        <th class="px-4 py-3 text-center font-medium text-sm text-gray-500">No</th>
+                        <th class="px-4 py-3 text-center font-medium text-sm text-gray-500">Farmer Name</th>
+                        <th class="px-4 py-3 text-center font-medium text-sm text-gray-500">Farmer NIC</th>
+                        <th class="px-4 py-3 text-center font-medium text-sm text-gray-500">Current Status (Rs.)</th>
+                        <th class="px-4 py-3 text-center font-medium text-sm text-gray-500">Days more</th>
+                        <th class="px-4 py-3 text-center font-medium text-sm text-gray-500">Approved By</th>
+                        <th class="px-4 py-3 text-center font-medium text-sm text-gray-500">Approved Date & Time</th>
+                        <th class="px-4 py-3 text-center font-medium text-sm text-gray-500">Details</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let f of filteredFarmers; let i = index"
+                    <tr *ngFor="let f of farmers | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }; let i = index"
                         class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300 text-center">
                             {{ f.no }}
                         </td>
-                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300 text-center">
                             {{ f.name }}
                         </td>
-                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300 text-center">
                             {{ f.nic }}
                         </td>
-                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300 text-center">
                             {{ f.amount | number:'1.2-2' }}
                         </td>
-                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300 text-center">
                             {{ f.daysMore }}
                         </td>
-                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300 text-center">
                             {{ f.approvedBy }}
                         </td>
-                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300 text-center">
                             {{ f.approvedDate }}
                         </td>
                         <td class="px-4 py-4 text-center">
@@ -79,63 +83,131 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- No Data Message -->
+        <div *ngIf="!hasData && !isLoading" class="flex flex-col justify-center items-center py-20">
+            <p class="text-[#494949] dark:text-textDark mb-4">
+                -- No Data Available --
+            </p>
+            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+        </div>
+
+        <!-- Pagination -->
+        <div class="dark:bg-[#262f45] pt-4" *ngIf="totalItems > 0">
+            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" previousLabel="Previous"
+                nextLabel="Next" screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+                screenReaderCurrentLabel="You're on page">
+            </pagination-controls>
+        </div>
     </div>
 </div>
 
-<div *ngIf="showDetailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+<div *ngIf="showDetailsModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 dark:bg-opacity-70"
     (click)="closeDetailsModal()">
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-md mx-4"
         (click)="$event.stopPropagation()">
 
-        <!-- Header -->
-        <div class="px-6 py-4 border-b">
-            <h2 class="text-lg font-semibold text-center">
-                Farmer Details
+        <!-- Modal Header -->
+        <div class="px-6 py-4 border-b border-gray-300 dark:border-gray-600">
+            <h2 class="text-lg font-semibold text-center text-gray-800 dark:text-gray-200">
+                Pension Request Details
             </h2>
         </div>
 
-        <!-- Body -->
-        <div class="p-6 space-y-4">
+        <!-- Modal Body -->
+        <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
 
-            <div class="flex justify-between">
-                <span class="text-gray-500">Farmer Name</span>
-                <span class="font-medium">{{ dataObject?.name }}</span>
+            <!-- Farmer's Full Name -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer's Full Name</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ dataObject?.farmerFullName }}
+                </span>
             </div>
 
-            <div class="flex justify-between">
-                <span class="text-gray-500">NIC</span>
-                <span class="font-medium">{{ dataObject?.nic }}</span>
+            <!-- Farmer's NIC Number -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer's NIC Number</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ dataObject?.nic }}
+                </span>
             </div>
 
-            <div class="flex justify-between">
-                <span class="text-gray-500">Amount</span>
-                <span class="font-medium">Rs. {{ dataObject?.amount }}</span>
+            <!-- Farmer's Phone Number -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer's Phone Number</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ dataObject?.phoneNumber }}
+                </span>
             </div>
 
-            <div class="flex justify-between">
-                <span class="text-gray-500">Days More</span>
-                <span class="font-medium">{{ dataObject?.daysMore }}</span>
+            <!-- Farmer's DOB -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer's DOB</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ dataObject?.dob | date:'MMMM d, y' }}
+                </span>
             </div>
 
-            <div class="flex justify-between">
-                <span class="text-gray-500">Approved By</span>
-                <span class="font-medium">{{ dataObject?.approvedBy }}</span>
+            <!-- Farmer's Age -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer's Age</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ dataObject?.age }}
+                </span>
             </div>
 
-            <div class="flex justify-between">
-                <span class="text-gray-500">Approved Date</span>
-                <span class="font-medium">{{ dataObject?.approvedDate }}</span>
+            <!-- Successor -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Successor</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ dataObject?.successor }}
+                </span>
+            </div>
+
+            <!-- Successor's NIC Number -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Successor's NIC Number</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ dataObject?.successorNic }}
+                </span>
+            </div>
+
+            <!-- Successor's DOB -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Successor's DOB</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ (dataObject?.successorDob ?? null) ? (dataObject?.successorDob | date:'MMMM d, y') : 'N/A' }}
+                </span>
+            </div>
+
+            <!-- Successor's Age -->
+            <div class="flex items-start">
+                <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Successor's Age</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+                <span class="text-sm text-gray-800 dark:text-gray-200 font-medium flex-1">
+                    {{ dataObject?.successorAge }}
+                </span>
             </div>
 
         </div>
 
-        <!-- Footer -->
+        <!-- Modal Footer -->
         <div class="px-6 py-4 flex justify-center">
-            <button (click)="closeDetailsModal()" class="px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+            <button (click)="closeDetailsModal()"
+                class="px-12 py-2 bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700 text-white rounded-lg transition-colors font-medium text-sm">
                 Close
             </button>
         </div>
-
     </div>
 </div>

@@ -143,7 +143,7 @@ export class AuditPersonalInfoComponent implements OnInit {
           this.minimumShare = this.sharesData.devideData.minShare;
           this.maximumShare = this.sharesData.devideData.maxShare;
           this.numShares = this.sharesData.devideData.defineShares;
-          this.shareValue = Number(this.sharesData.totalValue) / this.numShares;
+          this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
         }
 
         console.log('--------------------------------------');
@@ -158,9 +158,9 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.numShares = value; // optional, ngModel already does this
     console.log('numShares', this.numShares);
     if (this.numShares !== null) {
-      this.shareValue = Number(this.sharesData.totalValue) / this.numShares;
+      this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
     } else if (this.numShares === null) {
-      this.shareValue = 0.0;
+      this.shareValue = 0;
     }
     console.log('shareValue', this.shareValue);
   }
@@ -269,6 +269,8 @@ export class AuditPersonalInfoComponent implements OnInit {
       form.form.markAllAsTouched();
       return;
     }
+
+    if (this.numShares <= 0) return;
 
     this.openDevideSharesPopUp = false;
 

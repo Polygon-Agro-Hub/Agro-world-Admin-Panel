@@ -72,6 +72,7 @@ export class WholesaleComplaintsComponent implements OnInit {
   totalItems = 0;
   itemsPerPage = 10;
   page = 1;
+  roleCategory:string = this.tokenService.getUserDetails().role;
 
   hasData: boolean = false;
 
@@ -103,7 +104,7 @@ export class WholesaleComplaintsComponent implements OnInit {
   private fetchComplaints(): void {
     this.isLoading = true;
 
-    this.complaintsService.fetchWholesaleComplaints().subscribe({
+    this.complaintsService.fetchWholesaleComplaints(this.roleCategory).subscribe({
       next: (resp: ApiResponse) => {
         this.complaints = resp.data
           .map(item => ({

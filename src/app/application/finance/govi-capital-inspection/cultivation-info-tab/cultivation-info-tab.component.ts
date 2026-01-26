@@ -43,7 +43,7 @@ export class CultivationInfoTabComponent implements OnDestroy {
   }
 
   getYesNo(value: number | undefined): string {
-    if (value === undefined) return 'Not provided';
+    if (value === undefined) return '--';
     return value === 1 ? 'Yes' : 'No';
   }
 
@@ -53,7 +53,7 @@ export class CultivationInfoTabComponent implements OnDestroy {
 
   getFormattedPh(): string {
     if (!this.cultivationData || this.cultivationData.ph === undefined) {
-      return 'Not provided';
+      return '--';
     }
     return parseFloat(this.cultivationData.ph.toString()).toString();
   }
@@ -63,7 +63,7 @@ export class CultivationInfoTabComponent implements OnDestroy {
       !this.cultivationData?.waterSources ||
       this.cultivationData.waterSources.length === 0
     ) {
-      return 'Not provided';
+      return '--';
     }
     return this.cultivationData.waterSources.join(', ');
   }

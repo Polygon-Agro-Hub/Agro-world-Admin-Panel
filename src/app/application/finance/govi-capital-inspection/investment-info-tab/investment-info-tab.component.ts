@@ -25,7 +25,7 @@ export class InvestmentInfoTabComponent {
 
   // Method to format the expected investment value
   formatExpectedInvestment(value: string): string {
-    if (!value) return 'Rs 0';
+    if (!value) return '--';
     
     // Remove any existing commas and non-digit characters (except decimal point)
     const numericValue = value.replace(/[^\d.]/g, '');

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 @Component({
   selector: 'app-id-proof-tab',
@@ -10,6 +10,10 @@ import { Component, Input, OnChanges } from '@angular/core';
 })
 export class IdProofTabComponent implements OnChanges {
   @Input() idInfo!: IIdInfo;
+  @Input() currentPage: number = 2;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
 
   isModalOpen = false;
   modalTitle = '';
@@ -18,6 +22,14 @@ export class IdProofTabComponent implements OnChanges {
 
   ngOnChanges(): void {
     console.log(this.idInfo);
+  }
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
   }
 
   getProofTypeDisplay(): string {

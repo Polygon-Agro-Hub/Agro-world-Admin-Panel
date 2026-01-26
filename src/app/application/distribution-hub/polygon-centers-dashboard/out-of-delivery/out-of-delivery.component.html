@@ -1,7 +1,7 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <div *ngIf="!isLoading" class="overflow-x-auto">
   <div>
-    <div class="pt-5 pb-2 min-w-[1400px] bg-tileLight dark:bg-tileBlack">
+    <div class="pt-5 pb-2 w-full bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
           {{centerObj.centerRegCode}} {{centerObj.centerName}}
@@ -44,8 +44,7 @@
               id="deliveryDate" 
               placeholder="Delivery Date" 
               [showIcon]="true" 
-              [showClear]="true"
-              [showButtonBar]="true" 
+              [showButtonBar]="false" 
               dateFormat="yy-mm-dd" 
               [monthNavigator]="true" 
               [yearNavigator]="true"
@@ -54,20 +53,15 @@
               [(ngModel)]="selectDate" 
               (onSelect)="onDateSelect()"
               (onClearClick)="onDateClear()"
-              [style]="{ width: '16rem', height: '2rem' }" 
-              panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                       [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                       [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                       [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                       [&_.p-datepicker-header]:dark:text-white
-                       [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                       [&_.p-button:hover]:dark:bg-[#6b7280]"
-              inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-              [appendTo]="'body'" />
+              [style]="{ width: '145px' }"
+                  [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+                  panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+                  inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+/>
             
             <!-- Manual clear button as fallback -->
             <button *ngIf="selectDate" 
-                    (click)="clearDate()" 
+                    (click)="onDateClear()" 
                     class="absolute right-8 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none z-10">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -152,7 +146,7 @@
               {{item.firstNameEnglish}} {{item.lastNameEnglish}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              Today 8-12 AM
+              {{getDisplayDate(item.sheduleDate)}} {{ removeWithin(item.sheduleTime) }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{item.outDlvrDate | date:'shortTime'}}

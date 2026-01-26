@@ -336,6 +336,19 @@ export class OfficersComponent implements OnChanges {
       `/distribution-hub/action/view-polygon-centers/distributed-officer-profile/${id}`,
     ]);
   }
+
+  onInputChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    // Trim leading spaces from the input value
+    this.searchText = target.value.trimStart();
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+      // Prevent space as the first character
+      if (event.key === ' ' && this.searchText.length === 0) {
+        event.preventDefault();
+      }
+    }
 }
 
 interface CenterDetails {

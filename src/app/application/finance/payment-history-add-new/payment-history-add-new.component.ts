@@ -47,7 +47,23 @@ export class PaymentHistoryAddNewComponent {
   }
 
   back(): void {
-    this.router.navigate(['/finance/action/viewAll-payments']);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be redirected to the payments page',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/finance/action/viewAll-payments']);
+      }
+    });
   }
 
   onFileSelected(event: Event): void {
@@ -299,33 +315,29 @@ export class PaymentHistoryAddNewComponent {
     });
   }
 
-  onCancel(): void {
-    // Check if there's unsaved data
-    if (this.amount || this.paymentReference || this.uploadedFile) {
-      Swal.fire({
-        icon: 'question',
-        title: 'Discard Changes?',
-        text: 'You have unsaved changes. Are you sure you want to cancel?',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, discard',
-        cancelButtonText: 'No, keep editing',
-        confirmButtonColor: '#EF4444',
-        cancelButtonColor: '#6B7280',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-          confirmButton: 'bg-red-500 hover:bg-red-600',
-          cancelButton: 'bg-gray-500 hover:bg-gray-600',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.router.navigate(['/finance/action/viewAll-payments']);
-        }
-      });
-    } else {
-      this.router.navigate(['/finance/action/viewAll-payments']);
+  onCancel() {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Are you sure?',
+          text: 'You may lose the added data after canceling!',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Cancel',
+          cancelButtonText: 'No, Keep Editing',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+          buttonsStyling: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.navigatePath('/finance/action/viewAll-payments');
+          }
+        });
+      }
+  
+       navigatePath(path: string) {
+      this.router.navigate([path]);
     }
-  }
 
   formatAmount(event: Event): void {
     const input = event.target as HTMLInputElement;

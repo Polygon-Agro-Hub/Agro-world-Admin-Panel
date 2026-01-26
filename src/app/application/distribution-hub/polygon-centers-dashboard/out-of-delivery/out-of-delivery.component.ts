@@ -51,9 +51,10 @@ export class OutOfDeliveryComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['centerObj'] && this.centerObj) {
+      this.selectDate = new Date(); // Current date and time
       this.fetchData();
     }
-  }
+}
 
   onStatusChange() {
     console.log('Status changed to:', this.selectStatus);
@@ -67,7 +68,8 @@ export class OutOfDeliveryComponent implements OnChanges {
 
   onDateClear() {
     console.log('Date clear event triggered');
-    this.clearDate();
+    this.selectDate = new Date();
+    this.fetchData();
   }
 
   onSearch() {
@@ -79,13 +81,6 @@ export class OutOfDeliveryComponent implements OnChanges {
   clearSearch() {
     console.log('Clearing search');
     this.searchText = '';
-    this.fetchData();
-  }
-
-  clearDate() {
-    console.log('Clearing date, selectDate before:', this.selectDate);
-    this.selectDate = null;
-    console.log('selectDate after:', this.selectDate);
     this.fetchData();
   }
 
@@ -220,22 +215,16 @@ export class OutOfDeliveryComponent implements OnChanges {
 
   fetchData() {
     this.isLoading = true;
-    
-    // Format date properly for API - handle null case
-    const dateParam = this.selectDate ? 
-      this.selectDate.toISOString().split('T')[0] : 
-      '';
-    
     console.log('Fetching data with params:', {
       centerId: this.centerObj.centerId,
-      date: dateParam || 'No date filter',
+      // date: dateParam || 'No date filter',
       status: this.selectStatus || 'No status filter',
       search: this.searchText || 'No search filter'
     });
     
     this.DestributionSrv.getCenterOutForDlvryOrders(
       this.centerObj.centerId, 
-      dateParam,
+      this.formatDateForAPI(this.selectDate),
       this.selectStatus, 
       this.searchText
     ).subscribe(
@@ -267,6 +256,52 @@ export class OutOfDeliveryComponent implements OnChanges {
     // Optional: Also prevent multiple consecutive spaces
     this.searchText = this.searchText.replace(/\s+/g, ' ');
   }
+
+  private formatDateForAPI(date: Date | null): string {
+    if (!date) return '';
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`; 
+  }
+
+  getDisplayDate(scheduleDate: string | Date): string {
+    const schedule = new Date(scheduleDate);
+    const today = new Date();
+    
+    // Check if it's today (same year, month, and date)
+    const isToday = schedule.getFullYear() === today.getFullYear() &&
+                    schedule.getMonth() === today.getMonth() &&
+                    schedule.getDate() === today.getDate();
+    
+    if (isToday) {
+        return "Today";
+    }
+    
+    const day = schedule.getDate();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = monthNames[schedule.getMonth()];
+    
+    // Get ordinal for the day
+    const ordinal = (n: number) => {
+        if (n > 3 && n < 21) return 'th';
+        switch (n % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    }
+    
+    return `${day}${ordinal(day)} ${month}`;
+}
+
+removeWithin(time: string): string {
+  return time ? time.replace('Within ', '') : time;
+}
 }
 
 interface CenterDetails {
@@ -283,4 +318,5 @@ class Orders {
   sheduleDate!: string 
   outDlvrDate!: string 
   outDlvrStatus!: string 
+  sheduleTime!: string
 }

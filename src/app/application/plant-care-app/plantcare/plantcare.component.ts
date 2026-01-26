@@ -21,6 +21,7 @@ export class PlantcareComponent {
   popupVisibleCertification = false;
   popupVisibleFarmerClusters = false;
   popupVisibleAuditFarmers = false;
+  popupVisiblePentionRequests = false;
 
   constructor(
     private router: Router,
@@ -64,6 +65,8 @@ export class PlantcareComponent {
     if (this.popupVisibleNews) this.popupVisibleNews = false;
     if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
     if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisiblePentionRequests)
+      this.popupVisiblePentionRequests = false;
   }
 
   // Add the new toggle method for Farmer Clusters
@@ -73,11 +76,25 @@ export class PlantcareComponent {
     if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
     if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
     if (this.popupVisibleCertification) this.popupVisibleCertification = false;
+    if (this.popupVisiblePentionRequests)
+      this.popupVisiblePentionRequests = false;
   }
 
   // Toggle function for Audit Farmers popup
   togglePopupAuditFarmers() {
     this.popupVisibleAuditFarmers = !this.popupVisibleAuditFarmers;
+    if (this.popupVisibleNews) this.popupVisibleNews = false;
+    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
+    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
+    if (this.popupVisibleFarmerClusters)
+      this.popupVisibleFarmerClusters = false;
+    if (this.popupVisiblePentionRequests)
+      this.popupVisiblePentionRequests = false;
+  }
+
+  togglePopupPentionRequests() {
+    this.popupVisiblePentionRequests = !this.popupVisiblePentionRequests;
     if (this.popupVisibleNews) this.popupVisibleNews = false;
     if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
     if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
@@ -227,5 +244,9 @@ export class PlantcareComponent {
   // Navigation function for Farmer Clusters
   viewFarmerClusters(): void {
     this.router.navigate(['/plant-care/action/farmers-clusters-list']);
+  }
+
+  viewPentionRequests(): void {
+    this.router.navigate(['/plant-care/action/pension-requests']);
   }
 }

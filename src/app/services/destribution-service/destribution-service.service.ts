@@ -274,6 +274,7 @@ export class DestributionService {
     status: string = '',
     searchText: string = ''
   ): Observable<ApiResponse> {
+    console.log('date', date)
     let url = `${this.apiUrl}distribution/get-center-out-for-dlvry-orders?id=${id}`;
     if (status) {
       url += `&status=${status}`;

@@ -51,9 +51,10 @@ export class OutOfDeliveryComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['centerObj'] && this.centerObj) {
+      this.selectDate = new Date(); // Current date and time
       this.fetchData();
     }
-  }
+}
 
   onStatusChange() {
     console.log('Status changed to:', this.selectStatus);
@@ -67,6 +68,7 @@ export class OutOfDeliveryComponent implements OnChanges {
 
   onDateClear() {
     console.log('Date clear event triggered');
+    this.selectDate = new Date();
     this.fetchData();
   }
 
@@ -213,14 +215,6 @@ export class OutOfDeliveryComponent implements OnChanges {
 
   fetchData() {
     this.isLoading = true;
-    
-    // Format date properly for API - handle null case
-    // const dateParam = this.selectDate ? 
-    //   this.selectDate.toISOString().split('T')[0] : 
-    //   '';
-
-    // console.log('dateParam', dateParam )
-    
     console.log('Fetching data with params:', {
       centerId: this.centerObj.centerId,
       // date: dateParam || 'No date filter',
@@ -272,6 +266,42 @@ export class OutOfDeliveryComponent implements OnChanges {
 
     return `${year}-${month}-${day}`; 
   }
+
+  getDisplayDate(scheduleDate: string | Date): string {
+    const schedule = new Date(scheduleDate);
+    const today = new Date();
+    
+    // Check if it's today (same year, month, and date)
+    const isToday = schedule.getFullYear() === today.getFullYear() &&
+                    schedule.getMonth() === today.getMonth() &&
+                    schedule.getDate() === today.getDate();
+    
+    if (isToday) {
+        return "Today";
+    }
+    
+    const day = schedule.getDate();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = monthNames[schedule.getMonth()];
+    
+    // Get ordinal for the day
+    const ordinal = (n: number) => {
+        if (n > 3 && n < 21) return 'th';
+        switch (n % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    }
+    
+    return `${day}${ordinal(day)} ${month}`;
+}
+
+removeWithin(time: string): string {
+  return time ? time.replace('Within ', '') : time;
+}
 }
 
 interface CenterDetails {
@@ -288,4 +318,5 @@ class Orders {
   sheduleDate!: string 
   outDlvrDate!: string 
   outDlvrStatus!: string 
+  sheduleTime!: string
 }

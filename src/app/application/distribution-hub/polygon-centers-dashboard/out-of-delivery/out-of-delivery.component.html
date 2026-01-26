@@ -146,7 +146,7 @@
               {{item.firstNameEnglish}} {{item.lastNameEnglish}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              Today 8-12 AM
+              {{getDisplayDate(item.sheduleDate)}} {{ removeWithin(item.sheduleTime) }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{item.outDlvrDate | date:'shortTime'}}

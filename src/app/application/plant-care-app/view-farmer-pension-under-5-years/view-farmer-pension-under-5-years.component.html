@@ -1,0 +1,141 @@
+<button class="mb-5 text-gray-600 dark:text-gray-300 flex items-center gap-2" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div class="overflow-x-auto min-h-screen">
+    <div class="pt-5 pr-12 pl-12 pb-6 min-w-full bg-white dark:bg-[#1E1E1E] shadow-lg rounded-lg">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-normal text-[#2B2B2B] dark:text-white">
+                Farmer Pension Under 5 Years (03)
+            </h2>
+
+            <!-- Search -->
+            <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80">
+                <input type="text" placeholder="Search By Farmer NIC..."
+                    class="bg-transparent outline-none w-full text-gray-700 dark:text-white placeholder:text-gray-400"
+                    [(ngModel)]="searchText" />
+                <span class="text-gray-500 ml-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <th class="px-4 py-3 text-left text-sm text-gray-500">No</th>
+                        <th class="px-4 py-3 text-left text-sm text-gray-500">Farmer Name</th>
+                        <th class="px-4 py-3 text-left text-sm text-gray-500">Farmer NIC</th>
+                        <th class="px-4 py-3 text-left text-sm text-gray-500">Current Status (Rs.)</th>
+                        <th class="px-4 py-3 text-left text-sm text-gray-500">Days more</th>
+                        <th class="px-4 py-3 text-left text-sm text-gray-500">Approved By</th>
+                        <th class="px-4 py-3 text-left text-sm text-gray-500">Approved Date & Time</th>
+                        <th class="px-4 py-3 text-center text-sm text-gray-500">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of filteredFarmers; let i = index"
+                        class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                            {{ f.no }}
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                            {{ f.name }}
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                            {{ f.nic }}
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                            {{ f.amount | number:'1.2-2' }}
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                            {{ f.daysMore }}
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                            {{ f.approvedBy }}
+                        </td>
+                        <td class="px-4 py-4 text-sm text-gray-700 dark:text-gray-300">
+                            {{ f.approvedDate }}
+                        </td>
+                        <td class="px-4 py-4 text-center">
+                            <button (click)="viewDetails(f)"
+                                class="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors w-6 h-6 inline-block">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showDetailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    (click)="closeDetailsModal()">
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-md mx-4"
+        (click)="$event.stopPropagation()">
+
+        <!-- Header -->
+        <div class="px-6 py-4 border-b">
+            <h2 class="text-lg font-semibold text-center">
+                Farmer Details
+            </h2>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 space-y-4">
+
+            <div class="flex justify-between">
+                <span class="text-gray-500">Farmer Name</span>
+                <span class="font-medium">{{ dataObject?.name }}</span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="text-gray-500">NIC</span>
+                <span class="font-medium">{{ dataObject?.nic }}</span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="text-gray-500">Amount</span>
+                <span class="font-medium">Rs. {{ dataObject?.amount }}</span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="text-gray-500">Days More</span>
+                <span class="font-medium">{{ dataObject?.daysMore }}</span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="text-gray-500">Approved By</span>
+                <span class="font-medium">{{ dataObject?.approvedBy }}</span>
+            </div>
+
+            <div class="flex justify-between">
+                <span class="text-gray-500">Approved Date</span>
+                <span class="font-medium">{{ dataObject?.approvedDate }}</span>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 flex justify-center">
+            <button (click)="closeDetailsModal()" class="px-8 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                Close
+            </button>
+        </div>
+
+    </div>
+</div>

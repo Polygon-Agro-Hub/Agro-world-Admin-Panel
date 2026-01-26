@@ -106,24 +106,6 @@ export class PlantcareComponent {
       this.popupVisiblePentionRequests = false;
   }
 
-  togglePopupPentionRequests() {
-    this.popupVisiblePentionRequests = !this.popupVisiblePentionRequests;
-    if (this.popupVisibleNews) this.popupVisibleNews = false;
-    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
-    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
-    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
-    if (this.popupVisibleFarmerClusters)
-      this.popupVisibleFarmerClusters = false;
-  }
-
-  togglePopupFarmerPension() {
-    this.popupVisibleFarmerPension = !this.popupVisibleFarmerPension;
-    if (this.popupVisibleNews) this.popupVisibleNews = false;
-    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
-    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
-    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
-  }
-
   togglePopupFarmerPension() {
     this.popupVisibleFarmerPension = !this.popupVisibleFarmerPension;
     if (this.popupVisibleNews) this.popupVisibleNews = false;

@@ -102,8 +102,6 @@ export class PlantcareComponent {
     if (this.popupVisibleCertification) this.popupVisibleCertification = false;
     if (this.popupVisibleFarmerClusters)
       this.popupVisibleFarmerClusters = false;
-    if (this.popupVisiblePentionRequests)
-      this.popupVisiblePentionRequests = false;
   }
 
   togglePopupFarmerPension() {

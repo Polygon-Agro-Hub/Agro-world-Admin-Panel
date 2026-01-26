@@ -7,55 +7,61 @@
 <div class="w-full bg-transparent overflow-hidden">
 
   <div
-    class="mb-10 p-6 min-w-[1700px] bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center gap-10 dark:text-textDark">
-    <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Request_ID :</span><span>{{sharesData.jobId}}</span>
-    </div>
-    <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Farmer Phone :</span><span>{{sharesData.farmerPhone}}</span>
-    </div>
-    <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Audited By :</span><span>{{sharesData.empId}}</span>
-    </div>
-    <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Officer Phone :</span><span>{{sharesData.officerPhone}}</span>
-    </div>
-    <div class="flex flex-col">
-      <span class="text-[#7E7E7E]">Audited Date :</span><span>{{sharesData.reqCahangeTime | date: 'MMMM d, yyyy'}}</span>
-    </div>
-    <div *ngIf="lastSegment === 'approve-audit-personal-infor'" class="flex flex-col gap-4">
-      <div class="flex gap-4">
-        <button
-          *ngIf=" permissionService.hasPermission('Approve govicare request') || tokenService.getUserDetails().role === '1'"
-          class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
-          (click)="openApprovePopUp()">
-          Approve
-        </button>
-
-        <button
-          *ngIf=" permissionService.hasPermission('Reject govicare request') || tokenService.getUserDetails().role === '1'"
-          class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md hover:bg-[#980808] transition-colors duration-200 shadow-sm"
-          (click)="openRejectPopUp()">
-          Reject
-        </button>
+    class="flex flex-row justify-between items-center mb-10 p-6 bg-white dark:bg-tileBlack rounded-lg shadow-md gap-10 dark:text-textDark">
+    <div class="flex flex-row gap-x-10">
+      <div class="flex flex-col">
+        <span class="text-[#7E7E7E]">Request_ID :</span><span>{{sharesData.jobId}}</span>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-[#7E7E7E]">Farmer Phone :</span><span>{{sharesData.farmerPhone}}</span>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-[#7E7E7E]">Audited By :</span><span>{{sharesData.empId}}</span>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-[#7E7E7E]">Officer Phone :</span><span>{{sharesData.officerPhone}}</span>
+      </div>
+      <div class="flex flex-col">
+        <span class="text-[#7E7E7E]">Audited Date :</span><span>{{sharesData.reqCahangeTime | date: 'MMMM d,yyyy'}}</span>
       </div>
     </div>
 
-    <div *ngIf="lastSegment === 'edit-audit-personal-infor'" class="flex flex-col gap-4">
-      <div *ngIf="sharesData.devideData === null" class="flex gap-4">
-        <button
-          class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
-          (click)="devideSharesPopUp('Create')">
-          Divide Shares
-        </button>
+
+    <div>
+      <div *ngIf="lastSegment === 'approve-audit-personal-infor'" class="flex flex-col gap-4">
+        <div class="flex gap-4">
+          <button
+            *ngIf=" permissionService.hasPermission('Approve govicare request') || tokenService.getUserDetails().role === '1'"
+            class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
+            (click)="openApprovePopUp()">
+            Approve
+          </button>
+
+          <button
+            *ngIf=" permissionService.hasPermission('Reject govicare request') || tokenService.getUserDetails().role === '1'"
+            class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md hover:bg-[#980808] transition-colors duration-200 shadow-sm"
+            (click)="openRejectPopUp()">
+            Reject
+          </button>
+        </div>
       </div>
 
-      <div *ngIf="sharesData.devideData !== null" class="flex gap-4">
-        <button
-          class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
-          (click)="devideSharesPopUp('Edit')">
-          Edit Shares
-        </button>
+      <div *ngIf="lastSegment === 'edit-audit-personal-infor'" class="flex flex-col gap-4">
+        <div *ngIf="sharesData.devideData === null" class="flex gap-4">
+          <button
+            class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
+            (click)="devideSharesPopUp('Create')">
+            Divide Shares
+          </button>
+        </div>
+
+        <div *ngIf="sharesData.devideData !== null" class="flex gap-4">
+          <button
+            class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
+            (click)="devideSharesPopUp('Edit')">
+            Edit Shares
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -137,71 +143,38 @@
     </div>
 
     <div class="p-6">
-      <div *ngIf="activeTab === 'Personal'"><app-personal-info-tab
-          [personalObj]="inspectionArray.Personal"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'Personal'"><app-personal-info-tab [personalObj]="inspectionArray.Personal"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-personal-info-tab></div>
-      <div *ngIf="activeTab === 'IDProof'"><app-id-proof-tab 
-          [idInfo]="inspectionArray.ID"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'IDProof'"><app-id-proof-tab [idInfo]="inspectionArray.ID"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-id-proof-tab></div>
-      <div *ngIf="activeTab === 'Finance'"><app-finance-info-tab
-          [financeInfo]="inspectionArray.Finance"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'Finance'"><app-finance-info-tab [financeInfo]="inspectionArray.Finance"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-finance-info-tab></div>
-      <div *ngIf="activeTab === 'Land'"><app-land-info-tab 
-          [landlObj]="inspectionArray.Land"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'Land'"><app-land-info-tab [landlObj]="inspectionArray.Land"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-land-info-tab></div>
-      <div *ngIf="activeTab === 'Investment'"><app-investment-info-tab
-          [investmentObj]="inspectionArray.Investment"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'Investment'"><app-investment-info-tab [investmentObj]="inspectionArray.Investment"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-investment-info-tab></div>
-      <div *ngIf="activeTab === 'Cultivation'"><app-cultivation-info-tab
-          [cultivationData]="inspectionArray.Cultivation"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'Cultivation'"><app-cultivation-info-tab [cultivationData]="inspectionArray.Cultivation"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-cultivation-info-tab></div>
-      <div *ngIf="activeTab === 'CroppingSystems'"><app-cropping-system-tab
-          [croppingData]="inspectionArray.Cropping"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'CroppingSystems'"><app-cropping-system-tab [croppingData]="inspectionArray.Cropping"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-cropping-system-tab></div>
-      <div *ngIf="activeTab === 'ProfitRisk'"><app-profit-risk-tab
-          [profitRiskObj]="inspectionArray.ProfitRisk"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'ProfitRisk'"><app-profit-risk-tab [profitRiskObj]="inspectionArray.ProfitRisk"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-profit-risk-tab></div>
-      <div *ngIf="activeTab === 'Economical'"><app-economical-tab
-          [EconomicalObj]="inspectionArray.Economical"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'Economical'"><app-economical-tab [EconomicalObj]="inspectionArray.Economical"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-economical-tab></div>
-      <div *ngIf="activeTab === 'Labour'"><app-labour-tab 
-          [LaborObj]="inspectionArray.Labor"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'Labour'"><app-labour-tab [LaborObj]="inspectionArray.Labor"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-labour-tab></div>
-      <div *ngIf="activeTab === 'HarvestStorage'"><app-harvest-storage-tab
-          [HarvestObj]="inspectionArray.Harvest"
-          [currentPage]="getCurrentTabIndex() + 1"
-          [totalPages]="tabs.length"
-          (nextPage)="goToNextTab()"
+      <div *ngIf="activeTab === 'HarvestStorage'"><app-harvest-storage-tab [HarvestObj]="inspectionArray.Harvest"
+          [currentPage]="getCurrentTabIndex() + 1" [totalPages]="tabs.length" (nextPage)="goToNextTab()"
           (previousPage)="goToPreviousTab()"></app-harvest-storage-tab></div>
     </div>
   </div>
@@ -221,7 +194,7 @@
       </div>
 
       <div class="mb-8 text-center dark:text-textDark">
-        <p class="text-lg mb-2">
+        <p class=" mb-2">
           Are you sure you want to Approve this Project?
         </p>
 
@@ -229,11 +202,11 @@
 
       <!-- Buttons -->
       <div class="flex justify-center gap-6">
-        <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-10 py-3 rounded-xl shadow-md"
+        <button class="bg-[#74788D] border-[1px] border-[#74788D]  px-10 py-3 rounded-xl shadow-md"
           (click)="cancelApprovePopUp()"><span class="text-white">No, Go Back</span>
         </button>
         <button class="bg-[#3980C0] border-[1px] border-[#3980C0] px-10 py-3 rounded-xl shadow-md"
-          (click)="ApproveRequest()"><span class=" text-lg text-white">Yes, Approve</span>
+          (click)="ApproveRequest()"><span class="  text-white">Yes, Approve</span>
         </button>
       </div>
     </div>
@@ -252,14 +225,14 @@
       </div>
 
       <div class="mb-8 text-center dark:text-textDark">
-        <p class="text-lg mb-2">
+        <p class=" mb-2">
           Are you sure you want to Reject this Project?
         </p>
 
       </div>
 
       <div class="mb-8">
-        <label class="block mb-2 text-lg font-semibold dark:text-textDark">
+        <label class="block mb-2  font-semibold dark:text-textDark">
           Reason to Reject :
         </label>
         <textarea rows="8" placeholder="Mention Reason Here.." class="w-full rounded-lg border border-gray-300 dark:border-gray-600
@@ -272,11 +245,11 @@
 
       <!-- Buttons -->
       <div class="flex justify-center gap-6">
-        <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-10 py-3 rounded-xl shadow-md"
+        <button class="bg-[#74788D] border-[1px] border-[#74788D]  px-10 py-3 rounded-xl shadow-md"
           (click)="cancelRejectPopUp()"><span class="text-white">No, Go Back</span>
         </button>
         <button class="bg-[#C40D0D] border-[1px] border-[#C40D0D] px-10 py-3 rounded-xl shadow-md"
-          (click)="RejectRequest()"><span class=" text-lg text-white">Yes, Reject</span>
+          (click)="RejectRequest()"><span class="  text-white">Yes, Reject</span>
         </button>
       </div>
     </div>
@@ -295,45 +268,45 @@
           </p>
         </div>
 
-        <div class="mb-8">
+        <div class="flex flex-col gap-y-5 mb-8">
 
           <div>
-            <label class="block mb-2 text-lg dark:text-textDark">
+            <label class="block mb-1  dark:text-textDark">
               Total Value (Rs.)
             </label>
             <input id="totalValue" [value]="sharesData.totalValue | number:'1.2-2'" name="totalValue" readonly
-              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           </div>
 
           <div>
-            <label class="block mb-2 text-lg dark:text-textDark">
+            <label class="block mb-1  dark:text-textDark">
               Define Number of Shares
             </label>
             <input id="numShares" required type="number" [(ngModel)]="numShares" #numSharesInput="ngModel"
               name="numShares" placeholder="--Enter Here--" (ngModelChange)="onNumSharesChange($event)"
               (keypress)="allowDecimalOnly($event)"
-              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-            <span *ngIf="numSharesInput.touched && !numShares " class="text-red-600 text-sm">This field is
-              required.</span>
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="numSharesInput.touched && !numShares " class="text-red-600 text-sm">This field is required.</span>
+            <span *ngIf="numSharesInput.touched && numShares <= 0 " class="text-red-600 text-sm">Number of shares cannot be 0 or less than 0.</span>
           </div>
 
           <div>
-            <label class="block mb-2 text-lg dark:text-textDark">
+            <label class="block mb-1  dark:text-textDark">
               Value of One Share (Rs.)
             </label>
-            <input id="shareValue" [value]="shareValue | number:'1.2-2'" name="shareValue" readonly
-              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+            <input id="shareValue" [value]="shareValue === 0 ? '--Auto-fill--' : shareValue" name="shareValue" readonly
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           </div>
 
           <div>
-            <label class="block mb-2 text-lg dark:text-textDark">
+            <label class="block mb-1  dark:text-textDark">
               Minimum Investment Shares
             </label>
             <input id="minimumShare" required type="number" [(ngModel)]="minimumShare" #minimumShareInput="ngModel"
               name="minimumShare" placeholder="--Enter Here--" (keypress)="allowDecimalOnly($event)"
               pattern="^[1-9]\d*(\.\d+)?$"
-              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="minimumShareInput.touched && minimumShareInput.errors?.['required']"
               class="text-red-600 text-sm">This field is required.</span>
             <span *ngIf="minimumShareInput.touched && !minimumShareInput.errors?.['required'] && (minimumShare <= 0)"
@@ -343,12 +316,12 @@
           </div>
 
           <div>
-            <label class="block mb-2 text-lg dark:text-textDark">
+            <label class="block mb-1  dark:text-textDark">
               Maximum Investment Shares
             </label>
             <input id="maximumShare" required type="number" [(ngModel)]="maximumShare" #maximumShareInput="ngModel"
               name="maximumShare" placeholder="--Enter Here--" (keypress)="allowDecimalOnly($event)"
-              class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="maximumShareInput.touched && maximumShareInput.errors?.['required']"
               class="text-red-600 text-sm">This field is required.</span>
 
@@ -361,12 +334,12 @@
 
 
         <!-- Buttons -->
-        <div class="flex justify-between gap-16">
-          <button class="bg-[#74788D] border-[1px] border-[#74788D] text-lg px-6 py-3 rounded-xl shadow-md"
-            type="button" (click)="cancelDevidePopUp()"><span class="text-white">Cancel</span>
+        <div class="flex flex-row justify-between items-center">
+          <button class="bg-[#74788D] border-[1px] border-[#74788D] px-6 py-2 rounded-xl shadow-md" type="button"
+            (click)="cancelDevidePopUp()"><span class="text-white">Cancel</span>
           </button>
-          <button type="submit" class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-xl shadow-md">
-            <span class="text-lg text-white">Devide</span>
+          <button type="submit" class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-lg shadow-md">
+            <span class=" text-white">Devide</span>
           </button>
         </div>
       </form>

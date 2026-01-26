@@ -6,7 +6,7 @@
         <span class="text-gray-500 dark:text-textDark">01. Is the land own by the farmer?</span>
       </label>
       <div class="relative">
-        <input type="text" [value]="ownershipDisplay"
+        <input type="text" [value]="ownershipDisplay || '--'"
           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
           readonly />
       </div>
@@ -18,7 +18,7 @@
         <span class="text-gray-500 dark:text-textDark">02. Legal status of the ownership of the land</span>
       </label>
       <div class="relative">
-        <input type="text" [value]="landlObj.ownershipStatus || 'Not provided'"
+        <input type="text" [value]="landlObj.ownershipStatus || '--'"
           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
           readonly />
       </div>
@@ -30,7 +30,7 @@
         <span class="text-gray-500 dark:text-textDark">03. Brief description to reach the cultivation land</span>
       </label>
       <div class="relative">
-        <input type="text" [value]="landlObj.landDiscription || 'Not provided'"
+        <input type="text" [value]="landlObj.landDiscription || '--'"
           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
           readonly />
       </div>

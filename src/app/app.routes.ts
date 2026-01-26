@@ -265,6 +265,7 @@ import { GoviLinkJobsServiceRequestResponseComponent } from './application/govi-
 import { ViewJobHistoryFarmerClusterAuditResponseComponent } from './application/govi-link/view-job-history-farmer-cluster-audit-response/view-job-history-farmer-cluster-audit-response.component';
 import { ViewPikupCashRevenueComponent } from './application/distribution-hub/polygon-centers-dashboard/view-pikup-cash-revenue/view-pikup-cash-revenue.component';
 import { ViewDeliveryRevenueComponent } from './application/distribution-hub/polygon-centers-dashboard/view-delivery-revenue/view-delivery-revenue.component';
+import { ViewFarmerPensionUnder5YearsComponent } from './application/plant-care-app/view-farmer-pension-under-5-years/view-farmer-pension-under-5-years.component';
 import { PensionRequestsComponent } from './application/finance/pension-requests/pension-requests.component';
 
 export const routes: Routes = [
@@ -593,6 +594,10 @@ export const routes: Routes = [
                 component: FarmersClustersAuditsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'View audit farm cluster' },
+              },
+              {
+                path: 'farmer-pension-under-5-years',
+                component: ViewFarmerPensionUnder5YearsComponent,
               },
               {
                 path:'pension-requests',

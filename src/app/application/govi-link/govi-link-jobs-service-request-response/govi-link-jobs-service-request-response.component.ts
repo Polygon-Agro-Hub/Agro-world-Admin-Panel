@@ -152,4 +152,5 @@ class Response {
   farmCode!: string;
   completedQuestions!: string;
   serviceName!: string;
+  cropNames!: string[];
 }

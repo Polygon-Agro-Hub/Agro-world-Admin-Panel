@@ -53,7 +53,9 @@
       <div *ngIf="pensionRequests.length > 0">
         <table class="w-full">
           <thead>
-            <tr class="border-b text-base font-normal border-gray-200 dark:border-gray-700">
+            <tr
+              class="border-b text-base font-normal border-gray-200 dark:border-gray-700"
+            >
               <th
                 class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap text-base font-normal"
               >
@@ -211,6 +213,7 @@
                 <button
                   class="px-4 py-2 text-blue-500 hover:text-blue-700 font-medium text-sm"
                   title="Review Request"
+                  (click)="openReviewRequest(request)"
                 >
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>

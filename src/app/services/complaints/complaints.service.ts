@@ -42,7 +42,7 @@ export class ComplaintsService {
     });
   }
 
-  fetchWholesaleComplaints(roleCategory:string = "1"): Observable<ApiResponse> {
+  fetchWholesaleComplaints(roleCategory: string = "1"): Observable<ApiResponse> {
     const headers = this.getHeaders();
     if (!headers) {
       return throwError(() => new Error('No authentication token found'));
@@ -85,7 +85,7 @@ export class ComplaintsService {
     );
   }
 
-  fetchComplaints(roleCategory:string): Observable<ApiResponse> {
+  fetchComplaints(roleCategory: string): Observable<ApiResponse> {
     const headers = this.getHeaders();
     if (!headers) {
       return throwError(() => new Error('No authentication token found'));
@@ -312,7 +312,8 @@ export class ComplaintsService {
     comCategory: String,
     filterCompany: String,
     searchText: string,
-    rpstatus: string
+    rpstatus: string,
+    roleCategory: string = "1"
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -321,7 +322,7 @@ export class ComplaintsService {
 
     console.log('searchText', searchText);
 
-    let url = `${this.apiUrl}complain/get-all-distributed-complains?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}complain/get-all-distributed-complains?page=${page}&limit=${limit}&role=${roleCategory}`;
 
     if (status) {
       url += `&status=${status}`;
@@ -381,7 +382,7 @@ export class ComplaintsService {
     let url = `${this.apiUrl}auth/field-officer-complains?page=${page}&limit=${limit}`;
 
     console.log('Final url', url);
-    
+
 
     if (status) {
       url += `&status=${status}`;
@@ -409,66 +410,66 @@ export class ComplaintsService {
   }
 
   getFieldOfficerComplainById(id: string): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
-  return this.http.get(`${this.apiUrl}auth/field-officer-complains-by-id/${id}`, {
-    headers,
-  });
-}
-
-getAllDriverComplain(
-
-  page: number,
-  limit: number,
-  status: String,
-  category: String,
-  comCategory: String,
-  filterCompany: String,
-  searchText: string,
-  rpstatus: string
-  
-): Observable<any> {
-
-  console.log('rpstatus', rpstatus, 'status', status)
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
-
-  console.log('searchText', searchText);
-
-  let url = `${this.apiUrl}complain/get-all-driver-complains?page=${page}&limit=${limit}`;
-
-  if (status) {
-    url += `&status=${status}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get(`${this.apiUrl}auth/field-officer-complains-by-id/${id}`, {
+      headers,
+    });
   }
 
-  if (category) {
-    url += `&category=${category}`;
-  }
+  getAllDriverComplain(
 
-  if (comCategory) {
-    url += `&comCategory=${comCategory}`;
-  }
+    page: number,
+    limit: number,
+    status: String,
+    category: String,
+    comCategory: String,
+    filterCompany: String,
+    searchText: string,
+    rpstatus: string
 
-  if (filterCompany) {
-    url += `&filterCompany=${filterCompany}`;
-  }
+  ): Observable<any> {
 
-  if (searchText) {
-    url += `&searchText=${searchText}`;
-  }
+    console.log('rpstatus', rpstatus, 'status', status)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
 
-  if (rpstatus) {
-    url += `&rpstatus=${rpstatus}`;
-  }
+    console.log('searchText', searchText);
 
-  return this.http.get(url, {
-    headers,
-  });
-}
+    let url = `${this.apiUrl}complain/get-all-driver-complains?page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (category) {
+      url += `&category=${category}`;
+    }
+
+    if (comCategory) {
+      url += `&comCategory=${comCategory}`;
+    }
+
+    if (filterCompany) {
+      url += `&filterCompany=${filterCompany}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    if (rpstatus) {
+      url += `&rpstatus=${rpstatus}`;
+    }
+
+    return this.http.get(url, {
+      headers,
+    });
+  }
 }
 
 

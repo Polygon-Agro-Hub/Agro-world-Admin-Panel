@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
@@ -59,7 +59,6 @@ export interface PensionRequestResponse {
   count: number;
   data: PensionRequest[];
 }
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -74,8 +73,10 @@ export class FarmerPensionService {
   ) {}
 
   private getHeaders(): HttpHeaders {
+    const token = this.tokenService.getToken();
     return new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     });
   }
 
@@ -122,14 +123,6 @@ export class FarmerPensionService {
 
   return this.http.put<any>(url, body, { headers });
 }
-
-  private getHeaders(): HttpHeaders {
-    const token = this.tokenService.getToken();
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    });
-  }
 
   getFarmersUnder5Years(
     page: number = 1,

@@ -42,7 +42,7 @@ export class ComplaintsService {
     });
   }
 
-  fetchWholesaleComplaints(): Observable<ApiResponse> {
+  fetchWholesaleComplaints(roleCategory:string = "1"): Observable<ApiResponse> {
     const headers = this.getHeaders();
     if (!headers) {
       return throwError(() => new Error('No authentication token found'));
@@ -50,7 +50,7 @@ export class ComplaintsService {
 
     return this.http
       .get<ApiResponse>(
-        `${this.apiUrl}complain/get-marketplace-complaintWholesale`,
+        `${this.apiUrl}complain/get-marketplace-complaintWholesale?role=${roleCategory}`,
         { headers }
       )
       .pipe(

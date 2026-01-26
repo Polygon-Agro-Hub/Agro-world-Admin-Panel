@@ -1,1 +1,87 @@
-<p>cultivation-history works!</p>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button
+  class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
+  onclick="history.back()"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  <span>Back</span>
+</button>
+
+<div
+  class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6 w-full">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
+        917500010V - Cultivations (03)
+      </h1>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[800px]">
+        <thead>
+          <tr class="border-b border-gray-200 dark:border-gray-700">
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">No</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Crop</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Variety</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Extent(ac)</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Progress</th>
+            <th class="text-left py-3 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Started Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let cultivation of cultivations"
+            class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+          >
+            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+              {{ cultivation.no }}
+            </td>
+            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+              {{ cultivation.crop }}
+            </td>
+            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+              {{ cultivation.variety }}
+            </td>
+            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+              {{ cultivation.extent }}
+            </td>
+            <td class="py-4 px-4">
+              <div class="flex items-center gap-3">
+                <!-- Progress Bar -->
+                <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                  <div
+                    class="h-full rounded-full transition-all duration-300"
+                    [ngClass]="{
+                      'bg-blue-500': cultivation.progress > 0 && cultivation.progress < 100,
+                      'bg-green-500': cultivation.progress === 100,
+                      'bg-gray-300 dark:bg-gray-600': cultivation.progress === 0
+                    }"
+                    [style.width.%]="cultivation.progress"
+                  ></div>
+                </div>
+                <!-- Progress Percentage -->
+                <span class="text-sm text-textLight dark:text-textDark min-w-[40px]">
+                  {{ cultivation.progress }}%
+                </span>
+              </div>
+            </td>
+            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+              {{ cultivation.startedDate }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State (if no data) -->
+    <div
+      *ngIf="cultivations.length === 0"
+      class="text-center py-12 text-gray-500 dark:text-gray-400"
+    >
+      No cultivation records found.
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
@@ -59,6 +59,7 @@ export interface PensionRequestResponse {
   count: number;
   data: PensionRequest[];
 }
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -121,4 +122,28 @@ export class FarmerPensionService {
 
   return this.http.put<any>(url, body, { headers });
 }
+
+  private getHeaders(): HttpHeaders {
+    const token = this.tokenService.getToken();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+  }
+
+  getFarmersUnder5Years(
+    page: number = 1,
+    limit: number = 10,
+    searchText?: string,
+  ): Observable<{ total: number; items: any[] }> {
+    const headers = this.getHeaders();
+
+    let url = `${this.apiUrl}auth/farmer-pension-under-5-years-details?page=${page}&limit=${limit}`;
+
+    if (searchText) {
+      url += `&searchText=${encodeURIComponent(searchText)}`;
+    }
+
+    return this.http.get<{ total: number; items: any[] }>(url, { headers });
+  }
 }

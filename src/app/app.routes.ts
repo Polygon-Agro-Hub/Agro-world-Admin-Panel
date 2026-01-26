@@ -267,6 +267,7 @@ import { ViewPikupCashRevenueComponent } from './application/distribution-hub/po
 import { ViewDeliveryRevenueComponent } from './application/distribution-hub/polygon-centers-dashboard/view-delivery-revenue/view-delivery-revenue.component';
 import { ViewFarmerPensionUnder5YearsComponent } from './application/plant-care-app/view-farmer-pension-under-5-years/view-farmer-pension-under-5-years.component';
 import { PensionRequestsComponent } from './application/finance/pension-requests/pension-requests.component';
+import { CultivationHistoryComponent } from './application/finance/cultivation-history/cultivation-history.component';
 
 export const routes: Routes = [
   {
@@ -602,6 +603,10 @@ export const routes: Routes = [
               {
                 path:'pension-requests',
                 component:PensionRequestsComponent,
+              },
+              {
+                path: 'cultivation-history/:farmId',
+                component: CultivationHistoryComponent
               },
             ],
           },

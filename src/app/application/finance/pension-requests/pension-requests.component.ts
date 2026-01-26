@@ -3,34 +3,39 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TokenService } from '../../../services/token/services/token.service';
 import Swal from 'sweetalert2';
-import { FarmerPensionService, PensionRequest, PensionRequestDetail } from '../../../services/plant-care/farmer-pension.service';
+import {
+  FarmerPensionService,
+  PensionRequest,
+  PensionRequestDetail,
+} from '../../../services/plant-care/farmer-pension.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
-import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pension-requests',
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   templateUrl: './pension-requests.component.html',
-  styleUrl: './pension-requests.component.css'
+  styleUrl: './pension-requests.component.css',
 })
 export class PensionRequestsComponent implements OnInit {
   isLoading = false;
   search: string = '';
-  
+
   pensionRequests: PensionRequest[] = [];
   totalItems: number = 0;
-  
+
   // Details Modal
   showDetailsModal: boolean = false;
   selectedRequest: PensionRequestDetail | null = null;
-  
+
   // Approve/Reject Popup
   showApproveRejectModal: boolean = false;
   selectedRequestForAction: PensionRequest | null = null;
   actionNotes: string = '';
   isProcessingAction: boolean = false;
-  
+
   // Logged in user info
   currentUserId: string | null = null;
   currentUserName: string | null = null;
@@ -38,7 +43,8 @@ export class PensionRequestsComponent implements OnInit {
   constructor(
     private farmerPensionService: FarmerPensionService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -50,13 +56,18 @@ export class PensionRequestsComponent implements OnInit {
   getCurrentUserInfo(): void {
     // Try different methods to get user info based on your token service implementation
     const userDetails = this.tokenService.getUserDetails();
-    
+
     if (userDetails) {
       // Check for different possible property names
-      this.currentUserId = userDetails.id || userDetails.userId || userDetails.sub || null;
-      this.currentUserName = userDetails.username || userDetails.name || userDetails.userName || null;
+      this.currentUserId =
+        userDetails.id || userDetails.userId || userDetails.sub || null;
+      this.currentUserName =
+        userDetails.username ||
+        userDetails.name ||
+        userDetails.userName ||
+        null;
     }
-    
+
     // If still not found, try decoding the token directly
     if (!this.currentUserId) {
       const token = this.tokenService.getToken();
@@ -64,25 +75,28 @@ export class PensionRequestsComponent implements OnInit {
         // Try to decode JWT token (if it's a JWT)
         try {
           const payload = JSON.parse(atob(token.split('.')[1]));
-          this.currentUserId = payload.id || payload.userId || payload.sub || null;
-          this.currentUserName = payload.username || payload.name || payload.userName || null;
+          this.currentUserId =
+            payload.id || payload.userId || payload.sub || null;
+          this.currentUserName =
+            payload.username || payload.name || payload.userName || null;
         } catch (error) {
           console.warn('Could not decode JWT token:', error);
         }
       }
     }
-    
+
     console.log('Current User Info:', {
       userId: this.currentUserId,
       userName: this.currentUserName,
-      userDetails: userDetails
+      userDetails: userDetails,
     });
   }
 
   loadPensionRequests(): void {
     this.isLoading = true;
-    
-    this.farmerPensionService.getAllPensionRequests(undefined, this.search)
+
+    this.farmerPensionService
+      .getAllPensionRequests(undefined, this.search)
       .subscribe({
         next: (response) => {
           this.pensionRequests = response.data || [];
@@ -92,7 +106,7 @@ export class PensionRequestsComponent implements OnInit {
         error: (error) => {
           console.error('Error loading pension requests:', error);
           this.isLoading = false;
-        }
+        },
       });
   }
 
@@ -115,7 +129,8 @@ export class PensionRequestsComponent implements OnInit {
   // Details Modal Methods
   viewDetails(requestId: number): void {
     this.isLoading = true;
-    this.farmerPensionService.getPensionRequestById(requestId.toString())
+    this.farmerPensionService
+      .getPensionRequestById(requestId.toString())
       .subscribe({
         next: (response) => {
           if (response.status && response.data) {
@@ -127,7 +142,8 @@ export class PensionRequestsComponent implements OnInit {
               text: response.message || 'Failed to load request details',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
@@ -142,11 +158,12 @@ export class PensionRequestsComponent implements OnInit {
             text: 'An error occurred while loading request details',
             icon: 'error',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
-        }
+        },
       });
   }
 
@@ -161,12 +178,12 @@ export class PensionRequestsComponent implements OnInit {
     this.actionNotes = '';
     this.isProcessingAction = false;
     this.showApproveRejectModal = true;
-    
+
     // Log which user is trying to approve/reject
     console.log('Opening approve/reject modal for user:', {
       userId: this.currentUserId,
       userName: this.currentUserName,
-      requestId: request.Request_ID
+      requestId: request.Request_ID,
     });
   }
 
@@ -186,83 +203,91 @@ export class PensionRequestsComponent implements OnInit {
   }
 
   private processStatusUpdate(status: string): void {
-  if (!this.selectedRequestForAction) return;
+    if (!this.selectedRequestForAction) return;
 
-  // Check if user is logged in
-  if (!this.currentUserId) {
-    Swal.fire({
-      title: 'Authentication Error',
-      text: 'You must be logged in to perform this action',
-      icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
-
-  this.isProcessingAction = true;
-
-  console.log('Updating request with data:', {
-    requestId: this.selectedRequestForAction.Request_ID,
-    status: status,
-    userId: this.currentUserId,
-    userName: this.currentUserName
-  });
-
-  // Pass userId as parameter
-  this.farmerPensionService.updatePensionRequestStatus(
-    this.selectedRequestForAction.Request_ID.toString(),
-    status,
-    this.currentUserId  // Pass userId here
-  ).subscribe({
-    next: (response) => {
-      this.isProcessingAction = false;
-      if (response.status) {
-        this.closeApproveRejectModal();
-        this.loadPensionRequests(); // Refresh the list
-
-        Swal.fire({
-          title: 'Success',
-          text: response.message || `Request ${status.toLowerCase()} successfully`,
-          icon: 'success',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      } else {
-        Swal.fire({
-          title: 'Error',
-          text: response.message || `Failed to ${status.toLowerCase()} request`,
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      }
-    },
-    error: (error) => {
-      this.isProcessingAction = false;
-      console.error('Error updating request status:', error);
+    // Check if user is logged in
+    if (!this.currentUserId) {
       Swal.fire({
-        title: 'Error',
-        text: 'An error occurred while processing the request',
+        title: 'Authentication Error',
+        text: 'You must be logged in to perform this action',
         icon: 'error',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
         },
       });
+      return;
     }
-  });
-}
+
+    this.isProcessingAction = true;
+
+    console.log('Updating request with data:', {
+      requestId: this.selectedRequestForAction.Request_ID,
+      status: status,
+      userId: this.currentUserId,
+      userName: this.currentUserName,
+    });
+
+    // Pass userId as parameter
+    this.farmerPensionService
+      .updatePensionRequestStatus(
+        this.selectedRequestForAction.Request_ID.toString(),
+        status,
+        this.currentUserId, // Pass userId here
+      )
+      .subscribe({
+        next: (response) => {
+          this.isProcessingAction = false;
+          if (response.status) {
+            this.closeApproveRejectModal();
+            this.loadPensionRequests(); // Refresh the list
+
+            Swal.fire({
+              title: 'Success',
+              text:
+                response.message ||
+                `Request ${status.toLowerCase()} successfully`,
+              icon: 'success',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text:
+                response.message || `Failed to ${status.toLowerCase()} request`,
+              icon: 'error',
+              customClass: {
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+              },
+            });
+          }
+        },
+        error: (error) => {
+          this.isProcessingAction = false;
+          console.error('Error updating request status:', error);
+          Swal.fire({
+            title: 'Error',
+            text: 'An error occurred while processing the request',
+            icon: 'error',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        },
+      });
+  }
 
   // Get status class for styling
   getStatusClass(status: string): string {
-    switch(status) {
+    switch (status) {
       case 'Approved':
         return 'bg-green-100 text-green-800';
       case 'Rejected':
@@ -289,44 +314,57 @@ export class PensionRequestsComponent implements OnInit {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 
   // Add this function to your component class (you can place it near formatNIC and formatDate methods)
-calculateAge(dob: string | null | undefined): string {
-  if (!dob) return '--';
-  
-  const birthDate = new Date(dob);
-  const today = new Date();
-  
-  // Check if date is valid
-  if (isNaN(birthDate.getTime())) return '--';
-  
-  let years = today.getFullYear() - birthDate.getFullYear();
-  let months = today.getMonth() - birthDate.getMonth();
-  let days = today.getDate() - birthDate.getDate();
-  
-  // Adjust for negative months
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
-  
-  // Adjust for negative days (use a simple approach)
-  if (days < 0) {
-    months--;
-    // Add days from previous month
-    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-    days += prevMonth.getDate();
-    
-    // If months become negative after adjusting for days
+  calculateAge(dob: string | null | undefined): string {
+    if (!dob) return '--';
+
+    const birthDate = new Date(dob);
+    const today = new Date();
+
+    // Check if date is valid
+    if (isNaN(birthDate.getTime())) return '--';
+
+    let years = today.getFullYear() - birthDate.getFullYear();
+    let months = today.getMonth() - birthDate.getMonth();
+    let days = today.getDate() - birthDate.getDate();
+
+    // Adjust for negative months
     if (months < 0) {
       years--;
       months += 12;
     }
+
+    // Adjust for negative days (use a simple approach)
+    if (days < 0) {
+      months--;
+      // Add days from previous month
+      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+      days += prevMonth.getDate();
+
+      // If months become negative after adjusting for days
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+    }
+
+    return `${years} Years, ${months} Months`;
   }
-  
-  return `${years} Years, ${months} Months`;
-}
+
+  openReviewRequest(request: PensionRequest): void {
+    // Get the NIC from the current request
+    const nic = request.NIC;
+
+    if (!nic) {
+      console.error('NIC not found in request');
+      return;
+    }
+    this.router.navigate(['/plant-care/action/cultivation-history/:farmId'], {
+      queryParams: { nic: nic },
+    });
+  }
 }

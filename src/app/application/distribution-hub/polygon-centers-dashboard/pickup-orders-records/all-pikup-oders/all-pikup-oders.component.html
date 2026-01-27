@@ -126,7 +126,7 @@
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Order ID
             </th>
@@ -141,12 +141,12 @@
               Status
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Customer Phone
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Receiver Phone-1
             </th>
@@ -182,7 +182,7 @@
                 {{ order.no }}
               </td>
               <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+                class="px-4 py-3 text-left text-textLight dark:text-textDark"
               >
                 {{ order.orderId }}
               </td>
@@ -200,12 +200,12 @@
                 </span>
               </td>
               <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+                class="px-4 py-3 text-left text-textLight dark:text-textDark"
               >
                 {{ order.customerPhone }}
               </td>
               <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+                class="px-4 py-3 text-left text-textLight dark:text-textDark"
               >
                 {{ order.receiverPhone }}
               </td>
@@ -239,7 +239,7 @@
               <td class="px-4 py-3 text-left">
                 <span
                   [class]="
-                    'px-3 py-1 rounded-full text-sm font-medium ' +
+                    'rounded-full text-sm font-medium ' +
                     getPaymentClass(order.payment)
                   "
                 >

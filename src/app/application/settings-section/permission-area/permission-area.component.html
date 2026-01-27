@@ -12,10 +12,21 @@
 
 
   <div class="bg-tileLight dark:bg-tileBlack min-w-[1000px] mx-auto rounded-lg shadow-lg p-2 h-auto overflow-hidden">
-    <div class="flex items-center p-6">
+    <div class="flex flex-row items-center justify-between p-6">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
         Roles & Permissions Management
       </h2>
+
+      <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] group relative">
+        <input type="text" placeholder=" Search By Feature Name.." (input)="onSearch()"
+          class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchText"/>    
+        <button type="button" (click)="clearSearch()" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+          title="Clear search">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="flex items-center space-x-3 px-6">
       <label for="featureCategory" class="text-textLight dark:text-textDark">Category</label>
@@ -26,7 +37,8 @@
       </select> -->
       <p-dropdown [(ngModel)]="selectedCategory" [options]="categories" optionLabel="category" optionValue="id"
         (onChange)="onCategoryChange($event)" placeholder="Select a category" [filter]="true" filterBy="category"
-         styleClass="custom-dropdown w-[300px] border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" [style]="{ width: '300px' }">
+        styleClass="custom-dropdown w-[300px] border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+        [style]="{ width: '300px' }">
         <ng-template pTemplate="item" let-category>
           <div class="flex align-items-center">
             <div>{{category.category}}</div>
@@ -51,7 +63,8 @@
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-tileLight dark:bg-tileBlack dark:text-white"
         placeholder="Enter feature" />
 
-      <button (click)="addCategory()" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition cursor-pointer">
+      <button (click)="addCategory()"
+        class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition cursor-pointer">
         Add
       </button>
     </div>
@@ -76,7 +89,7 @@
           </thead>
 
           <tbody>
-            <ng-container *ngFor="let category of FeatureList">
+            <ng-container *ngFor="let category of filteredFeatureList">
               <!-- Category Header Row -->
               <tr>
                 <td [attr.colspan]="positionList.length + 1"
@@ -139,10 +152,12 @@
         class="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark" />
     </div>
     <div class="flex flex-row items-center justify-center gap-4">
-      <button class="bg-[#74788D] text-[#D3D3D3] rounded-lg shadow-md px-4 py-2 cursor-pointer" (click)="cancelEditFeature()">
+      <button class="bg-[#74788D] text-[#D3D3D3] rounded-lg shadow-md px-4 py-2 cursor-pointer"
+        (click)="cancelEditFeature()">
         Cancel
       </button>
-      <button class="bg-[#3980C0] text-white rounded-lg shadow-md px-6 py-2 cursor-pointer" (click)="editFeatureOnSubmit()">
+      <button class="bg-[#3980C0] text-white rounded-lg shadow-md px-6 py-2 cursor-pointer"
+        (click)="editFeatureOnSubmit()">
         Save
       </button>
     </div>

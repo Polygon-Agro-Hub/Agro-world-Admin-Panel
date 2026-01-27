@@ -42,6 +42,7 @@ export class PermissionAreaComponent {
   featureCategoryList: any[] = [];
   positionList: any[] = [];
   FeatureList: any[] = [];
+  filteredFeatureList: any[] = [];
   RoleFeatureList: any[] = [];
   editFeatureObj: Feature = new Feature();
   editCategoryObj: EditCategory = new EditCategory();
@@ -56,6 +57,7 @@ export class PermissionAreaComponent {
 
   isCategoryEdit: boolean = false;
   existCategoryName: string = '';
+  searchText: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -74,6 +76,8 @@ export class PermissionAreaComponent {
     this.getAllFeatures();
     this.getAllRoleFeatures();
     this.getAllfeatureCategory();
+
+    this.filteredFeatureList = [...this.FeatureList];
   }
 
   getAllPosition() {
@@ -185,6 +189,7 @@ export class PermissionAreaComponent {
           );
 
           this.FeatureList = groupedFeatures;
+          this.filteredFeatureList = [...this.FeatureList];
           console.log(this.FeatureList);
         },
         (error) => {
@@ -508,6 +513,33 @@ export class PermissionAreaComponent {
   viewConsole() {
     console.log("categories", this.categories);
 
+  }
+
+  onSearch() {
+    if (!this.searchText) {
+      // If search is empty, show all features
+      this.filteredFeatureList = [...this.FeatureList];
+      return;
+    }
+
+    const searchTerm = this.searchText.toLowerCase().trim();
+
+    // Filter features based on the search term
+    this.filteredFeatureList = this.FeatureList.map(category => {
+      // Create a deep copy of the category
+      const filteredCategory = {
+        ...category,
+        features: category.features.filter((feature: any) =>
+          feature.name.toLowerCase().includes(searchTerm)
+        )
+      };
+      return filteredCategory;
+    }).filter(category => category.features.length > 0); // Remove categories with no matching features
+  }
+
+  clearSearch() {
+    this.searchText = '';
+    this.filteredFeatureList = [...this.FeatureList];
   }
 }
 

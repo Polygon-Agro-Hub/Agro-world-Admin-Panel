@@ -35,4 +35,16 @@ export class ReciverinfoPopupComponent {
         return platform;
     }
   }
+
+  // Get the receiver's full name
+  getReceiverFullName(): string {
+    if (!this.receiverInfo) return '--';
+    
+    return this.receiverInfo.fullName || 
+           this.receiverInfo.full_name || 
+           this.receiverInfo.receiverFullName ||
+           this.receiverInfo.receiver?.fullName ||
+           this.receiverInfo.receiverName ||
+           '--';
+  }
 }

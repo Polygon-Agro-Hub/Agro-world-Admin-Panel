@@ -119,7 +119,7 @@
     <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
-          <tr>
+          <tr class="text-[#4B5563]">
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
@@ -176,7 +176,7 @@
           <ng-container *ngIf="hasData; else noData">
             <tr
               *ngFor="let order of transformedOrders"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 text-black"
             >
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.no | number: '2.0'}}

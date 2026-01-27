@@ -48,6 +48,7 @@ export class PermissionAreaComponent {
   editCategoryObj: EditCategory = new EditCategory();
 
   role_id!: number;
+  roleName!: string;
   createCategroyObj: CreateCategory = new CreateCategory();
   categories: { id: number; category: string }[] = [];
   selectedCategory: string | number = '';
@@ -71,6 +72,7 @@ export class PermissionAreaComponent {
 
   ngOnInit() {
     this.role_id = this.route.snapshot.params['id'];
+    this.roleName = this.route.snapshot.queryParams['role'];
     console.log(this.role_id);
     this.getAllPosition();
     this.getAllFeatures();

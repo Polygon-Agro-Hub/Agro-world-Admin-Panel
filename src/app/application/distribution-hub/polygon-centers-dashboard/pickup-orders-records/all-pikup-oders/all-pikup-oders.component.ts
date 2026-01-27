@@ -64,7 +64,7 @@ export class AllPikupOdersComponent implements OnChanges {
   searchText: string = '';
 
   // Time slot options for dropdown
-  timeSlotOptions = [{ label: '8AM-12PM' }, { label: '12PM-4PM' }];
+  timeSlotOptions = [{ label: '8AM-2PM' }, { label: '2PM-8PM' }];
 
   isLoading = false; // Not used for API calls anymore
   hasData: boolean = false;
@@ -129,8 +129,8 @@ export class AllPikupOdersComponent implements OnChanges {
       no: index + 1,
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
       value: item.fullTotal
-        ? `Rs. ${parseFloat(item.fullTotal).toFixed(2)}`
-        : 'Rs. 0.00',
+        ? `${parseFloat(item.fullTotal).toFixed(2)}`
+        : '0.00',
       status: this.getOrderStatus(item.status || item.orderStatus),
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
@@ -150,19 +150,20 @@ export class AllPikupOdersComponent implements OnChanges {
   }
 
   // Format scheduled time slot
-  private formatScheduledTimeSlot(item: any): string {
-    const scheduleDate = item.scheduleDate || item.sheduleDate;
-    const timeSlot = item.timeSlot || item.sheduleTime;
+private formatScheduledTimeSlot(item: any): string {
+  const scheduleDate = item.scheduleDate || item.sheduleDate;
+  const timeSlot = item.timeSlot || item.sheduleTime;
 
-    if (!scheduleDate) {
-      return this.getFormattedTimeSlotForDisplay(timeSlot) || 'N/A';
-    }
-
-    const formattedDate = this.formatDisplayDate(scheduleDate);
-    const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
-
-    return `${formattedTimeSlot}, ${formattedDate}`;
+  if (!scheduleDate) {
+    return this.getFormattedTimeSlotForDisplay(timeSlot) || 'N/A';
   }
+
+  const formattedDate = this.formatDisplayDate(scheduleDate);
+  const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
+
+  // Return with time slot on top and date below (like in screenshot)
+  return `${formattedTimeSlot}<br>${formattedDate}`;
+}
 
   // Helper method to format time slot for display
   private getFormattedTimeSlotForDisplay(timeSlot: string): string {
@@ -293,28 +294,50 @@ export class AllPikupOdersComponent implements OnChanges {
   console.log('View receiver info for:', order);
   
   if (order.originalData) {
+    const data = order.originalData;
+    const title = data.customerTitle || data.receiverTitle || data.title || '';
+    const fullName = data.fullName || 
+                     data.receiverFullName || 
+                     `${data.fillName || ''} ${data.lastName || ''}`.trim() ||
+                     data.receiverName ||
+                     '';
+    
+    // Combine title and name
+    const receiverNameWithTitle = title && fullName 
+      ? `${title} ${fullName}`.trim()
+      : fullName || title || '--';
+    
     this.selectedReceiverInfo = {
       orderId: order.orderId,
-      receiverName: `${order.originalData.customerTitle || ''} ${order.originalData.fillName || ''} ${order.originalData.lastName || ''}`.trim() ||
-                   order.originalData.receiverName,
+      receiverName: receiverNameWithTitle,
       receiverPhone1: this.formatPhoneNumber(
-        order.originalData.receiverPhoneCode1, 
-        order.originalData.receiverPhone1
+        data.receiverPhoneCode1, 
+        data.receiverPhone1
       ),
-      // Check if phone2 exists before formatting, otherwise return "--"
-      receiverPhone2: (order.originalData.phone2 || order.originalData.phonecode2) 
-        ? this.formatPhoneNumber(order.originalData.phonecode2, order.originalData.phone2)
+      receiverPhone2: (data.receiverPhone2 || data.receiverPhoneCode2) 
+        ? this.formatPhoneNumber(data.receiverPhoneCode2, data.receiverPhone2) // FIXED: removed extra "Code"
         : "--",
-      customerName: `${order.originalData.title || ''} ${order.originalData.firstName || ''} ${order.originalData.lastName || ''}`.trim(),
+      customerName: `${data.title || ''} ${data.firstName || ''} ${data.lastName || ''}`.trim(),
       customerPhone: this.formatPhoneNumber(
-        order.originalData.customerPhoneCode, 
-        order.originalData.customerPhoneNumber
+        data.customerPhoneCode, 
+        data.customerPhoneNumber
       ),
-      platform: order.originalData.orderApp || 'Salesdash',
-      orderPlaced: this.formatOrderDate(order.originalData.orderCreatedAt),
-      scheduledTime: this.formatScheduledTime(order.originalData),
+      platform: data.orderApp || 'Salesdash',
+      orderPlaced: this.formatOrderDate(data.orderCreatedAt),
+      scheduledTime: this.formatScheduledTime(data),
+      // Store title separately if needed for display
+      title: title
     };
     this.showReceiverPopup = true;
+    
+    console.log('Receiver Info Data:', this.selectedReceiverInfo);
+    console.log('Phone 2 details:', {
+      receiverPhoneCode2: data.receiverPhoneCode2,
+      receiverPhone2: data.receiverPhone2,
+      formatted: (data.receiverPhone2 || data.receiverPhoneCode2) 
+        ? this.formatPhoneNumber(data.receiverPhoneCode2, data.receiverPhone2)
+        : "--"
+    });
   }
 }
 

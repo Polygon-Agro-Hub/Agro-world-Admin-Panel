@@ -7,7 +7,7 @@
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1600px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center min-w-[200px]">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -92,36 +92,36 @@
       <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
         <thead>
           <tr>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-left">
               Ref No.
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-left">
               Category
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-left">
               EMP ID
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-left">
               Company
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-left">
               Centre Code
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-center">
               Received At
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-center">
               Status
             </th>
             <th
               *ngIf="permissionService.hasPermission('Reply Collector complaint') || tokenService.getUserDetails().role === '1'"
-              class="py-3 font-normal text-textLight dark:text-textDark text-center">
+              class="py-3 px-2 font-normal text-textLight dark:text-textDark text-center">
               View
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-center">
               Reply
             </th>
-            <th class="py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View Collector complaint') || tokenService.getUserDetails().role === '1'">
+            <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View Collector complaint') || tokenService.getUserDetails().role === '1'">
               View Reply
             </th>
             <th class="py-3 px-2 font-normal text-textLight dark:text-textDark text-left" >
@@ -139,15 +139,15 @@
                     totalItems: totalItems
                   }
           ">
-            <td class="py-3 dark:text-textDark text-left">{{ item.refNo }}</td>
-            <td class="py-3 dark:text-textDark text-left">
+            <td class="py-3 px-2 dark:text-textDark text-left">{{ item.refNo }}</td>
+            <td class="py-3 px-2 dark:text-textDark text-left">
               {{ item.complainCategory }}
             </td>
-            <td class="py-3 dark:text-textDark text-left">{{ item.empId }}</td>
-            <td class="py-3 dark:text-textDark text-left">
+            <td class="py-3 px-2 dark:text-textDark text-left">{{ item.empId }}</td>
+            <td class="py-3 px-2 dark:text-textDark text-left">
               {{ item.companyName }}
             </td>
-            <td class="py-3 dark:text-textDark text-left">
+            <td class="py-3 px-2 dark:text-textDark text-left">
               <ng-container *ngIf="item.regCode && item.regCode.trim(); else noRegCode">
                 {{ item.regCode }}
               </ng-container>
@@ -155,11 +155,11 @@
                 <span class="text-gray-400 italic">--No--</span>
               </ng-template>
             </td>
-            <td class="py-3 dark:text-textDark text-center">
+            <td class="py-3 px-2 dark:text-textDark text-center">
               {{ item.createdAt | date: 'yyyy/MM/dd' : 'Asia/Colombo' }}<br>
               {{ item.createdAt | date: 'hh.mm a' : 'Asia/Colombo' }}
             </td>
-            <td class="py-3 dark:text-textDark text-center">
+            <td class="py-3 px-2 dark:text-textDark text-center">
               <div *ngIf="item.status === 'Assigned'">
                 <span
                   class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{
@@ -178,7 +178,7 @@
             </td>
             <td
               *ngIf="permissionService.hasPermission('Reply Collector complaint') || tokenService.getUserDetails().role === '1'"
-              class="py-3 dark:text-textDark text-center">
+              class="py-3 px-2 dark:text-textDark text-center">
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="navigateSelectComplain(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -187,13 +187,13 @@
                 </svg>
               </button>
             </td>
-            <td class="py-3 dark:text-textDark text-center">
+            <td class="py-3 px-2 dark:text-textDark text-center">
               <span *ngIf="item.reply === null"
                 class="px-4 py-3 text-center text-textLight dark:text-textDark italic opacity-60">No</span>
               <span *ngIf="item.reply != null"
                 class="px-4 py-3 text-center text-textLight dark:text-textDark underline">Yes</span>
             </td>
-            <td class="py-3 dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View Collector complaint') || tokenService.getUserDetails().role === '1'">
+            <td class="py-3 px-2 dark:text-textDark text-center" *ngIf="permissionService.hasPermission('View Collector complaint') || tokenService.getUserDetails().role === '1'">
               <div *ngIf="item.reply === null">
                 <button disabled class="w-5 h-5 text-blue-100">
                   <img src="assets/icons/viewreply.png" alt="View Reply"

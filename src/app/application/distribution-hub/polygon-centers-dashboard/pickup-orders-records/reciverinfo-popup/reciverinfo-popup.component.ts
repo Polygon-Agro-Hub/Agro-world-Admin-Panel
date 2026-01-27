@@ -21,4 +21,30 @@ export class ReciverinfoPopupComponent {
   onPopupClick(event: Event): void {
     event.stopPropagation();
   }
+
+  // Transform platform display names
+  getPlatformDisplay(platform: string): string {
+    if (!platform) return '--';
+    
+    switch (platform) {
+      case 'Marketplace':
+        return 'GoVi Mart';
+      case 'Dash':
+        return 'Sales Dash';
+      default:
+        return platform;
+    }
+  }
+
+  // Get the receiver's full name
+  getReceiverFullName(): string {
+    if (!this.receiverInfo) return '--';
+    
+    return this.receiverInfo.fullName || 
+           this.receiverInfo.full_name || 
+           this.receiverInfo.receiverFullName ||
+           this.receiverInfo.receiver?.fullName ||
+           this.receiverInfo.receiverName ||
+           '--';
+  }
 }

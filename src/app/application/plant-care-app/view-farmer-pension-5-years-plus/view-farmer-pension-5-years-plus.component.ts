@@ -1,24 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FarmerPensionService } from '../../../services/plant-care/farmer-pension.service';
-import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
-  selector: 'app-view-farmer-pension-under-5-years',
+  selector: 'app-view-farmer-pension-5-years-plus',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    LoadingSpinnerComponent,
-    NgxPaginationModule,
-  ],
-  templateUrl: './view-farmer-pension-under-5-years.component.html',
-  styleUrl: './view-farmer-pension-under-5-years.component.css',
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, NgxPaginationModule],
+  templateUrl: './view-farmer-pension-5-years-plus.component.html',
+  styleUrl: './view-farmer-pension-5-years-plus.component.css'
 })
-export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
-  searchText: string = '';
+export class ViewFarmerPension5YearsPlusComponent {
+searchText: string = '';
   isLoading = false;
   showDetailsModal = false;
   dataObject: Farmer | null = null;
@@ -37,16 +32,16 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
   loadFarmers() {
     this.isLoading = true;
     this.farmerPensionService
-      .getFarmersUnder5Years(
+      .getFarmers5YearsPlus(
         this.currentPage,
         this.itemsPerPage,
         this.searchText || undefined,
       )
       .subscribe({
         next: (response) => {
-          // Filter out farmers who have completed 5 years or more
+          // Filter to show only farmers who have completed 5 years or more
           const filteredItems = response.items.filter((item) => {
-            return this.isUnder5Years(item.approveTime);
+            return this.is5YearsPlus(item.approveTime);
           });
 
           this.totalItems = filteredItems.length;
@@ -64,7 +59,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
               item.approveTime,
               parseFloat(item.defaultPension),
             ),
-            daysMore: this.calculateRemainingTime(item.approveTime),
+            duration: this.calculateDuration(item.approveTime),
             approvedBy: item.approveBy || 'N/A',
             approvedDate: this.formatApproveDate(item.approveTime),
             successor: item.sucType || 'N/A',
@@ -98,8 +93,8 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     this.loadFarmers();
   }
 
-  // Check if farmer is under 5 years from approval date
-  private isUnder5Years(approveTimeStr: string | null): boolean {
+  // Check if farmer has completed 5 years or more from approval date
+  private is5YearsPlus(approveTimeStr: string | null): boolean {
     if (!approveTimeStr) return false;
 
     const approveDate = new Date(approveTimeStr);
@@ -114,8 +109,55 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     const fiveYearsLater = new Date(approveDate);
     fiveYearsLater.setFullYear(approveDate.getFullYear() + 5);
 
-    // Return true only if current date is before the 5 year mark
-    return currentDate < fiveYearsLater;
+    // Return true if current date is at or after the 5 year mark
+    return currentDate >= fiveYearsLater;
+  }
+
+  // Calculate duration from approval date to current date
+  private calculateDuration(approveTimeStr: string | null): string {
+    if (!approveTimeStr) return 'N/A';
+
+    const approveDate = new Date(approveTimeStr);
+    const currentDate = new Date();
+
+    if (currentDate < approveDate) {
+      return 'N/A';
+    }
+
+    let years = currentDate.getFullYear() - approveDate.getFullYear();
+    let months = currentDate.getMonth() - approveDate.getMonth();
+    let days = currentDate.getDate() - approveDate.getDate();
+
+    // Adjust negative days
+    if (days < 0) {
+      months--;
+      const prevMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        0
+      );
+      days += prevMonth.getDate();
+    }
+
+    // Adjust negative months
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    // Build the string
+    const parts: string[] = [];
+    if (years > 0) {
+      parts.push(`${years} ${years === 1 ? 'Year' : 'Years'}`);
+    }
+    if (months > 0) {
+      parts.push(`${months} ${months === 1 ? 'Month' : 'Months'}`);
+    }
+    if (days > 0 && years === 0 && months === 0) {
+      parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
+    }
+
+    return parts.length > 0 ? parts.join(' ') : '0 Days';
   }
 
   // Calculate age from date of birth
@@ -213,7 +255,6 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     const eligibleDate = new Date(startDate);
     eligibleDate.setFullYear(startDate.getFullYear() + 5);
 
-    // Check if already past 5 years
     if (currentDate >= eligibleDate) {
       return 'Eligible';
     }
@@ -239,12 +280,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
       months += 12;
     }
 
-    // If years becomes negative or equals 5 with negative months, they're past 5 years
-    if (years < 0 || (years === 0 && months < 0) || (years === 5 && months > 0) || years > 5) {
-      return 'Eligible';
-    }
-
-    // Build the string - always show days
+    // Build the string
     const parts: string[] = [];
     if (years > 0) {
       parts.push(`${years} ${years === 1 ? 'Year' : 'Years'}`);
@@ -252,8 +288,9 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     if (months > 0) {
       parts.push(`${months} ${months === 1 ? 'Month' : 'Months'}`);
     }
-    // Always show days
-    parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
+    if (days > 0 || parts.length === 0) {
+      parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
+    }
 
     return parts.join(' ');
   }
@@ -314,7 +351,7 @@ interface Farmer {
   dob: string;
   age: string;
   amount: number;
-  daysMore: string;
+  duration: string;
   approvedBy: string;
   approvedDate: string;
   successor: string;

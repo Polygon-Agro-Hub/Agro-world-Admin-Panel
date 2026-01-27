@@ -268,6 +268,7 @@ import { ViewDeliveryRevenueComponent } from './application/distribution-hub/pol
 import { ViewFarmerPensionUnder5YearsComponent } from './application/plant-care-app/view-farmer-pension-under-5-years/view-farmer-pension-under-5-years.component';
 import { PensionRequestsComponent } from './application/finance/pension-requests/pension-requests.component';
 import { CultivationHistoryComponent } from './application/finance/cultivation-history/cultivation-history.component';
+import { ViewFarmerPension5YearsPlusComponent } from './application/plant-care-app/view-farmer-pension-5-years-plus/view-farmer-pension-5-years-plus.component';
 
 export const routes: Routes = [
   {
@@ -607,6 +608,10 @@ export const routes: Routes = [
               {
                 path: 'cultivation-history/:farmId',
                 component: CultivationHistoryComponent
+              },
+              {
+                path: 'farmer-pension-5-years-plus',
+                component: ViewFarmerPension5YearsPlusComponent,
               },
             ],
           },

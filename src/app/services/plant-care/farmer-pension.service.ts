@@ -7,6 +7,7 @@ import { TokenService } from '../token/services/token.service';
 export interface PensionRequest {
   No: number;
   Request_ID: number;
+  User_ID: number;
   Farmer_Name: string;
   NIC: string;
   dob: string;
@@ -70,7 +71,7 @@ export class FarmerPensionService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   private getHeaders(): HttpHeaders {
     const token = this.tokenService.getToken();
@@ -112,17 +113,17 @@ export class FarmerPensionService {
   }
 
   updatePensionRequestStatus(id: string, status: string, userId: string, notes: string = ''): Observable<any> {
-  const headers = this.getHeaders();
-  const url = `${this.apiUrl}auth/update-pension-request/${id}`;
+    const headers = this.getHeaders();
+    const url = `${this.apiUrl}auth/update-pension-request/${id}`;
 
-  const body = {
-    reqStatus: status,
-    approvedBy: userId,  // Send userId as approvedBy
-    approveTime: new Date().toISOString()
-  };
+    const body = {
+      reqStatus: status,
+      approvedBy: userId,  // Send userId as approvedBy
+      approveTime: new Date().toISOString()
+    };
 
-  return this.http.put<any>(url, body, { headers });
-}
+    return this.http.put<any>(url, body, { headers });
+  }
 
   getFarmersUnder5Years(
     page: number = 1,
@@ -138,5 +139,12 @@ export class FarmerPensionService {
     }
 
     return this.http.get<{ total: number; items: any[] }>(url, { headers });
+  }
+
+   getPensionForCultivation(id: string): Observable<any> {
+    const headers = this.getHeaders();
+    const url = `${this.apiUrl}auth/get-cultivation-for-pension/${id}`;
+
+    return this.http.get<any>(url, { headers });
   }
 }

@@ -605,7 +605,7 @@ export const routes: Routes = [
                 component:PensionRequestsComponent,
               },
               {
-                path: 'cultivation-history/:farmId',
+                path: 'cultivation-history/:id',
                 component: CultivationHistoryComponent
               },
             ],

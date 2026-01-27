@@ -69,7 +69,7 @@ export class PikupOdersComponent implements OnChanges {
   searchText: string = '';
 
   // Time slot options for dropdown
-  timeSlotOptions = [{ label: '8AM-12PM' }, { label: '12PM-4PM' }];
+  timeSlotOptions = [{ label: '8AM-2PM' }, { label: '2PM-8PM' }];
 
   isLoading = false;
   hasData: boolean = false;
@@ -92,36 +92,44 @@ export class PikupOdersComponent implements OnChanges {
   }
 
   private transformData(): void {
+    console.log('Transforming data, orders count:', this.orders?.length);
     if (this.orders && this.orders.length > 0) {
       this.transformedOrders = this.transformApiData(this.orders);
       this.orderCount = this.transformedOrders.length;
       this.hasData = this.orderCount > 0;
+      console.log('Transformed orders:', this.transformedOrders);
     } else {
       this.transformedOrders = [];
       this.orderCount = 0;
       this.hasData = false;
+      console.log('No orders to transform');
     }
   }
 
   // Filter methods - emit events to parent
   onDateSelect(): void {
+    console.log('Date selected:', this.selectedDate);
     this.dateChange.emit(this.selectedDate);
   }
 
   onDateClear(): void {
+    console.log('Date cleared');
     this.selectedDate = null;
     this.clearDate.emit();
   }
 
   onTimeSlotSelect(): void {
+    console.log('Time slot selected:', this.selectedTimeSlot);
     this.timeSlotChange.emit(this.selectedTimeSlot);
   }
 
   onSearch(): void {
+    console.log('Search triggered with:', this.searchText);
     this.searchChange.emit(this.searchText);
   }
 
   onClearSearch(): void {
+    console.log('Search cleared');
     this.searchText = '';
     this.clearSearch.emit();
   }
@@ -132,28 +140,27 @@ export class PikupOdersComponent implements OnChanges {
       no: index + 1,
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
       value: item.fullTotal
-        ? `Rs. ${parseFloat(item.fullTotal).toFixed(2)}`
-        : 'Rs. 0.00',
+        ? `${parseFloat(item.fullTotal).toFixed(2)}`
+        : ' 0.00',
       status: 'Picked Up', // Force status for this component
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
-        item.customerPhoneNumber
+        item.customerPhoneNumber,
       ),
       receiverPhone: this.formatPhoneNumber(
         item.receiverPhoneCode1,
-        item.receiverPhone1
+        item.receiverPhone1,
       ),
       receiversInfo: this.getReceiverInfo(item),
       scheduledTimeSlot: this.formatScheduledTimeSlot(item),
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
-      // CRITICAL FIX: Add originalData property
-      originalData: item,
+      originalData: item, // CRITICAL: Preserve original data for popup
     }));
   }
 
-  // Format scheduled time slot to match the image format: "8AM - 2PM, June 2, 2025"
+  // Format scheduled time slot
   private formatScheduledTimeSlot(item: any): string {
     const scheduleDate = item.scheduleDate || item.sheduleDate;
     const timeSlot = item.timeSlot || item.sheduleTime;
@@ -165,7 +172,8 @@ export class PikupOdersComponent implements OnChanges {
     const formattedDate = this.formatDisplayDate(scheduleDate);
     const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
 
-    return `${formattedTimeSlot}, ${formattedDate}`;
+    // Return with time slot on top and date below (like in screenshot)
+    return `${formattedTimeSlot}<br>${formattedDate}`;
   }
 
   // Helper method to format time slot for display
@@ -200,7 +208,7 @@ export class PikupOdersComponent implements OnChanges {
     }
 
     const timeRange = timeSlot.match(
-      /(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i
+      /(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i,
     );
     if (timeRange) {
       const startTime = this.formatTimeComponent(timeRange[1]);
@@ -275,33 +283,55 @@ export class PikupOdersComponent implements OnChanges {
 
   // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
-  console.log('View receiver info for:', order);
-  
-  if (order.originalData) {
-    this.selectedReceiverInfo = {
-      orderId: order.orderId,
-      receiverName: `${order.originalData.customerTitle || ''} ${order.originalData.fillName || ''} ${order.originalData.lastName || ''}`.trim() ||
-                   order.originalData.receiverName,
-      receiverPhone1: this.formatPhoneNumber(
-        order.originalData.receiverPhoneCode1, 
-        order.originalData.receiverPhone1
-      ),
-      // Check if phone2 exists before formatting, otherwise return "--"
-      receiverPhone2: (order.originalData.phone2 || order.originalData.phonecode2) 
-        ? this.formatPhoneNumber(order.originalData.phonecode2, order.originalData.phone2)
-        : "--",
-      customerName: `${order.originalData.title || ''} ${order.originalData.firstName || ''} ${order.originalData.lastName || ''}`.trim(),
-      customerPhone: this.formatPhoneNumber(
-        order.originalData.customerPhoneCode, 
-        order.originalData.customerPhoneNumber
-      ),
-      platform: order.originalData.orderApp || 'Salesdash',
-      orderPlaced: this.formatOrderDate(order.originalData.orderCreatedAt),
-      scheduledTime: this.formatScheduledTime(order.originalData),
-    };
-    this.showReceiverPopup = true;
+    console.log('View receiver info for:', order);
+
+    if (order.originalData) {
+      const data = order.originalData;
+      const title =
+        data.customerTitle || data.receiverTitle || data.title || '';
+      const fullName =
+        data.fullName ||
+        data.receiverFullName ||
+        `${data.fillName || ''} ${data.lastName || ''}`.trim() ||
+        data.receiverName ||
+        '';
+
+      // Combine title and name
+      const receiverNameWithTitle =
+        title && fullName
+          ? `${title} ${fullName}`.trim()
+          : fullName || title || '--';
+
+      this.selectedReceiverInfo = {
+        orderId: order.orderId,
+        receiverName: receiverNameWithTitle,
+        receiverPhone1: this.formatPhoneNumber(
+          data.receiverPhoneCode1,
+          data.receiverPhone1,
+        ),
+        receiverPhone2:
+          data.receiverPhone2 || data.receiverPhoneCode2
+            ? this.formatPhoneNumber(
+                data.receiverPhoneCode2,
+                data.receiverPhone2,
+              )
+            : '--',
+        customerName:
+          `${data.title || ''} ${data.firstName || ''} ${data.lastName || ''}`.trim(),
+        customerPhone: this.formatPhoneNumber(
+          data.customerPhoneCode,
+          data.customerPhoneNumber,
+        ),
+        platform: data.orderApp || 'Salesdash',
+        orderPlaced: this.formatOrderDate(data.orderCreatedAt),
+        scheduledTime: this.formatScheduledTime(data),
+        title: title,
+      };
+      this.showReceiverPopup = true;
+
+      console.log('Receiver Info Data:', this.selectedReceiverInfo);
+    }
   }
-}
 
   private formatOrderDate(dateString: string): string {
     if (!dateString) return 'N/A';
@@ -346,47 +376,80 @@ export class PikupOdersComponent implements OnChanges {
   }
 
   openOrderDetails(order: Order): void {
-    console.log('Button clicked! Opening order details for:', order);
+    console.log('=== openOrderDetails triggered ===');
+    console.log('Order clicked:', order);
+    console.log('Order has originalData:', !!order.originalData);
+
+    if (order.originalData) {
+      console.log('Original data keys:', Object.keys(order.originalData));
+      console.log('Full original data:', order.originalData);
+    }
 
     // For display in popup header (show invoice/order number)
     this.selectedOrderDisplayId = order.orderId;
+    console.log('Display ID set to:', this.selectedOrderDisplayId);
 
     // For API call (use processOrderId from original data)
     if (order.originalData) {
-      // Debug: Log all available fields
-      console.log('Original data fields:', Object.keys(order.originalData));
-      console.log('Full original data:', order.originalData);
-
       // Try to get the processOrderId from original data
       const processOrderId =
         order.originalData.processOrderId ||
         order.originalData.id ||
-        order.originalData.orderId;
+        order.originalData.orderId ||
+        this.extractOrderIdFromDisplay(order.orderId); // Fallback
+
+      console.log('Extracted processOrderId:', processOrderId);
 
       if (processOrderId) {
-        // Pass the processOrderId directly to API
-        this.selectedOrderId = processOrderId;
+        // Convert to number if needed
+        const numericId =
+          typeof processOrderId === 'string'
+            ? parseInt(processOrderId, 10)
+            : processOrderId;
+
+        if (!isNaN(numericId) && numericId !== 0) {
+          this.selectedOrderId = numericId;
+        } else {
+          // If it's a string ID or 0, keep it as is
+          this.selectedOrderId = processOrderId;
+        }
+
         this.selectedOrderData = order.originalData;
         this.showDetailsPopup = true;
 
-        console.log('Popup opened with:');
+        console.log('Popup opened successfully');
         console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
         console.log('- API ID (processOrderId):', this.selectedOrderId);
-        console.log('- Popup visible flag set to:', this.showDetailsPopup);
+        console.log('- Original data type:', typeof this.selectedOrderData);
+        console.log('- showDetailsPopup set to:', this.showDetailsPopup);
       } else {
-        console.warn('No processOrderId found in:', order.originalData);
-        // Fallback: try to use any available ID
-        const possibleId = order.originalData.id || order.originalData.orderId;
-        if (possibleId) {
-          this.selectedOrderId = possibleId;
-          this.selectedOrderData = order.originalData;
-          this.showDetailsPopup = true;
-        }
+        console.warn('No valid processOrderId found in original data');
+        console.warn('Original data:', order.originalData);
+        this.showErrorMessage(
+          'Unable to open order details: No valid order ID found.',
+        );
       }
     } else {
       console.warn('No original data available for order:', order);
-      console.log('Order object structure:', order);
+      this.showErrorMessage('Unable to open order details: No data available.');
     }
+  }
+
+  // Helper method to extract numeric ID from display ID
+  private extractOrderIdFromDisplay(displayId: string): number | null {
+    // Try to extract numbers from display ID like "ORD-1234"
+    const match = displayId.match(/\d+/);
+    if (match) {
+      return parseInt(match[0], 10);
+    }
+    return null;
+  }
+
+  // Helper method to show error messages
+  private showErrorMessage(message: string): void {
+    console.error(message);
+    // You can also implement a toast notification or alert here
+    alert(message);
   }
 
   closeDetailsPopup(): void {

@@ -74,7 +74,7 @@ export class LandInfoTabComponent implements OnDestroy {
   }
 
   get ownershipDisplay(): string {
-    if (!this.landlObj?.isOwnByFarmer) return 'Not provided';
+    if (!this.landlObj?.isOwnByFarmer) return '--';
     
     const value = this.landlObj.isOwnByFarmer.toString().trim();
     

@@ -71,6 +71,7 @@ export class RetailComplaintsComponent implements OnInit {
   totalItems = 0;
   itemsPerPage = 10;
   page = 1;
+  roleCategory = this.tokenService.getUserDetails().role;
 
   hasData: boolean = false;
 
@@ -90,6 +91,19 @@ export class RetailComplaintsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // if (this.tokenService.getUserDetails().role === "2") {
+    //   this.roleCategory = "Agriculture";
+    // } else if (this.tokenService.getUserDetails().role === "3") {
+    //   this.roleCategory = "Finance";
+    // }
+    // else if (this.tokenService.getUserDetails().role === "4") {
+    //   this.roleCategory = "Call Center";
+    // }
+    // else if (this.tokenService.getUserDetails().role === "5") {
+    //   this.roleCategory = "Procurement";
+    // }
+    // this.tokenService.getUserDetails().role = this.roleCategory;
+
     this.fetchComplaints();
     this.fetchComplaintCategories();
   }
@@ -97,7 +111,7 @@ export class RetailComplaintsComponent implements OnInit {
   private fetchComplaints(): void {
     this.isLoading = true;
 
-    this.complaintsService.fetchComplaints().subscribe({
+    this.complaintsService.fetchComplaints(this.roleCategory).subscribe({
       next: (resp: ApiResponse) => {
         if (resp.data.length === 0) {
           this.hasData = false;

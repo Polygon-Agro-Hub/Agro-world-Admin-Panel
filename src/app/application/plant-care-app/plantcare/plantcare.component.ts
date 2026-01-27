@@ -21,6 +21,8 @@ export class PlantcareComponent {
   popupVisibleCertification = false;
   popupVisibleFarmerClusters = false;
   popupVisibleAuditFarmers = false;
+  popupVisibleFarmerPension = false;
+  popupVisiblePentionRequests = false;
 
   constructor(
     private router: Router,
@@ -64,6 +66,8 @@ export class PlantcareComponent {
     if (this.popupVisibleNews) this.popupVisibleNews = false;
     if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
     if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisiblePentionRequests)
+      this.popupVisiblePentionRequests = false;
   }
 
   // Add the new toggle method for Farmer Clusters
@@ -73,6 +77,8 @@ export class PlantcareComponent {
     if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
     if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
     if (this.popupVisibleCertification) this.popupVisibleCertification = false;
+    if (this.popupVisiblePentionRequests)
+      this.popupVisiblePentionRequests = false;
   }
 
   // Toggle function for Audit Farmers popup
@@ -84,6 +90,26 @@ export class PlantcareComponent {
     if (this.popupVisibleCertification) this.popupVisibleCertification = false;
     if (this.popupVisibleFarmerClusters)
       this.popupVisibleFarmerClusters = false;
+    if (this.popupVisiblePentionRequests)
+      this.popupVisiblePentionRequests = false;
+  }
+
+  togglePopupPentionRequests() {
+    this.popupVisiblePentionRequests = !this.popupVisiblePentionRequests;
+    if (this.popupVisibleNews) this.popupVisibleNews = false;
+    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
+    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
+    if (this.popupVisibleFarmerClusters)
+      this.popupVisibleFarmerClusters = false;
+  }
+
+  togglePopupFarmerPension() {
+    this.popupVisibleFarmerPension = !this.popupVisibleFarmerPension;
+    if (this.popupVisibleNews) this.popupVisibleNews = false;
+    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
+    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
+    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
   }
 
   navigateToCreateNews(): void {
@@ -227,5 +253,13 @@ export class PlantcareComponent {
   // Navigation function for Farmer Clusters
   viewFarmerClusters(): void {
     this.router.navigate(['/plant-care/action/farmers-clusters-list']);
+  }
+
+  viewPentionRequests(): void {
+    this.router.navigate(['/plant-care/action/pension-requests']);
+  }
+
+  viewUnder5YearsFarmersPension(): void {
+    this.router.navigate(['/plant-care/action/farmer-pension-under-5-years']);
   }
 }

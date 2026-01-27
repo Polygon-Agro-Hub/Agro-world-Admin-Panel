@@ -1,0 +1,462 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<div *ngIf="!isLoading" class="p-6">
+  <!-- Back Button -->
+  <button
+    class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
+    onclick="history.back()"
+  >
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back</span>
+  </button>
+
+  <div
+    class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  >
+    <div
+      class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6 min-w-[1700px]"
+    >
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
+          Pension Requests ({{ totalItems }})
+        </h1>
+        <div class="flex items-center">
+          <div class="relative w-64">
+            <input
+              type="text"
+              [(ngModel)]="search"
+              (keyup.enter)="applySearch()"
+              placeholder="Search by Farmer's NIC..."
+              title="Search by Farmer's NIC"
+              class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] rounded-xl text-textLight dark:text-textDark focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <!-- Clear/Search Icon -->
+            <button
+              *ngIf="search"
+              (click)="clearSearch()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-gray-600 dark:hover:text-gray-400"
+            >
+              <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+            <button
+              *ngIf="!search"
+              (click)="applySearch()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-blue-500"
+            >
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+      <div *ngIf="pensionRequests.length > 0">
+        <table class="w-full">
+          <thead>
+            <tr
+              class="border-b text-base font-normal border-gray-200 dark:border-gray-700"
+            >
+              <th
+                class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                No
+              </th>
+              <th
+                class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Farmer NIC
+              </th>
+              <th
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Farmer’s NIC Front Image
+              </th>
+              <th
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Farmer’s NIC Back Image
+              </th>
+              <th
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Successor’s ID Front Image
+              </th>
+              <th
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Successor’s ID Back Image
+              </th>
+              <th
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Details
+              </th>
+              <th
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Status
+              </th>
+              <th
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Cultivation History
+              </th>
+              <th
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+              >
+                Date & Time
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let request of pensionRequests; let i = index"
+              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+            >
+              <!-- No -->
+              <td
+                class="px-4 py-4 text-textLight dark:text-textDark text-center"
+              >
+                {{ i + 1 }}
+              </td>
+
+              <!-- Farmer NIC -->
+              <td class="px-4 py-4 text-textLight dark:text-textDark">
+                {{ formatNIC(request.NIC) }}
+              </td>
+
+              <!-- Farmer's NIC Front Image -->
+              <td class="px-4 py-4 text-center">
+                <button
+                  (click)="openImage(request.NIC_Front_Image)"
+                  [disabled]="!request.NIC_Front_Image"
+                  class="text-blue-500 hover:text-blue-600 transition disabled:text-gray-400 disabled:cursor-not-allowed"
+                >
+                  <i class="fa-regular fa-image text-2xl"></i>
+                </button>
+              </td>
+
+              <!-- Farmer's NIC Back Image -->
+              <td class="px-4 py-4 text-center">
+                <button
+                  (click)="openImage(request.NIC_Back_Image)"
+                  [disabled]="!request.NIC_Back_Image"
+                  class="text-blue-500 hover:text-blue-600 transition disabled:text-gray-400 disabled:cursor-not-allowed"
+                >
+                  <i class="fa-regular fa-image text-2xl"></i>
+                </button>
+              </td>
+
+              <!-- Successor's ID Front Image -->
+              <td class="px-4 py-4 text-center">
+                <button
+                  (click)="openImage(request.Successor_NIC_Front_Image)"
+                  [disabled]="!request.Successor_NIC_Front_Image"
+                  class="text-blue-500 hover:text-blue-600 transition disabled:text-gray-400 disabled:cursor-not-allowed"
+                >
+                  <i class="fa-regular fa-image text-2xl"></i>
+                </button>
+              </td>
+
+              <!-- Successor's ID Back Image -->
+              <td class="px-4 py-4 text-center">
+                <button
+                  (click)="openImage(request.Successor_NIC_Back_Image)"
+                  [disabled]="!request.Successor_NIC_Back_Image"
+                  class="text-blue-500 hover:text-blue-600 transition disabled:text-gray-400 disabled:cursor-not-allowed"
+                >
+                  <i class="fa-regular fa-image text-2xl"></i>
+                </button>
+              </td>
+
+              <!-- Details -->
+              <td class="px-4 py-4 text-center">
+                <button
+                  (click)="viewDetails(request.Request_ID)"
+                  class="w-6 h-6 text-blue-500 hover:text-blue-700"
+                  title="View Details"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </td>
+
+              <td class="px-4 py-4 text-center">
+                <button
+                  (click)="openApproveRejectModal(request)"
+                  [disabled]="request.reqStatus !== 'To Review'"
+                  [class]="
+                    'px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto ' +
+                    getStatusClass(request.reqStatus)
+                  "
+                  [title]="
+                    request.reqStatus === 'To Review'
+                      ? 'Click to review this request'
+                      : request.reqStatus
+                  "
+                >
+                  {{ request.reqStatus }}
+                </button>
+              </td>
+              <td class="px-4 py-4 text-center">
+                <button
+                  class="px-4 py-2 text-blue-500 hover:text-blue-700 font-medium text-sm"
+                  title="Review Request"
+                  (click)="openReviewRequest(request)"
+                >
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+              </td>
+
+              <!-- Date & Time -->
+              <td
+                class="px-4 py-4 text-textLight text-center dark:text-textDark"
+              >
+                {{ request.Request_Date_Time }}
+              </td>
+
+              <!-- To Review -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div
+        *ngIf="pensionRequests.length === 0"
+        class="flex flex-col items-center w-full px-10 py-7 mt-6"
+      >
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          --No Data Available--
+        </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Details Modal -->
+<div
+  *ngIf="showDetailsModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="closeDetailsModal()"
+>
+  <div
+    class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-lg mx-4"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div
+      class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg"
+    >
+      <h2
+        class="text-lg font-semibold text-center text-textLight dark:text-textDark"
+      >
+        Pension Request Details
+      </h2>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+      <!-- Farmer's Full Name -->
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Farmer's Full Name
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ selectedRequest?.Farmer_Name }}
+        </span>
+      </div>
+
+      <!-- Farmer's NIC Number -->
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Farmer's NIC Number
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ formatNIC(selectedRequest?.NIC || "") }}
+        </span>
+      </div>
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Farmer’s Phone Number
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ selectedRequest?.Phone_Number }}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Farmer's DOB
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ formatDate(selectedRequest?.dob || "") }}
+        </span>
+      </div>
+
+      <!-- Farmer's DOB -->
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Farmer’s Age
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ calculateAge(selectedRequest?.dob) }}
+        </span>
+      </div>
+
+      <!-- Successor Type -->
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Successor
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ selectedRequest?.Successor_Type }}
+        </span>
+      </div>
+
+      <!-- Successor's NIC Number -->
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Successor's NIC Number
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ formatNIC(selectedRequest?.Successor_NIC || "") }}
+        </span>
+      </div>
+
+      <!-- Successor's DOB -->
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Successor's DOB
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ formatDate(selectedRequest?.Successor_DOB || "") }}
+        </span>
+      </div>
+
+      <!-- Request Date & Time -->
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Successor's Age
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ calculateAge(selectedRequest?.Successor_DOB) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 flex justify-center rounded-b-lg">
+      <button
+        (click)="closeDetailsModal()"
+        class="px-12 py-2 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium text-sm"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Approve/Reject Modal -->
+<div
+  *ngIf="showApproveRejectModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="closeApproveRejectModal()"
+>
+  <div
+    class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-md mx-4"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="px-6 py-4 dark:border-gray-700 rounded-t-lg">
+      <h2
+        class="text-lg font-semibold text-center text-textLight dark:text-textDark"
+      >
+        Please Confirm Action!
+      </h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">
+        What you want to do with this pension request?
+      </p>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6">
+      <!-- Action Buttons -->
+      <div class="flex justify-center gap-4">
+        <button
+          (click)="rejectRequest()"
+          [disabled]="isProcessingAction"
+          class="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition font-medium text-sm disabled:bg-red-300 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+          <i *ngIf="isProcessingAction" class="fa-solid fa-spinner fa-spin"></i>
+          Reject
+        </button>
+        <button
+          (click)="approveRequest()"
+          [disabled]="isProcessingAction"
+          class="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition font-medium text-sm disabled:bg-green-300 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+          <i *ngIf="isProcessingAction" class="fa-solid fa-spinner fa-spin"></i>
+          Approve
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

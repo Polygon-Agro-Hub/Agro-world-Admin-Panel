@@ -24,7 +24,7 @@
       <!-- Text Input -->
       <input
         type="text"
-        [value]="investmentObj.purpose"
+        [value]="investmentObj.purpose || '--'"
         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly
       />
@@ -40,7 +40,7 @@
       <!-- Text Input -->
       <input
         type="text"
-        [value]="investmentObj.repaymentMonth"
+        [value]="investmentObj.repaymentMonth || '--'"
         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
         readonly
       />

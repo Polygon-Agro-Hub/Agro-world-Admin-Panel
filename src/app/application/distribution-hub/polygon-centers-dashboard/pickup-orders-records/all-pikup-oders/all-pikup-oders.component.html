@@ -187,7 +187,7 @@
                 {{ order.orderId }}
               </td>
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-                {{ order.value }}
+                {{ order.value | number:'1.0-0' }}
               </td>
               <td class="px-4 py-3 text-center">
                 <span

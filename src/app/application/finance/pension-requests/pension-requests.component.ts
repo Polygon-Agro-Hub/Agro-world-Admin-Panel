@@ -367,4 +367,24 @@ export class PensionRequestsComponent implements OnInit {
       queryParams: { nic: nic },
     });
   }
+
+  formatTime(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+}
+
+formatDateLikeImage(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit'
+  });
+}
 }

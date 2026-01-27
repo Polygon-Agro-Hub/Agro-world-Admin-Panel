@@ -280,44 +280,43 @@
               </td>
             </tr>
           </ng-container>
-
-          <ng-template #noData>
-            <tr>
-              <td
-                colspan="10"
-                class="px-4 py-6 text-center text-textLight dark:text-textDark"
-              >
-                <div class="flex flex-col items-center w-full px-10 py-7">
-                  <p class="text-[#494949] my-6 dark:text-textDark">
-                    --No Data Available--
-                  </p>
-                  <img
-                    src="assets/images/NoData.png"
-                    alt="No Data"
-                    class="w-20 h-20"
-                  />
-                </div>
-              </td>
-            </tr>
-          </ng-template>
         </tbody>
       </table>
+      <ng-template #noData>
+        <tr>
+          <td
+            colspan="10"
+            class="px-4 py-6 text-center text-textLight dark:text-textDark"
+          >
+            <div class="flex flex-col items-center w-full px-10 py-7">
+              <p class="text-[#494949] my-6 dark:text-textDark">
+                --No Data Available--
+              </p>
+              <img
+                src="assets/images/NoData.png"
+                alt="No Data"
+                class="w-20 h-20"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
     </div>
   </div>
-  
+
   <!-- Details Popup Component -->
   <app-pikup-oder-record-details
     [visible]="showDetailsPopup"
-    [orderId]="selectedOrderId"  
+    [orderId]="selectedOrderId"
     [displayOrderId]="selectedOrderDisplayId"
     (close)="closeDetailsPopup()"
   >
   </app-pikup-oder-record-details>
 
   <app-reciverinfo-popup
-  [visible]="showReceiverPopup"
-  [receiverInfo]="selectedReceiverInfo"
-  (close)="closeReceiverPopup()"
->
-</app-reciverinfo-popup>
+    [visible]="showReceiverPopup"
+    [receiverInfo]="selectedReceiverInfo"
+    (close)="closeReceiverPopup()"
+  >
+  </app-reciverinfo-popup>
 </div>

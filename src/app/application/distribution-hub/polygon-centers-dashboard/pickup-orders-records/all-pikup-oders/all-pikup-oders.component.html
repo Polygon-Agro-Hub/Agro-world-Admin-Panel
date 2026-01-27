@@ -231,11 +231,9 @@
                   </svg>
                 </button>
               </td>
-              <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              >
-                {{ order.scheduledTimeSlot }}
-              </td>
+              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+  <div [innerHTML]="order.scheduledTimeSlot"></div>
+</td>
               <td class="px-4 py-3 text-left">
                 <span
                   [class]="

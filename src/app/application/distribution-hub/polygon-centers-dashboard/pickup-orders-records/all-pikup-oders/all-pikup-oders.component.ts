@@ -150,19 +150,20 @@ export class AllPikupOdersComponent implements OnChanges {
   }
 
   // Format scheduled time slot
-  private formatScheduledTimeSlot(item: any): string {
-    const scheduleDate = item.scheduleDate || item.sheduleDate;
-    const timeSlot = item.timeSlot || item.sheduleTime;
+private formatScheduledTimeSlot(item: any): string {
+  const scheduleDate = item.scheduleDate || item.sheduleDate;
+  const timeSlot = item.timeSlot || item.sheduleTime;
 
-    if (!scheduleDate) {
-      return this.getFormattedTimeSlotForDisplay(timeSlot) || 'N/A';
-    }
-
-    const formattedDate = this.formatDisplayDate(scheduleDate);
-    const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
-
-    return `${formattedTimeSlot}, ${formattedDate}`;
+  if (!scheduleDate) {
+    return this.getFormattedTimeSlotForDisplay(timeSlot) || 'N/A';
   }
+
+  const formattedDate = this.formatDisplayDate(scheduleDate);
+  const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
+
+  // Return with time slot on top and date below (like in screenshot)
+  return `${formattedTimeSlot}<br>${formattedDate}`;
+}
 
   // Helper method to format time slot for display
   private getFormattedTimeSlotForDisplay(timeSlot: string): string {

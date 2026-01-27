@@ -129,8 +129,8 @@ export class AllPikupOdersComponent implements OnChanges {
       no: index + 1,
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
       value: item.fullTotal
-        ? `Rs. ${parseFloat(item.fullTotal).toFixed(2)}`
-        : 'Rs. 0.00',
+        ? `${parseFloat(item.fullTotal).toFixed(2)}`
+        : '0.00',
       status: this.getOrderStatus(item.status || item.orderStatus),
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,

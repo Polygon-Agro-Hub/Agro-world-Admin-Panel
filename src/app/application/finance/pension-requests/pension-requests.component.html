@@ -17,7 +17,7 @@
     >
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
-          Pension Requests ({{ totalItems }})
+          Pension Requests ({{ totalItems.toString().padStart(2, '0') }})
         </h1>
         <div class="flex items-center">
           <div class="relative w-64">
@@ -115,9 +115,9 @@
             >
               <!-- No -->
               <td
-                class="px-4 py-4 text-textLight dark:text-textDark text-center"
+                class="px-4 py-4 text-textLight dark:text-textDark text-left"
               >
-                {{ i + 1 }}
+                {{ (i + 1).toString().padStart(3, '0') }}
               </td>
 
               <!-- Farmer NIC -->

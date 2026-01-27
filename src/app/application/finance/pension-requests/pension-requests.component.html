@@ -17,34 +17,39 @@
     >
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
-          Pension Requests ({{ totalItems.toString().padStart(2, '0') }})
+          Pension Requests ({{ totalItems.toString().padStart(2, "0") }})
         </h1>
         <div class="flex items-center">
-          <div class="relative w-64">
-            <input
-              type="text"
-              [(ngModel)]="search"
-              (keyup.enter)="applySearch()"
-              placeholder="Search by Farmer's NIC..."
-              title="Search by Farmer's NIC"
-              class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] rounded-xl text-textLight dark:text-textDark focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          <div class="relative">
+            <div
+              class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80"
+            >
+              <input
+                type="text"
+                [(ngModel)]="search"
+                (keyup.enter)="applySearch()"
+                placeholder="Search by Farmer's NIC..."
+                title="Search by Farmer's NIC"
+                class="bg-transparent outline-none w-full text-gray-700 dark:text-white placeholder:text-gray-400"
+              />
 
-            <!-- Clear/Search Icon -->
-            <button
-              *ngIf="search"
-              (click)="clearSearch()"
-              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-gray-600 dark:hover:text-gray-400"
-            >
-              <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
-            <button
-              *ngIf="!search"
-              (click)="applySearch()"
-              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-blue-500"
-            >
-              <i class="fa-solid fa-magnifying-glass text-sm"></i>
-            </button>
+              <!-- Clear Button -->
+              <button
+                *ngIf="search"
+                (click)="clearSearch()"
+                class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <i class="fa-solid fa-times"></i>
+              </button>
+
+              <!-- Search Button -->
+              <button
+                (click)="applySearch()"
+                class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -69,22 +74,22 @@
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 text-base font-normal"
               >
-                Farmer’s NIC<br>Front Image
+                Farmer’s NIC<br />Front Image
               </th>
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 text-base font-normal"
               >
-                Farmer’s NIC<br>Back Image
+                Farmer’s NIC<br />Back Image
               </th>
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 text-base font-normal"
               >
-                Successor’s ID<br>Front Image
+                Successor’s ID<br />Front Image
               </th>
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 text-base font-normal"
               >
-                Successor’s ID<br>Back Image
+                Successor’s ID<br />Back Image
               </th>
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
@@ -114,10 +119,8 @@
               class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
             >
               <!-- No -->
-              <td
-                class="px-4 py-4 text-textLight dark:text-textDark text-left"
-              >
-                {{ (i + 1).toString().padStart(3, '0') }}
+              <td class="px-4 py-4 text-textLight dark:text-textDark text-left">
+                {{ (i + 1).toString().padStart(3, "0") }}
               </td>
 
               <!-- Farmer NIC -->
@@ -221,13 +224,17 @@
 
               <!-- Date & Time -->
               <td
-  class="px-4 py-4 text-textLight text-center dark:text-textDark"
->
-  <div class="flex flex-col items-center">
-    <span class="text-sm">{{ formatTime(request.Request_Date_Time) }}</span>
-    <span class="text-sm">{{ formatDateLikeImage(request.Request_Date_Time) }}</span>
-  </div>
-</td>
+                class="px-4 py-4 text-textLight text-center dark:text-textDark"
+              >
+                <div class="flex flex-col items-center">
+                  <span class="text-sm">{{
+                    formatTime(request.Request_Date_Time)
+                  }}</span>
+                  <span class="text-sm">{{
+                    formatDateLikeImage(request.Request_Date_Time)
+                  }}</span>
+                </div>
+              </td>
 
               <!-- To Review -->
             </tr>

@@ -64,7 +64,7 @@ export class AllPikupOdersComponent implements OnChanges {
   searchText: string = '';
 
   // Time slot options for dropdown
-  timeSlotOptions = [{ label: '8AM-12PM' }, { label: '12PM-4PM' }];
+  timeSlotOptions = [{ label: '8AM-2PM' }, { label: '2PM-8PM' }];
 
   isLoading = false; // Not used for API calls anymore
   hasData: boolean = false;

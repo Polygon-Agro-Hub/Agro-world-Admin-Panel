@@ -152,6 +152,25 @@ export class UserBulkUploadComponent {
         const worksheet = workbook.Sheets[firstSheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
+        // Filter out empty rows
+        const filteredData = jsonData.filter((row: any) => {
+          const phoneNumber = row['Phone Number'];
+          const nicNumber = row['NIC Number'];
+          const firstName = row['First Name'];
+          const lastName = row['Last Name'];
+          
+          // Return true only if at least one required field has a meaningful value
+          return (
+            (phoneNumber !== undefined && phoneNumber !== null && String(phoneNumber).trim() !== '') ||
+            (nicNumber !== undefined && nicNumber !== null && String(nicNumber).trim() !== '') ||
+            (firstName !== undefined && firstName !== null && String(firstName).trim() !== '') ||
+            (lastName !== undefined && lastName !== null && String(lastName).trim() !== '')
+          );
+        });
+
+        console.log('Original rows:', jsonData.length);
+        console.log('Filtered rows:', filteredData.length);
+
         const phoneNumbers = new Map();
         const nicNumbers = new Map();
         const duplicates: ExistingUser[] = [];
@@ -161,8 +180,8 @@ export class UserBulkUploadComponent {
 
         let i;
 
-        for ( i = 0; i < jsonData.length; i++) {
-          const row = jsonData[i];
+        for ( i = 0; i < filteredData.length; i++) {
+          const row = filteredData[i];
           const phoneNumber = String(
             (row as { [key: string]: any })['Phone Number']
           );
@@ -204,7 +223,7 @@ export class UserBulkUploadComponent {
         });
 
         duplicateIndices.forEach(idx => {
-          const row = jsonData[idx];
+          const row = filteredData[idx];
           duplicates.push({
             firstName: String((row as { [key: string]: any })['First Name']),
             lastName: String((row as { [key: string]: any })['Last Name']),
@@ -221,65 +240,65 @@ export class UserBulkUploadComponent {
         }
 
         const formData = new FormData();
-    formData.append('file', this.selectedFile);
+        formData.append('file', this.selectedFile);
 
-    this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-        
-        // Log the response for debugging
-        console.log('Backend Response:', response);
-        
-        // FIRST: Check for duplicate entries in Excel (internal duplication)
-        if (response.duplicateData && response.duplicateData.length > 0) {
-          this.handleDuplicateEntries(response.duplicateData);
-        }
-        // SECOND: Check for existing users in database (redundancy)
-        else if (response.existingUsers && response.existingUsers.length > 0) {
-          this.handleExistingUsers(response.existingUsers);
-        }
-        // THIRD: Check for successful upload
-        else if (response.newUsersInserted > 0) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: `Successfully uploaded ${response.newUsersInserted} users!`,
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-              title: 'dark:text-white',
+        this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
+          next: (response: any) => {
+            this.isLoading = false;
+            
+            // Log the response for debugging
+            console.log('Backend Response:', response);
+            
+            // FIRST: Check for duplicate entries in Excel (internal duplication)
+            if (response.duplicateData && response.duplicateData.length > 0) {
+              this.handleDuplicateEntries(response.duplicateData);
             }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigate(['/steckholders/action/farmers']);
+            // SECOND: Check for existing users in database (redundancy)
+            else if (response.existingUsers && response.existingUsers.length > 0) {
+              this.handleExistingUsers(response.existingUsers);
             }
-          });
-        }
-        // FOURTH: Handle case where no data was uploaded
-        else {
-          Swal.fire({
-            icon: 'info',
-            title: 'No Data Processed',
-            text: 'No new users were uploaded.',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-              title: 'dark:text-white',
+            // THIRD: Check for successful upload
+            else if (response.newUsersInserted > 0) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: `Successfully uploaded ${response.newUsersInserted} users!`,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.router.navigate(['/steckholders/action/farmers']);
+                }
+              });
             }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigate(['/steckholders/action/farmers']);
+            // FOURTH: Handle case where no data was uploaded
+            else {
+              Swal.fire({
+                icon: 'info',
+                title: 'No Data Processed',
+                text: 'No new users were uploaded.',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.router.navigate(['/steckholders/action/farmers']);
+                }
+              });
             }
-          });
-        }
-        
-        this.selectedFile = null;
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.handleError(error);
-      },
-    });
+            
+            this.selectedFile = null;
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.handleError(error);
+          },
+        });
       } catch (error) {
         this.isLoading = false;
         this.handleError(
@@ -294,7 +313,6 @@ export class UserBulkUploadComponent {
     };
 
     reader.readAsArrayBuffer(this.selectedFile);
-
   }
 
   // Helper method to handle duplicate entries

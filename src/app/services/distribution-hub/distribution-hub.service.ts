@@ -801,33 +801,45 @@ export class DistributionHubService {
   }
 
   getcenterHomeDeliveryOrders(
-    activeTab: string = '', centerId: number, status: string = '', searchText: string = '', date: string | Date | null = ''
-    // searchType: string
+    activeTab: string = '',
+    centerId: number,
+    status: string = '',
+    searchText: string = '',
+    date: string | Date | null = '',
+    timeSlot: string = ''
   ): Observable<any> {
+  
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-
-    console.log('centerId', centerId)
-
+  
     let url = `${this.apiUrl}distribution/get-center-home-delivery-orders?activeTab=${activeTab}&centerId=${centerId}`;
-
+  
     if (status) {
       url += `&status=${status}`;
     }
-
+  
     if (searchText) {
       url += `&searchText=${searchText}`;
     }
-
+  
     if (date) {
-      url += `&date=${date}`;
+      const formattedDate =
+        date instanceof Date
+          ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+          : date;
+    
+      url += `&date=${formattedDate}`;
     }
-
+  
+    if (timeSlot) {
+      url += `&timeSlot=${timeSlot}`;
+    }
+  
     return this.http.get(url, { headers });
   }
-
+  
   getPolygonCenterDashbordDetails(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

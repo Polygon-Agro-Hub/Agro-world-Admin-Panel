@@ -54,6 +54,11 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
   centerName: string = ''
   centerRegCode: string = ''
 
+  timeSlotOptions = [
+    { label: '8AM - 2PM', value: '8AM - 2PM' },
+    { label: '2PM - 8PM', value: '2PM - 8PM' },
+  ];
+
   statusOptions = [
     { label: 'All', value: null },
     { label: 'Out for Delivery', value: 'Out For Delivery' },
@@ -68,6 +73,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
 
   selectedStatus: any = null;
   searchText: string = '';
+  selectedTimeSlot: string = '';
 
   showInfoModal: boolean = false;
 
@@ -92,12 +98,17 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
     { label: 'Delivered', value: 'Delivered' },
   ];
 
+  
+  onTimeSlotChange(): void {
+    this.centerFetchDeliveries();
+  }
 
   onStatusChange(): void {
     this.centerFetchDeliveries();
   }
 
   onSearchChange(): void {
+    this.searchText = this.searchText.trimStart();
     this.centerFetchDeliveries();
   }
 
@@ -107,22 +118,20 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
   }
 
   selectTab(tabName: string): void {
+    this.selectedTimeSlot = '';
     this.activeTab = tabName;
 
     switch (tabName) {
     
       case 'all':
-        this.placeholderDate = 'Date'
-        this.searchPlaceHolder = 'Search By Order ID..'
+        this.searchPlaceHolder = 'Search by Order ID, Phone Numbers..'
         break;
     
       case 'out-for-delivery':
-        this.placeholderDate = 'Out Date'
-        this.searchPlaceHolder = 'Search by Order ID, Any Phone..'
+        this.searchPlaceHolder = 'Search by Order ID, Phone Numbers..'
         break;
 
       case 'Return Received':
-        this.placeholderDate = 'Recieved Date'
         this.searchPlaceHolder = 'Search by Order ID..'
         break;
 
@@ -131,16 +140,16 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
         break;
 
       default:
-        this.searchPlaceHolder = 'Search by Order ID, Any Phone..'
+        this.searchPlaceHolder = 'Search by Order ID, Phone Numbers..'
         break;
     }
 
     this.centerFetchDeliveries(this.activeTab, this.centerId, this.selectedStatus = '', this.searchText = '', this.selectedDate = '');
   }
 
-  centerFetchDeliveries(activeTab: string = this.activeTab, centerId: number = this.centerId, status: string = this.selectedStatus, searchText: string = this.searchText, date: string | Date | null = this.selectedDate): void {
+  centerFetchDeliveries(activeTab: string = this.activeTab, centerId: number = this.centerId, status: string = this.selectedStatus, searchText: string = this.searchText, date: string | Date | null = this.selectedDate, timeSlot: string = this.selectedTimeSlot): void {
     this.isLoading = true;
-    this.distributionService.getcenterHomeDeliveryOrders(activeTab, centerId, status, searchText, date).subscribe({
+    this.distributionService.getcenterHomeDeliveryOrders(activeTab, centerId, status, searchText, date, timeSlot).subscribe({
       next: (response) => {
         if (response.status && response.data) {
           this.allDeliveries = response.data;
@@ -427,4 +436,5 @@ class Delivery {
   receivedTime!: string;
   title!: string;
   recieverTitle!: string;
+  completeTime!: Date;
 }

@@ -324,16 +324,7 @@ export class PaymentHistoryUpdateComponent implements OnInit {
   Swal.fire({
     icon: 'question',
     title: 'Confirm Update',
-    html: `
-      <div class="text-left">
-        <p class="mb-2">Are you sure you want to update this payment record?</p>
-        <div class="mt-3 p-2 bg-gray-100 dark:bg-gray-700 rounded text-sm">
-          <p><strong>Receivers:</strong> ${this.receivers}</p>
-          <p><strong>Amount:</strong> ${this.amount}</p>
-          <p><strong>Reference:</strong> ${this.paymentReference}</p>
-        </div>
-      </div>
-    `,
+    text: 'Are you sure you want to update the payment record?',
     showCancelButton: true,
     confirmButtonText: 'Yes, update',
     cancelButtonText: 'Cancel',

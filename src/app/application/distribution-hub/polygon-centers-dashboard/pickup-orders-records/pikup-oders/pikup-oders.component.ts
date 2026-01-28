@@ -136,29 +136,29 @@ export class PikupOdersComponent implements OnChanges {
 
   // Transform API data to match your Order interface
   private transformApiData(apiData: any[]): Order[] {
-    return apiData.map((item, index) => ({
-      no: index + 1,
-      orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
-      value: item.fullTotal
-        ? `${parseFloat(item.fullTotal).toFixed(2)}`
-        : ' 0.00',
-      status: 'Picked Up', // Force status for this component
-      customerPhone: this.formatPhoneNumber(
-        item.customerPhoneCode,
-        item.customerPhoneNumber,
-      ),
-      receiverPhone: this.formatPhoneNumber(
-        item.receiverPhoneCode1,
-        item.receiverPhone1,
-      ),
-      receiversInfo: this.getReceiverInfo(item),
-      scheduledTimeSlot: this.formatScheduledTimeSlot(item),
-      payment: this.getPaymentStatus(item.isPaid),
-      scheduleDate: item.scheduleDate || item.sheduleDate,
-      timeSlot: item.timeSlot || item.sheduleTime,
-      originalData: item, // CRITICAL: Preserve original data for popup
-    }));
-  }
+  return apiData.map((item, index) => ({
+    no: index + 1,
+    orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
+    value: item.fullTotal
+      ? `${parseFloat(item.fullTotal).toFixed(2)}`
+      : ' 0.00',
+    status: 'Picked Up', // Force status for this component
+    customerPhone: this.formatPhoneNumber(
+      item.customerPhoneCode,
+      item.customerPhoneNumber,
+    ),
+    receiverPhone: this.formatPhoneNumber(
+      item.receiverPhoneCode1,
+      item.receiverPhone1,
+    ),
+    receiversInfo: this.getReceiverInfo(item),
+    scheduledTimeSlot: this.formatScheduledTimeSlot(item),
+    payment: this.getPaymentStatus(item), // Pass the full item object
+    scheduleDate: item.scheduleDate || item.sheduleDate,
+    timeSlot: item.timeSlot || item.sheduleTime,
+    originalData: item, // CRITICAL: Preserve original data for popup
+  }));
+}
 
   // Format scheduled time slot
   private formatScheduledTimeSlot(item: any): string {
@@ -264,16 +264,23 @@ export class PikupOdersComponent implements OnChanges {
     return infoParts.length > 0 ? infoParts.join(', ') : 'N/A';
   }
 
-  // Update payment status
-  private getPaymentStatus(isPaid: number | string): string {
-    const paidStatus = parseInt(isPaid?.toString() || '0');
-
-    if (paidStatus === 1) {
-      return 'Paid';
-    }
-
-    return 'Pending';
+ private getPaymentStatus(item: any): string {
+  const isPaid = parseInt(item.isPaid?.toString() || '0');
+  const paymentMethod = item.paymentMethod || '';
+  const fullTotal = item.fullTotal || 0;
+  
+  // If payment method is Cash, isPaid = 1, and fullTotal exists, show "Received"
+  if (paymentMethod === 'Cash' && isPaid === 1 && fullTotal > 0) {
+    return 'Received';
   }
+  
+  // For other payment methods or conditions
+  if (isPaid === 1) {
+    return 'Paid';
+  }
+  
+  return 'Pending';
+}
 
   // Add this method to format the scheduleDate for display
   formatDisplayDate(dateString: string): string {

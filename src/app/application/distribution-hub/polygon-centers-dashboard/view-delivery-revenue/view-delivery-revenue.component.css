@@ -202,3 +202,19 @@
   height: 1.0rem !important;
   line-height: 1.0rem !important;
 }
+
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title {
+  margin: 0 0.2rem !important;
+  /* Add spacing between month and year */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+  margin-right: 0.2rem !important;
+  /* Space between month and year */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-year {
+  margin-left: 0.2rem !important;
+  /* Space between month and year */
+}

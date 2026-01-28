@@ -149,7 +149,7 @@
 
               <div class="bg-yellow-100 flex items-center gap-2 h-8 ml-2">
                 <p-calendar id="toDate" [(ngModel)]="selectedDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
-                placeholder="Date" [showIcon]="true" [showClear]="!!selectedDate" [showButtonBar]="true"
+                placeholder="Date" [showIcon]="true" [showClear]="!!selectedDate" [showButtonBar]="false"
                   iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                                  [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                                  [&_.p-datepicker-calendar_td_span:hover]:dark:text-white

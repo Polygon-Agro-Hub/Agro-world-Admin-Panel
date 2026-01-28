@@ -28,7 +28,7 @@ export class ReceivedCashTodayComponent implements OnInit {
   };
 
   storeName = '';
-  receivedDate = 'Received Cash on June 2, 2026 (09)';
+  receivedDate = new Date();
 
   totalPickupIncome = 0;
   totalDeliveryIncome = 0;

@@ -43,7 +43,7 @@
           placeholder="Date"
           [showIcon]="true"
           [showClear]="true"
-          [showButtonBar]="true"
+          [showButtonBar]="false"
           dateFormat="yy-mm-dd"
           [monthNavigator]="true"
           [yearNavigator]="true"
@@ -121,7 +121,7 @@
       >
         Total:
         <span class="font-bold ml-2">
-          Rs {{ formatCurrency(totalAmount) }}</span
+          Rs. {{ formatCurrency(totalAmount) }}</span
         >
       </div>
     </div>
@@ -129,29 +129,29 @@
       <ng-container *ngIf="hasData; else noData">
         <table class="min-w-full divide-y divide-gray-200">
           <thead>
-            <tr>
+            <tr >
               <th
-                class="px-4 py-3 text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 text-[#4B5563] font-normal dark:text-textDark text-left"
               >
                 No
               </th>
               <th
-                class="px-4 py-3 text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 text-[#4B5563] font-normal dark:text-textDark text-left"
               >
                 Order ID
               </th>
               <th
-                class="px-4 py-3 text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 text-[#4B5563] font-normal dark:text-textDark text-left"
               >
                 Amount (Rs.)
               </th>
               <th
-                class="px-4 py-3 text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 text-[#4B5563] font-normal dark:text-textDark text-left"
               >
                 Received Time
               </th>
               <th
-                class="px-4 py-3 text-textLight dark:text-textDark text-left"
+                class="px-4 py-3 text-[#4B5563] font-normal dark:text-textDark text-left"
               >
                 Officer EMP ID
               </th>
@@ -162,19 +162,19 @@
               *ngFor="let item of filteredRevenueData; let i = index"
               class="hover:bg-gray-50 dark:hover:bg-gray-700"
             >
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-black dark:text-textDark">
                 {{ i + 1 | number: "2.0" }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-black dark:text-textDark">
                 {{ item.invNo || "N/A" }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-black dark:text-textDark">
                 {{ formatCurrency(item.handOverPrice) }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-black dark:text-textDark">
                 {{ formatDateTimeExact(item.handOverTime) }}
               </td>
-              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-left text-black dark:text-textDark">
                 {{ getOfficerEmpId(item) || "N/A" }}
               </td>
             </tr>

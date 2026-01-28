@@ -132,21 +132,28 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
   // Details Modal Methods
   viewDetails(requestId: string): void {
-    this.isLoading = true;
-    this.FinanceService.getGoviCareRequestById(requestId).subscribe({
-      next: (response) => {
-        this.selectedRequest = response.data;
-        console.log('selectedRequest', this.selectedRequest)
-        this.totArea = (this.selectedRequest.ExtentH*2.47105) + this.selectedRequest.Extent + (this.selectedRequest.ExtentP / 160);
-        this.showDetailsModal = true;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading request details:', error);
-        this.isLoading = false;
-      }
-    });
-  }
+  this.isLoading = true;
+  this.FinanceService.getGoviCareRequestById(requestId).subscribe({
+    next: (response) => {
+      this.selectedRequest = response.data;
+      console.log('selectedRequest', this.selectedRequest);
+      
+      // Calculate total area and round to 4 decimal places
+      const totalArea = (this.selectedRequest.ExtentH * 2.47105) + 
+                       this.selectedRequest.Extent + 
+                       (this.selectedRequest.ExtentP / 160);
+      
+      this.totArea = Number(totalArea.toFixed(4));
+      
+      this.showDetailsModal = true;
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Error loading request details:', error);
+      this.isLoading = false;
+    }
+  });
+}
 
   closeDetailsModal(): void {
     this.showDetailsModal = false;

@@ -22,6 +22,12 @@ export class LandInfoTabComponent implements OnDestroy {
   currentImages: string[] = [];
   currentImageIndex = 0;
   
+  // Zoom functionality for images
+  scale = 1;
+  private readonly MIN_SCALE = 0.5;
+  private readonly MAX_SCALE = 3;
+  private readonly SCALE_STEP = 0.2;
+  
   // OpenStreetMap properties
   mapUrl: SafeResourceUrl = '';
   mapIframeLoaded = false;
@@ -183,6 +189,22 @@ export class LandInfoTabComponent implements OnDestroy {
   handleThumbnailError(event: Event): void {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'https://via.placeholder.com/150/9E9E9E/FFFFFF?text=Image';
+  }
+
+  zoomIn(): void {
+    if (this.scale < this.MAX_SCALE) {
+      this.scale += this.SCALE_STEP;
+    }
+  }
+
+  zoomOut(): void {
+    if (this.scale > this.MIN_SCALE) {
+      this.scale -= this.SCALE_STEP;
+    }
+  }
+
+  resetZoom(): void {
+    this.scale = 1;
   }
 }
 

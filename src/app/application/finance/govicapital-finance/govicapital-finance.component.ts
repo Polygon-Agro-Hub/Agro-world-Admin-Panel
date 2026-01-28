@@ -167,6 +167,12 @@ export class GovicapitalFinanceComponent implements OnInit {
   }
 
   auditResults(requestId: string) {
-    this.router.navigate(['finance/action/finance-govicapital/reject-requests/audit-personal-infor', requestId]);
+    const tree = this.router.createUrlTree([
+      'finance/action/finance-govicapital/reject-requests/audit-personal-infor',
+      requestId
+    ]);
+    
+    const url = this.router.serializeUrl(tree);
+    window.open(window.location.origin + '/admin' + url, '_blank');
   }
 }

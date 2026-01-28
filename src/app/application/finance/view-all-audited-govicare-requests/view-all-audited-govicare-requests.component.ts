@@ -239,8 +239,9 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
     }
   }
 
-  formatCurrency(amount: number): string {
-    return 'Rs. ' + amount.toLocaleString('en-US', {
+  formatCurrency(amount: number | string): string {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return 'Rs. ' + numAmount.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });

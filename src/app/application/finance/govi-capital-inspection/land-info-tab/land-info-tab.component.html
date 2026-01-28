@@ -197,72 +197,55 @@
 <!-- Image Gallery Popup Modal -->
 <div *ngIf="showImagePopup"
   class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-[20px] w-[700px] h-[700px] p-6 relative flex items-center justify-center">
     <!-- Header -->
+    <div class="absolute top-4 left-0 w-full text-center">
+      <h3 class="text-sm font-semibold text-gray-800 dark:text-textDark">
+        Land Document Images
+      </h3>
+    </div>
+
+    <!-- Image Frame -->
     <div
-      class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-      <div class="flex-1 text-center">
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-textDark">
-          Land Document Images
-        </h3>
-      </div>
-      <button (click)="closePopup()"
-        class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
+      class="bg-white dark:bg-gray-700 border border-[#D9D9D9] dark:border-gray-600 
+             rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative"
+    >
+      <img
+        [src]="currentImages[currentImageIndex]"
+        [style.transform]="'scale(' + scale + ')'"
+        class="w-[545px] h-[545px] object-contain transition"
+        alt="Land Document Image"
+        (error)="handleImageError($event)"
+      />
 
-    <div class="p-6">
-      <!-- Image Counter -->
-      <div class="mb-3 text-center" *ngIf="currentImages.length > 0">
-        <span class="inline-block dark:text-blue-200 px-4 py-2 rounded-lg text-sm font-medium">
-          {{ currentImageIndex + 1 }} out of {{ currentImages.length }}
-        </span>
-      </div>
-
-      <!-- Main Image Display -->
-      <div
-        class="h-96 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden mb-4">
-        <!-- If we have images -->
-        <div *ngIf="currentImages.length > 0" class="relative w-full h-full">
-          <img [src]="currentImages[currentImageIndex]" [alt]="'Land document ' + (currentImageIndex + 1)"
-            class="w-full h-full object-contain bg-white dark:bg-gray-800" (error)="handleImageError($event)" />
-
-          <!-- Navigation arrows -->
-          <div class="absolute inset-0 flex items-center justify-between p-4">
-            <button (click)="previousImage()" *ngIf="currentImages.length > 1"
-              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-full flex items-center justify-center transition-all"
-              aria-label="Previous image">
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <button (click)="nextImage()" *ngIf="currentImages.length > 1"
-              class="w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-70 dark:bg-gray-700 dark:hover:bg-gray-600 text-white rounded-full flex items-center justify-center transition-all"
-              aria-label="Next image">
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- If no images -->
-        <div *ngIf="currentImages.length === 0" class="w-full h-full flex flex-col items-center justify-center">
-          <div class="text-center p-6">
-            <div class="w-24 h-24 mx-auto mb-6">
-              <svg class="w-24 h-24 text-gray-300 dark:text-textDark" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-              </svg>
-            </div>
-            <h4 class="text-xl font-bold text-gray-800 dark:text-textDark mb-2">
-              No Images Available
-            </h4>
-            <p class="text-gray-600 dark:text-textDark">
-              No document images were provided for this land.
-            </p>
-          </div>
-        </div>
+      <!-- Zoom Buttons -->
+      <div class="absolute right-4 bottom-6 flex flex-col gap-3">
+        <button
+          (click)="zoomOut()"
+          class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
+                 border dark:border-gray-500 shadow text-xl dark:text-textDark
+                 hover:bg-gray-100 dark:hover:bg-gray-500"
+        >
+          −
+        </button>
+        <button
+          (click)="zoomIn()"
+          class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
+                 border dark:border-gray-500 shadow text-xl dark:text-textDark
+                 hover:bg-gray-100 dark:hover:bg-gray-500"
+        >
+          +
+        </button>
       </div>
     </div>
+
+    <!-- Close Button -->
+    <button
+      (click)="closePopup()"
+      class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 
+             hover:text-gray-700 dark:hover:text-white text-xl"
+    >
+      ✕
+    </button>
   </div>
 </div>

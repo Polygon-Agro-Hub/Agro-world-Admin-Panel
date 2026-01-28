@@ -37,7 +37,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
   loadFarmers() {
     this.isLoading = true;
     this.farmerPensionService
-      .getFarmersUnder5Years(
+      .getFarmersPensionDetails(
         this.currentPage,
         this.itemsPerPage,
         this.searchText || undefined,

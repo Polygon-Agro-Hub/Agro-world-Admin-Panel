@@ -21,6 +21,12 @@ export class CultivationInfoTabComponent implements OnDestroy {
   
   imageLoaded = false;
   private imageTimeout: any;
+  
+  // Zoom functionality
+  scale = 1;
+  private readonly MIN_SCALE = 0.5;
+  private readonly MAX_SCALE = 3;
+  private readonly SCALE_STEP = 0.2;
 
   onNextPage(): void {
     this.nextPage.emit();
@@ -133,6 +139,22 @@ export class CultivationInfoTabComponent implements OnDestroy {
     if (index >= 0 && index < this.currentImages.length) {
       this.currentImageIndex = index;
     }
+  }
+
+  zoomIn(): void {
+    if (this.scale < this.MAX_SCALE) {
+      this.scale += this.SCALE_STEP;
+    }
+  }
+
+  zoomOut(): void {
+    if (this.scale > this.MIN_SCALE) {
+      this.scale -= this.SCALE_STEP;
+    }
+  }
+
+  resetZoom(): void {
+    this.scale = 1;
   }
 }
 

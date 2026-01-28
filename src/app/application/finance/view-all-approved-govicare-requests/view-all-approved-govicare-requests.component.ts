@@ -231,8 +231,9 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     }
   }
 
-  formatCurrency(amount: number): string {
-    return 'Rs. ' + amount.toLocaleString('en-US', {
+  formatCurrency(amount: number | string): string {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return 'Rs. ' + numAmount.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
@@ -276,6 +277,21 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   }
 
   auditResults(requestId: number) {
-    this.router.navigate(['finance/action/finance-govicapital/view-Govicare-approved-requests/edit-audit-personal-infor', String(requestId)]);
+    const tree = this.router.createUrlTree([
+      'finance/action/finance-govicapital/view-Govicare-approved-requests/edit-audit-personal-infor',
+      String(requestId)
+    ]);
+    
+    const url = this.router.serializeUrl(tree);
+    window.open(window.location.origin + '/admin' + url, '_blank');
+  }
+
+  // Calculate total extent in Acres
+  calculateExtentInAcres(extent: number = 0, extentH: number = 0, extentP: number = 0): string { 
+    const hectaresToAcres = extentH * 2.471;
+    const perchesToAcres = extentP * 0.00625;
+    const totalAcres = extent + hectaresToAcres + perchesToAcres;
+    
+    return totalAcres.toFixed(2) + ' Acres';
   }
 }

@@ -340,16 +340,103 @@ export class PaymentHistoryAddNewComponent {
     }
 
   formatAmount(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/,/g, '');
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/[^\d.]/g, ''); // Remove all non-numeric except decimal point
+  
+  // Handle multiple decimal points
+  const decimalCount = (value.match(/\./g) || []).length;
+  if (decimalCount > 1) {
+    const parts = value.split('.');
+    value = parts[0] + '.' + parts.slice(1).join('');
+  }
+  
+  // Ensure only two decimal places
+  const parts = value.split('.');
+  if (parts[1]) {
+    parts[1] = parts[1].slice(0, 2);
+    value = parts.join('.');
+  }
+  
+  if (value && !isNaN(Number(value))) {
+    // Format with commas for thousands
+    const [integerPart, decimalPart] = value.split('.');
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     
-    if (value && !isNaN(Number(value))) {
-      // Format with commas for thousands
-      const parts = value.split('.');
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      this.amount = parts.join('.');
+    if (decimalPart !== undefined) {
+      this.amount = formattedInteger + '.' + decimalPart;
+    } else {
+      this.amount = formattedInteger;
+    }
+  } else if (value === '') {
+    this.amount = '';
+  }
+}
+
+onAmountInput(event: Event): void {
+  this.formatAmount(event);
+}
+
+onAmountKeyPress(event: KeyboardEvent): void {
+  const key = event.key;
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value.replace(/,/g, '');
+  
+  // Allow: backspace, delete, tab, escape, enter, decimal point
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+  
+  // Check if key is allowed
+  if (allowedKeys.includes(key)) {
+    return;
+  }
+  
+  // Allow only numbers
+  if (!/^\d$/.test(key)) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Prevent more than 2 decimal places
+  if (currentValue.includes('.')) {
+    const decimalParts = currentValue.split('.');
+    if (decimalParts[1] && decimalParts[1].length >= 2) {
+      event.preventDefault();
+      return;
     }
   }
+}
+
+onAmountBlur(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/,/g, '');
+  
+  // If the field is empty, keep it empty
+  if (value === '') {
+    this.amount = '';
+    return;
+  }
+  
+  // If the value ends with a decimal point, add '00'
+  if (value.endsWith('.')) {
+    value = value + '00';
+  }
+  
+  // If there's no decimal point, add '.00'
+  if (!value.includes('.')) {
+    value = value + '.00';
+  }
+  
+  // Ensure exactly two decimal places
+  const parts = value.split('.');
+  if (parts[1]) {
+    parts[1] = parts[1].padEnd(2, '0').slice(0, 2);
+    value = parts.join('.');
+  }
+  
+  // Format with commas
+  const [integerPart, decimalPart] = value.split('.');
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  this.amount = formattedInteger + '.' + decimalPart;
+}
 
   // Helper method to remove file
   removeFile(): void {

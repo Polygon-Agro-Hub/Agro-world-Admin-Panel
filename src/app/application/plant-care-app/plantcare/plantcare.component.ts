@@ -262,4 +262,8 @@ export class PlantcareComponent {
   viewUnder5YearsFarmersPension(): void {
     this.router.navigate(['/plant-care/action/farmer-pension-under-5-years']);
   }
+
+  viewFarmerPension5YearsPlus(): void {
+    this.router.navigate(['/plant-care/action/farmer-pension-5-years-plus']);
+  }
 }

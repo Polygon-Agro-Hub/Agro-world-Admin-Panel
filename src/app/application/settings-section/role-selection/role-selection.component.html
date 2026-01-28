@@ -1,177 +1,124 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button
-  class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-  (click)="openModal()"
->
-  <svg
-    class="w-5 h-5 mr-3"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M4 12H20M12 4V20"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-  Add New
+<button class="mb-5 text-textLight dark:text-textDark" onclick="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
 </button>
 
-<div
-  class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
->
-  <div class="flex justify-between items-center mb-8">
+<div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="flex justify-between items-center mb-6">
     <div class="flex items-center">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        Roles & Permissions Management
+        Permissions Management
       </h2>
     </div>
   </div>
 
-  <div
-    *ngIf="isModalOpen"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  >
-    <div
-      class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3"
-    >
-      <h2
-        class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4"
-      >
-        Add New Department
+  <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex  items-center"
+    (click)="openModal()">
+    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </svg>
+    Add New
+  </button>
+
+  <p class="text-lg font-semibold text-black dark:text-white my-5">All Sections ({{((rolesList.length - 1) |
+    number:'2.0') || 0}})</p>
+
+  <div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3">
+      <h2 class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4">
+        Add New Section
       </h2>
 
       <!-- Form or content for the modal -->
 
-      <div class="flex align-middle justify-center items-center">
-        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-          >Department Name</label
-        >
-        <input
-          [(ngModel)]="createRolesObj.role"
-          name="role"
-          type="text"
-          #roleInput="ngModel"
-          required
-          class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-          placeholder="Enter Department name"
-        />
-      </div>
-      <div *ngIf="roleInput.invalid && roleInput.touched" class="text-red-500 text-sm text-center">
-        Department Name is required.
+      <div class="flex align-middle justify-center items-center mb-8">
+        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Section Name</label>
+        <div class="w-full relative">
+          <input [(ngModel)]="createRolesObj.role" name="role" type="text" #roleInput="ngModel" required
+            class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+            placeholder="Enter Section name" />
+
+          <div *ngIf="roleInput.invalid && roleInput.touched"
+            class="absolute top-full left-0 mt-1 text-red-500 text-sm text-left">
+            Section Name is required.
+          </div>
+        </div>
       </div>
 
-      <div class="flex mt-4 align-middle justify-center items-center">
-        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-          >Email Address</label
-        >
-        <input
-      [(ngModel)]="createRolesObj.email"
-      name="email"
-      type="email"
-      #emailInput="ngModel"
-      required
-      (blur)="validateCreateEmail()"
-      (input)="validateCreateEmail()"
-      class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-      placeholder="Enter email address"
-      [class.border-red-500]="emailError"
-    />
+      <div class="flex mt-4 align-middle justify-center items-center ">
+        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Email Address</label>
+        <div class="w-full relative">
+          <input [(ngModel)]="createRolesObj.email" name="email" type="email" #emailInput="ngModel" required
+            (blur)="validateCreateEmail()" (input)="validateCreateEmail()"
+            class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+            placeholder="Enter email address" [class.border-red-500]="emailError" />
+          <div *ngIf="emailError" class="text-red-500 text-sm text-left">
+            {{ emailError }}
+          </div>
+        </div>
       </div>
-      <div *ngIf="emailError" class="text-red-500 text-sm text-center">
-      {{ emailError }}
-    </div>
+
 
       <!-- Modal Footer with buttons -->
       <div class="flex justify-center mt-4">
-        <button
-          (click)="closeModal()"
-          class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200"
-        >
+        <button (click)="closeModal()"
+          class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200">
           Cancel
         </button>
-        <button
-          [disabled]="!createRolesObj.role || !createRolesObj.email || emailError"
-          (click)="onSubmit()"
-          class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
-        >
+        <button [disabled]="!createRolesObj.role || !createRolesObj.email || emailError" (click)="onSubmit()"
+          class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200">
           Add
         </button>
       </div>
     </div>
   </div>
 
-  <div
-    *ngIf="iseditModalOpen"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  >
-    <div
-      class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3"
-    >
-      <h2
-        class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4"
-      >
-        Edit Department
+  <div *ngIf="iseditModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3">
+      <h2 class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4">
+        Edit Section
       </h2>
 
       <!-- Form or content for the modal -->
 
       <div class="flex align-middle justify-center items-center">
-        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-          >Department Name</label
-        >
-        <input
-          [(ngModel)]="selectedRole.role"
-          name="role"
-          type="text"
-          #roleInput="ngModel"
-          required
-          class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-          placeholder="Enter Department name"
-        />
-      </div>
-      <div *ngIf="roleInput.invalid && roleInput.touched" class="text-red-500 text-sm text-center">
-        Department Name is required.
+        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Section Name</label>
+        <div class="w-full relative">
+          <input [(ngModel)]="selectedRole.role" name="role" type="text" #roleInput="ngModel" required
+            class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+            placeholder="Section Name name" />
+          <div *ngIf="roleInput.invalid && roleInput.touched" class="text-red-500 text-sm text-left">
+            Section Name is required.
+          </div>
+        </div>
       </div>
 
+
       <div class="flex mt-4 align-middle justify-center items-center">
-        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40"
-          >Email Address</label
-        >
-        <input
-      [(ngModel)]="selectedRole.email"
-      name="editEmail"
-      type="email"
-      #editEmailInput="ngModel"
-      required
-      (blur)="validateEditEmail()"
-      (input)="validateEditEmail()"
-      class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-      placeholder="Enter email address"
-      [class.border-red-500]="editEmailError"
-    />
+        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Email Address</label>
+        <div class="w-full relative">
+          <input [(ngModel)]="selectedRole.email" name="editEmail" type="email" #editEmailInput="ngModel" required
+            (blur)="validateEditEmail()" (input)="validateEditEmail()"
+            class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+            placeholder="Enter email address" [class.border-red-500]="editEmailError" />
+          <div *ngIf="editEmailError" class="text-red-500 text-sm text-left">
+            {{ editEmailError }}
+          </div>
+        </div>
       </div>
-      <div *ngIf="editEmailError" class="text-red-500 text-sm text-center">
-      {{ editEmailError }}
-    </div>
+
 
       <!-- Modal Footer with buttons -->
       <div class="flex justify-center mt-4">
-        <button
-          (click)="editCloseModel()"
-          class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200"
-        >
+        <button (click)="editCloseModel()"
+          class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200">
           Cancel
         </button>
-        <button
-        [disabled]="!selectedRole.role || !selectedRole.email || editEmailError"
-          (click)="onEditOnSubmit()"
-          class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200"
-        >
+        <button [disabled]="!selectedRole.role || !selectedRole.email || editEmailError" (click)="onEditOnSubmit()"
+          class="w-28 bg-[#3980C0] text-white px-4 py-2 rounded-lg hover:bg-[#2c6ba0] transition duration-200">
           Save
         </button>
       </div>
@@ -179,57 +126,35 @@
   </div>
 
   <div class="overflow-x-auto">
-    <table
-      class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto"
-    >
+    <table class="min-width-[50%] divide-y divide-gray-200 dark:divide-[#4B555A] table-auto">
       <thead>
         <tr>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
             No
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
-          >
-            Department
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            Section
           </th>
-          <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-          >
+          <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
             Permission
           </th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let item of rolesList; let i = index">
-          <tr
-            *ngIf="item.id !== 1"
-            class="border-b border-gray-200 dark:border-[#4B555A]"
-          >
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
-              {{ i }}
+          <tr *ngIf="item.id !== 1" class="border-b border-gray-200 dark:border-[#4B555A]">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ i | number:'2.0'}}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.role }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button
-                (click)="viewPermissions(item.id)"
-                class="w-5 h-5 text-blue-500 hover:text-blue-700"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+              <button (click)="viewPermissions(item.id, item.role)" class="w-5 h-5 text-blue-500 hover:text-blue-700">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
             </td>

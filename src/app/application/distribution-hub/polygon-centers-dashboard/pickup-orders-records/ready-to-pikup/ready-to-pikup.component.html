@@ -29,29 +29,23 @@
           <div>
             <div>
               <p-calendar
-                [(ngModel)]="selectedDate"
-                (onSelect)="onDateSelect()"
-                (onClear)="onDateClear()"
                 id="date"
                 placeholder="Date"
-                [showIcon]="true"
-                [showClear]="true"
-                [showButtonBar]="true"
+                [(ngModel)]="selectedDate"
                 dateFormat="yy-mm-dd"
-                [monthNavigator]="true"
-                [yearNavigator]="true"
-                yearRange="1900:2030"
-                iconDisplay="input"
-                [style]="{ width: '16rem', height: '2rem' }"
-                panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                 [&_.p-datepicker-header]:dark:text-white
-                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                 [&_.p-button:hover]:dark:bg-[#6b7280]"
-                inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
-                [appendTo]="'body'"
+                [showIcon]="false"
+                [showClear]="true"
+                styleClass="calendar-compact dark-calendar"
+                [style]="{ width: '145px' }"
+                [inputStyle]="{
+                  width: '145px',
+                  padding: '0.5rem 2.5rem 0.5rem 0.75rem',
+                  fontSize: '0.875rem',
+                }"
+                inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+                panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+                (onSelect)="onDateSelect()"
+                (onClear)="onDateClear()"
               >
               </p-calendar>
             </div>
@@ -129,14 +123,14 @@
     <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
-          <tr>
+          <tr class="text-[#4B5563]">
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Order ID
             </th>
@@ -146,12 +140,12 @@
               Value (Rs.)
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Customer Phone
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Receiver Phone-1
             </th>
@@ -181,28 +175,26 @@
           <ng-container *ngIf="hasData && !isLoading; else noData">
             <tr
               *ngFor="let order of transformedOrders"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 text-black"
             >
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-                {{ order.no }}
+                {{ order.no | number: '2.0'}}
               </td>
               <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark font-medium"
+                class="px-4 py-3 text-left text-textLight dark:text-textDark"
               >
                 {{ order.orderId }}
               </td>
-              <td
-                class="px-4 py-3 text-left text-textLight dark:text-textDark font-semibold"
-              >
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.value }}
               </td>
               <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+                class="px-4 py-3 text-left text-textLight dark:text-textDark"
               >
                 {{ order.customerPhone }}
               </td>
               <td
-                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+                class="px-4 py-3 text-left text-textLight dark:text-textDark"
               >
                 {{ order.receiverPhone }}
               </td>
@@ -231,7 +223,7 @@
               <td
                 class="px-4 py-3 text-center text-textLight dark:text-textDark"
               >
-                {{ order.scheduledTimeSlot }}
+                <div [innerHTML]="order.scheduledTimeSlot"></div>
               </td>
               <td class="px-4 py-3 text-left text-sm font-medium">
                 {{ order.payment }}
@@ -287,16 +279,16 @@
   </div>
   <app-pikup-oder-record-details
     [visible]="showDetailsPopup"
-    [orderId]="selectedOrderId"  
+    [orderId]="selectedOrderId"
     [displayOrderId]="selectedOrderDisplayId"
     (close)="closeDetailsPopup()"
   >
   </app-pikup-oder-record-details>
 
   <app-reciverinfo-popup
-  [visible]="showReceiverPopup"
-  [receiverInfo]="selectedReceiverInfo"
-  (close)="closeReceiverPopup()"
->
-</app-reciverinfo-popup>
+    [visible]="showReceiverPopup"
+    [receiverInfo]="selectedReceiverInfo"
+    (close)="closeReceiverPopup()"
+  >
+  </app-reciverinfo-popup>
 </div>

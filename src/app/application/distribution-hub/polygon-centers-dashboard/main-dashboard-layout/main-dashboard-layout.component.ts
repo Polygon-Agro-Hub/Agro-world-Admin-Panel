@@ -17,10 +17,10 @@ import { DistributionHubService } from '../../../../services/distribution-hub/di
   imports: [
     CommonModule,
     HttpClientModule,
-    ProgressComponent,
-    OutOfDeliveryComponent,
-    OfficersComponent,
-    OfficerTargetComponent,
+    // ProgressComponent,
+    // OutOfDeliveryComponent,
+    // OfficersComponent,
+    // OfficerTargetComponent,
     LoadingSpinnerComponent
   ],
   templateUrl: './main-dashboard-layout.component.html',

@@ -357,14 +357,34 @@ export class PensionRequestsComponent implements OnInit {
 
   openReviewRequest(request: PensionRequest): void {
     // Get the NIC from the current request
-    const nic = request.NIC;
+    const id = request.User_ID;
 
-    if (!nic) {
-      console.error('NIC not found in request');
+    if (!id) {
+      console.error('ID not found in request');
       return;
     }
-    this.router.navigate(['/plant-care/action/cultivation-history/:farmId'], {
-      queryParams: { nic: nic },
+    this.router.navigate([`/plant-care/action/cultivation-history/${id}`], {
+      queryParams: { nic: request.NIC },
     });
   }
+
+  formatTime(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+}
+
+formatDateLikeImage(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit'
+  });
+}
 }

@@ -3,7 +3,7 @@
            w-full max-w-3xl mx-4 max-h-[90vh]
            overflow-hidden flex flex-col">
         <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-            <h2 class="text-xl font-semibold text-center text-textLight dark:text-textDark">
+            <h2 class="text-xl text-center text-[#000000] dark:text-textDark">
                 Order ID : {{ trackingDetails?.centerDetails?.invNo || 'Loading...' }}
             </h2>
         </div>
@@ -40,12 +40,12 @@
             
                             <!-- Step Number -->
                             <div
-                                class="relative z-10 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-semibold shrink-0">
+                                class="relative z-10 w-8 h-8 rounded-full bg-[#3980C0] text-white flex items-center justify-center text-sm font-semibold shrink-0">
                                 {{ idx + 1 }}
                             </div>
             
                             <!-- Step Content -->
-                            <div class="ml-6 text-gray-800 dark:text-gray-200 leading-relaxed">
+                            <div class="ml-6 text-[#4B5563] dark:text-gray-200 leading-relaxed">
             
                                 <!-- OUT FOR DELIVERY -->
                                 <ng-container *ngIf="step.type === 'out' && (trackingDetails?.centerDetails?.centerId === null)">
@@ -78,11 +78,11 @@
             
                                 <!-- HOLD -->
                                 <ng-container *ngIf="step.type === 'hold'">
-                                    Driver marked this order's status as Hold at {{ formatTime(step.payload.holdTime) }} on
+                                    Driver marked this order's status as <span class="font-bold">Hold</span> at {{ formatTime(step.payload.holdTime) }} on
                                     {{ formatDate(step.payload.holdTime) }}.
-                                    <div class="mt-1  dark:text-gray-400">
+                                    <div class="mt-1 font-bold dark:text-gray-400">
                                         Reason:
-                                        <span>{{ step.payload.holdReason }}</span>
+                                        <span>"{{ step.payload.holdReason }}"</span>
                                     </div>
                                 </ng-container>
             
@@ -95,16 +95,16 @@
             
                                 <!-- RETURN -->
                                 <ng-container *ngIf="step.type === 'return'">
-                                    Driver marked this order's status as Return at {{
+                                    Driver marked this order's status as <span class="font-semibold">Return</span> at {{
                                     formatTime(step.payload.returnTime) }} on {{ formatDate(step.payload.returnTime) }}.
-                                    <div class="mt-1 dark:text-gray-400">
+                                    <div class="mt-1 font-semibold dark:text-gray-400">
                                         Reason:
                                        <ng-container class="font-semibold"
                                             *ngIf="step.payload.returnReson === 'Other'; else normalReturnReason">
-                                            <span>{{ step.payload.returnNote }}</span>
+                                            <span>"{{ step.payload.returnNote }}"</span>
                                         </ng-container>
                                         <ng-template #normalReturnReason class="font-semibold"> 
-                                            <span>{{ step.payload.returnReson }}</span>
+                                            <span>"{{ step.payload.returnReson }}"</span>
                                         </ng-template>
                                     </div>
                                 </ng-container>

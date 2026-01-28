@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
   HttpClient,
   HttpClientModule,
@@ -43,7 +43,7 @@ export class RoleSelectionComponent {
   closeModal() {
     this.isModalOpen = false;
     this.emailError = null; // Clear error when modal closes
-  this.createRolesObj.email = ''; // Clear email field
+    this.createRolesObj.email = ''; // Clear email field
   }
 
   editModalOpen(role: any) {
@@ -65,14 +65,14 @@ export class RoleSelectionComponent {
     this.validateCreateEmail();
 
     if (this.emailError) {
-    Swal.fire({
-      title: 'Validation Error!',
-      text: 'Please fix the email validation errors before submitting.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    });
-    return;
-  }
+      Swal.fire({
+        title: 'Validation Error!',
+        text: 'Please fix the email validation errors before submitting.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
 
 
     this.roleSelectionService.createRoles(this.createRolesObj)?.subscribe(
@@ -104,16 +104,16 @@ export class RoleSelectionComponent {
 
   onEditOnSubmit() {
     this.validateEditEmail();
-  
-  if (this.editEmailError) {
-    Swal.fire({
-      title: 'Validation Error!',
-      text: 'Please fix the email validation errors before submitting.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    });
-    return;
-  }
+
+    if (this.editEmailError) {
+      Swal.fire({
+        title: 'Validation Error!',
+        text: 'Please fix the email validation errors before submitting.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
 
     this.updateRole();
   }
@@ -154,8 +154,9 @@ export class RoleSelectionComponent {
     public permissionService: PermissionService,
     private tokenService: TokenService,
     private roleSelectionService: RoleSelectionService,
-    private emailValidationService: EmailvalidationsService
-  ) {}
+    private emailValidationService: EmailvalidationsService,
+    private location: Location
+  ) { }
 
   ngOnInit() {
     this.getAllRoles();
@@ -175,25 +176,67 @@ export class RoleSelectionComponent {
     );
   }
 
-  viewPermissions(id: number) {
-    this.router.navigate([`/settings/give-permissions/${id}`]);
+  viewPermissions(id: number, role: string) {
+    this.router.navigate([`/settings/give-permissions/${id}`],
+      { queryParams: { role: role } }
+    );
   }
 
   validateCreateEmail(): void {
-  if (!this.createRolesObj.email) {
-    this.emailError = this.emailValidationService.validationMessages.required;
-    return;
+    if (!this.createRolesObj.email) {
+      this.emailError = this.emailValidationService.validationMessages.required;
+      return;
+    }
+    this.emailError = this.emailValidationService.getErrorMessage(this.createRolesObj.email);
   }
-  this.emailError = this.emailValidationService.getErrorMessage(this.createRolesObj.email);
-}
 
-validateEditEmail(): void {
-  if (!this.selectedRole.email) {
-    this.editEmailError = this.emailValidationService.validationMessages.required;
-    return;
+  // validateEditEmail(): void {
+  //   this.selectedRole.email = this.selectedRole.email.trim();
+  //   if (!this.selectedRole.email) {
+  //     this.editEmailError = this.emailValidationService.validationMessages.required;
+  //     return;
+  //   }
+  //   this.editEmailError = this.emailValidationService.getErrorMessage(this.selectedRole.email);
+  // }
+
+  back() {
+    this.location.back();
   }
-  this.editEmailError = this.emailValidationService.getErrorMessage(this.selectedRole.email);
-}
+
+
+  validateEditEmail() {
+    if (!this.selectedRole.email) {
+      this.editEmailError = 'Email is required';
+      return false;
+    }
+
+    // Check for leading spaces (shouldn't exist with our trimming)
+    if (this.selectedRole.email.startsWith(' ')) {
+      this.editEmailError = 'Email cannot start with spaces';
+      return false;
+    }
+
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.selectedRole.email)) {
+      this.editEmailError = 'Please enter a valid email address';
+      return false;
+    }
+
+    this.editEmailError = '';
+    return true;
+  }
+
+  trimEmailInput() {
+    if (this.selectedRole.email) {
+      // Trim leading and trailing spaces (for email, we usually want both)
+      const trimmed = this.selectedRole.email.trim();
+      if (trimmed !== this.selectedRole.email) {
+        this.selectedRole.email = trimmed;
+      }
+    }
+    this.validateEditEmail();
+  }
 }
 
 export class CreateRoles {

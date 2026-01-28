@@ -12,8 +12,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { PikupOderRecordDetailsComponent } from "../popup-component/pikup-oder-record-details/pikup-oder-record-details.component";
-import { ReciverinfoPopupComponent } from "../reciverinfo-popup/reciverinfo-popup.component";
+import { PikupOderRecordDetailsComponent } from '../popup-component/pikup-oder-record-details/pikup-oder-record-details.component';
+import { ReciverinfoPopupComponent } from '../reciverinfo-popup/reciverinfo-popup.component';
 
 interface Order {
   no: number;
@@ -40,8 +40,8 @@ interface Order {
     LoadingSpinnerComponent,
     FormsModule,
     PikupOderRecordDetailsComponent,
-    ReciverinfoPopupComponent
-],
+    ReciverinfoPopupComponent,
+  ],
   templateUrl: './ready-to-pikup.component.html',
   styleUrl: './ready-to-pikup.component.css',
   providers: [DatePipe],
@@ -63,10 +63,7 @@ export class ReadyToPikupComponent implements OnChanges {
   searchText: string = '';
 
   // Time slot options for dropdown
-  timeSlotOptions = [
-    { label: '8AM-12PM' },
-    { label: '12PM-4PM' },
-  ];
+  timeSlotOptions = [{ label: '8AM-2PM' }, { label: '2PM-8PM' }];
 
   isLoading = false;
   hasData: boolean = false;
@@ -137,16 +134,16 @@ export class ReadyToPikupComponent implements OnChanges {
       no: index + 1,
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
       value: item.fullTotal
-        ? `Rs. ${parseFloat(item.fullTotal).toFixed(2)}`
-        : 'Rs. 0.00',
+        ? `${parseFloat(item.fullTotal).toFixed(2)}`
+        : ' 0.00',
       status: 'Ready to Pickup', // Force status for this component
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
-        item.customerPhoneNumber
+        item.customerPhoneNumber,
       ),
       receiverPhone: this.formatPhoneNumber(
         item.receiverPhoneCode1,
-        item.receiverPhone1
+        item.receiverPhone1,
       ),
       receiversInfo: this.getReceiverInfo(item),
       scheduledTimeSlot: this.formatScheduledTimeSlot(item),
@@ -169,7 +166,8 @@ export class ReadyToPikupComponent implements OnChanges {
     const formattedDate = this.formatDisplayDate(scheduleDate);
     const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
 
-    return `${formattedTimeSlot}, ${formattedDate}`;
+    // Return with time slot on top and date below (like in screenshot)
+    return `${formattedTimeSlot}<br>${formattedDate}`;
   }
 
   // Helper method to format time slot for display
@@ -204,7 +202,7 @@ export class ReadyToPikupComponent implements OnChanges {
     }
 
     const timeRange = timeSlot.match(
-      /(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i
+      /(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i,
     );
     if (timeRange) {
       const startTime = this.formatTimeComponent(timeRange[1]);
@@ -279,57 +277,79 @@ export class ReadyToPikupComponent implements OnChanges {
 
   // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
-  console.log('View receiver info for:', order);
-  
-  if (order.originalData) {
-    this.selectedReceiverInfo = {
-      orderId: order.orderId,
-      receiverName: `${order.originalData.customerTitle || ''} ${order.originalData.fillName || ''} ${order.originalData.lastName || ''}`.trim() ||
-                   order.originalData.receiverName,
-      receiverPhone1: this.formatPhoneNumber(
-        order.originalData.receiverPhoneCode1, 
-        order.originalData.receiverPhone1
-      ),
-      // Check if phone2 exists before formatting, otherwise return "--"
-      receiverPhone2: (order.originalData.phone2 || order.originalData.phonecode2) 
-        ? this.formatPhoneNumber(order.originalData.phonecode2, order.originalData.phone2)
-        : "--",
-      customerName: `${order.originalData.title || ''} ${order.originalData.firstName || ''} ${order.originalData.lastName || ''}`.trim(),
-      customerPhone: this.formatPhoneNumber(
-        order.originalData.customerPhoneCode, 
-        order.originalData.customerPhoneNumber
-      ),
-      platform: order.originalData.orderApp || 'Salesdash',
-      orderPlaced: this.formatOrderDate(order.originalData.orderCreatedAt),
-      scheduledTime: this.formatScheduledTime(order.originalData),
-    };
-    this.showReceiverPopup = true;
+    console.log('View receiver info for:', order);
+
+    if (order.originalData) {
+      const data = order.originalData;
+      const title =
+        data.customerTitle || data.receiverTitle || data.title || '';
+      const fullName =
+        data.fullName ||
+        data.receiverFullName ||
+        `${data.fillName || ''} ${data.lastName || ''}`.trim() ||
+        data.receiverName ||
+        '';
+
+      // Combine title and name
+      const receiverNameWithTitle =
+        title && fullName
+          ? `${title} ${fullName}`.trim()
+          : fullName || title || '--';
+
+      this.selectedReceiverInfo = {
+        orderId: order.orderId,
+        receiverName: receiverNameWithTitle,
+        receiverPhone1: this.formatPhoneNumber(
+          data.receiverPhoneCode1,
+          data.receiverPhone1,
+        ),
+        receiverPhone2:
+          data.receiverPhone2 || data.receiverPhoneCode2
+            ? this.formatPhoneNumber(
+                data.receiverPhoneCode2,
+                data.receiverPhone2,
+              )
+            : '--',
+        customerName:
+          `${data.title || ''} ${data.firstName || ''} ${data.lastName || ''}`.trim(),
+        customerPhone: this.formatPhoneNumber(
+          data.customerPhoneCode,
+          data.customerPhoneNumber,
+        ),
+        platform: data.orderApp || 'Salesdash',
+        orderPlaced: this.formatOrderDate(data.orderCreatedAt),
+        scheduledTime: this.formatScheduledTime(data),
+        title: title,
+      };
+      this.showReceiverPopup = true;
+
+      console.log('Receiver Info Data:', this.selectedReceiverInfo);
+    }
   }
-}
 
-private formatOrderDate(dateString: string): string {
-  if (!dateString) return 'N/A';
-  const date = new Date(dateString);
-  return this.datePipe.transform(date, 'h:mm a \'on\' MMMM dd, yyyy') || 'N/A';
-}
+  private formatOrderDate(dateString: string): string {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return this.datePipe.transform(date, "h:mm a 'on' MMMM dd, yyyy") || 'N/A';
+  }
 
-private formatScheduledTime(item: any): string {
-  const scheduleDate = item.scheduleDate || item.sheduleDate;
-  const timeSlot = item.timeSlot || item.sheduleTime;
-  
-  if (!scheduleDate) return 'N/A';
-  
-  const date = new Date(scheduleDate);
-  const formattedDate = this.datePipe.transform(date, 'MMMM dd, yyyy') || '';
-  const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
-  
-  return `${formattedTimeSlot} on ${formattedDate}`;
-}
+  private formatScheduledTime(item: any): string {
+    const scheduleDate = item.scheduleDate || item.sheduleDate;
+    const timeSlot = item.timeSlot || item.sheduleTime;
 
-closeReceiverPopup(): void {
-  this.showReceiverPopup = false;
-  this.selectedReceiverInfo = null;
-}
+    if (!scheduleDate) return 'N/A';
+
+    const date = new Date(scheduleDate);
+    const formattedDate = this.datePipe.transform(date, 'MMMM dd, yyyy') || '';
+    const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
+
+    return `${formattedTimeSlot} on ${formattedDate}`;
+  }
+
+  closeReceiverPopup(): void {
+    this.showReceiverPopup = false;
+    this.selectedReceiverInfo = null;
+  }
 
   viewOrderDetails(order: Order): void {
     console.log('View order details for:', order);
@@ -353,42 +373,44 @@ closeReceiverPopup(): void {
     console.log('=== openOrderDetails triggered ===');
     console.log('Order clicked:', order);
     console.log('Order has originalData:', !!order.originalData);
-    
+
     if (order.originalData) {
       console.log('Original data keys:', Object.keys(order.originalData));
       console.log('Full original data:', order.originalData);
     }
-    
+
     // For display in popup header (show invoice/order number)
     this.selectedOrderDisplayId = order.orderId;
     console.log('Display ID set to:', this.selectedOrderDisplayId);
-    
+
     // For API call (use processOrderId from original data)
     if (order.originalData) {
       // Try to get the processOrderId from original data
-      const processOrderId = order.originalData.processOrderId || 
-                            order.originalData.id || 
-                            order.originalData.orderId ||
-                            this.extractOrderIdFromDisplay(order.orderId); // Fallback
-      
+      const processOrderId =
+        order.originalData.processOrderId ||
+        order.originalData.id ||
+        order.originalData.orderId ||
+        this.extractOrderIdFromDisplay(order.orderId); // Fallback
+
       console.log('Extracted processOrderId:', processOrderId);
-      
+
       if (processOrderId) {
         // Convert to number if needed
-        const numericId = typeof processOrderId === 'string' 
-          ? parseInt(processOrderId, 10) 
-          : processOrderId;
-        
+        const numericId =
+          typeof processOrderId === 'string'
+            ? parseInt(processOrderId, 10)
+            : processOrderId;
+
         if (!isNaN(numericId) && numericId !== 0) {
           this.selectedOrderId = numericId;
         } else {
           // If it's a string ID or 0, keep it as is
           this.selectedOrderId = processOrderId;
         }
-        
+
         this.selectedOrderData = order.originalData;
         this.showDetailsPopup = true;
-        
+
         console.log('Popup opened successfully');
         console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
         console.log('- API ID (processOrderId):', this.selectedOrderId);
@@ -397,7 +419,9 @@ closeReceiverPopup(): void {
       } else {
         console.warn('No valid processOrderId found in original data');
         console.warn('Original data:', order.originalData);
-        this.showErrorMessage('Unable to open order details: No valid order ID found.');
+        this.showErrorMessage(
+          'Unable to open order details: No valid order ID found.',
+        );
       }
     } else {
       console.warn('No original data available for order:', order);

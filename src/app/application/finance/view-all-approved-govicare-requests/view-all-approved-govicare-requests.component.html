@@ -265,10 +265,10 @@
                 class="px-8 py-4 text-sm text-center"
                 *ngIf=" permissionService.hasPermission('Publish approved request') || tokenService.getUserDetails().role === '1'">
                 <button class="bg-[#3980C0] text-white px-4 py-2 rounded-lg whitespace-nowrap"
-                  [ngClass]="{'pointer-events-none opacity-50 cursor-not-allowed': request.approvedDetails === null}"
-                  [disabled]="request.approvedDetails === null"
+                  [ngClass]="{'pointer-events-none opacity-50 cursor-not-allowed': request.approvedDetails === null || request.publishStatus === 'Published'}"
+                  [disabled]="request.approvedDetails === null || request.publishStatus === 'Published'"
                   (click)="openPublishPopup(request)">
-                  Publish Now!
+                  {{ request.publishStatus === 'Published' ? 'Published' : 'Publish Now' }}
                 </button>
               </td>
             </tr>
@@ -362,7 +362,7 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Extent</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
-          {{ selectedRequest?.Extent }}
+          {{ calculateExtentInAcres(selectedRequest?.Extent, selectedRequest?.ExtentH, selectedRequest?.ExtentP) }}
         </span>
       </div>
 
@@ -437,57 +437,76 @@
 <!-- shares popup -->
 <div *ngIf="isSharePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="isSharePopup = false">
-  <div class="bg-white dark:bg-tileBlack px-5 py-4 rounded-lg shadow-2xl max-w-lg" (click)="$event.stopPropagation()">
+  <div class="bg-white dark:bg-tileBlack px-8 py-6 rounded-lg shadow-2xl w-full max-w-md" (click)="$event.stopPropagation()">
 
-    <div class="flex flex-row items-center justify-between">
-      <div class="w-16"></div>
+    <!-- Header -->
+    <div class="mb-4">
+      <h2 class="text-center font-semibold text-lg dark:text-white">Request ID : {{selectedShares.Request_ID}}</h2>
+    </div>
 
-      <p class="mr-12 font-semibold dark:text-white">Request ID : {{selectedShares.Request_ID}}</p>
+    <hr class="h-[1px] bg-[#D1D5DB] dark:bg-gray-600 mb-6" />
 
+    <!-- Shares Details -->
+    <div class="space-y-3 mb-6">
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">Total Value</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          Rs. {{selectedShares.approvedDetails?.totValue | number: '1.2-2'}}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">No. of Sharese</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          {{selectedShares.approvedDetails?.defineShares}}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">Value of One Share</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          Rs. {{divideFunc(selectedShares.approvedDetails?.totValue || 0, selectedShares.approvedDetails?.defineShares || 1) | number: '1.2-2'}}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">Minimum Shares</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          {{selectedShares.approvedDetails?.minShare}}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">Maximum Shares</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          {{selectedShares.approvedDetails?.maxShare}}
+        </span>
+      </div>
+    </div>
+
+    <!-- Edit Button (only show when not published) -->
+    <div 
+      *ngIf="(permissionService.hasPermission('Edit divided shares') || tokenService.getUserDetails().role === '1') && selectedShares.publishStatus !== 'Published'"
+      class="flex justify-center mb-4">
       <button 
-        *ngIf=" permissionService.hasPermission('Edit divided shares') || tokenService.getUserDetails().role === '1'"
         (click)="auditResults(selectedShares.No)"
-        class="flex flex-row gap-x-3 bg-[#3980C0] text-white px-4 py-2 rounded-lg">
+        class="flex items-center gap-2 bg-[#3980C0] hover:bg-[#2c6da3] text-white px-6 py-2 rounded-lg transition font-medium">
         <i class="fa-solid fa-pen-to-square"></i>
-        <p>Edit</p>
+        <span>Edit</span>
       </button>
-
     </div>
 
-    <hr class="h-[1px] bg-[#5C5C5C] dark:bg-white my-3" />
-
-    <div>
-      <table>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">Total Value</td>
-          <td class="text-[#000000] dark:text-white">: Rs. {{selectedShares.approvedDetails.totValue | number: '1.2-2'}}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">No. of Sharese</td>
-          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.defineShares}}</td>
-        </tr>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">Value of One Share</td>
-          <td class="text-[#000000] dark:text-white">:
-            Rs.{{divideFunc(selectedShares.approvedDetails.totValue,selectedShares.approvedDetails.defineShares) |
-            number: '1.2-2'}}</td>
-        </tr>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">Minimum Shares</td>
-          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.minShare}}</td>
-        </tr>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">Maximum Shares</td>
-          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.maxShare}}</td>
-        </tr>
-      </table>
-    </div>
-    <div class="flex flex-row justify-center items-center my-5">
-      <button class="bg-[#74788D] text-white px-4 py-2 rounded-lg" (click)="isSharePopup = false">
+    <!-- Close Button -->
+    <div class="flex justify-center">
+      <button class="bg-[#6B7280] hover:bg-[#4B5563] text-white px-12 py-2 rounded-lg transition font-medium" 
+        (click)="isSharePopup = false">
         Close
       </button>
-
     </div>
   </div>
 </div>

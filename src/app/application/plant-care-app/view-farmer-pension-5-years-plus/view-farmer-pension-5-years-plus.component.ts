@@ -32,7 +32,7 @@ searchText: string = '';
   loadFarmers() {
     this.isLoading = true;
     this.farmerPensionService
-      .getFarmers5YearsPlus(
+      .getFarmersPensionDetails(
         this.currentPage,
         this.itemsPerPage,
         this.searchText || undefined,

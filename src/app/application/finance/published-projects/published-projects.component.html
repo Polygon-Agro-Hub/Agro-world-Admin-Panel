@@ -112,11 +112,11 @@
             <td class="px-3 py-3 text-textLight dark:text-textDark text-left">
               <div style="display: flex; align-items: center; gap: 8px;">
                   <div style="width: 120px; background: #d0d4db; height: 8px; border-radius: 4px;">
-                      <div [style.width.%]="progress"
+                      <div [style.width.%]="calculateProgress(item.shares, item.defineShares)"
                            style="background:#3b82f6; height: 100%; border-radius:4px;">
                       </div>
                   </div>
-                  <span>{{ progress }}%</span>
+                  <span>{{ calculateProgress(item.shares, item.defineShares) }}%</span>
               </div>
           </td>
 
@@ -194,7 +194,7 @@
 
     <!-- Modal Header -->
     <div class="px-6 py-4 border-b border-[#5C5C5C] dark:border-[#5C5C5C]">
-      <h2 class="text-lg font-semibold text-center text-[#000000] dark:text-[#000000]">
+      <h2 class="text-lg font-semibold text-center text-[#000000] dark:text-textDark">
         Request ID : {{itemDetailsToViewObj.jobId}}
       </h2>
     </div>
@@ -204,36 +204,36 @@
 
       <!-- Farmer Name -->
       <div class="flex items-start">
-        <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Farmer Name</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
+        <span class="text-sm text-[#5C5C5C] dark:text-textDark w-44 flex-shrink-0">Farmer Name</span>
+        <span class="text-sm text-[#000000] dark:text-textDark mx-3">:</span>
+        <span class="text-sm text-[#000000] dark:text-textDark font-medium flex-1">
           {{ itemDetailsToViewObj.firstName }} {{ itemDetailsToViewObj.lastName }}
         </span>
       </div>
 
       <!-- NIC Number -->
       <div class="flex items-start">
-        <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">NIC Number</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000]  font-medium flex-1">
+        <span class="text-sm text-[#5C5C5C] dark:text-textDark w-44 flex-shrink-0">NIC Number</span>
+        <span class="text-sm text-[#000000] dark:text-textDark mx-3">:</span>
+        <span class="text-sm text-[#000000] dark:text-textDark font-medium flex-1">
           {{ itemDetailsToViewObj.farmerNic }}
         </span>
       </div>
 
       <!-- Phone Number -->
       <div class="flex items-start">
-        <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Phone Number</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
+        <span class="text-sm text-[#5C5C5C] dark:text-textDark w-44 flex-shrink-0">Phone Number</span>
+        <span class="text-sm text-[#000000] dark:text-textDark mx-3">:</span>
+        <span class="text-sm text-[#000000] dark:text-textDark font-medium flex-1">
           {{ itemDetailsToViewObj.phoneNumber }}
         </span>
       </div>
 
       <!-- Crop -->
       <div class="flex items-start">
-        <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Crop</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
+        <span class="text-sm text-[#5C5C5C] dark:text-textDark w-44 flex-shrink-0">Crop</span>
+        <span class="text-sm text-[#000000] dark:text-textDark mx-3">:</span>
+        <span class="text-sm text-[#000000] dark:text-textDark font-medium flex-1">
           {{ itemDetailsToViewObj.cropNameEnglish }}
         </span>
       </div>
@@ -258,36 +258,36 @@
 
       <!-- Extent -->
       <div class="flex items-start">
-        <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Extent</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
-          {{ itemDetailsToViewObj.extentac }} Acres
+        <span class="text-sm text-[#5C5C5C] dark:text-textDark w-44 flex-shrink-0">Extent</span>
+        <span class="text-sm text-[#000000] dark:text-textDark mx-3">:</span>
+        <span class="text-sm text-[#000000] dark:text-textDark font-medium flex-1">
+          {{ calculateExtentInAcres(itemDetailsToViewObj.extentac, itemDetailsToViewObj.extentha, itemDetailsToViewObj.extentp) }} Acres
         </span>
       </div>
 
       <!-- Expected Investment -->
       <div class="flex items-start">
-        <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Expected Investment</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
+        <span class="text-sm text-[#5C5C5C] dark:text-textDark w-44 flex-shrink-0">Expected Investment</span>
+        <span class="text-sm text-[#000000] dark:text-textDark mx-3">:</span>
+        <span class="text-sm text-[#000000] dark:text-textDark font-medium flex-1">
           Rs. {{ itemDetailsToViewObj.investment | number:'1.2-2' }}
         </span>
       </div>
 
       <!-- Expected Yield -->
       <div class="flex items-start">
-        <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Expected Yield</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
+        <span class="text-sm text-[#5C5C5C] dark:text-textDark w-44 flex-shrink-0">Expected Yield</span>
+        <span class="text-sm text-[#000000] dark:text-textDark mx-3">:</span>
+        <span class="text-sm text-[#000000] dark:text-textDark font-medium flex-1">
           {{ itemDetailsToViewObj.expectedYield | number:'1.2-2' }}kg
         </span>
       </div>
 
       <!-- Expected Start Date -->
       <div class="flex items-start">
-        <span class="text-sm text-[#5C5C5C] dark:text-[#5C5C5C] w-44 flex-shrink-0">Expected Start Date</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] mx-3">:</span>
-        <span class="text-sm text-[#000000] dark:text-[#000000] font-medium flex-1">
+        <span class="text-sm text-[#5C5C5C] dark:text-textDark w-44 flex-shrink-0">Expected Start Date</span>
+        <span class="text-sm text-[#000000] dark:text-textDark mx-3">:</span>
+        <span class="text-sm text-[#000000] dark:text-textDark font-medium flex-1">
           {{ itemDetailsToViewObj.startDate | date: 'MMMM dd, yyyy' }}
         </span>
       </div>

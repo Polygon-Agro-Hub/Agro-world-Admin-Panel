@@ -70,6 +70,12 @@ export class ProjectInvestmentsComponent implements OnInit {
             imageDataUrl: undefined,
             imageLoading: true
           }));
+          this.projectInvestments.sort((a, b) => {
+            const cropA = (a.cropNameEnglish || '').toString().toLowerCase();
+            const cropB = (b.cropNameEnglish || '').toString().toLowerCase();
+            return cropA.localeCompare(cropB);
+          });
+          
           this.filteredProjects = [...this.projectInvestments];
           this.totalCount = response.count;
 

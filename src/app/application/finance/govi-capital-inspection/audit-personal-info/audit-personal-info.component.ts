@@ -51,10 +51,10 @@ export class AuditPersonalInfoComponent implements OnInit {
   rejectReason: string = '';
   openDevideSharesPopUp: boolean = false;
 
-  numShares!: number;
+  numShares: number = 0;
   shareValue: number = 0.0;
-  minimumShare!: number;
-  maximumShare!: number;
+  minimumShare: number = 0;
+  maximumShare: number = 0;
 
   sharesData: Partial<Shares> = {};
   devideRequestObj: Partial<DevideRequest> = {};
@@ -136,8 +136,6 @@ export class AuditPersonalInfoComponent implements OnInit {
       .subscribe((res: any) => {
         this.inspectionArray = res.data;
         this.sharesData = res.shares;
-        console.log('sharesData', this.sharesData);
-        console.log(res.data);
 
         if (this.sharesData.devideData) {
           this.minimumShare = this.sharesData.devideData.minShare;
@@ -145,13 +143,23 @@ export class AuditPersonalInfoComponent implements OnInit {
           this.numShares = this.sharesData.devideData.defineShares;
           this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
         }
-
-        console.log('--------------------------------------');
-
-        console.log(res.shares.divideData);
+        
+        this.fetchPublishStatus();
 
         this.isLoading = false;
       });
+  }
+
+  fetchPublishStatus() {
+    this.financeService.getAllApprovedGoviCareRequests().subscribe((res: any) => {
+      if (res.data && Array.isArray(res.data)) {
+        const request = res.data.find((req: any) => req.No === this.reqId);
+        if (request) {
+          this.sharesData.publishStatus = request.publishStatus;
+          console.log('Updated publishStatus:', this.sharesData.publishStatus);
+        }
+      }
+    });
   }
 
   onNumSharesChange(value: number) {
@@ -259,6 +267,11 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   cancelDevidePopUp() {
     this.openDevideSharesPopUp = false;
+    // Clear all form data when Cancel is clicked
+    this.numShares = 0;
+    this.shareValue = 0.0;
+    this.minimumShare = 0;
+    this.maximumShare = 0;
   }
 
   DevideRequest(form: any) {
@@ -271,6 +284,20 @@ export class AuditPersonalInfoComponent implements OnInit {
     }
 
     if (this.numShares <= 0) return;
+
+    // Validate Maximum Investment Shares >= Minimum Investment Shares
+    if (this.maximumShare < this.minimumShare) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum Investment Shares cannot be less than Minimum Investment Shares',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
 
     this.openDevideSharesPopUp = false;
 
@@ -299,6 +326,14 @@ export class AuditPersonalInfoComponent implements OnInit {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',
           },
+        }).then(() => {
+          // After successful share division, redirect to Approved Requests list and close tab
+          if (window.opener) {
+            window.opener.location.reload();
+            window.close();
+          } else {
+            this.router.navigate(['/finance/action/finance-govicapital/view-Govicare-approved-requests']);
+          }
         });
       } else if (!res.status) {
         Swal.fire({
@@ -334,6 +369,14 @@ export class AuditPersonalInfoComponent implements OnInit {
   devideSharesPopUp(devideType: 'Create' | 'Edit') {
     this.openDevideSharesPopUp = true;
     this.devideRequestObj.devideType = devideType;
+    
+    // If creating a new division (not editing), reset fields to empty
+    if (devideType === 'Create') {
+      this.numShares = 0;
+      this.shareValue = 0.0;
+      this.minimumShare = 0;
+      this.maximumShare = 0;
+    }
   }
 
   editSharesPopUp() {
@@ -372,6 +415,7 @@ class Shares {
   officerPhone!: string;
   totalValue: string = '';
   devideData: DevideData | null = null;
+  publishStatus?: string;
 }
 
 class DevideData {

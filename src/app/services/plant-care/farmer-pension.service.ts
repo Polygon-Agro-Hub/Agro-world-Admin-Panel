@@ -125,14 +125,14 @@ export class FarmerPensionService {
     return this.http.put<any>(url, body, { headers });
   }
 
-  getFarmersUnder5Years(
+  getFarmersPensionDetails(
     page: number = 1,
     limit: number = 10,
     searchText?: string,
   ): Observable<{ total: number; items: any[] }> {
     const headers = this.getHeaders();
 
-    let url = `${this.apiUrl}auth/farmer-pension-under-5-years-details?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}auth/farmer-pension-details?page=${page}&limit=${limit}`;
 
     if (searchText) {
       url += `&searchText=${encodeURIComponent(searchText)}`;
@@ -146,21 +146,5 @@ export class FarmerPensionService {
     const url = `${this.apiUrl}auth/get-cultivation-for-pension/${id}`;
 
     return this.http.get<any>(url, { headers });
-  }
-
-  getFarmers5YearsPlus(
-    page: number = 1,
-    limit: number = 10,
-    searchText?: string,
-  ): Observable<{ total: number; items: any[] }> {
-    const headers = this.getHeaders();
-
-    let url = `${this.apiUrl}auth/farmer-pension-5-years-plus-details?page=${page}&limit=${limit}`;
-
-    if (searchText) {
-      url += `&searchText=${encodeURIComponent(searchText)}`;
-    }
-
-    return this.http.get<{ total: number; items: any[] }>(url, { headers });
   }
 }

@@ -20,7 +20,7 @@ export class ViewPikupCashRevenueComponent implements OnInit, OnDestroy {
   centerRegCode: string = '';
   centerId: string = '';
   searchText: string = '';
-  selectedDate: Date | null = null;
+  selectedDate: Date = new Date();
   hasData: boolean = false;
 
   // Data arrays
@@ -70,6 +70,8 @@ export class ViewPikupCashRevenueComponent implements OnInit, OnDestroy {
       ? this.formatDateForAPI(this.selectedDate)
       : undefined;
 
+    this.searchText = this.searchText.trim();
+
     this.distributionHubService
       .getPickupCashRevenue(this.centerId, this.searchText, filterDate)
       .subscribe({
@@ -110,12 +112,11 @@ export class ViewPikupCashRevenueComponent implements OnInit, OnDestroy {
 
   onClearSearch(): void {
     this.searchText = '';
-    this.selectedDate = null;
     this.loadRevenueData();
   }
 
   onClearDate(): void {
-    this.selectedDate = null;
+    this.selectedDate = new Date();
     this.loadRevenueData();
   }
 

@@ -17,7 +17,7 @@
         {{ storeName }}
       </h2>
       <p class="text-lg font-semibold text-gray-600 dark:text-gray-400">
-        {{ receivedDate }}
+        Received Cash on {{ receivedDate | date:'MMMM d, y' }}
       </p>
     </div>
 
@@ -29,9 +29,7 @@
           <span class="text-base text-gray-700 dark:text-gray-300"
             >Total Pickup Order Income Today :</span
           >
-          <span class="text-base font-bold text-gray-900 dark:text-white">{{
-            formatCurrency(totalPickupIncome)
-          }}</span>
+          <span class="text-base font-bold text-gray-900 dark:text-white">Rs. {{totalPickupIncome | number: '1.2-2'}}</span>
         </div>
         <button
           (click)="viewPickupRevenue()"
@@ -74,9 +72,7 @@
           <span class="text-base text-gray-700 dark:text-gray-300"
             >Total Delivery Order Income Today :</span
           >
-          <span class="text-base font-bold text-gray-900 dark:text-white">{{
-            formatCurrency(totalDeliveryIncome)
-          }}</span>
+          <span class="text-base font-bold text-gray-900 dark:text-white">Rs. {{totalDeliveryIncome | number: '1.2-2'}}</span>
         </div>
         <button
           (click)="viewDeliveryRevenue()"

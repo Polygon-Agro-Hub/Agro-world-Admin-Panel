@@ -20,7 +20,7 @@ export class ViewDeliveryRevenueComponent implements OnInit, OnDestroy {
   centerRegCode: string = '';
   centerId: string = '';
   searchText: string = '';
-  selectedDate: Date | null = null;
+  selectedDate: Date = new Date();
   hasData: boolean = false;
 
   // Data arrays
@@ -36,7 +36,7 @@ export class ViewDeliveryRevenueComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private distributionHubService: DistributionHubService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Get query parameters
@@ -66,6 +66,8 @@ export class ViewDeliveryRevenueComponent implements OnInit, OnDestroy {
     const filterDate = this.selectedDate
       ? this.formatDateForAPI(this.selectedDate)
       : undefined;
+
+    this.searchText = this.searchText.trim();
 
     this.distributionHubService
       .getDriverCashRevenue(this.centerId, this.searchText, filterDate)
@@ -107,18 +109,22 @@ export class ViewDeliveryRevenueComponent implements OnInit, OnDestroy {
 
   onClearSearch(): void {
     this.searchText = '';
-    this.selectedDate = null;
     this.loadRevenueData();
   }
 
   onClearDate(): void {
-    this.selectedDate = null;
+    this.selectedDate = new Date();
     this.loadRevenueData();
   }
 
   private calculateSummary(): void {
     this.totalAmount = this.revenueData.reduce(
-      (sum, item) => sum + (item.handOverPrice || 0),
+      (sum, item) => {
+        // Safely convert handOverPrice to number
+        const price = Number(item.handOverPrice);
+        // Return sum + price if price is valid number, otherwise just sum
+        return sum + (isNaN(price) ? 0 : price);
+      },
       0,
     );
     this.totalOrders = this.revenueData.length;
@@ -144,36 +150,36 @@ export class ViewDeliveryRevenueComponent implements OnInit, OnDestroy {
 
   formatDateTime(dateTime: string): string {
     if (!dateTime) return 'N/A';
-    
+
     const date = new Date(dateTime);
-    
+
     // Format time part: 11:00 AM
     const timeString = date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true
     });
-    
+
     // Format date part: June 2, 2025
     const dateString = date.toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric',
       year: 'numeric'
     });
-    
+
     return `${timeString} ${dateString}`;
   }
 
   // Alternative method if you want exactly "11:00 AM June 2, 2025" format
   formatDateTimeExact(dateTime: string): string {
     if (!dateTime) return 'N/A';
-    
+
     const date = new Date(dateTime);
-    
+
     // Get hours and minutes
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    
+
     // Format time with AM/PM
     const period = hours >= 12 ? 'PM' : 'AM';
     const formattedHours = hours % 12 || 12;
@@ -188,7 +194,7 @@ export class ViewDeliveryRevenueComponent implements OnInit, OnDestroy {
     const month = monthNames[date.getMonth()];
     const day = date.getDate();
     const year = date.getFullYear();
-    
+
     return `${timeString} ${month} ${day}, ${year}`;
   }
 
@@ -197,7 +203,7 @@ export class ViewDeliveryRevenueComponent implements OnInit, OnDestroy {
       return item.handOverOfficerEmpId;
     }
 
-    
+
     if (item.driverEmpId && item.driverEmpId.trim() !== '') {
       return item.driverEmpId;
     }
@@ -211,6 +217,6 @@ interface RevenueItem {
   invNo: string;
   handOverPrice: number;
   handOverTime: string;
-  driverEmpId: string; 
+  driverEmpId: string;
   handOverOfficerEmpId: string;
 }

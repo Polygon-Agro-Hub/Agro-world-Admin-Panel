@@ -413,12 +413,16 @@ getFileName(value: string): string {
   }
 
   selectjobRole(role: string) {
-    this.personalData.jobRole = role;
-    this.toggleDropdown();
-    console.log('personalData', this.personalData);
-
-    this.EpmloyeIdCreate(); // call your method
+  this.personalData.jobRole = role;
+  
+  // Clear CFO if job role is not 'Field Officer'
+  if (role !== 'Field Officer') {
+    this.clearChiefFieldOfficer();
   }
+  
+  this.toggleDropdown();
+  this.EpmloyeIdCreate(); // call your method
+}
 
   EpmloyeIdCreate() {
     this.getAllCollectionManagers();
@@ -2379,11 +2383,44 @@ validateDocumentFieldsForUpdate(): string[] {
   return errors;
 }
 
+clearJobRole(event: Event): void {
+  event.stopPropagation(); // Prevent dropdown from opening
+  
+  // Clear job role
+  this.personalData.jobRole = '';
+  
+  // Also clear Chief Field Officer when job role is cleared
+  this.clearChiefFieldOfficer();
+  
+  // Mark field as touched for validation
+  this.touchedFields['jobRole'] = true;
+}
+
+clearChiefFieldOfficer(): void {
+  this.personalData.irmId = null;
+  this.touchedFields['irmId'] = true;
+}
+
+onAssignedDistrictsChange(): void {
+  // Check if assignDistrict is cleared (empty array)
+  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+    // Clear Job Role
+    this.personalData.jobRole = '';
+    this.touchedFields['jobRole'] = true;
+    
+    // Clear Chief Field Officer
+    this.clearChiefFieldOfficer();
+    
+    // Also reset the employee ID
+    this.personalData.empId = '';
+  }
+}
+
 }
 
 class Personal {
   id!: number;
-  irmId!: number | string;
+  irmId!: number | string | null;
   firstName!: string;
   lastName!: string;
   firstNameSinhala!: string;

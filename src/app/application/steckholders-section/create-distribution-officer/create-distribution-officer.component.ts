@@ -133,7 +133,6 @@ export class CreateDistributionOfficerComponent implements OnInit {
   jobRoleOptions: any[] = [
     { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
     { label: 'Distribution Officer', value: 'Distribution Officer' },
-    { label: 'Driver', value: 'Driver' }
   ];
 
   countries: PhoneCode[] = [
@@ -534,8 +533,6 @@ private formatDateForDatabase(date: Date | string | null): string | null {
               }
             );
         }
-      } else if (result.isDismissed) {
-        this.navigatePath('/steckholders/action/drivers');
       }
     } 
   );
@@ -637,10 +634,10 @@ private formatDateForDatabase(date: Date | string | null): string | null {
         html: errorMessage,
         confirmButtonText: 'OK',
         customClass: {
-          popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
-          confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;

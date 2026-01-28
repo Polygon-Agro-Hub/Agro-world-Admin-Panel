@@ -126,48 +126,42 @@ fetchSelectedOfficerTargets(
   this.isLoading = true;
   this.DestributionSrv.getSelectedOfficerTargets(officerId, search, status, completingStatus).subscribe(
     (res) => {
-      this.ordersArr = res.items.map((item: any) => {
-        let status = '';
-      
-        if (item.packageStatus === 'Pending' && (item.additionalItemsStatus === 'Unknown' || item.additionalItemsStatus === 'Pending')) {
-          status = 'Pending';
-        }
-        else if (item.packageStatus === 'Pending' && (item.additionalItemsStatus === 'Opened' || item.additionalItemsStatus === 'Completed')) {
-          status = 'Opened';
-        }
-        else if (item.packageStatus === 'Opened') {
-          status = 'Opened';
-        }
-        else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Unknown') {
-          status = 'Completed';
-        }
-        else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Pending') {
-          status = 'Pending';
-        }
-        else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Opened') {
-          status = 'Opened';
-        }
-        else if (item.packageStatus === 'Completed' && item.additionalItemsStatus === 'Completed') {
-          status = 'Completed';
-        }
-        else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Pending') {
-          status = 'Pending';
-        }
-        else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Opened') {
-          status = 'Opened';
-        }
-        else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Completed') {
-          status = 'Completed';
-        }
-        else if (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Unknown') {
-          status = 'Unknown';
-        }
-      
-        return {
-          ...item,
-          combinedStatus: status
-        };
-      });
+      this.ordersArr = res.items
+      // this.ordersArr = res.items.map((item: any) => {
+        // let status = '';
+          
+        //   const pkgStatus = item.packageStatus;
+        //   const addStatus = item.additionalItemsStatus;
+          
+        //   // Priority 1: If either is Pending, combinedStatus is Pending
+        //   if (pkgStatus === 'Pending' || addStatus === 'Pending') {
+        //     status = 'Pending';
+        //   }
+        //   // Priority 2: If either is Opened (and none are Pending), combinedStatus is Opened
+        //   else if (pkgStatus === 'Opened' || addStatus === 'Opened') {
+        //     status = 'Opened';
+        //   }
+        //   // Priority 3: If both are Completed, combinedStatus is Completed
+        //   else if (pkgStatus === 'Completed' && addStatus === 'Completed') {
+        //     status = 'Completed';
+        //   }
+        //   // Priority 4: If one is Completed and other is Unknown, use the non-Unknown status
+        //   else if (pkgStatus === 'Completed' && addStatus === 'Unknown') {
+        //     status = 'Completed';
+        //   }
+        //   else if (pkgStatus === 'Unknown' && addStatus === 'Completed') {
+        //     status = 'Completed';
+        //   }
+        //   // Default: Both are Unknown
+        //   else {
+        //     status = 'Unknown';
+        //   }
+        
+        //   return {
+        //     ...item,
+        //     combinedStatus: status
+        //   };
+      // });
 
       this.totalItems = res.total;
       this.hasData = this.ordersArr.length > 0;
@@ -255,4 +249,6 @@ class orders {
   distributedTargetId!: number
   combinedStatus!: string
   completeTimeStatus!: string
+  packageStatus!: string;
+  additionalItemsStatus!: string;
 }

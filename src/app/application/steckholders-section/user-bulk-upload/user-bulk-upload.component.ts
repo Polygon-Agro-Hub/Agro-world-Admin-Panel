@@ -156,7 +156,12 @@ export class UserBulkUploadComponent {
         const nicNumbers = new Map();
         const duplicates: ExistingUser[] = [];
 
-        for (let i = 0; i < jsonData.length; i++) {
+        const phoneNumberOccurrences = new Map<string, number[]>();
+        const nicNumberOccurrences = new Map<string, number[]>();
+
+        let i;
+
+        for ( i = 0; i < jsonData.length; i++) {
           const row = jsonData[i];
           const phoneNumber = String(
             (row as { [key: string]: any })['Phone Number']
@@ -169,35 +174,44 @@ export class UserBulkUploadComponent {
           );
           const lastName = String((row as { [key: string]: any })['Last Name']);
 
-          if (phoneNumbers.has(phoneNumber)) {
-            duplicates.push({
-              firstName,
-              lastName,
-              phoneNumber,
-              NICnumber: nicNumber,
-            });
-          } else {
-            phoneNumbers.set(phoneNumber, i);
+          if (!phoneNumberOccurrences.has(phoneNumber)) {
+            phoneNumberOccurrences.set(phoneNumber, []);
           }
-
-          if (nicNumbers.has(nicNumber)) {
-            if (
-              !duplicates.some(
-                (d) =>
-                  d.phoneNumber === phoneNumber && d.NICnumber === nicNumber
-              )
-            ) {
-              duplicates.push({
-                firstName,
-                lastName,
-                phoneNumber,
-                NICnumber: nicNumber,
-              });
-            }
-          } else {
-            nicNumbers.set(nicNumber, i);
+          phoneNumberOccurrences.get(phoneNumber)!.push(i);
+        
+          // Track all occurrences of each NIC number
+          if (!nicNumberOccurrences.has(nicNumber)) {
+            nicNumberOccurrences.set(nicNumber, []);
           }
+          nicNumberOccurrences.get(nicNumber)!.push(i);
         }
+
+        console.log('i', i)
+
+        const duplicateIndices = new Set<number>();
+
+        phoneNumberOccurrences.forEach((indices) => {
+          if (indices.length > 1) {
+            indices.forEach(idx => duplicateIndices.add(idx));
+          }
+        });
+        
+        // Find indices where NIC number appears more than once
+        nicNumberOccurrences.forEach((indices) => {
+          if (indices.length > 1) {
+            indices.forEach(idx => duplicateIndices.add(idx));
+          }
+        });
+
+        duplicateIndices.forEach(idx => {
+          const row = jsonData[idx];
+          duplicates.push({
+            firstName: String((row as { [key: string]: any })['First Name']),
+            lastName: String((row as { [key: string]: any })['Last Name']),
+            phoneNumber: String((row as { [key: string]: any })['Phone Number']),
+            NICnumber: String((row as { [key: string]: any })['NIC Number']),
+          });
+        });
 
         if (duplicates.length > 0) {
           console.log('duplicates', duplicates)
@@ -287,9 +301,13 @@ export class UserBulkUploadComponent {
   private handleDuplicateEntries(duplicateData: any[]): void {
     // Check what format the backend is returning
     console.log('Duplicate Data Structure:', duplicateData);
+
+
     
     // Convert to DuplicationEntry format if needed
     const duplicateEntries: DuplicationEntry[] = duplicateData.map((entry: any, index: number) => {
+
+      
       // Try different possible field names from backend
       return {
         firstName: entry.firstName || entry.firstname || entry['First Name'] || entry['FIRST NAME'] || entry['first_name'] || `Entry ${index + 1}`,
@@ -651,6 +669,8 @@ export class UserBulkUploadComponent {
   }
 
   private downloadDuplicationExcel(entries: DuplicationEntry[], fileName: string): void {
+
+    console.log('entries', entries)
     try {
       const dataForExcel = entries.map(entry => ({
         'FIRST NAME': entry.firstName,

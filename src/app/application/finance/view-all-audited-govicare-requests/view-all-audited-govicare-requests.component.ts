@@ -25,6 +25,8 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
   isStatusDropdownOpen: boolean = false;
   statusDropdownOptions: string[] = ['Draft', 'Published'];
 
+  totArea!: number;
+
   // Search
   search: string = '';
   hasSearched: boolean = false;
@@ -112,6 +114,7 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
     this.financeService.getGoviCareRequestById(requestId).subscribe({
       next: (response) => {
         this.selectedRequest = response.data;
+        this.totArea = (this.selectedRequest.ExtentH*2.47105) + this.selectedRequest.Extent + (this.selectedRequest.ExtentP / 160);
         this.showDetailsModal = true;
         this.isLoading = false;
       },

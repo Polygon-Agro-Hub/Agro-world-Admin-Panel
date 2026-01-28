@@ -37,7 +37,13 @@
       <div class="flex align-middle justify-center items-center mb-8">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Section Name</label>
         <div class="w-full relative">
-          <input [(ngModel)]="createRolesObj.role" name="role" type="text" #roleInput="ngModel" required
+          <input [(ngModel)]="createRolesObj.role" 
+            name="role" 
+            type="text" 
+            #roleInput="ngModel" 
+            required
+            (keydown)="preventLeadingSpace($event, createRolesObj.role)"
+            (paste)="onCreatePaste($event, 'role')"
             class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
             placeholder="Enter Section name" />
 
@@ -51,10 +57,18 @@
       <div class="flex mt-4 align-middle justify-center items-center ">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Email Address</label>
         <div class="w-full relative">
-          <input [(ngModel)]="createRolesObj.email" name="email" type="email" #emailInput="ngModel" required
-            (blur)="validateCreateEmail()" (input)="validateCreateEmail()"
+          <input [(ngModel)]="createRolesObj.email" 
+            name="email" 
+            type="email" 
+            #emailInput="ngModel" 
+            required
+            (keydown)="preventLeadingSpace($event, createRolesObj.email)"
+            (paste)="onCreatePaste($event, 'email')"
+            (blur)="validateCreateEmail()" 
+            (input)="validateCreateEmail()"
             class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-            placeholder="Enter email address" [class.border-red-500]="emailError" />
+            placeholder="Enter email address" 
+            [class.border-red-500]="emailError" />
           <div *ngIf="emailError" class="text-red-500 text-sm text-left">
             {{ emailError }}
           </div>
@@ -87,9 +101,15 @@
       <div class="flex align-middle justify-center items-center">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Section Name</label>
         <div class="w-full relative">
-          <input [(ngModel)]="selectedRole.role" name="role" type="text" #roleInput="ngModel" required
+          <input [(ngModel)]="selectedRole.role" 
+            name="role" 
+            type="text" 
+            #roleInput="ngModel" 
+            required
+            (keydown)="preventLeadingSpace($event, selectedRole.role)"
+            (paste)="onPaste($event, 'role')"
             class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-            placeholder="Section Name name" />
+            placeholder="Section Name" />
           <div *ngIf="roleInput.invalid && roleInput.touched" class="text-red-500 text-sm text-left">
             Section Name is required.
           </div>
@@ -100,10 +120,17 @@
       <div class="flex mt-4 align-middle justify-center items-center">
         <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Email Address</label>
         <div class="w-full relative">
-          <input [(ngModel)]="selectedRole.email" name="editEmail" type="email" #editEmailInput="ngModel" required
-            (blur)="validateEditEmail()" (input)="validateEditEmail()"
+          <input [(ngModel)]="selectedRole.email" 
+            name="editEmail" 
+            type="email" 
+            #editEmailInput="ngModel" 
+            required
+            (keydown)="preventLeadingSpace($event, selectedRole.email)"
+            (paste)="onPaste($event, 'email')"
+            (blur)="validateEditEmail()"
             class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
-            placeholder="Enter email address" [class.border-red-500]="editEmailError" />
+            placeholder="Enter email address" 
+            [class.border-red-500]="editEmailError" />
           <div *ngIf="editEmailError" class="text-red-500 text-sm text-left">
             {{ editEmailError }}
           </div>

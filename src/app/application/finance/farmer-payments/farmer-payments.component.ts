@@ -161,7 +161,7 @@ export class FarmerPaymentsComponent implements OnInit {
 
   onDateChange(event: any): void {
     this.selectedDate = event;
-    this.applyFilters();
+    this.loadFarmerPayments();
   }
 
   onSearchChange(): void {

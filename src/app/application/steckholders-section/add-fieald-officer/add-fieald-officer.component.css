@@ -293,3 +293,28 @@ div {
 ::ng-deep .dark .p-multiselect-header {
     background-color: #4b5563;
 }
+
+/* Add to your component's CSS file */
+.fa-times {
+  font-size: 12px;
+  padding: 2px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fa-times:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.dark .fa-times {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .fa-times:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

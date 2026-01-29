@@ -26,6 +26,11 @@ export class ProjectInvestmentsTransactionsComponent {
   itemId!: number;
   searchText: string = ''
 
+  // Project details
+  projectId: string = '';
+  sharePrice: number = 0;
+  cropName: string = '';
+
   statusArr = [
     { status: 'To Review', value: 'To Review' },
     { status: 'Approved', value: 'Approved' },
@@ -42,9 +47,32 @@ export class ProjectInvestmentsTransactionsComponent {
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.fetchProjectDetails(this.id);
     this.fetchAllInvestments(this.id);
   }
 
+  fetchProjectDetails(id: number): void {
+    this.isLoading = true;
+    this.financeService.getProjectInvestments().subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          const project = response.data.find((p: any) => p.id === id);
+          if (project) {
+            this.projectId = project.jobId || '';
+            this.cropName = project.cropNameEnglish || '';
+            if (project.investment && project.defineShares) {
+              this.sharePrice = project.investment / project.defineShares;
+            }
+          }
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading project details:', error);
+        this.isLoading = false;
+      }
+    });
+  }
 
   fetchAllInvestments(id: number, status: string = this.statusFilter, search: string = this.searchText): void {
     this.isLoading = true;
@@ -57,7 +85,17 @@ export class ProjectInvestmentsTransactionsComponent {
           this.isLoading = false;
           if (response) {
             this.investmentsArr = response.items;
+            this.investmentsArr.sort((a, b) => {
+              return a.id - b.id;
+            });
+            
             this.hasData = this.investmentsArr.length > 0;
+            if (this.investmentsArr.length > 0 && this.sharePrice === 0) {
+              const firstInvestment = this.investmentsArr[0];
+              if (firstInvestment.totInvt && firstInvestment.shares && firstInvestment.shares > 0) {
+                this.sharePrice = firstInvestment.totInvt / firstInvestment.shares;
+              }
+            }
 
           } else {
             this.hasData = false;
@@ -94,11 +132,11 @@ export class ProjectInvestmentsTransactionsComponent {
   getStatusClass(status: string): string {
     switch (status) {
       case 'To Review':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'Accepted':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+        return 'bg-[#F8FFA6] text-[#A8A100] dark:bg-[#F8FFA6] dark:text-[#A8A100]';
+      case 'Approved':
+        return 'bg-[#BBFFC6] text-[#308233] dark:bg-[#BBFFC6] dark:text-[#308233]';
       case 'Rejected':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+        return 'bg-[#FFB9B7] text-[#D16D6A] dark:bg-[#FFB9B7] dark:text-[#D16D6A]';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }

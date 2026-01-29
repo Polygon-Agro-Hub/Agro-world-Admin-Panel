@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   HttpClient,
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -52,6 +52,9 @@ interface PhoneCode {
 
 
 export class CollectiveofficersPersonalComponent implements OnInit {
+  @ViewChild('empTypeCtrl') empTypeCtrl!: NgModel;
+  @ViewChild('languagesCtrl') languagesCtrl!: NgModel;
+  
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
@@ -109,7 +112,6 @@ dropdownOpen = false;
   jobRoles = [
     'Collection Centre Manager',
     'Collection Officer',
-    'Customer Officer'
   ];
 
   districts = [
@@ -546,6 +548,9 @@ onCancel() {
 nextFormCreate(page: 'pageOne' | 'pageTwo') {
   if (page === 'pageTwo') {
     this.markPageOneFieldsAsTouched();
+
+    this.empTypeCtrl?.control.markAsTouched();
+    this.languagesCtrl?.control.markAsTouched();
 
     const missingFields: string[] = [];
 

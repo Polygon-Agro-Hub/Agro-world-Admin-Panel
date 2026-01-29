@@ -1,8 +1,4 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
-  <i class="fa-solid fa-arrow-left"></i>
-  Back
-</button>
 
 <div class="w-full bg-transparent overflow-hidden">
 
@@ -47,7 +43,8 @@
       </div>
 
       <div *ngIf="lastSegment === 'edit-audit-personal-infor'" class="flex flex-col gap-4">
-        <div *ngIf="sharesData.devideData === null" class="flex gap-4">
+        <!-- Show "Divide Shares" button when shares not yet divided and not published -->
+        <div *ngIf="sharesData.devideData === null && sharesData.publishStatus !== 'Published'" class="flex gap-4">
           <button
             class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
             (click)="devideSharesPopUp('Create')">
@@ -55,11 +52,21 @@
           </button>
         </div>
 
-        <div *ngIf="sharesData.devideData !== null" class="flex gap-4">
+        <!-- Show "Edit Shares" button when shares divided but not published -->
+        <div *ngIf="sharesData.devideData !== null && sharesData.publishStatus !== 'Published'" class="flex gap-4">
           <button
             class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
             (click)="devideSharesPopUp('Edit')">
             Edit Shares
+          </button>
+        </div>
+
+        <!-- Show disabled "Divided" button when shares divided and published -->
+        <div *ngIf="sharesData.devideData !== null && sharesData.publishStatus === 'Published'" class="flex gap-4">
+          <button
+            disabled
+            class="px-6 py-2 bg-[#6B7280] text-white font-medium rounded-md cursor-not-allowed opacity-60 shadow-sm">
+            <i class="fa-solid fa-check-circle mr-2"></i>Divided
           </button>
         </div>
       </div>
@@ -328,6 +335,11 @@
             <span *ngIf="maximumShareInput.touched && !maximumShareInput.errors?.['required'] && (maximumShare <= 0)"
               class="text-red-600 text-sm">
               Maximum Investment Shares cannot be 0 or less than 0.
+            </span>
+
+            <span *ngIf="maximumShareInput.touched && minimumShareInput.touched && maximumShare > 0 && minimumShare > 0 && maximumShare < minimumShare"
+              class="text-red-600 text-sm">
+              Maximum Investment Shares cannot be less than Minimum Investment Shares.
             </span>
           </div>
         </div>

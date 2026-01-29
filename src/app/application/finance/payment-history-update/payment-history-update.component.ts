@@ -113,11 +113,26 @@ export class PaymentHistoryUpdateComponent implements OnInit {
   }
 
   formatAmountValue(value: number): string {
-    return value.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+  // Convert to string and remove any existing formatting
+  let strValue = value.toString();
+  
+  // Handle decimal numbers
+  const parts = strValue.split('.');
+  let integerPart = parts[0];
+  const decimalPart = parts.length > 1 ? parts[1] : '';
+  
+  // Add commas to integer part
+  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  
+  // Reconstruct the value
+  let formattedValue = integerPart;
+  if (decimalPart !== '') {
+    // Ensure decimal part has max 2 digits
+    formattedValue += '.' + decimalPart.slice(0, 2);
   }
+  
+  return formattedValue;
+}
 
   back(): void {
   Swal.fire({
@@ -309,16 +324,7 @@ export class PaymentHistoryUpdateComponent implements OnInit {
   Swal.fire({
     icon: 'question',
     title: 'Confirm Update',
-    html: `
-      <div class="text-left">
-        <p class="mb-2">Are you sure you want to update this payment record?</p>
-        <div class="mt-3 p-2 bg-gray-100 dark:bg-gray-700 rounded text-sm">
-          <p><strong>Receivers:</strong> ${this.receivers}</p>
-          <p><strong>Amount:</strong> ${this.amount}</p>
-          <p><strong>Reference:</strong> ${this.paymentReference}</p>
-        </div>
-      </div>
-    `,
+    text: 'Are you sure you want to update the payment record?',
     showCancelButton: true,
     confirmButtonText: 'Yes, update',
     cancelButtonText: 'Cancel',
@@ -431,17 +437,38 @@ private executeUpdate(): void {
     this.router.navigate([path]);
   }
 
-  formatAmount(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/,/g, '');
-
-    if (value && !isNaN(Number(value))) {
-      // Format with commas for thousands
-      const parts = value.split('.');
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      this.amount = parts.join('.');
-    }
+  formatAmount(): void {
+  if (!this.amount || this.amount.trim() === '') {
+    return;
   }
+  
+  // Remove existing commas and clean up
+  let value = this.amount.replace(/,/g, '').trim();
+  
+  // Ensure it's a valid number
+  if (isNaN(Number(value)) || value === '') {
+    this.amount = '';
+    return;
+  }
+  
+  // Format with commas for thousands
+  const parts = value.split('.');
+  let integerPart = parts[0];
+  const decimalPart = parts.length > 1 ? parts[1] : '';
+  
+  // Add commas for thousands
+  integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  
+  // Reconstruct the value
+  let formattedValue = integerPart;
+  if (decimalPart !== '') {
+    // Ensure decimal part has max 2 digits
+    formattedValue += '.' + decimalPart.slice(0, 2);
+  }
+  
+  this.amount = formattedValue;
+}
+
   removeNewFile(): void {
     Swal.fire({
       icon: 'question',
@@ -562,4 +589,76 @@ private executeUpdate(): void {
         },
       });
     }
+
+    onAmountInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/,/g, '');
+  
+  // Remove all non-numeric characters except decimal point
+  value = value.replace(/[^0-9.]/g, '');
+  
+  // Allow only one decimal point
+  const parts = value.split('.');
+  if (parts.length > 2) {
+    value = parts[0] + '.' + parts.slice(1).join('');
+  }
+  
+  // Limit decimal places to 2
+  if (parts.length > 1) {
+    parts[1] = parts[1].slice(0, 2);
+    value = parts[0] + '.' + parts[1];
+  }
+  
+  // Update the amount (without commas for now, will format on blur)
+  this.amount = value;
+  
+  // Set the input value without commas for better typing experience
+  input.value = value;
+}
+
+onAmountKeydown(event: KeyboardEvent): void {
+  const allowedKeys = [
+    'Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 
+    'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+    'Home', 'End'
+  ];
+  
+  // Allow control keys
+  if (allowedKeys.includes(event.key) || event.ctrlKey || event.metaKey) {
+    return;
+  }
+  
+  // Allow only numbers and decimal point
+  if (!/[\d.]/.test(event.key)) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Check for existing decimal point
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value.replace(/,/g, '');
+  
+  if (event.key === '.' && currentValue.includes('.')) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Prevent multiple leading zeros
+  if (event.key === '0' && currentValue === '0') {
+    event.preventDefault();
+  }
+  
+  // Prevent starting with decimal point
+  if (event.key === '.' && (currentValue === '' || currentValue === '0')) {
+    event.preventDefault();
+    // If starting with decimal, add leading zero
+    setTimeout(() => {
+      this.amount = '0.';
+      const inputElement = event.target as HTMLInputElement;
+      inputElement.value = '0.';
+      inputElement.setSelectionRange(2, 2);
+    });
+  }
+}
+
 }

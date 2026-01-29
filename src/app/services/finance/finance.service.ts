@@ -274,7 +274,15 @@ export interface PaymentHistoryListResponse {
   data: PaymentHistoryListItem[];
 }
 
-
+export interface ApprovedDetails {
+  defineBy: string | null;
+  maxShare: number;
+  minShare: number;
+  totValue: number;
+  approveId: number;
+  definedAt: string;
+  defineShares: number;
+}
 
 export interface GoviCareRequest {
   No: number;
@@ -291,8 +299,8 @@ export interface GoviCareRequest {
   empId: string;
   publishStatus: string;
   Request_Date_Time: string;
-  approvedDetails: any;
-  Farmer_ID:any;
+  approvedDetails: ApprovedDetails | null;
+  Farmer_ID: any;
 }
 
 export interface GoviCareRequestsResponse {
@@ -315,8 +323,7 @@ export interface GoviCareRequestDetail {
   Expected_Yield: string;
   Expected_Start_Date: string;
   Request_Date_Time: string;
-  approvedDetails: any;
-
+  approvedDetails: ApprovedDetails | null;
 }
 
 export interface GoviCareRequestDetailResponse {

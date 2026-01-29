@@ -1,5 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button class="mb-5 text-textLight dark:text-textDark">
+<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -11,10 +11,10 @@
     class="pt-5 pr-12 pl-12 pb-5 min-w-[1850px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div>
-      <div class="flex justify-between items-center mb-8">
+      <div class="flex justify-between items-center mb-4">
         <div class="flex items-center">
-          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            Project : GC000001 | 1 Share : Rs.5,000.00
+          <h2 class="text-[20px] font-bold text-textLight dark:text-textDark">
+            Project : {{ projectId || 'Loading...' }} <span class="mx-4">|</span> 1 Share : Rs.{{ (sharePrice | number:'1.2-2') || '0.00' }}
           </h2>
         </div>
 
@@ -22,9 +22,10 @@
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="statusArr" [checkmark]="true" optionLabel="status" optionValue="value"
+              [options]="statusArr" [checkmark]="false" optionLabel="status" optionValue="value"
               [showClear]="statusFilter === '' ? false : true" placeholder="Status" [(ngModel)]="statusFilter"
-              (onChange)="applystatusFilters()" />
+              (onChange)="applystatusFilters()" 
+              panelStyleClass="dark:bg-[#272F45] dark:text-textDark" />
           </div>
 
           <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
@@ -57,8 +58,17 @@
     </div>
 
     <div>
+      
+      <!-- No Data Message -->
+      <div *ngIf="!hasData && !isLoading" class="flex flex-col justify-center items-center py-20">
+        <p class="text-[#494949] dark:text-textDark mb-4">
+          -- No Data Available --
+        </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+      </div>
+
       <!-- Data Table -->
-      <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
             <th

@@ -258,7 +258,7 @@
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <!-- Required validation message -->
-          <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+          <span *ngIf="confirmAccountNumberRequired || confirmAccNumberInput.touched && !companyData.confirmAccNumber" class="text-red-600 text-sm">
             Confirm Account Number is required.
           </span>
 
@@ -319,14 +319,14 @@
         <div class="pb-6">
           <label for="foName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance Officer’s
             Name *</label>
-          <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
+          <input id="foName" name="foName" [(ngModel)]="companyData.foName" #financeOfficerInput="ngModel" (keydown)="allowOnlyEnglishLetterss($event)"
             (keydown)="handleInputWithSpaceTrimming($event, 'foName')" (input)="capitalizeFirstLetter('foName')"
             (blur)="onBlur('foName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <!-- <div *ngIf="invalidFoName" class="text-red-500 text-sm mt-1">
             Only English letters and spaces are allowed in Finance Officer’s Name.
           </div> -->
-          <span *ngIf="isFieldInvalid('foName')" class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
+          <span *ngIf="isFieldInvalid('foName') || (financeOfficerInput.touched && !companyData.foName)" class="text-red-600 text-sm">Finance Officer’s Name is required.</span>
         </div>
 
         <div class="flex gap-5">

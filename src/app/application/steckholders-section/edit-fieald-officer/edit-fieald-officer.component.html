@@ -110,44 +110,62 @@
         -->
 
         <div>
-          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Assigned Districts *
-          </label>
-          <p-multiSelect id="assignDistrict" [(ngModel)]="personalData.assignDistrict" [options]="districts"
-            optionLabel="name" placeholder="Select districts" [filter]="true" [showClear]="true"
-            [styleClass]="'mt-1 w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
-            [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }" selectedItemsLabel="{0} districts selected" />
-          <span *ngIf="isFieldInvalid('assignDistrict')" class="text-red-600 text-sm">Assigned District is a required
-            field</span>
-        </div>
+  <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Assigned Districts *
+  </label>
+  <p-multiSelect id="assignDistrict" 
+                 [(ngModel)]="personalData.assignDistrict" 
+                 [options]="districts" 
+                 optionLabel="name" 
+                 placeholder="Select districts" 
+                 [filter]="true" 
+                 [showClear]="true"
+                 (onClear)="onAssignedDistrictsChange()"
+                 (onModelChange)="onAssignedDistrictsChange()"
+                 [styleClass]="'mt-1 w-full h-12 text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800'"
+                 [ngClass]="{ 'p-invalid': isFieldInvalid('assignDistrict') }" 
+                 selectedItemsLabel="{0} districts selected" />
+  <span *ngIf="isFieldInvalid('assignDistrict')" class="text-red-600 text-sm">
+    Assigned District is a required field
+  </span>
+</div>
         <div class="w-full">
-          <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Job Role *
-          </label>
+  <label for="jobRole" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Job Role *
+  </label>
 
-          <div class="relative mt-1" tabindex="0" (blur)="closeDropdown()">
-            <!-- Selected option -->
-            <div
-              class="cursor-pointer flex justify-between items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-[#061E2C] text-gray-700 dark:text-gray-300"
-              (click)="toggleDropdown()">
-              {{ personalData.jobRole || "Select a Job Role" }}
-              <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
-            </div>
+  <div class="relative mt-1" tabindex="0" (blur)="closeDropdown()">
+    <!-- Selected option with clear button -->
+    <div
+      class="cursor-pointer flex justify-between items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-[#061E2C] text-gray-700 dark:text-gray-300"
+      (click)="toggleDropdown()">
+      <span class="flex-1">{{ personalData.jobRole || "Select a Job Role" }}</span>
+      <div class="flex items-center gap-2">
+        <!-- Clear button (X icon) - shows when there's a selection -->
+        <button *ngIf="personalData.jobRole" 
+                type="button" 
+                class="text-gray-400 hover:text-red-500 focus:outline-none"
+                (click)="clearJobRole($event)">
+          <i class="fa-solid fa-times text-sm"></i>
+        </button>
+        <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400"></i>
+      </div>
+    </div>
 
-            <!-- Dropdown options -->
-            <div *ngIf="dropdownOpen"
-              class="absolute mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg z-10">
-              <div *ngFor="let role of jobRoles" (click)="selectjobRole(role)"
-                class="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
-                {{ role }}
-              </div>
-            </div>
-          </div>
+    <!-- Dropdown options -->
+    <div *ngIf="dropdownOpen"
+      class="absolute mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
+      <div *ngFor="let role of jobRoles" (click)="selectjobRole(role)"
+        class="p-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+        {{ role }}
+      </div>
+    </div>
+  </div>
 
-          <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">
-            Job Role is a required field
-          </span>
-        </div>
+  <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">
+    Job Role is a required field
+  </span>
+</div>
         <div *ngIf="personalData.jobRole === 'Field Officer'">
           <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Chief Field Officer *

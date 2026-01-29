@@ -73,6 +73,7 @@
                   name="enpType"
                   value="Permanent"
                   [(ngModel)]="empType"
+                  #empTypeCtrl="ngModel"
                   (ngModelChange)="updateEmployeeType($event)"
                 />
                 Permanent
@@ -88,13 +89,14 @@
                   name="enpType"
                   value="Temporary"
                   [(ngModel)]="empType"
+                  #empTypeCtrl="ngModel"
                   (ngModelChange)="updateEmployeeType($event)"
                 />
                 Temporary
               </label>
             </div>
           </div>
-          <p *ngIf="!isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
+          <p *ngIf="!isEmpTypeSelected() && empTypeCtrl.touched" class="text-red-600 text-sm mt-2">
             Employee Type is a required field
           </p>
         </div>
@@ -144,9 +146,17 @@
               />
               <label for="tamil" class="text-gray-700 dark:text-textDark">Tamil</label>
             </div>
+
+            <input
+              type="hidden"
+              name="languages"
+              [(ngModel)]="personalData.languages"
+              required
+              #languagesCtrl="ngModel"
+            />
           </div>
           <p
-            *ngIf="!isAtLeastOneLanguageSelected()"
+            *ngIf="!isAtLeastOneLanguageSelected() && languagesCtrl.touched"
             class="text-red-600 text-sm mt-2"
           >
             Preferred Languages is a required field

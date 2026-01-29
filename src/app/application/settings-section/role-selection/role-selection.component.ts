@@ -237,6 +237,69 @@ export class RoleSelectionComponent {
     }
     this.validateEditEmail();
   }
+
+ preventLeadingSpace(event: KeyboardEvent, currentValue: string): void {
+  // Check if space key is pressed
+  if (event.key === ' ' || event.keyCode === 32) {
+    const target = event.target as HTMLInputElement;
+    const cursorPosition = target.selectionStart || 0;
+    
+    if (!currentValue || cursorPosition === 0 || currentValue.trim().length === 0) {
+      event.preventDefault();
+    }
+  }
+}
+onPaste(event: ClipboardEvent, field: 'role' | 'email'): void {
+  event.preventDefault();
+  const pastedText = event.clipboardData?.getData('text') || '';
+  const target = event.target as HTMLInputElement;
+  const cursorPosition = target.selectionStart || 0;
+  const currentValue = this.selectedRole[field] || '';
+  
+  // Remove leading spaces from pasted text
+  const trimmedText = pastedText.replace(/^\s+/, '');
+  
+  // If pasting at the beginning, use trimmed text
+  // Otherwise, insert normally
+  if (cursorPosition === 0) {
+    this.selectedRole[field] = trimmedText + currentValue;
+  } else {
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    const afterCursor = currentValue.substring(cursorPosition);
+    this.selectedRole[field] = beforeCursor + trimmedText + afterCursor;
+  }
+  
+  // Validate email if it's the email field
+  if (field === 'email') {
+    this.validateEditEmail();
+  }
+}
+
+onCreatePaste(event: ClipboardEvent, field: 'role' | 'email'): void {
+  event.preventDefault();
+  const pastedText = event.clipboardData?.getData('text') || '';
+  const target = event.target as HTMLInputElement;
+  const cursorPosition = target.selectionStart || 0;
+  const currentValue = this.createRolesObj[field] || '';
+  
+  // Remove leading spaces from pasted text
+  const trimmedText = pastedText.replace(/^\s+/, '');
+  
+  // If pasting at the beginning, use trimmed text
+  // Otherwise, insert normally
+  if (cursorPosition === 0) {
+    this.createRolesObj[field] = trimmedText + currentValue;
+  } else {
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    const afterCursor = currentValue.substring(cursorPosition);
+    this.createRolesObj[field] = beforeCursor + trimmedText + afterCursor;
+  }
+  
+  // Validate email if it's the email field
+  if (field === 'email') {
+    this.validateCreateEmail();
+  }
+}
 }
 
 export class CreateRoles {

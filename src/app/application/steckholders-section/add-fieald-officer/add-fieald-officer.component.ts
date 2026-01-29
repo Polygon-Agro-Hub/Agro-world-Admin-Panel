@@ -291,27 +291,33 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
-    const isTouched = !!this.touchedFields[fieldName];
+  const isTouched = !!this.touchedFields[fieldName];
 
-    if (!isTouched) {
-      return false;
-    }
-
-    const value = this.personalData[fieldName];
-
-    // Special handling for assignDistrict array
-    if (fieldName === 'assignDistrict') {
-      return !value || (Array.isArray(value) && value.length === 0);
-    }
-
-    // Special handling for email field - check validation even if touched
-    if (fieldName === 'email' && value) {
-      return !this.isValidEmail(value);
-    }
-
-    // Default validation for other fields
-    return !value;
+  if (!isTouched) {
+    return false;
   }
+
+  const value = this.personalData[fieldName];
+
+  // Special handling for assignDistrict array
+  if (fieldName === 'assignDistrict') {
+    return !value || (Array.isArray(value) && value.length === 0);
+  }
+
+  // Special handling for jobRole when assignDistrict is empty
+  if (fieldName === 'jobRole' && this.personalData.assignDistrict && 
+      this.personalData.assignDistrict.length === 0) {
+    return false; // Don't show error if assignDistrict is empty
+  }
+
+  // Special handling for email field - check validation even if touched
+  if (fieldName === 'email' && value) {
+    return !this.isValidEmail(value);
+  }
+
+  // Default validation for other fields
+  return !value;
+}
 
   // New method to specifically check email validation
   isEmailInvalid(): boolean {
@@ -334,16 +340,16 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   selectjobRole(role: string) {
-    this.personalData.jobRole = role;
-    this.toggleDropdown();
+  this.personalData.jobRole = role;
+  this.dropdownOpen = false;
 
-    // Reset irmId when job role changes
-    if (role !== 'Field Officer') {
-      this.personalData.irmId = '';
-    }
-
-    this.EpmloyeIdCreate();
+  // Reset irmId when job role changes or is cleared
+  if (!role || role !== 'Field Officer') {
+    this.personalData.irmId = '';
   }
+
+  this.EpmloyeIdCreate();
+}
 
   EpmloyeIdCreate() {
     let rolePrefix: string | undefined;
@@ -1139,17 +1145,19 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadBanks();
-    this.loadBranches();
-    // this.getAllCompanies(); // Commented out as per HTML
-    this.EpmloyeIdCreate();
-    // Pre-fill country with Sri Lanka
-    this.personalData.country = 'Sri Lanka';
-    this.getAllCollectionManagers();
+  this.loadBanks();
+  this.loadBranches();
+  this.EpmloyeIdCreate();
+  // Pre-fill country with Sri Lanka
+  this.personalData.country = 'Sri Lanka';
+  this.getAllCollectionManagers();
 
-    // Initialize assignDistrict as array
-    this.personalData.assignDistrict = [];
-  }
+  // Initialize assignDistrict as array
+  this.personalData.assignDistrict = [];
+  
+  // Initialize jobRole as empty string
+  this.personalData.jobRole = '';
+}
 
   validateResidentialDetails(): string[] {
     const errors: string[] = [];
@@ -1758,6 +1766,36 @@ export class AddFiealdOfficerComponent implements OnInit {
   yourMethod(file: File | null) {
    console.log('file', this.selectedFrontNicFile)
   }
+
+  onAssignDistrictClear(): void {
+  // Clear job role and CFO when assign districts are cleared
+  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+    this.personalData.jobRole = '';
+    this.personalData.irmId = '';
+    this.selectedBranchId = null;
+    this.branchOptions = [];
+  }
+}
+
+onJobRoleClear(): void {
+  if (!this.personalData.jobRole) {
+    this.personalData.irmId = '';
+  }
+}
+
+clearJobRole(): void {
+  this.personalData.jobRole = '';
+  this.personalData.irmId = '';
+  this.dropdownOpen = false;
+}
+
+onAssignDistrictChange(event: any): void {
+  // If no districts are selected, clear job role and CFO
+  if (!event.value || event.value.length === 0) {
+    this.personalData.jobRole = '';
+    this.personalData.irmId = '';
+  }
+}
 
 }
 

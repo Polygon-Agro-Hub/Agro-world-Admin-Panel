@@ -351,7 +351,7 @@
         <div class="my-3">
           <label class="text-lg text-[#534E4E] dark:text-textDark">Default Unit Type *</label>
           <p-dropdown id="unitType" name="unitType" [(ngModel)]="productObj.unitType" required #unitTypeField="ngModel"
-            [options]="unitTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Unit Type--"
+            [options]="unitTypeOptions" optionLabel="label" optionValue="value" placeholder="--Select Unit Type--" (ngModelChange)="onUnitTypeChange()"
             [styleClass]="'w-full border border-gray-300 rounded-md bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark'">
           </p-dropdown>
           <div *ngIf="unitTypeField.invalid && unitTypeField.touched" class="text-red-500 text-sm mt-1">
@@ -360,7 +360,7 @@
         </div>
 
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity *</label>
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity in {{text}}*</label>
           <input type="number" min="0.1" step="0.1" id="startValue" name="startValue"
             [(ngModel)]="productObj.startValue" #minimumQuantityInput="ngModel" (input)="validatePriceInput($event, 'startValue')"
             (keydown)="preventInvalidChars($event)"
@@ -384,7 +384,7 @@
         </div>
 
         <div class="my-3" *ngIf="productObj.category === 'WholeSale'">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity *</label>
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Maximum Quantity in {{text}}*</label>
           <input type="number" min="0.1" step="0.1" id="maxQuntity" name="maxQuntity"
             [(ngModel)]="productObj.maxQuantity" (input)="validatePriceInput($event, 'maxQuantity')"
             (keydown)="preventInvalidChars($event)" 
@@ -409,7 +409,7 @@
         </div>
 
         <div class="my-3">
-          <label class="text-lg text-[#534E4E] dark:text-textDark">Increase/Decrease by *</label>
+          <label class="text-lg text-[#534E4E] dark:text-textDark">Increase/Decrease by in {{text}}*</label>
           <input type="number" min="0.1" step="0.1" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
             (input)="validatePriceInput($event, 'changeby')" (keydown)="preventInvalidChars($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"

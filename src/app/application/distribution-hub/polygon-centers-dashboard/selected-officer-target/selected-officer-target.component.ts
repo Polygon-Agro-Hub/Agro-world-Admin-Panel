@@ -20,6 +20,8 @@ export class SelectedOfficerTargetComponent implements OnInit {
   searchText: string = '';
   selectStatus: string = '';
 
+  isLateAndNotCompleted!: boolean;
+
   totalOfficers: number = 0;
 
   isPass: boolean = false;
@@ -126,42 +128,46 @@ fetchSelectedOfficerTargets(
   this.isLoading = true;
   this.DestributionSrv.getSelectedOfficerTargets(officerId, search, status, completingStatus).subscribe(
     (res) => {
+
+      console.log('res', res)
       this.ordersArr = res.items
-      // this.ordersArr = res.items.map((item: any) => {
-        // let status = '';
+      console.log('ordersArr', this.ordersArr)
+
+      this.ordersArr = res.items.map((item: any) => {
+        let status = '';
           
-        //   const pkgStatus = item.packageStatus;
-        //   const addStatus = item.additionalItemsStatus;
+          const pkgStatus = item.packageStatus;
+          const addStatus = item.additionalItemsStatus;
           
-        //   // Priority 1: If either is Pending, combinedStatus is Pending
-        //   if (pkgStatus === 'Pending' || addStatus === 'Pending') {
-        //     status = 'Pending';
-        //   }
-        //   // Priority 2: If either is Opened (and none are Pending), combinedStatus is Opened
-        //   else if (pkgStatus === 'Opened' || addStatus === 'Opened') {
-        //     status = 'Opened';
-        //   }
-        //   // Priority 3: If both are Completed, combinedStatus is Completed
-        //   else if (pkgStatus === 'Completed' && addStatus === 'Completed') {
-        //     status = 'Completed';
-        //   }
-        //   // Priority 4: If one is Completed and other is Unknown, use the non-Unknown status
-        //   else if (pkgStatus === 'Completed' && addStatus === 'Unknown') {
-        //     status = 'Completed';
-        //   }
-        //   else if (pkgStatus === 'Unknown' && addStatus === 'Completed') {
-        //     status = 'Completed';
-        //   }
-        //   // Default: Both are Unknown
-        //   else {
-        //     status = 'Unknown';
-        //   }
+          // Priority 1: If either is Pending, combinedStatus is Pending
+          if (pkgStatus === 'Pending' || addStatus === 'Pending') {
+            status = 'Pending';
+          }
+          // Priority 2: If either is Opened (and none are Pending), combinedStatus is Opened
+          else if (pkgStatus === 'Opened' || addStatus === 'Opened') {
+            status = 'Opened';
+          }
+          // Priority 3: If both are Completed, combinedStatus is Completed
+          else if (pkgStatus === 'Completed' && addStatus === 'Completed') {
+            status = 'Completed';
+          }
+          // Priority 4: If one is Completed and other is Unknown, use the non-Unknown status
+          else if (pkgStatus === 'Completed' && addStatus === 'Unknown') {
+            status = 'Completed';
+          }
+          else if (pkgStatus === 'Unknown' && addStatus === 'Completed') {
+            status = 'Completed';
+          }
+          // Default: Both are Unknown
+          else {
+            status = 'Unknown';
+          }
         
-        //   return {
-        //     ...item,
-        //     combinedStatus: status
-        //   };
-      // });
+          return {
+            ...item,
+            combinedStatus: status
+          };
+      });
 
       this.totalItems = res.total;
       this.hasData = this.ordersArr.length > 0;
@@ -228,6 +234,58 @@ fetchSelectedOfficerTargets(
     this.location.back();
   }
 
+  getStatus(item: orders): string {
+    console.log('Setting status');
+  
+    // Convert both into Date objects
+    const scheduleDate = new Date(item.sheduleDate);
+    const completeTime = item.completeTime ? new Date(item.completeTime) : null;
+  
+    // Create the schedule deadline
+    const deadline = new Date(scheduleDate);
+  
+    if (item.sheduleTime) {
+      const timeSlot = item.sheduleTime.trim();
+  
+      if (timeSlot === 'Within 8-12 PM') {
+        deadline.setHours(12, 0, 0, 0); // 12:00 PM
+      } else if (timeSlot === 'Within 12-4 PM') {
+        deadline.setHours(16, 0, 0, 0); // 4:00 PM
+      } else if (timeSlot === 'Within 4-8 PM') {
+        deadline.setHours(20, 0, 0, 0); // 8:00 PM
+      }
+    }
+  
+    // Current time in SL
+    const now = new Date(
+      new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' })
+    );
+  
+    console.log(
+      'Now (SL):',
+      now.toLocaleString('en-GB', { timeZone: 'Asia/Colombo', hour12: false })
+    );
+    console.log(
+      'Deadline (SL):',
+      deadline.toLocaleString('en-GB', { timeZone: 'Asia/Colombo', hour12: false })
+    );
+  
+    // --- Case 1: Not completed yet ---
+    if (!completeTime) {
+      if (now.getTime() > deadline.getTime()) {
+        this.isLateAndNotCompleted = true;
+        return 'Not Completed';
+      } else {
+        this.isLateAndNotCompleted = false;
+        return 'Not Completed';
+      }
+    }
+  
+    // --- Case 2: Completed: Check on-time or late ---
+    return completeTime.getTime() <= deadline.getTime() ? 'On Time' : 'Late';
+  }
+  
+
 
 
 }
@@ -251,4 +309,5 @@ class orders {
   completeTimeStatus!: string
   packageStatus!: string;
   additionalItemsStatus!: string;
+  completeTime!: Date;
 }

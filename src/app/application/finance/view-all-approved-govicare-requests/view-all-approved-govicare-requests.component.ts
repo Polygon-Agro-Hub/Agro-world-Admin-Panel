@@ -6,11 +6,12 @@ import Swal from 'sweetalert2';
 import { FinanceService, GoviCareRequest, GoviCareRequestDetail } from '../../../services/finance/finance.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-view-all-approved-govicare-requests',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './view-all-approved-govicare-requests.component.html',
   styleUrl: './view-all-approved-govicare-requests.component.css'
 })
@@ -24,6 +25,9 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   selectStatus: string = '';
   isStatusDropdownOpen: boolean = false;
   statusDropdownOptions: string[] = ['Draft', 'Published'];
+
+  selectShares: string = '';
+  sharesDropdownOptions: string[] = ['Divided', 'Not Divided'];
 
   // Search
   search: string = '';
@@ -55,9 +59,10 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     this.isLoading = true;
 
     const status = this.selectStatus || undefined;
+    const shares = this.selectShares || undefined;
 
     this.financeService
-      .getAllApprovedGoviCareRequests(status, this.search)
+      .getAllApprovedGoviCareRequests(status, shares, this.search)
       .subscribe({
         next: (response) => {
           this.govicareRequests = response.data || [];
@@ -76,6 +81,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     this.isStatusDropdownOpen = !this.isStatusDropdownOpen;
   }
 
+
   selectStatusOption(option: string): void {
     this.selectStatus = option;
     this.isStatusDropdownOpen = false;
@@ -85,6 +91,11 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   filterStatus(): void {
     this.loadGovicareRequests();
   }
+
+  filterShares(): void {
+    this.loadGovicareRequests();
+  }
+
 
   cancelStatus(event: Event): void {
     event.stopPropagation();

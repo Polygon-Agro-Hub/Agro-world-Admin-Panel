@@ -708,6 +708,7 @@ export class FinanceService {
 
   getAllApprovedGoviCareRequests(
     status?: string,
+    shares?: string,
     search?: string
   ): Observable<ApprovedGoviCareRequestsResponse> {
     const headers = new HttpHeaders({
@@ -718,6 +719,10 @@ export class FinanceService {
 
     if (status && status.trim()) {
       params = params.set('status', status.trim());
+    }
+
+    if (shares && shares.trim()) {
+      params = params.set('shares', shares.trim());
     }
 
     if (search && search.trim()) {

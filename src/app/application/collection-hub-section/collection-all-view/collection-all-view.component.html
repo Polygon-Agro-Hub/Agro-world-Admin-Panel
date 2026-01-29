@@ -37,7 +37,7 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="provinceOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="provinceOptions" optionLabel="label" optionValue="value"
             [showClear]="!!selectProvince" placeholder="Province" [(ngModel)]="selectProvince"
             (onChange)="applyProvinceFilters()"></p-dropdown>
         </div>
@@ -46,7 +46,7 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="districtOptions" optionLabel="label" optionValue="value"
             [showClear]="!!selectDistrict" placeholder="District" [(ngModel)]="selectDistrict"
             (onChange)="applyDistrictFilters()"></p-dropdown>
         </div>

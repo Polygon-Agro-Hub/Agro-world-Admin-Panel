@@ -77,9 +77,14 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
 
   showInfoModal: boolean = false;
 
-  constructor(private distributionService: DistributionHubService,) {}
+  constructor(private distributionService: DistributionHubService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      // Set center details from query params
+      this.centerName = params['name'] || '';
+      this.centerRegCode = params['regCode'] || '';
+    });
     this.centerFetchDeliveries();
   }
 

@@ -129,7 +129,6 @@ export class CollectiveofficersEditComponent {
   jobRoleOptions = [
     { label: 'Collection Centre Manager', value: 'Collection Centre Manager' },
     { label: 'Collection Officer', value: 'Collection Officer' },
-    { label: 'Customer Officer', value: 'Customer Officer' }
   ];
 
   isLanguageRequired = false;
@@ -1062,7 +1061,7 @@ export class CollectiveofficersEditComponent {
         .subscribe((res) => {
           this.collectionManagerData = res;
           this.managerOptions = this.collectionManagerData.map(manager => ({
-            label: manager.empId + " - " + manager.firstNameEnglish,
+            label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
             value: manager.id
           }));
         });
@@ -1503,6 +1502,7 @@ class CollectionManager {
   id!: number;
   empId!: string;
   firstNameEnglish!: string;
+  lastNameEnglish!: string;
 }
 
 class Company {

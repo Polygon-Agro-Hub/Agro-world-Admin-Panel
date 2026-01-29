@@ -438,7 +438,7 @@
         </span>
       </div> -->
 
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end my-10 ml-10">
         <button (click)="back()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
@@ -646,7 +646,7 @@
           class="mt-1 block w-full p-dropdown-custom" (onChange)="onBranchChange($event)">
         </p-dropdown>
       </div>
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end my-10 ml-10">
         <button (click)="nextFormCreate('pageOne')" type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
@@ -693,8 +693,16 @@
           <p class="text-gray-700 dark:text-textDark">Upload License Front Image</p>
         </div>
         <div *ngIf="licenseFrontImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ licenseFrontImageFileName }}</span>
+          <span class="text-sm font-semibold">
+            Attached:
+            <a
+              *ngIf="driverObj.licenseFrontImage"
+              [href]="driverObj.licenseFrontImage"
+              target="_blank"
+              class="text-blue-600 font-normal underline ml-1"
+            >
+              {{ licenseFrontImageFileName }}
+            </a>
           </span>
           <button (click)="clearLicenseFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -715,8 +723,16 @@
           <p class="text-gray-700 dark:text-textDark">Upload License Back Image</p>
         </div>
         <div *ngIf="licenseBackImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ licenseBackImageFileName }}</span>
+          <span class="text-sm font-semibold">
+            Attached:
+            <a
+              *ngIf="driverObj.licenseBackImage"
+              [href]="driverObj.licenseBackImage"
+              target="_blank"
+              class="text-blue-600 font-normal underline ml-1"
+            >
+              {{ licenseBackImageFileName }}
+            </a>
           </span>
           <button (click)="clearLicenseBackImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -768,8 +784,16 @@
           <p class="text-gray-700 dark:text-textDark">Upload Insurance Front Image</p>
         </div>
         <div *ngIf="insurenceFrontImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ insurenceFrontImageFileName }}</span>
+          <span class="text-sm font-semibold">
+            Attached:
+            <a
+              *ngIf="driverObj.insurenceFrontImage"
+              [href]="driverObj.insurenceFrontImage"
+              target="_blank"
+              class="text-blue-600 font-normal underline ml-1"
+            >
+              {{ insurenceFrontImageFileName }}
+            </a>
           </span>
           <button (click)="clearInsurenceFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -790,8 +814,16 @@
           <p class="text-gray-700 dark:text-textDark">Upload Insurance Back Image</p>
         </div>
         <div *ngIf="insurenceBackImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ insurenceBackImageFileName }}</span>
+          <span class="text-sm font-semibold">
+            Attached:
+            <a
+              *ngIf="driverObj.insurenceBackImage"
+              [href]="driverObj.insurenceBackImage"
+              target="_blank"
+              class="text-blue-600 font-normal underline ml-1"
+            >
+              {{ insurenceBackImageFileName }}
+            </a>
           </span>
           <button (click)="clearInsurenceBackImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -847,9 +879,19 @@
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Front Image</p>
         </div>
         <div *ngIf="vehicleFrontImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ vehicleFrontImageFileName }}</span>
+
+          <span class="text-sm font-semibold">
+            Attached:
+            <a
+              *ngIf="driverObj.vehicleFrontImage"
+              [href]="driverObj.vehicleFrontImage"
+              target="_blank"
+              class="text-blue-600 font-normal underline ml-1"
+            >
+              {{ vehicleFrontImageFileName }}
+            </a>
           </span>
+
           <button (click)="clearVehicleFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
           </button>
@@ -868,8 +910,17 @@
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Back Image</p>
         </div>
         <div *ngIf="vehicleBackImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ vehicleBackImageFileName }}</span>
+
+          <span class="text-sm font-semibold">
+            Attached:
+            <a
+              *ngIf="driverObj.vehicleBackImage"
+              [href]="driverObj.vehicleBackImage"
+              target="_blank"
+              class="text-blue-600 font-normal underline ml-1"
+            >
+              {{ vehicleBackImageFileName }}
+            </a>
           </span>
           <button (click)="clearVehicleBackImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -889,8 +940,16 @@
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 1</p>
         </div>
         <div *ngIf="vehicleSideAImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ vehicleSideAImageFileName }}</span>
+          <span class="text-sm font-semibold">
+            Attached:
+            <a
+              *ngIf="driverObj.vehicleSideAImage"
+              [href]="driverObj.vehicleSideAImage"
+              target="_blank"
+              class="text-blue-600 font-normal underline ml-1"
+            >
+              {{ vehicleSideAImageFileName }}
+            </a>
           </span>
           <button (click)="clearVehicleSideAImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -910,8 +969,17 @@
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 2</p>
         </div>
         <div *ngIf="vehicleSideBImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ vehicleSideBImageFileName }}</span>
+          
+          <span class="text-sm font-semibold">
+            Attached:
+            <a
+              *ngIf="driverObj.vehicleSideBImage"
+              [href]="driverObj.vehicleSideBImage"
+              target="_blank"
+              class="text-blue-600 font-normal underline ml-1"
+            >
+              {{ vehicleSideBImageFileName }}
+            </a>
           </span>
           <button (click)="clearVehicleSideBImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>

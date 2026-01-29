@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -46,6 +46,9 @@ interface PhoneCode {
   styleUrl: './add-distribution-officer.component.css',
 })
 export class AddDistributionOfficerComponent implements OnInit {
+
+  @ViewChild('empTypeCtrl') empTypeCtrl!: NgModel;
+@ViewChild('languagesCtrl') languagesCtrl!: NgModel;
   duplicatePhoneError: boolean = false;
 
   id: number | null = null;
@@ -446,6 +449,9 @@ export class AddDistributionOfficerComponent implements OnInit {
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
       const validation = this.validatePageOne();
+
+      this.empTypeCtrl?.control.markAsTouched();
+      this.languagesCtrl?.control.markAsTouched();
 
       if (!validation.isValid) {
         this.showValidationErrors(validation.errors);

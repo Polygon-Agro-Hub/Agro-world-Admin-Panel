@@ -286,6 +286,15 @@ export class UpdateDistributionOfficerComponent {
           this.driverObj.vCapacity = driverData.vCapacity || '';
           this.driverObj.vRegNo = driverData.vRegNo || '';
 
+          this.driverObj.licenseFrontImage = driverData.licFrontImg || '';
+          this.driverObj.licenseBackImage = driverData.licBackImg || '';
+          this.driverObj.insurenceFrontImage = driverData.insFrontImg || '';
+          this.driverObj.insurenceBackImage = driverData.insBackImg || '';
+          this.driverObj.vehicleFrontImage = driverData.vehFrontImg || '';
+          this.driverObj.vehicleBackImage = driverData.vehBackImg || '';
+          this.driverObj.vehicleSideAImage = driverData.vehSideImgA || '';
+          this.driverObj.vehicleSideBImage = driverData.vehSideImgB || '';
+
           // Set existing image file names
           this.licenseFrontImageFileName = driverData.licFrontName || '';
           this.licenseBackImageFileName = driverData.licBackName || '';
@@ -302,6 +311,8 @@ export class UpdateDistributionOfficerComponent {
             this.selectVehicletype = vehicleType;
           }
         }
+
+        console.log('this.driverObj', this.driverObj)
 
         this.isApproved = this.personalData.status === 'Approved';
         this.selectedLanguages = this.personalData.languages ? this.personalData.languages.split(',') : [];
@@ -2263,4 +2274,13 @@ class Drivers {
   vBackName!: string;
   vSideAName!: string;
   vSideBName!: string;
+
+  licenseFrontImage!: string;
+  licenseBackImage!: string;
+  insurenceFrontImage!: string;
+  insurenceBackImage! :string;
+  vehicleFrontImage!: string;
+  vehicleBackImage!: string;
+  vehicleSideAImage!: string;
+  vehicleSideBImage!: string;
 }

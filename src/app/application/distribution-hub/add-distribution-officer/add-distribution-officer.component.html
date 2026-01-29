@@ -69,20 +69,20 @@
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2 cursor-pointer">
               <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                <input  class="w-5 h-5 cursor-pointer "  type="radio" name="enpType" value="Permanent" [(ngModel)]="empType "
+                <input  class="w-5 h-5 cursor-pointer "  type="radio" name="enpType" value="Permanent" [(ngModel)]="empType " #empTypeCtrl="ngModel"
                   (ngModelChange)="updateEmployeeType($event)" />
                 Permanent
               </label>
             </div>
             <div class="flex items-center space-x-2 cursor-pointer">
               <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary" [(ngModel)]="empType"
+                <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary" [(ngModel)]="empType" #empTypeCtrl="ngModel"
                   (ngModelChange)="updateEmployeeType($event)" />
                 Temporary
               </label>
             </div>
           </div>
-          <p *ngIf="!isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
+          <p *ngIf="!isEmpTypeSelected() && empTypeCtrl.touched" class="text-red-600 text-sm mt-2">
             Please select an employee type.
           </p>
         </div>
@@ -112,9 +112,17 @@
               <label for="tamil" class="text-gray-700 dark:text-textDark font-medium">Tamil</label>
             </div>
 
+            <input
+              type="hidden"
+              name="languages"
+              [(ngModel)]="personalData.languages"
+              required
+              #languagesCtrl="ngModel"
+            />
+
           </div>
 
-          <p *ngIf="!isAtLeastOneLanguageSelected()" class="text-red-600 text-sm mt-2">
+          <p *ngIf="!isAtLeastOneLanguageSelected() && languagesCtrl.touched" class="text-red-600 text-sm mt-2">
             Please select at least one preferred language.
           </p>
         </div>

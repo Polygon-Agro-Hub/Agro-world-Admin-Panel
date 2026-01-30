@@ -37,7 +37,7 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="provinceOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="provinceOptions" optionLabel="label" optionValue="value"
             [showClear]="!!selectProvince" placeholder="Province" [(ngModel)]="selectProvince"
             (onChange)="applyProvinceFilters()"></p-dropdown>
         </div>
@@ -46,7 +46,7 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="districtOptions" optionLabel="label" optionValue="value"
             [showClear]="!!selectDistrict" placeholder="District" [(ngModel)]="selectDistrict"
             (onChange)="applyDistrictFilters()"></p-dropdown>
         </div>
@@ -141,10 +141,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               {{ item.regCode }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark">
               {{ item.centerName }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark">
               <ng-container *ngIf="item.companies.length > 0; else noCompanies">
                 <span *ngFor="let company of item.companies; let last = last" style="display: block;">
                   {{ company.companyNameEnglish }}
@@ -161,7 +161,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.city }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark whitespace-nowrap">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               <span *ngIf="item.contact01 === null" class="text-center">-</span>
               <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
             </td>

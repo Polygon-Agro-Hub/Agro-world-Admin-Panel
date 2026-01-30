@@ -149,13 +149,22 @@
               </div>
             </td>
             <td class="px-6 py-4 text-center text-textLight dark:text-textDark whitespace-nowrap align-middle">
-              <span [ngClass]="{
+              <!-- <span [ngClass]="{
                 'text-green-600 dark:text-green-400 font-medium': item.completeTimeStatus === 'On Time',
                 'text-red-600 dark:text-red-400 font-medium': item.completeTimeStatus === 'Late',
                 'text-gray-500 dark:text-gray-400': item.completeTimeStatus === 'Not Complete'
               }">
                 {{ item.completeTimeStatus }}
-              </span>
+              </span> -->
+
+              <span 
+                 [ngClass]="{
+                   'text-red-500 font-medium': getStatus(item) === 'Late',
+                   'text-blue-500 font-medium': getStatus(item) === 'On Time',
+                   'text-[#AC0003] font-medium': (getStatus(item) === 'Not Completed' && isLateAndNotCompleted )
+                 }">
+                 {{ getStatus(item) }}
+               </span>
             </td>
           </tr>
         </tbody>

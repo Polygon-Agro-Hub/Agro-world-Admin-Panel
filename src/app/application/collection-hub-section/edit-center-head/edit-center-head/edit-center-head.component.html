@@ -47,6 +47,28 @@
 
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        
+
+        <div class="mb-4">
+          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            Company Name *
+          </label>
+
+          <p-dropdown id="centerId" [(ngModel)]="personalData.companyId" [options]="CompanyData"
+            optionLabel="companyNameEnglish" optionValue="id" [filter]="true" filterPlaceholder="Search company..."
+            placeholder="Select Company"
+            class="mt-1 p-dropdown-custom w-full text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
+            #companyIdInput="ngModel" required>
+          </p-dropdown>
+
+          <div *ngIf="companyIdInput.touched && !personalData.companyId" class="text-red-500 text-sm mt-1">
+            Company Name is required
+          </div>
+        </div>
+
+        <div></div>
+
+
         <div>
           <label for="enpType" class="block text-sm font-medium text-gray-700 dark:text-textDark">
             Staff Employee Type *
@@ -103,26 +125,6 @@
           <!-- Required Validation Message -->
           <div *ngIf="isLanguageRequired && selectedLanguages.length === 0" class="text-red-500 text-sm mt-1">
             <div>Please select at least one language</div>
-          </div>
-        </div>
-
-
-
-
-        <div class="mb-4">
-          <label for="centerId" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Company Name *
-          </label>
-
-          <p-dropdown id="centerId" [(ngModel)]="personalData.companyId" [options]="CompanyData"
-            optionLabel="companyNameEnglish" optionValue="id" [filter]="true" filterPlaceholder="Search company..."
-            placeholder="Select Company"
-            class="mt-1 p-dropdown-custom w-full text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800"
-            #companyIdInput="ngModel" required>
-          </p-dropdown>
-
-          <div *ngIf="companyIdInput.touched && !personalData.companyId" class="text-red-500 text-sm mt-1">
-            Company Name is required
           </div>
         </div>
 
@@ -481,8 +483,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
       </div>
 
       <div class="pb-6">
-        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *<span
-            class="text-[#2E2E2E]">*</span></label>
+        <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
         <input id="accNumber" name="accNumber" type="number" [(ngModel)]="personalData.accNumber"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
           #accNumberInput="ngModel" required pattern="^[0-9]+$" (ngModelChange)="validateAccNumber()" />
@@ -498,7 +499,7 @@ Please enter a valid mobile number (format: +947XXXXXXXX)
 
       <div class="pb-6">
         <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Confirm Account Number *<span class="text-[#2E2E2E]">*</span>
+          Confirm Account Number *
         </label>
         <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber" type="number"
           [(ngModel)]="confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"

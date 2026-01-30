@@ -47,6 +47,10 @@ export class MarketAddProductComponent implements OnInit {
   isNoDiscount: boolean = true;
   formSubmitted = false;
 
+  text: string = 'Kg';
+
+  isunitTypeKg!: boolean;
+
   // In your component.ts
   categoryOptions = [
     { label: 'Retail', value: 'Retail' },
@@ -697,6 +701,18 @@ export class MarketAddProductComponent implements OnInit {
       return this.productObj.startValue <= this.productObj.maxQuantity;
     }
     return true;
+  }
+
+  onUnitTypeChange(): void {
+    console.log('chanegs')
+    if (this.productObj.unitType === 'g') {
+      this.isunitTypeKg = false;
+      this.text = 'g'
+    } else if (this.productObj.unitType === 'Kg') {
+      this.text = 'Kg'
+      this.isunitTypeKg = true;
+    }
+    console.log('Unit Type changed:', this.isunitTypeKg);
   }
 }
 

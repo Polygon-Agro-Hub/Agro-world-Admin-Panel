@@ -979,6 +979,21 @@ export class FinanceService {
       }
     );
   }
+
+   getSalesAgentForFilters(): Observable<any> {
+    const url = `${this.apiUrl}finance/get-sales-agent-for-filter`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getAgentCommisons(data:any): Observable<any> {
+    const url = `${this.apiUrl}finance/get-agent-commissions`;
+    return this.http.post<any>(url, data, {
+      headers: this.getHeaders(),
+    });
+  }
+
 }
 
 

@@ -36,15 +36,37 @@ export class ReciverinfoPopupComponent {
     }
   }
 
-  // Get the receiver's full name
-  getReceiverFullName(): string {
+  // Format a name with title
+  formatNameWithTitle(nameWithTitle: string): string {
+    if (!nameWithTitle || nameWithTitle === '--') return '--';
+    
+    // Common titles that should have periods
+    const titles = ['Mr', 'Mrs', 'Ms', 'Miss', 'Dr', 'Prof', 'Capt', 'Rev', 'Hon'];
+    
+    // Check if the string starts with a title without period
+    for (const title of titles) {
+      if (nameWithTitle.startsWith(`${title} `) && !nameWithTitle.startsWith(`${title}. `)) {
+        // Add period after title
+        return `${title}. ${nameWithTitle.substring(title.length + 1)}`;
+      }
+    }
+    
+    return nameWithTitle;
+  }
+
+  // Get the formatted customer name
+  getFormattedCustomerName(): string {
     if (!this.receiverInfo) return '--';
     
-    return this.receiverInfo.fullName || 
-           this.receiverInfo.full_name || 
-           this.receiverInfo.receiverFullName ||
-           this.receiverInfo.receiver?.fullName ||
-           this.receiverInfo.receiverName ||
-           '--';
+    const name = this.receiverInfo.customerName || '--';
+    return this.formatNameWithTitle(name);
+  }
+
+  // Get the formatted receiver's name
+  getFormattedReceiverName(): string {
+    if (!this.receiverInfo) return '--';
+    
+    const name = this.receiverInfo.receiverName || '--';
+    return this.formatNameWithTitle(name);
   }
 }

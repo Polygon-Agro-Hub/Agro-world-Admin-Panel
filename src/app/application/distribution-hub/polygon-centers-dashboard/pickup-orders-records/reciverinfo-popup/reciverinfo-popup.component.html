@@ -10,7 +10,7 @@
     <!-- Header -->
     <div class="px-6 py-4 border-b border-gray-300 dark:border-gray-600">
       <h2 class="text-lg font-semibold text-center text-gray-900 dark:text-white">
-        Order ID: {{ receiverInfo.orderId }}
+        Order ID: {{ receiverInfo?.orderId || "--" }}
       </h2>
     </div>
 
@@ -21,7 +21,7 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Customer Name</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
-          {{ receiverInfo?.customerName || "--" }}
+          {{ getFormattedCustomerName() }}
         </span>
       </div>
 
@@ -66,7 +66,7 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Receiver's Name</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
-          {{ getReceiverFullName() }}
+          {{ getFormattedReceiverName() }}
         </span>
       </div>
 
@@ -80,20 +80,18 @@
       </div>
 
       <!-- Receiver's Phone Number - 2 -->
-      <!-- Receiver's Phone Number - 2 -->
-<div class="flex items-start">
-  <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Receiver's Phone Number - 2</span>
-  <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-  <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
-    <!-- Direct check in template -->
-    <ng-container *ngIf="receiverInfo?.receiverPhone2 && receiverInfo.receiverPhone2 !== '+94' && receiverInfo.receiverPhone2 !== '94'; else noPhoneNumber">
-      {{ receiverInfo?.receiverPhoneCode2 }} {{ receiverInfo?.receiverPhone2 }}
-    </ng-container>
-    <ng-template #noPhoneNumber>
-      --
-    </ng-template>
-  </span>
-</div>
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Receiver's Phone Number - 2</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
+          <ng-container *ngIf="receiverInfo?.receiverPhone2 && receiverInfo.receiverPhone2 !== '+94' && receiverInfo.receiverPhone2 !== '94'; else noPhoneNumber">
+            {{ receiverInfo?.receiverPhone2 }}
+          </ng-container>
+          <ng-template #noPhoneNumber>
+            --
+          </ng-template>
+        </span>
+      </div>
     </div>
 
     <!-- Footer -->

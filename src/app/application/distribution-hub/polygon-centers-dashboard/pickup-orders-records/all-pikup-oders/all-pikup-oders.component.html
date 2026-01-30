@@ -52,17 +52,18 @@
           </div>
 
           <div>
-            <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [checkmark]="true"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Time Slot"
-              [options]="timeSlotOptions"
-              [(ngModel)]="selectedTimeSlot"
-              (onChange)="onTimeSlotSelect()"
-            >
-            </p-dropdown>
+            
+<p-dropdown
+  styleClass="smaller-dropdown border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+  [checkmark]="true"
+  optionLabel="label"
+  optionValue="value"
+  placeholder="Time Slot"
+  [options]="timeSlotOptions"
+  [(ngModel)]="selectedTimeSlot"
+  (onChange)="onTimeSlotSelect()"
+>
+</p-dropdown>
           </div>
 
           <div

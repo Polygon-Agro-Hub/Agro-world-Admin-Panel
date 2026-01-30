@@ -219,3 +219,86 @@
 ::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
   margin-left: 2px !important;
 }
+
+::ng-deep .p-dropdown {
+  min-width: 120px !important;
+  max-width: 150px !important;
+  width: 150px !important;
+}
+
+/* Reduce left and right padding in dropdown options */
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+  padding-left: 0.001rem !important;
+  padding-top: 0.375rem !important;
+  padding-bottom: 0.375rem !important;
+}
+
+/* Reduce dropdown panel width to match the dropdown */
+::ng-deep .p-dropdown-panel {
+  min-width: 120px !important;
+  width: auto !important;
+  max-width: 200px !important;
+}
+
+/* Reduce padding in dropdown panel */
+::ng-deep .p-dropdown-panel .p-dropdown-items {
+  padding: 0.25rem !important;
+}
+
+/* Make sure the selected item in dropdown has the same padding */
+::ng-deep .p-dropdown-panel .p-dropdown-item.p-highlight {
+  padding-left: 0.1rem !important;
+  
+}
+
+/* Reduce filter input padding if filter is enabled */
+::ng-deep .p-dropdown-filter-container {
+  padding: 0.5rem !important;
+}
+
+::ng-deep .p-dropdown-filter {
+  padding: 0.375rem 0.5rem !important;
+}
+
+/* Ensure dropdown toggle button doesn't overflow */
+::ng-deep .p-dropdown .p-dropdown-label {
+  padding: 0.375rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Reduce dropdown trigger button size */
+::ng-deep .p-dropdown .p-dropdown-trigger {
+  width: 2rem !important;
+}
+
+/* Reduce clear icon size inside dropdown */
+::ng-deep .p-dropdown .p-dropdown-clear-icon {
+  font-size: 0.75rem !important;
+  right: 2rem !important;
+}
+
+/* For dark mode dropdown panel width adjustment */
+::ng-deep .dark .p-dropdown-panel {
+  min-width: 120px !important;
+  width: auto !important;
+  max-width: 200px !important;
+}
+
+/* Optional: Further reduce width if needed */
+::ng-deep .p-dropdown.smaller-dropdown {
+  min-width: 100px !important;
+  max-width: 130px !important;
+  width: 130px !important;
+}
+
+::ng-deep .p-dropdown.smaller-dropdown .p-dropdown-label {
+  padding: 0.25rem 0.375rem !important;
+  font-size: 0.75rem !important;
+}
+
+::ng-deep .p-dropdown.smaller-dropdown .p-dropdown-trigger {
+  width: 1.75rem !important;
+}

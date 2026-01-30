@@ -80,13 +80,20 @@
       </div>
 
       <!-- Receiver's Phone Number - 2 -->
-      <div class="flex items-start">
-        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Receiver's Phone Number - 2</span>
-        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
-          {{ receiverInfo?.receiverPhone2 || "--" }}
-        </span>
-      </div>
+      <!-- Receiver's Phone Number - 2 -->
+<div class="flex items-start">
+  <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Receiver's Phone Number - 2</span>
+  <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+  <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
+    <!-- Direct check in template -->
+    <ng-container *ngIf="receiverInfo?.receiverPhone2 && receiverInfo.receiverPhone2 !== '+94' && receiverInfo.receiverPhone2 !== '94'; else noPhoneNumber">
+      {{ receiverInfo?.receiverPhoneCode2 }} {{ receiverInfo?.receiverPhone2 }}
+    </ng-container>
+    <ng-template #noPhoneNumber>
+      --
+    </ng-template>
+  </span>
+</div>
     </div>
 
     <!-- Footer -->

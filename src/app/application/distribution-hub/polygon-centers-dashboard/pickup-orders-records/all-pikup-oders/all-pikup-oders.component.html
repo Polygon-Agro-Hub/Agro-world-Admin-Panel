@@ -116,7 +116,26 @@
         </div>
       </div>
     </div>
-    <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
+    <ng-template #noData>
+        <tr>
+          <td
+            colspan="10"
+            class="px-4 py-6 text-center text-textLight dark:text-textDark"
+          >
+            <div class="flex flex-col items-center w-full px-10 py-7">
+              <p class="text-[#494949] my-6 dark:text-textDark">
+                --No Data Available--
+              </p>
+              <img
+                src="assets/images/NoData.png"
+                alt="No Data"
+                class="w-20 h-20"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">   
       <table class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr class="text-[#4B5563]">
@@ -270,25 +289,6 @@
           </ng-container>
         </tbody>
       </table>
-      <ng-template #noData>
-        <tr>
-          <td
-            colspan="10"
-            class="px-4 py-6 text-center text-textLight dark:text-textDark"
-          >
-            <div class="flex flex-col items-center w-full px-10 py-7">
-              <p class="text-[#494949] my-6 dark:text-textDark">
-                --No Data Available--
-              </p>
-              <img
-                src="assets/images/NoData.png"
-                alt="No Data"
-                class="w-20 h-20"
-              />
-            </div>
-          </td>
-        </tr>
-      </ng-template>
     </div>
   </div>
 

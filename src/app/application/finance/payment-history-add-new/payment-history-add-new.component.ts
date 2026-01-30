@@ -482,39 +482,66 @@ onAmountBlur(event: Event): void {
   }
 
   onPaymentReferenceInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const cursorPosition = input.selectionStart;
+  const input = event.target as HTMLInputElement;
+  const cursorPosition = input.selectionStart;
+  
+  // Get the current value
+  let currentValue = input.value;
+  
+  // Remove leading spaces only (allow spaces in the middle)
+  const trimmedValue = currentValue.replace(/^\s+/, '');
+  
+  // Check character limit
+  if (trimmedValue.length > this.MAX_REFERENCE_LENGTH) {
+    this.paymentReference = trimmedValue.substring(0, this.MAX_REFERENCE_LENGTH);
     
-    // If the input starts with a space, remove leading spaces
-    if (input.value.startsWith(' ')) {
-      // Remove all leading spaces
-      const newValue = input.value.replace(/^\s+/, '');
-      
-      // Update the model
-      this.paymentReference = newValue;
-      
-      // Restore cursor position (adjust for removed spaces)
-      setTimeout(() => {
-        const newCursorPosition = Math.max(0, (cursorPosition || 0) - (input.value.length - newValue.length));
-        input.setSelectionRange(newCursorPosition, newCursorPosition);
-      });
-      return;
-    }
-    
-    // Check if character limit is exceeded
-    if (input.value.length > this.MAX_REFERENCE_LENGTH) {
-      // Truncate to max length
-      const truncatedValue = input.value.substring(0, this.MAX_REFERENCE_LENGTH);
-      
-      // Update the model
-      this.paymentReference = truncatedValue;
-      
-      // Show warning if user keeps typing beyond limit
-      if (input.value.length > this.MAX_REFERENCE_LENGTH + 5) { // Show warning after 5 extra characters
-        this.showCharacterLimitWarning();
-      }
+    // Show warning
+    this.showCharacterLimitWarning();
+  } else {
+    this.paymentReference = trimmedValue;
+  }
+  
+  // If leading spaces were removed, adjust cursor position
+  if (currentValue !== trimmedValue) {
+    setTimeout(() => {
+      const spacesRemoved = currentValue.length - trimmedValue.length;
+      const newCursorPosition = Math.max(0, (cursorPosition || 0) - spacesRemoved);
+      input.setSelectionRange(newCursorPosition, newCursorPosition);
+    });
+  }
+}
+
+// Helper method to count spaces before a specific position
+private countSpacesBeforePosition(text: string, position: number): number {
+  let count = 0;
+  for (let i = 0; i < Math.min(position, text.length); i++) {
+    if (text.charAt(i) === ' ') {
+      count++;
     }
   }
+  return count;
+}
+
+onPaymentReferenceKeyPress(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
+  
+  // Prevent space if it's at the beginning
+  if (event.key === ' ' && cursorPosition === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Optional: Prevent multiple consecutive spaces
+  if (event.key === ' ') {
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    if (beforeCursor.endsWith(' ')) {
+      event.preventDefault();
+      return;
+    }
+  }
+}
 
   private showCharacterLimitWarning(): void {
     // You can show a small notification or change border color

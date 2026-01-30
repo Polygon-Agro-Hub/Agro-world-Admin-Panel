@@ -79,11 +79,23 @@ export class ReadyToPikupComponent implements OnChanges {
 
   constructor(private datePipe: DatePipe) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['orders'] || changes['centerObj']) {
-      this.transformData();
+  // In each child component, update ngOnChanges
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['orders'] || changes['activeTab'] || changes['searchText'] || changes['selectedDate'] || changes['selectedTimeSlot']) {
+    this.transformData();
+    
+    // Sync local filter values with parent
+    if (changes['searchText']) {
+      this.searchText = changes['searchText'].currentValue;
+    }
+    if (changes['selectedDate']) {
+      this.selectedDate = changes['selectedDate'].currentValue;
+    }
+    if (changes['selectedTimeSlot']) {
+      this.selectedTimeSlot = changes['selectedTimeSlot'].currentValue;
     }
   }
+}
 
   private transformData(): void {
     console.log('Transforming data, orders count:', this.orders?.length);

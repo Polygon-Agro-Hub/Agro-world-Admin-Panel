@@ -74,17 +74,14 @@ export class PikupOderRecordsMainComponent implements OnInit {
   }
 
   setActiveTab(tab: string) {
-    this.activeTab = tab;
-    // Remove the navigation that adds tab to URL
-    // this.router.navigate([], {
-    //   relativeTo: this.route,
-    //   queryParams: { tab: tab },
-    //   queryParamsHandling: 'merge',
-    // });
-    
-    // Just fetch orders for the new tab
-    this.fetchAllOrders();
-  }
+  // Reset filters when switching tabs
+  this.searchText = '';
+  this.selectedDate = null;
+  this.selectedTimeSlot = '';
+  
+  this.activeTab = tab;
+  this.fetchAllOrders();
+}
 
   fetchAllOrders(): void {
     this.isLoading = true;

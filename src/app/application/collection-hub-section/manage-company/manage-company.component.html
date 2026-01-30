@@ -94,6 +94,14 @@
             <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               COO Profiles
             </th>
+
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
+              Contact Number 01
+            </th>
+
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
+              Contact Number 02
+            </th>
             <!-- <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-center">
               CUO Profiles
             </th> -->
@@ -103,6 +111,11 @@
               tokenService.getUserDetails().role === '1'">
               Centre Head Portals
             </th>
+
+            <th class="px-4 py-3 font-normal whitespace-nowrap text-textLight dark:text-textDark text-left">
+              Last Modified By
+            </th>
+
             <th class=" py-3 font-normal text-textLight dark:text-textDark text-center"></th>
             <th class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
             <th class="py-3 font-normal text-textLight dark:text-textDark text-center"></th>
@@ -153,6 +166,14 @@
             <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfOfficers }}
             </td>
+
+            <td class="px-4 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
+              {{ item.oicConNum1 ? (item.oicConCode1 + item.oicConNum1) : '--' }}
+            </td>
+
+            <td class="px-4 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
+              {{ item.oicConNum2 ? (item.oicConCode2 + item.oicConNum2) : '--' }}
+            </td>
             <!-- <td class="px-2 py-3 whitespace-nowrap text-center text-textLight dark:text-textDark">
               {{ item.numOfCustomerOfficers }}
             </td> -->
@@ -165,6 +186,11 @@
                 <i class="fa-regular fa-square-plus text-2xl"></i>
               </button>
             </td>
+
+            <td class="px-4 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
+              {{ item.userName || '--' }}
+            </td>
+
             <td class="px-2 py-3 text-center  text-textLight dark:text-textDark">
               <button class="w-6 h-6  text-[#367bfa] hover:text-[#83aefd]" *ngIf="
               ( urlSegment === 'collection-hub' && permissionService.hasPermission('View Company') )||

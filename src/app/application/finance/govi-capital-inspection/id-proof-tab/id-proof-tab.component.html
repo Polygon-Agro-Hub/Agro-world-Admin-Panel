@@ -104,16 +104,23 @@
       </h2>
     </div>
 
-    <!-- Image Frame -->
+    <!-- Image Frame with pan functionality -->
     <div
       class="bg-white dark:bg-gray-700 border border-[#D9D9D9] dark:border-gray-600 
              rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative"
+      [style.cursor]="isPanning ? 'grabbing' : (scale > 1 ? 'grab' : 'default')"
+      (mousedown)="onMouseDown($event)"
+      (mousemove)="onMouseMove($event)"
+      (mouseup)="onMouseUp()"
+      (mouseleave)="onMouseLeave()"
     >
       <img
         [src]="modalImage"
-        [style.transform]="'scale(' + scale + ')'"
-        class="w-[545px] h-[545px] object-contain transition"
+        [style.transform]="getImageTransform()"
+        class="w-[545px] h-[545px] object-contain transition-transform select-none"
+        style="pointer-events: none;"
         alt="ID Image"
+        draggable="false"
       />
 
       <!-- Zoom Buttons -->

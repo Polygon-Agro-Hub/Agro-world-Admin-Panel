@@ -27,6 +27,13 @@ export class CultivationInfoTabComponent implements OnDestroy {
   private readonly MIN_SCALE = 0.5;
   private readonly MAX_SCALE = 3;
   private readonly SCALE_STEP = 0.2;
+  
+  // Pan functionality
+  isPanning = false;
+  startX = 0;
+  startY = 0;
+  translateX = 0;
+  translateY = 0;
 
   onNextPage(): void {
     this.nextPage.emit();
@@ -115,6 +122,8 @@ export class CultivationInfoTabComponent implements OnDestroy {
     this.currentImageIndex = 0;
     this.currentImages = [];
     this.imageLoaded = false;
+    this.resetZoom();
+    this.resetPan();
     
     if (this.imageTimeout) {
       clearTimeout(this.imageTimeout);
@@ -155,6 +164,52 @@ export class CultivationInfoTabComponent implements OnDestroy {
 
   resetZoom(): void {
     this.scale = 1;
+  }
+
+  // Pan (drag) functionality
+  onMouseDown(event: MouseEvent): void {
+    if (this.scale > 1) {
+      this.isPanning = true;
+      this.startX = event.clientX - this.translateX;
+      this.startY = event.clientY - this.translateY;
+      event.preventDefault();
+    }
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (this.isPanning && this.scale > 1) {
+      this.translateX = event.clientX - this.startX;
+      this.translateY = event.clientY - this.startY;
+    }
+  }
+
+  onMouseUp(): void {
+    this.isPanning = false;
+  }
+
+  onMouseLeave(): void {
+    this.isPanning = false;
+  }
+
+  resetPan(): void {
+    this.translateX = 0;
+    this.translateY = 0;
+    this.isPanning = false;
+  }
+
+  getImageTransform(): string {
+    return `scale(${this.scale}) translate(${this.translateX / this.scale}px, ${this.translateY / this.scale}px)`;
+  }
+
+  handleImageError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/800x600/9E9E9E/FFFFFF?text=Image+Not+Available';
+    imgElement.classList.add('p-4');
+  }
+
+  handleThumbnailError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/150/9E9E9E/FFFFFF?text=Image';
   }
 }
 

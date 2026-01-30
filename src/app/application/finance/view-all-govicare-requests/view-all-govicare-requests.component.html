@@ -6,7 +6,7 @@
 </div>
 
 <!-- Main Content -->
-<div *ngIf="!isLoading" class="p-6">
+<div *ngIf="!isLoading">
   <!-- Back Button -->
   <button
     class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
@@ -91,60 +91,60 @@
           <thead>
             <tr class="border-b border-gray-200 dark:border-gray-700">
               <th
-                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 No
               </th>
               <th
-                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Request_ID
               </th>
               <th
-                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Farmer Name
               </th>
               <th
-                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Phone number
               </th>
               <th
-                class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Status
               </th>
               <th
-                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Officer ID
               </th>
               <th
-                class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
                 *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
               >
                 NIC Front Image
               </th>
               <th
-                class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
                  *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
               >
                 NIC Back Image
               </th>
               <th
-                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Requested On
               </th>
               <th
-                class="px-4 py-3 text-center  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
                 *ngIf=" permissionService.hasPermission('Govicare request view other details') || tokenService.getUserDetails().role === '1'"
               >
                 Details
               </th>
               <th
-                class="px-4 py-3 text-left  text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                class="px-4 py-3 text-left font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
                 Assigned By
               </th>
@@ -478,7 +478,7 @@
   (click)="assignPopupClose()"
 >
   <div
-    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md flex flex-col justify-center items-center max-w-lg min-h-[70%] p-10"
+    class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md flex flex-col justify-center items-center max-w-lg min-h-[50%] p-10"
     (click)="$event.stopPropagation()"
   >
     <!-- Popup Header -->

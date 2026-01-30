@@ -79,7 +79,11 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       .getAllGoviCareRequests(status, this.search)
       .subscribe({
         next: (response) => {
-          this.govicareRequests = response.data || [];
+          this.govicareRequests = (response.data || []).sort((a: GoviCareRequest, b: GoviCareRequest) => {
+            if (a.Status === 'Not Assigned' && b.Status !== 'Not Assigned') return -1;
+            if (a.Status !== 'Not Assigned' && b.Status === 'Not Assigned') return 1;
+            return 0;
+          });
           this.totalItems = response.count || 0;
           this.isLoading = false;
         },

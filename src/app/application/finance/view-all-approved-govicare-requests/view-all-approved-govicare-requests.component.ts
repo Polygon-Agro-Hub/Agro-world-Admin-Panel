@@ -247,12 +247,6 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     }
   }
 
-  getStatusClass(status: string): string {
-    return status === 'Published'
-      ? 'bg-[#BBFFC6] text-[#308233]'
-      : 'bg-[#D1D5DB] text-[#4B5563]';
-  }
-
   // Updated format methods with leading zeros
   formatNumber(num: number): string {
     return num.toString().padStart(3, '0');

@@ -120,8 +120,8 @@
                 View Shares</th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Shares Updated By</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                Status</th>
+              <!-- <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Status</th> -->
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Approved By</th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
@@ -199,13 +199,13 @@
               </td>
 
               <!-- Status -->
-              <td class="px-4 py-4 text-center">
+              <!-- <td class="px-4 py-4 text-center">
                 <span [class]="getStatusClass(request.publishStatus)"
                   class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity w-28 mx-auto"
                   [title]="request.publishStatus === 'Published' ? 'Cannot change published status' : 'Click to publish to GoViCapital'">
                   {{ request.publishStatus }}
               </span>
-              </td>
+              </td> -->
 
               <!-- Approved By -->
               <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">

@@ -9,10 +9,10 @@
       <table class="min-w-[50%] bg-white dark:bg-tileBlack border border-gray-200 dark:border-gray-600 rounded-lg">
         <thead>
           <tr class="bg-gray-50 dark:bg-gray-700">
-            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 dark:text-textDark border-b dark:border-gray-600">
+            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 dark:text-textDark border-b border-r dark:border-gray-600">
               Factor
             </th>
-            <th class="py-3 px-4 text-center text-sm font-semibold text-gray-600 dark:text-textDark border-b dark:border-gray-600">
+            <th class="py-3 px-4 text-center text-sm font-semibold text-gray-600 dark:text-textDark border-b border-r dark:border-gray-600">
               Yes
             </th>
             <th class="py-3 px-4 text-center text-sm font-semibold text-gray-600 dark:text-textDark border-b dark:border-gray-600">
@@ -24,8 +24,8 @@
         <tbody>
           <!-- Temperature -->
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Temperature</td>
-            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b border-r dark:border-gray-600">Temperature</td>
+            <td class="py-3 px-4 text-center border-b border-r dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.temperature)"
                   class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
@@ -45,8 +45,8 @@
 
           <!-- Rainfall -->
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Rainfall</td>
-            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b border-r dark:border-gray-600">Rainfall</td>
+            <td class="py-3 px-4 text-center border-b border-r dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.rainfall)"
                   class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
@@ -66,8 +66,8 @@
 
           <!-- Sunshine hours -->
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Sunshine hours</td>
-            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b border-r dark:border-gray-600">Sunshine hours</td>
+            <td class="py-3 px-4 text-center border-b border-r dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.sunShine)"
                   class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
@@ -87,8 +87,8 @@
 
           <!-- Relative humidity -->
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Relative humidity</td>
-            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b border-r dark:border-gray-600">Relative humidity</td>
+            <td class="py-3 px-4 text-center border-b border-r dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.humidity)"
                   class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
@@ -108,8 +108,8 @@
 
           <!-- Wind velocity -->
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Wind velocity</td>
-            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b border-r dark:border-gray-600">Wind velocity</td>
+            <td class="py-3 px-4 text-center border-b border-r dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.windVelocity)"
                   class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
@@ -129,8 +129,8 @@
 
           <!-- Wind direction -->
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">Wind direction</td>
-            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b border-r dark:border-gray-600">Wind direction</td>
+            <td class="py-3 px-4 text-center border-b border-r dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.windDirection)"
                   class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
@@ -150,10 +150,10 @@
 
           <!-- Seasons and agro-ecological zone -->
           <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b dark:border-gray-600">
+            <td class="py-3 px-4 text-sm text-gray-800 dark:text-textDark border-b border-r dark:border-gray-600">
               Seasons and agro-ecological zone
             </td>
-            <td class="py-3 px-4 text-center border-b dark:border-gray-600">
+            <td class="py-3 px-4 text-center border-b border-r dark:border-gray-600">
               <div class="flex justify-center">
                 <div *ngIf="getClimaticValue(cultivationData.zone)"
                   class="w-4 h-4 bg-black dark:bg-gray-600 rounded-sm flex items-center justify-center">
@@ -312,34 +312,64 @@
 </div>
 
 <!-- Image Gallery Popup Modal -->
-<div *ngIf="showImageModal" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
-  <!-- Modal Container -->
-  <div class="bg-white dark:bg-gray-800 rounded-[20px] w-[700px] h-[700px] p-6 relative flex items-center justify-center">
-    
-    <!-- Title -->
-    <div class="absolute top-4 left-0 w-full text-center">
-      <h2 class="text-sm font-semibold dark:text-textDark">
-        Water Source Images
-      </h2>
+<div *ngIf="showImageModal" 
+  class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
+  <div class="bg-white dark:bg-gray-800 rounded-[20px] w-[700px] p-6 relative">
+    <!-- Header with image counter -->
+    <div class="text-center mb-4">
+      <h3 class="text-sm font-semibold text-gray-800 dark:text-textDark">
+        {{ currentImageIndex + 1 }} out of {{ currentImages.length }}
+      </h3>
     </div>
 
-    <!-- Image Frame -->
-    <div class="bg-white dark:bg-gray-700 border border-[#D9D9D9] dark:border-gray-600 
-                rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative">
+    <!-- Image Frame with pan functionality -->
+    <div
+      class="bg-white dark:bg-gray-700 border border-[#D9D9D9] dark:border-gray-600 
+             rounded-[10px] w-full aspect-square flex items-center justify-center overflow-hidden relative"
+      [style.cursor]="isPanning ? 'grabbing' : (scale > 1 ? 'grab' : 'default')"
+      (mousedown)="onMouseDown($event)"
+      (mousemove)="onMouseMove($event)"
+      (mouseup)="onMouseUp()"
+      (mouseleave)="onMouseLeave()"
+    >
       <img
         [src]="currentImages[currentImageIndex]"
-        [style.transform]="'scale(' + scale + ')'"
-        class="w-[545px] h-[545px] object-contain transition"
+        [style.transform]="getImageTransform()"
+        class="max-w-full max-h-full object-contain transition-transform select-none"
+        style="pointer-events: none;"
         alt="Water Source Image"
+        (error)="handleImageError($event)"
+        draggable="false"
       />
 
+      <!-- Navigation Arrows (only show if multiple images) -->
+      <button
+        *ngIf="currentImages.length > 1"
+        (click)="prevImage()"
+        class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full 
+               bg-white/80 dark:bg-gray-600/80 hover:bg-white dark:hover:bg-gray-600
+               flex items-center justify-center shadow-lg transition-all z-10"
+      >
+        <i class="fa-solid fa-chevron-left text-gray-700 dark:text-white"></i>
+      </button>
+
+      <button
+        *ngIf="currentImages.length > 1"
+        (click)="nextImage()"
+        class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full 
+               bg-white/80 dark:bg-gray-600/80 hover:bg-white dark:hover:bg-gray-600
+               flex items-center justify-center shadow-lg transition-all z-10"
+      >
+        <i class="fa-solid fa-chevron-right text-gray-700 dark:text-white"></i>
+      </button>
+
       <!-- Zoom Buttons -->
-      <div class="absolute right-4 bottom-6 flex flex-col gap-3">
+      <div class="absolute right-4 bottom-6 flex flex-col gap-3 z-10">
         <button
           (click)="zoomOut()"
           class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
                  border dark:border-gray-500 shadow text-xl dark:text-textDark
-                 hover:bg-gray-100 dark:hover:bg-gray-500"
+                 hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
         >
           −
         </button>
@@ -347,18 +377,38 @@
           (click)="zoomIn()"
           class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
                  border dark:border-gray-500 shadow text-xl dark:text-textDark
-                 hover:bg-gray-100 dark:hover:bg-gray-500"
+                 hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
         >
           +
         </button>
       </div>
     </div>
 
+    <!-- Thumbnails (only show if multiple images) -->
+    <div *ngIf="currentImages.length > 1" class="flex justify-center gap-2 mt-4 overflow-x-auto">
+      <button
+        *ngFor="let img of currentImages; let i = index"
+        (click)="selectImage(i)"
+        class="w-16 h-16 rounded border-2 overflow-hidden flex-shrink-0 transition-all"
+        [class.border-blue-500]="i === currentImageIndex"
+        [class.border-gray-300]="i !== currentImageIndex"
+        [class.dark:border-blue-400]="i === currentImageIndex"
+        [class.dark:border-gray-600]="i !== currentImageIndex"
+      >
+        <img
+          [src]="img"
+          class="w-full h-full object-cover"
+          alt="Thumbnail {{ i + 1 }}"
+          (error)="handleThumbnailError($event)"
+        />
+      </button>
+    </div>
+
     <!-- Close Button -->
     <button
       (click)="closeImageModal()"
       class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 
-             hover:text-gray-700 dark:hover:text-white text-xl"
+             hover:text-gray-700 dark:hover:text-white text-xl z-20"
     >
       ✕
     </button>

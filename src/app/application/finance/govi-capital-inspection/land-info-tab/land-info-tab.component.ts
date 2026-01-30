@@ -28,6 +28,13 @@ export class LandInfoTabComponent implements OnDestroy {
   private readonly MAX_SCALE = 3;
   private readonly SCALE_STEP = 0.2;
   
+  // Pan functionality
+  isPanning = false;
+  startX = 0;
+  startY = 0;
+  translateX = 0;
+  translateY = 0;
+  
   // OpenStreetMap properties
   mapUrl: SafeResourceUrl = '';
   mapIframeLoaded = false;
@@ -80,14 +87,16 @@ export class LandInfoTabComponent implements OnDestroy {
   }
 
   get ownershipDisplay(): string {
-    if (!this.landlObj?.isOwnByFarmer) return '--';
+    if (this.landlObj?.isOwnByFarmer === null || this.landlObj?.isOwnByFarmer === undefined) {
+      return '--';
+    }
     
     const value = this.landlObj.isOwnByFarmer.toString().trim();
     
     if (value === '1') return 'Yes';
     if (value === '0') return 'No';
     
-    return this.landlObj.isOwnByFarmer;
+    return '--';
   }
 
   openMapPopup(): void {
@@ -174,6 +183,8 @@ export class LandInfoTabComponent implements OnDestroy {
     this.currentImageIndex = 0;
     this.currentImages = [];
     this.mapIframeLoaded = false;
+    this.resetZoom();
+    this.resetPan();
     
     if (this.mapTimeout) {
       clearTimeout(this.mapTimeout);
@@ -205,6 +216,41 @@ export class LandInfoTabComponent implements OnDestroy {
 
   resetZoom(): void {
     this.scale = 1;
+  }
+
+  // Pan (drag) functionality
+  onMouseDown(event: MouseEvent): void {
+    if (this.scale > 1) {
+      this.isPanning = true;
+      this.startX = event.clientX - this.translateX;
+      this.startY = event.clientY - this.translateY;
+      event.preventDefault();
+    }
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (this.isPanning && this.scale > 1) {
+      this.translateX = event.clientX - this.startX;
+      this.translateY = event.clientY - this.startY;
+    }
+  }
+
+  onMouseUp(): void {
+    this.isPanning = false;
+  }
+
+  onMouseLeave(): void {
+    this.isPanning = false;
+  }
+
+  resetPan(): void {
+    this.translateX = 0;
+    this.translateY = 0;
+    this.isPanning = false;
+  }
+
+  getImageTransform(): string {
+    return `scale(${this.scale}) translate(${this.translateX / this.scale}px, ${this.translateY / this.scale}px)`;
   }
 }
 

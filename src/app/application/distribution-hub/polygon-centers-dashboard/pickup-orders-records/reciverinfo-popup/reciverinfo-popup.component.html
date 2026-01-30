@@ -1,145 +1,103 @@
-<div
+<div 
   *ngIf="visible"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 w-full"
   (click)="onClose()"
 >
-  <div
-    class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+  <div 
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl mx-4 max-w-2xl "
     (click)="onPopupClick($event)"
   >
     <!-- Header -->
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-      <div class="flex justify-center items-center">
-        <h4 class="text-lg font-medium text-gray-900 dark:text-white">
-          Order ID: {{ receiverInfo.orderId }}
-        </h4>
-      </div>
+    <div class="px-6 py-4 border-b border-gray-300 dark:border-gray-600">
+      <h2 class="text-lg font-semibold text-center text-gray-900 dark:text-white">
+        Order ID: {{ receiverInfo.orderId }}
+      </h2>
     </div>
 
     <!-- Content -->
-    <div class="py-6 px-20">
-      <div>
-        <table>
-          <tbody>
-            <tr>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Customer Name
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-              >
-                : {{ receiverInfo?.customerName || "--" }}
-              </td>
-            </tr>
+    <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+      <!-- Customer Name -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Customer Name</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
+          {{ receiverInfo?.customerName || "--" }}
+        </span>
+      </div>
 
-            <tr>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Customer Phone Number
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-              >
-                : {{ receiverInfo?.customerPhone || "--" }}
-              </td>
-            </tr>
+      <!-- Customer Phone Number -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Customer Phone Number</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
+          {{ receiverInfo?.customerPhone || "--" }}
+        </span>
+      </div>
 
-            <tr>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Platform
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-              >
-                : {{ getPlatformDisplay(receiverInfo?.platform) }}
-              </td>
-            </tr>
+      <!-- Platform -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Platform</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
+          {{ getPlatformDisplay(receiverInfo?.platform) }}
+        </span>
+      </div>
 
-            <tr>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Order Placed
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-              >
-                : At {{ receiverInfo?.orderPlaced || "--" }}
-              </td>
-            </tr>
+      <!-- Order Placed -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Order Placed</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1 whitespace-nowrap">
+          At {{ receiverInfo?.orderPlaced || "--" }}
+        </span>
+      </div>
 
-            <tr>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Scheduled Time
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-              >
-                : Within {{ receiverInfo?.scheduledTime || "--" }}
-              </td>
-            </tr>
+      <!-- Scheduled Time -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Scheduled Time</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1 whitespace-nowrap">
+          Within {{ receiverInfo?.scheduledTime || "--" }}
+        </span>
+      </div>
 
-            <tr>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Receiver's Name
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-              >
-                : {{ getReceiverFullName() }}
-              </td>
-            </tr>
+      <!-- Receiver's Name -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Receiver's Name</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
+          {{ getReceiverFullName() }}
+        </span>
+      </div>
 
-            <tr>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Receiver's Phone Number - 1
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-              >
-                : {{ receiverInfo?.receiverPhone1 || "-" }}
-              </td>
-            </tr>
+      <!-- Receiver's Phone Number - 1 -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Receiver's Phone Number - 1</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1 whitespace-nowrap">
+          {{ receiverInfo?.receiverPhone1 || "--" }}
+        </span>
+      </div>
 
-            <tr>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Receiver's Phone Number - 2
-              </td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
-              >
-                : {{ receiverInfo?.receiverPhone2 || "-" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Receiver's Phone Number - 2 -->
+      <div class="flex items-start">
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0 whitespace-nowrap">Receiver's Phone Number - 2</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span class="text-sm text-gray-900 dark:text-white font-medium flex-1">
+          {{ receiverInfo?.receiverPhone2 || "--" }}
+        </span>
       </div>
     </div>
 
     <!-- Footer -->
-    <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-      <div class="flex justify-center">
-        <button
-          type="button"
-          class="w-20 bg-[#74788D] px-4 py-2 text-sm font-medium text-white dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors"
-          (click)="onClose()"
-        >
-          Close
-        </button>
-      </div>
+    <div class="px-6 py-4 flex justify-center">
+      <button
+        type="button"
+        class="px-12 py-2 text-white bg-[#74788D] border border-[#95A1AC] rounded-lg transition font-medium text-sm"
+        (click)="onClose()"
+      >
+        Close
+      </button>
     </div>
   </div>
 </div>

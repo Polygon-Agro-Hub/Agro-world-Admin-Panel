@@ -133,9 +133,8 @@ export class ReadyToPikupComponent implements OnChanges {
     return apiData.map((item, index) => ({
       no: index + 1,
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
-      value: item.fullTotal
-        ? `${parseFloat(item.fullTotal).toFixed(2)}`
-        : ' 0.00',
+      // Updated this line to format with comma separators
+      value: this.formatCurrencyValue(item.fullTotal),
       status: 'Ready to Pickup', // Force status for this component
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
@@ -152,6 +151,31 @@ export class ReadyToPikupComponent implements OnChanges {
       timeSlot: item.timeSlot || item.sheduleTime,
       originalData: item, // CRITICAL: Preserve original data for popup
     }));
+  }
+
+  // NEW METHOD: Format currency value with comma separators
+  private formatCurrencyValue(value: any): string {
+    if (value === null || value === undefined || value === '') {
+      return '0.00';
+    }
+    
+    // Convert to number
+    const numericValue = parseFloat(value);
+    
+    // Check if it's a valid number
+    if (isNaN(numericValue)) {
+      return '0.00';
+    }
+    
+    // Format with comma separators for thousands
+    // Using toLocaleString for proper formatting
+    return numericValue.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    
+    // Alternative implementation without toLocaleString:
+    // return numericValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   // Format scheduled time slot

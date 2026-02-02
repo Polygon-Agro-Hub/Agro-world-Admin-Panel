@@ -204,14 +204,62 @@ export class ViewCollectiveOfficerProfileComponent {
       return value !== null && value !== undefined ? value.toString() : 'N/A';
     };
 
+    function loadImageAsBase64(url: string): Promise<string> {
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          const reader = new FileReader();
+          reader.onloadend = function () {
+            resolve(reader.result as string);
+          };
+          reader.readAsDataURL(xhr.response);
+        };
+        xhr.onerror = function () {
+          const img = new Image();
+          img.crossOrigin = 'Anonymous';
+          img.onload = function () {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx?.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+          };
+          img.onerror = function () {
+            resolve('');
+          };
+          img.src = url;
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.setRequestHeader('Accept', 'image/png;image/*');
+        try {
+          xhr.send();
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+
     let y = margin;
     const hasImage = !!this.officerObj.image;
 
     // Header Section with Image
     if (hasImage) {
       try {
+
+        const appendCacheBuster = (url: string) => {
+          if (!url) return '';
+          const separator = url.includes('?') ? '&' : '?';
+          return `${url}${separator}t=${new Date().getTime()}`;
+        };
+    
+        const img = new Image();
+        const modifiedFarmerUrl = appendCacheBuster(this.officerObj.image);
+        img.src = await loadImageAsBase64(modifiedFarmerUrl);
+
         // Simple image loading approach
-        const imgData = this.officerObj.image;
+        // const imgData = this.officerObj.image;
 
         const imgDiameter = 35;
         const imgRadius = imgDiameter / 2;
@@ -227,7 +275,7 @@ export class ViewCollectiveOfficerProfileComponent {
         doc.clip();
 
         // Add image directly - jsPDF handles various formats
-        doc.addImage(imgData, 'JPEG', imgX, imgY, imgDiameter, imgDiameter);
+        doc.addImage(img, 'JPEG', imgX, imgY, imgDiameter, imgDiameter);
         doc.restoreGraphicsState();
       } catch (error) {
         console.error('Error adding image to PDF:', error);

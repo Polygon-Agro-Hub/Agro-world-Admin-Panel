@@ -1525,7 +1525,7 @@ export class UpdateDistributionOfficerComponent {
 
       // Convert to dropdown options format
       this.managerOptions = this.collectionManagerData.map((manager) => ({
-        label: manager.empId + " - " + manager.firstNameEnglish,
+        label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
         value: manager.id,
       }));
     });
@@ -2251,6 +2251,7 @@ class CollectionManager {
   id!: number;
   empId!: string;
   firstNameEnglish!: string;
+  lastNameEnglish!: string;
 }
 
 class Company {

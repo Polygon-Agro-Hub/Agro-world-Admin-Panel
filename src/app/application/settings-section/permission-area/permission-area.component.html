@@ -73,14 +73,14 @@
         <table class="table-auto border-collapse border border-gray-300 w-full">
           <thead>
             <tr>
-              <th class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-left text-[#4B5563] dark:text-textDark">
+              <th class="border border-gray-300 p-2  dark:bg-gray-700 text-left text-[#4B5563] dark:text-textDark">
                 Feature
               </th>
               <th *ngFor="let position of positionList"
-                class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-[#4B5563] dark:text-textDark text-center">
+                class="border border-gray-300 p-2  dark:bg-gray-700 text-[#4B5563] dark:text-textDark text-center">
                 {{ position.positions }}
               </th>
-              <th class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-textLight dark:text-textDark text-center">
+              <th class="border border-gray-300 p-2 dark:bg-gray-700 text-textLight dark:text-textDark text-center">
                 Actions
               </th>
             </tr>
@@ -90,7 +90,7 @@
             <ng-container *ngFor="let category of filteredFeatureList">
               <!-- Category Header Row -->
               <tr>
-                <td class="bg-gray-100 dark:bg-gray-800 font-bold p-3 text-textLight dark:text-textDark">
+                <td class="bg-[#F1F4F5] dark:bg-gray-800 font-bold p-3 text-textLight dark:text-textDark">
                   {{ category.category }}
                 </td>
                 <!-- Empty cells for position columns before Manager -->

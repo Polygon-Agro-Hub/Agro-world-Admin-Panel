@@ -5,25 +5,24 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1850px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
-    <div class="flex justify-between items-center mb-8">
+  <div class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <!-- Header with min-width to keep title and search in one line -->
+    <div class="flex justify-between items-center mb-8 min-w-[1100px]">
       <div class="flex items-center">
-        <h2 class="text-2xl font-bold text-textLight dark:text-textDark">
+        <h2 class="text-2xl font-bold text-textLight dark:text-textDark whitespace-nowrap">
           Rejected Requests ({{ (total ?? 0).toString().padStart(2, "0") }})
         </h2>
       </div>
 
-      <div class="mr-8">
+      <div class="ml-4">
         <div
-          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
+          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80 relative group"
         >
           <!-- Popover -->
           <div
-            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap"
           >
             Search by Request ID or Phone Number
           </div>
@@ -85,7 +84,8 @@
       </div>
     </div>
 
-    <div>
+    <!-- Table container with separate scroll -->
+    <div class="overflow-x-auto">
       <!-- No Data State -->
       <div
         *ngIf="rejectedRequests.length === 0 && !isLoading"
@@ -196,7 +196,7 @@
                 class="text-blue-600 hover:text-blue-800 underline"
                 (click)="viewNicImage(request.nicFront, 'NIC Front')"
               >
-                <i class="fa-solid fa-image"></i>
+                <i class="fa-solid fa-image text-2xl"></i>
               </button>
               <span *ngIf="!request.nicFront">N/A</span>
             </td>
@@ -208,7 +208,7 @@
                 class="text-blue-600 hover:text-blue-800 underline"
                 (click)="viewNicImage(request.nicBack, 'NIC Back')"
               >
-                <i class="fa-solid fa-image"></i>
+                <i class="fa-solid fa-image text-2xl"></i>
               </button>
               <span *ngIf="!request.nicBack">N/A</span>
             </td>
@@ -354,7 +354,7 @@
             Extent
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.extentac }} Acres
+            : {{ selectedRequest.extentac.toFixed(4) }} Acres
           </div>
         </div>
 

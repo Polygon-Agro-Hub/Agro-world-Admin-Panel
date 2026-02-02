@@ -44,6 +44,14 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   isPublishing: boolean = false;
   isSharePopup: boolean = false;
 
+  // Edit Shares Modal
+  isEditSharesModal: boolean = false;
+  editNumShares: number = 0;
+  editShareValue: number = 0;
+  editMinShares: number = 0;
+  editMaxShares: number = 0;
+  isSavingShares: boolean = false;
+
   constructor(
     private financeService: FinanceService,
     private router: Router,
@@ -297,6 +305,130 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     const perchesToAcres = extentP * 0.00625;
     const totalAcres = extent + hectaresToAcres + perchesToAcres;
     
-    return totalAcres.toFixed(2) + ' Acres';
+    return totalAcres.toFixed(4) + ' Acres';
+  }
+
+  openEditSharesModal() {
+    this.editNumShares = this.selectedShares.approvedDetails?.defineShares || 0;
+    this.editMinShares = this.selectedShares.approvedDetails?.minShare || 0;
+    this.editMaxShares = this.selectedShares.approvedDetails?.maxShare || 0;
+    this.onEditSharesChange(); // Calculate share value
+    
+    this.isSharePopup = false; // Close view popup
+    this.isEditSharesModal = true; // Open edit popup
+  }
+
+  closeEditSharesModal() {
+    this.isEditSharesModal = false;
+  }
+
+  onEditSharesChange() {
+    if (this.editNumShares > 0 && this.selectedShares.approvedDetails?.totValue) {
+      this.editShareValue = this.selectedShares.approvedDetails.totValue / this.editNumShares;
+    } else {
+      this.editShareValue = 0;
+    }
+  }
+
+  updateShares(form: any) {
+    if (form.invalid || this.editNumShares <= 0 || this.editMinShares <= 0 || this.editMaxShares <= 0) {
+      return;
+    }
+
+    if (this.editMaxShares < this.editMinShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum shares cannot be less than minimum shares',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    this.isSavingShares = true;
+
+    const updateData = {
+      id: this.selectedShares.No,
+      jobId: this.selectedShares.Request_ID,
+      totalValue: this.selectedShares.approvedDetails?.totValue,
+      numShares: this.editNumShares,
+      shareValue: this.editShareValue,
+      minimumShare: this.editMinShares,
+      maximumShare: this.editMaxShares,
+      devideType: 'Edit'
+    };
+
+    this.financeService.devideSharesRequest(updateData).subscribe({
+      next: (response) => {
+        this.isSavingShares = false;
+        if (response.status) {
+          Swal.fire({
+            title: 'Success',
+            text: 'Shares updated successfully',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+          this.closeEditSharesModal();
+          this.loadGovicareRequests(); 
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.message || 'Failed to update shares',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      },
+      error: (error) => {
+        this.isSavingShares = false;
+        console.error('Error updating shares:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'An error occurred while updating shares',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+    });
+  }
+
+  // Helper methods for input validation
+  allowIntegerOnly(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const key = event.key;
+
+    // Block everything except numbers
+    if (!allowedKeys.includes(key)) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  allowDecimalOnly(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    const key = event.key;
+
+    // Block everything except numbers and dot
+    if (!allowedKeys.includes(key)) {
+      event.preventDefault();
+      return;
+    }
+
+    // Prevent multiple dots
+    if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+      event.preventDefault();
+    }
   }
 }

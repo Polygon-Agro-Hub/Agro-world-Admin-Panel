@@ -525,7 +525,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
                     title: 'font-semibold text-lg',
                   },
                 });
-                this.navigatePath('/steckholders/action/drivers');
+                this.navigatePath('/steckholders/action/view-distribution-officers');
               },
               (error: any) => {
                 this.isLoading = false;
@@ -659,7 +659,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/drivers');
+        this.navigatePath('/steckholders/action/view-distribution-officers');
       }
     });
   }

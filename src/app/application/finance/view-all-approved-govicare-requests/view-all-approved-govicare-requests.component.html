@@ -264,7 +264,7 @@
               <td 
                 class="px-8 py-4 text-sm text-center"
                 *ngIf=" permissionService.hasPermission('Publish approved request') || tokenService.getUserDetails().role === '1'">
-                <button class="bg-[#3980C0] text-white px-4 py-2 rounded-lg whitespace-nowrap"
+                <button class="bg-[#3980C0] text-white px-4 py-2 rounded-lg whitespace-nowrap w-32"
                   [ngClass]="{'pointer-events-none opacity-50 cursor-not-allowed': request.approvedDetails === null || request.publishStatus === 'Published'}"
                   [disabled]="request.approvedDetails === null || request.publishStatus === 'Published'"
                   (click)="openPublishPopup(request)">
@@ -439,12 +439,19 @@
   (click)="isSharePopup = false">
   <div class="bg-white dark:bg-tileBlack px-8 py-6 rounded-lg shadow-2xl w-full max-w-md" (click)="$event.stopPropagation()">
 
-    <!-- Header -->
-    <div class="mb-4">
-      <h2 class="text-center font-semibold text-lg dark:text-white">Request ID : {{selectedShares.Request_ID}}</h2>
+    <!-- Header with Edit Button -->
+    <div class="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
+      <div class="flex items-center justify-center relative">
+        <h2 class="font-semibold text-lg dark:text-white">Request ID : {{selectedShares.Request_ID}}</h2>
+        <button 
+          *ngIf="(permissionService.hasPermission('Edit divided shares') || tokenService.getUserDetails().role === '1') && selectedShares.publishStatus !== 'Published'"
+          (click)="openEditSharesModal()"
+          class="absolute right-0 flex items-center gap-2 bg-[#3980C0] hover:bg-[#2c6da3] text-white px-4 py-2 rounded-lg transition font-medium">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Edit</span>
+        </button>
+      </div>
     </div>
-
-    <hr class="h-[1px] bg-[#D1D5DB] dark:bg-gray-600 mb-6" />
 
     <!-- Shares Details -->
     <div class="space-y-3 mb-6">
@@ -489,24 +496,142 @@
       </div>
     </div>
 
-    <!-- Edit Button (only show when not published) -->
-    <div 
-      *ngIf="(permissionService.hasPermission('Edit divided shares') || tokenService.getUserDetails().role === '1') && selectedShares.publishStatus !== 'Published'"
-      class="flex justify-center mb-4">
-      <button 
-        (click)="auditResults(selectedShares.No)"
-        class="flex items-center gap-2 bg-[#3980C0] hover:bg-[#2c6da3] text-white px-6 py-2 rounded-lg transition font-medium">
-        <i class="fa-solid fa-pen-to-square"></i>
-        <span>Edit</span>
-      </button>
-    </div>
-
     <!-- Close Button -->
     <div class="flex justify-center">
       <button class="bg-[#6B7280] hover:bg-[#4B5563] text-white px-12 py-2 rounded-lg transition font-medium" 
         (click)="isSharePopup = false">
         Close
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Shares Modal -->
+<div *ngIf="isEditSharesModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeEditSharesModal()">
+  <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 pt-4 pb-10 w-1/4" (click)="$event.stopPropagation()">
+
+    <div class="px-4">
+      <form #editSharesForm="ngForm" (ngSubmit)="updateShares(editSharesForm)">
+        <div class="mb-6 text-center font-semibold dark:text-textDark">
+          <p class="text-xl mb-2">
+            Request ID : {{selectedShares.Request_ID}}
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-y-5 mb-8">
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Total Value (Rs.)
+            </label>
+            <input 
+              id="totalValue" 
+              [value]="selectedShares.approvedDetails?.totValue | number:'1.2-2'" 
+              name="totalValue" 
+              readonly
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          </div>
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Define Number of Shares
+            </label>
+            <input 
+              id="numShares" 
+              required 
+              type="number" 
+              [(ngModel)]="editNumShares" 
+              #numSharesInput="ngModel"
+              name="numShares" 
+              placeholder="--Enter Here--" 
+              (ngModelChange)="onEditSharesChange()"
+              (keypress)="allowIntegerOnly($event)"
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="numSharesInput.touched && !editNumShares" class="text-red-600 text-sm block mt-1">This field is required.</span>
+            <span *ngIf="numSharesInput.touched && editNumShares <= 0" class="text-red-600 text-sm block mt-1">Number of shares cannot be 0 or less than 0.</span>
+          </div>
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Value of One Share (Rs.)
+            </label>
+            <input 
+              id="shareValue" 
+              [value]="editShareValue === 0 ? '--Auto-fill--' : editShareValue" 
+              name="shareValue" 
+              readonly
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          </div>
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Minimum Investment Shares
+            </label>
+            <input 
+              id="minimumShare" 
+              required 
+              type="number" 
+              [(ngModel)]="editMinShares" 
+              #minimumShareInput="ngModel"
+              name="minimumShare" 
+              placeholder="--Enter Here--" 
+              (keypress)="allowDecimalOnly($event)"
+              pattern="^[1-9]\d*(\.\d+)?$"
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="minimumShareInput.touched && minimumShareInput.errors?.['required']" class="text-red-600 text-sm block mt-1">This field is required.</span>
+            <span *ngIf="minimumShareInput.touched && !minimumShareInput.errors?.['required'] && (editMinShares <= 0)" class="text-red-600 text-sm block mt-1">
+              Minimum Investment Shares cannot be 0 or less than 0.
+            </span>
+          </div>
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Maximum Investment Shares
+            </label>
+            <input 
+              id="maximumShare" 
+              required 
+              type="number" 
+              [(ngModel)]="editMaxShares" 
+              #maximumShareInput="ngModel"
+              name="maximumShare" 
+              placeholder="--Enter Here--" 
+              (keypress)="allowDecimalOnly($event)"
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="maximumShareInput.touched && maximumShareInput.errors?.['required']" class="text-red-600 text-sm block mt-1">This field is required.</span>
+
+            <span *ngIf="maximumShareInput.touched && !maximumShareInput.errors?.['required'] && (editMaxShares <= 0)" class="text-red-600 text-sm block mt-1">
+              Maximum Investment Shares cannot be 0 or less than 0.
+            </span>
+
+            <span
+              *ngIf="maximumShareInput.touched && minimumShareInput.touched && editMaxShares > 0 && editMinShares > 0 && editMaxShares < editMinShares"
+              class="text-red-600 text-sm block mt-1">
+              Maximum Investment Shares cannot be less than Minimum Investment Shares.
+            </span>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-row justify-between items-center">
+          <button 
+            class="bg-[#74788D] border-[1px] border-[#74788D] px-6 py-2 rounded-xl shadow-md" 
+            type="button"
+            (click)="closeEditSharesModal()">
+            <span class="text-white">Cancel</span>
+          </button>
+          <button 
+            type="submit" 
+            [disabled]="isSavingShares"
+            class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-lg shadow-md disabled:opacity-50">
+            <span class="text-white flex items-center gap-2">
+              <i *ngIf="isSavingShares" class="fa-solid fa-spinner fa-spin"></i>
+              {{ isSavingShares ? 'Saving...' : 'Divide' }}
+            </span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

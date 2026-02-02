@@ -96,16 +96,8 @@
       class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
       <div class="flex-1 text-center">
         <h3 class="text-lg font-semibold text-gray-800 dark:text-textDark">
-          Location Coordinates
+          Attached Location
         </h3>
-        <p class="text-sm text-gray-600 dark:text-textDark mt-1">
-          <span *ngIf="hasCoordinates">
-            Latitude: {{ landlObj.latitude }}, Longitude: {{ landlObj.longitude }}
-          </span>
-          <span *ngIf="!hasCoordinates">
-            No coordinates available
-          </span>
-        </p>
       </div>
       <button (click)="closePopup()"
         class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ml-4"
@@ -152,43 +144,6 @@
         <iframe *ngIf="hasCoordinates" [src]="mapUrl" width="100%" height="500" frameborder="0" scrolling="no"
           marginheight="0" marginwidth="0" (load)="mapIframeLoaded = true" class="border-0"
           title="Location Map"></iframe>
-
-        <!-- Map Attribution (required by OpenStreetMap) -->
-        <div *ngIf="hasCoordinates && mapIframeLoaded"
-          class="absolute bottom-0 left-0 right-0 bg-white/80 dark:bg-gray-900/80 text-xs p-2 text-center">
-          <a href="https://www.openstreetmap.org/copyright" target="_blank"
-            class="text-blue-600 dark:text-blue-400 hover:underline">
-            © OpenStreetMap contributors
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer with action buttons -->
-    <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div class="text-sm text-gray-600 dark:text-textDark">
-          <span *ngIf="hasCoordinates">
-            Coordinates: {{ landlObj.latitude }}, {{ landlObj.longitude }}
-          </span>
-          <span *ngIf="!hasCoordinates">
-            Coordinates not available
-          </span>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <button *ngIf="hasCoordinates" (click)="openInExternalMap()"
-            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-colors">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            Open in OpenStreetMap
-          </button>
-          <button (click)="closePopup()"
-            class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-textDark hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
-            Close
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -197,34 +152,63 @@
 <!-- Image Gallery Popup Modal -->
 <div *ngIf="showImagePopup"
   class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
-  <div class="bg-white dark:bg-gray-800 rounded-[20px] w-[700px] h-[700px] p-6 relative flex items-center justify-center">
-    <!-- Header -->
-    <div class="absolute top-4 left-0 w-full text-center">
+  <div class="bg-white dark:bg-gray-800 rounded-[20px] w-[700px] p-6 relative">
+    <!-- Header with image counter -->
+    <div class="text-center mb-4">
       <h3 class="text-sm font-semibold text-gray-800 dark:text-textDark">
-        Land Document Images
+        {{ currentImageIndex + 1 }} out of {{ currentImages.length }}
       </h3>
     </div>
 
-    <!-- Image Frame -->
+    <!-- Image Frame with pan functionality -->
     <div
       class="bg-white dark:bg-gray-700 border border-[#D9D9D9] dark:border-gray-600 
-             rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative"
+             rounded-[10px] w-full aspect-square flex items-center justify-center overflow-hidden relative"
+      style="cursor: grab;"
+      [style.cursor]="isPanning ? 'grabbing' : (scale > 1 ? 'grab' : 'default')"
+      (mousedown)="onMouseDown($event)"
+      (mousemove)="onMouseMove($event)"
+      (mouseup)="onMouseUp()"
+      (mouseleave)="onMouseLeave()"
     >
       <img
         [src]="currentImages[currentImageIndex]"
-        [style.transform]="'scale(' + scale + ')'"
-        class="w-[545px] h-[545px] object-contain transition"
+        [style.transform]="getImageTransform()"
+        class="max-w-full max-h-full object-contain transition-transform select-none"
+        style="pointer-events: none;"
         alt="Land Document Image"
         (error)="handleImageError($event)"
+        draggable="false"
       />
 
+      <!-- Navigation Arrows (only show if multiple images) -->
+      <button
+        *ngIf="currentImages.length > 1"
+        (click)="previousImage()"
+        class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full 
+               bg-white/80 dark:bg-gray-600/80 hover:bg-white dark:hover:bg-gray-600
+               flex items-center justify-center shadow-lg transition-all z-10"
+      >
+        <i class="fa-solid fa-chevron-left text-gray-700 dark:text-white"></i>
+      </button>
+
+      <button
+        *ngIf="currentImages.length > 1"
+        (click)="nextImage()"
+        class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full 
+               bg-white/80 dark:bg-gray-600/80 hover:bg-white dark:hover:bg-gray-600
+               flex items-center justify-center shadow-lg transition-all z-10"
+      >
+        <i class="fa-solid fa-chevron-right text-gray-700 dark:text-white"></i>
+      </button>
+
       <!-- Zoom Buttons -->
-      <div class="absolute right-4 bottom-6 flex flex-col gap-3">
+      <div class="absolute right-4 bottom-6 flex flex-col gap-3 z-10">
         <button
           (click)="zoomOut()"
           class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
                  border dark:border-gray-500 shadow text-xl dark:text-textDark
-                 hover:bg-gray-100 dark:hover:bg-gray-500"
+                 hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
         >
           −
         </button>
@@ -232,18 +216,38 @@
           (click)="zoomIn()"
           class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
                  border dark:border-gray-500 shadow text-xl dark:text-textDark
-                 hover:bg-gray-100 dark:hover:bg-gray-500"
+                 hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
         >
           +
         </button>
       </div>
     </div>
 
+    <!-- Thumbnails (only show if multiple images) -->
+    <div *ngIf="currentImages.length > 1" class="flex justify-center gap-2 mt-4 overflow-x-auto">
+      <button
+        *ngFor="let img of currentImages; let i = index"
+        (click)="selectImage(i)"
+        class="w-16 h-16 rounded border-2 overflow-hidden flex-shrink-0 transition-all"
+        [class.border-blue-500]="i === currentImageIndex"
+        [class.border-gray-300]="i !== currentImageIndex"
+        [class.dark:border-blue-400]="i === currentImageIndex"
+        [class.dark:border-gray-600]="i !== currentImageIndex"
+      >
+        <img
+          [src]="img"
+          class="w-full h-full object-cover"
+          alt="Thumbnail {{ i + 1 }}"
+          (error)="handleThumbnailError($event)"
+        />
+      </button>
+    </div>
+
     <!-- Close Button -->
     <button
       (click)="closePopup()"
       class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 
-             hover:text-gray-700 dark:hover:text-white text-xl"
+             hover:text-gray-700 dark:hover:text-white text-xl z-20"
     >
       ✕
     </button>

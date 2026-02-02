@@ -35,34 +35,37 @@ export class OrderPackingProgressDashboardComponent implements OnInit {
       public permissionService: PermissionService) { }
 
   ngOnInit(): void {
-    // Get route parameters and query parameters
+    // Get route parameters (removed query params for tab)
     this.route.params.subscribe(params => {
       this.centerObj.centerId = params['id'];
     });
 
+    // Only get center details from query params if needed
     this.route.queryParams.subscribe(params => {
-      // Set tab based on query parameter
-      const tab = params['tab'];
-      if (tab && ['Progress', 'Out for Delivery'].includes(tab)) {
-        this.activeTab = tab;
-      }
-      
-      // Set center details from query params
+      // Set center details from query params (removed tab handling)
       this.centerObj.centerName = params['name'] || '';
       this.centerObj.centerRegCode = params['regCode'] || '';
     });
 
+    // Set default tab based on permissions if you want
+    // For example, show 'Progress' tab if user has permission, otherwise show 'Out for Delivery'
+    this.initializeDefaultTab();
+  }
+
+  private initializeDefaultTab(): void {
+    // Set default tab based on permissions
+    if (this.permissionService.hasPermission('Polygon centres view dashboard progress tab') || 
+        this.tokenService.getUserDetails().role === '1') {
+      this.activeTab = 'Progress';
+    } else if (this.permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') ||
+               this.tokenService.getUserDetails().role === '1') {
+      this.activeTab = 'Out for Delivery';
+    }
   }
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
-    
-    // Update URL with tab query parameter without reloading
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { tab: tab },
-      queryParamsHandling: 'merge'
-    });
+    // Removed URL update for tab
   }
 
   back() {

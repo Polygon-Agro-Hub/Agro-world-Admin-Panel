@@ -6,19 +6,19 @@
     class="flex flex-row justify-between items-center mb-10 p-6 bg-white dark:bg-tileBlack rounded-lg shadow-md gap-10 dark:text-textDark">
     <div class="flex flex-row gap-x-10">
       <div class="flex flex-col">
-        <span class="text-[#7E7E7E]">Request_ID :</span><span>{{sharesData.jobId}}</span>
+        <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Request_ID :</span><span class="dark:text-[#FFFFFF]">{{sharesData.jobId}}</span>
       </div>
       <div class="flex flex-col">
-        <span class="text-[#7E7E7E]">Farmer Phone :</span><span>{{sharesData.farmerPhone}}</span>
+        <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Farmer Phone :</span><span class="dark:text-[#FFFFFF]">{{sharesData.farmerPhone}}</span>
       </div>
       <div class="flex flex-col">
-        <span class="text-[#7E7E7E]">Audited By :</span><span>{{sharesData.empId}}</span>
+        <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Audited By :</span><span class="dark:text-[#FFFFFF]">{{sharesData.empId}}</span>
       </div>
       <div class="flex flex-col">
-        <span class="text-[#7E7E7E]">Officer Phone :</span><span>{{sharesData.officerPhone}}</span>
+        <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Officer Phone :</span><span class="dark:text-[#FFFFFF]">{{sharesData.officerPhone}}</span>
       </div>
       <div class="flex flex-col">
-        <span class="text-[#7E7E7E]">Audited Date :</span><span>{{sharesData.reqCahangeTime | date: 'MMMM d,yyyy'}}</span>
+        <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Audited Date :</span><span class="dark:text-[#FFFFFF]">{{sharesData.reqCahangeTime | date: 'MMMM d,yyyy'}}</span>
       </div>
     </div>
 
@@ -62,7 +62,7 @@
         </div>
 
         <!-- Show disabled "Divided" button when shares divided and published -->
-        <div *ngIf="sharesData.devideData !== null && sharesData.publishStatus === 'Published'" class="flex gap-4">
+        <div *ngIf="sharesData.devideData !== null" class="flex gap-4">
           <button
             disabled
             class="px-6 py-2 bg-[#6B7280] text-white font-medium rounded-md cursor-not-allowed opacity-60 shadow-sm">

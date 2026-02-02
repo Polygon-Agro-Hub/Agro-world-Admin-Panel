@@ -85,11 +85,23 @@ export class PikupOdersComponent implements OnChanges {
 
   constructor(private datePipe: DatePipe) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['orders'] || changes['centerObj']) {
-      this.transformData();
+  // In each child component, update ngOnChanges
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['orders'] || changes['activeTab'] || changes['searchText'] || changes['selectedDate'] || changes['selectedTimeSlot']) {
+    this.transformData();
+    
+    // Sync local filter values with parent
+    if (changes['searchText']) {
+      this.searchText = changes['searchText'].currentValue;
+    }
+    if (changes['selectedDate']) {
+      this.selectedDate = changes['selectedDate'].currentValue;
+    }
+    if (changes['selectedTimeSlot']) {
+      this.selectedTimeSlot = changes['selectedTimeSlot'].currentValue;
     }
   }
+}
 
   private transformData(): void {
     console.log('Transforming data, orders count:', this.orders?.length);
@@ -136,29 +148,43 @@ export class PikupOdersComponent implements OnChanges {
 
   // Transform API data to match your Order interface
   private transformApiData(apiData: any[]): Order[] {
-  return apiData.map((item, index) => ({
-    no: index + 1,
-    orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
-    value: item.fullTotal
-      ? `${parseFloat(item.fullTotal).toFixed(2)}`
-      : ' 0.00',
-    status: 'Picked Up', // Force status for this component
-    customerPhone: this.formatPhoneNumber(
-      item.customerPhoneCode,
-      item.customerPhoneNumber,
-    ),
-    receiverPhone: this.formatPhoneNumber(
-      item.receiverPhoneCode1,
-      item.receiverPhone1,
-    ),
-    receiversInfo: this.getReceiverInfo(item),
-    scheduledTimeSlot: this.formatScheduledTimeSlot(item),
-    payment: this.getPaymentStatus(item), // Pass the full item object
-    scheduleDate: item.scheduleDate || item.sheduleDate,
-    timeSlot: item.timeSlot || item.sheduleTime,
-    originalData: item, // CRITICAL: Preserve original data for popup
-  }));
-}
+    return apiData.map((item, index) => ({
+      no: index + 1,
+      orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
+      // Format with comma separators for thousands
+      value: item.fullTotal
+        ? this.formatWithCommas(parseFloat(item.fullTotal).toFixed(2))
+        : '0.00',
+      status: 'Picked Up', // Force status for this component
+      customerPhone: this.formatPhoneNumber(
+        item.customerPhoneCode,
+        item.customerPhoneNumber,
+      ),
+      receiverPhone: this.formatPhoneNumber(
+        item.receiverPhoneCode1,
+        item.receiverPhone1,
+      ),
+      receiversInfo: this.getReceiverInfo(item),
+      scheduledTimeSlot: this.formatScheduledTimeSlot(item),
+      payment: this.getPaymentStatus(item), // Pass the full item object
+      scheduleDate: item.scheduleDate || item.sheduleDate,
+      timeSlot: item.timeSlot || item.sheduleTime,
+      originalData: item, // CRITICAL: Preserve original data for popup
+    }));
+  }
+
+  // Helper method to format numbers with commas for thousands
+  private formatWithCommas(value: string): string {
+    // Split the number into integer and decimal parts
+    const parts = value.split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts.length > 1 ? `.${parts[1]}` : '';
+    
+    // Add commas to integer part for thousands separators
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+    return formattedInteger + decimalPart;
+  }
 
   // Format scheduled time slot
   private formatScheduledTimeSlot(item: any): string {

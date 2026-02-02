@@ -29,36 +29,41 @@
           <div>
             <div>
               <p-calendar
-  id="date"
-  placeholder="Date"
-  [(ngModel)]="selectedDate"
-  dateFormat="yy-mm-dd"
-  [showIcon]="false"
-  [showClear]="true"
-  styleClass="calendar-compact dark-calendar"
-  [style]="{ width: '145px' }"
-  [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
-  inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
-  panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
-  (onSelect)="onDateSelect()"
-  (onClear)="onDateClear()"
->
-</p-calendar>
+                id="date"
+                placeholder="Date"
+                [(ngModel)]="selectedDate"
+                dateFormat="yy-mm-dd"
+                [showIcon]="false"
+                [showClear]="true"
+                styleClass="calendar-compact dark-calendar"
+                [style]="{ width: '145px' }"
+                [inputStyle]="{
+                  width: '145px',
+                  padding: '0.5rem 2.5rem 0.5rem 0.75rem',
+                  fontSize: '0.875rem',
+                }"
+                inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+                panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+                (onSelect)="onDateSelect()"
+                (onClear)="onDateClear()"
+              >
+              </p-calendar>
             </div>
           </div>
 
           <div>
-            <p-dropdown
-              styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [checkmark]="true"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Time Slot"
-              [options]="timeSlotOptions"
-              [(ngModel)]="selectedTimeSlot"
-              (onChange)="onTimeSlotSelect()"
-            >
-            </p-dropdown>
+            
+<p-dropdown
+  styleClass="smaller-dropdown border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+  [checkmark]="true"
+  optionLabel="label"
+  optionValue="value"
+  placeholder="Time Slot"
+  [options]="timeSlotOptions"
+  [(ngModel)]="selectedTimeSlot"
+  (onChange)="onTimeSlotSelect()"
+>
+</p-dropdown>
           </div>
 
           <div
@@ -116,57 +121,76 @@
         </div>
       </div>
     </div>
+    <ng-template #noData>
+      <tr>
+        <td
+          colspan="10"
+          class="px-4 py-6 text-center text-textLight dark:text-textDark"
+        >
+          <div class="flex flex-col items-center w-full px-10 py-7">
+            <p class="text-[#494949] my-6 dark:text-textDark">
+              --No Data Available--
+            </p>
+            <img
+              src="assets/images/NoData.png"
+              alt="No Data"
+              class="w-20 h-20"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
     <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
       <table class="min-w-full divide-y divide-gray-200">
-        <thead>
-          <tr class="text-[#4B5563]">
+        <thead class="text-[#4B5563]">
+          <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal dark:text-textDark text-left "
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal dark:text-textDark text-left"
             >
               Order ID
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal dark:text-textDark text-left"
             >
               Value (Rs.)
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal dark:text-textDark text-center"
             >
               Status
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal dark:text-textDark text-left"
             >
               Customer Phone
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal dark:text-textDark text-left"
             >
               Receiver Phone-1
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal dark:text-textDark text-center"
             >
               Receiver's Info
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal dark:text-textDark text-center"
             >
               Scheduled Time Slot
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-4 py-3 font-normal dark:text-textDark text-left"
             >
               Payment
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal dark:text-textDark text-center"
             >
               Details
             </th>
@@ -179,15 +203,13 @@
               class="hover:bg-gray-50 dark:hover:bg-gray-700 text-black"
             >
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-                {{ order.no | number: '2.0'}}
+                {{ order.no | number: "2.0" }}
               </td>
-              <td
-                class="px-4 py-3 text-left text-textLight dark:text-textDark"
-              >
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.orderId }}
               </td>
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-                {{ order.value | number:'1.0-0' }}
+                {{ order.value | number: "1.0-0" }}
               </td>
               <td class="px-4 py-3 text-center">
                 <span
@@ -199,14 +221,10 @@
                   {{ order.status }}
                 </span>
               </td>
-              <td
-                class="px-4 py-3 text-left text-textLight dark:text-textDark"
-              >
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.customerPhone }}
               </td>
-              <td
-                class="px-4 py-3 text-left text-textLight dark:text-textDark"
-              >
+              <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.receiverPhone }}
               </td>
               <td
@@ -231,9 +249,11 @@
                   </svg>
                 </button>
               </td>
-              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-  <div [innerHTML]="order.scheduledTimeSlot"></div>
-</td>
+              <td
+                class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              >
+                <div [innerHTML]="order.scheduledTimeSlot"></div>
+              </td>
               <td class="px-4 py-3 text-left">
                 <span
                   [class]="
@@ -270,25 +290,6 @@
           </ng-container>
         </tbody>
       </table>
-      <ng-template #noData>
-        <tr>
-          <td
-            colspan="10"
-            class="px-4 py-6 text-center text-textLight dark:text-textDark"
-          >
-            <div class="flex flex-col items-center w-full px-10 py-7">
-              <p class="text-[#494949] my-6 dark:text-textDark">
-                --No Data Available--
-              </p>
-              <img
-                src="assets/images/NoData.png"
-                alt="No Data"
-                class="w-20 h-20"
-              />
-            </div>
-          </td>
-        </tr>
-      </ng-template>
     </div>
   </div>
 

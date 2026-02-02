@@ -226,24 +226,35 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 }
 
   back(): void {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Stay Here',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-      buttonsStyling: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
+  const currentRoute = this.router.url;
+  let confirmMessage = 'You may lose the added data after going back!';
+  let confirmButtonText = 'Yes, Go Back';
+  let cancelButtonText = 'No, Stay Here';
+  
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: confirmMessage,
+    showCancelButton: true,
+    confirmButtonText: confirmButtonText,
+    cancelButtonText: cancelButtonText,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (currentRoute.includes('drivers/add-driver')) {
+        // Navigate to drivers list for driver route
+        this.router.navigate(['/steckholders/action/drivers']);
+      } else {
+        // Navigate to distribution officers list for regular route
         this.router.navigate(['/steckholders/action/view-distribution-officers']);
       }
-    });
-  }
+    }
+  });
+}
 
 
   onSubmit() {

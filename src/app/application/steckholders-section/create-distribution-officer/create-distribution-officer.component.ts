@@ -655,25 +655,34 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     }
   }
   onCancel() {
-    console.log('canceled')
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-      buttonsStyling: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/view-distribution-officers');
+  let confirmMessage = 'You may lose the added data after canceling!';
+  let confirmButtonText = 'Yes, Cancel';
+  let cancelButtonText = 'No, Keep Editing';
+  
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: confirmMessage,
+    showCancelButton: true,
+    confirmButtonText: confirmButtonText,
+    cancelButtonText: cancelButtonText,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (this.isDriverRoute) {
+        // Navigate to drivers list for driver route
+        this.router.navigate(['/steckholders/action/drivers']);
+      } else {
+        // Navigate to distribution officers list for regular route
+        this.router.navigate(['/steckholders/action/view-distribution-officers']);
       }
-    });
-  }
+    }
+  });
+}
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
     console.log('pdatra', this.personalData)

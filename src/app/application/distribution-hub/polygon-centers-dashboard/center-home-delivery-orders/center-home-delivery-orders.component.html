@@ -184,21 +184,17 @@
                   [style]="{ width: '145px' }" 
                   [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
                   panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
-                  inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"/>
+                  inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"/>
               </div>
-
 
               <div class=" text-textLight dark:text-textDark">
                 <p-dropdown #topfilters
-                  styleClass="border border-2 rounded-xl h-10 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D1D1] dark:border-[#AFAFAF]"
+                  styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D1D1] dark:border-[#AFAFAF]"
                   [options]="timeSlotOptions" [(ngModel)]="selectedTimeSlot" (onChange)="onTimeSlotChange()" [showClear]="!!selectedTimeSlot"
                   [checkmark]="true" optionLabel="label" optionValue="value" placeholder="Time Slot">
                 </p-dropdown>
               </div>
-
               
-    
-        
               <!-- <div class="mr-5">
                 <p-dropdown #topfilters
                   styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"

@@ -53,7 +53,6 @@ export class EditFiealdOfficerComponent implements OnInit {
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberRequired: boolean = false;
   confirmAccountNumberError: boolean = false;
-  dropdownOpen = false;
   fiealdManagerData: fiealdManager[] = [];
   lastID!: string;
   languagesTouched: boolean = false;
@@ -114,7 +113,10 @@ export class EditFiealdOfficerComponent implements OnInit {
     private http: HttpClient,
   ) { }
 
-  jobRoles = ['Field Officer', 'Chief Field Officer'];
+  jobRoles = [
+  { label: 'Field Officer', value: 'Field Officer' },
+  { label: 'Chief Field Officer', value: 'Chief Field Officer' }
+];
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -359,10 +361,6 @@ getFileName(value: string): string {
     return !!this.empType;
   }
 
-  closeDropdown() {
-    this.dropdownOpen = false;
-  }
-
   onCheckboxChange(lang: string, event: any) {
     if (event.target.checked) {
       if (this.personalData.language) {
@@ -408,43 +406,30 @@ getFileName(value: string): string {
     return !!this.touchedFields[fieldName] && !value;
   }
 
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  selectjobRole(role: string) {
-  this.personalData.jobRole = role;
-  
-  // Clear CFO if job role is not 'Field Officer'
-  if (role !== 'Field Officer') {
-    this.clearChiefFieldOfficer();
-  }
-  
-  this.toggleDropdown();
-  this.EpmloyeIdCreate(); // call your method
-}
-
   EpmloyeIdCreate() {
-    this.getAllCollectionManagers();
-    let rolePrefix: string | undefined;
-
-    const rolePrefixes: { [key: string]: string } = {
-      'Field Officer': 'FIO',
-      'Chief Field Officer': 'CFO',
-    };
-
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
-
-    if (!rolePrefix) {
-      return;
-    }
-
-    this.getLastID(rolePrefix)
-      .then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      })
-      .catch((error) => { });
+  if (!this.personalData.jobRole) {
+    return;
   }
+
+  let rolePrefix: string | undefined;
+
+  const rolePrefixes: { [key: string]: string } = {
+    'Field Officer': 'FIO',
+    'Chief Field Officer': 'CFO',
+  };
+
+  rolePrefix = rolePrefixes[this.personalData.jobRole];
+
+  if (!rolePrefix) {
+    return;
+  }
+
+  this.getLastID(rolePrefix)
+    .then((lastID) => {
+      this.personalData.empId = rolePrefix + lastID;
+    })
+    .catch((error) => { });
+}
 
   getAllCollectionManagers() {
   this.stakeHolderSrv
@@ -2383,19 +2368,6 @@ validateDocumentFieldsForUpdate(): string[] {
   return errors;
 }
 
-clearJobRole(event: Event): void {
-  event.stopPropagation(); // Prevent dropdown from opening
-  
-  // Clear job role
-  this.personalData.jobRole = '';
-  
-  // Also clear Chief Field Officer when job role is cleared
-  this.clearChiefFieldOfficer();
-  
-  // Mark field as touched for validation
-  this.touchedFields['jobRole'] = true;
-}
-
 clearChiefFieldOfficer(): void {
   this.personalData.irmId = null;
   this.touchedFields['irmId'] = true;
@@ -2404,9 +2376,8 @@ clearChiefFieldOfficer(): void {
 onAssignedDistrictsChange(): void {
   // Check if assignDistrict is cleared (empty array)
   if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
-    // Clear Job Role
-    this.personalData.jobRole = '';
-    this.touchedFields['jobRole'] = true;
+    // Clear Job Role (p-dropdown will handle this automatically)
+    // No need to manually set personalData.jobRole = ''
     
     // Clear Chief Field Officer
     this.clearChiefFieldOfficer();
@@ -2414,6 +2385,26 @@ onAssignedDistrictsChange(): void {
     // Also reset the employee ID
     this.personalData.empId = '';
   }
+}
+
+onJobRoleChange(event: DropdownChangeEvent): void {
+  const role = event.value;
+  
+  // Clear CFO if job role is not 'Field Officer'
+  if (!role || role !== 'Field Officer') {
+    this.clearChiefFieldOfficer();
+  }
+  
+  // Generate employee ID
+  this.EpmloyeIdCreate();
+}
+
+onJobRoleClear(): void {
+  // Clear Chief Field Officer when job role is cleared
+  this.clearChiefFieldOfficer();
+  
+  // Mark field as touched for validation
+  this.touchedFields['jobRole'] = true;
 }
 
 }

@@ -54,7 +54,6 @@ export class AddFiealdOfficerComponent implements OnInit {
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberRequired: boolean = false;
   confirmAccountNumberError: boolean = false;
-  dropdownOpen = false;
   fiealdManagerData: fiealdManager[] = [];
   lastID!: string;
   languagesTouched: boolean = false;
@@ -242,9 +241,6 @@ export class AddFiealdOfficerComponent implements OnInit {
     return !!this.empType;
   }
 
-  closeDropdown() {
-    this.dropdownOpen = false;
-  }
 
   onCheckboxChange(lang: string, event: any) {
     if (event.target.checked) {
@@ -335,42 +331,30 @@ export class AddFiealdOfficerComponent implements OnInit {
     return !this.isValidEmail(email);
   }
 
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  selectjobRole(role: string) {
-  this.personalData.jobRole = role;
-  this.dropdownOpen = false;
-
-  // Reset irmId when job role changes or is cleared
-  if (!role || role !== 'Field Officer') {
-    this.personalData.irmId = '';
-  }
-
-  this.EpmloyeIdCreate();
-}
-
   EpmloyeIdCreate() {
-    let rolePrefix: string | undefined;
-
-    const rolePrefixes: { [key: string]: string } = {
-      'Field Officer': 'FIO',
-      'Chief Field Officer': 'CFO',
-    };
-
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
-
-    if (!rolePrefix) {
-      return;
-    }
-
-    this.getLastID(rolePrefix)
-      .then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      })
-      .catch((error) => { });
+  if (!this.personalData.jobRole) {
+    return;
   }
+
+  let rolePrefix: string | undefined;
+
+  const rolePrefixes: { [key: string]: string } = {
+    'Field Officer': 'FIO',
+    'Chief Field Officer': 'CFO',
+  };
+
+  rolePrefix = rolePrefixes[this.personalData.jobRole];
+
+  if (!rolePrefix) {
+    return;
+  }
+
+  this.getLastID(rolePrefix)
+    .then((lastID) => {
+      this.personalData.empId = rolePrefix + lastID;
+    })
+    .catch((error) => { });
+}
 
   getAllCollectionManagers() {
     this.stakeHolderSrv
@@ -1783,18 +1767,24 @@ onJobRoleClear(): void {
   }
 }
 
-clearJobRole(): void {
-  this.personalData.jobRole = '';
-  this.personalData.irmId = '';
-  this.dropdownOpen = false;
-}
-
 onAssignDistrictChange(event: any): void {
   // If no districts are selected, clear job role and CFO
   if (!event.value || event.value.length === 0) {
     this.personalData.jobRole = '';
     this.personalData.irmId = '';
   }
+}
+
+onJobRoleChange(event: DropdownChangeEvent): void {
+  const role = event.value;
+  
+  // Reset irmId when job role changes or is cleared
+  if (!role || role !== 'Field Officer') {
+    this.personalData.irmId = '';
+  }
+
+  // Generate employee ID
+  this.EpmloyeIdCreate();
 }
 
 }

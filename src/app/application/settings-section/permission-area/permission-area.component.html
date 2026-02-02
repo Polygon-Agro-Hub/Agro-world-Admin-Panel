@@ -7,10 +7,7 @@
 </button>
 
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-
-
+<div class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="bg-tileLight dark:bg-tileBlack min-w-[1000px] mx-auto rounded-lg shadow-lg p-2 h-auto overflow-hidden">
     <div class="flex flex-row items-center justify-between p-6">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -35,13 +32,16 @@
         </button>
       </div>
     </div>
-    <div class="flex items-center space-x-3 px-6">
+
+    <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 shadow-lg">
+      <p class="text-[#494949] dark:text-textDark mb-4">
+        -- No Data Available --
+      </p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+    </div>
+
+    <div class="flex items-center space-x-3 px-6" *ngIf="hasData">
       <label for="featureCategory" class="text-textLight dark:text-textDark">Category</label>
-      <!-- <select id="featureCategory" name="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange($event)"
-        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full">
-        <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.category }}</option>
-        <option value="add_new">Add New</option>
-      </select> -->
       <p-dropdown [(ngModel)]="selectedCategory" [options]="categories" optionLabel="category" optionValue="id"
         (onChange)="onCategoryChange($event)" placeholder="Select a category" [filter]="true" filterBy="category"
         styleClass="custom-dropdown w-[300px] border max-h-10 mt-1 p-0 items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
@@ -53,17 +53,9 @@
         </ng-template>
       </p-dropdown>
 
-      <!-- Add New option can be handled in the component or as a separate button -->
-      <!-- <button *ngIf="selectedCategory === 'add_new'" class="mt-2 p-button p-button-text">
-        Add New Category
-      </button> -->
-
-      <!-- Show input field only when 'Add New' is selected -->
       <input *ngIf="selectedCategory === -1" type="text" [(ngModel)]="newCategory" (blur)="addNewCategory()"
         class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 w-full bg-tileLight dark:bg-tileBlack dark:text-white"
         placeholder="Enter new category" />
-
-
 
       <label for="featureCategory" class="text-textLight dark:text-textDark w-40">Feature </label>
       <input type="text" id="featureCategory" name="category" [(ngModel)]="createCategroyObj.category"
@@ -76,21 +68,20 @@
       </button>
     </div>
 
-    <div class="p-6">
+    <div class="p-6" *ngIf="hasData">
       <div class="overflow-auto">
         <table class="table-auto border-collapse border border-gray-300 w-full">
           <thead>
             <tr>
-              <th
-                class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-left text-textLight dark:text-textDark">
+              <th class="border border-gray-300 p-2  dark:bg-gray-700 text-left text-[#4B5563] dark:text-textDark">
                 Feature
               </th>
               <th *ngFor="let position of positionList"
-                class="border border-gray-300 p-2 bg-gray-200 dark:bg-gray-700 text-textLight dark:text-textDark text-center">
+                class="border border-gray-300 p-2  dark:bg-gray-700 text-[#4B5563] dark:text-textDark text-center">
                 {{ position.positions }}
               </th>
-              <th
-                class="border border-gray-300 bg-gray-200 dark:bg-gray-700 text-textLight dark:text-textDark text-center">
+              <th class="border border-gray-300 p-2 dark:bg-gray-700 text-textLight dark:text-textDark text-center">
+                Actions
               </th>
             </tr>
           </thead>
@@ -99,39 +90,44 @@
             <ng-container *ngFor="let category of filteredFeatureList">
               <!-- Category Header Row -->
               <tr>
-                <td [attr.colspan]="positionList.length + 1"
-                  class="bg-gray-100 dark:bg-gray-800 font-bold p-3 text-textLight dark:text-textDark">
+                <td class="bg-[#F1F4F5] dark:bg-gray-800 font-bold p-3 text-textLight dark:text-textDark">
                   {{ category.category }}
                 </td>
-                <td class="bg-gray-100 dark:bg-gray-800 font-bold p-3 text-textLight dark:text-textDark text-center">
-                  <button class="w-6 h-6 text-[#013975] hover:text-[#83aefd]"
-                    (click)="editCategory(category.categoryId , category.category)">
-                    <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                      <title>pen-to-square</title>
-                      <path
-                        d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                      </path>
-                    </svg>
-                  </button>
+                <!-- Empty cells for position columns before Manager -->
+                <td *ngFor="let position of positionList; let i = index" 
+                    class="bg-gray-100 dark:bg-gray-800 border border-gray-300 p-2 text-center">
+                  <!-- Show edit button under Manager column -->
+                  <ng-container *ngIf="position.positions === 'Manager'">
+                    <button class="w-5 h-5 text-[#013975] hover:text-[#83aefd] mx-auto"
+                      (click)="editCategory(category.categoryId, category.category)">
+                      <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+                        
+                        <path
+                          d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                        </path>
+                      </svg>
+                    </button>
+                  </ng-container>
                 </td>
+                <!-- Empty cell for Actions column -->
+                <td class="bg-gray-100 dark:bg-gray-800 border border-gray-300 p-2"></td>
               </tr>
 
               <!-- Features under each category -->
               <tr *ngFor="let feature of category.features">
-                <td
-                  class="border border-gray-300 p-2 text-left bg-gray-50 dark:bg-gray-900 text-textLight dark:text-textDark">
+                <td class="border border-gray-300 p-2 text-left bg-gray-50 dark:bg-gray-900 text-textLight dark:text-textDark">
                   {{ feature.name }}
                 </td>
-                <td *ngFor="let position of positionList" class="border border-gray-300 p-2 text-center">
+                <td *ngFor="let position of positionList" class="border border-gray-300 p-2 text-center bg-gray-50 dark:bg-gray-900">
                   <input type="checkbox" class="form-checkbox h-5 w-5 text-[#3980C0] cursor-pointer"
                     [checked]="isChecked(feature.id, position.id)"
                     (change)="onCheckboxChange($event, feature.id, position.id)" />
                 </td>
-                <td class="border border-gray-300 py-2 text-center">
-                  <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] cursor-pointer"
+                <td class="border border-gray-300 p-2 text-center bg-gray-50 dark:bg-gray-900">
+                  <button class="w-5 h-5 text-[#367bfa] hover:text-[#83aefd] cursor-pointer"
                     (click)="editFeature(feature.id, feature.name)">
-                    <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                      <title>pen-to-square</title>
+                    <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+                      
                       <path
                         d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
                       </path>
@@ -150,8 +146,7 @@
 
 <!-- edit feature -->
 <div *ngIf="isFeatureEdit" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-  <div
-    class="flex flex-col items-center justify-center gap-4 bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
+  <div class="flex flex-col items-center justify-center gap-4 bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
     <p class="text-black text-lg font-semibold">Edit Feature Name</p>
     <div class="flex flex-row items-center justify-center gap-4 w-3/4">
       <label for="featurename" class="whitespace-nowrap">Feature Name</label>
@@ -174,8 +169,7 @@
 
 <!-- edit category -->
 <div *ngIf="isCategoryEdit" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-  <div
-    class="flex flex-col items-center justify-center gap-4 bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
+  <div class="flex flex-col items-center justify-center gap-4 bg-white dark:bg-[#272F45] shadow-lg rounded-lg p-6 w-1/2">
     <p class="text-black text-lg font-semibold">Edit Category Name</p>
     <div class="flex flex-row items-center justify-center gap-4 w-3/4">
       <label for="featurename" class="whitespace-nowrap">category Name</label>

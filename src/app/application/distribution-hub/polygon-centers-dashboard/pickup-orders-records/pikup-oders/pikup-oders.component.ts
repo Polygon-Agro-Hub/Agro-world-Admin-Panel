@@ -204,29 +204,68 @@ export class PikupOdersComponent implements OnChanges {
   }
 
   // Transform API data to match your Order interface
-  private transformApiData(apiData: any[]): Order[] {
-    return apiData.map((item, index) => ({
-      no: index + 1,
-      orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
-      // Format with comma separators for thousands using new method
-      value: this.formatCurrencyValue(item.fullTotal),
-      status: 'Picked Up', // Force status for this component
-      customerPhone: this.formatPhoneNumber(
-        item.customerPhoneCode,
-        item.customerPhoneNumber,
-      ),
-      receiverPhone: this.formatPhoneNumber(
-        item.receiverPhoneCode1,
-        item.receiverPhone1,
-      ),
-      receiversInfo: this.getReceiverInfo(item),
-      scheduledTimeSlot: this.formatScheduledTimeSlot(item),
-      payment: this.getPaymentStatus(item), // Pass the full item object
-      scheduleDate: item.scheduleDate || item.sheduleDate,
-      timeSlot: item.timeSlot || item.sheduleTime,
-      originalData: item, // CRITICAL: Preserve original data for popup
-    }));
-  }
+  // Update the transformApiData method to include sorting by pickup time
+private transformApiData(apiData: any[]): Order[] {
+  // First, create a copy of the data to avoid mutating the original
+  const dataToProcess = [...apiData];
+  
+  // Sort by pickup timestamp (most recent first)
+  const sortedData = dataToProcess.sort((a, b) => {
+    // Try to get pickup timestamps - check various possible field names
+    const pickupTimeA = a.pickupTime || a.pickedUpAt || a.pickupAt || a.updatedAt;
+    const pickupTimeB = b.pickupTime || b.pickedUpAt || b.pickupAt || b.updatedAt;
+    
+    // If both have pickup times, compare them (most recent first)
+    if (pickupTimeA && pickupTimeB) {
+      return new Date(pickupTimeB).getTime() - new Date(pickupTimeA).getTime();
+    }
+    
+    // If only one has a pickup time, put it first
+    if (pickupTimeA && !pickupTimeB) return -1;
+    if (!pickupTimeA && pickupTimeB) return 1;
+    
+    // If no pickup times, try order creation date (as fallback)
+    const createdA = a.orderCreatedAt;
+    const createdB = b.orderCreatedAt;
+    
+    if (createdA && createdB) {
+      return new Date(createdB).getTime() - new Date(createdA).getTime();
+    }
+    
+    // Fallback to schedule date if available
+    const scheduleA = a.scheduleDate || a.sheduleDate;
+    const scheduleB = b.scheduleDate || b.sheduleDate;
+    
+    if (scheduleA && scheduleB) {
+      return new Date(scheduleB).getTime() - new Date(scheduleA).getTime();
+    }
+    
+    // Last resort: alphabetical by order ID (descending)
+    return (b.orderId || b.invNo || '').localeCompare(a.orderId || a.invNo || '');
+  });
+
+  // Now transform the sorted data
+  return sortedData.map((item, index) => ({
+    no: index + 1,
+    orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
+    value: this.formatCurrencyValue(item.fullTotal),
+    status: 'Picked Up',
+    customerPhone: this.formatPhoneNumber(
+      item.customerPhoneCode,
+      item.customerPhoneNumber,
+    ),
+    receiverPhone: this.formatPhoneNumber(
+      item.receiverPhoneCode1,
+      item.receiverPhone1,
+    ),
+    receiversInfo: this.getReceiverInfo(item),
+    scheduledTimeSlot: this.formatScheduledTimeSlot(item),
+    payment: this.getPaymentStatus(item),
+    scheduleDate: item.scheduleDate || item.sheduleDate,
+    timeSlot: item.timeSlot || item.sheduleTime,
+    originalData: item,
+  }));
+}
 
   // NEW METHOD: Format currency value with comma separators
   private formatCurrencyValue(value: any): string {

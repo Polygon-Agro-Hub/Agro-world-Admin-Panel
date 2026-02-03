@@ -157,7 +157,7 @@
           <tbody class="divide-y divide-gray-200">
             <tr
               *ngFor="let order of transformedOrders"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700 text-black"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 text-[#000000]"
             >
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.no | number: "2.0" }}
@@ -201,7 +201,7 @@
               >
                 <div [innerHTML]="order.scheduledTimeSlot"></div>
               </td>
-              <td class="px-4 py-3 text-left text-sm font-medium">
+              <td class="px-4 py-3 text-left">
                 {{ order.payment }}
               </td>
               <td class="px-4 py-3 text-center">

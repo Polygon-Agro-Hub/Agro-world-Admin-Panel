@@ -199,8 +199,49 @@ export class ReadyToPikupComponent implements OnChanges {
 
   // Transform API data to match your Order interface
   private transformApiData(apiData: any[]): Order[] {
-    return apiData.map((item, index) => ({
-      no: index + 1,
+  // First, transform and add timestamp for sorting
+  const ordersWithTimestamp = apiData.map((item, index) => {
+    // Get the most relevant timestamp for sorting
+    // Priority: schedule date -> order creation date -> current date
+    let sortTimestamp: Date;
+    
+    // First try to use schedule date if available
+    if (item.scheduleDate || item.sheduleDate) {
+      const scheduleDateStr = item.scheduleDate || item.sheduleDate;
+      sortTimestamp = new Date(scheduleDateStr);
+      
+      // If there's a time slot, adjust the time
+      const timeSlot = item.timeSlot || item.sheduleTime;
+      if (timeSlot) {
+        // Extract the start time from the time slot
+        const timeMatch = timeSlot.match(/(\d+)(AM|PM)/i);
+        if (timeMatch) {
+          let hour = parseInt(timeMatch[1]);
+          const ampm = timeMatch[2].toUpperCase();
+          
+          // Convert to 24-hour format
+          if (ampm === 'PM' && hour < 12) hour += 12;
+          if (ampm === 'AM' && hour === 12) hour = 0;
+          
+          sortTimestamp.setHours(hour, 0, 0, 0);
+        }
+      }
+    }
+    // Fallback to order creation date
+    else if (item.orderCreatedAt) {
+      sortTimestamp = new Date(item.orderCreatedAt);
+    }
+    // Fallback to any updated timestamp
+    else if (item.updatedAt) {
+      sortTimestamp = new Date(item.updatedAt);
+    }
+    // Fallback to current date (lowest priority)
+    else {
+      sortTimestamp = new Date();
+    }
+    
+    return {
+      no: index + 1, // Temporary number, will be reassigned after sorting
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
       value: this.formatCurrencyValue(item.fullTotal),
       status: 'Ready to Pickup', // Force status for this component
@@ -218,8 +259,31 @@ export class ReadyToPikupComponent implements OnChanges {
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
       originalData: item,
-    }));
-  }
+      sortTimestamp: sortTimestamp // Add timestamp for sorting
+    };
+  });
+
+  // Sort orders by timestamp in descending order (most recent first)
+  const sortedOrders = ordersWithTimestamp.sort((a, b) => {
+    // If both have timestamps, compare them
+    if (a.sortTimestamp && b.sortTimestamp) {
+      return b.sortTimestamp.getTime() - a.sortTimestamp.getTime();
+    }
+    
+    // If one has timestamp and other doesn't, prioritize the one with timestamp
+    if (a.sortTimestamp && !b.sortTimestamp) return -1;
+    if (!a.sortTimestamp && b.sortTimestamp) return 1;
+    
+    // Fallback: sort by order ID if no timestamps
+    return b.orderId.localeCompare(a.orderId);
+  });
+
+  // Reassign sequential numbers after sorting
+  return sortedOrders.map((order, index) => ({
+    ...order,
+    no: index + 1
+  }));
+}
 
   // NEW: Update time slot display formatting to remove "Within"
   private getFormattedTimeSlotForDisplay(timeSlot: string): string {

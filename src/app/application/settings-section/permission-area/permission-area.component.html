@@ -33,14 +33,9 @@
       </div>
     </div>
 
-    <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 shadow-lg">
-      <p class="text-[#494949] dark:text-textDark mb-4">
-        -- No Data Available --
-      </p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
-    </div>
+    
 
-    <div class="flex items-center space-x-3 px-6" *ngIf="hasData">
+    <div class="flex items-center space-x-3 px-6" >
       <label for="featureCategory" class="text-textLight dark:text-textDark">Category</label>
       <p-dropdown [(ngModel)]="selectedCategory" [options]="categories" optionLabel="category" optionValue="id"
         (onChange)="onCategoryChange($event)" placeholder="Select a category" [filter]="true" filterBy="category"
@@ -68,7 +63,7 @@
       </button>
     </div>
 
-    <div class="p-6" *ngIf="hasData">
+    <div class="p-6" >
       <div class="overflow-auto">
         <table class="table-auto border-collapse border border-gray-300 w-full">
           <thead>
@@ -86,9 +81,10 @@
             </tr>
           </thead>
 
-          <tbody>
-            <ng-container *ngFor="let category of filteredFeatureList">
-              <!-- Category Header Row -->
+          <tbody >
+            <ng-container *ngIf="hasData">
+              <ng-container *ngFor="let category of filteredFeatureList">
+                <!-- Category Header Row -->
               <tr>
                 <td class="bg-[#F1F4F5] dark:bg-gray-800 font-bold p-3 text-textLight dark:text-textDark">
                   {{ category.category }}
@@ -135,9 +131,16 @@
                   </button>
                 </td>
               </tr>
+              </ng-container>
             </ng-container>
           </tbody>
         </table>
+        <div *ngIf="!hasData" class="flex flex-col justify-center items-center py-20 shadow-lg">
+      <p class="text-[#494949] dark:text-textDark mb-4">
+        -- No Data Available --
+      </p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+    </div>
       </div>
     </div>
   </div>

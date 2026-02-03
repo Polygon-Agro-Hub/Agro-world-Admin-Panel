@@ -80,7 +80,7 @@
                                 <ng-container *ngIf="step.type === 'hold'">
                                     Driver marked this order's status as <span class="font-bold">Hold</span> at {{ formatTime(step.payload.holdTime) }} on
                                     {{ formatDate(step.payload.holdTime) }}.
-                                    <div class="mt-1 font-bold dark:text-gray-400">
+                                    <div class="mt-1 dark:text-gray-400">
                                         Reason:
                                         <span>"{{ step.payload.holdReason }}"</span>
                                     </div>
@@ -97,7 +97,7 @@
                                 <ng-container *ngIf="step.type === 'return'">
                                     Driver marked this order's status as <span class="font-semibold">Return</span> at {{
                                     formatTime(step.payload.returnTime) }} on {{ formatDate(step.payload.returnTime) }}.
-                                    <div class="mt-1 font-semibold dark:text-gray-400">
+                                    <div class="mt-1 dark:text-gray-400">
                                         Reason:
                                        <ng-container class="font-semibold"
                                             *ngIf="step.payload.returnReson === 'Other'; else normalReturnReason">

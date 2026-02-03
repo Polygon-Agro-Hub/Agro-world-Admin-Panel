@@ -68,8 +68,11 @@ export class PikupOdersComponent implements OnChanges {
   selectedTimeSlot: string = '';
   searchText: string = '';
 
-  // Time slot options for dropdown
-  timeSlotOptions = [{ label: '8AM-2PM' }, { label: '2PM-8PM' }];
+  // Time slot options for dropdown - updated format
+  timeSlotOptions = [
+    { label: '8AM - 2PM', value: '8AM-2PM' },
+    { label: '2PM - 8PM', value: '2PM-8PM' }
+  ];
 
   isLoading = false;
   hasData: boolean = false;
@@ -85,23 +88,67 @@ export class PikupOdersComponent implements OnChanges {
 
   constructor(private datePipe: DatePipe) {}
 
-  // In each child component, update ngOnChanges
-ngOnChanges(changes: SimpleChanges): void {
-  if (changes['orders'] || changes['activeTab'] || changes['searchText'] || changes['selectedDate'] || changes['selectedTimeSlot']) {
-    this.transformData();
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('PikupOders - ngOnChanges triggered:', changes);
     
-    // Sync local filter values with parent
-    if (changes['searchText']) {
-      this.searchText = changes['searchText'].currentValue;
+    if (changes['orders']) {
+      console.log('Orders changed, transforming data...');
+      this.transformData();
     }
+    
+    // Update local filter values when parent passes them
+    if (changes['searchText']) {
+      console.log('Search text changed from parent:', changes['searchText'].currentValue);
+      this.searchText = changes['searchText'].currentValue || '';
+    }
+    
     if (changes['selectedDate']) {
+      console.log('Date changed from parent:', changes['selectedDate'].currentValue);
       this.selectedDate = changes['selectedDate'].currentValue;
     }
+    
     if (changes['selectedTimeSlot']) {
-      this.selectedTimeSlot = changes['selectedTimeSlot'].currentValue;
+      console.log('Time slot changed from parent:', changes['selectedTimeSlot'].currentValue);
+      // Convert backend format to UI format for dropdown
+      const backendTimeSlot = changes['selectedTimeSlot'].currentValue || '';
+      this.selectedTimeSlot = this.convertTimeSlotToUIFormat(backendTimeSlot);
+    } else if (this.selectedTimeSlot === undefined) {
+      // Initialize if undefined
+      this.selectedTimeSlot = '';
     }
   }
-}
+
+  // Method to convert UI time slot to backend format (WITH "Within")
+  private convertTimeSlotToBackendFormat(timeSlot: string): string {
+    if (!timeSlot) return '';
+    
+    const conversionMap: { [key: string]: string } = {
+      '8AM-2PM': 'Within 8AM - 2PM',
+      '2PM-8PM': 'Within 2PM - 8PM',
+      '8AM - 2PM': 'Within 8AM - 2PM',
+      '2PM - 8PM': 'Within 2PM - 8PM'
+    };
+    
+    return conversionMap[timeSlot] || timeSlot;
+  }
+
+  // Method to convert backend time slot to UI format (WITHOUT "Within")
+  private convertTimeSlotToUIFormat(timeSlot: string): string {
+    if (!timeSlot) return '';
+    
+    // Remove "Within " prefix and clean up
+    const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
+    
+    // Convert to consistent format for dropdown
+    const uiFormatMap: { [key: string]: string } = {
+      '8AM - 2PM': '8AM-2PM',
+      '2PM - 8PM': '2PM-8PM',
+      '8AM-2PM': '8AM-2PM',
+      '2PM-8PM': '2PM-8PM'
+    };
+    
+    return uiFormatMap[cleanTimeSlot] || cleanTimeSlot;
+  }
 
   private transformData(): void {
     console.log('Transforming data, orders count:', this.orders?.length);
@@ -131,8 +178,18 @@ ngOnChanges(changes: SimpleChanges): void {
   }
 
   onTimeSlotSelect(): void {
-    console.log('Time slot selected:', this.selectedTimeSlot);
-    this.timeSlotChange.emit(this.selectedTimeSlot);
+    console.log('UI Time slot selected:', this.selectedTimeSlot);
+    const backendTimeSlot = this.convertTimeSlotToBackendFormat(this.selectedTimeSlot);
+    console.log('Converted to backend format:', backendTimeSlot);
+    this.timeSlotChange.emit(backendTimeSlot);
+  }
+
+  // Add method to clear time slot
+  onClearTimeSlot(): void {
+    console.log('Time slot cleared');
+    this.selectedTimeSlot = '';
+    // Send empty string to backend
+    this.timeSlotChange.emit('');
   }
 
   onSearch(): void {
@@ -151,10 +208,8 @@ ngOnChanges(changes: SimpleChanges): void {
     return apiData.map((item, index) => ({
       no: index + 1,
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
-      // Format with comma separators for thousands
-      value: item.fullTotal
-        ? this.formatWithCommas(parseFloat(item.fullTotal).toFixed(2))
-        : '0.00',
+      // Format with comma separators for thousands using new method
+      value: this.formatCurrencyValue(item.fullTotal),
       status: 'Picked Up', // Force status for this component
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
@@ -173,17 +228,45 @@ ngOnChanges(changes: SimpleChanges): void {
     }));
   }
 
-  // Helper method to format numbers with commas for thousands
-  private formatWithCommas(value: string): string {
-    // Split the number into integer and decimal parts
-    const parts = value.split('.');
-    const integerPart = parts[0];
-    const decimalPart = parts.length > 1 ? `.${parts[1]}` : '';
+  // NEW METHOD: Format currency value with comma separators
+  private formatCurrencyValue(value: any): string {
+    if (value === null || value === undefined || value === '') {
+      return '0.00';
+    }
     
-    // Add commas to integer part for thousands separators
-    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // Convert to number
+    const numericValue = parseFloat(value);
     
-    return formattedInteger + decimalPart;
+    // Check if it's a valid number
+    if (isNaN(numericValue)) {
+      return '0.00';
+    }
+    
+    // Format with comma separators for thousands
+    return numericValue.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  // NEW: Update time slot display formatting to remove "Within"
+  private getFormattedTimeSlotForDisplay(timeSlot: string): string {
+    if (!timeSlot) return '';
+
+    // Remove "Within " prefix if present
+    const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
+    
+    // Format nicely for display
+    const displayFormatMap: { [key: string]: string } = {
+      '8AM - 2PM': '8AM - 2PM',
+      '2PM - 8PM': '2PM - 8PM',
+      '8AM-2PM': '8AM - 2PM',
+      '2PM-8PM': '2PM - 8PM',
+      '8AM-2 PM': '8AM - 2PM',
+      '2PM-8 PM': '2PM - 8PM'
+    };
+
+    return displayFormatMap[cleanTimeSlot] || cleanTimeSlot;
   }
 
   // Format scheduled time slot
@@ -200,49 +283,6 @@ ngOnChanges(changes: SimpleChanges): void {
 
     // Return with time slot on top and date below (like in screenshot)
     return `${formattedTimeSlot}<br>${formattedDate}`;
-  }
-
-  // Helper method to format time slot for display
-  private getFormattedTimeSlotForDisplay(timeSlot: string): string {
-    if (!timeSlot) return '';
-
-    const timeSlotLower = timeSlot.toLowerCase();
-
-    if (
-      timeSlotLower.includes('8-12') ||
-      timeSlotLower.includes('8am-12pm') ||
-      timeSlotLower.includes('morning')
-    ) {
-      return '8AM - 12PM';
-    } else if (
-      timeSlotLower.includes('12-4') ||
-      timeSlotLower.includes('12pm-4pm') ||
-      timeSlotLower.includes('afternoon')
-    ) {
-      return '12PM - 4PM';
-    } else if (
-      timeSlotLower.includes('4-8') ||
-      timeSlotLower.includes('4pm-8pm') ||
-      timeSlotLower.includes('evening')
-    ) {
-      return '4PM - 8PM';
-    } else if (
-      timeSlotLower.includes('8pm-12am') ||
-      timeSlotLower.includes('night')
-    ) {
-      return '8PM - 12AM';
-    }
-
-    const timeRange = timeSlot.match(
-      /(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i,
-    );
-    if (timeRange) {
-      const startTime = this.formatTimeComponent(timeRange[1]);
-      const endTime = this.formatTimeComponent(timeRange[2]);
-      return `${startTime} - ${endTime}`;
-    }
-
-    return timeSlot;
   }
 
   // Helper method to format time components
@@ -314,7 +354,6 @@ ngOnChanges(changes: SimpleChanges): void {
     return this.datePipe.transform(dateString, 'MMM d, yyyy') || 'N/A';
   }
 
-  // Navigation methods for view details
   viewReceiverInfo(order: Order): void {
     console.log('View receiver info for:', order);
 
@@ -390,10 +429,6 @@ ngOnChanges(changes: SimpleChanges): void {
     this.selectedReceiverInfo = null;
   }
 
-  viewOrderDetails(order: Order): void {
-    console.log('View order details for:', order);
-  }
-
   // Function to get payment status color
   getPaymentColor(payment: string): string {
     switch (payment) {
@@ -401,6 +436,8 @@ ngOnChanges(changes: SimpleChanges): void {
         return 'text-green-600 dark:text-green-400 font-semibold';
       case 'Pending':
         return 'text-yellow-600 dark:text-yellow-400 font-semibold';
+      case 'Received':
+        return 'text-green-600 dark:text-green-400 font-semibold';
       case 'Failed':
         return 'text-red-600 dark:text-red-400 font-semibold';
       default:
@@ -418,23 +455,19 @@ ngOnChanges(changes: SimpleChanges): void {
       console.log('Full original data:', order.originalData);
     }
 
-    // For display in popup header (show invoice/order number)
     this.selectedOrderDisplayId = order.orderId;
     console.log('Display ID set to:', this.selectedOrderDisplayId);
 
-    // For API call (use processOrderId from original data)
     if (order.originalData) {
-      // Try to get the processOrderId from original data
       const processOrderId =
         order.originalData.processOrderId ||
         order.originalData.id ||
         order.originalData.orderId ||
-        this.extractOrderIdFromDisplay(order.orderId); // Fallback
+        this.extractOrderIdFromDisplay(order.orderId);
 
       console.log('Extracted processOrderId:', processOrderId);
 
       if (processOrderId) {
-        // Convert to number if needed
         const numericId =
           typeof processOrderId === 'string'
             ? parseInt(processOrderId, 10)
@@ -443,7 +476,6 @@ ngOnChanges(changes: SimpleChanges): void {
         if (!isNaN(numericId) && numericId !== 0) {
           this.selectedOrderId = numericId;
         } else {
-          // If it's a string ID or 0, keep it as is
           this.selectedOrderId = processOrderId;
         }
 
@@ -470,7 +502,6 @@ ngOnChanges(changes: SimpleChanges): void {
 
   // Helper method to extract numeric ID from display ID
   private extractOrderIdFromDisplay(displayId: string): number | null {
-    // Try to extract numbers from display ID like "ORD-1234"
     const match = displayId.match(/\d+/);
     if (match) {
       return parseInt(match[0], 10);
@@ -481,7 +512,6 @@ ngOnChanges(changes: SimpleChanges): void {
   // Helper method to show error messages
   private showErrorMessage(message: string): void {
     console.error(message);
-    // You can also implement a toast notification or alert here
     alert(message);
   }
 

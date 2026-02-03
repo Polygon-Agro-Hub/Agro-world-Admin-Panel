@@ -64,7 +64,10 @@ export class AllPikupOdersComponent implements OnChanges {
   searchText: string = '';
 
   // Time slot options for dropdown
-  timeSlotOptions = [{ label: '8AM-2PM' }, { label: '2PM-8PM' }];
+  timeSlotOptions = [
+  { label: '8AM-2PM', value: '8AM-2PM' },
+  { label: '2PM-8PM', value: '2PM-8PM' }
+];
 
   isLoading = false; // Not used for API calls anymore
   hasData: boolean = false;
@@ -83,20 +86,30 @@ export class AllPikupOdersComponent implements OnChanges {
   constructor(private datePipe: DatePipe) {}
 
   // In each child component, update ngOnChanges
+// In AllPikupOdersComponent - update ngOnChanges:
+
 ngOnChanges(changes: SimpleChanges): void {
-  if (changes['orders'] || changes['activeTab'] || changes['searchText'] || changes['selectedDate'] || changes['selectedTimeSlot']) {
+  console.log('ngOnChanges triggered:', changes);
+  
+  if (changes['orders']) {
+    console.log('Orders changed, transforming data...');
     this.transformData();
-    
-    // Sync local filter values with parent
-    if (changes['searchText']) {
-      this.searchText = changes['searchText'].currentValue;
-    }
-    if (changes['selectedDate']) {
-      this.selectedDate = changes['selectedDate'].currentValue;
-    }
-    if (changes['selectedTimeSlot']) {
-      this.selectedTimeSlot = changes['selectedTimeSlot'].currentValue;
-    }
+  }
+  
+  // Update local filter values when parent passes them
+  if (changes['searchText']) {
+    console.log('Search text changed from parent:', changes['searchText'].currentValue);
+    this.searchText = changes['searchText'].currentValue || '';
+  }
+  
+  if (changes['selectedDate']) {
+    console.log('Date changed from parent:', changes['selectedDate'].currentValue);
+    this.selectedDate = changes['selectedDate'].currentValue;
+  }
+  
+  if (changes['selectedTimeSlot']) {
+    console.log('Time slot changed from parent:', changes['selectedTimeSlot'].currentValue);
+    this.selectedTimeSlot = changes['selectedTimeSlot'].currentValue || '';
   }
 }
 

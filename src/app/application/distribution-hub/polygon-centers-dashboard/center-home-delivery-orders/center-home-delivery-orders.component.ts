@@ -48,7 +48,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
 
   hasData: boolean = false;
 
-  searchPlaceHolder: string = "Search By Order ID...";
+  searchPlaceHolder: string = "Search...";
 
   centerId: number = 66;
   centerName: string = ''
@@ -129,23 +129,23 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
     switch (tabName) {
     
       case 'all':
-        this.searchPlaceHolder = 'Search by Order ID, Phone Numbers..'
+        this.searchPlaceHolder = 'Search...'
         break;
     
       case 'out-for-delivery':
-        this.searchPlaceHolder = 'Search by Order ID, Phone Numbers..'
+        this.searchPlaceHolder = 'Search...'
         break;
 
       case 'Return Received':
-        this.searchPlaceHolder = 'Search by Order ID..'
+        this.searchPlaceHolder = 'Search...'
         break;
 
       case 'delivered':
-        this.searchPlaceHolder = 'Search by Order ID..'
+        this.searchPlaceHolder = 'Search...'
         break;
 
       default:
-        this.searchPlaceHolder = 'Search by Order ID, Phone Numbers..'
+        this.searchPlaceHolder = 'Search...'
         break;
     }
 

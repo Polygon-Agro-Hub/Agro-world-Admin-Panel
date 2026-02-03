@@ -328,14 +328,10 @@ export class PaymentHistoryUpdateComponent implements OnInit {
     showCancelButton: true,
     confirmButtonText: 'Yes, update',
     cancelButtonText: 'Cancel',
-    confirmButtonColor: '#10B981',
-    cancelButtonColor: '#6B7280',
     reverseButtons: true,
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
-      confirmButton: 'bg-green-500 hover:bg-green-600 px-4 py-2',
-      cancelButton: 'bg-gray-500 hover:bg-gray-600 px-4 py-2',
       htmlContainer: 'text-left'
     },
   }).then((result) => {

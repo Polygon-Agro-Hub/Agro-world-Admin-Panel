@@ -661,4 +661,25 @@ onAmountKeydown(event: KeyboardEvent): void {
   }
 }
 
+onPaymentReferenceKeyPress(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
+  
+  // Prevent space if it's at the beginning
+  if (event.key === ' ' && cursorPosition === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Optional: Prevent multiple consecutive spaces
+  if (event.key === ' ') {
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    if (beforeCursor.endsWith(' ')) {
+      event.preventDefault();
+      return;
+    }
+  }
+}
+
 }

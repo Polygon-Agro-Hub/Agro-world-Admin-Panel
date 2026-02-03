@@ -2167,6 +2167,24 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     }
   }
 
+
+  preventSpecialcharacters(event: KeyboardEvent) {
+    const allowedPattern = /^[a-zA-Z0-9]$/;
+    const inputChar = event.key;
+  
+    if (!allowedPattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  preventSpecialCharactersPaste(event: ClipboardEvent) {
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const allowedPattern = /^[a-zA-Z0-9]+$/;
+  
+    if (!allowedPattern.test(pastedText)) {
+      event.preventDefault();
+    }
+  }
 }
 
 class Personal {

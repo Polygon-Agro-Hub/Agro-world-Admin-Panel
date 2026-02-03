@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
@@ -111,6 +111,7 @@ export class EditFiealdOfficerComponent implements OnInit {
     private route: ActivatedRoute,
     private stakeHolderSrv: StakeholderService,
     private http: HttpClient,
+    private location: Location
   ) { }
 
   jobRoles = [
@@ -311,7 +312,7 @@ getFileName(value: string): string {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/field-inspectors']);
+         this.location.back();
       }
     });
   }

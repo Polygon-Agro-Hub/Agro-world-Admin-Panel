@@ -238,6 +238,10 @@ export class ViewCollectiveOfficerComponent {
   }
 
   ngOnInit() {
+    window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Optional: adds smooth scrolling animation
+  });
     this.isSteckholdersRoute = this.router.url.includes('/steckholders/action/collective-officer');
     this.fetchAllCollectionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();

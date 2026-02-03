@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   HttpClient,
   HttpClientModule,
@@ -54,6 +54,8 @@ interface PhoneCode {
 export class CollectiveofficersPersonalComponent implements OnInit {
   @ViewChild('empTypeCtrl') empTypeCtrl!: NgModel;
   @ViewChild('languagesCtrl') languagesCtrl!: NgModel;
+   @ViewChild('topScroll') topScrollElement!: ElementRef;
+  private shouldScrollToTop = false;
   
   officerId: number | null = null;
   selectedFile: File | null = null;
@@ -652,6 +654,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       });
       return;
     }
+    this.shouldScrollToTop = true;
   }
 
   this.selectedPage = page;
@@ -1494,6 +1497,19 @@ preventSpecialCharacters(event: KeyboardEvent): void {
   
   return 'Please enter a valid email in the format: example@domain.com';
 }
+
+ngAfterViewChecked(): void {
+    // Scroll to top when page changes to pageTwo
+    if (this.selectedPage === 'pageTwo' && this.shouldScrollToTop && this.topScrollElement) {
+      setTimeout(() => {
+        this.topScrollElement.nativeElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+        this.shouldScrollToTop = false; // Reset the flag
+      }, 100); // Small delay to ensure DOM is updated
+    }
+  }
   
 }
 

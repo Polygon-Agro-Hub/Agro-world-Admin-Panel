@@ -164,10 +164,9 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   onNumSharesChange(value: number) {
     this.numShares = value; // optional, ngModel already does this
-    console.log('numShares', this.numShares);
-    if (this.numShares !== null) {
+    if (this.numShares !== null && this.numShares > 0) {
       this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
-    } else if (this.numShares === null) {
+    } else {
       this.shareValue = 0;
     }
     console.log('shareValue', this.shareValue);
@@ -267,7 +266,6 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   cancelDevidePopUp() {
     this.openDevideSharesPopUp = false;
-    // Clear all form data when Cancel is clicked
     this.numShares = 0;
     this.shareValue = 0.0;
     this.minimumShare = 0;
@@ -275,8 +273,6 @@ export class AuditPersonalInfoComponent implements OnInit {
   }
 
   DevideRequest(form: any) {
-
-    console.log('devind')
 
     if (form.invalid) {
       form.form.markAllAsTouched();
@@ -327,7 +323,6 @@ export class AuditPersonalInfoComponent implements OnInit {
             title: 'font-semibold text-lg',
           },
         }).then(() => {
-          // After successful share division, redirect to Approved Requests list and close tab
           if (window.opener) {
             window.opener.location.reload();
             window.close();
@@ -363,6 +358,18 @@ export class AuditPersonalInfoComponent implements OnInit {
     // Prevent multiple dots
     if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
       event.preventDefault();
+    }
+  }
+
+  // Method to block decimal values (only allow integers)
+  allowIntegerOnly(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const key = event.key;
+
+    // Block everything except numbers
+    if (!allowedKeys.includes(key)) {
+      event.preventDefault();
+      return;
     }
   }
 

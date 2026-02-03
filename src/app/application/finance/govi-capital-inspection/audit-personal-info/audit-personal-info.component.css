@@ -2,3 +2,15 @@ input[readonly] {
   cursor: default !important;
   user-select: none !important;
 }
+
+/* User Input */
+textarea {
+  font-style: normal; 
+  color: black;
+}
+
+/* Placeholder Only */
+textarea::placeholder {
+  font-style: italic;
+  color: gray;
+}

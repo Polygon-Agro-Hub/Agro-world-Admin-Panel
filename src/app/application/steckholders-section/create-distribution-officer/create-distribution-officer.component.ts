@@ -226,24 +226,35 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 }
 
   back(): void {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Stay Here',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-      buttonsStyling: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
+  const currentRoute = this.router.url;
+  let confirmMessage = 'You may lose the added data after going back!';
+  let confirmButtonText = 'Yes, Go Back';
+  let cancelButtonText = 'No, Stay Here';
+  
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: confirmMessage,
+    showCancelButton: true,
+    confirmButtonText: confirmButtonText,
+    cancelButtonText: cancelButtonText,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (currentRoute.includes('drivers/add-driver')) {
+        // Navigate to drivers list for driver route
+        this.router.navigate(['/steckholders/action/drivers']);
+      } else {
+        // Navigate to distribution officers list for regular route
         this.router.navigate(['/steckholders/action/view-distribution-officers']);
       }
-    });
-  }
+    }
+  });
+}
 
 
   onSubmit() {
@@ -525,7 +536,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
                     title: 'font-semibold text-lg',
                   },
                 });
-                this.navigatePath('/steckholders/action/drivers');
+                this.navigatePath('/steckholders/action/view-distribution-officers');
               },
               (error: any) => {
                 this.isLoading = false;
@@ -644,25 +655,34 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     }
   }
   onCancel() {
-    console.log('canceled')
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after canceling!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No, Keep Editing',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold',
-      },
-      buttonsStyling: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/drivers');
+  let confirmMessage = 'You may lose the added data after canceling!';
+  let confirmButtonText = 'Yes, Cancel';
+  let cancelButtonText = 'No, Keep Editing';
+  
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: confirmMessage,
+    showCancelButton: true,
+    confirmButtonText: confirmButtonText,
+    cancelButtonText: cancelButtonText,
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (this.isDriverRoute) {
+        // Navigate to drivers list for driver route
+        this.router.navigate(['/steckholders/action/drivers']);
+      } else {
+        // Navigate to distribution officers list for regular route
+        this.router.navigate(['/steckholders/action/view-distribution-officers']);
       }
-    });
-  }
+    }
+  });
+}
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
     console.log('pdatra', this.personalData)
@@ -2167,6 +2187,24 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     }
   }
 
+
+  preventSpecialcharacters(event: KeyboardEvent) {
+    const allowedPattern = /^[a-zA-Z0-9]$/;
+    const inputChar = event.key;
+  
+    if (!allowedPattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  preventSpecialCharactersPaste(event: ClipboardEvent) {
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const allowedPattern = /^[a-zA-Z0-9]+$/;
+  
+    if (!allowedPattern.test(pastedText)) {
+      event.preventDefault();
+    }
+  }
 }
 
 class Personal {

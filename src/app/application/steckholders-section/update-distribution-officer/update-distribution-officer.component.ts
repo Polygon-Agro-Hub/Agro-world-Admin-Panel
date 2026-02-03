@@ -1989,6 +1989,24 @@ export class UpdateDistributionOfficerComponent {
     return 'Please enter a valid email in the format: example@domain.com';
   }
 
+  preventSpecialCharacters(event: KeyboardEvent) {
+    const allowedPattern = /^[a-zA-Z0-9]$/;
+    const inputChar = event.key;
+  
+    if (!allowedPattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  preventSpecialCharactersPaste(event: ClipboardEvent) {
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const allowedPattern = /^[a-zA-Z0-9]+$/;
+  
+    if (!allowedPattern.test(pastedText)) {
+      event.preventDefault();
+    }
+  }
+
   openPopup(item: any) {
     const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
 

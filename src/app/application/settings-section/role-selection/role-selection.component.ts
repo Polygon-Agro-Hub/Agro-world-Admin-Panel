@@ -41,10 +41,10 @@ export class RoleSelectionComponent {
   }
 
   closeModal() {
-    this.isModalOpen = false;
-    this.emailError = null; // Clear error when modal closes
-    this.createRolesObj.email = ''; // Clear email field
-  }
+  this.isModalOpen = false;
+  this.emailError = null; // Clear error when modal closes
+  this.createRolesObj = new CreateRoles(); // Reset to new empty object
+}
 
   editModalOpen(role: any) {
     this.selectedRole = { ...role };
@@ -52,9 +52,10 @@ export class RoleSelectionComponent {
   }
 
   editCloseModel() {
-    this.iseditModalOpen = false;
-    this.editEmailError = null; // Clear error when modal closes
-  }
+  this.iseditModalOpen = false;
+  this.editEmailError = null; // Clear error when modal closes
+  this.selectedRole = {}; // Reset selected role
+}
 
   addSection() {
     // Add logic to save the new section

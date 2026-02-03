@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
@@ -46,6 +46,7 @@ interface PhoneCode {
   styleUrl: './create-distribution-officer.component.css'
 })
 export class CreateDistributionOfficerComponent implements OnInit {
+  @ViewChild('pageContainer') pageContainer!: ElementRef;
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
@@ -675,6 +676,11 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
+    this.selectedPage = page;
+    // Scroll to top after page change
+    setTimeout(() => {
+      this.scrollToTop();
+    }, 100);
     console.log('pdatra', this.personalData)
     if (page === 'pageTwo') {
 
@@ -2193,6 +2199,15 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   
     if (!allowedPattern.test(pastedText)) {
       event.preventDefault();
+    }
+  }
+
+  scrollToTop(): void {
+    if (this.pageContainer && this.pageContainer.nativeElement) {
+      this.pageContainer.nativeElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
     }
   }
 }

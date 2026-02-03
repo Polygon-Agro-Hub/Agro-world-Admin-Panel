@@ -158,13 +158,19 @@ ngOnChanges(changes: SimpleChanges): void {
 
   // Transform API data to match your Order interface
   private transformApiData(apiData: any[]): Order[] {
-    return apiData.map((item, index) => ({
-      no: index + 1,
+  // First transform the data with priority and timestamps
+  const ordersWithPriority = apiData.map((item, index) => {
+    const status = this.getOrderStatus(item.status || item.orderStatus);
+    const statusPriority = this.getStatusPriority(status);
+    const sortTimestamp = this.getSortTimestamp(item, status);
+    
+    return {
+      no: index + 1, // This will be recalculated after sorting
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
       value: item.fullTotal
         ? `${parseFloat(item.fullTotal).toFixed(2)}`
         : '0.00',
-      status: this.getOrderStatus(item.status || item.orderStatus),
+      status: status,
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
         item.customerPhoneNumber
@@ -178,9 +184,29 @@ ngOnChanges(changes: SimpleChanges): void {
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
-      originalData: item, // Store original API data for popup
-    }));
-  }
+      originalData: item,
+      statusPriority: statusPriority,
+      sortTimestamp: sortTimestamp
+    };
+  });
+
+  // Sort orders: first by status priority, then by timestamp (descending)
+  const sortedOrders = ordersWithPriority.sort((a, b) => {
+    // First compare by status priority (lower number = higher priority)
+    if (a.statusPriority !== b.statusPriority) {
+      return a.statusPriority - b.statusPriority;
+    }
+    
+    // For same status, sort by timestamp (most recent first)
+    return b.sortTimestamp.getTime() - a.sortTimestamp.getTime();
+  });
+
+  // Reassign numbers after sorting
+  return sortedOrders.map((order, index) => ({
+    ...order,
+    no: index + 1
+  }));
+}
 
   // Format scheduled time slot
 private formatScheduledTimeSlot(item: any): string {
@@ -478,6 +504,41 @@ private convertTimeSlotToBackendFormat(timeSlot: string): string {
     
     return uiFormatMap[cleanTimeSlot] || cleanTimeSlot;
   }
+
+  private getStatusPriority(status: string): number {
+  const priorityMap: { [key: string]: number } = {
+    'Picked Up': 1,        // Highest priority
+    'Ready to Pickup': 2,  // Second priority
+    'Processing': 3,
+    'Pending': 4,
+    'Delivered': 5,
+    'Cancelled': 6
+  };
+  
+  return priorityMap[status] || 7; // Default lowest priority
+}
+
+private getSortTimestamp(item: any, status: string): Date {
+  // For "Picked Up" orders, use pickup timestamp if available
+  if (status === 'Picked Up') {
+    const pickupTime = item.pickupTime || item.pickedUpAt || item.updatedAt;
+    if (pickupTime) {
+      return new Date(pickupTime);
+    }
+  }
+  
+  // For "Ready to Pickup" orders, use status change timestamp if available
+  if (status === 'Ready to Pickup') {
+    const readyTime = item.readyAt || item.statusUpdatedAt || item.updatedAt;
+    if (readyTime) {
+      return new Date(readyTime);
+    }
+  }
+  
+  // Default: use order creation time or current date
+  const orderTime = item.orderCreatedAt || item.createdAt || new Date();
+  return new Date(orderTime);
+}
 }
 
 interface CenterDetails {

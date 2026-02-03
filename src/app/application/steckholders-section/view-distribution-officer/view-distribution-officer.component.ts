@@ -107,6 +107,10 @@ export class ViewDistributionOfficerComponent {
   ) { }
 
   ngOnInit() {
+    window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Optional: adds smooth scrolling animation
+  });
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchDistributionCenterNames();

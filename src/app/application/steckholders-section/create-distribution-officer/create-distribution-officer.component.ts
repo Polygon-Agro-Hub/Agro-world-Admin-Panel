@@ -49,7 +49,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
-  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageThree';
   driverObj: Drivers = new Drivers();
   personalData: Personal = new Personal();
 

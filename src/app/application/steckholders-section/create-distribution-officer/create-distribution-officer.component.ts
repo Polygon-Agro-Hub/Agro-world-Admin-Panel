@@ -226,7 +226,6 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 }
 
   back(): void {
-  const currentRoute = this.router.url;
   let confirmMessage = 'You may lose the added data after going back!';
   let confirmButtonText = 'Yes, Go Back';
   let cancelButtonText = 'No, Stay Here';
@@ -245,13 +244,9 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      if (currentRoute.includes('drivers/add-driver')) {
-        // Navigate to drivers list for driver route
-        this.router.navigate(['/steckholders/action/drivers']);
-      } else {
-        // Navigate to distribution officers list for regular route
-        this.router.navigate(['/steckholders/action/view-distribution-officers']);
-      }
+      // Use history back instead of specific route
+      window.history.back();
+      // Or: this.location.back();
     }
   });
 }
@@ -673,13 +668,8 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      if (this.isDriverRoute) {
-        // Navigate to drivers list for driver route
-        this.router.navigate(['/steckholders/action/drivers']);
-      } else {
-        // Navigate to distribution officers list for regular route
-        this.router.navigate(['/steckholders/action/view-distribution-officers']);
-      }
+      // Use browser history back instead of specific route navigation
+      window.history.back();
     }
   });
 }

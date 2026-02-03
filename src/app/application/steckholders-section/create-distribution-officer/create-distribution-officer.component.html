@@ -528,7 +528,8 @@
       <label for="licNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
         Driving License ID *
       </label>
-      <input id="licNo" type="text" name="licNo" [(ngModel)]="driverObj.licNo" (keypress)="preventNonNumbers($event)"
+      <input id="licNo" type="text" name="licNo" [(ngModel)]="driverObj.licNo" (keypress)="preventSpecialcharacters($event)"
+      (paste)="preventSpecialCharactersPaste($event)"
         class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
     </div>
 
@@ -661,7 +662,8 @@
       <label for="vRegNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
         Vehicle Registration Number *
       </label>
-      <input id="vRegNo" type="text" name="vRegNo" [(ngModel)]="driverObj.vRegNo" (keypress)="preventNonNumbers($event)"
+      <input id="vRegNo" type="text" name="vRegNo" [(ngModel)]="driverObj.vRegNo" (keypress)="preventSpecialcharacters($event)"
+      (paste)="preventSpecialCharactersPaste($event)"
         class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
     </div>
 

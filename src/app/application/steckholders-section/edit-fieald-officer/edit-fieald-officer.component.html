@@ -140,15 +140,14 @@
     [options]="jobRoles"
     placeholder="Select a Job Role"
     [showClear]="true"
-    [filter]="true"
     styleClass="w-full mt-1"
     panelStyleClass="custom-dropdown-panel"
     class="mt-1 block w-full p-dropdown-custom"
     (onChange)="onJobRoleChange($event)"
     (onClear)="onJobRoleClear()"
     [ngClass]="{ 'p-invalid': isFieldInvalid('jobRole') }"
-  >
-  </p-dropdown>
+>
+</p-dropdown>
   
   <span *ngIf="isFieldInvalid('jobRole')" class="text-red-600 text-sm">
     Job Role is a required field

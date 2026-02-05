@@ -328,14 +328,10 @@ export class PaymentHistoryUpdateComponent implements OnInit {
     showCancelButton: true,
     confirmButtonText: 'Yes, update',
     cancelButtonText: 'Cancel',
-    confirmButtonColor: '#10B981',
-    cancelButtonColor: '#6B7280',
     reverseButtons: true,
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold',
-      confirmButton: 'bg-green-500 hover:bg-green-600 px-4 py-2',
-      cancelButton: 'bg-gray-500 hover:bg-gray-600 px-4 py-2',
       htmlContainer: 'text-left'
     },
   }).then((result) => {
@@ -658,6 +654,27 @@ onAmountKeydown(event: KeyboardEvent): void {
       inputElement.value = '0.';
       inputElement.setSelectionRange(2, 2);
     });
+  }
+}
+
+onPaymentReferenceKeyPress(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
+  
+  // Prevent space if it's at the beginning
+  if (event.key === ' ' && cursorPosition === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Optional: Prevent multiple consecutive spaces
+  if (event.key === ' ') {
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    if (beforeCursor.endsWith(' ')) {
+      event.preventDefault();
+      return;
+    }
   }
 }
 

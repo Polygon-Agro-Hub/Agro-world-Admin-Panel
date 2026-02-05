@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
@@ -111,6 +111,7 @@ export class EditFiealdOfficerComponent implements OnInit {
     private route: ActivatedRoute,
     private stakeHolderSrv: StakeholderService,
     private http: HttpClient,
+    private location: Location
   ) { }
 
   jobRoles = [
@@ -311,7 +312,7 @@ getFileName(value: string): string {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/field-inspectors']);
+         this.location.back();
       }
     });
   }
@@ -863,6 +864,10 @@ getFileName(value: string): string {
 
     // Navigate to the selected page
     this.selectedPage = page;
+
+    setTimeout(() => {
+    this.scrollToTop();
+  }, 0);
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
@@ -908,6 +913,10 @@ getFileName(value: string): string {
 
     // Navigate to the selected page if validation passes
     this.selectedPage = page;
+
+    setTimeout(() => {
+    this.scrollToTop();
+  }, 0);
   }
 
   markPageOneFieldsAsTouched(): void {
@@ -2405,6 +2414,23 @@ onJobRoleClear(): void {
   
   // Mark field as touched for validation
   this.touchedFields['jobRole'] = true;
+}
+
+scrollToTop(): void {
+  // Method 1: Direct window scrolling
+  window.scrollTo(0, 0);
+  
+  // Method 2: With smooth scrolling
+  // window.scrollTo({
+  //   top: 0,
+  //   behavior: 'smooth'
+  // });
+  
+  // Method 3: Scroll to specific container
+  // const container = document.querySelector('.mx-auto.p-6');
+  // if (container) {
+  //   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // }
 }
 
 }

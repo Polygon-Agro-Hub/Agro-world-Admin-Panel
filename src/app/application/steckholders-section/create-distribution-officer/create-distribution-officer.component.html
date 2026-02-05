@@ -5,7 +5,7 @@
   Back
 </button>
 <div class="h-[20px]"></div>
-<div *ngIf="this.itemId == null" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
+<div #pageContainer *ngIf="this.itemId == null" class="mx-auto p-6 bg-white dark:bg-tileBlack rounded-lg shadow-mg">
   <div *ngIf="selectedPage === 'pageOne'">
     <h2 class="text-2xl mb-6 text-textLight dark:text-textDark">
       Add Personal Details
@@ -597,7 +597,7 @@
           Insurance Expire Date *
         </label>
         <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="true" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
+          [showButtonBar]="false" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
           [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white

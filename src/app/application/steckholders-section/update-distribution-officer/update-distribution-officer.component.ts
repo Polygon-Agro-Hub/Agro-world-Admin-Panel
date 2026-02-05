@@ -1434,6 +1434,13 @@ export class UpdateDistributionOfficerComponent {
     }
 
     this.selectedPage = page;
+
+    setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Add smooth scrolling effect
+    });
+  }, 100);
   }
 
 

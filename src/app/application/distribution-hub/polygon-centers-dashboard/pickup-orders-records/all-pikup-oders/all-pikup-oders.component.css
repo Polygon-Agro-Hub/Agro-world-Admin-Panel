@@ -304,3 +304,44 @@
 ::ng-deep .p-dropdown.smaller-dropdown .p-dropdown-trigger {
   width: 1.75rem !important;
 }
+
+/* Add space between checkmark and dropdown items */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item .p-dropdown-check-icon {
+  margin-right: 0.5rem !important;
+}
+
+/* Adjust text alignment when checkmark is present */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 0.5rem !important;
+}
+
+/* Ensure the check icon has proper spacing */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item .p-dropdown-check-icon {
+  font-size: 0.875rem !important;
+}
+
+/* For the "checkmark: true" property specifically */
+::ng-deep .p-dropdown-panel[checkmark="true"] .p-dropdown-item,
+::ng-deep .p-dropdown-panel .p-dropdown-item[hascheckmark="true"] {
+  padding-left: 0.5rem !important;
+}
+
+/* If you need even more control, target the check icon directly */
+::ng-deep .pi-check:before {
+  margin-right: 0.5rem !important;
+}
+
+/* Alternative approach - adjust the icon container */
+::ng-deep .p-dropdown-item .p-dropdown-check-icon {
+  margin-right: 8px !important;
+  width: 16px !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+}
+
+/* Make sure the text aligns properly */
+::ng-deep .p-dropdown-item .p-dropdown-item-text {
+  margin-left: 0.25rem !important;
+}

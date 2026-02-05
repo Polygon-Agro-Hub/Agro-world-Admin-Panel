@@ -51,19 +51,38 @@
             </div>
           </div>
 
-          <div>
-            
-<p-dropdown
-  styleClass="smaller-dropdown border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-  [checkmark]="true"
-  optionLabel="label"
-  optionValue="value"
-  placeholder="Time Slot"
-  [options]="timeSlotOptions"
-  [(ngModel)]="selectedTimeSlot"
-  (onChange)="onTimeSlotSelect()"
->
-</p-dropdown>
+          <div class="relative">
+            <p-dropdown
+              styleClass="smaller-dropdown border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#E5E5E5] dark:border-[#AFAFAF]"
+              [checkmark]="true"
+              placeholder="Time Slot"
+              [options]="timeSlotOptions"
+              [(ngModel)]="selectedTimeSlot"
+              (onChange)="onTimeSlotSelect()"
+            ></p-dropdown>
+
+            <!-- Add clear button when time slot is selected -->
+            <button
+              *ngIf="selectedTimeSlot"
+              type="button"
+              class="absolute right-8 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              (click)="onClearTimeSlot()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
 
           <div
@@ -142,65 +161,45 @@
     </ng-template>
     <div class="w-full overflow-x-auto border-2 border-gray-200 rounded-2xl">
       <table class="min-w-full divide-y divide-gray-200">
-        <thead class="text-[#4B5563]">
-          <tr>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-left "
-            >
-              No
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-left"
-            >
-              Order ID
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-left"
-            >
-              Value (Rs.)
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-center"
-            >
-              Status
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-left"
-            >
-              Customer Phone
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-left"
-            >
-              Receiver Phone-1
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-center"
-            >
-              Receiver's Info
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-center"
-            >
-              Scheduled Time Slot
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-left"
-            >
-              Payment
-            </th>
-            <th
-              class="px-4 py-3 font-normal dark:text-textDark text-center"
-            >
-              Details
-            </th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-          <ng-container *ngIf="hasData; else noData">
+        <ng-container *ngIf="hasData; else noData">
+          <thead class="text-[#4B5563]">
+            <tr>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-left">
+                No
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-left">
+                Order ID
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-left">
+                Value (Rs.)
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-center">
+                Status
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-left">
+                Customer Phone
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-left">
+                Receiver Phone-1
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-center">
+                Receiver's Info
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-center">
+                Scheduled Time Slot
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-left">
+                Payment
+              </th>
+              <th class="px-4 py-3 font-normal dark:text-textDark text-center">
+                Details
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
             <tr
               *ngFor="let order of transformedOrders"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700 text-black"
+              class="hover:bg-gray-50 dark:hover:bg-gray-700 text-[#000000]"
             >
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.no | number: "2.0" }}
@@ -256,10 +255,7 @@
               </td>
               <td class="px-4 py-3 text-left">
                 <span
-                  [class]="
-                    'rounded-full text-sm font-medium ' +
-                    getPaymentClass(order.payment)
-                  "
+                  [class]="'rounded-full ' + getPaymentClass(order.payment)"
                 >
                   {{ order.payment }}
                 </span>
@@ -287,8 +283,8 @@
                 </button>
               </td>
             </tr>
-          </ng-container>
-        </tbody>
+          </tbody>
+        </ng-container>
       </table>
     </div>
   </div>

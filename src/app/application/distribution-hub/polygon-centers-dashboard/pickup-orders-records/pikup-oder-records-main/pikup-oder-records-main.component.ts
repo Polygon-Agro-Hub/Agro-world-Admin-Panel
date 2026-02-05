@@ -73,57 +73,65 @@ export class PikupOderRecordsMainComponent implements OnInit {
     });
   }
 
-  setActiveTab(tab: string) {
+setActiveTab(tab: string) {
   // Reset filters when switching tabs
   this.searchText = '';
   this.selectedDate = null;
-  this.selectedTimeSlot = '';
+  this.selectedTimeSlot = ''; // Reset time slot too
   
   this.activeTab = tab;
   this.fetchAllOrders();
 }
 
-  fetchAllOrders(): void {
-    this.isLoading = true;
-    this.isInitializing = false;
+  // In pikup-oder-records-main.component.ts - update fetchAllOrders method
+fetchAllOrders(): void {
+  this.isLoading = true;
+  this.isInitializing = false;
 
-    let formattedDate = '';
-    if (this.selectedDate) {
-      const year = this.selectedDate.getFullYear();
-      const month = (this.selectedDate.getMonth() + 1)
-        .toString()
-        .padStart(2, '0');
-      const day = this.selectedDate.getDate().toString().padStart(2, '0');
-      formattedDate = `${year}-${month}-${day}`;
-    }
-
-    console.log('Fetching orders for tab:', this.activeTab, 'Backend param:');
-
-    this.destributionService
-      .getDistributedCenterPickupOrders({
-        companycenterId: this.centerObj.centerId,
-        sheduleTime: this.selectedTimeSlot,
-        date: formattedDate,
-        searchText: this.searchText,
-        activeTab: this.activeTab
-      })
-      .subscribe({
-        next: (res) => {
-          console.log('API Response for', this.activeTab, 'tab:', res);
-          if (res && res.data) {
-            this.allOrders = Array.isArray(res.data) ? res.data : [res.data];
-          } else {
-            this.allOrders = [];
-          }
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching pickup orders:', error);
-          this.allOrders = [];
-          this.isLoading = false;
-        },
-      });
+  let formattedDate = '';
+  if (this.selectedDate) {
+    const year = this.selectedDate.getFullYear();
+    const month = (this.selectedDate.getMonth() + 1)
+      .toString()
+      .padStart(2, '0');
+    const day = this.selectedDate.getDate().toString().padStart(2, '0');
+    formattedDate = `${year}-${month}-${day}`;
   }
+
+  console.log('Fetching orders with params:', {
+    companycenterId: this.centerObj.centerId,
+    sheduleTime: this.selectedTimeSlot,
+    date: formattedDate,
+    searchText: this.searchText,
+    activeTab: this.activeTab
+  });
+
+  this.destributionService
+    .getDistributedCenterPickupOrders({
+      companycenterId: this.centerObj.centerId,
+      sheduleTime: this.selectedTimeSlot, // Make sure this is correct
+      date: formattedDate,
+      searchText: this.searchText,
+      activeTab: this.activeTab
+    })
+    .subscribe({
+      next: (res) => {
+        console.log('API Response:', res);
+        console.log('Time slot used:', this.selectedTimeSlot);
+        if (res && res.data) {
+          this.allOrders = Array.isArray(res.data) ? res.data : [res.data];
+        } else {
+          this.allOrders = [];
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching pickup orders:', error);
+        this.allOrders = [];
+        this.isLoading = false;
+      },
+    });
+}
 
   onDateChangeFromChild(date: Date | null): void {
     this.selectedDate = date;

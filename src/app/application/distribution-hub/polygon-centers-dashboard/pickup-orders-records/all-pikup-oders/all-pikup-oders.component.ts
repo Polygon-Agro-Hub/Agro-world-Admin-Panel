@@ -64,7 +64,10 @@ export class AllPikupOdersComponent implements OnChanges {
   searchText: string = '';
 
   // Time slot options for dropdown
-  timeSlotOptions = [{ label: '8AM-2PM' }, { label: '2PM-8PM' }];
+  timeSlotOptions = [
+  { label: '8AM-2PM', value: '8AM-2PM' },
+  { label: '2PM-8PM', value: '2PM-8PM' }
+];
 
   isLoading = false; // Not used for API calls anymore
   hasData: boolean = false;
@@ -83,22 +86,37 @@ export class AllPikupOdersComponent implements OnChanges {
   constructor(private datePipe: DatePipe) {}
 
   // In each child component, update ngOnChanges
+// In AllPikupOdersComponent - update ngOnChanges:
+
 ngOnChanges(changes: SimpleChanges): void {
-  if (changes['orders'] || changes['activeTab'] || changes['searchText'] || changes['selectedDate'] || changes['selectedTimeSlot']) {
-    this.transformData();
+    console.log('ngOnChanges triggered:', changes);
     
-    // Sync local filter values with parent
-    if (changes['searchText']) {
-      this.searchText = changes['searchText'].currentValue;
+    if (changes['orders']) {
+      console.log('Orders changed, transforming data...');
+      this.transformData();
     }
+    
+    // Update local filter values when parent passes them
+    if (changes['searchText']) {
+      console.log('Search text changed from parent:', changes['searchText'].currentValue);
+      this.searchText = changes['searchText'].currentValue || '';
+    }
+    
     if (changes['selectedDate']) {
+      console.log('Date changed from parent:', changes['selectedDate'].currentValue);
       this.selectedDate = changes['selectedDate'].currentValue;
     }
+    
     if (changes['selectedTimeSlot']) {
-      this.selectedTimeSlot = changes['selectedTimeSlot'].currentValue;
+      console.log('Time slot changed from parent:', changes['selectedTimeSlot'].currentValue);
+      // Convert backend format to UI format for dropdown
+      const backendTimeSlot = changes['selectedTimeSlot'].currentValue || '';
+      this.selectedTimeSlot = this.convertTimeSlotToUIFormat(backendTimeSlot);
+    } else if (this.selectedTimeSlot === undefined) {
+      // Initialize if undefined
+      this.selectedTimeSlot = '';
     }
   }
-}
 
   private transformData(): void {
     if (this.orders && this.orders.length > 0) {
@@ -123,7 +141,10 @@ ngOnChanges(changes: SimpleChanges): void {
   }
 
   onTimeSlotSelect(): void {
-    this.timeSlotChange.emit(this.selectedTimeSlot);
+    console.log('UI Time slot selected:', this.selectedTimeSlot);
+    const backendTimeSlot = this.convertTimeSlotToBackendFormat(this.selectedTimeSlot);
+    console.log('Converted to backend format:', backendTimeSlot);
+    this.timeSlotChange.emit(backendTimeSlot);
   }
 
   onSearch(): void {
@@ -137,13 +158,19 @@ ngOnChanges(changes: SimpleChanges): void {
 
   // Transform API data to match your Order interface
   private transformApiData(apiData: any[]): Order[] {
-    return apiData.map((item, index) => ({
-      no: index + 1,
+  // First transform the data with priority and timestamps
+  const ordersWithPriority = apiData.map((item, index) => {
+    const status = this.getOrderStatus(item.status || item.orderStatus);
+    const statusPriority = this.getStatusPriority(status);
+    const sortTimestamp = this.getSortTimestamp(item, status);
+    
+    return {
+      no: index + 1, // This will be recalculated after sorting
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
       value: item.fullTotal
         ? `${parseFloat(item.fullTotal).toFixed(2)}`
         : '0.00',
-      status: this.getOrderStatus(item.status || item.orderStatus),
+      status: status,
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
         item.customerPhoneNumber
@@ -157,9 +184,29 @@ ngOnChanges(changes: SimpleChanges): void {
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
-      originalData: item, // Store original API data for popup
-    }));
-  }
+      originalData: item,
+      statusPriority: statusPriority,
+      sortTimestamp: sortTimestamp
+    };
+  });
+
+  // Sort orders: first by status priority, then by timestamp (descending)
+  const sortedOrders = ordersWithPriority.sort((a, b) => {
+    // First compare by status priority (lower number = higher priority)
+    if (a.statusPriority !== b.statusPriority) {
+      return a.statusPriority - b.statusPriority;
+    }
+    
+    // For same status, sort by timestamp (most recent first)
+    return b.sortTimestamp.getTime() - a.sortTimestamp.getTime();
+  });
+
+  // Reassign numbers after sorting
+  return sortedOrders.map((order, index) => ({
+    ...order,
+    no: index + 1
+  }));
+}
 
   // Format scheduled time slot
 private formatScheduledTimeSlot(item: any): string {
@@ -173,52 +220,27 @@ private formatScheduledTimeSlot(item: any): string {
   const formattedDate = this.formatDisplayDate(scheduleDate);
   const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
 
-  // Return with time slot on top and date below (like in screenshot)
+  // Return with time slot on top and date below
   return `${formattedTimeSlot}<br>${formattedDate}`;
 }
 
   // Helper method to format time slot for display
   private getFormattedTimeSlotForDisplay(timeSlot: string): string {
-    if (!timeSlot) return '';
+  if (!timeSlot) return '';
 
-    const timeSlotLower = timeSlot.toLowerCase();
+  // Remove "Within " prefix if present
+  const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
+  
+  // Format nicely for display
+  const displayFormatMap: { [key: string]: string } = {
+    '8AM - 2PM': '8AM - 2PM',
+    '2PM - 8PM': '2PM - 8PM',
+    '8AM-2PM': '8AM - 2PM',
+    '2PM-8PM': '2PM - 8PM'
+  };
 
-    if (
-      timeSlotLower.includes('8-12') ||
-      timeSlotLower.includes('8am-12pm') ||
-      timeSlotLower.includes('morning')
-    ) {
-      return '8AM - 12PM';
-    } else if (
-      timeSlotLower.includes('12-4') ||
-      timeSlotLower.includes('12pm-4pm') ||
-      timeSlotLower.includes('afternoon')
-    ) {
-      return '12PM - 4PM';
-    } else if (
-      timeSlotLower.includes('4-8') ||
-      timeSlotLower.includes('4pm-8pm') ||
-      timeSlotLower.includes('evening')
-    ) {
-      return '4PM - 8PM';
-    } else if (
-      timeSlotLower.includes('8pm-12am') ||
-      timeSlotLower.includes('night')
-    ) {
-      return '8PM - 12AM';
-    }
-
-    const timeRange = timeSlot.match(
-      /(\d{1,2}(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?:AM|PM)?)/i
-    );
-    if (timeRange) {
-      const startTime = this.formatTimeComponent(timeRange[1]);
-      const endTime = this.formatTimeComponent(timeRange[2]);
-      return `${startTime} - ${endTime}`;
-    }
-
-    return timeSlot;
-  }
+  return displayFormatMap[cleanTimeSlot] || cleanTimeSlot;
+}
 
   // Helper method to format time components
   private formatTimeComponent(time: string): string {
@@ -447,6 +469,76 @@ closeReceiverPopup(): void {
     }
     return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
   }
+
+  onClearTimeSlot(): void {
+  this.selectedTimeSlot = '';
+  this.timeSlotChange.emit('');
+}
+
+private convertTimeSlotToBackendFormat(timeSlot: string): string {
+    if (!timeSlot) return '';
+    
+    const conversionMap: { [key: string]: string } = {
+      '8AM-2PM': 'Within 8AM - 2PM',
+      '2PM-8PM': 'Within 2PM - 8PM',
+      '8AM - 2PM': 'Within 8AM - 2PM',
+      '2PM - 8PM': 'Within 2PM - 8PM'
+    };
+    
+    return conversionMap[timeSlot] || timeSlot;
+  }
+
+  private convertTimeSlotToUIFormat(timeSlot: string): string {
+    if (!timeSlot) return '';
+    
+    // Remove "Within " prefix and clean up
+    const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
+    
+    // Convert to consistent format for dropdown
+    const uiFormatMap: { [key: string]: string } = {
+      '8AM - 2PM': '8AM-2PM',
+      '2PM - 8PM': '2PM-8PM',
+      '8AM-2PM': '8AM-2PM',
+      '2PM-8PM': '2PM-8PM'
+    };
+    
+    return uiFormatMap[cleanTimeSlot] || cleanTimeSlot;
+  }
+
+  private getStatusPriority(status: string): number {
+  const priorityMap: { [key: string]: number } = {
+    'Picked Up': 1,        // Highest priority
+    'Ready to Pickup': 2,  // Second priority
+    'Processing': 3,
+    'Pending': 4,
+    'Delivered': 5,
+    'Cancelled': 6
+  };
+  
+  return priorityMap[status] || 7; // Default lowest priority
+}
+
+private getSortTimestamp(item: any, status: string): Date {
+  // For "Picked Up" orders, use pickup timestamp if available
+  if (status === 'Picked Up') {
+    const pickupTime = item.pickupTime || item.pickedUpAt || item.updatedAt;
+    if (pickupTime) {
+      return new Date(pickupTime);
+    }
+  }
+  
+  // For "Ready to Pickup" orders, use status change timestamp if available
+  if (status === 'Ready to Pickup') {
+    const readyTime = item.readyAt || item.statusUpdatedAt || item.updatedAt;
+    if (readyTime) {
+      return new Date(readyTime);
+    }
+  }
+  
+  // Default: use order creation time or current date
+  const orderTime = item.orderCreatedAt || item.createdAt || new Date();
+  return new Date(orderTime);
+}
 }
 
 interface CenterDetails {

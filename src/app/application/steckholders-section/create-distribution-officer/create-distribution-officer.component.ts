@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
@@ -46,6 +46,7 @@ interface PhoneCode {
   styleUrl: './create-distribution-officer.component.css'
 })
 export class CreateDistributionOfficerComponent implements OnInit {
+  @ViewChild('pageContainer') pageContainer!: ElementRef;
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
@@ -226,7 +227,6 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 }
 
   back(): void {
-  const currentRoute = this.router.url;
   let confirmMessage = 'You may lose the added data after going back!';
   let confirmButtonText = 'Yes, Go Back';
   let cancelButtonText = 'No, Stay Here';
@@ -245,13 +245,9 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      if (currentRoute.includes('drivers/add-driver')) {
-        // Navigate to drivers list for driver route
-        this.router.navigate(['/steckholders/action/drivers']);
-      } else {
-        // Navigate to distribution officers list for regular route
-        this.router.navigate(['/steckholders/action/view-distribution-officers']);
-      }
+      // Use history back instead of specific route
+      window.history.back();
+      // Or: this.location.back();
     }
   });
 }
@@ -673,18 +669,18 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      if (this.isDriverRoute) {
-        // Navigate to drivers list for driver route
-        this.router.navigate(['/steckholders/action/drivers']);
-      } else {
-        // Navigate to distribution officers list for regular route
-        this.router.navigate(['/steckholders/action/view-distribution-officers']);
-      }
+      // Use browser history back instead of specific route navigation
+      window.history.back();
     }
   });
 }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
+    this.selectedPage = page;
+    // Scroll to top after page change
+    setTimeout(() => {
+      this.scrollToTop();
+    }, 100);
     console.log('pdatra', this.personalData)
     if (page === 'pageTwo') {
 
@@ -2203,6 +2199,15 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   
     if (!allowedPattern.test(pastedText)) {
       event.preventDefault();
+    }
+  }
+
+  scrollToTop(): void {
+    if (this.pageContainer && this.pageContainer.nativeElement) {
+      this.pageContainer.nativeElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
     }
   }
 }

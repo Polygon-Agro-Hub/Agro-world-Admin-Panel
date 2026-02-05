@@ -13,10 +13,10 @@ interface RejectedInvestmentRequest {
   officerId: number;
   jobId: string;
   extentha: number;
-  extentac: string;  // Changed to string based on API response
+  extentac: string; 
   extentp: number;
-  investment: string;  // Changed to string based on API response
-  expectedYield: string;  // Changed to string based on API response
+  investment: string; 
+  expectedYield: string; 
   startDate: string;
   nicFront: string;
   nicBack: string;

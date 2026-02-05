@@ -82,7 +82,7 @@
                                     {{ formatDate(step.payload.holdTime) }}.
                                     <div class="mt-1 dark:text-gray-400">
                                         Reason:
-                                        <span>"{{ step.payload.holdReason }}"</span>
+                                        <span class="font-bold">"{{ step.payload.holdReason }}"</span>
                                     </div>
                                 </ng-container>
             
@@ -99,12 +99,12 @@
                                     formatTime(step.payload.returnTime) }} on {{ formatDate(step.payload.returnTime) }}.
                                     <div class="mt-1 dark:text-gray-400">
                                         Reason:
-                                       <ng-container class="font-semibold"
+                                       <ng-container 
                                             *ngIf="step.payload.returnReson === 'Other'; else normalReturnReason">
-                                            <span>"{{ step.payload.returnNote }}"</span>
+                                            <span class="font-bold">"{{ step.payload.returnNote }}"</span>
                                         </ng-container>
-                                        <ng-template #normalReturnReason class="font-semibold"> 
-                                            <span>"{{ step.payload.returnReson }}"</span>
+                                        <ng-template #normalReturnReason> 
+                                            <span class="font-bold">"{{ step.payload.returnReson }}"</span>
                                         </ng-template>
                                     </div>
                                 </ng-container>

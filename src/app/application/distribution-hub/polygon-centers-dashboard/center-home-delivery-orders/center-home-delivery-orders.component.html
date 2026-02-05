@@ -169,23 +169,23 @@
               </div> -->
 
               <div class="relative flex items-center">
-                <p-calendar 
-                  id="toDate" 
-                  placeholder="Date" 
-                  [showIcon]="true" 
-                  [monthNavigator]="true" 
-                  [yearNavigator]="true"
-                  yearRange="1900:2030" 
-                  iconDisplay="input" 
-                  [(ngModel)]="selectedDate" 
-                  [showClear]="!!selectedDate"
-                  (onSelect)="dateFilter()"
-                  (onClear)="onDateClear()"
-                  [style]="{ width: '145px' }" 
-                  [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
-                  panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
-                  inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"/>
-              </div>
+  <p-calendar 
+    id="toDate" 
+    [placeholder]="datePlaceholder" 
+    [showIcon]="true" 
+    [monthNavigator]="true" 
+    [yearNavigator]="true"
+    yearRange="1900:2030" 
+    iconDisplay="input" 
+    [(ngModel)]="selectedDate" 
+    [showClear]="!!selectedDate"
+    (onSelect)="dateFilter()"
+    (onClear)="onDateClear()"
+    [style]="{ width: '145px' }" 
+    [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
+    panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+    inputStyleClass="text-[16px] h-8 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"/>
+</div>
 
               <div class=" text-textLight dark:text-textDark">
                 <p-dropdown #topfilters

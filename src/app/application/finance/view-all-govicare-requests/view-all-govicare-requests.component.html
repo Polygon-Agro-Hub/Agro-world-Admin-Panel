@@ -41,13 +41,13 @@
                 />
               </svg>
             </i>
-            <span class="text-sm text-[#828282]">Filter By</span>
+            <span class="text-[#828282]">Filter By</span>
           </div>
 
           <!-- Status Filter -->
           <div class="relative w-40 custom-status-dropdown-container">
             <p-dropdown
-              styleClass="rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark h-8 w-40"
+              styleClass="rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] dark:text-textDark h-8 w-40"
               [options]="statusDropdownOptions"
               [(ngModel)]="selectStatus"
               [showClear]="!!selectStatus"

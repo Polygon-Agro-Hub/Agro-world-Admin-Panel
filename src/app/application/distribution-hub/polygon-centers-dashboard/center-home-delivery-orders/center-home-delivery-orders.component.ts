@@ -18,7 +18,7 @@ import { HomeDeliveryViewPopupComponent } from "../home-delivery-view-popup/home
     FormsModule,
     CalendarModule,
     HomeDeliveryViewPopupComponent
-],
+  ],
   templateUrl: './center-home-delivery-orders.component.html',
   styleUrl: './center-home-delivery-orders.component.css'
 })
@@ -26,8 +26,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
   isLoading: boolean = false;
   activeTab: string = 'all';
 
-  placeholderDate: string = 'Date';
-
+  // Remove placeholderDate property
   selectedDate: string | Date | null = null;
   
   // Data from backend
@@ -86,6 +85,30 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
       this.centerRegCode = params['regCode'] || '';
     });
     this.centerFetchDeliveries();
+  }
+
+  // Add this computed property to get the placeholder text based on active tab
+  get datePlaceholder(): string {
+    switch (this.activeTab) {
+      case 'all':
+        return 'Schedule Date';
+      case 'out-for-delivery':
+        return 'Out Date';
+      case 'Collected':
+        return 'Collected Date';
+      case 'on-the-way':
+        return 'Started Date';
+      case 'hold':
+        return 'Hold Date';
+      case 'return':
+        return 'Return Date';
+      case 'delivered':
+        return 'Delivered Date';
+      case 'Return Received':
+        return 'Return Received Date';
+      default:
+        return 'Date';
+    }
   }
 
   back(): void {

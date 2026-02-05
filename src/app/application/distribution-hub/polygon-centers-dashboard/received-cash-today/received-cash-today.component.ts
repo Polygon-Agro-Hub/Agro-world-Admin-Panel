@@ -33,6 +33,9 @@ export class ReceivedCashTodayComponent implements OnInit {
   totalPickupIncome = 0;
   totalDeliveryIncome = 0;
 
+  totPickOrders: number = 0;
+  totDeliveryOrders: number = 0;
+
   pickupMetrics: OrderMetric[] = [];
   deliveryMetrics: OrderMetric[] = [];
 
@@ -126,6 +129,7 @@ export class ReceivedCashTodayComponent implements OnInit {
     ]
 
     this.totalPickupIncome = data.order_price
+    this.totPickOrders = data.all_pickup
   }
 
   assignDelivaryOrders(data: IDelivary) {
@@ -138,6 +142,7 @@ export class ReceivedCashTodayComponent implements OnInit {
       { label: 'Overdue Deliveries - Today', count: (data.all_delivary - data.today_delivary), color: '#FFA202' }
     ]
     this.totalDeliveryIncome = data.order_price
+    this.totDeliveryOrders = data.all_delivary
 
   }
 

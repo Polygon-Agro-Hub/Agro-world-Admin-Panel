@@ -819,7 +819,7 @@ export class ViewCollectiveOfficerProfileComponent {
 
   editOfficer(id: number, jobRole: string) {
     if (jobRole === 'Driver') {
-      this.router.navigate([`/steckholders/action/view-distribution-officers/update-distribution-officer/${id}`]);
+      this.router.navigate([`/steckholders/action/drivers/edit-driver/${id}`]);
     }
   }
 }

@@ -114,7 +114,7 @@ export class FarmerPensionService {
 
   updatePensionRequestStatus(id: string, status: string, userId: string, notes: string = ''): Observable<any> {
     const headers = this.getHeaders();
-    const url = `${this.apiUrl}auth/update-pension-request/${id}`;
+    const url = `${this.apiUrl}finance/update-pension-request/${id}`;
 
     const body = {
       reqStatus: status,

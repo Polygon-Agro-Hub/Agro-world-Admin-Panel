@@ -107,7 +107,7 @@ export class FarmerPensionService {
   // Get pension request by ID
   getPensionRequestById(id: string): Observable<any> {
     const headers = this.getHeaders();
-    const url = `${this.apiUrl}auth/pension-request/${id}`;
+    const url = `${this.apiUrl}finance/pension-request/${id}`;
 
     return this.http.get<any>(url, { headers });
   }

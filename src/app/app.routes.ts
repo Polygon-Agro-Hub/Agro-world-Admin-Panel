@@ -601,10 +601,6 @@ export const routes: Routes = [
                 component: ViewFarmerPensionUnder5YearsComponent,
               },
               {
-                path:'pension-requests',
-                component:PensionRequestsComponent,
-              },
-              {
                 path: 'cultivation-history/:id',
                 component: CultivationHistoryComponent
               },
@@ -759,6 +755,10 @@ export const routes: Routes = [
                     component: AuditPersonalInfoComponent,
                   },
                 ],
+              },
+              {
+                path:'pension-requests',
+                component:PensionRequestsComponent,
               },
               {
                 path: 'agents-commission',

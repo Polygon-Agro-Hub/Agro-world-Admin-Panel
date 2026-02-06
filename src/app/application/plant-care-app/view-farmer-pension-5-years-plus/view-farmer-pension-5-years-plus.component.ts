@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { FarmerPensionService } from '../../../services/plant-care/farmer-pension.service';
+import { FarmerPensionService } from '../../../services/finance/farmer-pension.service';
 
 @Component({
   selector: 'app-view-farmer-pension-5-years-plus',

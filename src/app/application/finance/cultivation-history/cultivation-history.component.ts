@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FarmerPensionService } from '../../../services/plant-care/farmer-pension.service';
+import { FarmerPensionService } from '../../../services/finance/farmer-pension.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { ActivatedRoute } from '@angular/router';

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { FarmerPensionService } from '../../../services/plant-care/farmer-pension.service';
+import { FarmerPensionService } from '../../../services/finance/farmer-pension.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({

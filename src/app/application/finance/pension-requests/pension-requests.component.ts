@@ -7,7 +7,7 @@ import {
   FarmerPensionService,
   PensionRequest,
   PensionRequestDetail,
-} from '../../../services/plant-care/farmer-pension.service';
+} from '../../../services/finance/farmer-pension.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';

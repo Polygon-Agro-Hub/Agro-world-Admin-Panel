@@ -96,7 +96,7 @@ export class FarmerPensionService {
     }
 
     const headers = this.getHeaders();
-    const url = `${this.apiUrl}auth/pension-requests`;
+    const url = `${this.apiUrl}finance/pension-requests`;
 
     return this.http.get<PensionRequestResponse>(url, {
       headers: headers,

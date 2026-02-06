@@ -363,7 +363,7 @@ export class PensionRequestsComponent implements OnInit {
       console.error('ID not found in request');
       return;
     }
-    this.router.navigate([`/plant-care/action/cultivation-history/${id}`], {
+    this.router.navigate([`/finance/action/cultivation-history/${id}`], {
       queryParams: { nic: request.NIC },
     });
   }

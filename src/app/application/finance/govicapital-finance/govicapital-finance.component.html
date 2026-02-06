@@ -303,8 +303,7 @@
             NIC Number
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{ selectedRequest.NICnumber }}
+            : {{ selectedRequest.NICnumber || "N/A" }}
           </div>
         </div>
 
@@ -314,7 +313,7 @@
             Phone Number
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.phoneNumber }}
+            : {{ selectedRequest.phoneNumber || "N/A" }}
           </div>
         </div>
 
@@ -324,29 +323,9 @@
             Crop
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.cropNameEnglish }}
+            : {{ selectedRequest.cropNameEnglish || "N/A" }}
           </div>
         </div>
-
-        <!-- Variety -->
-        <!-- <div class="grid grid-cols-2 gap-4">
-          <div class="text-sm font-medium text-textLight dark:text-textDark">
-            Variety
-          </div>
-          <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.varietyNameEnglish }}
-          </div>
-        </div> -->
-
-        <!-- Certificate -->
-        <!-- <div class="grid grid-cols-2 gap-4">
-          <div class="text-sm font-medium text-textLight dark:text-textDark">
-            Certificate
-          </div>
-          <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.certificateName }}
-          </div>
-        </div> -->
 
         <!-- Extent -->
         <div class="grid grid-cols-2 gap-4">
@@ -354,7 +333,7 @@
             Extent
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.extentac.toFixed(4) }} Acres
+            : {{ formatExtent(selectedRequest.extentac) }} Acres
           </div>
         </div>
 
@@ -364,12 +343,7 @@
             Expected Investment
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              formatCurrency(
-                selectedRequest.expectedInvestment || selectedRequest.investment
-              )
-            }}
+            : {{ formatCurrency(selectedRequest.investment) }}
           </div>
         </div>
 
@@ -379,12 +353,7 @@
             Expected Yield
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              selectedRequest.expectedYield
-                ? selectedRequest.expectedYield + "kg"
-                : "2,000kg"
-            }}
+            : {{ (selectedRequest.expectedYield || "0") + " kg" }}
           </div>
         </div>
 
@@ -394,12 +363,7 @@
             Expected Start Date
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              formatDate(
-                selectedRequest.expectedStartDate || selectedRequest.startDate
-              ) || "November 1, 2026"
-            }}
+            : {{ formatDate(selectedRequest.startDate) }}
           </div>
         </div>
 
@@ -409,26 +373,17 @@
             Request Date & Time
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              formatDate(
-                selectedRequest.requestDateTime || selectedRequest.createdAt
-              ) || "At 11.00AM on October 1, 2026"
-            }}
+            : {{ formatDate(selectedRequest.createdAt) }}
           </div>
         </div>
 
         <!-- Rejection Reason -->
         <div class="grid grid-cols-2 gap-4">
           <div class="text-sm font-medium text-textLight dark:text-textDark">
-            Rejected Reason
+            Rejection Reason
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              selectedRequest.rejectionReason ||
-                "The farmer currently does not possess such a land to cultivate and new as a farmer to have such a large investment."
-            }}
+            : {{ selectedRequest.rejectionReason || "No reason provided" }}
           </div>
         </div>
       </div>

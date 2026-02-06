@@ -91,6 +91,7 @@ export class UpdateDistributionOfficerComponent {
   role: any = '';
   totalItems: number = 0;
   isApproved: boolean = false;
+  urlSegment: string = '';
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -185,11 +186,7 @@ export class UpdateDistributionOfficerComponent {
     { name: 'Vavuniya', province: 'Northern' },
   ];
 
-  jobRoleOptions: any[] = [
-    { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
-    { label: 'Distribution Officer', value: 'Distribution Officer' },
-    { label: 'Driver', value: 'Driver' }
-  ];
+  jobRoleOptions: any[] = [];
 
   setupDropdownOptions() {
     this.districts = this.districts.sort((a, b) =>
@@ -225,7 +222,10 @@ export class UpdateDistributionOfficerComponent {
     this.loadBranches();
     this.setupDropdownOptions();
     this.itemId = this.route.snapshot.params['id'];
-
+    // If you want the last segment of the URL
+    const urlSegments = this.router.url.split('/').filter(segment => segment.length > 0);
+    this.urlSegment = urlSegments[urlSegments.length - 2];
+    this.chooseJobRole();
     if (this.itemId) {
       this.fetchData();
     }
@@ -1436,11 +1436,11 @@ export class UpdateDistributionOfficerComponent {
     this.selectedPage = page;
 
     setTimeout(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth' // Add smooth scrolling effect
-    });
-  }, 100);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Add smooth scrolling effect
+      });
+    }, 100);
   }
 
 
@@ -1478,65 +1478,65 @@ export class UpdateDistributionOfficerComponent {
 
   // Update getAllCollectionCetnter method
   getAllCollectionCetnter() {
-  this.distributionOfficerServ
-    .getDistributionCentreList(
-      this.personalData.companyId,
-    )
-    .subscribe((res) => {
-      this.collectionCenterData = res;
+    this.distributionOfficerServ
+      .getDistributionCentreList(
+        this.personalData.companyId,
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
 
-      // Convert to dropdown options format with regCode
-      this.centerOptions = this.collectionCenterData.map((center) => ({
-        label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
-        value: center.id,
-        // Store original data if needed
-        originalLabel: center.centerName,
-        regCode: center.regCode
-      }));
-    });
-}
+        // Convert to dropdown options format with regCode
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
+          value: center.id,
+          // Store original data if needed
+          originalLabel: center.centerName,
+          regCode: center.regCode
+        }));
+      });
+  }
 
   getAllCollectionCenters() {
-  // Reset center data
-  this.collectionCenterData = []
-  this.personalData.centerId = null;
-  this.managerOptions = [];
-  this.personalData.irmId = null;
-  
-  this.distributionOfficerServ
-    .getDistributionCentreList(
-      this.personalData.companyId,
-    )
-    .subscribe((res) => {
-      this.collectionCenterData = res;
+    // Reset center data
+    this.collectionCenterData = []
+    this.personalData.centerId = null;
+    this.managerOptions = [];
+    this.personalData.irmId = null;
 
-      // Convert to dropdown options format with regCode
-      this.centerOptions = this.collectionCenterData.map((center) => ({
-        label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
-        value: center.id,
-        originalLabel: center.centerName,
-        regCode: center.regCode
-      }));
-    });
-}
+    this.distributionOfficerServ
+      .getDistributionCentreList(
+        this.personalData.companyId,
+      )
+      .subscribe((res) => {
+        this.collectionCenterData = res;
+
+        // Convert to dropdown options format with regCode
+        this.centerOptions = this.collectionCenterData.map((center) => ({
+          label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
+          value: center.id,
+          originalLabel: center.centerName,
+          regCode: center.regCode
+        }));
+      });
+  }
 
   // Update getAllCollectionManagers method
   getAllCollectionManagers() {
-  this.distributionOfficerServ
-    .getAllManagerList(
-      this.personalData.companyId,
-      this.personalData.centerId
-    )
-    .subscribe((res) => {
-      this.collectionManagerData = res;
+    this.distributionOfficerServ
+      .getAllManagerList(
+        this.personalData.companyId,
+        this.personalData.centerId
+      )
+      .subscribe((res) => {
+        this.collectionManagerData = res;
 
-      // Convert to dropdown options format
-      this.managerOptions = this.collectionManagerData.map((manager) => ({
-        label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
-        value: manager.id,
-      }));
-    });
-}
+        // Convert to dropdown options format
+        this.managerOptions = this.collectionManagerData.map((manager) => ({
+          label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
+          value: manager.id,
+        }));
+      });
+  }
   onCheckboxChange(language: string, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
@@ -1894,7 +1894,7 @@ export class UpdateDistributionOfficerComponent {
 
               if (error.error && Array.isArray(error.error.errors)) {
                 messages = error.error.errors.map((err: string) => {
-                  console.log('error', )
+                  console.log('error',)
                   switch (err) {
                     case 'NIC':
                       return 'The NIC number is already registered.';
@@ -1999,7 +1999,7 @@ export class UpdateDistributionOfficerComponent {
   preventSpecialCharacters(event: KeyboardEvent) {
     const allowedPattern = /^[a-zA-Z0-9]$/;
     const inputChar = event.key;
-  
+
     if (!allowedPattern.test(inputChar)) {
       event.preventDefault();
     }
@@ -2008,7 +2008,7 @@ export class UpdateDistributionOfficerComponent {
   preventSpecialCharactersPaste(event: ClipboardEvent) {
     const pastedText = event.clipboardData?.getData('text') || '';
     const allowedPattern = /^[a-zA-Z0-9]+$/;
-  
+
     if (!allowedPattern.test(pastedText)) {
       event.preventDefault();
     }
@@ -2224,6 +2224,20 @@ export class UpdateDistributionOfficerComponent {
       }
     });
   }
+
+  chooseJobRole() {
+    if (this.urlSegment === 'edit-driver') {
+      this.jobRoleOptions = [
+        { label: 'Driver', value: 'Driver' }
+      ];
+    } else {
+      this.jobRoleOptions = [
+        { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
+        { label: 'Distribution Officer', value: 'Distribution Officer' },
+        // { label: 'Driver', value: 'Driver' }
+      ];
+    }
+  }
 }
 
 class Personal {
@@ -2304,7 +2318,7 @@ class Drivers {
   licenseFrontImage!: string;
   licenseBackImage!: string;
   insurenceFrontImage!: string;
-  insurenceBackImage! :string;
+  insurenceBackImage!: string;
   vehicleFrontImage!: string;
   vehicleBackImage!: string;
   vehicleSideAImage!: string;

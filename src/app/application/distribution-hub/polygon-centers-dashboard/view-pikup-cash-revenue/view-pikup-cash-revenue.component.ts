@@ -128,13 +128,15 @@ export class ViewPikupCashRevenueComponent implements OnInit, OnDestroy {
   // }
 
   private calculateSummary(): void {
-    this.totalAmount = this.revenueData.reduce(
-      (sum, item) => sum + (item.handOverPrice || 0),
-      0,
-    );
-    this.totalOrders = this.revenueData.length;
-  }
-
+  this.totalAmount = this.revenueData.reduce(
+    (sum, item) => {
+      const price = Number(item.handOverPrice);
+      return sum + (!isNaN(price) ? price : 0);
+    },
+    0,
+  );
+  this.totalOrders = this.revenueData.length;
+}
   private resetSummary(): void {
     this.totalAmount = 0;
     this.totalOrders = 0;

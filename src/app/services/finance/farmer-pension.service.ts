@@ -143,7 +143,7 @@ export class FarmerPensionService {
 
    getPensionForCultivation(id: string): Observable<any> {
     const headers = this.getHeaders();
-    const url = `${this.apiUrl}auth/get-cultivation-for-pension/${id}`;
+    const url = `${this.apiUrl}finance/get-cultivation-for-pension/${id}`;
 
     return this.http.get<any>(url, { headers });
   }

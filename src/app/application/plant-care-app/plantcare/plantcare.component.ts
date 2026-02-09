@@ -21,7 +21,6 @@ export class PlantcareComponent {
   popupVisibleCertification = false;
   popupVisibleFarmerClusters = false;
   popupVisibleAuditFarmers = false;
-  popupVisibleFarmerPension = false;
   popupVisiblePentionRequests = false;
 
   constructor(
@@ -102,14 +101,6 @@ export class PlantcareComponent {
     if (this.popupVisibleCertification) this.popupVisibleCertification = false;
     if (this.popupVisibleFarmerClusters)
       this.popupVisibleFarmerClusters = false;
-  }
-
-  togglePopupFarmerPension() {
-    this.popupVisibleFarmerPension = !this.popupVisibleFarmerPension;
-    if (this.popupVisibleNews) this.popupVisibleNews = false;
-    if (this.popupVisibleMarketPrice) this.popupVisibleMarketPrice = false;
-    if (this.popupVisibleCropCalender) this.popupVisibleCropCalender = false;
-    if (this.popupVisibleCertification) this.popupVisibleCertification = false;
   }
 
   navigateToCreateNews(): void {
@@ -257,13 +248,5 @@ export class PlantcareComponent {
 
   viewPentionRequests(): void {
     this.router.navigate(['/plant-care/action/pension-requests']);
-  }
-
-  viewUnder5YearsFarmersPension(): void {
-    this.router.navigate(['/plant-care/action/farmer-pension-under-5-years']);
-  }
-
-  viewFarmerPension5YearsPlus(): void {
-    this.router.navigate(['/plant-care/action/farmer-pension-5-years-plus']);
   }
 }

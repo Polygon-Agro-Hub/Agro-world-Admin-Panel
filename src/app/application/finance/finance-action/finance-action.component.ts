@@ -12,11 +12,12 @@ import { PermissionService } from '../../../services/roles-permission/permission
   styleUrl: './finance-action.component.css',
 })
 export class FinanceActionComponent {
+  popupVisiblePentionRequests = false;
   constructor(
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   farmerPayments(): void {
     this.router.navigate(['/finance/action/farmer-payments']);
@@ -44,5 +45,13 @@ export class FinanceActionComponent {
 
   back(): void {
     this.router.navigate(['finance/action']);
+  }
+
+  viewPentionRequests(): void {
+    this.router.navigate(['/finance/action/pension-requests']);
+  }
+
+  togglePopupPentionRequests() {
+    this.popupVisiblePentionRequests = !this.popupVisiblePentionRequests;
   }
 }

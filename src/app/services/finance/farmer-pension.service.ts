@@ -96,7 +96,7 @@ export class FarmerPensionService {
     }
 
     const headers = this.getHeaders();
-    const url = `${this.apiUrl}auth/pension-requests`;
+    const url = `${this.apiUrl}finance/pension-requests`;
 
     return this.http.get<PensionRequestResponse>(url, {
       headers: headers,
@@ -107,14 +107,14 @@ export class FarmerPensionService {
   // Get pension request by ID
   getPensionRequestById(id: string): Observable<any> {
     const headers = this.getHeaders();
-    const url = `${this.apiUrl}auth/pension-request/${id}`;
+    const url = `${this.apiUrl}finance/pension-request/${id}`;
 
     return this.http.get<any>(url, { headers });
   }
 
   updatePensionRequestStatus(id: string, status: string, userId: string, notes: string = ''): Observable<any> {
     const headers = this.getHeaders();
-    const url = `${this.apiUrl}auth/update-pension-request/${id}`;
+    const url = `${this.apiUrl}finance/update-pension-request/${id}`;
 
     const body = {
       reqStatus: status,
@@ -143,7 +143,7 @@ export class FarmerPensionService {
 
    getPensionForCultivation(id: string): Observable<any> {
     const headers = this.getHeaders();
-    const url = `${this.apiUrl}auth/get-cultivation-for-pension/${id}`;
+    const url = `${this.apiUrl}finance/get-cultivation-for-pension/${id}`;
 
     return this.http.get<any>(url, { headers });
   }

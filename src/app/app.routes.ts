@@ -760,7 +760,7 @@ export const routes: Routes = [
               {
                 path: 'pension-requests-view-documents/:id',
                 component: PensionRequestsViewDocumentsComponent,
-              }
+              },
               {
                 path: 'farmer-pension-under-5-years',
                 component: ViewFarmerPensionUnder5YearsComponent,

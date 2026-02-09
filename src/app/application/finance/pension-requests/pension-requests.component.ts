@@ -389,13 +389,16 @@ export class PensionRequestsComponent implements OnInit {
   }
 
   openViewDocuments(request: PensionRequest): void {
-    // Get the NIC from the current request
-    const id = request.User_ID;
+    // Use Request_ID instead of User_ID
+    const id = request.Request_ID;
 
     if (!id) {
-      console.error('ID not found in request');
+      console.error('Request_ID not found in request');
       return;
     }
+
+    console.log('Navigating to view documents for Request_ID:', id);
+
     this.router.navigate(
       [`/finance/action/pension-requests-view-documents/${id}`],
       {

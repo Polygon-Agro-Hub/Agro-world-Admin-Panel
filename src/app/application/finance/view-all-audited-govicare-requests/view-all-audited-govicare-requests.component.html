@@ -67,31 +67,31 @@
           <table class="w-full" *ngIf="govicareRequests.length > 0">
             <thead>
               <tr class="border-b border-gray-200 dark:border-gray-700">
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">No
+                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">No
                 </th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Request_ID</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Farmer Name</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Phone number</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Audited By</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Audit Date</th>
                 <th 
-                  class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                  class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap"
                   *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'"
                   >
                   NIC Front Image</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap"
                 *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'"
                 >
                   NIC Back Image</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap"
                 *ngIf=" permissionService.hasPermission('View audit request result') || tokenService.getUserDetails().role === '1'">
                   Audit Results</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap"
                  *ngIf=" permissionService.hasPermission('Audited request other details') || tokenService.getUserDetails().role === '1'">
                   Details</th>
               </tr>

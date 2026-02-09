@@ -11,6 +11,7 @@ interface CurrentAssetsViewRecord {
   numOfPlusUnit: any;
   numOfMinUnit: any;
   totalPrice: any;
+  volumeOrWeight?: any;
   createdAt: string;
 }
 

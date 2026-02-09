@@ -132,7 +132,7 @@ export class FarmerPensionService {
   ): Observable<{ total: number; items: any[] }> {
     const headers = this.getHeaders();
 
-    let url = `${this.apiUrl}auth/farmer-pension-details?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}finance/farmer-pension-details?page=${page}&limit=${limit}`;
 
     if (searchText) {
       url += `&searchText=${encodeURIComponent(searchText)}`;

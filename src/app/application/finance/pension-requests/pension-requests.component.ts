@@ -369,22 +369,38 @@ export class PensionRequestsComponent implements OnInit {
   }
 
   formatTime(dateString: string): string {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  return date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  });
-}
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  }
 
-formatDateLikeImage(dateString: string): string {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit'
-  });
-}
+  formatDateLikeImage(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit',
+    });
+  }
+
+  openViewDocuments(request: PensionRequest): void {
+    // Get the NIC from the current request
+    const id = request.User_ID;
+
+    if (!id) {
+      console.error('ID not found in request');
+      return;
+    }
+    this.router.navigate(
+      [`/finance/action/pension-requests-view-documents/${id}`],
+      {
+        queryParams: { nic: request.NIC },
+      },
+    );
+  }
 }

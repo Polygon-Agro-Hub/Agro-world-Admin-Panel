@@ -212,4 +212,5 @@ class CompanyDetails {
   ownedCentersCount!: number;
   managerCount!: number;
   officerCount!: number;
+  modifyBy!:string;
 }

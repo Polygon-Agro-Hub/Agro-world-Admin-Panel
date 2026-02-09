@@ -79,11 +79,6 @@
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
               >
-                Status
-              </th>
-              <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
-              >
                 Cultivation History
               </th>
               <th
@@ -133,24 +128,6 @@
                       stroke-linejoin="round"
                     />
                   </svg>
-                </button>
-              </td>
-
-              <td class="px-4 py-4 text-center">
-                <button
-                  (click)="openApproveRejectModal(request)"
-                  [disabled]="request.reqStatus !== 'To Review'"
-                  [class]="
-                    'px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto ' +
-                    getStatusClass(request.reqStatus)
-                  "
-                  [title]="
-                    request.reqStatus === 'To Review'
-                      ? 'Click to review this request'
-                      : request.reqStatus
-                  "
-                >
-                  {{ request.reqStatus }}
                 </button>
               </td>
               <td class="px-4 py-4 text-center">

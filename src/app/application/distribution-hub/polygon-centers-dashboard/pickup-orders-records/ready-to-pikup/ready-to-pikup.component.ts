@@ -48,21 +48,18 @@ interface Order {
 })
 export class ReadyToPikupComponent implements OnChanges {
   @Input() centerObj!: CenterDetails;
-  @Input() orders: any[] = []; // Orders from parent
+  @Input() orders: any[] = [];
 
-  // Output events for parent to handle filters
   @Output() dateChange = new EventEmitter<Date | null>();
   @Output() timeSlotChange = new EventEmitter<string>();
   @Output() searchChange = new EventEmitter<string>();
   @Output() clearSearch = new EventEmitter<void>();
   @Output() clearDate = new EventEmitter<void>();
 
-  // Local filter properties for child component
   selectedDate: Date | null = null;
   selectedTimeSlot: string = '';
   searchText: string = '';
 
-  // Time slot options for dropdown - updated format
   timeSlotOptions = [
     { label: '8AM - 2PM', value: '8AM-2PM' },
     { label: '2PM - 8PM', value: '2PM-8PM' }
@@ -90,7 +87,6 @@ export class ReadyToPikupComponent implements OnChanges {
       this.transformData();
     }
     
-    // Update local filter values when parent passes them
     if (changes['searchText']) {
       console.log('Search text changed from parent:', changes['searchText'].currentValue);
       this.searchText = changes['searchText'].currentValue || '';
@@ -103,16 +99,13 @@ export class ReadyToPikupComponent implements OnChanges {
     
     if (changes['selectedTimeSlot']) {
       console.log('Time slot changed from parent:', changes['selectedTimeSlot'].currentValue);
-      // Convert backend format to UI format for dropdown
       const backendTimeSlot = changes['selectedTimeSlot'].currentValue || '';
       this.selectedTimeSlot = this.convertTimeSlotToUIFormat(backendTimeSlot);
     } else if (this.selectedTimeSlot === undefined) {
-      // Initialize if undefined
       this.selectedTimeSlot = '';
     }
   }
 
-  // Method to convert UI time slot to backend format (WITH "Within")
   private convertTimeSlotToBackendFormat(timeSlot: string): string {
     if (!timeSlot) return '';
     
@@ -126,14 +119,11 @@ export class ReadyToPikupComponent implements OnChanges {
     return conversionMap[timeSlot] || timeSlot;
   }
 
-  // Method to convert backend time slot to UI format (WITHOUT "Within")
   private convertTimeSlotToUIFormat(timeSlot: string): string {
     if (!timeSlot) return '';
     
-    // Remove "Within " prefix and clean up
     const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
     
-    // Convert to consistent format for dropdown
     const uiFormatMap: { [key: string]: string } = {
       '8AM - 2PM': '8AM-2PM',
       '2PM - 8PM': '2PM-8PM',
@@ -159,7 +149,6 @@ export class ReadyToPikupComponent implements OnChanges {
     }
   }
 
-  // Filter methods - emit events to parent
   onDateSelect(): void {
     console.log('Date selected:', this.selectedDate);
     this.dateChange.emit(this.selectedDate);
@@ -178,11 +167,9 @@ export class ReadyToPikupComponent implements OnChanges {
     this.timeSlotChange.emit(backendTimeSlot);
   }
 
-  // Add method to clear time slot
   onClearTimeSlot(): void {
     console.log('Time slot cleared');
     this.selectedTimeSlot = '';
-    // Send empty string to backend
     this.timeSlotChange.emit('');
   }
 
@@ -197,54 +184,13 @@ export class ReadyToPikupComponent implements OnChanges {
     this.clearSearch.emit();
   }
 
-  // Transform API data to match your Order interface
+  // SORTING REMOVED - orders displayed as received from API
   private transformApiData(apiData: any[]): Order[] {
-  // First, transform and add timestamp for sorting
-  const ordersWithTimestamp = apiData.map((item, index) => {
-    // Get the most relevant timestamp for sorting
-    // Priority: schedule date -> order creation date -> current date
-    let sortTimestamp: Date;
-    
-    // First try to use schedule date if available
-    if (item.scheduleDate || item.sheduleDate) {
-      const scheduleDateStr = item.scheduleDate || item.sheduleDate;
-      sortTimestamp = new Date(scheduleDateStr);
-      
-      // If there's a time slot, adjust the time
-      const timeSlot = item.timeSlot || item.sheduleTime;
-      if (timeSlot) {
-        // Extract the start time from the time slot
-        const timeMatch = timeSlot.match(/(\d+)(AM|PM)/i);
-        if (timeMatch) {
-          let hour = parseInt(timeMatch[1]);
-          const ampm = timeMatch[2].toUpperCase();
-          
-          // Convert to 24-hour format
-          if (ampm === 'PM' && hour < 12) hour += 12;
-          if (ampm === 'AM' && hour === 12) hour = 0;
-          
-          sortTimestamp.setHours(hour, 0, 0, 0);
-        }
-      }
-    }
-    // Fallback to order creation date
-    else if (item.orderCreatedAt) {
-      sortTimestamp = new Date(item.orderCreatedAt);
-    }
-    // Fallback to any updated timestamp
-    else if (item.updatedAt) {
-      sortTimestamp = new Date(item.updatedAt);
-    }
-    // Fallback to current date (lowest priority)
-    else {
-      sortTimestamp = new Date();
-    }
-    
-    return {
-      no: index + 1, // Temporary number, will be reassigned after sorting
+    return apiData.map((item, index) => ({
+      no: index + 1,
       orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
       value: this.formatCurrencyValue(item.fullTotal),
-      status: 'Ready to Pickup', // Force status for this component
+      status: 'Ready to Pickup',
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
         item.customerPhoneNumber,
@@ -258,41 +204,15 @@ export class ReadyToPikupComponent implements OnChanges {
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
-      originalData: item,
-      sortTimestamp: sortTimestamp // Add timestamp for sorting
-    };
-  });
+      originalData: item
+    }));
+  }
 
-  // Sort orders by timestamp in descending order (most recent first)
-  const sortedOrders = ordersWithTimestamp.sort((a, b) => {
-    // If both have timestamps, compare them
-    if (a.sortTimestamp && b.sortTimestamp) {
-      return b.sortTimestamp.getTime() - a.sortTimestamp.getTime();
-    }
-    
-    // If one has timestamp and other doesn't, prioritize the one with timestamp
-    if (a.sortTimestamp && !b.sortTimestamp) return -1;
-    if (!a.sortTimestamp && b.sortTimestamp) return 1;
-    
-    // Fallback: sort by order ID if no timestamps
-    return b.orderId.localeCompare(a.orderId);
-  });
-
-  // Reassign sequential numbers after sorting
-  return sortedOrders.map((order, index) => ({
-    ...order,
-    no: index + 1
-  }));
-}
-
-  // NEW: Update time slot display formatting to remove "Within"
   private getFormattedTimeSlotForDisplay(timeSlot: string): string {
     if (!timeSlot) return '';
 
-    // Remove "Within " prefix if present
     const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
     
-    // Format nicely for display
     const displayFormatMap: { [key: string]: string } = {
       '8AM - 2PM': '8AM - 2PM',
       '2PM - 8PM': '2PM - 8PM',
@@ -305,7 +225,6 @@ export class ReadyToPikupComponent implements OnChanges {
     return displayFormatMap[cleanTimeSlot] || cleanTimeSlot;
   }
 
-  // Format scheduled time slot
   private formatScheduledTimeSlot(item: any): string {
     const scheduleDate = item.scheduleDate || item.sheduleDate;
     const timeSlot = item.timeSlot || item.sheduleTime;
@@ -320,7 +239,6 @@ export class ReadyToPikupComponent implements OnChanges {
     return `${formattedTimeSlot}<br>${formattedDate}`;
   }
 
-  // Helper method to format time components
   private formatTimeComponent(time: string): string {
     time = time.trim().toUpperCase();
 
@@ -339,7 +257,6 @@ export class ReadyToPikupComponent implements OnChanges {
     return time;
   }
 
-  // Helper method to format phone numbers
   private formatPhoneNumber(code: string, number: string): string {
     if (!code && !number) return 'N/A';
     if (code && number) {
@@ -350,7 +267,6 @@ export class ReadyToPikupComponent implements OnChanges {
     return number || code || 'N/A';
   }
 
-  // Helper method to get receiver info
   private getReceiverInfo(item: any): string {
     const infoParts = [];
 
@@ -365,7 +281,6 @@ export class ReadyToPikupComponent implements OnChanges {
     return infoParts.length > 0 ? infoParts.join(', ') : 'N/A';
   }
 
-  // Update payment status
   private getPaymentStatus(isPaid: number | string): string {
     const paidStatus = parseInt(isPaid?.toString() || '0');
 
@@ -393,7 +308,6 @@ export class ReadyToPikupComponent implements OnChanges {
     });
   }
 
-  // Add this method to format the scheduleDate for display
   formatDisplayDate(dateString: string): string {
     if (!dateString) return 'N/A';
     return this.datePipe.transform(dateString, 'MMM d, yyyy') || 'N/A';
@@ -549,7 +463,6 @@ export class ReadyToPikupComponent implements OnChanges {
     this.selectedOrderDisplayId = '';
   }
 
-  // Function to get payment status color
   getPaymentColor(payment: string): string {
     switch (payment) {
       case 'Paid':

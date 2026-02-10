@@ -42,6 +42,14 @@
     color: #B1B1B1 !important;
 }
 
+/* ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.75rem !important;
+ 
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.75rem !important;
+} */
 
 /* Dark mode styles for PrimeNG Calendar */
 .dark .custom-calendar .p-datepicker {
@@ -149,11 +157,11 @@
 /* Remove left padding from dropdown items */
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   padding-left: 0.75rem !important; /* Reduce from default 1rem to 0.75rem */
-  padding-right: 0.75rem !important;
+ 
 }
 
 ::ng-deep .p-dropdown-panel .p-dropdown-item .p-dropdown-item-text {
-  padding-left: 0 !important;
+  padding-left:  0.75rem  !important;
 }
 
 /* Specifically target the center dropdown in your modal */
@@ -163,12 +171,12 @@
 
 /* For the top filter dropdowns */
 ::ng-deep .custom-top-dropdown .p-dropdown-panel .p-dropdown-item {
-  padding-left: 0.20rem !important;
+  padding-left: 0.75rem !important;
 }
 
 /* Dark mode adjustments */
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.20rem !important;
+  padding-left: 0.75rem !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item .p-dropdown-item-text {

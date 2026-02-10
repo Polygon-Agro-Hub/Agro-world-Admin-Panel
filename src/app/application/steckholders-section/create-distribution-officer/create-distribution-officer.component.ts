@@ -143,8 +143,8 @@ export class CreateDistributionOfficerComponent implements OnInit {
     { code: 'BD', dialCode: '+880', name: 'Bangladesh' },
     { code: 'IN', dialCode: '+91', name: 'India' },
     { code: 'NL', dialCode: '+31', name: 'Netherlands' },
-    { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
-    { code: 'US', dialCode: '+1', name: 'United States' }
+    // { code: 'UK', dialCode: '+44', name: 'United Kingdom' },
+    // { code: 'US', dialCode: '+1', name: 'United States' }
   ];
 
   getFlagUrl(countryCode: string): string {
@@ -254,188 +254,188 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 
 
   onSubmit() {
-    // const missingFields: string[] = [];
+    const missingFields: string[] = [];
 
-    // // Check required fields for pageOne
-    // if (!this.personalData.empType) {
-    //   missingFields.push('Staff Employee Type is Required');
-    // }
+    // Check required fields for pageOne
+    if (!this.personalData.empType) {
+      missingFields.push('Staff Employee Type is Required');
+    }
 
-    // if (!this.isAtLeastOneLanguageSelected()) {
-    //   missingFields.push('Preferred Languages is Required');
-    // }
+    if (!this.isAtLeastOneLanguageSelected()) {
+      missingFields.push('Preferred Languages is Required');
+    }
 
-    // if (!this.personalData.companyId) {
-    //   missingFields.push('Company Name is Required');
-    // }
+    if (!this.personalData.companyId) {
+      missingFields.push('Company Name is Required');
+    }
 
-    // if (!this.personalData.centerId) {
-    //   missingFields.push('Collection Centre Name is Required');
-    // }
+    if (!this.personalData.centerId) {
+      missingFields.push('Collection Centre Name is Required');
+    }
 
-    // if (!this.personalData.jobRole) {
-    //   missingFields.push('Job Role is Required');
-    // }
+    if (!this.personalData.jobRole) {
+      missingFields.push('Job Role is Required');
+    }
 
-    // if (this.personalData.jobRole === 'Distribution Officer' && !this.personalData.irmId) {
-    //   missingFields.push('Manager Name is Required');
-    // }
+    if (this.personalData.jobRole === 'Distribution Officer' && !this.personalData.irmId) {
+      missingFields.push('Manager Name is Required');
+    }
 
-    // if (!this.personalData.firstNameEnglish ) {
-    //   missingFields.push('First Name (in English) is Required');
-    // }
+    if (!this.personalData.firstNameEnglish ) {
+      missingFields.push('First Name (in English) is Required');
+    }
 
-    // if (!this.personalData.lastNameEnglish) {
-    //   missingFields.push('Last Name (in English) is Required');
-    // }
+    if (!this.personalData.lastNameEnglish) {
+      missingFields.push('Last Name (in English) is Required');
+    }
 
-    // if (!this.personalData.firstNameSinhala && !this.isDriverRoute) {
-    //   missingFields.push('First Name (in Sinhala) is Required');
-    // }
+    if (!this.personalData.firstNameSinhala && !this.isDriverRoute) {
+      missingFields.push('First Name (in Sinhala) is Required');
+    }
 
-    // if (!this.personalData.lastNameSinhala && !this.isDriverRoute) {
-    //   missingFields.push('Last Name (in Sinhala) is Required');
-    // }
+    if (!this.personalData.lastNameSinhala && !this.isDriverRoute) {
+      missingFields.push('Last Name (in Sinhala) is Required');
+    }
 
-    // if (!this.personalData.firstNameTamil && !this.isDriverRoute) {
-    //   missingFields.push('First Name (in Tamil) is Required');
-    // }
+    if (!this.personalData.firstNameTamil && !this.isDriverRoute) {
+      missingFields.push('First Name (in Tamil) is Required');
+    }
 
-    // if (!this.personalData.lastNameTamil && !this.isDriverRoute) {
-    //   missingFields.push('Last Name (in Tamil) is Required');
-    // }
+    if (!this.personalData.lastNameTamil && !this.isDriverRoute) {
+      missingFields.push('Last Name (in Tamil) is Required');
+    }
 
-    // if (!this.personalData.phoneNumber01) {
-    //   missingFields.push('Mobile Number - 01 is Required');
-    // } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-    //   missingFields.push('Mobile Number - 01 - Must be 9 digits');
-    // }
+    if (!this.personalData.phoneNumber01) {
+      missingFields.push('Mobile Number - 01 is Required');
+    } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+      missingFields.push('Mobile Number - 01 - Must be 9 digits');
+    }
 
-    // if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-    //   missingFields.push('Mobile Number - 02 - Must be 9 digits');
-    // }
+    if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+      missingFields.push('Mobile Number - 02 - Must be 9 digits');
+    }
 
-    // if (this.areDuplicatePhoneNumbers()) {
-    //   missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
-    // }
+    if (this.areDuplicatePhoneNumbers()) {
+      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+    }
 
-    // if (!this.personalData.nic) {
-    //   missingFields.push('NIC Number is Required');
-    // } else if (!this.isValidNIC(this.personalData.nic)) {
-    //   missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
-    // }
+    if (!this.personalData.nic) {
+      missingFields.push('NIC Number is Required');
+    } else if (!this.isValidNIC(this.personalData.nic)) {
+      missingFields.push('NIC Number - Must be 12 digits or 9 digits followed by V');
+    }
 
-    // if (!this.personalData.email) {
-    //   missingFields.push('Email is Required');
-    // } else if (!this.isValidEmail(this.personalData.email)) {
-    //   missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
-    // }
+    if (!this.personalData.email) {
+      missingFields.push('Email is Required');
+    } else if (!this.isValidEmail(this.personalData.email)) {
+      missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
+    }
 
-    // // Check required fields for pageTwo
-    // if (!this.personalData.houseNumber) {
-    //   missingFields.push('House Number is Required');
-    // }
+    // Check required fields for pageTwo
+    if (!this.personalData.houseNumber) {
+      missingFields.push('House Number is Required');
+    }
 
-    // if (!this.personalData.streetName) {
-    //   missingFields.push('Street Name is Required');
-    // }
+    if (!this.personalData.streetName) {
+      missingFields.push('Street Name is Required');
+    }
 
-    // if (!this.personalData.city) {
-    //   missingFields.push('City is Required');
-    // }
+    if (!this.personalData.city) {
+      missingFields.push('City is Required');
+    }
 
-    // if (!this.personalData.district) {
-    //   missingFields.push('District is Required');
-    // }
+    if (!this.personalData.district) {
+      missingFields.push('District is Required');
+    }
 
-    // if (!this.personalData.province) {
-    //   missingFields.push('Province is Required');
-    // }
+    if (!this.personalData.province) {
+      missingFields.push('Province is Required');
+    }
 
-    // if (!this.personalData.accHolderName) {
-    //   missingFields.push(`Account Holder's Name is Required`);
-    // }
+    if (!this.personalData.accHolderName) {
+      missingFields.push(`Account Holder's Name is Required`);
+    }
 
-    // if (!this.personalData.accNumber) {
-    //   missingFields.push('Account Number');
-    // }
+    if (!this.personalData.accNumber) {
+      missingFields.push('Account Number');
+    }
 
-    // if (!this.personalData.confirmAccNumber) {
-    //   missingFields.push('Confirm Account Number is Required');
-    // } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
-    //   missingFields.push('Confirm Account Number - Must match Account Number');
-    // }
+    if (!this.personalData.confirmAccNumber) {
+      missingFields.push('Confirm Account Number is Required');
+    } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
+      missingFields.push('Confirm Account Number - Must match Account Number');
+    }
 
-    // if (!this.selectedBankId) {
-    //   missingFields.push('Bank Name is Required');
-    // }
+    if (!this.selectedBankId) {
+      missingFields.push('Bank Name is Required');
+    }
 
-    // if (!this.selectedBranchId) {
-    //   missingFields.push('Branch Name is Required');
-    // }
+    if (!this.selectedBranchId) {
+      missingFields.push('Branch Name is Required');
+    }
 
-    // if (this.personalData.jobRole === 'Driver') {
-    //   if (!this.driverObj.licNo) {
-    //     missingFields.push('License Number is Required');
-    //   }
-    //   if (!this.licenseFrontImageFileName) {
-    //     missingFields.push("License's Front Image is Required");
-    //   }
-    //   if (!this.licenseBackImageFileName) {
-    //     missingFields.push("License's Back Image is Required");
-    //   }
-    //   if (!this.driverObj.insNo) {
-    //     missingFields.push('Insurance Number is Required');
-    //   }
-    //   if (!this.driverObj.insExpDate) {
-    //     missingFields.push('Insurance Expire Date is Required');
-    //   }
-    //   if (!this.insurenceFrontImageFileName) {
-    //     missingFields.push("Insurance's Front Image is Required");
-    //   }
-    //   if (!this.insurenceBackImageFileName) {
-    //     missingFields.push("Insurance's Back Image is Required");
-    //   }
-    //   if (!this.driverObj.vRegNo) {
-    //     missingFields.push('Vehicle Registration Number is Required');
-    //   }
-    //   if (!this.driverObj.vType) {
-    //     missingFields.push('Vehicle Type is Required');
-    //   }
-    //   if (!this.vehicleFrontImageFileName) {
-    //     missingFields.push("Vehicle's Front Image is Required");
-    //   }
-    //   if (!this.vehicleBackImageFileName) {
-    //     missingFields.push("Vehicle's Back Image is Required");
-    //   }
-    //   if (!this.vehicleSideAImageFileName) {
-    //     missingFields.push("Vehicle's Side Image - 1 is Required");
-    //   }
-    //   if (!this.vehicleSideBImageFileName) {
-    //     missingFields.push("Vehicle's Side Image - 2 is Required");
-    //   }
-    // }
+    if (this.personalData.jobRole === 'Driver') {
+      if (!this.driverObj.licNo) {
+        missingFields.push('License Number is Required');
+      }
+      if (!this.licenseFrontImageFileName) {
+        missingFields.push("License's Front Image is Required");
+      }
+      if (!this.licenseBackImageFileName) {
+        missingFields.push("License's Back Image is Required");
+      }
+      if (!this.driverObj.insNo) {
+        missingFields.push('Insurance Number is Required');
+      }
+      if (!this.driverObj.insExpDate) {
+        missingFields.push('Insurance Expire Date is Required');
+      }
+      if (!this.insurenceFrontImageFileName) {
+        missingFields.push("Insurance's Front Image is Required");
+      }
+      if (!this.insurenceBackImageFileName) {
+        missingFields.push("Insurance's Back Image is Required");
+      }
+      if (!this.driverObj.vRegNo) {
+        missingFields.push('Vehicle Registration Number is Required');
+      }
+      if (!this.driverObj.vType) {
+        missingFields.push('Vehicle Type is Required');
+      }
+      if (!this.vehicleFrontImageFileName) {
+        missingFields.push("Vehicle's Front Image is Required");
+      }
+      if (!this.vehicleBackImageFileName) {
+        missingFields.push("Vehicle's Back Image is Required");
+      }
+      if (!this.vehicleSideAImageFileName) {
+        missingFields.push("Vehicle's Side Image - 1 is Required");
+      }
+      if (!this.vehicleSideBImageFileName) {
+        missingFields.push("Vehicle's Side Image - 2 is Required");
+      }
+    }
 
-    // if (missingFields.length > 0) {
-    //   let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
-    //   missingFields.forEach((field) => {
-    //     errorMessage += `<li>${field}</li>`;
-    //   });
-    //   errorMessage += '</ul></div>';
+    if (missingFields.length > 0) {
+      let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+      missingFields.forEach((field) => {
+        errorMessage += `<li>${field}</li>`;
+      });
+      errorMessage += '</ul></div>';
 
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Missing or Invalid Information',
-    //     html: errorMessage,
-    //     confirmButtonText: 'OK',
-    //     customClass: {
-    //       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-    //       title: 'font-semibold text-lg',
-    //       htmlContainer: 'text-left',
-    //     },
-    //   });
-    //   return;
-    // }
+      Swal.fire({
+        icon: 'error',
+        title: 'Missing or Invalid Information',
+        html: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+      });
+      return;
+    }
     
     const roleTitle = this.getRoleDisplayName(this.personalData.jobRole);
 
@@ -676,7 +676,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
-    this.selectedPage = page;
+    // this.selectedPage = page;
     // Scroll to top after page change
     setTimeout(() => {
       this.scrollToTop();
@@ -2210,6 +2210,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
       });
     }
   }
+  
 }
 
 class Personal {

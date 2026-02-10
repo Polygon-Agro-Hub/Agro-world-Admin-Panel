@@ -68,16 +68,16 @@
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2 cursor-pointer">
-              <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                <input  class="w-5 h-5 cursor-pointer "  type="radio" name="enpType" value="Permanent" [(ngModel)]="empType " #empTypeCtrl="ngModel"
-                  (ngModelChange)="updateEmployeeType($event)" />
+              <input class="w-5 h-5 cursor-pointer " type="radio" name="enpType" value="Permanent" id="Permanent"
+                [(ngModel)]="empType " #empTypeCtrl="ngModel" (ngModelChange)="updateEmployeeType($event)" />
+              <label class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer" for="Permanent">
                 Permanent
               </label>
             </div>
             <div class="flex items-center space-x-2 cursor-pointer">
-              <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary" [(ngModel)]="empType" #empTypeCtrl="ngModel"
-                  (ngModelChange)="updateEmployeeType($event)" />
+              <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary" id="Temporary" [(ngModel)]="empType"
+                #empTypeCtrl="ngModel" (ngModelChange)="updateEmployeeType($event)" />
+              <label class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer" for="Temporary">
                 Temporary
               </label>
             </div>
@@ -112,13 +112,8 @@
               <label for="tamil" class="text-gray-700 dark:text-textDark font-medium">Tamil</label>
             </div>
 
-            <input
-              type="hidden"
-              name="languages"
-              [(ngModel)]="personalData.languages"
-              required
-              #languagesCtrl="ngModel"
-            />
+            <input type="hidden" name="languages" [(ngModel)]="personalData.languages" required
+              #languagesCtrl="ngModel" />
 
           </div>
 
@@ -171,7 +166,8 @@
             Last Name *
           </label>
           <input id="lastNameEnglish" name="lastNameEnglish" required [(ngModel)]="personalData.lastNameEnglish"
-            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$" (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"
+            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"
+            (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="lastNameEnglishRef.invalid && (lastNameEnglishRef.dirty || lastNameEnglishRef.touched)"
             class="text-red-600 text-sm">
@@ -295,8 +291,8 @@
 
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
-          <input type="email" id="email" name="nic" [(ngModel)]="personalData.email"
-             (blur)="onBlur('email')" (input)="onTrimInput($event, personalData, 'email')"
+          <input type="email" id="email" name="nic" [(ngModel)]="personalData.email" (blur)="onBlur('email')"
+            (input)="onTrimInput($event, personalData, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <!-- Show detailed error messages from service -->
@@ -408,9 +404,8 @@
           Account Holder’s Name *
         </label>
         <input maxlength="50" id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-        (input)="onTrimInput($event, personalData, 'accHolderName')" #accHolderNameRef="ngModel" required
-          pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$" 
-           (blur)="onBlur('accHolderName')"
+          (input)="onTrimInput($event, personalData, 'accHolderName')" #accHolderNameRef="ngModel" required
+          pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$" (blur)="onBlur('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="accHolderNameRef.invalid && (accHolderNameRef.dirty || accHolderNameRef.touched)"
           class="text-red-600 text-sm">

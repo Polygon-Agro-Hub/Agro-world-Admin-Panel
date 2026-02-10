@@ -877,4 +877,5 @@ class CollectionOfficer {
   fullEmpId!: string;
   centerRegCode!: string;
   insExpDate!: string;
+  manageName!:string;
 }

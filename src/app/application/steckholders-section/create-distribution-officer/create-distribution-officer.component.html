@@ -321,6 +321,7 @@
             <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
             <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keypress)="preventNICInvalidCharacters($event)"
               (input)="formatNIC()" (blur)="onBlur('nic')" placeholder="123456789012 or 123456789V"
+              [maxLength]="getNICMaxLength()"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
             <!-- Show required message only when field is empty -->
@@ -539,7 +540,7 @@
         class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 gap-x-4 my-5">
       <!-- License Front Image -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
@@ -548,7 +549,7 @@
         <input id="licenseFrontImageUpload" type="file" accept="image/*" (change)="onLicenseFrontImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload License Front Image</p>
         </div>
@@ -570,7 +571,7 @@
         <input id="licenseBackImageUpload" type="file" accept="image/*" (change)="onLicenseBackImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload License Back Image</p>
         </div>
@@ -589,7 +590,7 @@
       Vehicle Insurance Details
     </h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 gap-x-4 my-5">
       <!-- Insurance Number -->
       <div>
         <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -602,8 +603,8 @@
         <label for="insExpDate" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Expire Date *
         </label>
-        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="false" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
+        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [readonlyInput]="true" [showIcon]="true" [showClear]="true"
+          [showButtonBar]="false" iconDisplay="input" [minDate]="curDate" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
           [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -623,7 +624,7 @@
         <input id="insurenceFrontImageUpload" type="file" accept="image/*"
           (change)="onInsurenceFrontImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'insurenceFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Insurance Front Image</p>
         </div>
@@ -645,7 +646,7 @@
         <input id="insuranceBackImageUpload" type="file" accept="image/*"
           (change)="onInsurenceBackImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'insuranceBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2  border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Insurance Back Image</p>
         </div>
@@ -673,7 +674,7 @@
         class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 gap-x-4 my-5">
       <!-- Vehicle Type Dropdown -->
       <div>
         <label for="selectVehicletype" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -690,9 +691,16 @@
         <label for="capacity" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Vehicle Capacity
         </label>
-        <input id="capacity" placeholder="------------" [value]="selectVehicletype?.capacity"
-          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800"
-          readonly />
+        <div class="mt-1 block w-full">
+          <div *ngIf="selectVehicletype?.capacity"
+            class="p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800">
+            {{ selectVehicletype?.capacity }} kg
+          </div>
+
+          <input *ngIf="!selectVehicletype?.capacity" id="capacity" placeholder="------------"
+            class="form-control w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800"
+            readonly />
+        </div>
       </div>
 
       <!-- Vehicle Images (Front, Back, Side A, Side B) -->
@@ -703,7 +711,7 @@
         <input id="vehicleFrontImageUpload" type="file" accept="image/*" (change)="onVehicleFrontImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Front Image</p>
         </div>
@@ -724,7 +732,7 @@
         <input id="vehicleBackImageUpload" type="file" accept="image/*" (change)="onVehicleBackImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Back Image</p>
         </div>
@@ -745,7 +753,7 @@
         <input id="vehicleSideAImageUpload" type="file" accept="image/*" (change)="onVehicleSideAImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideAImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-14 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 1</p>
         </div>
@@ -766,7 +774,7 @@
         <input id="vehicleSideBImageUpload" type="file" accept="image/*" (change)="onVehicleSideBImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideBImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-14 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 2</p>
         </div>

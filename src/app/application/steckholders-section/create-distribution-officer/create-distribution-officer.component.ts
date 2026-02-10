@@ -50,7 +50,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
-  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageThree';
   driverObj: Drivers = new Drivers();
   personalData: Personal = new Personal();
 
@@ -123,6 +123,8 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
   isAppireImgValidation: boolean = false;
   selectVehicletype: any = { name: '', capacity: '' };
+
+  curDate:Date = new Date();
 
   VehicleTypes = [
     { name: 'Mahindra Bollero', capacity: 272 },
@@ -212,45 +214,45 @@ export class CreateDistributionOfficerComponent implements OnInit {
       this.personalData.languages = languagesArray.join(',');
     }
   }
-  
-private formatDateForDatabase(date: Date | string | null): string | null {
-  if (!date) return null;
-  
-  const dateObj = date instanceof Date ? date : new Date(date);
-  
-  // Format as YYYY-MM-DD
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-  const day = String(dateObj.getDate()).padStart(2, '0');
-  
-  return `${year}-${month}-${day}`;
-}
+
+  private formatDateForDatabase(date: Date | string | null): string | null {
+    if (!date) return null;
+
+    const dateObj = date instanceof Date ? date : new Date(date);
+
+    // Format as YYYY-MM-DD
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 
   back(): void {
-  let confirmMessage = 'You may lose the added data after going back!';
-  let confirmButtonText = 'Yes, Go Back';
-  let cancelButtonText = 'No, Stay Here';
-  
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: confirmMessage,
-    showCancelButton: true,
-    confirmButtonText: confirmButtonText,
-    cancelButtonText: cancelButtonText,
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Use history back instead of specific route
-      window.history.back();
-      // Or: this.location.back();
-    }
-  });
-}
+    let confirmMessage = 'You may lose the added data after going back!';
+    let confirmButtonText = 'Yes, Go Back';
+    let cancelButtonText = 'No, Stay Here';
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: confirmMessage,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      cancelButtonText: cancelButtonText,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Use history back instead of specific route
+        window.history.back();
+        // Or: this.location.back();
+      }
+    });
+  }
 
 
   onSubmit() {
@@ -281,7 +283,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
       missingFields.push('Manager Name is Required');
     }
 
-    if (!this.personalData.firstNameEnglish ) {
+    if (!this.personalData.firstNameEnglish) {
       missingFields.push('First Name (in English) is Required');
     }
 
@@ -436,82 +438,82 @@ private formatDateForDatabase(date: Date | string | null): string | null {
       });
       return;
     }
-    
+
     const roleTitle = this.getRoleDisplayName(this.personalData.jobRole);
 
-     Swal.fire({
-    title: 'Are you sure?',
-    text: `Do you want to create the ${roleTitle}?`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, create it!',
-    cancelButtonText: 'No, cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-      htmlContainer: 'text-left',
-    },
-    reverseButtons: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you want to create the ${roleTitle}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'No, cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+      },
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
 
-      // Prepare driver data if job role is Driver
-      if (this.personalData.jobRole === 'Driver') {
-        this.driverObj.licFrontName = this.licenseFrontImageFileName;
-        this.driverObj.licBackName = this.licenseBackImageFileName;
-        this.driverObj.insFrontName = this.insurenceFrontImageFileName;
-        this.driverObj.insBackName = this.insurenceBackImageFileName;
-        this.driverObj.vFrontName = this.vehicleFrontImageFileName;
-        this.driverObj.vBackName = this.vehicleBackImageFileName;
-        this.driverObj.vSideAName = this.vehicleSideAImageFileName;
-        this.driverObj.vSideBName = this.vehicleSideBImageFileName;
+        // Prepare driver data if job role is Driver
+        if (this.personalData.jobRole === 'Driver') {
+          this.driverObj.licFrontName = this.licenseFrontImageFileName;
+          this.driverObj.licBackName = this.licenseBackImageFileName;
+          this.driverObj.insFrontName = this.insurenceFrontImageFileName;
+          this.driverObj.insBackName = this.insurenceBackImageFileName;
+          this.driverObj.vFrontName = this.vehicleFrontImageFileName;
+          this.driverObj.vBackName = this.vehicleBackImageFileName;
+          this.driverObj.vSideAName = this.vehicleSideAImageFileName;
+          this.driverObj.vSideBName = this.vehicleSideBImageFileName;
 
-        // Format the insurance expiry date before sending
-        const formattedDriverObj = {
-          ...this.driverObj,
-          insExpDate: this.formatDateForDatabase(this.driverObj.insExpDate)
-        };
+          // Format the insurance expiry date before sending
+          const formattedDriverObj = {
+            ...this.driverObj,
+            insExpDate: this.formatDateForDatabase(this.driverObj.insExpDate)
+          };
 
-        this.distributionOfficerServ
-          .createDistributionOfficer(
-            this.personalData,
-            this.selectedImage,
-            formattedDriverObj,  // Use formatted driver object
-            this.licenseFrontImagePreview,
-            this.licenseBackImagePreview,
-            this.insurenceFrontImagePreview,
-            this.insurenceBackImagePreview,
-            this.vehicleFrontImagePreview,
-            this.vehicleBackImagePreview,
-            this.vehicleSideAImagePreview,
-            this.vehicleSideBImagePreview
-          )
-          .subscribe(
-            (res: any) => {
-              this.isLoading = false;
-              this.officerId = res.officerId;
-              this.errorMessage = '';
+          this.distributionOfficerServ
+            .createDistributionOfficer(
+              this.personalData,
+              this.selectedImage,
+              formattedDriverObj,  // Use formatted driver object
+              this.licenseFrontImagePreview,
+              this.licenseBackImagePreview,
+              this.insurenceFrontImagePreview,
+              this.insurenceBackImagePreview,
+              this.vehicleFrontImagePreview,
+              this.vehicleBackImagePreview,
+              this.vehicleSideAImagePreview,
+              this.vehicleSideBImagePreview
+            )
+            .subscribe(
+              (res: any) => {
+                this.isLoading = false;
+                this.officerId = res.officerId;
+                this.errorMessage = '';
 
-              const roleTitle = this.getRoleDisplayName(this.personalData.jobRole);
+                const roleTitle = this.getRoleDisplayName(this.personalData.jobRole);
 
-              Swal.fire({
-                title: 'Success',
-                text: `${roleTitle} Created Successfully`,
-                icon: 'success',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                },
-              });
-              this.navigatePath('/steckholders/action/drivers');
-            },
-            (error: any) => {
-              this.isLoading = false;
-              this.handleCreateError(error);
-            }
-          );
-      } else {
+                Swal.fire({
+                  title: 'Success',
+                  text: `${roleTitle} Created Successfully`,
+                  icon: 'success',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+                this.navigatePath('/steckholders/action/drivers');
+              },
+              (error: any) => {
+                this.isLoading = false;
+                this.handleCreateError(error);
+              }
+            );
+        } else {
           this.distributionOfficerServ
             .createDistributionOfficer(this.personalData, this.selectedImage)
             .subscribe(
@@ -541,8 +543,8 @@ private formatDateForDatabase(date: Date | string | null): string | null {
             );
         }
       }
-    } 
-  );
+    }
+    );
   }
 
   private getRoleDisplayName(jobRole: string): string {
@@ -555,79 +557,79 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     return roleMapping[jobRole] || 'Distribution Officer';
   }
 
-//   private handleCreateError(error: any) {
-//     let errorMessage = 'An unexpected error occurred';
+  //   private handleCreateError(error: any) {
+  //     let errorMessage = 'An unexpected error occurred';
 
-//     if (error.error && error.error.errors) {
-//         // Handle array of errors
-//         const errors = error.error.errors;
-//         const errorMessages = [];
+  //     if (error.error && error.error.errors) {
+  //         // Handle array of errors
+  //         const errors = error.error.errors;
+  //         const errorMessages = [];
 
-//         // Map each error code to a user-friendly message
-//         errors.forEach((errorCode: string) => {
-//             switch (errorCode) {
-//                 case 'NIC':
-//                     errorMessages.push('The NIC number is already registered.');
-//                     break;
-//                 case 'email':
-//                     errorMessages.push('The email address is already in use.');
-//                     break;
-//                 case 'phoneNumber01':
-//                     errorMessages.push('The primary phone number is already registered.');
-//                     break;
-//                 case 'phoneNumber02':
-//                     errorMessages.push('The secondary phone number is already registered.');
-//                     break;
-//                 default:
-//                     errorMessages.push(`Error: ${errorCode}`);
-//             }
-//         });
+  //         // Map each error code to a user-friendly message
+  //         errors.forEach((errorCode: string) => {
+  //             switch (errorCode) {
+  //                 case 'NIC':
+  //                     errorMessages.push('The NIC number is already registered.');
+  //                     break;
+  //                 case 'email':
+  //                     errorMessages.push('The email address is already in use.');
+  //                     break;
+  //                 case 'phoneNumber01':
+  //                     errorMessages.push('The primary phone number is already registered.');
+  //                     break;
+  //                 case 'phoneNumber02':
+  //                     errorMessages.push('The secondary phone number is already registered.');
+  //                     break;
+  //                 default:
+  //                     errorMessages.push(`Error: ${errorCode}`);
+  //             }
+  //         });
 
-//         // Join multiple errors with line breaks
-//         errorMessage = errorMessages.join('<br>');
-//     } else if (error.error && error.error.error) {
-//         // Handle single string error (for backward compatibility)
-//         switch (error.error.error) {
-//             case 'Invalid file format or file upload error':
-//                 errorMessage = 'Invalid file format or error uploading the file.';
-//                 break;
-//             default:
-//                 errorMessage = error.error.error || 'An unexpected error occurred';
-//         }
-//     }
+  //         // Join multiple errors with line breaks
+  //         errorMessage = errorMessages.join('<br>');
+  //     } else if (error.error && error.error.error) {
+  //         // Handle single string error (for backward compatibility)
+  //         switch (error.error.error) {
+  //             case 'Invalid file format or file upload error':
+  //                 errorMessage = 'Invalid file format or error uploading the file.';
+  //                 break;
+  //             default:
+  //                 errorMessage = error.error.error || 'An unexpected error occurred';
+  //         }
+  //     }
 
-//     this.errorMessage = errorMessage;
-//     Swal.fire({
-//         title: 'Error',
-//         html: this.errorMessage, // Use 'html' instead of 'text' for line breaks
-//         icon: 'error',
-//         customClass: {
-//             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-//             title: 'font-semibold',
-//         },
-//     });
-// }
+  //     this.errorMessage = errorMessage;
+  //     Swal.fire({
+  //         title: 'Error',
+  //         html: this.errorMessage, // Use 'html' instead of 'text' for line breaks
+  //         icon: 'error',
+  //         customClass: {
+  //             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+  //             title: 'font-semibold',
+  //         },
+  //     });
+  // }
 
   private handleCreateError(error: any) {
     this.isLoading = false;
-              let errorMessage = 'An unexpected error occurred';
-              let messages: string[] = [];     
-              if (error.error && Array.isArray(error.error.errors)) {
-                messages = error.error.errors.map((err: string) => {
-                  switch (err) {
-                    case 'NIC':
-                      return 'The NIC number is already registered.';
-                    case 'email':
-                      return 'Email already exists.';
-                    case 'phoneNumber01':
-                      return 'Mobile Number 1 already exists.';
-                    case 'phoneNumber02':
-                      return 'Mobile Number 2 already exists.';
-                    default:
-                      return 'Validation error: ' + err;
-                  }
-                });
-              }
+    let errorMessage = 'An unexpected error occurred';
+    let messages: string[] = [];
+    if (error.error && Array.isArray(error.error.errors)) {
+      messages = error.error.errors.map((err: string) => {
+        switch (err) {
+          case 'NIC':
+            return 'The NIC number is already registered.';
+          case 'email':
+            return 'Email already exists.';
+          case 'phoneNumber01':
+            return 'Mobile Number 1 already exists.';
+          case 'phoneNumber02':
+            return 'Mobile Number 2 already exists.';
+          default:
+            return 'Validation error: ' + err;
+        }
+      });
+    }
 
     if (messages.length > 0) {
       errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
@@ -651,29 +653,29 @@ private formatDateForDatabase(date: Date | string | null): string | null {
     }
   }
   onCancel() {
-  let confirmMessage = 'You may lose the added data after canceling!';
-  let confirmButtonText = 'Yes, Cancel';
-  let cancelButtonText = 'No, Keep Editing';
-  
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: confirmMessage,
-    showCancelButton: true,
-    confirmButtonText: confirmButtonText,
-    cancelButtonText: cancelButtonText,
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Use browser history back instead of specific route navigation
-      window.history.back();
-    }
-  });
-}
+    let confirmMessage = 'You may lose the added data after canceling!';
+    let confirmButtonText = 'Yes, Cancel';
+    let cancelButtonText = 'No, Keep Editing';
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: confirmMessage,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      cancelButtonText: cancelButtonText,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Use browser history back instead of specific route navigation
+        window.history.back();
+      }
+    });
+  }
 
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
     // this.selectedPage = page;
@@ -852,17 +854,17 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   }
 
   ngOnInit(): void {
-  const currentRoute = this.router.url;
+    const currentRoute = this.router.url;
 
-  if (currentRoute.includes('drivers/add-driver')) {
+    if (currentRoute.includes('drivers/add-driver')) {
 
-    this.isDriverRoute = true;
- 
-    this.jobRoleOptions = [
-      { label: 'Driver', value: 'Driver' }
-    ];
+      this.isDriverRoute = true;
 
-  }
+      this.jobRoleOptions = [
+        { label: 'Driver', value: 'Driver' }
+      ];
+
+    }
     this.loadBanks();
     this.loadBranches();
     this.getAllCompanies();
@@ -939,26 +941,26 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   }
 
   getAllCollectionCetnter(id: number) {
-  this.loaded = false;
-  this.personalData.centerId = '';
-  this.personalData.irmId = '';
-  this.distributionOfficerServ.getAllDistributionCenterByCompany(id).subscribe(
-    (res) => {
-      this.distributionCenterData = res;
-      // Convert to dropdown options format with regCode in front
-      this.centerOptions = this.distributionCenterData.map(center => ({
-        label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`,
-        value: center.id
-      }));
-      this.loaded = true;
-    },
-    (error) => {
-      this.distributionCenterData = [];
-      this.centerOptions = [];
-      this.loaded = true;
-    }
-  );
-}
+    this.loaded = false;
+    this.personalData.centerId = '';
+    this.personalData.irmId = '';
+    this.distributionOfficerServ.getAllDistributionCenterByCompany(id).subscribe(
+      (res) => {
+        this.distributionCenterData = res;
+        // Convert to dropdown options format with regCode in front
+        this.centerOptions = this.distributionCenterData.map(center => ({
+          label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`,
+          value: center.id
+        }));
+        this.loaded = true;
+      },
+      (error) => {
+        this.distributionCenterData = [];
+        this.centerOptions = [];
+        this.loaded = true;
+      }
+    );
+  }
 
   getAllCompanies() {
     this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
@@ -1421,12 +1423,13 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
     if (!allowedTypes.includes(file.type)) {
-      Swal.fire({title: 'Error', text: 'Only JPEG, JPG and PNG files are allowed', icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
+      Swal.fire({
+        title: 'Error', text: 'Only JPEG, JPG and PNG files are allowed', icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
 
-      },
+        },
       });
       return false;
     }
@@ -2187,7 +2190,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   preventSpecialcharacters(event: KeyboardEvent) {
     const allowedPattern = /^[a-zA-Z0-9]$/;
     const inputChar = event.key;
-  
+
     if (!allowedPattern.test(inputChar)) {
       event.preventDefault();
     }
@@ -2196,7 +2199,7 @@ private formatDateForDatabase(date: Date | string | null): string | null {
   preventSpecialCharactersPaste(event: ClipboardEvent) {
     const pastedText = event.clipboardData?.getData('text') || '';
     const allowedPattern = /^[a-zA-Z0-9]+$/;
-  
+
     if (!allowedPattern.test(pastedText)) {
       event.preventDefault();
     }
@@ -2204,13 +2207,31 @@ private formatDateForDatabase(date: Date | string | null): string | null {
 
   scrollToTop(): void {
     if (this.pageContainer && this.pageContainer.nativeElement) {
-      this.pageContainer.nativeElement.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+      this.pageContainer.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
       });
     }
   }
-  
+
+  getNICMaxLength(): number {
+    if (!this.personalData.nic) return 12;
+
+    const nic = this.personalData.nic.toUpperCase();
+
+    // If it already contains 'V', limit to 11 (10 digits + 'V')
+    if (nic.includes('V')) {
+      return 10;
+    }
+
+    // Check if last character could be 'V' (if we have 9 digits and typing the 10th)
+    if (nic.length === 9 && /^\d+$/.test(nic)) {
+      return 10; // Allow space for 'V'
+    }
+
+    return 12; // Default for new NIC
+  }
+
 }
 
 class Personal {

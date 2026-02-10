@@ -273,21 +273,24 @@
 
 
         <div>
-          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            NIC Number *
-          </label>
-          <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
-            (input)="capitalizeV(); enforceNicLength($event)" (input)="trimLeadingSpace($event)"
-            (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
-            class="text-red-600 text-sm">
-            Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
-          </span>
-          <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm">
-            NIC is a required field.
-          </span>
-        </div>
+  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    NIC Number *
+  </label>
+  <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
+    (input)="capitalizeV(); enforceNicLength($event)" (input)="trimLeadingSpace($event)"
+    (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+    maxlength="12" />
+  
+  <!-- Validation messages -->
+  <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
+    class="text-red-600 text-sm block mt-1">
+    Please enter a valid NIC number (12 digits or 9 digits followed by 'V')
+  </span>
+  <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm block mt-1">
+    NIC is a required field.
+  </span>
+</div>
 
 
         <div>

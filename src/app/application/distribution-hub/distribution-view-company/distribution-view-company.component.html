@@ -72,10 +72,10 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Mobile Number 02
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Last Modified By
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Created At
             </th>
             <th *ngIf="permissionService.hasPermission('Distribution Hub view a cch') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
@@ -117,7 +117,7 @@
         'font-bold px-3 py-1 text-sm bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A] rounded-lg':
           item.status === 'Rejected'
       }" 
-      class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
+      class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
       [class.cursor-pointer]="canApproveReject"
       [class.cursor-not-allowed]="!canApproveReject"
       [class.opacity-50]="!canApproveReject"
@@ -126,22 +126,22 @@
     </span>
   </div>
 </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               <!-- {{ item.phoneCode01 + "" + item.phoneNumber01 }} -->
               <span *ngIf="item.phoneNumber01 === null">-</span>
               <span *ngIf="item.phoneNumber01 != null">{{ item.phoneCode01 }}{{ ' ' + item.phoneNumber01 }}</span>
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               <span *ngIf="item.phoneNumber02 === null || item.phoneNumber02 === ''"
                 class="px-4 py-3 text-center text-textLight dark:text-textDark">-</span>
               <span *ngIf="item.phoneNumber02 != null && item.phoneNumber02 !== ''"
                 class="px-4 py-3 text-center text-textLight dark:text-textDark">{{ item.phoneCode02 + "" +
                 item.phoneNumber02 }}</span>
             </td>
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.adminModify !== null ? item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ item.createdAtFormatted }}
             </td>
             <td *ngIf="

@@ -17,12 +17,12 @@
         </div>
 
         <div class="ml-6">
-          <p class="text-lg font-bold text-textLight dark:text-textDark">
+          <p class="text-lg font-[500] text-[#030308] dark:text-textDark">
             {{ officerObj.firstNameEnglish }} {{ officerObj.lastNameEnglish }}
           </p>
-          <p class="dark:text-[#a6aebb]">
-            <span>{{ officerObj.jobRole }} -
-              <span>{{ this.empHeader }}{{ officerObj.empId }}</span></span>
+          <p>
+            <span class="text-[#627189] dark:text-[#a6aebb]">{{ officerObj.jobRole }} </span>-
+              <span class="text-black dark:text-[#a6aebb]">{{ this.empHeader }}{{ officerObj.empId }}</span>
           </p>
 
           <!-- collection officer -->
@@ -31,11 +31,11 @@
             {{ officerObj.centerRegCode || 'Officer has been disclaimed - No Assigned Centre' }}
           </p>
           <!-- distribution officer -->
-          <p *ngIf="officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head' || officerObj.jobRole === 'Driver'"
-            class="font-semibold text-textLight dark:text-textDark">
+          <p *ngIf="officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head'"
+            class="font-[500] text-textLight dark:text-textDark">
             {{ officerObj.distributedCenterName || 'Officer has been disclaimed - No Assigned Centre' }}
           </p>
-          <p class="dark:text-[#a6aebb]">{{ officerObj.companyNameEnglish }}</p>
+          <p class="dark:text-[#a6aebb] text-[#627189]">{{ officerObj.companyNameEnglish }}</p>
         </div>
       </div>
 
@@ -93,7 +93,7 @@
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
       <div class="flex flex-row justify-between">
-        <p class="text-[#030308] dark:text-[#ffffff]">Personal Information</p>
+        <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Personal Information</p>
         <button *ngIf="(
           (urlSegment === 'steckholders' && (officerObj.jobRole === 'Collection Officer' || officerObj.jobRole === 'Collection Centre Manager' || officerObj.jobRole === 'Collection Centre Head') && permissionService.hasPermission('Stakeholder collection officer download pdf')) ||
           (urlSegment === 'distribution-hub' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Distribution hub officer download pdf')) ||
@@ -150,11 +150,19 @@
             <p class="font-semibold dark:text-[#a6aebb]">-</p>
           </ng-template>
         </div>
+
+        <div *ngIf="officerObj.jobRole === 'Driver'">
+          <p class="text-[#627189]">Distribution Centre Manager</p>
+          <p class="text-[#030308] dark:text-[#ffffff]">
+            {{ officerObj.manageName || '--'}}
+          </p>
+          
+        </div>
       </div>
     </div>
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
-      <p class="text-[#030308] dark:text-[#ffffff]">Address Details</p>
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Address Details</p>
 
       <div class="grid grid-cols-2 gap-4 my-4">
         <div>
@@ -202,7 +210,7 @@
     </div>
 
     <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
-      <p class="text-[#030308] dark:text-[#ffffff]">Bank Details</p>
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Bank Details</p>
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div>
@@ -237,7 +245,7 @@
 
 
     <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
-      <p class="text-[#030308] dark:text-[#ffffff]">Driving Details</p>
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Driving Details</p>
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div>
@@ -267,7 +275,7 @@
     </div>
 
     <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
-      <p class="text-[#030308] dark:text-[#ffffff]">Vehicle Insurance Details</p>
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Vehicle Insurance Details</p>
 
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
@@ -302,7 +310,7 @@
     </div>
 
     <div *ngIf="officerObj.jobRole === 'Driver'" class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
-      <p class="text-[#030308] dark:text-[#ffffff]">Vehicle Details</p>
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Vehicle Details</p>
 
       <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
         <div>

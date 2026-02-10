@@ -88,26 +88,26 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
   }
 
   // Add this computed property to get the placeholder text based on active tab
-  get datePlaceholder(): string {
+  get datePlaceholder(): {name:string, width:string} {
     switch (this.activeTab) {
       case 'all':
-        return 'Schedule Date';
+        return {name:'Schedule Date', width: '145px'};
       case 'out-for-delivery':
-        return 'Out Date';
+        return {name:'Out Date', width: '145px'};
       case 'Collected':
-        return 'Collected Date';
+        return {name:'Collected Date', width: '165px'};
       case 'on-the-way':
-        return 'Started Date';
+        return {name:'Started Date', width: '145px'};
       case 'hold':
-        return 'Hold Date';
+        return {name:'Hold Date', width: '145px'};
       case 'return':
-        return 'Return Date';
+        return {name:'Return Date', width: '145px'};
       case 'delivered':
-        return 'Delivered Date';
+        return {name:'Delivered Date', width: '165px'};
       case 'Return Received':
-        return 'Return Received Date';
+        return {name:'Return Received Date', width: '190px'};
       default:
-        return 'Date';
+        return {name:'Date', width: '145px'};
     }
   }
 

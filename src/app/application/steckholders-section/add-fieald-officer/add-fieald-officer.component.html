@@ -225,7 +225,7 @@
     [(ngModel)]="personalData.jobRole"
     [options]="jobRoles"
     placeholder="Select a Job Role"
-    [showClear]="true"
+    [showClear]="!!personalData.jobRole"
     styleClass="w-full mt-1"
     panelStyleClass="custom-dropdown-panel"
     class="mt-1 block w-full p-dropdown-custom"

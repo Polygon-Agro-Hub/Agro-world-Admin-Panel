@@ -52,13 +52,23 @@ export class EmailvalidationsService {
       return { isValid: false, errorMessage: this.validationMessages.consecutiveDots };
     }
 
-    // Check for leading dot
-    if (localPart.startsWith('.') || domainPart.startsWith('.')) {
+    // Check for leading dot in local part (before @)
+    if (localPart.startsWith('.')) {
+      return { isValid: false, errorMessage: this.validationMessages.leadingDot };
+    }
+    
+    // Check for leading dot in domain part (after @)
+    if (domainPart.startsWith('.')) {
       return { isValid: false, errorMessage: this.validationMessages.leadingDot };
     }
 
-    // Check for trailing dot
-    if (localPart.endsWith('.') || domainPart.endsWith('.')) {
+    // Check for trailing dot in local part (before @)
+    if (localPart.endsWith('.')) {
+      return { isValid: false, errorMessage: this.validationMessages.trailingDot };
+    }
+    
+    // Check for trailing dot in domain part (after @)
+    if (domainPart.endsWith('.')) {
       return { isValid: false, errorMessage: this.validationMessages.trailingDot };
     }
 

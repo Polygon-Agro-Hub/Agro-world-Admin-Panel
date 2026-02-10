@@ -467,20 +467,30 @@ export class AddDestributionCenterComponent implements OnInit {
         }
         break;
       case 'centreName':
-        // For centre name, prevent leading spaces and ensure first letter is capital
-        if (value.length > 0 && value.startsWith(' ')) {
-          value = value.trimStart();
-          target.value = value;
-        }
-        // Capitalize first letter in real-time
-        if (value.length > 0) {
-          const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
-          if (capitalizedValue !== value) {
-            target.value = capitalizedValue;
-            value = capitalizedValue;
+      // For centre name, prevent leading spaces
+      if (value.length > 0 && value.startsWith(' ')) {
+        value = value.trimStart();
+        target.value = value;
+      }
+      
+      // Capitalize first letter of EACH WORD in real-time
+      if (value.length > 0) {
+        // Capitalize first letter of each word
+        const words = value.split(' ');
+        const capitalizedWords = words.map(word => {
+          if (word.length > 0) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
           }
+          return word;
+        });
+        const capitalizedValue = capitalizedWords.join(' ');
+        
+        if (capitalizedValue !== value) {
+          target.value = capitalizedValue;
+          value = capitalizedValue;
         }
-        break;
+      }
+      break;
 
       case 'city':
         // For city field, prevent leading spaces and ensure first letter is capital

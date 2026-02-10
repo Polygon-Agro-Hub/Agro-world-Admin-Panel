@@ -34,10 +34,9 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
@@ -45,7 +44,7 @@
           class="text-2xl font-normal text-[#292929] dark:text-textDark whitespace-nowrap mr-5"
         >
           <!-- Other Distribution Centres ({{ this.totalItems }}) -->
-          Other Distribution Centres ({{ formatCount(totalItems) }})
+          Other Centres ({{ formatCount(totalItems) }})
         </h2>
       </div>
       <div class="flex items-center">
@@ -149,7 +148,7 @@
         </div>
 
         <div
-          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] group relative"
+          class="flex items-center rounded-full px-4 py-2 w-full bg-[#F1F1F1] dark:bg-[#272F45] group relative"
         >
           <input
             type="text"
@@ -210,9 +209,9 @@
         </div>
       </div>
     </div>
-    <div class="overflow-x-auto">
+    <div class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
       <table
-        class="min-w-full divide-y divide-gray-200 table-auto"
+        class="divide-y divide-gray-200 table-auto whitespace-nowrap"
         *ngIf="hasData"
       >
         <thead>
@@ -479,7 +478,7 @@
       </table>
       <div
         *ngIf="!hasData"
-        class="flex flex-col justify-center items-center py-20 shadow-lg"
+        class="flex flex-col justify-center items-center py-20 shadow-lg w-full"
       >
         <p class="text-[#494949] my-6 dark:text-textDark">
           --No Data Available--

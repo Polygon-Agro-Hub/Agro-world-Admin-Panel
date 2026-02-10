@@ -117,7 +117,7 @@
         'font-bold px-3 py-1 text-sm bg-[#FFB9B7] text-[#D16D6A] dark:text-[#D16D6A] rounded-lg':
           item.status === 'Rejected'
       }" 
-      class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center"
+      class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
       [class.cursor-pointer]="canApproveReject"
       [class.cursor-not-allowed]="!canApproveReject"
       [class.opacity-50]="!canApproveReject"

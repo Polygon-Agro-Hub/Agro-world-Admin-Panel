@@ -533,14 +533,14 @@ export class AddDestributionCenterComponent implements OnInit {
           target.value = value;
         }
         break;
-      case 'coordinates':
-        // For latitude/longitude, allow numbers, dots, and minus signs
-        const coordOriginalValue = value;
-        value = value.replace(/[^0-9.-]/g, '');
-        if (coordOriginalValue !== value) {
-          target.value = value;
-        }
-        break;
+      // case 'coordinates':
+      //   // For latitude/longitude, allow numbers, dots, and minus signs
+      //   const coordOriginalValue = value;
+      //   value = value.replace(/[^0-9.-]/g, '');
+      //   if (coordOriginalValue !== value) {
+      //     target.value = value;
+      //   }
+      //   break;
     }
 
     // Mark field as touched to trigger validation display
@@ -1026,10 +1026,10 @@ export class AddDestributionCenterComponent implements OnInit {
   private latitudeRangeValidator(control: AbstractControl) {
     if (!control.value) return null;
 
-    const numericDecimal = /^-?\d+(\.\d+)?$/;
-    if (!numericDecimal.test(control.value)) {
-      return { numericDecimal: true };
-    }
+    // const numericDecimal = /^-?\d+(\.\d+)?$/;
+    // if (!numericDecimal.test(control.value)) {
+    //   return { numericDecimal: true };
+    // }
 
     const value = parseFloat(control.value);
     if (value < -90 || value > 90) {
@@ -1042,10 +1042,10 @@ export class AddDestributionCenterComponent implements OnInit {
   private longitudeRangeValidator(control: AbstractControl) {
     if (!control.value) return null;
 
-    const numericDecimal = /^-?\d+(\.\d+)?$/;
-    if (!numericDecimal.test(control.value)) {
-      return { numericDecimal: true };
-    }
+    // const numericDecimal = /^-?\d+(\.\d+)?$/;
+    // if (!numericDecimal.test(control.value)) {
+    //   return { numericDecimal: true };
+    // }
 
     const value = parseFloat(control.value);
     if (value < -180 || value > 180) {

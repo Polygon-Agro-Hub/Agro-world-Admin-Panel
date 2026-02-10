@@ -460,7 +460,15 @@ export class AddDistributionOfficerComponent implements OnInit {
     }
 
     this.selectedPage = page;
+
+    setTimeout(() => {
+    this.scrollToTop();
+  }, 0);
   }
+
+  scrollToTop(): void {
+  window.scrollTo(0, 0);
+}
 
   // Enhanced validation for pageOne
   validatePageOne(): { isValid: boolean; errors: string[] } {

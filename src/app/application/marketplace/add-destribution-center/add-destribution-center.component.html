@@ -156,33 +156,34 @@
     <!-- Row 4 -->
     <div class="flex flex-col md:flex-row md:space-x-4 mb-4 gap-8">
       <div class="flex-1 mb-4 md:mb-0">
-        <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
-          Email *
-        </label>
-      
-        <input
-          type="email"
-          formControlName="email"
-          (input)="onInputChange($event, 'email')"
-          [ngClass]="
-            'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
-            (distributionForm.get('email')?.value && !isValidGmail(distributionForm.get('email')?.value) 
-              ? 'border-red-500' 
-              : 'border-gray-300')
-          "
-        />
+  <label class="block text-sm font-medium text-[#534E4E] mb-2 dark:text-textDark">
+    Email *
+  </label>
+  
+  <input
+    type="email"
+    formControlName="email"
+    (input)="onInputChange($event, 'email')"
+    [ngClass]="
+      'dark:text-textDark bg-tileLight dark:bg-tileBlack w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ' +
+      (distributionForm.get('email')?.value && !isValidGmail(distributionForm.get('email')?.value) 
+        ? 'border-red-500' 
+        : 'border-gray-300')
+    "
+  />
 
-        <div *ngIf="!distributionForm.get('email')?.value" 
-             class="text-red-500 text-sm mt-1">
-             Email is Required
-        </div>
-      
-        <!-- Error message -->
-        <div *ngIf="distributionForm.get('email')?.value && !isValidGmail(distributionForm.get('email')?.value)" 
-             class="text-red-500 text-sm mt-1">
-             Please enter a valid email
-        </div>
-      </div>
+  <!-- Only show required error when field is touched/dirty and empty -->
+  <div *ngIf="distributionForm.get('email')?.touched && distributionForm.get('email')?.hasError('required')" 
+       class="text-red-500 text-sm mt-1">
+       Email is Required
+  </div>
+  
+  <!-- Error message for invalid email format -->
+  <div *ngIf="distributionForm.get('email')?.value && !isValidGmail(distributionForm.get('email')?.value)" 
+       class="text-red-500 text-sm mt-1">
+       Please enter a valid email
+  </div>
+</div>
       
 
 

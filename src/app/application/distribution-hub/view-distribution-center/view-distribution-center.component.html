@@ -49,103 +49,103 @@
       </div>
       <div class="flex items-center">
         <div class="mr-5">
-          <p-dropdown
-            styleClass="
-              border border-2 rounded-xl h-8 items-center 
-              bg-[#F1F1F1] dark:bg-[#272F45] 
-              text-textLight dark:text-textDark 
-              border-[#yourLightColor] dark:border-[#AFAFAF]
-              [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
-              [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
-              [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
-            "
-            panelStyleClass="
-              bg-white dark:bg-[#272F45] 
-              border border-gray-200 dark:border-[#AFAFAF]
-              [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
-              [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
-              [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
-              [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
-              [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
-              [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
-              [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-            "
-            [options]="companyOptions"
-            [checkmark]="true"
-            optionLabel="label"
-            optionValue="value"
-            [showClear]="!!selectCompany"
-            placeholder="Company"
-            [(ngModel)]="selectCompany"
-            (onChange)="applyCompanyFilter()"
-          ></p-dropdown>
-        </div>
+  <p-dropdown
+    styleClass="
+      border border-2 rounded-xl h-8 items-center 
+      bg-[#F1F1F1] dark:bg-[#272F45] 
+      text-textLight dark:text-textDark 
+      border-[#yourLightColor] dark:border-[#AFAFAF]
+      [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+      [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+      [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+    "
+    panelStyleClass="
+      bg-white dark:bg-[#272F45] 
+      border border-gray-200 dark:border-[#AFAFAF]
+      [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+      [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+      [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+      [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+      [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+      [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+      [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+    "
+    [options]="companyOptions"
+    [checkmark]="false"
+    optionLabel="label"
+    optionValue="value"
+    [showClear]="!!selectCompany"
+    placeholder="Company"
+    [(ngModel)]="selectCompany"
+    (onChange)="applyCompanyFilter()"
+  ></p-dropdown>
+</div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="
-              border border-2 rounded-xl h-8 items-center 
-              bg-[#F1F1F1] dark:bg-[#272F45] 
-              text-textLight dark:text-textDark 
-              border-[#yourLightColor] dark:border-[#AFAFAF]
-              [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
-              [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
-              [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
-            "
-            panelStyleClass="
-              bg-white dark:bg-[#272F45] 
-              border border-gray-200 dark:border-[#AFAFAF]
-              [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
-              [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
-              [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
-              [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
-              [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
-              [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
-              [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-            "
-            [options]="provinceOptions"
-            [checkmark]="true"
-            optionLabel="label"
-            optionValue="value"
-            [showClear]="!!selectProvince"
-            placeholder="Province"
-            [(ngModel)]="selectProvince"
-            (onChange)="applyProvinceFilters()"
-          ></p-dropdown>
-        </div>
+<div class="mr-5">
+  <p-dropdown
+    styleClass="
+      border border-2 rounded-xl h-8 items-center 
+      bg-[#F1F1F1] dark:bg-[#272F45] 
+      text-textLight dark:text-textDark 
+      border-[#yourLightColor] dark:border-[#AFAFAF]
+      [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+      [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+      [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+    "
+    panelStyleClass="
+      bg-white dark:bg-[#272F45] 
+      border border-gray-200 dark:border-[#AFAFAF]
+      [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+      [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+      [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+      [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+      [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+      [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+      [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+    "
+    [options]="provinceOptions"
+    [checkmark]="false"
+    optionLabel="label"
+    optionValue="value"
+    [showClear]="!!selectProvince"
+    placeholder="Province"
+    [(ngModel)]="selectProvince"
+    (onChange)="applyProvinceFilters()"
+  ></p-dropdown>
+</div>
 
-        <div class="mr-5">
-          <p-dropdown
-            styleClass="
-              border border-2 rounded-xl h-8 items-center 
-              bg-[#F1F1F1] dark:bg-[#272F45] 
-              text-textLight dark:text-textDark 
-              border-[#yourLightColor] dark:border-[#AFAFAF]
-              [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
-              [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
-              [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
-            "
-            panelStyleClass="
-              bg-white dark:bg-[#272F45] 
-              border border-gray-200 dark:border-[#AFAFAF]
-              [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
-              [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
-              [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
-              [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
-              [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
-              [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
-              [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
-            "
-            [options]="districtOptions"
-            [checkmark]="true"
-            optionLabel="label"
-            optionValue="value"
-            [showClear]="!!selectDistrict"
-            placeholder="District"
-            [(ngModel)]="selectDistrict"
-            (onChange)="applyDistrictFilters()"
-          ></p-dropdown>
-        </div>
+<div class="mr-5">
+  <p-dropdown
+    styleClass="
+      border border-2 rounded-xl h-8 items-center 
+      bg-[#F1F1F1] dark:bg-[#272F45] 
+      text-textLight dark:text-textDark 
+      border-[#yourLightColor] dark:border-[#AFAFAF]
+      [&_.p-dropdown-label]:text-textLight [&_.p-dropdown-label]:dark:text-textDark
+      [&_.p-dropdown-trigger]:text-textLight [&_.p-dropdown-trigger]:dark:text-textDark
+      [&_.p-dropdown-clear-icon]:text-textLight [&_.p-dropdown-clear-icon]:dark:text-textDark
+    "
+    panelStyleClass="
+      bg-white dark:bg-[#272F45] 
+      border border-gray-200 dark:border-[#AFAFAF]
+      [&_.p-dropdown-item]:text-textLight [&_.p-dropdown-item]:dark:text-textDark
+      [&_.p-dropdown-item]:bg-white [&_.p-dropdown-item]:dark:bg-[#272F45]
+      [&_.p-dropdown-item:hover]:bg-gray-100 [&_.p-dropdown-item:hover]:dark:bg-[#1e2332]
+      [&_.p-dropdown-item.p-highlight]:bg-[#3980C0] [&_.p-dropdown-item.p-highlight]:dark:bg-[#3980C0]
+      [&_.p-dropdown-item.p-highlight]:text-white [&_.p-dropdown-item.p-highlight]:dark:text-white
+      [&_.p-dropdown-empty-message]:text-textLight [&_.p-dropdown-empty-message]:dark:text-textDark
+      [&_.p-dropdown-empty-message]:bg-white [&_.p-dropdown-empty-message]:dark:bg-[#272F45]
+    "
+    [options]="districtOptions"
+    [checkmark]="false"
+    optionLabel="label"
+    optionValue="value"
+    [showClear]="!!selectDistrict"
+    placeholder="District"
+    [(ngModel)]="selectDistrict"
+    (onChange)="applyDistrictFilters()"
+  ></p-dropdown>
+</div>
 
         <div
           class="flex items-center rounded-full px-4 py-2 w-full bg-[#F1F1F1] dark:bg-[#272F45] group relative"

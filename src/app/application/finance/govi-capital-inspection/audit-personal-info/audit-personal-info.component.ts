@@ -279,7 +279,11 @@ export class AuditPersonalInfoComponent implements OnInit {
       return;
     }
 
-    if (this.numShares <= 0) return;
+    if (
+        this.numShares <= 0 || 
+        (this.numShares < this.minimumShare) ||
+        (this.numShares < this.maximumShare)
+      ) return;
 
     // Validate Maximum Investment Shares >= Minimum Investment Shares
     if (this.maximumShare < this.minimumShare) {
@@ -316,7 +320,7 @@ export class AuditPersonalInfoComponent implements OnInit {
       if (res.status) {
         Swal.fire({
           title: 'Success',
-          text: `Request Approved Successfully`,
+          text: `Shares Saved Successfully`,
           icon: 'success',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

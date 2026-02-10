@@ -66,7 +66,7 @@
         </div>
 
         <!-- Show disabled "Divided" button when shares divided and published -->
-        <div *ngIf="sharesData.devideData !== null" class="flex gap-4">
+        <div *ngIf="sharesData.devideData !== null && sharesData.publishStatus === 'Published'" class="flex gap-4">
           <button disabled
             class="px-6 py-2 bg-[#6B7280] text-white font-medium rounded-md cursor-not-allowed opacity-60 shadow-sm">
             <i class="fa-solid fa-check-circle mr-2"></i>Divided
@@ -299,7 +299,8 @@
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="numSharesInput.touched && !numShares " class="text-red-600 text-sm block mt-1">This field is
               required.</span>
-            <span *ngIf="numSharesInput.touched && numShares <= 0 " class="text-red-600 text-sm block mt-1">Number of shares cannot
+            <span *ngIf="numSharesInput.touched && numShares <= 0 " class="text-red-600 text-sm block mt-1">Number of
+              shares cannot
               be 0 or less than 0.</span>
           </div>
 
@@ -325,6 +326,9 @@
               class="text-red-600 text-sm block mt-1">
               Minimum Investment Shares cannot be 0 or less than 0.
             </span>
+            <span *ngIf="minimumShareInput.touched && numShares < minimumShare" class="text-red-600 text-sm block mt-1">
+              The Minimum Investment Shares cannot be larger than the defined number of shares.
+            </span>
           </div>
 
           <div>
@@ -346,6 +350,11 @@
               *ngIf="maximumShareInput.touched && minimumShareInput.touched && maximumShare > 0 && minimumShare > 0 && maximumShare < minimumShare"
               class="text-red-600 text-sm block mt-1">
               Maximum Investment Shares cannot be less than Minimum Investment Shares.
+            </span>
+
+            <span *ngIf="maximumShareInput.touched && minimumShareInput.touched && (numShares < maximumShare) "
+              class="text-red-600 text-sm block mt-1">
+              Maximum Investment Shares cannot be greater than the defined number of shares.
             </span>
           </div>
         </div>

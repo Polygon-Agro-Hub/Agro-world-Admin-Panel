@@ -82,7 +82,7 @@
               Investor ID
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Transaction ID
             </th>
@@ -92,17 +92,17 @@
               Investor Phone
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               No.Shares
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Total Amount (Rs.)
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Date & Time
             </th>
@@ -142,19 +142,19 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{item.regCode}}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{item.refCode}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{item.phoneCode}}{{item.phoneNumber}}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{item.shares}}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{formatCurrency(item.totInvt)}}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{item.createdAt | date: "hh:mma 'on' MMMM dd, yyyy"}}
             </td>
             <td 
@@ -196,7 +196,7 @@
             <td  class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button 
                 (click)="openPopUp(item.id)"
-                [disabled]="!permissionService.hasPermission('Approve or Reject invester request') && tokenService.getUserDetails().role !== '1'"
+                [disabled]="(!permissionService.hasPermission('Approve or Reject invester request') && tokenService.getUserDetails().role !== '1') || item.invtStatus !== 'To Review'"
                 class="px-3 py-2 rounded-lg font-medium cursor-pointer {{getStatusClass(item.invtStatus)}}"
               >
                 {{item.invtStatus}}

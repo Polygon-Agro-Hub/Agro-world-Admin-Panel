@@ -75,7 +75,7 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Last Modified By
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Created At
             </th>
             <th *ngIf="permissionService.hasPermission('Distribution Hub view a cch') || tokenService.getUserDetails().role === '1'" class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
@@ -141,7 +141,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.adminModify !== null ? item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-3 py-3 text-left text-textLight dark:text-textDark">
               {{ item.createdAtFormatted }}
             </td>
             <td *ngIf="

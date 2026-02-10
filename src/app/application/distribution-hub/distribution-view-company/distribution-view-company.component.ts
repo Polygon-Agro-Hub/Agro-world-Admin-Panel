@@ -274,16 +274,17 @@ export class DistributionViewCompanyComponent implements OnInit {
                   this.isLoading = false;
                   if (res.status) {
                     Swal.fire({
-                      icon: 'success',
-                      title: 'Success!',
-                      text: 'The Distributed Center Head was approved successfully.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                      customClass: {
-                        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                        title: 'font-semibold text-lg',
-                      },
-                    });
+  icon: 'success',
+  title: 'Success!',
+  text: 'The Distributed Center Head was approved successfully.',
+  showConfirmButton: true,
+  confirmButtonText: 'OK',
+  timer: 3000,
+  customClass: {
+    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+    title: 'font-semibold text-lg',
+  },
+});
                     this.fetchAllCompanyHeads();
                   } else {
                     Swal.fire({
@@ -332,7 +333,8 @@ export class DistributionViewCompanyComponent implements OnInit {
                       icon: 'success',
                       title: 'Success!',
                       text: 'The Distributed Center Head was rejected successfully.',
-                      showConfirmButton: false,
+                      showConfirmButton: true,
+                      confirmButtonText: 'OK',
                       timer: 3000,
                       customClass: {
                         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -345,7 +347,8 @@ export class DistributionViewCompanyComponent implements OnInit {
                       icon: 'error',
                       title: 'Error!',
                       text: 'Something went wrong. Please try again.',
-                      showConfirmButton: false,
+                      showConfirmButton: true,
+                      confirmButtonText: 'OK',
                       timer: 3000,
                       customClass: {
                         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

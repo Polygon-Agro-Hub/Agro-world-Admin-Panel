@@ -205,27 +205,12 @@ export class RoleSelectionComponent {
   }
 
 
-  validateEditEmail() {
+  validateEditEmail(): void {
     if (!this.selectedRole.email) {
-      this.editEmailError = 'Email is required';
-      return false;
+      this.editEmailError = this.emailValidationService.validationMessages.required;
+      return;
     }
-
-    // Check for leading spaces (shouldn't exist with our trimming)
-    if (this.selectedRole.email.startsWith(' ')) {
-      this.editEmailError = 'Email cannot start with spaces';
-      return false;
-    }
-
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(this.selectedRole.email)) {
-      this.editEmailError = 'Please enter a valid email address';
-      return false;
-    }
-
-    this.editEmailError = '';
-    return true;
+    this.editEmailError = this.emailValidationService.getErrorMessage(this.selectedRole.email);
   }
 
   trimEmailInput() {

@@ -737,7 +737,7 @@ getFileName(value: string): string {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/field-inspectors');
+       this.location.back();
       }
     });
   }

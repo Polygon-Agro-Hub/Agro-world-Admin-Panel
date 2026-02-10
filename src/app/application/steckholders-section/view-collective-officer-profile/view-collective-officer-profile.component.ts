@@ -45,10 +45,18 @@ export class ViewCollectiveOfficerProfileComponent {
   ) { }
 
   ngOnInit(): void {
+    this.scrollToTop();
     this.officerId = this.route.snapshot.params['id'];
     this.fetchOfficerById(this.officerId);
     this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
 
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Use 'auto' for instant scroll
+    });
   }
 
   getRoleHeading() {

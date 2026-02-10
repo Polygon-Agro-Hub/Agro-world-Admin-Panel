@@ -146,6 +146,7 @@ export class CollectiveofficersEditComponent {
   ) { }
 
   ngOnInit() {
+    this.scrollToTop();
     this.loadBanks();
     this.loadBranches();
     this.setupDropdownOptions();
@@ -224,6 +225,12 @@ export class CollectiveofficersEditComponent {
     });
   }
 
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Use 'auto' for instant scroll
+    });
+  }
   onCompanyChange(event: any): void {
 
     this.personalData.centerId = null;

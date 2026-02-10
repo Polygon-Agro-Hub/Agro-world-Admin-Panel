@@ -54,21 +54,18 @@ interface CenterDetails {
 })
 export class PikupOdersComponent implements OnChanges {
   @Input() centerObj!: CenterDetails;
-  @Input() orders: any[] = []; // Orders from parent
+  @Input() orders: any[] = [];
 
-  // Output events for parent to handle filters
   @Output() dateChange = new EventEmitter<Date | null>();
   @Output() timeSlotChange = new EventEmitter<string>();
   @Output() searchChange = new EventEmitter<string>();
   @Output() clearSearch = new EventEmitter<void>();
   @Output() clearDate = new EventEmitter<void>();
 
-  // Local filter properties for child component
   selectedDate: Date | null = null;
   selectedTimeSlot: string = '';
   searchText: string = '';
 
-  // Time slot options for dropdown - updated format
   timeSlotOptions = [
     { label: '8AM - 2PM', value: '8AM-2PM' },
     { label: '2PM - 8PM', value: '2PM-8PM' }
@@ -96,7 +93,6 @@ export class PikupOdersComponent implements OnChanges {
       this.transformData();
     }
     
-    // Update local filter values when parent passes them
     if (changes['searchText']) {
       console.log('Search text changed from parent:', changes['searchText'].currentValue);
       this.searchText = changes['searchText'].currentValue || '';
@@ -109,16 +105,13 @@ export class PikupOdersComponent implements OnChanges {
     
     if (changes['selectedTimeSlot']) {
       console.log('Time slot changed from parent:', changes['selectedTimeSlot'].currentValue);
-      // Convert backend format to UI format for dropdown
       const backendTimeSlot = changes['selectedTimeSlot'].currentValue || '';
       this.selectedTimeSlot = this.convertTimeSlotToUIFormat(backendTimeSlot);
     } else if (this.selectedTimeSlot === undefined) {
-      // Initialize if undefined
       this.selectedTimeSlot = '';
     }
   }
 
-  // Method to convert UI time slot to backend format (WITH "Within")
   private convertTimeSlotToBackendFormat(timeSlot: string): string {
     if (!timeSlot) return '';
     
@@ -132,14 +125,11 @@ export class PikupOdersComponent implements OnChanges {
     return conversionMap[timeSlot] || timeSlot;
   }
 
-  // Method to convert backend time slot to UI format (WITHOUT "Within")
   private convertTimeSlotToUIFormat(timeSlot: string): string {
     if (!timeSlot) return '';
     
-    // Remove "Within " prefix and clean up
     const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
     
-    // Convert to consistent format for dropdown
     const uiFormatMap: { [key: string]: string } = {
       '8AM - 2PM': '8AM-2PM',
       '2PM - 8PM': '2PM-8PM',
@@ -165,7 +155,6 @@ export class PikupOdersComponent implements OnChanges {
     }
   }
 
-  // Filter methods - emit events to parent
   onDateSelect(): void {
     console.log('Date selected:', this.selectedDate);
     this.dateChange.emit(this.selectedDate);
@@ -184,11 +173,9 @@ export class PikupOdersComponent implements OnChanges {
     this.timeSlotChange.emit(backendTimeSlot);
   }
 
-  // Add method to clear time slot
   onClearTimeSlot(): void {
     console.log('Time slot cleared');
     this.selectedTimeSlot = '';
-    // Send empty string to backend
     this.timeSlotChange.emit('');
   }
 
@@ -203,99 +190,52 @@ export class PikupOdersComponent implements OnChanges {
     this.clearSearch.emit();
   }
 
-  // Transform API data to match your Order interface
-  // Update the transformApiData method to include sorting by pickup time
-private transformApiData(apiData: any[]): Order[] {
-  // First, create a copy of the data to avoid mutating the original
-  const dataToProcess = [...apiData];
-  
-  // Sort by pickup timestamp (most recent first)
-  const sortedData = dataToProcess.sort((a, b) => {
-    // Try to get pickup timestamps - check various possible field names
-    const pickupTimeA = a.pickupTime || a.pickedUpAt || a.pickupAt || a.updatedAt;
-    const pickupTimeB = b.pickupTime || b.pickedUpAt || b.pickupAt || b.updatedAt;
-    
-    // If both have pickup times, compare them (most recent first)
-    if (pickupTimeA && pickupTimeB) {
-      return new Date(pickupTimeB).getTime() - new Date(pickupTimeA).getTime();
-    }
-    
-    // If only one has a pickup time, put it first
-    if (pickupTimeA && !pickupTimeB) return -1;
-    if (!pickupTimeA && pickupTimeB) return 1;
-    
-    // If no pickup times, try order creation date (as fallback)
-    const createdA = a.orderCreatedAt;
-    const createdB = b.orderCreatedAt;
-    
-    if (createdA && createdB) {
-      return new Date(createdB).getTime() - new Date(createdA).getTime();
-    }
-    
-    // Fallback to schedule date if available
-    const scheduleA = a.scheduleDate || a.sheduleDate;
-    const scheduleB = b.scheduleDate || b.sheduleDate;
-    
-    if (scheduleA && scheduleB) {
-      return new Date(scheduleB).getTime() - new Date(scheduleA).getTime();
-    }
-    
-    // Last resort: alphabetical by order ID (descending)
-    return (b.orderId || b.invNo || '').localeCompare(a.orderId || a.invNo || '');
-  });
+  // SORTING REMOVED - orders displayed as received from API
+  private transformApiData(apiData: any[]): Order[] {
+    return apiData.map((item, index) => ({
+      no: index + 1,
+      orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
+      value: this.formatCurrencyValue(item.fullTotal),
+      status: 'Picked Up',
+      customerPhone: this.formatPhoneNumber(
+        item.customerPhoneCode,
+        item.customerPhoneNumber,
+      ),
+      receiverPhone: this.formatPhoneNumber(
+        item.receiverPhoneCode1,
+        item.receiverPhone1,
+      ),
+      receiversInfo: this.getReceiverInfo(item),
+      scheduledTimeSlot: this.formatScheduledTimeSlot(item),
+      payment: this.getPaymentStatus(item),
+      scheduleDate: item.scheduleDate || item.sheduleDate,
+      timeSlot: item.timeSlot || item.sheduleTime,
+      originalData: item,
+    }));
+  }
 
-  // Now transform the sorted data
-  return sortedData.map((item, index) => ({
-    no: index + 1,
-    orderId: item.invNo || item.orderId || `ORD-${index + 1000}`,
-    value: this.formatCurrencyValue(item.fullTotal),
-    status: 'Picked Up',
-    customerPhone: this.formatPhoneNumber(
-      item.customerPhoneCode,
-      item.customerPhoneNumber,
-    ),
-    receiverPhone: this.formatPhoneNumber(
-      item.receiverPhoneCode1,
-      item.receiverPhone1,
-    ),
-    receiversInfo: this.getReceiverInfo(item),
-    scheduledTimeSlot: this.formatScheduledTimeSlot(item),
-    payment: this.getPaymentStatus(item),
-    scheduleDate: item.scheduleDate || item.sheduleDate,
-    timeSlot: item.timeSlot || item.sheduleTime,
-    originalData: item,
-  }));
-}
-
-  // NEW METHOD: Format currency value with comma separators
   private formatCurrencyValue(value: any): string {
     if (value === null || value === undefined || value === '') {
       return '0.00';
     }
     
-    // Convert to number
     const numericValue = parseFloat(value);
     
-    // Check if it's a valid number
     if (isNaN(numericValue)) {
       return '0.00';
     }
     
-    // Format with comma separators for thousands
     return numericValue.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
   }
 
-  // NEW: Update time slot display formatting to remove "Within"
   private getFormattedTimeSlotForDisplay(timeSlot: string): string {
     if (!timeSlot) return '';
 
-    // Remove "Within " prefix if present
     const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
     
-    // Format nicely for display
     const displayFormatMap: { [key: string]: string } = {
       '8AM - 2PM': '8AM - 2PM',
       '2PM - 8PM': '2PM - 8PM',
@@ -308,7 +248,6 @@ private transformApiData(apiData: any[]): Order[] {
     return displayFormatMap[cleanTimeSlot] || cleanTimeSlot;
   }
 
-  // Format scheduled time slot
   private formatScheduledTimeSlot(item: any): string {
     const scheduleDate = item.scheduleDate || item.sheduleDate;
     const timeSlot = item.timeSlot || item.sheduleTime;
@@ -320,11 +259,9 @@ private transformApiData(apiData: any[]): Order[] {
     const formattedDate = this.formatDisplayDate(scheduleDate);
     const formattedTimeSlot = this.getFormattedTimeSlotForDisplay(timeSlot);
 
-    // Return with time slot on top and date below (like in screenshot)
     return `${formattedTimeSlot}<br>${formattedDate}`;
   }
 
-  // Helper method to format time components
   private formatTimeComponent(time: string): string {
     time = time.trim().toUpperCase();
 
@@ -343,7 +280,6 @@ private transformApiData(apiData: any[]): Order[] {
     return time;
   }
 
-  // Helper method to format phone numbers
   private formatPhoneNumber(code: string, number: string): string {
     if (!code && !number) return 'N/A';
     if (code && number) {
@@ -354,7 +290,6 @@ private transformApiData(apiData: any[]): Order[] {
     return number || code || 'N/A';
   }
 
-  // Helper method to get receiver info
   private getReceiverInfo(item: any): string {
     const infoParts = [];
 
@@ -369,25 +304,22 @@ private transformApiData(apiData: any[]): Order[] {
     return infoParts.length > 0 ? infoParts.join(', ') : 'N/A';
   }
 
- private getPaymentStatus(item: any): string {
-  const isPaid = parseInt(item.isPaid?.toString() || '0');
-  const paymentMethod = item.paymentMethod || '';
-  const fullTotal = item.fullTotal || 0;
-  
-  // If payment method is Cash, isPaid = 1, and fullTotal exists, show "Received"
-  if (paymentMethod === 'Cash' && isPaid === 1 && fullTotal > 0) {
-    return 'Received';
+  private getPaymentStatus(item: any): string {
+    const isPaid = parseInt(item.isPaid?.toString() || '0');
+    const paymentMethod = item.paymentMethod || '';
+    const fullTotal = item.fullTotal || 0;
+    
+    if (paymentMethod === 'Cash' && isPaid === 1 && fullTotal > 0) {
+      return 'Received';
+    }
+    
+    if (isPaid === 1) {
+      return 'Paid';
+    }
+    
+    return 'Pending';
   }
-  
-  // For other payment methods or conditions
-  if (isPaid === 1) {
-    return 'Paid';
-  }
-  
-  return 'Pending';
-}
 
-  // Add this method to format the scheduleDate for display
   formatDisplayDate(dateString: string): string {
     if (!dateString) return 'N/A';
     return this.datePipe.transform(dateString, 'MMM d, yyyy') || 'N/A';
@@ -407,7 +339,6 @@ private transformApiData(apiData: any[]): Order[] {
         data.receiverName ||
         '';
 
-      // Combine title and name
       const receiverNameWithTitle =
         title && fullName
           ? `${title} ${fullName}`.trim()
@@ -468,7 +399,6 @@ private transformApiData(apiData: any[]): Order[] {
     this.selectedReceiverInfo = null;
   }
 
-  // Function to get payment status color
   getPaymentColor(payment: string): string {
     switch (payment) {
       case 'Paid':
@@ -539,7 +469,6 @@ private transformApiData(apiData: any[]): Order[] {
     }
   }
 
-  // Helper method to extract numeric ID from display ID
   private extractOrderIdFromDisplay(displayId: string): number | null {
     const match = displayId.match(/\d+/);
     if (match) {
@@ -548,7 +477,6 @@ private transformApiData(apiData: any[]): Order[] {
     return null;
   }
 
-  // Helper method to show error messages
   private showErrorMessage(message: string): void {
     console.error(message);
     alert(message);

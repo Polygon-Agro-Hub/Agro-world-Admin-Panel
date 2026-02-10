@@ -13,6 +13,8 @@ import { PermissionService } from '../../../services/roles-permission/permission
 })
 export class FinanceActionComponent {
   popupVisiblePentionRequests = false;
+  popupVisibleFarmerPension = false;
+
   constructor(
     private router: Router,
     public tokenService: TokenService,
@@ -53,5 +55,17 @@ export class FinanceActionComponent {
 
   togglePopupPentionRequests() {
     this.popupVisiblePentionRequests = !this.popupVisiblePentionRequests;
+  }
+
+  togglePopupFarmerPension() {
+    this.popupVisibleFarmerPension = !this.popupVisibleFarmerPension;
+  }
+
+  viewUnder5YearsFarmersPension(): void {
+    this.router.navigate(['/finance/action/farmer-pension-under-5-years']);
+  }
+
+  viewFarmerPension5YearsPlus(): void {
+    this.router.navigate(['/finance/action/farmer-pension-5-years-plus']);
   }
 }

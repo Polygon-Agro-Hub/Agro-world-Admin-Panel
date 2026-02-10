@@ -79,12 +79,12 @@
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
               >
-                Status
+                Cultivation History
               </th>
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
               >
-                Cultivation History
+                View Documents
               </th>
               <th
                 class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
@@ -108,7 +108,6 @@
                 {{ formatNIC(request.NIC) }}
               </td>
 
-
               <!-- Details -->
               <td class="px-4 py-4 text-center">
                 <button
@@ -131,29 +130,18 @@
                   </svg>
                 </button>
               </td>
-
               <td class="px-4 py-4 text-center">
                 <button
-                  (click)="openApproveRejectModal(request)"
-                  [disabled]="request.reqStatus !== 'To Review'"
-                  [class]="
-                    'px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto ' +
-                    getStatusClass(request.reqStatus)
-                  "
-                  [title]="
-                    request.reqStatus === 'To Review'
-                      ? 'Click to review this request'
-                      : request.reqStatus
-                  "
+                  class="px-4 py-2 text-blue-500 hover:text-blue-700 font-medium"
+                  (click)="openReviewRequest(request)"
                 >
-                  {{ request.reqStatus }}
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>
               </td>
               <td class="px-4 py-4 text-center">
                 <button
-                  class="px-4 py-2 text-blue-500 hover:text-blue-700 font-medium text-sm"
-                  title="Review Request"
-                  (click)="openReviewRequest(request)"
+                  class="px-4 py-2 text-red-500 hover:text-red-700 font-medium"
+                  (click)="openViewDocuments(request)"
                 >
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>

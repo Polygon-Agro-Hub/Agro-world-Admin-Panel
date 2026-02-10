@@ -218,6 +218,7 @@ export class UpdateDistributionOfficerComponent {
   ) { }
 
   ngOnInit() {
+    this.scrollToTop();
     this.loadBanks();
     this.loadBranches();
     this.setupDropdownOptions();
@@ -332,6 +333,13 @@ export class UpdateDistributionOfficerComponent {
         console.error('Error fetching officer data:', error);
         this.isLoading = false;
       },
+    });
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Use 'auto' for instant scroll
     });
   }
 

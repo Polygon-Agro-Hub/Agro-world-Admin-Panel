@@ -104,6 +104,10 @@
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Centre Head Portals
             </th>
+            <th 
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+              Last Modified By
+            </th>
             <th *ngIf="
               ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Distribution Hub view a company') )||
               ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder view distribution company' ) ) ||
@@ -194,6 +198,9 @@
                 (click)="viewCompanyHeadPortals(item.companyId, item.companyNameEnglish)">
                 <i class="fa-regular fa-square-plus text-2xl"></i>
               </button>
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{item.modifyBy || '--'}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button *ngIf="

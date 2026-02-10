@@ -203,7 +203,6 @@
   line-height: 1.0rem !important;
 }
 
-
 ::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title {
   margin: 0 0.2rem !important;
   /* Add spacing between month and year */

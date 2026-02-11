@@ -26,7 +26,7 @@
         <!-- Select Centre -->
         <div class="w-full">
           <p-dropdown [options]="centerNames" optionLabel="centerName" optionValue="id" 
-            placeholder="Select Collection Centre"
+            placeholder="Select Distribution Centre"
             [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
             name="selectedCenterId" required
             [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'"
@@ -42,6 +42,7 @@
           <p-dropdown [options]="collectionCenterManagerNames" optionLabel="displayLabel" optionValue="id"
             placeholder="Select Manager" [(ngModel)]="selectedIrmId" #selectedIrmIdInput="ngModel"
             name="selectedIrmId" required panelStyleClass="custom-dropdown-panel"
+             [filter]="true" filterBy="empId,firstNameEnglish,lastNameEnglish"
             [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'">
           </p-dropdown>
           <div *ngIf="selectedIrmIdInput.touched && !selectedIrmId" class="text-red-500 text-sm mt-1 ml-1">

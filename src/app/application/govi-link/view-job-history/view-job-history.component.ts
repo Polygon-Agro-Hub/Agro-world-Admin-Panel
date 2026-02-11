@@ -250,7 +250,7 @@ export class ViewJobHistoryComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/govi-link']);
+    this.router.navigate(['/govi-link/action']);
   }
 
   

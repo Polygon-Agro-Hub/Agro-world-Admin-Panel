@@ -12,9 +12,7 @@
   <div
     class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
   >
-    <div
-      class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6"
-    >
+    <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
           Pension Requests ({{ totalItems.toString().padStart(2, "0") }})
@@ -333,6 +331,21 @@
           class="text-sm text-textLight dark:text-textDark font-medium flex-1"
         >
           {{ calculateAge(selectedRequest?.Successor_DOB) }}
+        </span>
+      </div>
+
+      <!-- Applied By - Shows "Farmer" when Collection_Officer_EmpID is null -->
+      <div class="flex items-start">
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
+        >
+          Applied By
+        </span>
+        <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
+        <span
+          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
+        >
+          {{ selectedRequest?.Collection_Officer_EmpID }}
         </span>
       </div>
     </div>

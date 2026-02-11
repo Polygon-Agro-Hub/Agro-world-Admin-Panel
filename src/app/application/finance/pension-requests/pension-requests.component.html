@@ -59,7 +59,7 @@
         <table class="w-full">
           <thead>
             <tr
-              class="border-b font-normal border-gray-200 dark:border-gray-700"
+              class="border-b font-normal text[#000000]] border-gray-200 dark:border-gray-700"
             >
               <th
                 class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal"
@@ -99,12 +99,12 @@
               class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               <!-- No -->
-              <td class="px-4 py-3 text-textLight dark:text-textDark text-left">
+              <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left">
                 {{ (i + 1).toString().padStart(3, "0") }}
               </td>
 
               <!-- Farmer NIC -->
-              <td class="px-4 py-3 text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-[#000000] dark:text-textDark">
                 {{ formatNIC(request.NIC) }}
               </td>
 
@@ -149,7 +149,7 @@
 
               <!-- Date & Time -->
               <td
-                class="px-4 py-3 text-textLight text-center dark:text-textDark"
+                class="px-4 py-3 text-[#000000] text-center dark:text-textDark"
               >
                 <div class="flex flex-col items-center">
                   <span class="text-sm">{{

@@ -222,7 +222,7 @@
 
           </div>
 
-          <!-- Fixed Mobile Number - 01 input -->
+<!-- Mobile Number - 01 -->
 <div>
   <label for="phoneNumber01" class="block text-sm font-medium text-gray-700 dark:text-textDark">
     Mobile Number - 01 *
@@ -270,14 +270,12 @@
         class="text-red-600 text-sm block">
         Please enter a valid mobile number (must start with 7 and be exactly 9 digits)
       </span>
-      <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
-        Mobile Number - 01 and Mobile Number - 02 cannot be the same
-      </span>
+      <!-- REMOVED from here: Duplicate validation message -->
     </div>
   </div>
 </div>
 
-<!-- Fixed Mobile Number - 02 input -->
+<!-- Mobile Number - 02 -->
 <div>
   <label for="phoneNumber02" class="block text-sm font-medium text-gray-700 dark:text-textDark">
     Mobile Number - 02
@@ -320,6 +318,10 @@
       <span *ngIf="showFirstDigitError && firstDigitErrorField === 'phoneNumber02'" 
         class="text-red-600 text-sm block">
         Mobile number must start with 7
+      </span>
+      <!-- MOVED HERE: Duplicate validation message now appears under Mobile Number - 02 -->
+      <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
+        Mobile Number - 01 and Mobile Number - 02 cannot be the same
       </span>
     </div>
   </div>

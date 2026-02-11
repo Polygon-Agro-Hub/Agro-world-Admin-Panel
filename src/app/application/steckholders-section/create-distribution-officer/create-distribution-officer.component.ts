@@ -308,14 +308,14 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     if (!this.personalData.phoneNumber01) {
-      missingFields.push('Mobile Number - 01 is Required');
-    } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-      missingFields.push('Mobile Number - 01 - Must be 9 digits');
-    }
+  missingFields.push('Mobile Number - 01 is Required');
+} else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+}
 
-    if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-      missingFields.push('Mobile Number - 02 - Must be 9 digits');
-    }
+if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+}
 
     if (this.areDuplicatePhoneNumbers()) {
       missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
@@ -755,14 +755,14 @@ export class CreateDistributionOfficerComponent implements OnInit {
       }
 
       if (!this.personalData.phoneNumber01) {
-        missingFields.push('Mobile Number - 01 is Required');
-      } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-        missingFields.push('Mobile Number - 01 - Must be 9 digits');
-      }
+  missingFields.push('Mobile Number - 01 is Required');
+} else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+}
 
-      if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-        missingFields.push('Mobile Number - 02 - Must be 9 digits');
-      }
+if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+}
 
       if (this.personalData.phoneNumber01 && this.personalData.phoneNumber02 && this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
         missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
@@ -1307,10 +1307,12 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    if (!phone) return false;
-    const phoneRegex = /^[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+  if (!phone) return false;
+  
+  // Must start with 7 and be exactly 9 digits total
+  const phoneRegex = /^7[0-9]{8}$/;
+  return phoneRegex.test(phone);
+}
 
   // Check if phone numbers are duplicate
   areDuplicatePhoneNumbers(): boolean {

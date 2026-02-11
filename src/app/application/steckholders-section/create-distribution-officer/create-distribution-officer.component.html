@@ -260,15 +260,20 @@
           " />
               </div>
               <!-- Error messages outside the flex container -->
-              <div class="mt-1">
-                <span *ngIf="touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
-                  class="text-red-600 text-sm block">
-                  Mobile Number - 01 is required
-                </span>
-                <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
-                  Mobile Number - 01 and Mobile Number - 02 cannot be the same
-                </span>
-              </div>
+              <!-- Error messages outside the flex container -->
+<div class="mt-1">
+  <span *ngIf="touchedFields.phoneNumber01 && !personalData.phoneNumber01"
+    class="text-red-600 text-sm block">
+    Mobile Number - 01 is required
+  </span>
+  <span *ngIf="touchedFields.phoneNumber01 && personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
+    class="text-red-600 text-sm block">
+    Please enter a valid mobile number (format: +947XXXXXXXX)
+  </span>
+  <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
+    Mobile Number - 01 and Mobile Number - 02 cannot be the same
+  </span>
+</div>
             </div>
           </div>
           <!-- Fixed Mobile Number - 02 input -->
@@ -307,13 +312,12 @@
             (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) ? 'border-red-500' : 'border-gray-300')
           " />
               </div>
-              <!-- Error messages outside the flex container -->
-              <div class="mt-1">
-                <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)"
-                  class="text-red-600 text-sm block">
-                  Please enter a valid mobile number (9 digits)
-                </span>
-              </div>
+<div class="mt-1">
+  <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)"
+    class="text-red-600 text-sm block">
+    Please enter a valid mobile number (format: +947XXXXXXXX)
+  </span>
+</div>
             </div>
           </div>
 

@@ -13,7 +13,7 @@
     class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
   >
     <div
-      class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6 min-w-[1700px]"
+      class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6"
     >
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
@@ -59,35 +59,35 @@
         <table class="w-full">
           <thead>
             <tr
-              class="border-b text-base font-normal border-gray-200 dark:border-gray-700"
+              class="border-b font-normal border-gray-200 dark:border-gray-700"
             >
               <th
-                class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap text-base font-normal"
+                class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal"
               >
                 No
               </th>
               <th
-                class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap text-base font-normal"
+                class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal"
               >
                 Farmer NIC
               </th>
               <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal"
               >
                 Details
               </th>
               <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal"
               >
                 Cultivation History
               </th>
               <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal"
               >
                 View Documents
               </th>
               <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap text-base font-normal"
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal"
               >
                 Date & Time
               </th>
@@ -96,20 +96,20 @@
           <tbody>
             <tr
               *ngFor="let request of pensionRequests; let i = index"
-              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
+              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               <!-- No -->
-              <td class="px-4 py-4 text-textLight dark:text-textDark text-left">
+              <td class="px-4 py-3 text-textLight dark:text-textDark text-left">
                 {{ (i + 1).toString().padStart(3, "0") }}
               </td>
 
               <!-- Farmer NIC -->
-              <td class="px-4 py-4 text-textLight dark:text-textDark">
+              <td class="px-4 py-3 text-textLight dark:text-textDark">
                 {{ formatNIC(request.NIC) }}
               </td>
 
               <!-- Details -->
-              <td class="px-4 py-4 text-center">
+              <td class="px-4 py-3 text-center">
                 <button
                   (click)="viewDetails(request.Request_ID)"
                   class="w-6 h-6 text-blue-500 hover:text-blue-700"
@@ -130,7 +130,7 @@
                   </svg>
                 </button>
               </td>
-              <td class="px-4 py-4 text-center">
+              <td class="px-4 py-3 text-center">
                 <button
                   class="px-4 py-2 text-blue-500 hover:text-blue-700 font-medium"
                   (click)="openReviewRequest(request)"
@@ -138,7 +138,7 @@
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>
               </td>
-              <td class="px-4 py-4 text-center">
+              <td class="px-4 py-3 text-center">
                 <button
                   class="px-4 py-2 text-red-500 hover:text-red-700 font-medium"
                   (click)="openViewDocuments(request)"
@@ -149,7 +149,7 @@
 
               <!-- Date & Time -->
               <td
-                class="px-4 py-4 text-textLight text-center dark:text-textDark"
+                class="px-4 py-3 text-textLight text-center dark:text-textDark"
               >
                 <div class="flex flex-col items-center">
                   <span class="text-sm">{{

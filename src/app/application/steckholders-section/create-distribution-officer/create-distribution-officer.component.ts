@@ -50,7 +50,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
-  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageThree';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageOne';
   driverObj: Drivers = new Drivers();
   personalData: Personal = new Personal();
 
@@ -82,6 +82,9 @@ export class CreateDistributionOfficerComponent implements OnInit {
   managerOptions: any[] = [];
   bankOptions: any[] = [];
   branchOptions: any[] = [];
+
+  showFirstDigitError: boolean = false;
+firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
 
   invalidFields: Set<string> = new Set();
 
@@ -308,14 +311,14 @@ export class CreateDistributionOfficerComponent implements OnInit {
     }
 
     if (!this.personalData.phoneNumber01) {
-      missingFields.push('Mobile Number - 01 is Required');
-    } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-      missingFields.push('Mobile Number - 01 - Must be 9 digits');
-    }
+  missingFields.push('Mobile Number - 01 is Required');
+} else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+}
 
-    if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-      missingFields.push('Mobile Number - 02 - Must be 9 digits');
-    }
+if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+}
 
     if (this.areDuplicatePhoneNumbers()) {
       missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
@@ -755,14 +758,14 @@ export class CreateDistributionOfficerComponent implements OnInit {
       }
 
       if (!this.personalData.phoneNumber01) {
-        missingFields.push('Mobile Number - 01 is Required');
-      } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-        missingFields.push('Mobile Number - 01 - Must be 9 digits');
-      }
+  missingFields.push('Mobile Number - 01 is Required');
+} else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
+  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+}
 
-      if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-        missingFields.push('Mobile Number - 02 - Must be 9 digits');
-      }
+if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
+  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+}
 
       if (this.personalData.phoneNumber01 && this.personalData.phoneNumber02 && this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
         missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
@@ -1100,25 +1103,19 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove leading/trailing spaces and replace multiple spaces with single space
+    value = value.trim().replace(/\s{2,}/g, ' ');
 
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      // Capitalize first letter and make rest lowercase
-      if (value.length > 0) {
-        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      }
-
-      this.personalData[fieldName] = value;
+    // Capitalize first letter and make rest lowercase
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
     }
+
+    this.personalData[fieldName] = value;
   }
+}
 
   // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
@@ -1156,75 +1153,70 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
   // Updated formatAccountHolderName function
   formatAccountHolderName(): void {
-    let value = this.personalData.accHolderName;
-    if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
+  let value = this.personalData.accHolderName;
+  if (value) {
+    // Remove leading/trailing spaces and replace multiple spaces with single space
+    value = value.trim().replace(/\s{2,}/g, ' ');
 
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
+    // Capitalize first letter of each word
+    value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
 
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      // Capitalize first letter of each word
-      value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
-
-      this.personalData.accHolderName = value;
-    }
+    this.personalData.accHolderName = value;
   }
+}
+
 
   // Add new keypress handler for account holder name input
   preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
-    if (!this.handleSpaceRestrictions(event)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-    // Allow only letters (a-z, A-Z) and space
-    if (!/[a-zA-Z\s]/.test(char)) {
-      event.preventDefault();
-    }
+  // Handle space restrictions first
+  if (!this.handleSpaceRestrictions(event)) {
+    return;
   }
+
+  const char = String.fromCharCode(event.which);
+  // Allow only letters (a-z, A-Z) and space
+  if (!/[a-zA-Z\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
 
   // Add new keypress handlers for address fields
   preventAddressSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
-    if (!this.handleSpaceRestrictions(event)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-    // Allow letters, numbers, and space for address fields
-    if (!/[a-zA-Z0-9\s\-\/\\#]/.test(char)) {
-      event.preventDefault();
-    }
+  // Handle space restrictions first
+  if (!this.handleSpaceRestrictions(event)) {
+    return;
   }
+
+  const char = String.fromCharCode(event.which);
+  // Allow letters, numbers, and space for address fields
+  if (!/[a-zA-Z0-9\s\-\/\\#]/.test(char)) {
+    event.preventDefault();
+  }
+}
 
   // Format address fields to handle spaces
   formatAddressField(fieldName: 'houseNumber' | 'streetName' | 'city'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove leading/trailing spaces and replace multiple spaces with single space
-      value = value.trim().replace(/\s{2,}/g, ' ');
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove leading/trailing spaces and replace multiple spaces with single space
+    value = value.trim().replace(/\s{2,}/g, ' ');
 
-      // Capitalize first letter of each word for streetName and city
-      if (fieldName === 'streetName' || fieldName === 'city') {
-        value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
-      }
-
-      // For houseNumber, capitalize the first letter only if it's alphabetic
-      if (fieldName === 'houseNumber' && value.length > 0) {
-        const firstChar = value.charAt(0);
-        if (/[a-zA-Z]/.test(firstChar)) {
-          value = firstChar.toUpperCase() + value.slice(1);
-        }
-      }
-
-      this.personalData[fieldName] = value;
+    // Capitalize first letter of each word for streetName and city
+    if (fieldName === 'streetName' || fieldName === 'city') {
+      value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
     }
+
+    // For houseNumber, capitalize the first letter only if it's alphabetic
+    if (fieldName === 'houseNumber' && value.length > 0) {
+      const firstChar = value.charAt(0);
+      if (/[a-zA-Z]/.test(firstChar)) {
+        value = firstChar.toUpperCase() + value.slice(1);
+      }
+    }
+
+    this.personalData[fieldName] = value;
   }
+}
   // Check if name has invalid characters (numbers or special characters)
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];
@@ -1318,10 +1310,12 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   isValidPhoneNumber(phone: string): boolean {
-    if (!phone) return false;
-    const phoneRegex = /^[0-9]{9}$/;
-    return phoneRegex.test(phone);
-  }
+  if (!phone) return false;
+  
+  // Must start with 7 and be exactly 9 digits total
+  const phoneRegex = /^7[0-9]{8}$/;
+  return phoneRegex.test(phone);
+}
 
   // Check if phone numbers are duplicate
   areDuplicatePhoneNumbers(): boolean {
@@ -1334,12 +1328,24 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   onBlur(fieldName: keyof Personal): void {
-    this.touchedFields[fieldName] = true;
-
-    if (fieldName === 'confirmAccNumber') {
-      this.validateConfirmAccNumber();
+  this.touchedFields[fieldName] = true;
+  
+  // Check for first digit error on blur
+  if (fieldName === 'phoneNumber01' || fieldName === 'phoneNumber02') {
+    const value = this.personalData[fieldName];
+    if (value && value.length > 0 && value.charAt(0) !== '7') {
+      this.showFirstDigitError = true;
+      this.firstDigitErrorField = fieldName;
+    } else {
+      this.showFirstDigitError = false;
+      this.firstDigitErrorField = null;
     }
   }
+  
+  if (fieldName === 'confirmAccNumber') {
+    this.validateConfirmAccNumber();
+  }
+}
 
   validateConfirmAccNumber(): void {
     this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
@@ -1547,28 +1553,40 @@ export class CreateDistributionOfficerComponent implements OnInit {
       !this.personalData.languages || this.personalData.languages.trim() === '';
   }
 
-  handleSpaceRestrictions(event: KeyboardEvent): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    const currentValue = (event.target as HTMLInputElement).value;
+  // Updated handleSpaceRestrictions function to prevent leading and consecutive spaces
+handleSpaceRestrictions(event: KeyboardEvent): boolean {
+  const charCode = event.which ? event.which : event.keyCode;
+  const currentValue = (event.target as HTMLInputElement).value;
+  const selectionStart = (event.target as HTMLInputElement).selectionStart;
 
-    if (charCode === 32) {
-      if (currentValue.length === 0) {
-        event.preventDefault();
-        return false;
-      }
-
-      if (!/[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(currentValue)) {
-        event.preventDefault();
-        return false;
-      }
-      if (currentValue.charAt(currentValue.length - 1) === ' ') {
-        event.preventDefault();
-        return false;
-      }
+  if (charCode === 32) { // Space key
+    // Block space if input is empty
+    if (currentValue.length === 0) {
+      event.preventDefault();
+      return false;
     }
 
-    return true;
+    // Block space if cursor is at the start
+    if (selectionStart === 0) {
+      event.preventDefault();
+      return false;
+    }
+
+    // Block space if the character before cursor is already a space
+    if (selectionStart !== null && currentValue.charAt(selectionStart - 1) === ' ') {
+      event.preventDefault();
+      return false;
+    }
+
+    // Block space if the character at cursor is a space
+    if (selectionStart !== null && currentValue.charAt(selectionStart) === ' ') {
+      event.preventDefault();
+      return false;
+    }
   }
+
+  return true;
+}
 
 
   // Handle NIC input restrictions
@@ -1679,17 +1697,17 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   preventSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
-    if (!this.handleSpaceRestrictions(event)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-    // Allow only letters (a-z, A-Z) and space
-    if (!/[a-zA-Z\s]/.test(char)) {
-      event.preventDefault();
-    }
+  // Handle space restrictions first
+  if (!this.handleSpaceRestrictions(event)) {
+    return;
   }
+
+  const char = String.fromCharCode(event.which);
+  // Allow only letters (a-z, A-Z) and space
+  if (!/[a-zA-Z\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
 
   preventNonSinhalaCharacters(event: KeyboardEvent): void {
     // Handle space restrictions first
@@ -1723,17 +1741,31 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove non-numeric characters
-      value = value.replace(/[^0-9]/g, '');
-      // Limit to 9 digits
-      if (value.length > 9) {
-        value = value.substring(0, 9);
-      }
-      this.personalData[fieldName] = value;
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Track if we need to show error for empty or invalid first digit
+    if (value.length > 0 && value.charAt(0) !== '7') {
+      this.showFirstDigitError = true;
+      this.firstDigitErrorField = fieldName;
+      // Replace first digit with 7 if it's not already
+      value = '7' + value.substring(1);
+    } else if (value.length > 0 && value.charAt(0) === '7') {
+      this.showFirstDigitError = false;
+      this.firstDigitErrorField = null;
     }
+    
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    
+    this.personalData[fieldName] = value;
   }
+}
+
 
   changeCenter(event: any) {
     console.log('Center changed:', this.personalData.centerId);
@@ -2231,6 +2263,114 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
     return 12; // Default for new NIC
   }
+
+  preventNonNumericWith7First(event: KeyboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+  const char = String.fromCharCode(event.which);
+  const currentValue = this.personalData[fieldName] || '';
+  const cursorPosition = (event.target as HTMLInputElement).selectionStart || 0;
+  
+  // Allow control keys (backspace, delete, arrows, tab)
+  if ([8, 9, 13, 37, 38, 39, 40, 46].includes(event.keyCode)) {
+    this.showFirstDigitError = false;
+    this.firstDigitErrorField = null;
+    return;
+  }
+  
+  // Allow only numbers
+  if (!/[0-9]/.test(char)) {
+    event.preventDefault();
+    this.showFirstDigitError = false;
+    this.firstDigitErrorField = null;
+    return;
+  }
+  
+  // If field is empty and trying to input first character
+  if (currentValue.length === 0 && cursorPosition === 0) {
+    // First character must be '7'
+    if (char !== '7') {
+      event.preventDefault();
+      this.showFirstDigitError = true;
+      this.firstDigitErrorField = fieldName;
+    } else {
+      this.showFirstDigitError = false;
+      this.firstDigitErrorField = null;
+    }
+  }
+  
+  // If trying to insert at the beginning of existing number
+  if (cursorPosition === 0 && currentValue.length > 0) {
+    // If inserting at position 0, the new first character must be '7'
+    if (char !== '7') {
+      event.preventDefault();
+      this.showFirstDigitError = true;
+      this.firstDigitErrorField = fieldName;
+    } else {
+      this.showFirstDigitError = false;
+      this.firstDigitErrorField = null;
+    }
+  }
+  
+  // If inserting elsewhere, clear the error
+  if (cursorPosition > 0) {
+    this.showFirstDigitError = false;
+    this.firstDigitErrorField = null;
+  }
+}
+
+preventInvalidPhonePaste(event: ClipboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+  event.preventDefault();
+  const clipboardData = event.clipboardData || (window as any).clipboardData;
+  const pastedText = clipboardData.getData('text');
+  
+  // Remove non-numeric characters
+  let cleanedText = pastedText.replace(/[^0-9]/g, '');
+  
+  // Ensure first digit is 7
+  if (cleanedText.length > 0 && cleanedText.charAt(0) !== '7') {
+    // Try to find a 7 in the pasted text
+    const indexOf7 = cleanedText.indexOf('7');
+    if (indexOf7 > -1) {
+      // Use from the first 7 found
+      cleanedText = cleanedText.substring(indexOf7);
+    } else {
+      // Prepend 7 if no 7 found
+      cleanedText = '7' + cleanedText;
+    }
+  }
+  
+  // Limit to 9 digits
+  if (cleanedText.length > 9) {
+    cleanedText = cleanedText.substring(0, 9);
+  }
+  
+  // Get current value and cursor position
+  const inputElement = event.target as HTMLInputElement;
+  const currentValue = this.personalData[fieldName] || '';
+  const cursorPosition = inputElement.selectionStart || 0;
+  
+  // Insert the cleaned text at cursor position
+  const newValue = currentValue.substring(0, cursorPosition) + 
+                   cleanedText + 
+                   currentValue.substring(inputElement.selectionEnd || 0);
+  
+  // Ensure the resulting value starts with 7
+  let finalValue = newValue.replace(/[^0-9]/g, '');
+  if (finalValue.length > 0 && finalValue.charAt(0) !== '7') {
+    finalValue = '7' + finalValue.substring(1);
+    this.showFirstDigitError = true;
+    this.firstDigitErrorField = fieldName;
+  } else {
+    this.showFirstDigitError = false;
+    this.firstDigitErrorField = null;
+  }
+  
+  if (finalValue.length > 9) {
+    finalValue = finalValue.substring(0, 9);
+  }
+  
+  this.personalData[fieldName] = finalValue;
+}
+
 
 }
 

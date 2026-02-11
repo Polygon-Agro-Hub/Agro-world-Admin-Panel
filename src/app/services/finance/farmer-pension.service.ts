@@ -54,6 +54,7 @@ export interface PensionRequestDetail {
   Requested_On: string;
   Approved_Date_Time: string;
   Phone_Number: string;
+  Collection_Officer_EmpID: string;
 }
 
 export interface PensionRequestResponse {

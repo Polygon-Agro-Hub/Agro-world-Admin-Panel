@@ -1100,25 +1100,19 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove leading/trailing spaces and replace multiple spaces with single space
+    value = value.trim().replace(/\s{2,}/g, ' ');
 
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
-
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      // Capitalize first letter and make rest lowercase
-      if (value.length > 0) {
-        value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-      }
-
-      this.personalData[fieldName] = value;
+    // Capitalize first letter and make rest lowercase
+    if (value.length > 0) {
+      value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
     }
+
+    this.personalData[fieldName] = value;
   }
+}
 
   // Updated formatSinhalaName function
   formatSinhalaName(fieldName: 'firstNameSinhala' | 'lastNameSinhala'): void {
@@ -1156,75 +1150,70 @@ export class CreateDistributionOfficerComponent implements OnInit {
 
   // Updated formatAccountHolderName function
   formatAccountHolderName(): void {
-    let value = this.personalData.accHolderName;
-    if (value) {
-      // Remove special characters and numbers, keep only letters and spaces
-      value = value.replace(/[^a-zA-Z\s]/g, '');
+  let value = this.personalData.accHolderName;
+  if (value) {
+    // Remove leading/trailing spaces and replace multiple spaces with single space
+    value = value.trim().replace(/\s{2,}/g, ' ');
 
-      // Remove leading spaces
-      value = value.replace(/^\s+/, '');
+    // Capitalize first letter of each word
+    value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
 
-      // Replace multiple consecutive spaces with single space
-      value = value.replace(/\s{2,}/g, ' ');
-
-      // Capitalize first letter of each word
-      value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
-
-      this.personalData.accHolderName = value;
-    }
+    this.personalData.accHolderName = value;
   }
+}
+
 
   // Add new keypress handler for account holder name input
   preventAccountHolderSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
-    if (!this.handleSpaceRestrictions(event)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-    // Allow only letters (a-z, A-Z) and space
-    if (!/[a-zA-Z\s]/.test(char)) {
-      event.preventDefault();
-    }
+  // Handle space restrictions first
+  if (!this.handleSpaceRestrictions(event)) {
+    return;
   }
+
+  const char = String.fromCharCode(event.which);
+  // Allow only letters (a-z, A-Z) and space
+  if (!/[a-zA-Z\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
 
   // Add new keypress handlers for address fields
   preventAddressSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
-    if (!this.handleSpaceRestrictions(event)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-    // Allow letters, numbers, and space for address fields
-    if (!/[a-zA-Z0-9\s\-\/\\#]/.test(char)) {
-      event.preventDefault();
-    }
+  // Handle space restrictions first
+  if (!this.handleSpaceRestrictions(event)) {
+    return;
   }
+
+  const char = String.fromCharCode(event.which);
+  // Allow letters, numbers, and space for address fields
+  if (!/[a-zA-Z0-9\s\-\/\\#]/.test(char)) {
+    event.preventDefault();
+  }
+}
 
   // Format address fields to handle spaces
   formatAddressField(fieldName: 'houseNumber' | 'streetName' | 'city'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove leading/trailing spaces and replace multiple spaces with single space
-      value = value.trim().replace(/\s{2,}/g, ' ');
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove leading/trailing spaces and replace multiple spaces with single space
+    value = value.trim().replace(/\s{2,}/g, ' ');
 
-      // Capitalize first letter of each word for streetName and city
-      if (fieldName === 'streetName' || fieldName === 'city') {
-        value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
-      }
-
-      // For houseNumber, capitalize the first letter only if it's alphabetic
-      if (fieldName === 'houseNumber' && value.length > 0) {
-        const firstChar = value.charAt(0);
-        if (/[a-zA-Z]/.test(firstChar)) {
-          value = firstChar.toUpperCase() + value.slice(1);
-        }
-      }
-
-      this.personalData[fieldName] = value;
+    // Capitalize first letter of each word for streetName and city
+    if (fieldName === 'streetName' || fieldName === 'city') {
+      value = value.replace(/\b\w/g, (char: string) => char.toUpperCase());
     }
+
+    // For houseNumber, capitalize the first letter only if it's alphabetic
+    if (fieldName === 'houseNumber' && value.length > 0) {
+      const firstChar = value.charAt(0);
+      if (/[a-zA-Z]/.test(firstChar)) {
+        value = firstChar.toUpperCase() + value.slice(1);
+      }
+    }
+
+    this.personalData[fieldName] = value;
   }
+}
   // Check if name has invalid characters (numbers or special characters)
   hasInvalidNameCharacters(fieldName: 'firstNameEnglish' | 'lastNameEnglish'): boolean {
     const value = this.personalData[fieldName];
@@ -1547,28 +1536,40 @@ export class CreateDistributionOfficerComponent implements OnInit {
       !this.personalData.languages || this.personalData.languages.trim() === '';
   }
 
-  handleSpaceRestrictions(event: KeyboardEvent): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    const currentValue = (event.target as HTMLInputElement).value;
+  // Updated handleSpaceRestrictions function to prevent leading and consecutive spaces
+handleSpaceRestrictions(event: KeyboardEvent): boolean {
+  const charCode = event.which ? event.which : event.keyCode;
+  const currentValue = (event.target as HTMLInputElement).value;
+  const selectionStart = (event.target as HTMLInputElement).selectionStart;
 
-    if (charCode === 32) {
-      if (currentValue.length === 0) {
-        event.preventDefault();
-        return false;
-      }
-
-      if (!/[a-zA-Z\u0D80-\u0DFF\u0B80-\u0BFF]/.test(currentValue)) {
-        event.preventDefault();
-        return false;
-      }
-      if (currentValue.charAt(currentValue.length - 1) === ' ') {
-        event.preventDefault();
-        return false;
-      }
+  if (charCode === 32) { // Space key
+    // Block space if input is empty
+    if (currentValue.length === 0) {
+      event.preventDefault();
+      return false;
     }
 
-    return true;
+    // Block space if cursor is at the start
+    if (selectionStart === 0) {
+      event.preventDefault();
+      return false;
+    }
+
+    // Block space if the character before cursor is already a space
+    if (selectionStart !== null && currentValue.charAt(selectionStart - 1) === ' ') {
+      event.preventDefault();
+      return false;
+    }
+
+    // Block space if the character at cursor is a space
+    if (selectionStart !== null && currentValue.charAt(selectionStart) === ' ') {
+      event.preventDefault();
+      return false;
+    }
   }
+
+  return true;
+}
 
 
   // Handle NIC input restrictions
@@ -1679,17 +1680,17 @@ export class CreateDistributionOfficerComponent implements OnInit {
   }
 
   preventSpecialCharacters(event: KeyboardEvent): void {
-    // Handle space restrictions first
-    if (!this.handleSpaceRestrictions(event)) {
-      return;
-    }
-
-    const char = String.fromCharCode(event.which);
-    // Allow only letters (a-z, A-Z) and space
-    if (!/[a-zA-Z\s]/.test(char)) {
-      event.preventDefault();
-    }
+  // Handle space restrictions first
+  if (!this.handleSpaceRestrictions(event)) {
+    return;
   }
+
+  const char = String.fromCharCode(event.which);
+  // Allow only letters (a-z, A-Z) and space
+  if (!/[a-zA-Z\s]/.test(char)) {
+    event.preventDefault();
+  }
+}
 
   preventNonSinhalaCharacters(event: KeyboardEvent): void {
     // Handle space restrictions first

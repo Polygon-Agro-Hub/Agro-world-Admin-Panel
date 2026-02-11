@@ -83,6 +83,9 @@ export class CreateDistributionOfficerComponent implements OnInit {
   bankOptions: any[] = [];
   branchOptions: any[] = [];
 
+  showFirstDigitError: boolean = false;
+firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
+
   invalidFields: Set<string> = new Set();
 
   languagesRequired: boolean = false;
@@ -1325,12 +1328,24 @@ if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalDat
   }
 
   onBlur(fieldName: keyof Personal): void {
-    this.touchedFields[fieldName] = true;
-
-    if (fieldName === 'confirmAccNumber') {
-      this.validateConfirmAccNumber();
+  this.touchedFields[fieldName] = true;
+  
+  // Check for first digit error on blur
+  if (fieldName === 'phoneNumber01' || fieldName === 'phoneNumber02') {
+    const value = this.personalData[fieldName];
+    if (value && value.length > 0 && value.charAt(0) !== '7') {
+      this.showFirstDigitError = true;
+      this.firstDigitErrorField = fieldName;
+    } else {
+      this.showFirstDigitError = false;
+      this.firstDigitErrorField = null;
     }
   }
+  
+  if (fieldName === 'confirmAccNumber') {
+    this.validateConfirmAccNumber();
+  }
+}
 
   validateConfirmAccNumber(): void {
     this.confirmAccountNumberRequired = !this.personalData.confirmAccNumber;
@@ -1726,17 +1741,31 @@ handleSpaceRestrictions(event: KeyboardEvent): boolean {
   }
 
   formatPhoneNumber(fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
-    let value = this.personalData[fieldName];
-    if (value) {
-      // Remove non-numeric characters
-      value = value.replace(/[^0-9]/g, '');
-      // Limit to 9 digits
-      if (value.length > 9) {
-        value = value.substring(0, 9);
-      }
-      this.personalData[fieldName] = value;
+  let value = this.personalData[fieldName];
+  if (value) {
+    // Remove non-numeric characters
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Track if we need to show error for empty or invalid first digit
+    if (value.length > 0 && value.charAt(0) !== '7') {
+      this.showFirstDigitError = true;
+      this.firstDigitErrorField = fieldName;
+      // Replace first digit with 7 if it's not already
+      value = '7' + value.substring(1);
+    } else if (value.length > 0 && value.charAt(0) === '7') {
+      this.showFirstDigitError = false;
+      this.firstDigitErrorField = null;
     }
+    
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    
+    this.personalData[fieldName] = value;
   }
+}
+
 
   changeCenter(event: any) {
     console.log('Center changed:', this.personalData.centerId);
@@ -2234,6 +2263,114 @@ handleSpaceRestrictions(event: KeyboardEvent): boolean {
 
     return 12; // Default for new NIC
   }
+
+  preventNonNumericWith7First(event: KeyboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+  const char = String.fromCharCode(event.which);
+  const currentValue = this.personalData[fieldName] || '';
+  const cursorPosition = (event.target as HTMLInputElement).selectionStart || 0;
+  
+  // Allow control keys (backspace, delete, arrows, tab)
+  if ([8, 9, 13, 37, 38, 39, 40, 46].includes(event.keyCode)) {
+    this.showFirstDigitError = false;
+    this.firstDigitErrorField = null;
+    return;
+  }
+  
+  // Allow only numbers
+  if (!/[0-9]/.test(char)) {
+    event.preventDefault();
+    this.showFirstDigitError = false;
+    this.firstDigitErrorField = null;
+    return;
+  }
+  
+  // If field is empty and trying to input first character
+  if (currentValue.length === 0 && cursorPosition === 0) {
+    // First character must be '7'
+    if (char !== '7') {
+      event.preventDefault();
+      this.showFirstDigitError = true;
+      this.firstDigitErrorField = fieldName;
+    } else {
+      this.showFirstDigitError = false;
+      this.firstDigitErrorField = null;
+    }
+  }
+  
+  // If trying to insert at the beginning of existing number
+  if (cursorPosition === 0 && currentValue.length > 0) {
+    // If inserting at position 0, the new first character must be '7'
+    if (char !== '7') {
+      event.preventDefault();
+      this.showFirstDigitError = true;
+      this.firstDigitErrorField = fieldName;
+    } else {
+      this.showFirstDigitError = false;
+      this.firstDigitErrorField = null;
+    }
+  }
+  
+  // If inserting elsewhere, clear the error
+  if (cursorPosition > 0) {
+    this.showFirstDigitError = false;
+    this.firstDigitErrorField = null;
+  }
+}
+
+preventInvalidPhonePaste(event: ClipboardEvent, fieldName: 'phoneNumber01' | 'phoneNumber02'): void {
+  event.preventDefault();
+  const clipboardData = event.clipboardData || (window as any).clipboardData;
+  const pastedText = clipboardData.getData('text');
+  
+  // Remove non-numeric characters
+  let cleanedText = pastedText.replace(/[^0-9]/g, '');
+  
+  // Ensure first digit is 7
+  if (cleanedText.length > 0 && cleanedText.charAt(0) !== '7') {
+    // Try to find a 7 in the pasted text
+    const indexOf7 = cleanedText.indexOf('7');
+    if (indexOf7 > -1) {
+      // Use from the first 7 found
+      cleanedText = cleanedText.substring(indexOf7);
+    } else {
+      // Prepend 7 if no 7 found
+      cleanedText = '7' + cleanedText;
+    }
+  }
+  
+  // Limit to 9 digits
+  if (cleanedText.length > 9) {
+    cleanedText = cleanedText.substring(0, 9);
+  }
+  
+  // Get current value and cursor position
+  const inputElement = event.target as HTMLInputElement;
+  const currentValue = this.personalData[fieldName] || '';
+  const cursorPosition = inputElement.selectionStart || 0;
+  
+  // Insert the cleaned text at cursor position
+  const newValue = currentValue.substring(0, cursorPosition) + 
+                   cleanedText + 
+                   currentValue.substring(inputElement.selectionEnd || 0);
+  
+  // Ensure the resulting value starts with 7
+  let finalValue = newValue.replace(/[^0-9]/g, '');
+  if (finalValue.length > 0 && finalValue.charAt(0) !== '7') {
+    finalValue = '7' + finalValue.substring(1);
+    this.showFirstDigitError = true;
+    this.firstDigitErrorField = fieldName;
+  } else {
+    this.showFirstDigitError = false;
+    this.firstDigitErrorField = null;
+  }
+  
+  if (finalValue.length > 9) {
+    finalValue = finalValue.substring(0, 9);
+  }
+  
+  this.personalData[fieldName] = finalValue;
+}
+
 
 }
 

@@ -129,7 +129,7 @@ export class ReceivedCashTodayComponent implements OnInit {
     ]
 
     this.totalPickupIncome = data.order_price
-    this.totPickOrders = data.total_today + data.all_pickup
+    this.totPickOrders = data.all_pickup
   }
 
   assignDelivaryOrders(data: IDelivary) {
@@ -142,7 +142,7 @@ export class ReceivedCashTodayComponent implements OnInit {
       { label: 'Overdue Deliveries - Today', count: (data.all_delivary - data.today_delivary), color: '#FFA202' }
     ]
     this.totalDeliveryIncome = data.order_price
-    this.totDeliveryOrders = data.total_today + data.all_delivary
+    this.totDeliveryOrders = data.all_delivary
 
   }
 

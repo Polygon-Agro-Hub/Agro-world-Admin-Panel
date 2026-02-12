@@ -14,7 +14,7 @@
         {{ storeName }}
       </h2>
       <p class="text-lg font-semibold text-gray-600 dark:text-gray-400">
-        Received Cash on {{ receivedDate | date:'MMMM d, y' }} ({{ (totPickOrders + totDeliveryOrders) | number:'2.0' }})
+        Received Cash on {{ receivedDate | date:'MMMM d, y' }} ({{ (totPickOrders + totDeliveryOrders) === 0 ? '0' : (totPickOrders + totDeliveryOrders) | number:'2.0' }})
       </p>
     </div>
 

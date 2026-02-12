@@ -250,6 +250,7 @@
 </div>
 
 <!-- Image Slider Modal -->
+<!-- Image Slider Modal -->
 <div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="relative bg-white dark:bg-tileBlack rounded-[20px] p-4 w-[90%] max-w-md shadow-lg">
     <!-- Close Button -->
@@ -274,10 +275,17 @@
 
       <!-- Image Navigation -->
       <div class="relative flex items-center justify-center">
-        <!-- Left Arrow - Only show if more than 1 image -->
+        <!-- Left Arrow - Disabled when at first image -->
         <button
           *ngIf="selectedImages.length > 1"
-          class="absolute left-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
+          class="absolute left-2 z-10 p-1.5 rounded-full flex items-center justify-center w-8 h-8 transition
+                 [&:not(:disabled)]:bg-[#F0F0F0] [&:not(:disabled)]:dark:bg-[#3a3a3a] 
+                 [&:not(:disabled)]:text-black [&:not(:disabled)]:dark:text-white 
+                 [&:not(:disabled)]:shadow-md [&:not(:disabled)]:hover:bg-[#e0e0e0] 
+                 [&:not(:disabled)]:dark:hover:bg-[#4a4a4a]
+                 disabled:bg-gray-200 disabled:dark:bg-gray-800 
+                 disabled:text-gray-400 disabled:dark:text-gray-600 
+                 disabled:cursor-not-allowed disabled:shadow-none"
           (click)="prevImage()"
           [disabled]="currentImageIndex === 0"
           aria-label="Previous Image"
@@ -313,10 +321,17 @@
           </div>
         </div>
 
-        <!-- Right Arrow - Only show if more than 1 image -->
+        <!-- Right Arrow - Disabled when at last image -->
         <button
           *ngIf="selectedImages.length > 1"
-          class="absolute right-2 z-10 p-1.5 rounded-full bg-[#F0F0F0] dark:bg-[#3a3a3a] text-black dark:text-white text-base shadow-md hover:bg-[#e0e0e0] dark:hover:bg-[#4a4a4a] transition flex items-center justify-center w-8 h-8"
+          class="absolute right-2 z-10 p-1.5 rounded-full flex items-center justify-center w-8 h-8 transition
+                 [&:not(:disabled)]:bg-[#F0F0F0] [&:not(:disabled)]:dark:bg-[#3a3a3a] 
+                 [&:not(:disabled)]:text-black [&:not(:disabled)]:dark:text-white 
+                 [&:not(:disabled)]:shadow-md [&:not(:disabled)]:hover:bg-[#e0e0e0] 
+                 [&:not(:disabled)]:dark:hover:bg-[#4a4a4a]
+                 disabled:bg-gray-200 disabled:dark:bg-gray-800 
+                 disabled:text-gray-400 disabled:dark:text-gray-600 
+                 disabled:cursor-not-allowed disabled:shadow-none"
           (click)="nextImage()"
           [disabled]="currentImageIndex === selectedImages.length - 1"
           aria-label="Next Image"

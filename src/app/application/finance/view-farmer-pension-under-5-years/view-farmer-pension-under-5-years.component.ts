@@ -303,6 +303,22 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
   get hasData(): boolean {
     return this.farmers.length > 0;
   }
+
+  onSearchKeydown(event: KeyboardEvent): void {
+    if (event.key === ' ' || event.keyCode === 32) {
+      const input = event.target as HTMLInputElement;
+      const currentValue = input.value;
+      const cursorPosition = input.selectionStart || 0;
+
+      if (
+        currentValue.length === 0 ||
+        cursorPosition === 0 ||
+        currentValue.substring(0, cursorPosition).trim() === ''
+      ) {
+        event.preventDefault();
+      }
+    }
+  }
 }
 
 interface Farmer {

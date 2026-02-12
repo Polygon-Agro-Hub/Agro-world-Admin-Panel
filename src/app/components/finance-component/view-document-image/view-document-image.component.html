@@ -7,18 +7,22 @@
       {{ frontTitle }}
     </h3>
     <div
-      class="relative border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 shadow-sm"
+      class="relative border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden"
     >
-      <img
-        [src]="frontImageUrl"
-        [alt]="frontTitle"
-        [style.transform]="'scale(' + frontZoomLevel + ')'"
-        [style.transform-origin]="'center center'"
-        class="w-full h-auto object-contain transition-transform duration-200 cursor-pointer"
-        style="min-height: 400px; max-height: 500px"
-        (error)="onImageError($event, 'front')"
-        (click)="openModal(frontImageUrl, frontTitle)"
-      />
+      <div
+        class="w-full h-[400px] overflow-hidden flex items-center justify-center"
+      >
+        <!-- Added wrapper with fixed height and overflow-hidden -->
+        <img
+          [src]="frontImageUrl"
+          [alt]="frontTitle"
+          [style.transform]="'scale(' + frontZoomLevel + ')'"
+          [style.transform-origin]="'center center'"
+          class="w-auto h-auto max-w-full max-h-full object-contain transition-transform duration-200 cursor-pointer"
+          (error)="onImageError($event, 'front')"
+          (click)="openModal(frontImageUrl, frontTitle)"
+        />
+      </div>
       <div class="absolute bottom-3 right-3 flex flex-col gap-2">
         <button
           (click)="zoomOut('front'); $event.stopPropagation()"
@@ -50,18 +54,22 @@
       {{ backTitle }}
     </h3>
     <div
-      class="relative border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 shadow-sm"
+      class="relative border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 shadow-sm overflow-hidden"
     >
-      <img
-        [src]="backImageUrl"
-        [alt]="backTitle"
-        [style.transform]="'scale(' + backZoomLevel + ')'"
-        [style.transform-origin]="'center center'"
-        class="w-full h-auto object-contain transition-transform duration-200 cursor-pointer"
-        style="min-height: 400px; max-height: 500px"
-        (error)="onImageError($event, 'back')"
-        (click)="openModal(backImageUrl, backTitle)"
-      />
+      <div
+        class="w-full h-[400px] overflow-hidden flex items-center justify-center"
+      >
+        <!-- Added wrapper with fixed height and overflow-hidden -->
+        <img
+          [src]="backImageUrl"
+          [alt]="backTitle"
+          [style.transform]="'scale(' + backZoomLevel + ')'"
+          [style.transform-origin]="'center center'"
+          class="w-auto h-auto max-w-full max-h-full object-contain transition-transform duration-200 cursor-pointer"
+          (error)="onImageError($event, 'back')"
+          (click)="openModal(backImageUrl, backTitle)"
+        />
+      </div>
       <div class="absolute bottom-3 right-3 flex flex-col gap-2">
         <button
           (click)="zoomOut('back'); $event.stopPropagation()"

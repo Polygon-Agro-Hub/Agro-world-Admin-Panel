@@ -121,34 +121,42 @@ export class UpdateDistributionOfficerComponent {
   licenseFrontImageFileName!: string;
   licenseFrontImagePreview: string | ArrayBuffer | null = null;
   licenseFrontImageFile: File | null = null;
+  licenseFrontImageUpdated: boolean = false;
 
   licenseBackImageFileName!: string;
   licenseBackImagePreview: string | ArrayBuffer | null = null;
   licenseBackImageFile: File | null = null;
+  licenseBackImageUpdated: boolean = false;
 
   insurenceFrontImageFileName!: string;
   insurenceFrontImagePreview: string | ArrayBuffer | null = null;
   insurenceFrontImageFile: File | null = null;
+  insurenceFrontImageUpdated: boolean = false;
 
   insurenceBackImageFileName!: string;
   insurenceBackImagePreview: string | ArrayBuffer | null = null;
   insurenceBackImageFile: File | null = null;
+  insurenceBackImageUpdated: boolean = false;
 
   vehicleFrontImageFileName!: string;
   vehicleFrontImagePreview: string | ArrayBuffer | null = null;
   vehicleFrontImageFile: File | null = null;
+  vehicleFrontImageUpdated: boolean = false;
 
   vehicleBackImageFileName!: string;
   vehicleBackImagePreview: string | ArrayBuffer | null = null;
   vehicleBackImageFile: File | null = null;
+  vehicleBackImageUpdated: boolean = false;
 
   vehicleSideAImageFileName!: string;
   vehicleSideAImagePreview: string | ArrayBuffer | null = null;
   vehicleSideAImageFile: File | null = null;
+  vehicleSideAImageUpdated: boolean = false;
 
   vehicleSideBImageFileName!: string;
   vehicleSideBImagePreview: string | ArrayBuffer | null = null;
   vehicleSideBImageFile: File | null = null;
+  vehicleSideBImageUpdated: boolean = false;
 
   selectVehicletype: any = { name: '', capacity: '' };
 
@@ -208,6 +216,7 @@ export class UpdateDistributionOfficerComponent {
   ];
 
   isLanguageRequired = false;
+  minInsuranceDate: Date = new Date(new Date().setDate(new Date().getDate() + 1)); // Tomorrow - blocks current and past dates
 
   constructor(
     private http: HttpClient,
@@ -219,6 +228,15 @@ export class UpdateDistributionOfficerComponent {
 
   ngOnInit() {
     this.scrollToTop();
+    // Set minimum date to tomorrow to block current and past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
+    
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    this.minInsuranceDate = tomorrow;
+    
     this.loadBanks();
     this.loadBranches();
     this.setupDropdownOptions();
@@ -416,6 +434,7 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
+  // Update loadBranches method to set allBranches directly
   loadBranches() {
     this.http
       .get<BranchesData>('assets/json/branches.json')
@@ -424,6 +443,15 @@ export class UpdateDistributionOfficerComponent {
           data[bankID].sort((a, b) => a.name.localeCompare(b.name));
         });
         this.allBranches = data;
+
+        // If bank is already selected, set branches for the bank
+        if (this.selectedBankId) {
+          this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+          this.branchOptions = this.branches.map((branch) => ({
+            label: branch.name,
+            value: branch.name,
+          }));
+        }
       });
   }
 
@@ -519,6 +547,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.licenseFrontImageFile = file;
       this.licenseFrontImageFileName = file.name;
+      this.licenseFrontImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -532,6 +561,7 @@ export class UpdateDistributionOfficerComponent {
     this.licenseFrontImageFile = null;
     this.licenseFrontImageFileName = '';
     this.licenseFrontImagePreview = null;
+    this.licenseFrontImageUpdated = false;
     const fileInput = document.getElementById('licenseFrontImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -568,6 +598,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.licenseBackImageFile = file;
       this.licenseBackImageFileName = file.name;
+      this.licenseBackImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -581,6 +612,7 @@ export class UpdateDistributionOfficerComponent {
     this.licenseBackImageFile = null;
     this.licenseBackImageFileName = '';
     this.licenseBackImagePreview = null;
+    this.licenseBackImageUpdated = false;
     const fileInput = document.getElementById('licenseBackImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -617,6 +649,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.insurenceFrontImageFile = file;
       this.insurenceFrontImageFileName = file.name;
+      this.insurenceFrontImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -630,6 +663,7 @@ export class UpdateDistributionOfficerComponent {
     this.insurenceFrontImageFile = null;
     this.insurenceFrontImageFileName = '';
     this.insurenceFrontImagePreview = null;
+    this.insurenceFrontImageUpdated = false;
     const fileInput = document.getElementById('insurenceFrontImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -666,6 +700,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.insurenceBackImageFile = file;
       this.insurenceBackImageFileName = file.name;
+      this.insurenceBackImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -679,6 +714,7 @@ export class UpdateDistributionOfficerComponent {
     this.insurenceBackImageFile = null;
     this.insurenceBackImageFileName = '';
     this.insurenceBackImagePreview = null;
+    this.insurenceBackImageUpdated = false;
     const fileInput = document.getElementById('insuranceBackImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -715,6 +751,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.vehicleFrontImageFile = file;
       this.vehicleFrontImageFileName = file.name;
+      this.vehicleFrontImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -728,6 +765,7 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleFrontImageFile = null;
     this.vehicleFrontImageFileName = '';
     this.vehicleFrontImagePreview = null;
+    this.vehicleFrontImageUpdated = false;
     const fileInput = document.getElementById('vehicleFrontImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -764,6 +802,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.vehicleBackImageFile = file;
       this.vehicleBackImageFileName = file.name;
+      this.vehicleBackImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -777,6 +816,7 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleBackImageFile = null;
     this.vehicleBackImageFileName = '';
     this.vehicleBackImagePreview = null;
+    this.vehicleBackImageUpdated = false;
     const fileInput = document.getElementById('vehicleBackImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -813,6 +853,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.vehicleSideAImageFile = file;
       this.vehicleSideAImageFileName = file.name;
+      this.vehicleSideAImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -826,6 +867,7 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleSideAImageFile = null;
     this.vehicleSideAImageFileName = '';
     this.vehicleSideAImagePreview = null;
+    this.vehicleSideAImageUpdated = false;
     const fileInput = document.getElementById('vehicleSideAImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -862,6 +904,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.vehicleSideBImageFile = file;
       this.vehicleSideBImageFileName = file.name;
+      this.vehicleSideBImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -875,6 +918,7 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleSideBImageFile = null;
     this.vehicleSideBImageFileName = '';
     this.vehicleSideBImagePreview = null;
+    this.vehicleSideBImageUpdated = false;
     const fileInput = document.getElementById('vehicleSideBImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -938,6 +982,9 @@ export class UpdateDistributionOfficerComponent {
   isValidEmail(email: string): boolean {
     if (!email) return false;
 
+    // Trim the email
+    email = email.trim();
+
     // Basic email regex pattern
     const emailRegex =
       /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
@@ -949,11 +996,24 @@ export class UpdateDistributionOfficerComponent {
     if (email.startsWith('.') || email.endsWith('.')) {
       return false; // Leading or trailing dots
     }
+    const [localPart] = email.split('@');
+    if (localPart && (localPart.endsWith('.') || localPart.startsWith('.'))) {
+      return false; // Dot before @ or after local part
+    }
     if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
       return false; // Invalid special characters
     }
 
     return emailRegex.test(email);
+  }
+
+  getEmailErrorMessage(email: string): string {
+    if (!email) return 'Email is required';
+    if (email.startsWith('.')) return 'Email cannot start with a dot';
+    const [localPart] = email.split('@');
+    if (localPart && localPart.endsWith('.')) return 'Email cannot have a dot before @';
+    if (email.includes('..')) return 'Email cannot contain consecutive dots';
+    return 'Please enter a valid email address';
   }
 
   isValidNIC(nic: string): boolean {
@@ -965,8 +1025,16 @@ export class UpdateDistributionOfficerComponent {
 
   isValidPhoneNumber(phone: string): boolean {
     if (!phone) return false;
-    const phoneRegex = /^[0-9]{9}$/;
+    // Must be exactly 9 digits and start with 7
+    const phoneRegex = /^7[0-9]{8}$/;
     return phoneRegex.test(phone);
+  }
+
+  getPhoneErrorMessage(phone: string): string {
+    if (!phone) return 'Mobile number is required';
+    if (!phone.startsWith('7')) return 'Mobile number must start with 7';
+    if (phone.length < 9) return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+    return 'Please enter a valid mobile number (9 digits)';
   }
 
   formatTextInput(fieldName: keyof Personal): void {
@@ -978,9 +1046,16 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
-  preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal): void {
+  preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal | string): void {
     const input = event.target as HTMLInputElement;
-    const fieldValue = this.personalData[fieldName];
+    let fieldValue;
+    
+    if (typeof fieldName === 'string' && fieldName in this.personalData) {
+      fieldValue = this.personalData[fieldName as keyof Personal];
+    } else {
+      fieldValue = input.value;
+    }
+    
     // Prevent space if it's the first character or if the field is empty
     if (event.key === ' ' && (input.selectionStart === 0 || !fieldValue)) {
       event.preventDefault();
@@ -1005,11 +1080,59 @@ export class UpdateDistributionOfficerComponent {
       // Remove leading spaces
       value = value.replace(/^\s+/, '');
 
+      // For English names, remove numbers and special characters
+      if (fieldName === 'firstNameEnglish' || fieldName === 'lastNameEnglish') {
+        value = value.replace(/[^a-zA-Z\s]/g, '');
+      }
+
       // Replace multiple consecutive spaces with single space
       value = value.replace(/\s{2,}/g, ' ');
 
       this.personalData[fieldName] = value;
     }
+  }
+
+  // Add method to handle NIC input restriction
+  onNICInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.toUpperCase();
+    
+    // If it's 9 digits followed by V, block further input
+    if (/^\d{9}V$/.test(value)) {
+      input.maxLength = 10;
+    }
+    // If it's 12 digits, block further input
+    else if (/^\d{12}$/.test(value)) {
+      input.maxLength = 12;
+    } else {
+      input.maxLength = 12;
+    }
+    
+    this.personalData.nic = value;
+  }
+
+  // Add method to handle phone input - only allow starting with 7
+  onPhoneInput(event: Event, fieldName: 'contact1' | 'contact2'): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    // If first digit is not 7, clear the input
+    if (value.length > 0 && !value.startsWith('7')) {
+      this.personalData[fieldName] = '';
+      input.value = '';
+      return;
+    }
+    
+    // Only allow digits
+    value = value.replace(/\D/g, '');
+    
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    
+    this.personalData[fieldName] = value;
+    input.value = value;
   }
 
 
@@ -1985,28 +2108,25 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
-  getEmailErrorMessage(email: string): string {
-    if (!email) return 'Email is required';
-
-    if (email.includes('..')) {
-      return 'Email cannot contain consecutive dots';
-    }
-    if (email.startsWith('.')) {
-      return 'Email cannot start with a dot';
-    }
-    if (email.endsWith('.')) {
-      return 'Email cannot end with a dot';
-    }
-    if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
-      return 'Email contains invalid special characters';
-    }
-
-    return 'Please enter a valid email in the format: example@domain.com';
-  }
-
   preventSpecialCharacters(event: KeyboardEvent) {
     const allowedPattern = /^[a-zA-Z0-9]$/;
     const inputChar = event.key;
+
+    if (!allowedPattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  // New method to prevent special characters AND numbers (only letters and spaces allowed)
+  preventSpecialCharactersAndNumbers(event: KeyboardEvent) {
+    const allowedPattern = /^[a-zA-Z\s]$/;
+    const inputChar = event.key;
+
+    // Allow control keys (Backspace, Delete, Arrow keys, Tab, etc.)
+    const controlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+    if (controlKeys.includes(event.key)) {
+      return;
+    }
 
     if (!allowedPattern.test(inputChar)) {
       event.preventDefault();
@@ -2244,6 +2364,46 @@ export class UpdateDistributionOfficerComponent {
         { label: 'Distribution Officer', value: 'Distribution Officer' },
         // { label: 'Driver', value: 'Driver' }
       ];
+    }
+  }
+
+  // Method to preview/view uploaded images
+  // Method to open image preview in new tab
+  viewImagePreview(imagePreview: string | ArrayBuffer | null, imageName: string): void {
+    if (imagePreview) {
+      const imageUrl = typeof imagePreview === 'string' ? imagePreview : '';
+      
+      // Create a new window with the image
+      const newWindow = window.open('', '_blank');
+      if (newWindow) {
+        newWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>${imageName}</title>
+              <style>
+                body {
+                  margin: 0;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  min-height: 100vh;
+                  background-color: #000;
+                }
+                img {
+                  max-width: 100%;
+                  max-height: 100vh;
+                  object-fit: contain;
+                }
+              </style>
+            </head>
+            <body>
+              <img src="${imageUrl}" alt="${imageName}" />
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      }
     }
   }
 }

@@ -285,14 +285,32 @@
           <i class="fa-solid fa-chevron-left"></i>
         </button>
 
-        <!-- Image Box -->
-        <div class="rounded-md border border-[#D9D9D9] dark:border-[#444444] p-2 inline-block">
+        <!-- Image Box with Loading Spinner -->
+        <div class="relative rounded-md border border-[#D9D9D9] dark:border-[#444444] p-2 min-w-[250px] min-h-[250px] flex items-center justify-center">
+          <!-- Loading Spinner -->
+          <div *ngIf="isImageLoading" class="absolute inset-0 flex items-center justify-center bg-white dark:bg-tileBlack bg-opacity-80 dark:bg-opacity-80 rounded-md">
+            <div class="flex flex-col items-center">
+              <app-loading-spinner></app-loading-spinner>
+              <span class="mt-2 text-sm text-gray-600 dark:text-textDark">Loading image...</span>
+            </div>
+          </div>
+
+          <!-- Image -->
           <img
+            *ngIf="!isImageLoading && !imageLoadErrors[currentImageIndex]"
             [src]="selectedImages[currentImageIndex]"
             alt="Task image"
             class="max-w-[250px] max-h-[250px] object-contain rounded shadow-md"
+            (load)="isImageLoading = false"
             (error)="handleImageError($event)"
           />
+          
+          <!-- Error Message -->
+          <div *ngIf="!isImageLoading && imageLoadErrors[currentImageIndex]" 
+               class="flex flex-col items-center justify-center p-4">
+            <i class="fa-solid fa-image text-4xl text-gray-400 mb-2"></i>
+            <p class="text-gray-500 dark:text-textDark text-center">Failed to load image</p>
+          </div>
         </div>
 
         <!-- Right Arrow - Only show if more than 1 image -->

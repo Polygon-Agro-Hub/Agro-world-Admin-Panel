@@ -59,6 +59,8 @@ export class UserCropCalendarComponent {
   cropName: string = '';
   ongCultivationId: number | null = null;
   currentImageIndex: number = 0;
+  isImageLoading: boolean = false;
+imageLoadErrors: boolean[] = [];
 
   constructor(
     private ongoingCultivationService: OngoingCultivationService,
@@ -324,13 +326,41 @@ export class UserCropCalendarComponent {
 
   openImageSlider(images: string[]) {
   this.selectedImages = images;
-  this.currentImageIndex = 0; // Reset to first image
+  this.currentImageIndex = 0;
   this.isModalOpen = true;
+  this.isImageLoading = true; // Show loading spinner
+  this.imageLoadErrors = new Array(images.length).fill(false);
+  
+  // Preload the first image
+  if (images.length > 0) {
+    this.preloadImage(images[0], 0);
+  }
 }
+
+preloadImage(imageUrl: string, index: number) {
+  const img = new Image();
+  img.onload = () => {
+    this.imageLoadErrors[index] = false;
+    // Only hide loading spinner if it's the current image
+    if (index === this.currentImageIndex) {
+      this.isImageLoading = false;
+    }
+  };
+  img.onerror = () => {
+    this.imageLoadErrors[index] = true;
+    if (index === this.currentImageIndex) {
+      this.isImageLoading = false;
+    }
+  };
+  img.src = imageUrl;
+}
+
 
   closeImageSlider() {
   this.isModalOpen = false;
-  this.currentImageIndex = 0; // Reset index when closing
+  this.currentImageIndex = 0;
+  this.isImageLoading = false;
+  this.imageLoadErrors = [];
 }
 
   checkDueStatus(taskDate: string): boolean {
@@ -347,17 +377,37 @@ export class UserCropCalendarComponent {
 prevImage() {
   if (this.currentImageIndex > 0) {
     this.currentImageIndex--;
+    this.isImageLoading = true;
+    // Preload the previous image if not already loaded
+    if (!this.imageLoadErrors[this.currentImageIndex]) {
+      this.preloadImage(this.selectedImages[this.currentImageIndex], this.currentImageIndex);
+    } else {
+      this.isImageLoading = false;
+    }
   }
 }
 
 nextImage() {
   if (this.currentImageIndex < this.selectedImages.length - 1) {
     this.currentImageIndex++;
+    this.isImageLoading = true;
+    // Preload the next image if not already loaded
+    if (!this.imageLoadErrors[this.currentImageIndex]) {
+      this.preloadImage(this.selectedImages[this.currentImageIndex], this.currentImageIndex);
+    } else {
+      this.isImageLoading = false;
+    }
   }
 }
 
 handleImageError(event: Event) {
   const imgElement = event.target as HTMLImageElement;
-  imgElement.src = 'assets/images/image-not-found.jpg'; // Add a fallback image
+  imgElement.src = 'assets/images/image-not-found.jpg';
+  this.isImageLoading = false;
+  
+  // Update error state for current image
+  if (this.currentImageIndex !== undefined) {
+    this.imageLoadErrors[this.currentImageIndex] = true;
+  }
 }
 }

@@ -24,13 +24,21 @@
       <!-- <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Centre</label> -->
 
       <div class="flex flex-col w-full ml-5">
-        <p-dropdown name="selectedCenterId" [(ngModel)]="selectedCenterId" [options]="centerNames"
-          (onChange)="centerValidationError = false; fetchDistributionManagerNames()" optionLabel="centerName"
-          optionValue="id" placeholder="Select Distribution centre" [showClear]="false" [required]="true" [filter]="true"
-          filterBy="centerName"
-          [style]="{'width': '400px'}"
-          [ngClass]="{'border-red-500': centerValidationError, 'border-gray-300': !centerValidationError}">
-        </p-dropdown>
+        <p-dropdown 
+  name="selectedCenterId" 
+  [(ngModel)]="selectedCenterId" 
+  [options]="centerNames"
+  (onChange)="centerValidationError = false; fetchDistributionManagerNames()" 
+  optionLabel="displayName" 
+  optionValue="id" 
+  placeholder="Select Distribution centre" 
+  [showClear]="false" 
+  [required]="true" 
+  [filter]="true"
+  filterBy="displayName,centerName,regCode" 
+  [style]="{'width': '400px'}"
+  [ngClass]="{'border-red-500': centerValidationError, 'border-gray-300': !centerValidationError}">
+</p-dropdown>
 
         <div *ngIf="centerValidationError" class="text-red-500 text-sm mt-1">
           Centre selection is required.

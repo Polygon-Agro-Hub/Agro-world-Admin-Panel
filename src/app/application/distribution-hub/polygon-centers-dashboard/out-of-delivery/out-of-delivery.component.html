@@ -100,7 +100,7 @@
     
     <!-- Download Button -->
     <div *ngIf="
-        permissionService.hasPermission('Polygon centres out for delivery download pdf') ||
+        permissionService.hasPermission('Polygon centres dashboard out for delivery details download') ||
         tokenService.getUserDetails().role === '1'
       " class="flex justify-between items-center mb-5">
       <button (click)="downloadPDF()" 

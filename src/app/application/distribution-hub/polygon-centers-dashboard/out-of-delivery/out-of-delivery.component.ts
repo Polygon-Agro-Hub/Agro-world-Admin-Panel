@@ -45,8 +45,8 @@ export class OutOfDeliveryComponent implements OnChanges {
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,
-    public permissionService: PermissionService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {

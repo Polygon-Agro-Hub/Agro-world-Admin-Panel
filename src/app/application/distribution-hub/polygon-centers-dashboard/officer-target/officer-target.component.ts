@@ -7,6 +7,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { Router } from '@angular/router';
 import { DestributionService } from '../../../../services/destribution-service/destribution-service.service';
 import { FormsModule } from '@angular/forms';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-officer-target',
@@ -33,6 +35,9 @@ export class OfficerTargetComponent implements OnChanges {
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+
   ) { }
   ngOnChanges(changes: SimpleChanges): void {
     this.fetchData();
@@ -62,7 +67,7 @@ export class OfficerTargetComponent implements OnChanges {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
 
-    return `${year}-${month}-${day}`; 
+    return `${year}-${month}-${day}`;
   }
 }
 

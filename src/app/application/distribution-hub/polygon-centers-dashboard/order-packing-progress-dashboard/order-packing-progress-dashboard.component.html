@@ -8,7 +8,7 @@
     <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-white dark:bg-tileBlack shadow-lg rounded-lg">
       <div class="flex space-x-4 pb-5 border-b border-gray-300">
         <button *ngIf="
-          permissionService.hasPermission('Polygon centres view dashboard progress tab') ||
+          permissionService.hasPermission('Polygon centres dashboard progress tab') ||
           tokenService.getUserDetails().role === '1'
         " (click)="setActiveTab('Progress')" [ngClass]="
             activeTab === 'Progress'
@@ -20,7 +20,7 @@
         </button>
   
         <button *ngIf="
-          permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') ||
+          permissionService.hasPermission('Polygon centres dashboard out for delivery tab') ||
           tokenService.getUserDetails().role === '1'
         " (click)="setActiveTab('Out for Delivery')" [ngClass]="
             activeTab === 'Out for Delivery'
@@ -34,8 +34,8 @@
       </div>
       <div class="h-5"></div>
       <div class="tab-content">
-        <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress' && (permissionService.hasPermission('Polygon centres view dashboard progress tab') || tokenService.getUserDetails().role === '1')"></app-progress>
-        <app-out-of-delivery [centerObj]="centerObj" *ngIf="activeTab === 'Out for Delivery' && (permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') || tokenService.getUserDetails().role === '1')"></app-out-of-delivery>
+        <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress' && (permissionService.hasPermission('Polygon centres dashboard progress tab') || tokenService.getUserDetails().role === '1')"></app-progress>
+        <app-out-of-delivery [centerObj]="centerObj" *ngIf="activeTab === 'Out for Delivery' && (permissionService.hasPermission('Polygon centres dashboard out for delivery tab') || tokenService.getUserDetails().role === '1')"></app-out-of-delivery>
       </div>
     </div>
 </div>

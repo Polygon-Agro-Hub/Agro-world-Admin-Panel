@@ -13,6 +13,7 @@ interface CurrentAssetsViewRecord {
   totalPrice: any;
   volumeOrWeight?: any;
   createdAt: string;
+  unitVolume: number;
 }
 
 @Component({
@@ -34,6 +35,7 @@ export class CurrentAssetRecordComponent {
   unit: string = '';
   unitPrice: string = '';
   batchNumber : string = '';
+  
 
   constructor(
     private assetService: AssetsService,

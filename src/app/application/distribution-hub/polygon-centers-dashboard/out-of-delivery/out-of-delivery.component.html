@@ -42,7 +42,7 @@
           <div class="relative flex items-center">
             <p-calendar 
               id="deliveryDate" 
-              placeholder="Delivery Date" 
+              placeholder="Schedule Date" 
               [showIcon]="true" 
               [showButtonBar]="false" 
               dateFormat="yy-mm-dd" 
@@ -146,10 +146,12 @@
               {{item.firstNameEnglish}} {{item.lastNameEnglish}}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{getDisplayDate(item.sheduleDate)}} {{ removeWithin(item.sheduleTime) }}
+              <p>{{getDisplayDate(item.sheduleDate)}}</p>
+              <p>{{ removeWithin(item.sheduleTime) }}</p>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{item.outDlvrDate | date:'shortTime'}}
+              <p>{{item.outDlvrDate | date:'MMMM d, y'}}</p>
+              <p>{{item.outDlvrDate | date:'h:mm a'}}</p>
             </td>
             <td class="px-4 py-3 text-center">
               <span *ngIf="item.outDlvrStatus ==='Late'" class="text-[#FF0000] font-medium"> Late </span>

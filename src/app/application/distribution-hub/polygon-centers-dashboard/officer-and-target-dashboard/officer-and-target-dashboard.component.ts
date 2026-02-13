@@ -24,7 +24,7 @@ import { PermissionService } from '../../../../services/roles-permission/permiss
   styleUrl: './officer-and-target-dashboard.component.css'
 })
 export class OfficerAndTargetDashboardComponent implements OnInit {
-  activeTab: string = '';
+  activeTab: string = 'Officers';
   centerObj: CenterDetails = {
     centerId: 0,
     centerName: '',

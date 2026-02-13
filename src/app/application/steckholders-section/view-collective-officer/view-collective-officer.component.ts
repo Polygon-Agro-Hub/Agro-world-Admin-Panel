@@ -717,6 +717,7 @@ class CenterName {
   id!: string;
   regCode!: string;
   centerName!: string;
+  fullCenterName!: string;
 }
 
 class ManagerNames {

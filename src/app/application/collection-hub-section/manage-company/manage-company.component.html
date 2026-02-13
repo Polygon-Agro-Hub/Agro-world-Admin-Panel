@@ -123,7 +123,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of companies; let i = index">
-            <td class="px-2 py-3 whitespace-nowrap text-textLight dark:text-textDark text-left">
+            <td class="px-4 py-3 whitespace-nowrap text-textLight dark:text-textDark text-left">
               {{ i + 1 }}
             </td>
             <td class="px-4 py-3 whitespace-nowrap text-left text-textLight dark:text-textDark">
@@ -133,7 +133,7 @@
               {{ item.companyEmail }}
             </td>
             <td *ngIf="!item.companyEmail"
-              class="px-2 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark font-bold italic">
+              class="px-4 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark font-bold italic">
               Email added by default
             </td>
 

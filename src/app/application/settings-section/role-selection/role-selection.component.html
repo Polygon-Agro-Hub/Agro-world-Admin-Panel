@@ -26,8 +26,10 @@
   <p class="text-lg font-semibold text-black dark:text-white my-5">All Sections ({{((rolesList.length - 1) |
     number:'2.0') || 0}})</p>
 
-  <div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3">
+ <div *ngIf="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3 pb-16">
+      <!-- Add pb-16 (padding-bottom) to create space for error messages -->
+      
       <h2 class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4">
         Add New Section
       </h2>
@@ -54,8 +56,10 @@
         </div>
       </div>
 
-      <div class="flex mt-4 align-middle justify-center items-center mb-8">
-        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Email Address</label>
+      <div class="flex mt-4 align-middle justify-center items-start mb-8">
+        <!-- Changed items-center to items-start for better alignment with error messages -->
+        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40 pt-2">Email Address</label>
+        <!-- Added pt-2 to align label with input -->
         <div class="w-full relative">
           <input [(ngModel)]="createRolesObj.email" 
             name="email" 
@@ -69,15 +73,16 @@
             class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
             placeholder="Enter email address" 
             [class.border-red-500]="emailError" />
-          <div *ngIf="emailError" class="absolute top-full left-0 mt-1 text-red-500 text-sm text-left">
+          <div *ngIf="emailError" 
+            class="absolute top-full left-0 mt-1 text-red-500 text-sm text-left">
             {{ emailError }}
           </div>
         </div>
       </div>
 
-
       <!-- Modal Footer with buttons -->
-      <div class="flex justify-center mt-2">
+      <div class="flex justify-center mt-12">
+        <!-- Increased margin-top to mt-12 -->
         <button (click)="closeModal()"
           class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200">
           Cancel
@@ -91,7 +96,7 @@
   </div>
 
   <div *ngIf="iseditModalOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-20/21 md:w-1/3  pb-16">
       <h2 class="text-center text-2xl font-normal text-gray-800 dark:text-white mb-4">
         Edit Section
       </h2>
@@ -117,8 +122,8 @@
       </div>
 
 
-      <div class="flex mt-4 align-middle justify-center items-center mb-8">
-        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Email Address</label>
+      <div class="flex mt-4 align-middle justify-center items-start mb-8">
+        <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40 pt-2">Email Address</label>
         <div class="w-full relative">
           <input [(ngModel)]="selectedRole.email" 
             name="editEmail" 
@@ -140,7 +145,7 @@
 
 
       <!-- Modal Footer with buttons -->
-      <div class="flex justify-center mt-2">
+      <div class="flex justify-center mt-12">
         <button (click)="editCloseModel()"
           class="w-28 bg-gray-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-gray-600 transition duration-200">
           Cancel

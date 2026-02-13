@@ -203,13 +203,16 @@ export class ViewDistributionOfficerComponent {
   }
 
   fetchDistributionCenterNames() {
-    this.distributionService.getDistributionCenterNames().subscribe(
-      (response) => {
-        this.centerNames = response;
-      },
-      (error) => { }
-    );
-  }
+  this.distributionService.getDistributionCenterNames().subscribe(
+    (response) => {
+      this.centerNames = response.map((center: CenterName) => ({
+        ...center,
+        displayName: `${center.regCode} - ${center.centerName}` // Combine regCode and centerName
+      }));
+    },
+    (error) => { }
+  );
+}
 
   fetchDistributionManagerNames() {
     this.distributionService.getDistributionCenterManagerNames(this.selectedCenterId).subscribe(

@@ -25,13 +25,16 @@
       <div class="space-y-6">
         <!-- Select Centre -->
         <div class="w-full">
-          <p-dropdown [options]="centerNames" optionLabel="centerName" optionValue="id" 
+          <p-dropdown [options]="centerOptions" optionLabel="label" optionValue="value" 
             placeholder="Select Distribution Centre"
             [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
             name="selectedCenterId" required
             [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'"
-            panelStyleClass="custom-dropdown-panel">
-          </p-dropdown>
+            panelStyleClass="custom-dropdown-panel"
+            [filter]="true" 
+            filterBy="label"
+            [showClear]="true">
+</p-dropdown>
           <div *ngIf="selectedCenterIdInput.touched && !selectedCenterId" class="text-red-500 text-sm mt-1 ml-1">
             Centre Name is required
           </div>

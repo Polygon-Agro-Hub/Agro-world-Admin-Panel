@@ -24,13 +24,21 @@
       <!-- <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Centre</label> -->
 
       <div class="flex flex-col w-full ml-5">
-        <p-dropdown name="selectedCenterId" [(ngModel)]="selectedCenterId" [options]="centerNames"
-          (onChange)="centerValidationError = false; fetchDistributionManagerNames()" optionLabel="centerName"
-          optionValue="id" placeholder="Select Distribution centre" [showClear]="false" [required]="true" [filter]="true"
-          filterBy="centerName"
-          [style]="{'width': '400px'}"
-          [ngClass]="{'border-red-500': centerValidationError, 'border-gray-300': !centerValidationError}">
-        </p-dropdown>
+        <p-dropdown 
+  name="selectedCenterId" 
+  [(ngModel)]="selectedCenterId" 
+  [options]="centerNames"
+  (onChange)="centerValidationError = false; fetchDistributionManagerNames()" 
+  optionLabel="displayName" 
+  optionValue="id" 
+  placeholder="Select Distribution Centre" 
+  [showClear]="false" 
+  [required]="true" 
+  [filter]="true"
+  filterBy="displayName,centerName,regCode" 
+  [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'"
+  [ngClass]="{'border-red-500': centerValidationError, 'border-gray-300': !centerValidationError}">
+</p-dropdown>
 
         <div *ngIf="centerValidationError" class="text-red-500 text-sm mt-1">
           Centre selection is required.
@@ -151,7 +159,7 @@
         <div class="mr-5">
           <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="statusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="selectStatus != null && selectStatus !== ''" placeholder="Status" [(ngModel)]="selectStatus"
             (onChange)="applyStatusFilters()"></p-dropdown>
         </div>
@@ -159,7 +167,7 @@
         <div class="mr-5">
           <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="centerStatusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="centerStatusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="selectCenterStatus != null && selectCenterStatus !== ''" placeholder="Centre Status"
             [(ngModel)]="selectCenterStatus" (onChange)="applyCenterStatusFilters()"></p-dropdown>
         </div>
@@ -167,7 +175,7 @@
         <div class="mr-5">
           <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="role != null && role !== ''"
+            [options]="jobRole" [checkmark]="false" optionLabel="jobRole" [showClear]="role != null && role !== ''"
             placeholder="Role" [(ngModel)]="role" (onChange)="applyFilters()"></p-dropdown>
         </div>
 

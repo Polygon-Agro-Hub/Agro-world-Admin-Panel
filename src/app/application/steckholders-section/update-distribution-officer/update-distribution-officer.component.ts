@@ -1,6 +1,6 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import Swal from 'sweetalert2';
@@ -62,6 +62,14 @@ interface DistributionOfficers {
   styleUrl: './update-distribution-officer.component.css',
 })
 export class UpdateDistributionOfficerComponent {
+
+  @ViewChild('licNoInput') licNoModel!: NgModel;
+  @ViewChild('confirmLicNoInput') confirmLicNoModel!: NgModel;
+  @ViewChild('insurenceNoInput') insurenceNoModel!: NgModel;
+  @ViewChild('confirmInsurenceNoInput') confirmInsurenceNoModel!: NgModel;
+  @ViewChild('vRegNoInput') vRegNoModel!: NgModel;
+  @ViewChild('confirmVRegNoInput') confirmVRegNoModel!: NgModel;
+
   userForm: FormGroup = new FormGroup({});
   page: number = 1;
   itemId!: number;
@@ -304,6 +312,12 @@ export class UpdateDistributionOfficerComponent {
           this.driverObj.vType = driverData.vType || '';
           this.driverObj.vCapacity = driverData.vCapacity || '';
           this.driverObj.vRegNo = driverData.vRegNo || '';
+
+          this.driverObj.confirmLicNo = driverData.licNo || '';
+          this.driverObj.confirmInsNo = driverData.insNo || '';
+          this.driverObj.confirmVRegNo = driverData.vRegNo || '';
+
+
 
           this.driverObj.licenseFrontImage = driverData.licFrontImg || '';
           this.driverObj.licenseBackImage = driverData.licBackImg || '';
@@ -1687,6 +1701,8 @@ export class UpdateDistributionOfficerComponent {
   }
 
   onSubmit() {
+
+    console.log('submitted')
     // Log personalData to verify phone numbers
     console.log('personalData before submit:', {
       contact1: this.personalData.contact1,
@@ -1694,6 +1710,13 @@ export class UpdateDistributionOfficerComponent {
       contact2: this.personalData.contact2,
       contact2Code: this.personalData.contact2Code,
     });
+
+    this.licNoModel.control.markAsTouched();
+    this.confirmLicNoModel.control.markAsTouched();
+    this.insurenceNoModel.control.markAsTouched();
+    this.confirmInsurenceNoModel.control.markAsTouched();
+    this.vRegNoModel.control.markAsTouched();
+    this.confirmVRegNoModel.control.markAsTouched();
 
     const missingFields: string[] = [];
 
@@ -1843,17 +1866,43 @@ export class UpdateDistributionOfficerComponent {
 
     if (this.personalData.jobRole === 'Driver') {
       if (!this.driverObj.licNo) {
-        missingFields.push('License Number is Required');
+        missingFields.push('Driving License ID number is Required');
+      } else if (!/^([A-Z]\d{7}|\d{10,12})$/.test(this.driverObj.licNo)) {
+        missingFields.push('Please enter a valid License ID number (1 capital letter + 7 digits or 10–12 digits).');
       }
+  
+      if (!this.driverObj.confirmLicNo) {
+        missingFields.push('Confirm Driving License ID number is Required');
+      } else if (this.driverObj.licNo !== this.driverObj.confirmLicNo) {
+        missingFields.push('Confirm Driving License ID number should match the Driving License ID number.');
+      }
+  
+      if (!this.driverObj.insNo) {
+        missingFields.push('Insurance Number is Required');
+      }
+      if (!this.driverObj.confirmInsNo) {
+        missingFields.push('Confirm Insurance Number is Required');
+      } else if (this.driverObj.insNo !== this.driverObj.confirmInsNo) {
+        missingFields.push('Confirm Insurance Number should match the Insurance Number.');
+      }
+  
+      if (!this.driverObj.vRegNo) {
+        missingFields.push('Vehicle Registration Number is Required');
+      }
+  
+      if (!this.driverObj.confirmVRegNo) {
+        missingFields.push(' Confirm Vehicle Registration Number is Required');
+      } else if (this.driverObj.vRegNo !== this.driverObj.confirmVRegNo) {
+        missingFields.push('Confirm Vehicle Registration Number should match the Vehicle Registration Number.');
+      }
+
       if (!this.licenseFrontImageFileName) {
         missingFields.push("License's Front Image is Required");
       }
       if (!this.licenseBackImageFileName) {
         missingFields.push("License's Back Image is Required");
       }
-      if (!this.driverObj.insNo) {
-        missingFields.push('Insurance Number is Required');
-      }
+     
       if (!this.driverObj.insExpDate) {
         missingFields.push('Insurance Expire Date is Required');
       }
@@ -1863,9 +1912,7 @@ export class UpdateDistributionOfficerComponent {
       if (!this.insurenceBackImageFileName) {
         missingFields.push("Insurance's Back Image is Required");
       }
-      if (!this.driverObj.vRegNo) {
-        missingFields.push('Vehicle Registration Number is Required');
-      }
+
       if (!this.driverObj.vType) {
         missingFields.push('Vehicle Type is Required');
       }
@@ -2473,6 +2520,10 @@ class Drivers {
   vType!: string;
   vCapacity!: string;
   vRegNo!: string;
+
+  confirmLicNo!: string;
+  confirmInsNo!: string;
+  confirmVRegNo!: string;
 
   licFrontName!: string;
   licBackName!: string;

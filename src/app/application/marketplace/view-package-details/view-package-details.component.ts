@@ -94,7 +94,7 @@ export class ViewPackageDetailsComponent implements OnInit {
   }
 
   formatCurrency(value: number): string {
-    return 'Rs.' + (value || 0).toFixed(2);
+    return 'Rs. ' + (value || 0).toFixed(2);
   }
 }
 

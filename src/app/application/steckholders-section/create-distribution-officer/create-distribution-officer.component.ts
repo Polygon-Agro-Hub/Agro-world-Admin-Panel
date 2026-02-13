@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule  } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, NgModel } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
@@ -47,6 +47,13 @@ interface PhoneCode {
 })
 export class CreateDistributionOfficerComponent implements OnInit {
   @ViewChild('pageContainer') pageContainer!: ElementRef;
+  @ViewChild('licNoInput') licNoModel!: NgModel;
+  @ViewChild('confirmLicNoInput') confirmLicNoModel!: NgModel;
+  @ViewChild('insurenceNoInput') insurenceNoModel!: NgModel;
+  @ViewChild('confirmInsurenceNoInput') confirmInsurenceNoModel!: NgModel;
+  @ViewChild('vRegNoInput') vRegNoModel!: NgModel;
+  @ViewChild('confirmVRegNoInput') confirmVRegNoModel!: NgModel;
+
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
@@ -261,6 +268,13 @@ firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
   onSubmit() {
     const missingFields: string[] = [];
 
+    this.licNoModel.control.markAsTouched();
+    this.confirmLicNoModel.control.markAsTouched();
+    this.insurenceNoModel.control.markAsTouched();
+    this.confirmInsurenceNoModel.control.markAsTouched();
+    this.vRegNoModel.control.markAsTouched();
+    this.confirmVRegNoModel.control.markAsTouched();
+
     // Check required fields for pageOne
     if (!this.personalData.empType) {
       missingFields.push('Staff Employee Type is Required');
@@ -380,17 +394,43 @@ if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalDat
     }
 
     if (this.personalData.jobRole === 'Driver') {
+      
       if (!this.driverObj.licNo) {
-        missingFields.push('License Number is Required');
+        missingFields.push('Driving License ID number is Required');
+      } else if (!/^([A-Z]\d{7}|\d{10,12})$/.test(this.driverObj.licNo)) {
+        missingFields.push('Please enter a valid License ID number (1 capital letter + 7 digits or 10–12 digits).');
       }
+  
+      if (!this.driverObj.confirmLicNo) {
+        missingFields.push('Confirm Driving License ID number is Required');
+      } else if (this.driverObj.licNo !== this.driverObj.confirmLicNo) {
+        missingFields.push('Confirm Driving License ID number should match the Driving License ID number.');
+      }
+  
+      if (!this.driverObj.insNo) {
+        missingFields.push('Insurance Number is Required');
+      }
+      if (!this.driverObj.confirmInsNo) {
+        missingFields.push('Confirm Insurance Number is Required');
+      } else if (this.driverObj.insNo !== this.driverObj.confirmInsNo) {
+        missingFields.push('Confirm Insurance Number should match the Insurance Number.');
+      }
+  
+      if (!this.driverObj.vRegNo) {
+        missingFields.push('Vehicle Registration Number is Required');
+      }
+  
+      if (!this.driverObj.confirmVRegNo) {
+        missingFields.push(' Confirm Vehicle Registration Number is Required');
+      } else if (this.driverObj.vRegNo !== this.driverObj.confirmVRegNo) {
+        missingFields.push('Confirm Vehicle Registration Number should match the Vehicle Registration Number.');
+      }
+
       if (!this.licenseFrontImageFileName) {
         missingFields.push("License's Front Image is Required");
       }
       if (!this.licenseBackImageFileName) {
         missingFields.push("License's Back Image is Required");
-      }
-      if (!this.driverObj.insNo) {
-        missingFields.push('Insurance Number is Required');
       }
       if (!this.driverObj.insExpDate) {
         missingFields.push('Insurance Expire Date is Required');
@@ -401,9 +441,7 @@ if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalDat
       if (!this.insurenceBackImageFileName) {
         missingFields.push("Insurance's Back Image is Required");
       }
-      if (!this.driverObj.vRegNo) {
-        missingFields.push('Vehicle Registration Number is Required');
-      }
+
       if (!this.driverObj.vType) {
         missingFields.push('Vehicle Type is Required');
       }
@@ -2436,6 +2474,9 @@ class Drivers {
   vType!: string;
   vCapacity!: string;
   vRegNo!: string;
+  confirmLicNo!: string;
+  confirmInsNo!: string;
+  confirmVRegNo!: string;
 
   licFrontName!: string;
   licBackName!: string;

@@ -14,6 +14,7 @@
     <div *ngIf="!isInitializing">
       <div class="flex space-x-4 pb-5 border-b border-gray-300">
         <button
+          *ngIf="permissionService.hasPermission('Pickup orders all tab') || tokenService.getUserDetails().role === '1'"
           (click)="setActiveTab('All')"
           [ngClass]="
             activeTab === 'All'
@@ -27,6 +28,7 @@
         </button>
 
         <button
+          *ngIf="permissionService.hasPermission('Pickup orders ready to pickup tab') || permissionService.hasPermission('Pickup orders ready to pickup tab') || tokenService.getUserDetails().role === '1'"
           (click)="setActiveTab('Ready to Pickup')"
           [ngClass]="
             activeTab === 'Ready to Pickup'
@@ -40,6 +42,7 @@
         </button>
 
         <button
+          *ngIf="permissionService.hasPermission('Pickup orders picked up tab') || permissionService.hasPermission('Pickup orders ready to pickup tab') || tokenService.getUserDetails().role === '1'"
           (click)="setActiveTab('Picked Up')"
           [ngClass]="
             activeTab === 'Picked Up'

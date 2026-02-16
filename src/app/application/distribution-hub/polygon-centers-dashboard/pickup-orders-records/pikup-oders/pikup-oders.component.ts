@@ -14,6 +14,8 @@ import { DatePipe } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../../../../components/loading-spinner/loading-spinner.component';
 import { PikupOderRecordDetailsComponent } from '../popup-component/pikup-oder-record-details/pikup-oder-record-details.component';
 import { ReciverinfoPopupComponent } from '../reciverinfo-popup/reciverinfo-popup.component';
+import { TokenService } from '../../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../../services/roles-permission/permission.service';
 
 interface Order {
   no: number;
@@ -83,26 +85,30 @@ export class PikupOdersComponent implements OnChanges {
   showReceiverPopup: boolean = false;
   selectedReceiverInfo: any = null;
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(
+    private datePipe: DatePipe,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('PikupOders - ngOnChanges triggered:', changes);
-    
+
     if (changes['orders']) {
       console.log('Orders changed, transforming data...');
       this.transformData();
     }
-    
+
     if (changes['searchText']) {
       console.log('Search text changed from parent:', changes['searchText'].currentValue);
       this.searchText = changes['searchText'].currentValue || '';
     }
-    
+
     if (changes['selectedDate']) {
       console.log('Date changed from parent:', changes['selectedDate'].currentValue);
       this.selectedDate = changes['selectedDate'].currentValue;
     }
-    
+
     if (changes['selectedTimeSlot']) {
       console.log('Time slot changed from parent:', changes['selectedTimeSlot'].currentValue);
       const backendTimeSlot = changes['selectedTimeSlot'].currentValue || '';
@@ -114,29 +120,29 @@ export class PikupOdersComponent implements OnChanges {
 
   private convertTimeSlotToBackendFormat(timeSlot: string): string {
     if (!timeSlot) return '';
-    
+
     const conversionMap: { [key: string]: string } = {
       '8AM-2PM': 'Within 8AM - 2PM',
       '2PM-8PM': 'Within 2PM - 8PM',
       '8AM - 2PM': 'Within 8AM - 2PM',
       '2PM - 8PM': 'Within 2PM - 8PM'
     };
-    
+
     return conversionMap[timeSlot] || timeSlot;
   }
 
   private convertTimeSlotToUIFormat(timeSlot: string): string {
     if (!timeSlot) return '';
-    
+
     const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
-    
+
     const uiFormatMap: { [key: string]: string } = {
       '8AM - 2PM': '8AM-2PM',
       '2PM - 8PM': '2PM-8PM',
       '8AM-2PM': '8AM-2PM',
       '2PM-8PM': '2PM-8PM'
     };
-    
+
     return uiFormatMap[cleanTimeSlot] || cleanTimeSlot;
   }
 
@@ -218,13 +224,13 @@ export class PikupOdersComponent implements OnChanges {
     if (value === null || value === undefined || value === '') {
       return '0.00';
     }
-    
+
     const numericValue = parseFloat(value);
-    
+
     if (isNaN(numericValue)) {
       return '0.00';
     }
-    
+
     return numericValue.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
@@ -235,7 +241,7 @@ export class PikupOdersComponent implements OnChanges {
     if (!timeSlot) return '';
 
     const cleanTimeSlot = timeSlot.replace(/^Within\s*/i, '').trim();
-    
+
     const displayFormatMap: { [key: string]: string } = {
       '8AM - 2PM': '8AM - 2PM',
       '2PM - 8PM': '2PM - 8PM',
@@ -308,15 +314,15 @@ export class PikupOdersComponent implements OnChanges {
     const isPaid = parseInt(item.isPaid?.toString() || '0');
     const paymentMethod = item.paymentMethod || '';
     const fullTotal = item.fullTotal || 0;
-    
+
     if (paymentMethod === 'Cash' && isPaid === 1 && fullTotal > 0) {
       return 'Received';
     }
-    
+
     if (isPaid === 1) {
       return 'Paid';
     }
-    
+
     return 'Pending';
   }
 
@@ -354,9 +360,9 @@ export class PikupOdersComponent implements OnChanges {
         receiverPhone2:
           data.receiverPhone2 || data.receiverPhoneCode2
             ? this.formatPhoneNumber(
-                data.receiverPhoneCode2,
-                data.receiverPhone2,
-              )
+              data.receiverPhoneCode2,
+              data.receiverPhone2,
+            )
             : '--',
         customerName:
           `${data.title || ''} ${data.firstName || ''} ${data.lastName || ''}`.trim(),

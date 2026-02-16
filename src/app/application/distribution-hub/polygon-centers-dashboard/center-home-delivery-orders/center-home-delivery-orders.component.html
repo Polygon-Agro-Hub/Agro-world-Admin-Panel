@@ -12,7 +12,9 @@
 
     <div class="pt-5 pb-5 bg-white dark:bg-tileBlack rounded-lg">
       <div class="flex space-x-4 pb-5 pr-12 border-b border-gray-300">
-        <button (click)="selectTab('all')" [ngClass]="{
+        <button
+          *ngIf="permissionService.hasPermission('Home delivery order records all tab') || tokenService.getUserDetails().role === '1'"
+          (click)="selectTab('all')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'all',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'all'
@@ -22,7 +24,9 @@
         </button>
 
 
-        <button (click)="selectTab('out-for-delivery')" [ngClass]="{
+        <button
+          *ngIf="permissionService.hasPermission('Home delivery order records all tab') || permissionService.hasPermission('Home delivery order records out for delivery tab') || tokenService.getUserDetails().role === '1'"
+          (click)="selectTab('out-for-delivery')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]':
             activeTab === 'out-for-delivery',
           'border border-gray-300 text-textLight dark:text-textDark':
@@ -32,7 +36,9 @@
           Out for Delivery
         </button>
 
-        <button (click)="selectTab('Collected')" [ngClass]="{
+        <button
+          *ngIf="permissionService.hasPermission('Home delivery order records all tab') || permissionService.hasPermission('Home delivery order records collected tab') || tokenService.getUserDetails().role === '1'"
+          (click)="selectTab('Collected')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'Collected',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Collected'
@@ -41,7 +47,9 @@
           Collected
         </button>
 
-        <button (click)="selectTab('on-the-way')" [ngClass]="{
+        <button
+          *ngIf="permissionService.hasPermission('Home delivery order records all tab') || permissionService.hasPermission('Home delivery order records on the way tab') || tokenService.getUserDetails().role === '1'"
+          (click)="selectTab('on-the-way')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'on-the-way',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'on-the-way'
@@ -49,7 +57,10 @@
           <i *ngIf="activeTab === 'on-the-way'" class="fa fa-check"></i>
           On the way
         </button>
-        <button (click)="selectTab('hold')" [ngClass]="{
+
+        <button
+          *ngIf="permissionService.hasPermission('Home delivery order records all tab') || permissionService.hasPermission('Home delivery order records hold tab') || tokenService.getUserDetails().role === '1'"
+          (click)="selectTab('hold')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'hold',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'hold'
@@ -57,7 +68,10 @@
           <i *ngIf="activeTab === 'hold'" class="fa fa-check"></i>
           Hold
         </button>
-        <button (click)="selectTab('return')" [ngClass]="{
+
+        <button
+          *ngIf="permissionService.hasPermission('Home delivery order records all tab') || permissionService.hasPermission('Home delivery order records return tab') || tokenService.getUserDetails().role === '1'"
+          (click)="selectTab('return')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'return',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'return'
@@ -66,7 +80,9 @@
           Return
         </button>
 
-        <button (click)="selectTab('delivered')" [ngClass]="{
+        <button
+          *ngIf="permissionService.hasPermission('Home delivery order records all tab') || permissionService.hasPermission('Home delivery order records delivered tab') || tokenService.getUserDetails().role === '1'"
+          (click)="selectTab('delivered')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'delivered',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'delivered'
@@ -75,7 +91,9 @@
           Delivered
         </button>
 
-        <button (click)="selectTab('Return Received')" [ngClass]="{
+        <button
+          *ngIf="permissionService.hasPermission('Home delivery order records all tab') || permissionService.hasPermission('Home delivery order records return received tab') || tokenService.getUserDetails().role === '1'"
+          (click)="selectTab('Return Received')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'Return Received',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'Return Received'
@@ -233,7 +251,9 @@
               Receiver Phone-1
             </th>
 
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th
+              *ngIf="permissionService.hasPermission('Home delivery view receiver info') || tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
               Receiver's Info
             </th>
 
@@ -245,7 +265,9 @@
               Payment
             </th>
 
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th
+              *ngIf="permissionService.hasPermission('Home delivery view order tracking info') || tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
               Details
             </th>
           </tr>
@@ -291,7 +313,9 @@
               {{ delivery?.phone1 ? (delivery.phoneCode1 + ' ' + delivery.phone1) : '--' }}
             </td>
 
-            <td class="px-4 py-3 text-center">
+            <td
+              *ngIf="permissionService.hasPermission('Home delivery view receiver info') || tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 text-center">
               <button (click)="openInfoPopup(delivery)"
                 class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
                 <svg class="w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -301,10 +325,6 @@
                 </svg>
               </button>
             </td>
-
-            <!-- <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-                    {{ delivery.regCode || "N/A" }}
-                  </td> -->
 
             <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
               <p> {{ formatTimeRange(delivery.sheduleTime) }}</p>
@@ -332,7 +352,9 @@
               </div>
             </td>
 
-            <td class="px-4 py-3 text-center">
+            <td
+              *ngIf="permissionService.hasPermission('Home delivery view order tracking info') || tokenService.getUserDetails().role === '1'"
+              class="px-4 py-3 text-center">
               <button (click)="openDetailsPopup(delivery)"
                 class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
                 <svg class="w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

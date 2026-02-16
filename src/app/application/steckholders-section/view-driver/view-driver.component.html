@@ -4,10 +4,7 @@
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-<button *ngIf="
-    (permissionService.hasPermission('Onboard individual collection CO / CCM / DO') ||
-    tokenService.getUserDetails().role === '1') && !Cname
-  " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+<button *ngIf="permissionService.hasPermission('Stakeholder add driver') || tokenService.getUserDetails().role === '1'" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
   (click)="navigatePath('/steckholders/action/drivers/add-driver')">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -127,10 +124,7 @@
         </h2>
       </div>
 
-      <div class="flex items-center mr-5" *ngIf="
-    (permissionService.hasPermission('Filter CO / CCM / DO') ||
-      tokenService.getUserDetails().role === '1') 
-  ">
+      <div class="flex items-center mr-5">
         <i class="mr-6 w-6 h-6 fill-current text-textLight dark:text-textDark">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
@@ -214,16 +208,10 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Centre
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
-                permissionService.hasPermission('Claim collection officer') ||
-                tokenService.getUserDetails().role === '1'
-              ">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Centre Status
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center" *ngIf="
-                permissionService.hasPermission('Approve collection officer') ||
-                tokenService.getUserDetails().role === '1'
-              ">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Status
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -284,11 +272,11 @@
               <div>
                 <span [class.cursor-pointer]="
                     permissionService.hasPermission(
-                      'Claim collection officer'
+                      'Stakeholder claim driver'
                     ) || tokenService.getUserDetails().role === '1'
                   " (click)="
                     permissionService.hasPermission(
-                      'Claim collection officer'
+                      'Stakeholder claim driver'
                     ) || tokenService.getUserDetails().role === '1'
                       ? handleClaimButtonClick(item)
                       : null
@@ -313,11 +301,11 @@
                   }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
                   [class.cursor-pointer]="
                     permissionService.hasPermission(
-                      'Approve collection officer'
+                      'Stakeholder approve driver'
                     ) || tokenService.getUserDetails().role === '1'
                   " (click)="
                     permissionService.hasPermission(
-                      'Approve collection officer'
+                      'Stakeholder approve driver'
                     ) || tokenService.getUserDetails().role === '1'
                       ? openPopup(item)
                       : null
@@ -337,7 +325,7 @@
               {{ getModifiedBy(item) }}
             </td>
 
-            <td *ngIf="(permissionService.hasPermission('View individual collection officer') ||
+            <td *ngIf="(permissionService.hasPermission('Stakeholder view individual driver') ||
             tokenService.getUserDetails().role === '1')" [class.ml-4]="Cname" class="px-4 py-3 text-center">
               <button class="w-5 h-5 text-blue-500 hover:text-blue-700" (click)="viewDriverProfile(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

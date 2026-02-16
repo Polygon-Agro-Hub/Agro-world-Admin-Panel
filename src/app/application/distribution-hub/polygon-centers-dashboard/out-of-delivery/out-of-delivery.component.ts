@@ -45,8 +45,8 @@ export class OutOfDeliveryComponent implements OnChanges {
   constructor(
     private router: Router,
     private DestributionSrv: DestributionService,
-    public permissionService: PermissionService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -270,34 +270,40 @@ export class OutOfDeliveryComponent implements OnChanges {
   getDisplayDate(scheduleDate: string | Date): string {
     const schedule = new Date(scheduleDate);
     const today = new Date();
-    
+  
     // Check if it's today (same year, month, and date)
-    const isToday = schedule.getFullYear() === today.getFullYear() &&
-                    schedule.getMonth() === today.getMonth() &&
-                    schedule.getDate() === today.getDate();
-    
+    const isToday =
+      schedule.getFullYear() === today.getFullYear() &&
+      schedule.getMonth() === today.getMonth() &&
+      schedule.getDate() === today.getDate();
+  
     if (isToday) {
-        return "Today";
+      return "Today";
     }
-    
+  
     const day = schedule.getDate();
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const year = schedule.getFullYear();
+  
+    const monthNames = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
     const month = monthNames[schedule.getMonth()];
-    
+  
     // Get ordinal for the day
     const ordinal = (n: number) => {
-        if (n > 3 && n < 21) return 'th';
-        switch (n % 10) {
-            case 1: return 'st';
-            case 2: return 'nd';
-            case 3: return 'rd';
-            default: return 'th';
-        }
-    }
-    
-    return `${day}${ordinal(day)} ${month}`;
-}
+      if (n > 3 && n < 21) return "th";
+      switch (n % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+      }
+    };
+  
+    return `${day}${ordinal(day)} ${month}, ${year}`;
+  }
+  
 
 removeWithin(time: string): string {
   return time ? time.replace('Within ', '') : time;

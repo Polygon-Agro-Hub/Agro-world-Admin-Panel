@@ -4,8 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressComponent } from '../progress/progress.component';
 import { OutOfDeliveryComponent } from '../out-of-delivery/out-of-delivery.component';
-import { OfficersComponent } from '../officers/officers.component';
-import { OfficerTargetComponent } from "../officer-target/officer-target.component";
+// import { OfficersComponent } from '../officers/officers.component';
+// import { OfficerTargetComponent } from "../officer-target/officer-target.component";
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
@@ -17,22 +17,26 @@ import { PermissionService } from '../../../../services/roles-permission/permiss
     HttpClientModule,
     ProgressComponent,
     OutOfDeliveryComponent,
-    OfficersComponent,
-    OfficerTargetComponent
+    // OfficersComponent,
+    // OfficerTargetComponent
   ],
   templateUrl: './order-packing-progress-dashboard.component.html',
   styleUrl: './order-packing-progress-dashboard.component.css'
 })
 export class OrderPackingProgressDashboardComponent implements OnInit {
-  activeTab: string = 'Progress';
+  activeTab: string = '';
   centerObj: CenterDetails = {
     centerId: 0,
     centerName: '',
     centerRegCode: ''
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, public tokenService: TokenService,
-      public permissionService: PermissionService) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     // Get route parameters (removed query params for tab)
@@ -54,12 +58,10 @@ export class OrderPackingProgressDashboardComponent implements OnInit {
 
   private initializeDefaultTab(): void {
     // Set default tab based on permissions
-    if (this.permissionService.hasPermission('Polygon centres view dashboard progress tab') || 
-        this.tokenService.getUserDetails().role === '1') {
-      this.activeTab = 'Progress';
-    } else if (this.permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') ||
-               this.tokenService.getUserDetails().role === '1') {
-      this.activeTab = 'Out for Delivery';
+    if (this.permissionService.hasPermission('Polygon centres dashboard progress tab') || this.tokenService.getUserDetails().role === '1') {
+      this.activeTab = 'Progress'
+    } else if (this.permissionService.hasPermission('Polygon centres dashboard progress tab')) {
+      this.activeTab = 'Out for Delivery'
     }
   }
 

@@ -106,7 +106,7 @@
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">
               <span class="block">
-                {{ item.volumeOrWeight || (item.totalPrice / (+unitPrice)) | number:'1.0-2' }}
+                {{item.unitVolume | number:'1.2-2'}}
               </span>
             </td>
             <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">

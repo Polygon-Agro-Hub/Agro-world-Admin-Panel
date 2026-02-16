@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProgressComponent } from '../progress/progress.component';
-import { OutOfDeliveryComponent } from '../out-of-delivery/out-of-delivery.component';
+// import { ProgressComponent } from '../progress/progress.component';
+// import { OutOfDeliveryComponent } from '../out-of-delivery/out-of-delivery.component';
 import { OfficersComponent } from '../officers/officers.component';
 import { OfficerTargetComponent } from "../officer-target/officer-target.component";
 import { TokenService } from '../../../../services/token/services/token.service';
@@ -15,8 +15,8 @@ import { PermissionService } from '../../../../services/roles-permission/permiss
   imports: [
     CommonModule,
     HttpClientModule,
-    ProgressComponent,
-    OutOfDeliveryComponent,
+    // ProgressComponent,
+    // OutOfDeliveryComponent,
     OfficersComponent,
     OfficerTargetComponent
   ],
@@ -24,15 +24,18 @@ import { PermissionService } from '../../../../services/roles-permission/permiss
   styleUrl: './officer-and-target-dashboard.component.css'
 })
 export class OfficerAndTargetDashboardComponent implements OnInit {
-  activeTab: string = 'Progress';
+  activeTab: string = 'Officers';
   centerObj: CenterDetails = {
     centerId: 0,
     centerName: '',
     centerRegCode: ''
   };
 
-  constructor(private router: Router, private route: ActivatedRoute, public tokenService: TokenService,
-      public permissionService: PermissionService) { }
+  constructor(
+    private router: Router, private route: ActivatedRoute, 
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     // Get route parameters and query parameters
@@ -51,6 +54,12 @@ export class OfficerAndTargetDashboardComponent implements OnInit {
       this.centerObj.centerName = params['name'] || '';
       this.centerObj.centerRegCode = params['regCode'] || '';
     });
+
+    if( this.tokenService.getUserDetails().role === '1' || this.permissionService.hasPermission('Polygon centres view dashboard officers tab')) {
+      this.activeTab = 'Officers'
+    }else if (this.permissionService.hasPermission('Polygon centres view dashboard officers tab')){
+      this.activeTab = 'Officer Target'
+    }
 
   }
 

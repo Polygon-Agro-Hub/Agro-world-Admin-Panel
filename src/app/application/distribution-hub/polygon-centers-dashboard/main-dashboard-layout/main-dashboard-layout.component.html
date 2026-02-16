@@ -28,7 +28,7 @@
       <div class="relative flex cursor-pointer items-center justify-center rounded-lg shadow-lg">
         <div
           class="inline-flex h-[60px] w-full items-center justify-between rounded-lg bg-tileLight px-4 text-sm font-medium text-[#495057] transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
-          (click)="officersTargets()"
+          (click)="(permissionService.hasPermission('Polygon center dashboard officers and target') || tokenService.getUserDetails().role === '1') && officersTargets()"
         >
           <div class="flex items-center">
             <span class="ml-2 text-sm font-semibold text-[#292929] dark:text-white sm:ml-4 sm:text-base lg:ml-8 text-[16px]"
@@ -70,7 +70,7 @@
           <!-- Order Packing Progress Card -->
           <div
             class="relative h-56 w-full cursor-pointer rounded-lg bg-tileLight shadow-lg transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
-            (click)="packingProgress()"
+            (click)="(permissionService.hasPermission('Polygon center order packing progress') || tokenService.getUserDetails().role === '1') && packingProgress()"
           >
             <div class="flex flex-col items-center justify-center gap-5 h-full">
               <div

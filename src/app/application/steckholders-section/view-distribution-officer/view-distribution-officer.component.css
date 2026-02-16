@@ -8,286 +8,6 @@
     display: inline-flex !important;
 }
 
-/* Light mode dropdown styles */
-::ng-deep .p-dropdown {
-    background-color: white !important;
-    color: #1f2937 !important;
-    border: 1px solid #d1d5db !important;
-}
-
-::ng-deep .p-dropdown-panel {
-    background-color: white !important;
-    color: #1f2937 !important;
-    border-radius: 6px !important;
-    overflow: hidden;
-    border: 1px solid #d1d5db !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-    padding: 0.5rem 0.75rem !important;
-    background-color: white !important;
-    color: #1f2937 !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
-    background-color: #f3f4f6 !important;
-    color: #1f2937 !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
-    background-color: #e5e7eb !important;
-    color: #1f2937 !important;
-}
-
-/* Search/filter input styles */
-::ng-deep .p-dropdown-panel .p-dropdown-filter {
-    background-color: white !important;
-    color: #1f2937 !important;
-    border: 1px solid #d1d5db !important;
-    padding: 0.5rem 0.75rem !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-filter::placeholder {
-    color: #6b7280 !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-filter-icon {
-    color: #6b7280 !important;
-}
-
-/* Dark mode dropdown styles */
-::ng-deep .dark .p-dropdown {
-    background-color: #2d354d !important;
-    color: #B1B1B1 !important;
-    border: 1px solid #4a5568 !important;
-}
-
-::ng-deep .dark .p-dropdown-panel {
-    background-color: #2d354d !important;
-    color: #B1B1B1 !important;
-    border-radius: 6px !important;
-    overflow: hidden;
-    border: 1px solid #4a5568 !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-    padding: 0.5rem 0.75rem !important;
-    background-color: #2d354d !important;
-    color: #B1B1B1 !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
-    background-color: #3a4160 !important;
-    color: #fff !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
-    background-color: #2d354d !important;
-    color: #B1B1B1 !important;
-}
-
-/* Dark mode search/filter input styles */
-::ng-deep .dark .p-dropdown-panel .p-dropdown-filter {
-    background-color: #2d354d !important;
-    color: #B1B1B1 !important;
-    border: 1px solid #4a5568 !important;
-    padding: 0.5rem 0.75rem !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-filter::placeholder {
-    color: #8B8B8B !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-icon {
-    color: #8B8B8B !important;
-}
-
-/* Empty message styling */
-::ng-deep .p-dropdown-panel .p-dropdown-empty-message {
-    padding: 0.5rem 0.75rem !important;
-    color: #6b7280 !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-empty-message {
-    color: #8B8B8B !important;
-}
-
-/* Keep your existing calendar styles - they remain unchanged */
-/* Dark mode styles for PrimeNG Calendar */
-.dark .custom-calendar .p-datepicker {
-    background: #272F45;
-    color: white;
-    border: 1px solid #4a5568;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-header {
-    background: #1a202c;
-    border-bottom: 1px solid #4a5568;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-title {
-    color: white;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-prev,
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-next {
-    color: white;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-prev:hover,
-.dark .custom-calendar .p-datepicker .p-datepicker-header .p-datepicker-next:hover {
-    background: #4a5568;
-    color: white;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar td {
-    border: 1px solid #4a5568;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar td span {
-    color: white;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar td span:hover {
-    background: #4a5568;
-    color: white;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar td.p-datepicker-today span {
-    background: #3182ce;
-    color: white;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar .p-datepicker-other-month span {
-    color: #a0aec0;
-}
-
-.dark .custom-calendar .p-datepicker .p-datepicker-calendar .p-highlight {
-    background: #3182ce;
-    color: white;
-}
-
-/* Clear button dark mode */
-.dark .custom-calendar .p-calendar-clear-icon {
-    color: white;
-}
-
-.dark .custom-calendar .p-calendar-clear-icon:hover {
-    color: #cbd5e0;
-}
-
-:host ::ng-deep .p-calendar .p-button {
-    color: black;
-}
-
-:host-context(.dark) ::ng-deep .p-calendar .p-button {
-    color: white;
-}
-
-::ng-deep .p-calendar .p-inputtext {
-    padding-right: 3rem !important;
-}
-
-::ng-deep .p-calendar .p-calendar-clear-icon {
-    right: 1.2rem !important;
-    top: 8.2px !important;
-    order: 1;
-}
-
-::ng-deep .p-calendar .p-datepicker-trigger {
-    right: 0.5rem !important;
-    order: 2;
-}
-
-/* For light mode placeholder */
-:host ::ng-deep .p-calendar .p-inputtext::placeholder {
-    color: #6c6c6c;
-}
-
-/* For dark mode placeholder */
-:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
-    color: #8B8B8B;
-}
-
-/* Light mode dropdown header with filter */
-::ng-deep .p-dropdown-panel .p-dropdown-header {
-    background-color: white !important;
-    border-bottom: 1px solid #d1d5db !important;
-    padding: 0.5rem !important;
-}
-
-/* Dark mode dropdown header with filter */
-::ng-deep .dark .p-dropdown-panel .p-dropdown-header {
-    background-color: #2d354d !important;
-    border-bottom: 1px solid #4a5568 !important;
-    padding: 0.5rem !important;
-}
-
-/* Light mode search/filter container */
-::ng-deep .p-dropdown-panel .p-dropdown-filter-container {
-    background-color: white !important;
-}
-
-/* Dark mode search/filter container */
-::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-container {
-    background-color: #2d354d !important;
-}
-
-/* Light mode search input */
-::ng-deep .p-dropdown-panel .p-dropdown-filter {
-    background-color: white !important;
-    color: #1f2937 !important;
-    border: 1px solid #d1d5db !important;
-    padding: 0.5rem 0.75rem !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-filter::placeholder {
-    color: #6b7280 !important;
-}
-
-::ng-deep .p-dropdown-panel .p-dropdown-filter-icon {
-    color: #6b7280 !important;
-}
-
-/* Dark mode search input */
-::ng-deep .dark .p-dropdown-panel .p-dropdown-filter {
-    background-color: #374151 !important;
-    color: #B1B1B1 !important;
-    border: 1px solid #4a5568 !important;
-    padding: 0.5rem 0.75rem !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-filter::placeholder {
-    color: #8B8B8B !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-icon {
-    color: #8B8B8B !important;
-}
-
-/* Focus states for search input */
-::ng-deep .p-dropdown-panel .p-dropdown-filter:focus {
-    outline: none !important;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
-    border-color: #3b82f6 !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-filter:focus {
-    outline: none !important;
-    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
-    border-color: #60a5fa !important;
-}
-
-/* Hides clear icon when dropdown has no selected value */
-::ng-deep .p-dropdown .p-dropdown-clear {
-    display: none;
-}
-
-/* Show the clear button only when a value is selected */
-::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
-    display: inline-flex !important;
-}
-
 ::ng-deep .dark .p-dropdown-panel {
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
@@ -441,10 +161,10 @@
 
   
   /* Change the text color of the active/selected option inside the panel */
-  ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
-    color: #16a34a !important; /* Tailwind's green-600 equivalent */
-    background-color: #f0fdf4; /* optional, like Tailwind bg-green-50 */
-  }
+  /* ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    color: #16a34a !important; 
+    background-color: #f0fdf4; 
+  } */
 
   ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;
@@ -482,13 +202,22 @@
   color: #B1B1B1 !important;
 }
 
-/* Reduce dropdown item padding */
-::ng-deep .topfilters .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+
+::ng-deep .custom-center-dropdown .p-dropdown {
+  padding-left: 10px !important;
 }
 
-::ng-deep .topfilters .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+::ng-deep .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 10px !important;
+}
+
+/* For dark mode */
+::ng-deep .dark .custom-center-dropdown .p-dropdown {
+  padding-left: 10px !important;
+}
+
+::ng-deep .dark .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 10px !important;
 }
 
 /* The rest of your existing calendar styles... */

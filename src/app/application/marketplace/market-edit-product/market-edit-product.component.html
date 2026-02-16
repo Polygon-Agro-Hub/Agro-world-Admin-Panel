@@ -452,19 +452,19 @@
       <div class="my-3">
   <label class="text-lg text-[#534E4E] dark:text-textDark">Minimum Quantity *</label>
   <input
-    type="text"
-    id="startValue"
-    name="startValue"
-    [(ngModel)]="productObj.startValue"
-    (keydown)="validateDecimalInput($event)"
-    (blur)="formatPrice($event, 'startValue')"
-    (input)="validateMinQuantity()"
-    pattern="^\d+(\.\d{1,2})?$"
-    required
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-    placeholder="0.00"
-    #minQuantityField="ngModel"
-  />
+  type="text"
+  id="startValue"
+  name="startValue"
+  [(ngModel)]="productObj.startValue"
+  (keydown)="validateDecimalInput($event)"
+  (blur)="formatPrice($event, 'startValue')"
+  (input)="validateMinQuantity()"
+  pattern="^\d+(\.\d{1,3})?$" 
+  required
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  placeholder="0.000"
+  #minQuantityField="ngModel"
+/>
   <div *ngIf="getMinQuantityError() && productObj.startValue" class="text-red-500 text-sm mt-1">
     {{ getMinQuantityError() }}
   </div>
@@ -504,12 +504,20 @@
           <label class="text-lg text-[#534E4E] dark:text-textDark">
             Increase/Decrease by *
           </label>
-          <input type="text" id="changeby" name="changeby" [(ngModel)]="productObj.changeby"
-            (keydown)="validateDecimalInput($event)" (blur)="formatPrice($event, 'changeby')"
-            (input)="validateChangeBy()" pattern="^\d+(\.\d{1,2})?$" required
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            placeholder="0.00"
-            #changeByField="ngModel" />
+          <input 
+  type="text" 
+  id="changeby" 
+  name="changeby" 
+  [(ngModel)]="productObj.changeby"
+  (keydown)="validateDecimalInput($event)" 
+  (blur)="formatPrice($event, 'changeby')"
+  (input)="validateChangeBy()" 
+  pattern="^\d+(\.\d{1,3})?$" 
+  required
+  class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+  placeholder="0.000"
+  #changeByField="ngModel" 
+/>
           <div *ngIf="productObj.changeby <= 0.0 && productObj.changeby" class="text-red-500 text-sm mt-1">
             Please enter a value greater than 0.
           </div>

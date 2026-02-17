@@ -269,6 +269,7 @@ import { PensionRequestsComponent } from './application/finance/pension-requests
 import { CultivationHistoryComponent } from './application/finance/cultivation-history/cultivation-history.component';
 import { ViewFarmerPension5YearsPlusComponent } from './application/finance/view-farmer-pension-5-years-plus/view-farmer-pension-5-years-plus.component';
 import { PensionRequestsViewDocumentsComponent } from './application/finance/pension-requests-view-documents/pension-requests-view-documents.component';
+import { CallCenterDashboardComponent } from './application/call-centers/call-center-dashboard/call-center-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -1991,6 +1992,32 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'call-centers',
+        children: [
+          {
+            path: 'dashboard',
+            component: CallCenterDashboardComponent
+          },
+          {
+            path: 'action',
+            children: [
+              {
+                path: '',
+                // component: biman implement
+              },
+              {
+                path: 'call-logs',
+                // component: dumith implement
+              },
+              {
+                path: 'govi-care-call',
+                // component:biman
+              }
+            ]
+          }
+        ]
+      }
     ],
   },
   { path: '**', component: NotFoundComponent },

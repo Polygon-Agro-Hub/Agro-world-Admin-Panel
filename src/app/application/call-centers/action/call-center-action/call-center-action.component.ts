@@ -17,4 +17,10 @@ export class CallCenterActionComponent {
       .navigate(['/call-centers/action/govi-care-call'])
       .then(() => {});
   }
+
+  allCallLogs(): void {
+    this.router
+      .navigate(['/call-centers/action/call-logs'])
+      .then(() => {});
+  }
 }

@@ -2015,6 +2015,10 @@ export const routes: Routes = [
                 path: 'govi-care-call',
                 component: CallCenterComponentComponent,
               },
+              {
+                path: 'call-logs',
+                component: AllCallLogsComponent,
+              },
             ],
           },
         ],

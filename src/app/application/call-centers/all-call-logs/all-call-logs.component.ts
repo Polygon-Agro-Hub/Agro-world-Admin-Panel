@@ -4,6 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
+interface CallLog {
+  id: string;
+  name: string;
+  contactNumber: string;
+  duration: string;
+  dateTime: string;
+  callerRating: number;
+  officerRating: number;
+  overallRating: number;
+}
+
 @Component({
   selector: 'app-all-call-logs',
   standalone: true,
@@ -106,7 +117,7 @@ export class AllCallLogsComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['/call-centers']);
+    this.router.navigate(['/call-centers/action']).then(() => {});
   }
 
   getStarClass(starPosition: number, rating: number): string {
@@ -118,16 +129,5 @@ export class AllCallLogsComponent implements OnInit {
       return 'fa-solid fa-star text-gray-300 dark:text-gray-600 text-[16px] w-[19px] h-[16px]';
     }
   }
-}
-
-interface CallLog {
-  id: string;
-  name: string;
-  contactNumber: string;
-  duration: string;
-  dateTime: string;
-  callerRating: number;
-  officerRating: number;
-  overallRating: number;
 }
 

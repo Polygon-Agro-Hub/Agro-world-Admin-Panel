@@ -154,7 +154,7 @@
               </div> -->
 
         <div class="relative flex items-center">
-          <p-calendar id="toDate" [placeholder]="datePlaceholder.name" [showIcon]="true" [monthNavigator]="true"
+          <p-calendar id="toDate" [placeholder]="datePlaceholder.name" [showIcon]="true" [monthNavigator]="true"  [readonlyInput]="true"
             [yearNavigator]="true" yearRange="1900:2030" iconDisplay="input" [(ngModel)]="selectedDate"
             [showClear]="!!selectedDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
             [style]="{ width: datePlaceholder.width }"

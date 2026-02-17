@@ -272,6 +272,7 @@ import { PensionRequestsViewDocumentsComponent } from './application/finance/pen
 import { CallCenterDashboardComponent } from './application/call-centers/call-center-dashboard/call-center-dashboard.component';
 import { CallCenterActionComponent } from './application/call-centers/action/call-center-action/call-center-action.component';
 import { CallCenterComponentComponent } from './application/call-centers/action/call-center-component/call-center-component.component';
+import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
 
 export const routes: Routes = [
   {

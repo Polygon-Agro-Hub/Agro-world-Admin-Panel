@@ -164,7 +164,11 @@ export class ViewGoviLinkJobsComponent implements OnInit {
 
     if (job.assignStatus === 'Assigned') {
       // If already assigned, open assign popup in edit mode
+      if (job.assignedOfficerRole !== null) {
+        this.selectedOfficerRole = job.assignedOfficerRole;
+      }
       this.openAssignPopup(job);
+      this.onOfficerRoleChange()
     } else {
       // If not assigned, open the assign popup in create mode
       this.openAssignPopup(job);
@@ -174,12 +178,12 @@ export class ViewGoviLinkJobsComponent implements OnInit {
   // Open assign popup
   openAssignPopup(job: any): void {
     this.selectedJob = job;
-    this.selectedOfficerRole = '';
+    // this.selectedOfficerRole = '';
     this.selectedOfficerId = '';
     this.availableOfficers = [];
     this.selectedOfficerInfo = null;
     this.currentAssignedOfficer = null;
-    this.assignError = '';
+    this.assignError = '';;
 
     // If job is already assigned, pre-fill the current officer info
     if (job.assignStatus === 'Assigned' && job.assignedOfficerName) {

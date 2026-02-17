@@ -1999,23 +1999,23 @@ export const routes: Routes = [
             path: 'dashboard',
             component: CallCenterDashboardComponent
           },
-          {
-            path: 'action',
-            children: [
-              {
-                path: '',
-                // component: biman implement
-              },
-              {
-                path: 'call-logs',
-                // component: dumith implement
-              },
-              {
-                path: 'govi-care-call',
-                // component:biman
-              }
-            ]
-          }
+        //  {
+        //     path: 'action',
+        //     children: [
+        //       {
+        //         path: '',
+        //         // component: biman implement
+        //       },
+        //       {
+        //         path: 'call-logs',
+        //         // component: dumith implement
+        //       },
+        //       {
+        //         path: 'govi-care-call',
+        //         // component:biman
+        //       } 
+        //     ]
+        //   }
         ]
       }
     ],

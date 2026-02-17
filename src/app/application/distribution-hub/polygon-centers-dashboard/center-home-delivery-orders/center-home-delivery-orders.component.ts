@@ -484,4 +484,5 @@ class Delivery {
   title!: string;
   recieverTitle!: string;
   completeTime!: Date;
+  returnRecivedTime!:string;
 }

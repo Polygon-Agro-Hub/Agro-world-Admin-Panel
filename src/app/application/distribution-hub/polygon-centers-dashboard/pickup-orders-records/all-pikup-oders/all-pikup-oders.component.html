@@ -114,7 +114,9 @@
               <th class="px-4 py-3 font-normal dark:text-textDark text-left">
                 Receiver Phone-1
               </th>
-              <th class="px-4 py-3 font-normal dark:text-textDark text-center">
+              <th
+                *ngIf="permissionService.hasPermission('Pickup orders view receiver info') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 font-normal dark:text-textDark text-center">
                 Receiver's Info
               </th>
               <th class="px-4 py-3 font-normal dark:text-textDark text-center">
@@ -123,7 +125,9 @@
               <th class="px-4 py-3 font-normal dark:text-textDark text-left">
                 Payment
               </th>
-              <th class="px-4 py-3 font-normal dark:text-textDark text-center">
+              <th
+                *ngIf="permissionService.hasPermission('Pickup orders view order tracking info') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 font-normal dark:text-textDark text-center">
                 Details
               </th>
             </tr>
@@ -153,7 +157,9 @@
               <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
                 {{ order.receiverPhone }}
               </td>
-              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <td
+                *ngIf="permissionService.hasPermission('Pickup orders view receiver info') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center text-textLight dark:text-textDark">
                 <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="viewReceiverInfo(order)">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -170,7 +176,9 @@
                   {{ order.payment }}
                 </span>
               </td>
-              <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <td
+                *ngIf="permissionService.hasPermission('Pickup orders view order tracking info') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center text-textLight dark:text-textDark">
                 <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="openOrderDetails(order)">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path

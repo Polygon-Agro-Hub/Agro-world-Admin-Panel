@@ -669,7 +669,7 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'Finance Payment History' },
               },
-              
+
               {
                 path: 'finance-govicapital',
                 children: [
@@ -746,8 +746,8 @@ export const routes: Routes = [
                 ],
               },
               {
-                path:'pension-requests',
-                component:PensionRequestsComponent,
+                path: 'pension-requests',
+                component: PensionRequestsComponent,
               },
               {
                 path: 'cultivation-history/:id',
@@ -1059,6 +1059,8 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: ViewDriverComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Onboard individual collection CO / CCM / DO' },
                   },
 
                   {
@@ -1904,11 +1906,11 @@ export const routes: Routes = [
                   },
                   {
                     path: 'view-pikup-chash-revenue/:id',
-                    component:ViewPikupCashRevenueComponent
+                    component: ViewPikupCashRevenueComponent
                   },
                   {
                     path: 'view-delivery-revenue/:id',
-                    component:ViewDeliveryRevenueComponent
+                    component: ViewDeliveryRevenueComponent
                   },
                 ],
               },

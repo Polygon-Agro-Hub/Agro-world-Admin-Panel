@@ -7,6 +7,8 @@ import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/
 import { DistributionHubService } from '../../../../services/distribution-hub/distribution-hub.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 interface DriverVehicle {
   officerId: number;
@@ -103,8 +105,11 @@ export class DriversAndVehiclesComponent implements OnInit {
   constructor(
     private distributionHubService: DistributionHubService,
     private router: Router,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   statusOptions = [
     { label: 'Approved', value: 'Approved' },
@@ -179,23 +184,20 @@ export class DriversAndVehiclesComponent implements OnInit {
 
     const tableHtml = `
       <div class="px-10 py-8 rounded-md bg-white dark:bg-gray-800">
-        <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Driver Name: ${
-          item.firstName
-        } ${item.lastName}</h1>
+        <h1 class="text-center text-2xl font-bold mb-4 dark:text-white">Driver Name: ${item.firstName
+      } ${item.lastName}</h1>
         <div>
           <p class="text-center dark:text-white">${message}</p>
         </div>
         <div class="flex justify-center mt-4">
-          ${
-            showRejectButton
-              ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>'
-              : ''
-          }
-          ${
-            showApproveButton
-              ? '<button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>'
-              : ''
-          }
+          ${showRejectButton
+        ? '<button id="rejectButton" class="bg-red-500 text-white px-6 py-2 rounded-lg mr-2">Reject</button>'
+        : ''
+      }
+          ${showApproveButton
+        ? '<button id="approveButton" class="bg-green-500 text-white px-4 py-2 rounded-lg">Approve</button>'
+        : ''
+      }
         </div>
       </div>
     `;

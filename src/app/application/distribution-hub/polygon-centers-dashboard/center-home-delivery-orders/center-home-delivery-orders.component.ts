@@ -7,6 +7,8 @@ import { DistributionHubService } from '../../../../services/distribution-hub/di
 import { ActivatedRoute, Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { HomeDeliveryViewPopupComponent } from "../home-delivery-view-popup/home-delivery-view-popup.component";
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-center-home-delivery-orders',
@@ -24,11 +26,11 @@ import { HomeDeliveryViewPopupComponent } from "../home-delivery-view-popup/home
 })
 export class CenterHomeDeliveryOrdersComponent implements OnInit {
   isLoading: boolean = false;
-  activeTab: string = 'all';
+  activeTab: string = '';
 
   // Remove placeholderDate property
   selectedDate: string | Date | null = null;
-  
+
   // Data from backend
   allDeliveries: Delivery[] = [];
   deliveryObj: Partial<Delivery> = {};
@@ -67,7 +69,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
     { label: 'Hold', value: 'Hold' },
     { label: 'Return Received', value: 'Return Received' },
     { label: 'Delivered', value: 'Delivered' },
-    
+
   ];
 
   selectedStatus: any = null;
@@ -76,7 +78,13 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
 
   showInfoModal: boolean = false;
 
-  constructor(private distributionService: DistributionHubService, private route: ActivatedRoute) {}
+  constructor(
+    private distributionService: DistributionHubService,
+    private route: ActivatedRoute,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -84,30 +92,31 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
       this.centerName = params['name'] || '';
       this.centerRegCode = params['regCode'] || '';
     });
+    this.initTabSelection()
     this.centerFetchDeliveries();
   }
 
   // Add this computed property to get the placeholder text based on active tab
-  get datePlaceholder(): {name:string, width:string} {
+  get datePlaceholder(): { name: string, width: string } {
     switch (this.activeTab) {
       case 'all':
-        return {name:'Schedule Date', width: '145px'};
+        return { name: 'Schedule Date', width: '145px' };
       case 'out-for-delivery':
-        return {name:'Out Date', width: '145px'};
+        return { name: 'Out Date', width: '145px' };
       case 'Collected':
-        return {name:'Collected Date', width: '165px'};
+        return { name: 'Collected Date', width: '165px' };
       case 'on-the-way':
-        return {name:'Started Date', width: '145px'};
+        return { name: 'Started Date', width: '145px' };
       case 'hold':
-        return {name:'Hold Date', width: '145px'};
+        return { name: 'Hold Date', width: '145px' };
       case 'return':
-        return {name:'Return Date', width: '145px'};
+        return { name: 'Return Date', width: '145px' };
       case 'delivered':
-        return {name:'Delivered Date', width: '165px'};
+        return { name: 'Delivered Date', width: '165px' };
       case 'Return Received':
-        return {name:'Return Received Date', width: '190px'};
+        return { name: 'Return Received Date', width: '190px' };
       default:
-        return {name:'Date', width: '145px'};
+        return { name: 'Date', width: '145px' };
     }
   }
 
@@ -126,7 +135,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
     { label: 'Delivered', value: 'Delivered' },
   ];
 
-  
+
   onTimeSlotChange(): void {
     this.centerFetchDeliveries();
   }
@@ -150,11 +159,11 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
     this.activeTab = tabName;
 
     switch (tabName) {
-    
+
       case 'all':
         this.searchPlaceHolder = 'Search...'
         break;
-    
+
       case 'out-for-delivery':
         this.searchPlaceHolder = 'Search...'
         break;
@@ -200,13 +209,13 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
     this.allDeliveries = this.allDeliveries.map((delivery, index) => {
       // Format return time from createdAt or outDlvrTime
       const returnTime = this.formatToReturnTime(delivery.createdAt || delivery.outDlvrTime);
-      
+
       // Format delivery time slot from sheduleTime
       const deliveryTimeSlot = this.formatDeliveryTimeSlot(delivery.sheduleTime);
-      
+
       // Format delivery time for delivered items (use outDlvrTime or createdAt)
       const deliveryTime = this.formatToReturnTime(delivery.outDlvrTime || delivery.createdAt);
-      
+
       return {
         ...delivery,
         no: index + 1,
@@ -223,23 +232,23 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
 
   private formatToReturnTime(timeString: string): string {
     if (!timeString) return 'N/A';
-    
+
     try {
       const date = new Date(timeString);
       if (isNaN(date.getTime())) {
         if (timeString.includes('.')) return timeString;
         return 'N/A';
       }
-      
+
       let hours = date.getHours();
       const minutes = date.getMinutes();
       const ampm = hours >= 12 ? 'PM' : 'AM';
-      
+
       hours = hours % 12;
       hours = hours ? hours : 12;
-      
+
       const minutesStr = minutes < 10 ? '0' + minutes : minutes.toString();
-      
+
       return `${hours}.${minutesStr}${ampm}`;
     } catch (error) {
       console.error('Error formatting return time:', error);
@@ -249,15 +258,15 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
 
   private formatDeliveryTimeSlot(sheduleTime: string): string {
     if (!sheduleTime) return 'N/A';
-    
+
     try {
       const date = new Date(sheduleTime);
       if (isNaN(date.getTime())) {
         return sheduleTime;
       }
-      
+
       const hours = date.getHours();
-      
+
       if (hours >= 8 && hours < 14) {
         return '8AM - 2PM';
       } else if (hours >= 14 && hours < 20) {
@@ -312,13 +321,13 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
 
   formatTimeRange(sheduleTime: string): string {
     if (!sheduleTime) return 'N/A';
-    
+
     // Remove "Within " prefix if present
     let timeRange = sheduleTime;
     if (timeRange.startsWith('Within ')) {
       timeRange = timeRange.substring(7);
     }
-    
+
     // Convert "8-12 PM" to "8AM - 12PM"
     // Handle various formats
     if (timeRange.includes('AM') || timeRange.includes('PM')) {
@@ -330,22 +339,22 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
       if (parts.length === 2) {
         const start = parts[0].trim();
         const end = parts[1].trim();
-        
+
         // Determine AM/PM based on the hour
         const startNum = parseInt(start);
         const endNum = parseInt(end);
-        
+
         const startSuffix = startNum < 12 ? 'AM' : 'PM';
         const endSuffix = endNum < 12 ? 'AM' : 'PM';
-        
+
         // Convert to 12-hour format if needed
         const startHour = startNum > 12 ? startNum - 12 : startNum;
         const endHour = endNum > 12 ? endNum - 12 : endNum;
-        
+
         return `${startHour}${startSuffix} - ${endHour}${endSuffix}`;
       }
     }
-    
+
     return timeRange;
   }
 
@@ -373,7 +382,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
   openDetailsPopup(delivery: Delivery): void {
     if (delivery.id == null) {
       console.warn('Delivery id is missing for selected row:', delivery);
-      return; 
+      return;
     }
     this.selectedDeliveryId = delivery.id;
     this.showDetailsPopup = true;
@@ -388,7 +397,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
   openInfoPopup(delivery: Delivery): void {
     if (delivery.id == null) {
       console.warn('Delivery id is missing for selected row:', delivery);
-      return; 
+      return;
     }
     this.deliveryObj = delivery;
     this.showInfoModal = true;
@@ -411,30 +420,40 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
 
   onDateChange(newDate: string | Date | null) {
     let dateString: string;
-  
+
     if (!newDate) {
-      
+
       dateString = new Date().toISOString().split('T')[0];
-    } 
+    }
     else if (newDate instanceof Date) {
-      
+
       dateString = newDate.toISOString().split('T')[0];
-    } 
+    }
     else {
-      
+
       dateString = newDate;
     }
-  
+
     this.selectedDate = dateString;
     this.centerFetchDeliveries();
+  }
   
+  initTabSelection(){
+    if(this.permissionService.hasPermission('Home delivery order records all tab') || this.tokenService.getUserDetails().role === '1') this.activeTab = 'all';
+    else if(this.permissionService.hasPermission('Home delivery order records out for delivery tab') ) this.activeTab = 'out-for-delivery';
+    else if(this.permissionService.hasPermission('Home delivery order records collected tab') ) this.activeTab = 'Collected';
+    else if(this.permissionService.hasPermission('Home delivery order records on the way tab') ) this.activeTab = 'on-the-way';
+    else if(this.permissionService.hasPermission('Home delivery order records hold tab') ) this.activeTab = 'hold';
+    else if(this.permissionService.hasPermission('Home delivery order records return tab') ) this.activeTab = 'return';
+    else if(this.permissionService.hasPermission('Home delivery order records delivered tab') ) this.activeTab = 'delivered';
+    else if(this.permissionService.hasPermission('Home delivery order records return received tab') ) this.activeTab = 'Return Received';
   }
 
 }
 
 
 class Delivery {
-  id! :number;
+  id!: number;
   invNo!: string;
   regCode!: string;
   sheduleTime!: string;

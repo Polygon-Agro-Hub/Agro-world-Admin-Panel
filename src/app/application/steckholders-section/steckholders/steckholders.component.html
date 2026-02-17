@@ -227,7 +227,9 @@
       </button>
     </div>
 
-    <div class="flex justify-center">
+    <div 
+      *ngIf="permissionService.hasPermission('Stakeholder drivers') || tokenService.getUserDetails().role === '1'"
+      class="flex justify-center">
       <button
         (click)="navigateToViewDrivers()"
         type="button"

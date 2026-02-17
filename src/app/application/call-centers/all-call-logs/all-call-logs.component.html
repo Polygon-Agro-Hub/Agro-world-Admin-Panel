@@ -1,0 +1,135 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div
+    class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+        <div class="flex justify-between items-center mb-6 min-w-[1100px]">
+            <div class="flex items-center">
+                <h2 class="text-[20px] font-semibold text-textLight dark:text-textDark whitespace-nowrap">
+                    All Call Logs ({{ total.toString().padStart(2, "0") }})
+                </h2>
+            </div>
+
+            <div class="ml-4">
+                <div
+                    class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80 relative group">
+                    <!-- Popover -->
+                    <div
+                        class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap">
+                        Search by Contact Number
+                    </div>
+
+                    <!-- Input field -->
+                    <input type="text" placeholder="Search By Contact Number.."
+                        class="bg-transparent outline-none w-full dark:text-textDark text-gray-600 text-sm"
+                        [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" />
+
+                    <!-- Search button -->
+                    <button type="button" class="voorbeeld text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                        (click)="onSearch()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                        </svg>
+                    </button>
+
+                    <!-- Clear button -->
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                        (click)="onClearSearch()" *ngIf="searchTerm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table container with separate scroll -->
+        <div class="overflow-x-auto">
+            <!-- No Data State -->
+            <div *ngIf="callLogs.length === 0 && !isLoading"
+                class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6">
+                <p class="text-[#494949] my-6 dark:text-textDark">
+                    {{ searchTerm ? "No matching records found" : "No Data Available" }}
+                </p>
+                <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
+            </div>
+
+            <!-- Data Table -->
+            <table *ngIf="callLogs.length > 0" class="min-w-full table-auto">
+                <thead class="border-b border-gray-200 dark:border-gray-700">
+                    <tr>
+                        <th class="px-6 py-3 text-[16px] font-normal text-gray-500 dark:text-gray-400 text-left">
+                            No
+                        </th>
+                        <th class="px-6 py-3 text-[16px] font-normal text-gray-500 dark:text-gray-400 text-left">
+                            Name
+                        </th>
+                        <th class="px-6 py-3 text-[16px] font-normal text-gray-500 dark:text-gray-400 text-left">
+                            Contact Number
+                        </th>
+                        <th class="px-6 py-3 text-[16px] font-normal text-gray-500 dark:text-gray-400 text-left">
+                            Duration
+                        </th>
+                        <th class="px-6 py-3 text-[16px] font-normal text-gray-500 dark:text-gray-400 text-left">
+                            Date & Time
+                        </th>
+                        <th class="px-6 py-3 text-[16px] font-normal text-gray-500 dark:text-gray-400 text-center">
+                            Rating for<br>Caller for Call
+                        </th>
+                        <th class="px-6 py-3 text-[16px] font-normal text-gray-500 dark:text-gray-400 text-center">
+                            Rating for CC<br>Officer for Call
+                        </th>
+                        <th class="px-6 py-3 text-[16px] font-normal text-gray-500 dark:text-gray-400 text-center">
+                            Overall Rating<br>for Caller
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <tr *ngFor="let log of callLogs; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 text-[16px] text-textLight dark:text-textDark">
+                            {{ formatNumber(i) }}
+                        </td>
+                        <td class="px-6 py-4 text-[16px] text-textLight dark:text-textDark">
+                            {{ log.name || "N/A" }}
+                        </td>
+                        <td class="px-6 py-4 text-[16px] text-textLight dark:text-textDark">
+                            {{ log.contactNumber || "N/A" }}
+                        </td>
+                        <td class="px-6 py-4 text-[16px] text-textLight dark:text-textDark">
+                            {{ log.duration || "00:00:00" }}
+                        </td>
+                        <td class="px-6 py-4 text-[16px] text-textLight dark:text-textDark">
+                            {{ formatDateTime(log.dateTime) }}
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex justify-center gap-0.5">
+                                <i *ngFor="let star of [1,2,3,4,5]" [class]="getStarClass(star, log.callerRating)"
+                                    class="w-[19px] h-[16px]"></i>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex justify-center gap-0.5">
+                                <i *ngFor="let star of [1,2,3,4,5]" [class]="getStarClass(star, log.officerRating)"
+                                    class="w-[19px] h-[16px]"></i>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex justify-center gap-0.5">
+                                <i *ngFor="let star of [1,2,3,4,5]" [class]="getStarClass(star, log.overallRating)"
+                                    class="w-[19px] h-[16px]"></i>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

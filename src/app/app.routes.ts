@@ -270,6 +270,7 @@ import { CultivationHistoryComponent } from './application/finance/cultivation-h
 import { ViewFarmerPension5YearsPlusComponent } from './application/finance/view-farmer-pension-5-years-plus/view-farmer-pension-5-years-plus.component';
 import { PensionRequestsViewDocumentsComponent } from './application/finance/pension-requests-view-documents/pension-requests-view-documents.component';
 import { CallCenterDashboardComponent } from './application/call-centers/call-center-dashboard/call-center-dashboard.component';
+import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
 
 export const routes: Routes = [
   {
@@ -2008,7 +2009,7 @@ export const routes: Routes = [
               },
               {
                 path: 'call-logs',
-                // component: dumith implement
+                component: AllCallLogsComponent
               },
               {
                 path: 'govi-care-call',

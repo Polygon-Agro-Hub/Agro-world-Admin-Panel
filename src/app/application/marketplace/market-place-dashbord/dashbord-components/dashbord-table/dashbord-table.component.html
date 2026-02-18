@@ -1,82 +1,103 @@
-<p class="text-[#4B5563] text-xl font-semibold mx-5 my-5 dark:text-white">Recent Orders</p>
+<p class="text-[#4B5563] text-xl font-semibold mx-5 my-5 dark:text-white">
+  Recent Orders
+</p>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="uppercase bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2">
-            <tr>
-                <th scope="col" class="px-6 py-3 text-left dark:text-white">
-                    INVOICE NO
-                </th>
-                <th scope="col" class="px-6 py-3 text-left dark:text-white">
-                    ORDER TIME
-                </th>
-                <th scope="col" class="px-6 py-3 text-left dark:text-white">
-                    CUSTOMER NAME
-                </th>
-                <th scope="col" class="px-6 py-3 text-left dark:text-white">
-                    METHOD
-                </th>
-                <th scope="col" class="px-6 py-3 text-left dark:text-white">
-                    AMOUNT
-                </th>
-                <th scope="col" class="px-6 py-3 text-center dark:text-white">
-                    STATUS
-                </th>
-                <th scope="col" class="px-6 py-3 text-center dark:text-white">
-                    INVOICE
-                </th>
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                *ngFor="let item of orders">
-                <th scope="row" class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left ">
-                    {{item.invNo}}
-                </th>
-                <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-                    {{ item.createdAt | date:'d MMM, y h:mm a' }}
-                </td>
-                <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-                    {{item.firstName}} {{item.lastName}}
-                </td>
-                <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-                    {{item.paymentMethod}}
-                </td>
-                <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-                    {{item.fullTotal}}
-                </td>
-                <td class="px-6 py-4 text-center dark:text-[#C8C8C8]">
-                    <div *ngIf="item.status ==='Delivered'" class="bg-[#BBFFC6] px-3 py-2 text-[#308233] rounded-xl">
-                        {{item.status}}
-                    </div>
-
-                    <div *ngIf="item.status ==='Out For Delivery'" class="bg-[#BBFFC6] px-3 py-2 text-[#308233] rounded-xl">
-                        {{item.status}}
-                    </div>
-
-                    <div *ngIf="item.status ==='Processing'" class="bg-[#CFE1FF] px-3 py-2 text-[#3B82F6] rounded-xl">
-                        {{item.status}}
-                    </div>
-                    <div *ngIf="item.status ==='Ordered'" class="bg-[#F8FFA6] px-3 py-2 text-[#A8A100] rounded-xl">
-                        Assigned
-                    </div>
-                </td>
-                <td class="px-6 py-4 text-center dark:text-[#C8C8C8]">
-                    <button 
-                        (click)="downloadInvoice(item.id, item.invNo)"
-                        [disabled]="isDownloading(item.id)"
-                        class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        [class.opacity-50]="isDownloading(item.id)"
-                        [class.cursor-not-allowed]="isDownloading(item.id)"
-                        title="Download Invoice">
-                        <i class="fa-solid fa-file-invoice-dollar text-xl text-center" 
-                           [class.text-blue-500]="!isDownloading(item.id)"
-                           [class.text-gray-400]="isDownloading(item.id)"></i>
-                        <span *ngIf="isDownloading(item.id)" class="ml-2 text-xs">Downloading...</span>
-                    </button>
-                </td>
-
-            </tr>
-        </tbody>
-    </table>
+  <table class="w-full rtl:text-right text-gray-500 dark:text-gray-400">
+    <thead
+      class="uppercase bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2"
+    >
+      <tr>
+        <th scope="col" class="px-6 py-3 text-left dark:text-white">
+          INVOICE NO
+        </th>
+        <th scope="col" class="px-6 py-3 text-left dark:text-white">
+          ORDER TIME
+        </th>
+        <th scope="col" class="px-6 py-3 text-left dark:text-white">
+          CUSTOMER NAME
+        </th>
+        <th scope="col" class="px-6 py-3 text-left dark:text-white">METHOD</th>
+        <th scope="col" class="px-6 py-3 text-left dark:text-white">AMOUNT</th>
+        <th scope="col" class="px-6 py-3 text-center dark:text-white">
+          STATUS
+        </th>
+        <th scope="col" class="px-6 py-3 text-center dark:text-white">
+          INVOICE
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+        *ngFor="let item of orders"
+      >
+        <th
+          scope="row"
+          class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
+        >
+          {{ item.invNo }}
+        </th>
+        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+          {{ item.createdAt | date: "d MMM, y h:mm a" }}
+        </td>
+        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+          {{ item.firstName }} {{ item.lastName }}
+        </td>
+        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+          {{ item.paymentMethod }}
+        </td>
+        <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+          {{ item.fullTotal | number: "1.2-2" }}
+        </td>
+        <td class="px-6 py-4 text-center dark:text-[#C8C8C8]">
+          <span
+            class="inline-block min-w-36 text-center font-normal rounded-2xl border px-3 py-1 truncate"
+            [ngClass]="{
+              'text-[#308233] bg-[#BBFFC6] border-[#BBFFC6]':
+                item.status === 'Delivered' || item.status === 'Picked up',
+              'text-[#80118A] bg-[#FCD4FF] border-[#FCD4FF]':
+                item.status === 'Out For Delivery',
+              'text-[#3B82F6] bg-[#CFE1FF] border-[#CFE1FF]':
+                item.status === 'Processing',
+              'text-[#A8A100] bg-[#F8FFA6] border-[#F8FFA6]':
+                item.status === 'Ordered' || item.status === 'Assigned',
+              'text-[#FF0004] bg-[#FFDFDF] border-[#FFDFDF]':
+                item.status === 'Failed',
+              'text-[#5C5C5C] bg-[#DFDFDF] border-[#DFDFDF]':
+                item.status === 'Cancelled',
+              'text-[#7E8700] bg-[#F8FEA5] border-[#F8FEA5]':
+                item.status === 'Collected',
+              'text-[#D17A00] bg-[#FFEDCF] border-[#FFEDCF]':
+                item.status === 'Hold' || item.status === 'On the way',
+              'text-[#00818A] bg-[#ACFBFF] border-[#ACFBFF]':
+                item.status === 'Ready to Pickup',
+              'text-[#FF1100] bg-[#FFDCDA] border-[#FFDCDA]':
+                item.status === 'Return Received' || item.status === 'Return',
+            }"
+          >
+            {{ item.status === "Ordered" ? "Assigned" : item.status }}
+          </span>
+        </td>
+        <td class="px-6 py-4 text-center dark:text-[#C8C8C8]">
+          <button
+            (click)="downloadInvoice(item.id, item.invNo)"
+            [disabled]="isDownloading(item.id)"
+            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            [class.opacity-50]="isDownloading(item.id)"
+            [class.cursor-not-allowed]="isDownloading(item.id)"
+            title="Download Invoice"
+          >
+            <i
+              class="fa-solid fa-file-invoice-dollar text-xl text-center"
+              [class.text-blue-500]="!isDownloading(item.id)"
+              [class.text-gray-400]="isDownloading(item.id)"
+            ></i>
+            <span *ngIf="isDownloading(item.id)" class="ml-2 text-xs"
+              >Downloading...</span
+            >
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

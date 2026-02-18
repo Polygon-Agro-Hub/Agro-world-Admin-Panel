@@ -154,7 +154,7 @@
               </div> -->
 
         <div class="relative flex items-center">
-          <p-calendar id="toDate" [placeholder]="datePlaceholder.name" [showIcon]="true" [monthNavigator]="true"
+          <p-calendar id="toDate" [placeholder]="datePlaceholder.name" [showIcon]="true" [monthNavigator]="true"  [readonlyInput]="true"
             [yearNavigator]="true" yearRange="1900:2030" iconDisplay="input" [(ngModel)]="selectedDate"
             [showClear]="!!selectedDate" (onSelect)="dateFilter()" (onClear)="onDateClear()"
             [style]="{ width: datePlaceholder.width }"
@@ -299,8 +299,8 @@
             </td>
 
             <td *ngIf="activeTab === 'Return Received'" class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-              <p> {{ delivery.receivedTime | date:'h:mm a' }}</p>
-              <p>{{delivery.receivedTime | date:'MMMM d, y'}}</p>
+              <p> {{ delivery.returnRecivedTime | date:'h:mm a' }}</p>
+              <p>{{delivery.returnRecivedTime | date:'MMMM d, y'}}</p>
             </td>
 
             <td *ngIf="activeTab !== 'delivered' && activeTab !== 'Return Received'"

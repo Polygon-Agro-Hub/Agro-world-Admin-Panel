@@ -100,7 +100,7 @@ export class CenterHomeDeliveryOrdersComponent implements OnInit {
   get datePlaceholder(): { name: string, width: string } {
     switch (this.activeTab) {
       case 'all':
-        return { name: 'Schedule Date', width: '145px' };
+        return { name: 'Schedule Date', width: '160px' };
       case 'out-for-delivery':
         return { name: 'Out Date', width: '145px' };
       case 'Collected':
@@ -484,4 +484,5 @@ class Delivery {
   title!: string;
   recieverTitle!: string;
   completeTime!: Date;
+  returnRecivedTime!:string;
 }

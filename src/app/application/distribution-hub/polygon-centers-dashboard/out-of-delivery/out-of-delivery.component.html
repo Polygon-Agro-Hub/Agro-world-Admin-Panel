@@ -150,7 +150,7 @@
               <p>{{ removeWithin(item.sheduleTime) }}</p>
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <p>{{item.outDlvrDate | date:'MMMM d, y'}}</p>
+              <p>{{getDisplayDate(item.outDlvrDate) }}</p>
               <p>{{item.outDlvrDate | date:'h:mm a'}}</p>
             </td>
             <td class="px-4 py-3 text-center">

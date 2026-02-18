@@ -269,6 +269,10 @@ import { PensionRequestsComponent } from './application/finance/pension-requests
 import { CultivationHistoryComponent } from './application/finance/cultivation-history/cultivation-history.component';
 import { ViewFarmerPension5YearsPlusComponent } from './application/finance/view-farmer-pension-5-years-plus/view-farmer-pension-5-years-plus.component';
 import { PensionRequestsViewDocumentsComponent } from './application/finance/pension-requests-view-documents/pension-requests-view-documents.component';
+import { CallCenterDashboardComponent } from './application/call-centers/call-center-dashboard/call-center-dashboard.component';
+import { CallCenterActionComponent } from './application/call-centers/action/call-center-action/call-center-action.component';
+import { CallCenterComponentComponent } from './application/call-centers/action/call-center-component/call-center-component.component';
+import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
 
 export const routes: Routes = [
   {
@@ -641,7 +645,7 @@ export const routes: Routes = [
                 path: 'commission-range',
                 component: CommissionRangeComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Commission Range' }
+                data: { permission: 'Commission Range' },
               },
               {
                 path: 'view-all-service-payments',
@@ -655,7 +659,7 @@ export const routes: Routes = [
                 path: 'add-new-payment',
                 component: PaymentHistoryAddNewComponent,
                 canActivate: [PermissionGuard],
-                data: { permission: 'Add payment history' }
+                data: { permission: 'Add payment history' },
               },
               {
                 path: 'update-payment/:id',
@@ -681,43 +685,43 @@ export const routes: Routes = [
                     path: 'viewAll-Govicare-requests',
                     component: ViewAllGovicareRequestsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'GoViCare Request' }
+                    data: { permission: 'GoViCare Request' },
                   },
                   {
                     path: 'view-Govicare-approved-requests',
                     component: ViewAllApprovedGovicareRequestsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Approved Requests' }
+                    data: { permission: 'Approved Requests' },
                   },
                   {
                     path: 'viewAll-Govicare-AuditedRequests',
                     component: ViewAllAuditedGovicareRequestsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Audited Request' }
+                    data: { permission: 'Audited Request' },
                   },
                   {
                     path: 'reject-requests',
                     component: GovicapitalFinanceComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'GoViCare Reject Request' }
+                    data: { permission: 'GoViCare Reject Request' },
                   },
                   {
                     path: 'project-investments',
                     component: ProjectInvestmentsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Project Investments' }
+                    data: { permission: 'Project Investments' },
                   },
                   {
                     path: 'project-investments-transactions/:id',
                     component: ProjectInvestmentsTransactionsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'View each investment transaction' }
+                    data: { permission: 'View each investment transaction' },
                   },
                   {
                     path: 'published-projects',
                     component: PublishedProjectsComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'GoViCare Publish Request' }
+                    data: { permission: 'GoViCare Publish Request' },
                   },
                   {
                     path: 'viewAll-Govicare-AuditedRequests/audit-personal-infor/:requestId',
@@ -751,7 +755,7 @@ export const routes: Routes = [
               },
               {
                 path: 'cultivation-history/:id',
-                component: CultivationHistoryComponent
+                component: CultivationHistoryComponent,
               },
               {
                 path: 'agents-commission',
@@ -1060,7 +1064,9 @@ export const routes: Routes = [
                     path: '',
                     component: ViewDriverComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Onboard individual collection CO / CCM / DO' },
+                    data: {
+                      permission: 'Onboard individual collection CO / CCM / DO',
+                    },
                   },
 
                   {
@@ -1898,7 +1904,7 @@ export const routes: Routes = [
                   },
                   {
                     path: 'received-cash-today/:id',
-                    component: ReceivedCashTodayComponent
+                    component: ReceivedCashTodayComponent,
                   },
                   {
                     path: 'home-delivery-order-records',
@@ -1906,11 +1912,11 @@ export const routes: Routes = [
                   },
                   {
                     path: 'view-pikup-chash-revenue/:id',
-                    component: ViewPikupCashRevenueComponent
+                    component: ViewPikupCashRevenueComponent,
                   },
                   {
                     path: 'view-delivery-revenue/:id',
-                    component: ViewDeliveryRevenueComponent
+                    component: ViewDeliveryRevenueComponent,
                   },
                 ],
               },
@@ -1991,6 +1997,32 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'call-centers',
+        children: [
+          {
+            path: 'dashboard',
+            component: CallCenterDashboardComponent,
+          },
+          {
+            path: 'action',
+            children: [
+              {
+                path: '',
+                component: CallCenterActionComponent,
+              },
+              {
+                path: 'govi-care-call',
+                component: CallCenterComponentComponent,
+              },
+              {
+                path: 'call-logs',
+                component: AllCallLogsComponent,
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   { path: '**', component: NotFoundComponent },
@@ -2000,4 +2032,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

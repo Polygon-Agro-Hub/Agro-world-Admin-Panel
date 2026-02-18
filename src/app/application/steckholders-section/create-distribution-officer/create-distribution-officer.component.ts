@@ -821,10 +821,30 @@ if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalDat
         missingFields.push(`Email - ${this.getEmailErrorMessage(this.personalData.email)}`);
       }
 
-      // Navigate to the selected page only if validation passes
-      if (missingFields.length === 0) {
-        this.selectedPage = page;
+      // Show error popup if there are missing fields
+      if (missingFields.length > 0) {
+        let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        missingFields.forEach((field) => {
+          errorMessage += `<li>${field}</li>`;
+        });
+        errorMessage += '</ul></div>';
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing or Invalid Information',
+          html: errorMessage,
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+          },
+        });
+        return;
       }
+
+      // Navigate to the selected page only if validation passes
+      this.selectedPage = page;
     } else if (page === 'pageThree') {
       // Validate pageTwo fields before moving to pageThree
       const missingFields: string[] = [];
@@ -2317,8 +2337,7 @@ handleSpaceRestrictions(event: KeyboardEvent): boolean {
   // Allow only numbers
   if (!/[0-9]/.test(char)) {
     event.preventDefault();
-    this.showFirstDigitError = false;
-    this.firstDigitErrorField = null;
+    // Don't show error message when blocking non-numeric input
     return;
   }
   
@@ -2327,8 +2346,7 @@ handleSpaceRestrictions(event: KeyboardEvent): boolean {
     // First character must be '7'
     if (char !== '7') {
       event.preventDefault();
-      this.showFirstDigitError = true;
-      this.firstDigitErrorField = fieldName;
+      // Don't show error message, just silently block the input
     } else {
       this.showFirstDigitError = false;
       this.firstDigitErrorField = null;
@@ -2340,8 +2358,7 @@ handleSpaceRestrictions(event: KeyboardEvent): boolean {
     // If inserting at position 0, the new first character must be '7'
     if (char !== '7') {
       event.preventDefault();
-      this.showFirstDigitError = true;
-      this.firstDigitErrorField = fieldName;
+      // Don't show error message, just silently block the input
     } else {
       this.showFirstDigitError = false;
       this.firstDigitErrorField = null;

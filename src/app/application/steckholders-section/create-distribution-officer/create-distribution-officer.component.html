@@ -177,7 +177,7 @@
             <label for="firstNameSinhala" class="block text-sm font-medium text-gray-700 dark:text-textDark">First Name
               (in Sinhala) *</label>
             <input id="firstNameSinhala" name="firstNameSinhala" [(ngModel)]="personalData.firstNameSinhala"
-              (blur)="onBlur('firstNameSinhala')"
+              (blur)="onBlur('firstNameSinhala')" (keypress)="preventSpecialCharacters($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="isFieldInvalid('firstNameSinhala')" class="text-red-600 text-sm">First Name (in Sinhala) is
               required</span>
@@ -190,7 +190,7 @@
               (in
               Sinhala) *</label>
             <input id="lastNameSinhala" name="lastNameSinhala" [(ngModel)]="personalData.lastNameSinhala"
-              (blur)="onBlur('lastNameSinhala')"
+              (blur)="onBlur('lastNameSinhala')" (keypress)="preventSpecialCharacters($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="isFieldInvalid('lastNameSinhala')" class="text-red-600 text-sm">Last Name (in Sinhala) is
               required</span>
@@ -203,7 +203,7 @@
               (in
               Tamil) *</label>
             <input id="firstNameTamil" name="firstNameTamil" [(ngModel)]="personalData.firstNameTamil"
-              (blur)="onBlur('firstNameTamil')"
+              (blur)="onBlur('firstNameTamil')" (keypress)="preventSpecialCharacters($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="isFieldInvalid('firstNameTamil')" class="text-red-600 text-sm">First Name (in Tamil) is
               required</span>
@@ -215,7 +215,7 @@
             <label for="lastNameTamil" class="block text-sm font-medium text-gray-700 dark:text-textDark">Last Name (in
               Tamil) *</label>
             <input id="lastNameTamil" name="lastNameTamil" [(ngModel)]="personalData.lastNameTamil"
-              (blur)="onBlur('lastNameTamil')"
+              (blur)="onBlur('lastNameTamil')" (keypress)="preventSpecialCharacters($event)"
               class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
             <span *ngIf="isFieldInvalid('lastNameTamil')" class="text-red-600 text-sm">Last Name (in Tamil) is
               required</span>
@@ -261,16 +261,6 @@
         class="text-red-600 text-sm block">
         Mobile Number - 01 is required
       </span>
-      <!-- First digit error for phone 01 -->
-      <span *ngIf="showFirstDigitError && firstDigitErrorField === 'phoneNumber01'" 
-        class="text-red-600 text-sm block">
-        Mobile number must start with 7
-      </span>
-      <span *ngIf="touchedFields.phoneNumber01 && personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) && !(showFirstDigitError && firstDigitErrorField === 'phoneNumber01')"
-        class="text-red-600 text-sm block">
-        Please enter a valid mobile number (must start with 7 and be exactly 9 digits)
-      </span>
-      <!-- REMOVED from here: Duplicate validation message -->
     </div>
   </div>
 </div>
@@ -310,15 +300,6 @@
           (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) ? 'border-red-500' : 'border-gray-300')" />
     </div>
     <div class="mt-1">
-      <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) && !(showFirstDigitError && firstDigitErrorField === 'phoneNumber02')"
-        class="text-red-600 text-sm block">
-        Please enter a valid mobile number (must start with 7 and be exactly 9 digits)
-      </span>
-      <!-- First digit error for phone 02 -->
-      <span *ngIf="showFirstDigitError && firstDigitErrorField === 'phoneNumber02'" 
-        class="text-red-600 text-sm block">
-        Mobile number must start with 7
-      </span>
       <!-- MOVED HERE: Duplicate validation message now appears under Mobile Number - 02 -->
       <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
         Mobile Number - 01 and Mobile Number - 02 cannot be the same
@@ -342,7 +323,7 @@
             <!-- Show format error only when field has value but is invalid -->
             <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
               class="text-red-600 text-sm block">
-              Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
+              Please enter a valid NIC number (12 digits or 9 digits followed by 'V')
             </span>
           </div>
 
@@ -636,13 +617,9 @@
         <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Number *
         </label>
-        <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo" (keypress)="preventNonNumbers($event)"
+        <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div>
-            <!-- <span class="text-red-600 text-sm" *ngIf="licNoInput.touched && licNoInput.errors?.['pattern'] && driverObj.licNo">
-              Please enter a valid License ID number (1 letter + 7 digits or 10–12 digits).
-            </span> -->
-  
             <span class="text-red-600 text-sm" *ngIf="insurenceNoInput.touched && !driverObj.insNo">
               Insurance Number Required.
             </span>
@@ -650,10 +627,10 @@
       </div>
 
       <div>
-        <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label for="confirmInsNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Confirm Insurance Number *
         </label>
-        <input id="insNo" type="text" #confirmInsurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.confirmInsNo" (keypress)="preventNonNumbers($event)"
+        <input id="confirmInsNo" type="text" #confirmInsurenceNoInput="ngModel" name="confirmInsNo" [(ngModel)]="driverObj.confirmInsNo"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <div>

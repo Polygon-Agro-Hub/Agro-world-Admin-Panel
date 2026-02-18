@@ -43,7 +43,7 @@
                     {{item.paymentMethod}}
                 </td>
                 <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-                    {{item.fullTotal}}
+                    {{item.fullTotal | number : "1.2-2"}}
                 </td>
                 <td class="px-6 py-4 text-center dark:text-[#C8C8C8]">
                     <div *ngIf="item.status ==='Delivered'" class="bg-[#BBFFC6] px-3 py-2 text-[#308233] rounded-xl">

@@ -138,3 +138,42 @@ dark .custom-calendar .p-datepicker {
   margin-left: 0.2rem !important;
   /* Space between month and year */
 }
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+
+:host ::ng-deep .dark .p-autocomplete-panel .p-autocomplete-items-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #272F45;
+}
+
+:host ::ng-deep .dark .p-autocomplete-panel .p-autocomplete-items-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+:host ::ng-deep .dark .p-autocomplete-panel .p-autocomplete-items-wrapper::-webkit-scrollbar-track {
+  background: #272F45;
+  border-radius: 4px;
+}
+
+:host ::ng-deep .dark .p-autocomplete-panel .p-autocomplete-items-wrapper::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+:host ::ng-deep .dark .p-autocomplete-panel .p-autocomplete-items-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}

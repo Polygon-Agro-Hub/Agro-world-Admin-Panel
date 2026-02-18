@@ -75,7 +75,7 @@ export class AgentsCommissionComponent {
   }
 
   filterAgents(event: any) {
-    const query = event.query.toLowerCase();
+    const query = event.query.toLowerCase().trim();
     this.filteredAgents = this.agentArr.filter(agent =>
       agent.empId.toLowerCase().includes(query) ||
       agent.id.toString().includes(query)

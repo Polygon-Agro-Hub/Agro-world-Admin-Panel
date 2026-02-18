@@ -145,11 +145,11 @@ export class ViewJobHistoryComponent implements OnInit {
             district: item.district,
             scheduledDate: this.formatDateTime(item.scheduledDate),
             completedDate: this.formatDateTime(item.completedDate),
-            onScreenTime: item.onScreenTime || '-',
+            onScreenTime: item.onScreenTime || '--',
             status: item.status,
             assignedOn: this.formatDateTime(item.assignedOn),
-            assignedByName: item.assignedByName || '-',
-            assignedOfficer: item.assignedOfficer || '-'
+            assignedByName: item.assignedByName || '--',
+            assignedOfficer: item.assignedOfficer || '--'
           }));
           this.totalItems = this.jobHistory.length;
           this.hasData = this.totalItems > 0;

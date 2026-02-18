@@ -32,7 +32,7 @@
             <p-dropdown
               styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] h-8 min-w-[150px] w-full sm:w-40"
               [(ngModel)]="selectedDistrict" [options]="districtOptions" optionLabel="label" optionValue="value"
-              [showClear]="!!selectedDistrict" [filter]="true" filterPlaceholder="Search district"
+              [showClear]="!!selectedDistrict" [filter]="true" filterPlaceholder="Search ..."
               placeholder="District" (onChange)="applyFilters()" />
           </div>
 
@@ -132,29 +132,29 @@
                 {{ (page - 1) * itemsPerPage + i + 1 }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
-                {{ item.jobId }}
+                {{ item.jobId || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
-                {{ item.empId }}
+                {{ item.empId || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
-                {{ item.farmCode }}
+                {{ item.farmCode || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
-                {{ item.visitPurpose }}
+                {{ item.visitPurpose || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.onScreenTime }}
+                {{ item.onScreenTime || '--' }}
               </td>
               <td class="px-6 py-3 text-center text-sm font-medium whitespace-nowrap"
                 [ngClass]="getStatusClass(item.status)">
-                {{ item.status }}
+                {{ item.status}}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.scheduledDate }}
+                {{ item.scheduledDate || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.completedDate }}
+                {{ item.completedDate || '--' }}
               </td>
               <td class="px-3 py-3 text-center whitespace-nowrap">
                 <button class="w-6 h-6 inline-flex items-center justify-center"
@@ -172,19 +172,19 @@
                 </button>
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.farmerNIC }}
+                {{ item.farmerNIC || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.district }}
+                {{ item.district || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
-                {{ item.assignedByName }}
+                {{ item.assignedByName || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
-                {{ item.assignedOfficer }}
+                {{ item.assignedOfficer || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
-                {{ item.assignedOn }}
+                {{ item.assignedOn || '--' }}
               </td>
             </tr>
           </tbody>

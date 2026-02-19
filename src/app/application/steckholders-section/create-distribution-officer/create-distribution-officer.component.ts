@@ -57,7 +57,7 @@ export class CreateDistributionOfficerComponent implements OnInit {
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
-  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageOne';
+  selectedPage: 'pageOne' | 'pageTwo' | 'pageThree' = 'pageThree';
   driverObj: Drivers = new Drivers();
   personalData: Personal = new Personal();
 
@@ -135,6 +135,7 @@ firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
   selectVehicletype: any = { name: '', capacity: '' };
 
   curDate:Date = new Date();
+  tomorrowDate: Date = new Date();   // tomorrow's date
 
   VehicleTypes = [
     { name: 'Mahindra Bollero', capacity: 272 },
@@ -200,7 +201,9 @@ firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
     private distributionOfficerServ: DistributionHubService,
     private http: HttpClient,
     private router: Router
-  ) { }
+  ) { 
+     this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1);
+  }
 
   selectedLanguages: string[] = [];
 

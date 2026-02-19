@@ -222,3 +222,14 @@
 
 /* The rest of your existing calendar styles... */
 
+/* Apply Helvetica Neue to all dropdowns */
+::ng-deep .p-dropdown,
+::ng-deep .p-dropdown .p-dropdown-label,
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}
+
+/* For dropdown placeholder text */
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}

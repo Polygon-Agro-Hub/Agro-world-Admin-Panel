@@ -20,18 +20,22 @@
             <!-- AutoComplete for EMP ID search and selection -->
             <p-autoComplete #empIdField="ngModel" [(ngModel)]="selectedAgent" [suggestions]="filteredAgents"
               (completeMethod)="filterAgents($event)" (onSelect)="onAgentSelect($event)" field="empId" name="empId"
-              required placeholder="e.g. : SA0123" [dropdown]="true"
-              inputStyleClass="px-3 py-2 border rounded-lg h-8 w-44 ml-8"
-              [ngClass]="{'border-red-500': (empIdField.invalid && empIdField.touched) || (empIdField.invalid && formSubmitted)}">
+              required placeholder="e.g. : SA0123" [dropdown]="false"
+              inputStyleClass="px-3 py-2 border rounded-lg h-8 w-full ml-8 dark:bg-[#272F45] dark:text-white dark:border-gray-600 dark:placeholder:text-gray-400"
+              [ngClass]="{'border-red-500': (empIdField.invalid && empIdField.touched) || (empIdField.invalid && formSubmitted)}"
+              panelStyleClass="dark:bg-[#272F45] dark:text-white dark:border dark:border-gray-600"
+               [style]="{ 'background-color': 'transparent', 'width': '290px' }"
+              dropdownStyleClass="dark:text-white dark:hover:text-gray-300">
 
               <ng-template let-agent pTemplate="selectedItem">
-                <div *ngIf="agent">
+                <div class="dark:text-white dark:hover:text-black" *ngIf="agent">
                   {{ agent.empId }}
                 </div>
               </ng-template>
 
               <ng-template let-agent pTemplate="item">
-                <div class="flex items-center p-2">
+                <div
+                  class="flex items-center p-2 cursor-pointer dark:text-white dark:hover:text-black">
                   <span class="font-medium">{{ agent.empId }}</span>
                 </div>
               </ng-template>
@@ -40,7 +44,7 @@
 
             <!-- Updated validation condition -->
             <div *ngIf="(empIdField.invalid && empIdField.touched) || (empIdField.invalid && formSubmitted)"
-              class="text-red-500 text-sm mt-1">
+              class="text-red-500 text-sm mt-1 ml-8">
               <div *ngIf="empIdField.errors?.['required']">
                 EMP ID is required
               </div>
@@ -56,12 +60,13 @@
                 name="paymentFilter" required
                 styleClass="border border-2 rounded-lg h-8 w-full items-center dark:bg-[#272F45] text-black dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                 optionLabel="label" optionValue="value" placeholder="--Select--"
+                [style]="{'width':'250px'}"
                 [ngClass]="{'border-red-500': (filterDropdown.invalid && filterDropdown.touched) || (filterDropdown.invalid && formSubmitted)}">
               </p-dropdown>
             </div>
             <!-- Updated validation condition -->
             <div *ngIf="(filterDropdown.invalid && filterDropdown.touched) || (filterDropdown.invalid && formSubmitted)"
-              class="text-red-500 text-sm text-left mt-1 ml-0">
+              class="text-red-500 text-sm text-left mt-1 ml-5">
               Payment selection is required
             </div>
           </div>
@@ -202,7 +207,7 @@
       Download
     </button>
     <div *ngIf="hasData">
-      <table class="min-w-full divide-y divide-gray-200 table-auto">
+      <table class="min-w-min divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
             <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
@@ -214,7 +219,7 @@
             <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
               Ordered Date
             </th>
-            <th class="px-4 py-3 font-normal text-black dark:text-textDark text-center" style="white-space: nowrap">
+            <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
               Delivered Date
             </th>
             <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
@@ -234,7 +239,7 @@
             <td class="px-4 py-3 text-left text-black dark:text-textDark">
               {{data.sheduleDate | date:'MMMM d, y'}}
             </td>
-            <td class="px-4 py-3 text-center text-black dark:text-textDark">
+            <td class="px-4 py-3 text-left text-black dark:text-textDark">
               {{data.deliveredTime | date:'MMMM d, y'}}
             </td>
             <td class="px-4 py-3 text-left text-black dark:text-textDark">

@@ -1,13 +1,3 @@
-.profile-pic {
-    background-color: #fff;
-    width: 3em;
-    height: 3em;
-    border-radius: 50%;
-    /* Perfect circle */
-    object-fit: cover;
-    /* Ensures the image fills the container without distortion */
-}
-
 /* Hides clear icon when dropdown has no selected value */
 ::ng-deep .p-dropdown .p-dropdown-clear {
     display: none;
@@ -145,3 +135,90 @@
     color: #8B8B8B;
     /* gray-300 */
 }
+
+/* Reduce dropdown item padding */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
+}
+
+.dark .p-dropdown .p-dropdown-label {
+    color: #ffffff !important;
+  }
+/* ::ng-deep .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important;
+  }
+
+::ng-deep .dark .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important; 
+} */
+
+
+/* Change the color of the selected value inside the dropdown button */
+
+  
+  /* Change the text color of the active/selected option inside the panel */
+  /* ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    color: #16a34a !important; 
+    background-color: #f0fdf4; 
+  } */
+
+  ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+    color: white;
+  }
+
+  /* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+
+::ng-deep .custom-center-dropdown .p-dropdown {
+  padding-left: 10px !important;
+}
+
+::ng-deep .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 10px !important;
+}
+
+/* For dark mode */
+::ng-deep .dark .custom-center-dropdown .p-dropdown {
+  padding-left: 10px !important;
+}
+
+::ng-deep .dark .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 10px !important;
+}
+
+/* The rest of your existing calendar styles... */
+

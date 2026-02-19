@@ -79,7 +79,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private certificateCompanyService: CertificateCompanyService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAudits();
@@ -95,10 +95,10 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   handleSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-    
+
     // Remove spaces at the beginning
     const newValue = value.replace(/^\s+/, '');
-    
+
     if (value !== newValue) {
       this.searchTerm = newValue;
       // Force update the input value
@@ -112,7 +112,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     const target = event.target as HTMLInputElement;
-    
+
     // Check if the event target is our search input
     if (target && target.type === 'text' && target.placeholder === 'Search by Farmer Name/Phone') {
       // Prevent space when cursor is at the beginning
@@ -175,6 +175,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
   // Handle assign status click
   onAssignStatusClick(audit: FieldAudit): void {
+    console.log('audit', audit)
     // Special condition: If audit is completed and assigned, show warning popup
     if (audit.status === 'Completed' && audit.officerFirstName) {
       this.selectedAudit = audit;
@@ -206,6 +207,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
     // Set initial schedule date from audit if available
     if (audit.sheduleDate) {
+      console.log('schedule date', audit.sheduleDate)
       this.selectedScheduleDate = new Date(audit.sheduleDate);
     } else {
       this.selectedScheduleDate = new Date(); // Default to today
@@ -287,13 +289,12 @@ export class IndividualFarmersAuditsComponent implements OnInit {
             this.availableOfficers = response.data.map(
               (officer: FieldOfficer) => ({
                 ...officer,
-                displayName: `${officer.firstName} ${officer.lastName} - ${
-                  officer.empId
-                } (Jobs: ${officer.jobCount || 0})`,
+                displayName: `${officer.firstName} ${officer.lastName} - ${officer.empId
+                  } (Jobs: ${officer.jobCount || 0})`,
                 activeJobCount: officer.jobCount || 0,
               })
             );
-            
+
             // If there's a currently assigned officer, try to pre-select them
             if (
               this.currentAssignedOfficer &&
@@ -302,7 +303,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
               const currentOfficer = this.availableOfficers.find(
                 (officer) => officer.empId === this.currentAssignedOfficer.empId
               );
-              
+
               if (currentOfficer) {
                 this.selectedOfficerId = currentOfficer.empId;
                 this.selectedOfficerInfo = currentOfficer;
@@ -328,6 +329,21 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
   // Handle schedule date changes
   onScheduleDateChange(): void {
+    console.log(this.checkDate(this.selectedScheduleDate));
+
+    if (this.checkDate(this.selectedScheduleDate)) {
+      Swal.fire({
+        title: 'Invalid Date',
+        text: 'The selected date cannot be in the past.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      this.onScheduleDateClear();
+      return;
+    }
     // Reload officers when schedule date changes
     if (this.selectedOfficerRole && this.selectedAudit && this.selectedScheduleDate) {
       this.loadOfficersByDistrictAndRole(
@@ -335,6 +351,12 @@ export class IndividualFarmersAuditsComponent implements OnInit {
         this.selectedOfficerRole
       );
     }
+  }
+
+  checkDate(date: Date | null): boolean {
+    const today = new Date();
+    if (!date) return false;
+    return date < today;
   }
 
   // Handle schedule date clear
@@ -376,7 +398,7 @@ export class IndividualFarmersAuditsComponent implements OnInit {
 
     const officerId = this.selectedOfficerInfo.id;
     const auditId = this.selectedAudit.auditNo;
-    
+
     // Use the same date formatting method to avoid timezone issues
     const scheduleDateString = this.formatDateToYYYYMMDD(this.selectedScheduleDate);
     const scheduleDate = new Date(scheduleDateString);

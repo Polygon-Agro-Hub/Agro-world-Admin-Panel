@@ -11,6 +11,20 @@ import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
+interface UserErrorEntry {
+  line: number;
+  phone: string;
+  nic: string;
+  status: string;
+}
+
+interface DuplicationEntry {
+  firstName: string;
+  lastName: string;
+  nic: string;
+  phoneNumber: string;
+}
+
 interface ExistingUser {
   firstName: string;
   lastName: string;
@@ -35,8 +49,18 @@ export class UserBulkUploadComponent {
   errorMessage: string = '';
   successMessage: string = '';
   isLoading = false;
+  duplicateEntries: UserErrorEntry[] = [];
   existingUsers: ExistingUser[] = [];
-  duplicateEntries: ExistingUser[] = [];
+
+  // Check if dark mode is enabled
+  private isDarkMode(): boolean {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ||
+             document.body.classList.contains('dark') ||
+             window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  }
 
   constructor(
     private http: HttpClient,
@@ -50,6 +74,7 @@ export class UserBulkUploadComponent {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
+    console.log('file', file)
     this.validateFile(file);
   }
 
@@ -76,6 +101,7 @@ export class UserBulkUploadComponent {
 
     if (fileExtension && allowedExtensions.includes(`.${fileExtension}`)) {
       this.selectedFile = file;
+      console.log('selectedFile', this.selectedFile)
       this.errorMessage = '';
     } else {
       this.errorMessage =
@@ -94,509 +120,599 @@ export class UserBulkUploadComponent {
     }
   }
 
-  // onUpload(): void {
-  //   if (!this.selectedFile) {
-  //     Swal.fire({
-  //       icon: 'warning',
-  //       title: 'Warning',
-  //       text: 'Please select a file to upload',
-  //       confirmButtonText: 'OK',
-  //       customClass: {
-  //         popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-  //         title: 'dark:text-white',
-  //       }
-  //     });
-  //     return;
-  //   }
-
-  //   this.isLoading = true;
-  //   this.errorMessage = '';
-  //   this.successMessage = '';
-
-  //   const reader = new FileReader();
-  //   reader.onload = (e: any) => {
-  //     try {
-  //       const data = e.target.result;
-  //       const workbook = XLSX.read(data, { type: 'array' });
-  //       const firstSheetName = workbook.SheetNames[0];
-  //       const worksheet = workbook.Sheets[firstSheetName];
-  //       const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-  //       const phoneNumbers = new Map();
-  //       const nicNumbers = new Map();
-  //       const duplicates: ExistingUser[] = [];
-
-  //       for (let i = 0; i < jsonData.length; i++) {
-  //         const row = jsonData[i];
-  //         const phoneNumber = String(
-  //           (row as { [key: string]: any })['Phone Number']
-  //         );
-  //         const nicNumber = String(
-  //           (row as { [key: string]: any })['NIC Number']
-  //         );
-  //         const firstName = String(
-  //           (row as { [key: string]: any })['First Name']
-  //         );
-  //         const lastName = String((row as { [key: string]: any })['Last Name']);
-  //         if (!phoneNumber && !nicNumber && !firstName && !lastName) {
-  //           continue;
-  //         }
-
-  //         if (phoneNumbers.has(phoneNumber)) {
-  //           duplicates.push({
-  //             firstName,
-  //             lastName,
-  //             phoneNumber,
-  //             NICnumber: nicNumber,
-  //           });
-  //         } else {
-  //           phoneNumbers.set(phoneNumber, i);
-  //         }
-
-  //         if (nicNumbers.has(nicNumber)) {
-  //           if (
-  //             !duplicates.some(
-  //               (d) =>
-  //                 d.phoneNumber === phoneNumber && d.NICnumber === nicNumber
-  //             )
-  //           ) {
-  //             duplicates.push({
-  //               firstName,
-  //               lastName,
-  //               phoneNumber,
-  //               NICnumber: nicNumber,
-  //             });
-  //           }
-  //         } else {
-  //           nicNumbers.set(nicNumber, i);
-  //         }
-  //       }
-
-  //       if (duplicates.length > 0) {
-  //         this.isLoading = false;
-  //         this.downloadExcel(duplicates, 'duplicate_entries.xlsx');
-  //         Swal.fire({
-  //           icon: 'warning',
-  //           title: 'Duplicate Entries Found!',
-  //           html: `
-  //             <div class="swal-content">
-  //               <p>Please note: Your file contains duplicate NIC numbers or phone numbers.</p>
-  //               <br/>
-  //               <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}</p>
-  //               <br/>
-  //               <hr style="border-color: #d1d5db;" class="dark:border-gray-600">
-  //               <br/>
-  //               <p style="text-align: right;">File with duplicate entries downloaded.</p>
-  //               <br/>
-  //               <table style="width: 100%; text-align: left; border-collapse: collapse;">
-  //                 <thead>
-  //                   <tr class="dark:bg-gray-700">
-  //                     <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">First Name</th>
-  //                     <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">Last Name</th>
-  //                     <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">Phone Number</th>
-  //                     <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">NIC number</th>
-  //                   </tr>
-  //                 </thead>
-  //                 <tbody>
-  //                   ${duplicates
-  //               .map(
-  //                 (user) => `
-  //                     <tr>
-  //                       <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.firstName}</td>
-  //                       <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.lastName}</td>
-  //                       <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.phoneNumber}</td>
-  //                       <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.NICnumber}</td>
-  //                     </tr>`
-  //               )
-  //               .join('')}
-  //                 </tbody>
-  //               </table>
-  //               <br/>
-  //               <p style="text-align: left; color: #374151;" class="dark:text-gray-200">Found <b style="color: #dc2626;" class="dark:text-red-400">${duplicates.length}</b> duplicate entries.</p>
-  //               <p style="text-align: left; color: #374151;" class="dark:text-gray-200">Please fix duplicates and upload again.</p>
-  //             </div>
-  //           `,
-  //           width: '80%',
-  //           confirmButtonText: 'Close',
-  //           customClass: {
-  //             popup: '!bg-white dark:!bg-gray-800 !text-gray-800 dark:!text-white',
-  //             title: '!text-gray-800 dark:!text-white !font-semibold',
-  //             htmlContainer: '!text-gray-800 dark:!text-gray-200',
-  //             confirmButton: '!bg-blue-500 hover:!bg-blue-600 !text-white !font-medium !py-2 !px-4 !rounded'
-  //           }
-  //         });
-  //         return;
-  //       }
-
-  //       const formData = new FormData();
-  //       console.log(this.selectedFile);
-
-  //       formData.append('file', this.selectedFile);
-
-  //       this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
-  //         next: (response: any) => {
-  //           this.isLoading = false;
-  //           if (response.existingUsers && response.existingUsers.length > 0) {
-  //             this.downloadExcel(response.existingUsers, 'existing_users.xlsx');
-  //             this.existingUsers = response.existingUsers;
-  //             Swal.fire({
-  //               icon: 'warning',
-  //               title: 'User Redundancy!',
-  //               html: this.buildUserTable(
-  //                 response.existingUsers,
-  //                 response.newUsersInserted
-  //               ),
-  //               width: '80%',
-  //               confirmButtonText: 'Close & Go Back',
-  //               customClass: {
-  //                 popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-  //                 title: 'dark:text-white',
-  //               }
-  //             });
-  //           } else if (response.duplicateEntries) {
-  //             this.downloadExcel(
-  //               response.duplicateEntries,
-  //               'duplication_entries.xlsx'
-  //             );
-  //             this.duplicateEntries = response.duplicateEntries;
-  //             Swal.fire({
-  //               icon: 'warning',
-  //               title: 'Duplication Entries!',
-  //               html: this.buildUserTable(
-  //                 response.duplicateEntries,
-  //                 response.newUsersInserted
-  //               ),
-  //               width: '80%',
-  //               confirmButtonText: 'Close & Go Back',
-  //               customClass: {
-  //                 popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-  //                 title: 'dark:text-white',
-  //               }
-  //             });
-  //           } else {
-  //             Swal.fire({
-  //               icon: 'success',
-  //               title: 'Success',
-  //               text: `Successfully uploaded ${response.rowsAffected} users!`,
-  //               confirmButtonText: 'OK',
-  //               customClass: {
-  //                 popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-  //                 title: 'dark:text-white',
-  //               }
-  //             });
-  //           }
-  //           this.selectedFile = null;
-  //           this.router.navigate(['/steckholders/action/farmers']);
-  //         },
-  //         error: (error) => {
-  //           this.downloadExcel(
-  //             error.existingUsers || [],
-  //             'existing_users.xlsx'
-  //           );
-  //           this.handleError(error);
-  //         },
-  //       });
-  //     } catch (error) {
-  //       this.isLoading = false;
-  //       this.handleError(
-  //         new Error('Failed to process the file. Please check the file format.')
-  //       );
-  //     }
-  //   };
-
-  //   reader.onerror = () => {
-  //     this.isLoading = false;
-  //     this.handleError(new Error('Error reading the file. Please try again.'));
-  //   };
-
-  //   reader.readAsArrayBuffer(this.selectedFile);
-  // }
-
   onUpload(): void {
-  if (!this.selectedFile) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Warning',
-      text: 'Please select a file to upload',
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-        title: 'dark:text-white',
-      }
-    });
-    return;
-  }
-
-  this.isLoading = true;
-  this.errorMessage = '';
-  this.successMessage = '';
-
-  const reader = new FileReader();
-  reader.onload = (e: any) => {
-    try {
-      const data = e.target.result;
-      const workbook = XLSX.read(data, { type: 'array' });
-      const firstSheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[firstSheetName];
-      const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet);
-
-      const phoneNumbers = new Map<string, number[]>(); // Store array of row indices
-      const nicNumbers = new Map<string, number[]>(); // Store array of row indices
-      const duplicates: ExistingUser[] = [];
-      const processedRows = new Set<number>(); // Track which rows we've already added as duplicates
-
-      // First pass: collect all phone and NIC numbers with their row indices
-      for (let i = 0; i < jsonData.length; i++) {
-        const row = jsonData[i];
-        const phoneNumber = String((row as { [key: string]: any })['Phone Number'] || '').trim();
-        const nicNumber = String((row as { [key: string]: any })['NIC Number'] || '').trim();
-        const firstName = String((row as { [key: string]: any })['First Name'] || '').trim();
-        const lastName = String((row as { [key: string]: any })['Last Name'] || '').trim();
-        
-        // Skip empty rows
-        if (!phoneNumber && !nicNumber && !firstName && !lastName) {
-          continue;
+    if (!this.selectedFile) {
+      console.log('no')
+      Swal.fire({
+        icon: 'warning',
+        title: 'Warning',
+        text: 'Please select a file to upload',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+          title: 'dark:text-white',
         }
-
-        // Track phone numbers
-        if (phoneNumber) {
-          if (!phoneNumbers.has(phoneNumber)) {
-            phoneNumbers.set(phoneNumber, [i]);
-          } else {
-            phoneNumbers.get(phoneNumber)!.push(i);
-          }
-        }
-
-        // Track NIC numbers
-        if (nicNumber) {
-          if (!nicNumbers.has(nicNumber)) {
-            nicNumbers.set(nicNumber, [i]);
-          } else {
-            nicNumbers.get(nicNumber)!.push(i);
-          }
-        }
-      }
-
-      // Second pass: identify all duplicate entries
-      for (let i = 0; i < jsonData.length; i++) {
-        const row = jsonData[i];
-        const phoneNumber = String((row as { [key: string]: any })['Phone Number'] || '').trim();
-        const nicNumber = String((row as { [key: string]: any })['NIC Number'] || '').trim();
-        const firstName = String((row as { [key: string]: any })['First Name'] || '').trim();
-        const lastName = String((row as { [key: string]: any })['Last Name'] || '').trim();
-        
-        // Skip empty rows
-        if (!phoneNumber && !nicNumber && !firstName && !lastName) {
-          continue;
-        }
-
-        // Check if this row has duplicate phone or NIC
-        const isPhoneDuplicate = phoneNumber && phoneNumbers.get(phoneNumber)!.length > 1;
-        const isNicDuplicate = nicNumber && nicNumbers.get(nicNumber)!.length > 1;
-        
-        // If either is duplicate and we haven't processed this row yet
-        if ((isPhoneDuplicate || isNicDuplicate) && !processedRows.has(i)) {
-          // Get all duplicate rows for this entry
-          const duplicateRows = new Set<number>();
-          
-          if (isPhoneDuplicate) {
-            phoneNumbers.get(phoneNumber)!.forEach(rowIndex => duplicateRows.add(rowIndex));
-          }
-          
-          if (isNicDuplicate) {
-            nicNumbers.get(nicNumber)!.forEach(rowIndex => duplicateRows.add(rowIndex));
-          }
-          
-          // Add all duplicate rows to the duplicates list
-          duplicateRows.forEach(rowIndex => {
-            if (!processedRows.has(rowIndex)) {
-              const duplicateRow = jsonData[rowIndex];
-              duplicates.push({
-                firstName: String((duplicateRow as { [key: string]: any })['First Name'] || '').trim(),
-                lastName: String((duplicateRow as { [key: string]: any })['Last Name'] || '').trim(),
-                phoneNumber: String((duplicateRow as { [key: string]: any })['Phone Number'] || '').trim(),
-                NICnumber: String((duplicateRow as { [key: string]: any })['NIC Number'] || '').trim(),
-              });
-              processedRows.add(rowIndex);
-            }
-          });
-        }
-      }
-
-      // Sort duplicates to show them in original order
-      duplicates.sort((a, b) => {
-        const aIndex = Array.from(processedRows).findIndex(rowIndex => 
-          jsonData[rowIndex]['First Name'] === a.firstName &&
-          jsonData[rowIndex]['Last Name'] === a.lastName &&
-          jsonData[rowIndex]['Phone Number'] === a.phoneNumber &&
-          jsonData[rowIndex]['NIC Number'] === a.NICnumber
-        );
-        const bIndex = Array.from(processedRows).findIndex(rowIndex => 
-          jsonData[rowIndex]['First Name'] === b.firstName &&
-          jsonData[rowIndex]['Last Name'] === b.lastName &&
-          jsonData[rowIndex]['Phone Number'] === b.phoneNumber &&
-          jsonData[rowIndex]['NIC Number'] === b.NICnumber
-        );
-        return aIndex - bIndex;
       });
+      return;
+    }
 
-      if (duplicates.length > 0) {
-        this.isLoading = false;
-        this.downloadExcel(duplicates, 'duplicate_entries.xlsx');
-        Swal.fire({
-          icon: 'warning',
-          title: 'Duplicate Entries Found!',
-          html: `
-            <div class="swal-content">
-              <p>Please note: Your file contains duplicate NIC numbers or phone numbers.</p>
-              <br/>
-              <p style="text-align: left;">Add Plant Care Users - ${this.selectedFile!.name}</p>
-              <br/>
-              <hr style="border-color: #d1d5db;" class="dark:border-gray-600">
-              <br/>
-              <p style="text-align: right;">File with duplicate entries downloaded.</p>
-              <br/>
-              <table style="width: 100%; text-align: left; border-collapse: collapse;">
-                <thead>
-                  <tr class="dark:bg-gray-700">
-                    <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">Row #</th>
-                    <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">First Name</th>
-                    <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">Last Name</th>
-                    <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">Phone Number</th>
-                    <th style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">NIC number</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${duplicates
-                    .map(
-                      (user, index) => `
-                      <tr>
-                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${index + 1}</td>
-                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.firstName}</td>
-                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.lastName}</td>
-                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.phoneNumber}</td>
-                        <td style="padding: 8px; border: 1px solid #d1d5db; color: #374151;" class="dark:border-gray-600 dark:text-gray-200">${user.NICnumber}</td>
-                      </tr>`
-                    )
-                    .join('')}
-                </tbody>
-              </table>
-              <br/>
-              <p style="text-align: left; color: #374151;" class="dark:text-gray-200">Found <b style="color: #dc2626;" class="dark:text-red-400">${duplicates.length}</b> duplicate entries.</p>
-              <p style="text-align: left; color: #374151;" class="dark:text-gray-200">Please fix duplicates and upload again.</p>
-            </div>
-          `,
-          width: '80%',
-          confirmButtonText: 'Close',
-          customClass: {
-            popup: '!bg-white dark:!bg-gray-800 !text-gray-800 dark:!text-white',
-            title: '!text-gray-800 dark:!text-white !font-semibold',
-            htmlContainer: '!text-gray-800 dark:!text-gray-200',
-            confirmButton: '!bg-blue-500 hover:!bg-blue-600 !text-white !font-medium !py-2 !px-4 !rounded'
+    console.log('yes')
+
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      try {
+        const data = e.target.result;
+        console.log('data', data)
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        // Filter out empty rows
+        const filteredData = jsonData.filter((row: any) => {
+          const phoneNumber = row['Phone Number'];
+          const nicNumber = row['NIC Number'];
+          const firstName = row['First Name'];
+          const lastName = row['Last Name'];
+          
+          // Return true only if at least one required field has a meaningful value
+          return (
+            (phoneNumber !== undefined && phoneNumber !== null && String(phoneNumber).trim() !== '') ||
+            (nicNumber !== undefined && nicNumber !== null && String(nicNumber).trim() !== '') ||
+            (firstName !== undefined && firstName !== null && String(firstName).trim() !== '') ||
+            (lastName !== undefined && lastName !== null && String(lastName).trim() !== '')
+          );
+        });
+
+        console.log('Original rows:', jsonData.length);
+        console.log('Filtered rows:', filteredData.length);
+
+        const phoneNumbers = new Map();
+        const nicNumbers = new Map();
+        const duplicates: ExistingUser[] = [];
+
+        const phoneNumberOccurrences = new Map<string, number[]>();
+        const nicNumberOccurrences = new Map<string, number[]>();
+
+        let i;
+
+        for ( i = 0; i < filteredData.length; i++) {
+          const row = filteredData[i];
+          const phoneNumber = String(
+            (row as { [key: string]: any })['Phone Number']
+          );
+          const nicNumber = String(
+            (row as { [key: string]: any })['NIC Number']
+          );
+          const firstName = String(
+            (row as { [key: string]: any })['First Name']
+          );
+          const lastName = String((row as { [key: string]: any })['Last Name']);
+
+          if (!phoneNumberOccurrences.has(phoneNumber)) {
+            phoneNumberOccurrences.set(phoneNumber, []);
+          }
+          phoneNumberOccurrences.get(phoneNumber)!.push(i);
+        
+          // Track all occurrences of each NIC number
+          if (!nicNumberOccurrences.has(nicNumber)) {
+            nicNumberOccurrences.set(nicNumber, []);
+          }
+          nicNumberOccurrences.get(nicNumber)!.push(i);
+        }
+
+        console.log('i', i)
+
+        const duplicateIndices = new Set<number>();
+
+        phoneNumberOccurrences.forEach((indices) => {
+          if (indices.length > 1) {
+            indices.forEach(idx => duplicateIndices.add(idx));
           }
         });
-        return;
-      }
-
-      const formData = new FormData();
-      console.log(this.selectedFile);
-
-      formData.append('file', this.selectedFile);
-
-      this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
-        next: (response: any) => {
-          this.isLoading = false;
-          if (response.existingUsers && response.existingUsers.length > 0) {
-            this.downloadExcel(response.existingUsers, 'existing_users.xlsx');
-            this.existingUsers = response.existingUsers;
-            Swal.fire({
-              icon: 'warning',
-              title: 'User Redundancy!',
-              html: this.buildUserTable(
-                response.existingUsers,
-                response.newUsersInserted
-              ),
-              width: '80%',
-              confirmButtonText: 'Close & Go Back',
-              customClass: {
-                popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-                title: 'dark:text-white',
-              }
-            });
-          } else if (response.duplicateData && response.duplicateData.length > 0) {
-            this.downloadExcel(
-              response.duplicateData,
-              'duplication_entries.xlsx'
-            );
-            this.duplicateEntries = response.duplicateData;
-            Swal.fire({
-              icon: 'warning',
-              title: 'Duplication Entries!',
-              html: this.buildUserTable(
-                response.duplicateData,
-                response.newUsersInserted
-              ),
-              width: '80%',
-              confirmButtonText: 'Close & Go Back',
-              customClass: {
-                popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-                title: 'dark:text-white',
-              }
-            });
-          } else {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: `Successfully uploaded ${response.newUsersInserted || 0} users!`,
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-                title: 'dark:text-white',
-              }
-            });
+        
+        // Find indices where NIC number appears more than once
+        nicNumberOccurrences.forEach((indices) => {
+          if (indices.length > 1) {
+            indices.forEach(idx => duplicateIndices.add(idx));
           }
-          this.selectedFile = null;
-          this.router.navigate(['/steckholders/action/farmers']);
-        },
-        error: (error) => {
-          this.downloadExcel(
-            error.existingUsers || [],
-            'existing_users.xlsx'
-          );
-          this.handleError(error);
-        },
-      });
-    } catch (error) {
+        });
+
+        duplicateIndices.forEach(idx => {
+          const row = filteredData[idx];
+          duplicates.push({
+            firstName: String((row as { [key: string]: any })['First Name']),
+            lastName: String((row as { [key: string]: any })['Last Name']),
+            phoneNumber: String((row as { [key: string]: any })['Phone Number']),
+            NICnumber: String((row as { [key: string]: any })['NIC Number']),
+          });
+        });
+
+        if (duplicates.length > 0) {
+          console.log('duplicates', duplicates)
+          this.isLoading = false;
+          this.handleDuplicateEntries(duplicates)
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', this.selectedFile);
+
+        this.plantcareUsersService.uploadUserXlsxFile(formData).subscribe({
+          next: (response: any) => {
+            this.isLoading = false;
+            
+            // Log the response for debugging
+            console.log('Backend Response:', response);
+            
+            // FIRST: Check for duplicate entries in Excel (internal duplication)
+            if (response.duplicateData && response.duplicateData.length > 0) {
+              this.handleDuplicateEntries(response.duplicateData);
+            }
+            // SECOND: Check for existing users in database (redundancy)
+            else if (response.existingUsers && response.existingUsers.length > 0) {
+              this.handleExistingUsers(response.existingUsers);
+            }
+            // THIRD: Check for successful upload
+            else if (response.newUsersInserted > 0) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: `Successfully uploaded ${response.newUsersInserted} users!`,
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.router.navigate(['/steckholders/action/farmers']);
+                }
+              });
+            }
+            // FOURTH: Handle case where no data was uploaded
+            else {
+              Swal.fire({
+                icon: 'info',
+                title: 'No Data Processed',
+                text: 'No new users were uploaded.',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+                  title: 'dark:text-white',
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.router.navigate(['/steckholders/action/farmers']);
+                }
+              });
+            }
+            
+            this.selectedFile = null;
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.handleError(error);
+          },
+        });
+      } catch (error) {
+        this.isLoading = false;
+        this.handleError(
+          new Error('Failed to process the file. Please check the file format.')
+        );
+      }
+    };
+
+    reader.onerror = () => {
       this.isLoading = false;
-      this.handleError(
-        new Error('Failed to process the file. Please check the file format.')
-      );
-    }
-  };
+      this.handleError(new Error('Error reading the file. Please try again.'));
+    };
 
-  reader.onerror = () => {
-    this.isLoading = false;
-    this.handleError(new Error('Error reading the file. Please try again.'));
-  };
+    reader.readAsArrayBuffer(this.selectedFile);
+  }
 
-  reader.readAsArrayBuffer(this.selectedFile);
-}
+  // Helper method to handle duplicate entries
+  private handleDuplicateEntries(duplicateData: any[]): void {
+    // Check what format the backend is returning
+    console.log('Duplicate Data Structure:', duplicateData);
 
-  private downloadExcel(data: any[], fileName: string): void {
+
+    
+    // Convert to DuplicationEntry format if needed
+    const duplicateEntries: DuplicationEntry[] = duplicateData.map((entry: any, index: number) => {
+
+      
+      // Try different possible field names from backend
+      return {
+        firstName: entry.firstName || entry.firstname || entry['First Name'] || entry['FIRST NAME'] || entry['first_name'] || `Entry ${index + 1}`,
+        lastName: entry.lastName || entry.lastname || entry['Last Name'] || entry['LAST NAME'] || entry['last_name'] || '',
+        nic: entry.nic || entry.NIC || entry.NICnumber || entry['NIC Number'] || entry['NIC'] || entry['nic_number'] || '',
+        phoneNumber: entry.phoneNumber || entry.phone || entry['Phone Number'] || entry['PHONE NUMBER'] || entry['Phone'] || entry['phone_number'] || ''
+      };
+    });
+    
+    this.downloadDuplicationExcel(duplicateEntries, 'Duplicate_entries.xlsx');
+    
+    const isDarkMode = this.isDarkMode();
+    
+    Swal.fire({
+      icon: 'warning',
+      title: 'Error : Duplicate Entries Found in Excel Sheet!',
+      html: isDarkMode 
+        ? this.buildDuplicationDarkModeTable(duplicateEntries, `Add GoVi Care user  - ${this.selectedFile.name}`)
+        : this.buildDuplicationLightModeTable(duplicateEntries, `Add GoVi Care user - ${this.selectedFile.name}`),
+      width: '700px',
+      showConfirmButton: true,
+      confirmButtonText: 'Close & Go Back',
+      customClass: {
+        popup: isDarkMode ? '!bg-[#363636] !text-white !p-6' : '!bg-white !text-gray-800 !p-6',
+        title: isDarkMode ? '!text-red-400 !font-bold !text-lg !mb-4' : '!text-red-600 !font-bold !text-lg !mb-4',
+        htmlContainer: isDarkMode ? '!text-white !m-0 !p-0' : '!text-gray-800 !m-0 !p-0',
+        confirmButton: isDarkMode ? '!bg-blue-500 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-600' 
+                                 : '!bg-blue-600 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-700'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/steckholders/action/farmers']);
+      }
+    });
+  }
+
+  // Helper method to handle existing users
+  private handleExistingUsers(existingUsers: any[]): void {
+    // Convert to UserErrorEntry format
+    const errorEntries: UserErrorEntry[] = existingUsers.map((user: any, index: number) => {
+      let status = '';
+      if (user.phoneNumber && user.NICnumber) {
+        status = 'Phone number & NIC already exists';
+      } else if (user.phoneNumber) {
+        status = 'Phone number already exists';
+      } else if (user.NICnumber) {
+        status = 'NIC already exists';
+      }
+      
+      return {
+        line: index + 3,
+        phone: user.phoneNumber || '',
+        nic: user.NICnumber || '',
+        status: status
+      };
+    });
+
+    this.downloadErrorExcel(errorEntries, 'Existing_users.xlsx');
+    
+    const isDarkMode = this.isDarkMode();
+    
+    Swal.fire({
+      icon: 'warning',
+      title: 'Error : User Redundancy!',
+      html: isDarkMode 
+        ? this.buildRedundancyDarkModeTable(errorEntries, `Add GoVi Care user - ${this.selectedFile.name}`)
+        : this.buildRedundancyLightModeTable(errorEntries, `Add GoVi Care user - ${this.selectedFile.name}`),
+      width: '700px',
+      showConfirmButton: true,
+      confirmButtonText: 'Close & Go Back',
+      customClass: {
+        popup: isDarkMode ? '!bg-[#363636] !text-white !p-6' : '!bg-white !text-gray-800 !p-6',
+        title: isDarkMode ? '!text-red-400 !font-bold !text-lg !mb-4' : '!text-red-600 !font-bold !text-lg !mb-4',
+        htmlContainer: isDarkMode ? '!text-white !m-0 !p-0' : '!text-gray-800 !m-0 !p-0',
+        confirmButton: isDarkMode ? '!bg-blue-500 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-600' 
+                                 : '!bg-blue-600 !text-white !font-medium !py-2 !px-6 !rounded !mt-4 hover:!bg-blue-700'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/steckholders/action/farmers']);
+      }
+    });
+  }
+
+  // ========== User Redundancy Error (LINE, PHONE, NIC, STATUS) ==========
+
+  private buildRedundancyLightModeTable(entries: UserErrorEntry[], fileName: string): string {
+    return `
+      <div style="font-family: Arial, sans-serif; color: #000;">
+        <!-- Error message -->
+        <p style="margin: 0 0 16px 0; color: #666; font-size: 14px;">
+          Please note: These user profiles with redundancy errors were not uploaded.
+        </p>
+        
+        <!-- File name -->
+        <p style="margin: 0 0 8px 0; font-weight: bold; color: #000; font-size: 14px;">
+          ${fileName}
+        </p>
+        
+        <!-- Blank line -->
+        <div style="height: 8px;"></div>
+        
+        <!-- Horizontal line -->
+        <hr style="border: none; border-top: 1px solid #ccc; margin: 8px 0 16px 0;">
+        
+        <!-- Download message -->
+        <p style="margin: 0 0 16px 0; text-align: right; color: #666; font-size: 14px;">
+          File with existing users downloaded
+        </p>
+        
+        <!-- Blank line -->
+        <div style="height: 8px;"></div>
+        
+        <!-- Table headers -->
+        <div style="margin-bottom: 8px; font-weight: bold; font-size: 14px;">
+          <span style="display: inline-block; width: 60px; text-align: left;">LINE</span>
+          <span style="display: inline-block; width: 120px; text-align: left;">PHONE</span>
+          <span style="display: inline-block; width: 120px; text-align: left;">NIC</span>
+          <span style="display: inline-block; width: 250px; text-align: left;">STATUS</span>
+        </div>
+        
+        <!-- Blank line -->
+        <div style="height: 4px;"></div>
+        
+        <!-- Table rows -->
+        ${entries.map(entry => `
+          <div style="margin-bottom: 6px; font-size: 14px;">
+            <span style="display: inline-block; width: 60px; text-align: left;">
+              <span style="color: #f59e0b; margin-right: 4px;">⚠</span>${entry.line}
+            </span>
+            <span style="display: inline-block; width: 120px; text-align: left;">${entry.phone}</span>
+            <span style="display: inline-block; width: 120px; text-align: left;">${entry.nic}</span>
+            <span style="display: inline-block; width: 250px; text-align: left;">${entry.status}</span>
+          </div>
+        `).join('')}
+        
+        <!-- Blank line -->
+        <div style="height: 16px;"></div>
+        
+        <!-- Item count -->
+        <p style="margin: 0; font-weight: bold; color: #000; font-size: 14px;">
+          ${entries.length} items
+        </p>
+      </div>
+    `;
+  }
+
+  private buildRedundancyDarkModeTable(entries: UserErrorEntry[], fileName: string): string {
+    return `
+      <div style="font-family: Arial, sans-serif; color: #e5e7eb;">
+        <!-- Error message -->
+        <p style="margin: 0 0 16px 0; color: #9ca3af; font-size: 14px;">
+          Please note: These user profiles with redundancy errors were not uploaded.
+        </p>
+        
+        <!-- File name -->
+        <p style="margin: 0 0 8px 0; font-weight: bold; color: #e5e7eb; font-size: 14px;">
+          ${fileName}
+        </p>
+        
+        <!-- Blank line -->
+        <div style="height: 8px;"></div>
+        
+        <!-- Horizontal line -->
+        <hr style="border: none; border-top: 1px solid #4b5563; margin: 8px 0 16px 0;">
+        
+        <!-- Download message -->
+        <p style="margin: 0 0 16px 0; text-align: right; color: #9ca3af; font-size: 14px;">
+          File with existing users downloaded
+        </p>
+        
+        <!-- Blank line -->
+        <div style="height: 8px;"></div>
+        
+        <!-- Table headers -->
+        <div style="margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #d1d5db;">
+          <span style="display: inline-block; width: 60px; text-align: left;">LINE</span>
+          <span style="display: inline-block; width: 120px; text-align: left;">PHONE</span>
+          <span style="display: inline-block; width: 120px; text-align: left;">NIC</span>
+          <span style="display: inline-block; width: 250px; text-align: left;">STATUS</span>
+        </div>
+        
+        <!-- Blank line -->
+        <div style="height: 4px;"></div>
+        
+        <!-- Table rows -->
+        ${entries.map(entry => `
+          <div style="margin-bottom: 6px; font-size: 14px; color: #e5e7eb;">
+            <span style="display: inline-block; width: 60px; text-align: left;">
+              <span style="color: #fbbf24; margin-right: 4px;">⚠</span>${entry.line}
+            </span>
+            <span style="display: inline-block; width: 120px; text-align: left;">${entry.phone}</span>
+            <span style="display: inline-block; width: 120px; text-align: left;">${entry.nic}</span>
+            <span style="display: inline-block; width: 250px; text-align: left;">${entry.status}</span>
+          </div>
+        `).join('')}
+        
+        <!-- Blank line -->
+        <div style="height: 16px;"></div>
+        
+        <!-- Item count -->
+        <p style="margin: 0; font-weight: bold; color: #e5e7eb; font-size: 14px;">
+          ${entries.length} items
+        </p>
+      </div>
+    `;
+  }
+
+  // ========== Duplication Entries Error (FIRST NAME, LAST NAME, NIC, PHONE NUMBER) ==========
+
+  private buildDuplicationLightModeTable(entries: DuplicationEntry[], fileName: string): string {
+    return `
+      <div style="font-family: Arial, sans-serif; color: #000;">
+        <!-- Error message -->
+        <p style="margin: 0 0 16px 0; color: #666; font-size: 14px;">
+          Please note: These duplicate entries were found within the Excel file itself.
+        </p>
+        
+        <!-- File name -->
+        <p style="margin: 0 0 8px 0; font-weight: bold; color: #000; font-size: 14px;">
+          ${fileName}
+        </p>
+        
+        <!-- Blank line -->
+        <div style="height: 8px;"></div>
+        
+        <!-- Horizontal line -->
+        <hr style="border: none; border-top: 1px solid #ccc; margin: 8px 0 16px 0;">
+        
+        <!-- Download message -->
+        <p style="margin: 0 0 16px 0; text-align: right; color: #666; font-size: 14px;">
+          File with duplicate entries downloaded
+        </p>
+        
+        <!-- Blank line -->
+        <div style="height: 8px;"></div>
+        
+        <!-- Table headers -->
+        <div style="margin-bottom: 8px; font-weight: bold; font-size: 14px;">
+          <span style="display: inline-block; width: 120px; text-align: left;">FIRST NAME</span>
+          <span style="display: inline-block; width: 120px; text-align: left;">LAST NAME</span>
+          <span style="display: inline-block; width: 120px; text-align: left;">NIC</span>
+          <span style="display: inline-block; width: 150px; text-align: left;">PHONE NUMBER</span>
+        </div>
+        
+        <!-- Blank line -->
+        <div style="height: 4px;"></div>
+        
+        <!-- Table rows -->
+        ${entries.map(entry => `
+          <div style="margin-bottom: 6px; font-size: 14px;">
+            <span style="display: inline-block; width: 120px; text-align: left;">
+              <span style="color: #f59e0b; margin-right: 4px;">⚠</span>${entry.firstName}
+            </span>
+            <span style="display: inline-block; width: 120px; text-align: left;">${entry.lastName}</span>
+            <span style="display: inline-block; width: 120px; text-align: left;">${entry.nic}</span>
+            <span style="display: inline-block; width: 150px; text-align: left;">${entry.phoneNumber}</span>
+          </div>
+        `).join('')}
+        
+        <!-- Blank line -->
+        <div style="height: 16px;"></div>
+        
+        <!-- Item count -->
+        <p style="margin: 0; font-weight: bold; color: #000; font-size: 14px;">
+          ${entries.length} duplicate entries
+        </p>
+      </div>
+    `;
+  }
+
+  private buildDuplicationDarkModeTable(entries: DuplicationEntry[], fileName: string): string {
+    return `
+      <div style="font-family: Arial, sans-serif; color: #e5e7eb;">
+        <!-- Error message -->
+        <p style="margin: 0 0 16px 0; color: #9ca3af; font-size: 14px;">
+          Please note: These duplicate entries were found within the Excel file itself.
+        </p>
+        
+        <!-- File name -->
+        <p style="margin: 0 0 8px 0; font-weight: bold; color: #e5e7eb; font-size: 14px;">
+          ${fileName}
+        </p>
+        
+        <!-- Blank line -->
+        <div style="height: 8px;"></div>
+        
+        <!-- Horizontal line -->
+        <hr style="border: none; border-top: 1px solid #4b5563; margin: 8px 0 16px 0;">
+        
+        <!-- Download message -->
+        <p style="margin: 0 0 16px 0; text-align: right; color: #9ca3af; font-size: 14px;">
+          File with duplicate entries downloaded
+        </p>
+        
+        <!-- Blank line -->
+        <div style="height: 8px;"></div>
+        
+        <!-- Table headers -->
+        <div style="margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #d1d5db;">
+          <span style="display: inline-block; width: 120px; text-align: left;">FIRST NAME</span>
+          <span style="display: inline-block; width: 120px; text-align: left;">LAST NAME</span>
+          <span style="display: inline-block; width: 120px; text-align: left;">NIC</span>
+          <span style="display: inline-block; width: 150px; text-align: left;">PHONE NUMBER</span>
+        </div>
+        
+        <!-- Blank line -->
+        <div style="height: 4px;"></div>
+        
+        <!-- Table rows -->
+        ${entries.map(entry => `
+          <div style="margin-bottom: 6px; font-size: 14px; color: #e5e7eb;">
+            <span style="display: inline-block; width: 120px; text-align: left;">
+              <span style="color: #fbbf24; margin-right: 4px;">⚠</span>${entry.firstName}
+            </span>
+            <span style="display: inline-block; width: 120px; text-align: left;">${entry.lastName}</span>
+            <span style="display: inline-block; width: 120px; text-align: left;">${entry.nic}</span>
+            <span style="display: inline-block; width: 150px; text-align: left;">${entry.phoneNumber}</span>
+          </div>
+        `).join('')}
+        
+        <!-- Blank line -->
+        <div style="height: 16px;"></div>
+        
+        <!-- Item count -->
+        <p style="margin: 0; font-weight: bold; color: #e5e7eb; font-size: 14px;">
+          ${entries.length} duplicate entries
+        </p>
+      </div>
+    `;
+  }
+
+  private downloadErrorExcel(entries: UserErrorEntry[], fileName: string): void {
     try {
-      const worksheet = XLSX.utils.json_to_sheet(data);
+      const dataForExcel = entries.map(entry => ({
+        'LINE': entry.line,
+        'PHONE': entry.phone,
+        'NIC': entry.nic,
+        'STATUS': entry.status
+      }));
+      
+      const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Existing Users');
+      
       const excelBuffer = XLSX.write(workbook, {
         bookType: 'xlsx',
         type: 'array',
       });
+      
       const blob = new Blob([excelBuffer], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
+      
       saveAs(blob, fileName);
     } catch (error) {
-      this.handleError(new Error('Failed to generate Excel file'));
+      console.error('Failed to generate Excel file:', error);
+    }
+  }
+
+  private downloadDuplicationExcel(entries: DuplicationEntry[], fileName: string): void {
+
+    console.log('entries', entries)
+    try {
+      const dataForExcel = entries.map(entry => ({
+        'FIRST NAME': entry.firstName,
+        'LAST NAME': entry.lastName,
+        'NIC': entry.nic,
+        'PHONE NUMBER': entry.phoneNumber
+      }));
+      
+      const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Duplicate Entries');
+      
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
+      
+      const blob = new Blob([excelBuffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      
+      saveAs(blob, fileName);
+    } catch (error) {
+      console.error('Failed to generate Excel file:', error);
     }
   }
 
@@ -604,109 +720,35 @@ export class UserBulkUploadComponent {
     this.isLoading = false;
     this.selectedFile = null;
 
-    let errorMessage = 'Failed to upload file. Please try again.';
+    let errorMessage = error.error?.error || 'Failed to upload file. Please try again.';
     if (error.status === 400) {
       errorMessage = error.error?.error || 'Invalid file or data format.';
-    } else if (error.status === 413) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Upload Failed',
+        text: errorMessage,
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+          title: 'dark:text-white',
+        }
+      });
+    } 
+    else if (error.status === 413) {
       errorMessage = 'File size too large. Please upload a smaller file.';
     }
 
-    Swal.fire({
-      icon: 'error',
-      title: 'Upload Failed',
-      text: errorMessage,
-      confirmButtonText: 'OK',
-      customClass: {
-        popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-        title: 'dark:text-white',
-      }
-    });
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: 'Upload Failed',
+    //   text: errorMessage,
+    //   confirmButtonText: 'OK',
+    //   customClass: {
+    //     popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+    //     title: 'dark:text-white',
+    //   }
+    // });
   }
-
-  // private buildUserTable(
-  //   users: ExistingUser[],
-  //   newUsersInserted: number
-  // ): string {
-  //   return `
-  //     <p>Please note: These user profiles with redundancy errors were not uploaded.<p>
-  //     <br/>
-  //     <hr></hr>
-  //     <br/>
-  //     <p style="text-align: right;">File downloaded.</p>
-  //     <br/>
-  //     <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
-  //       <thead>
-  //         <tr>
-  //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">First Name</th>
-  //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Last Name</th>
-  //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">Phone Number</th>
-  //           <th style="padding: 8px; background-color: #f2f2f2; border: 1px solid #ddd;">NIC number</th>
-  //         </tr>
-  //       </thead>
-  //       <tbody>
-  //         ${users
-  //       .map(
-  //         (user) => `
-  //           <tr>
-  //             <td style="padding: 8px; border: 1px solid #ddd;">${user.firstName}</td>
-  //             <td style="padding: 8px; border: 1px solid #ddd;">${user.lastName}</td>
-  //             <td style="padding: 8px; border: 1px solid #ddd;">${user.phoneNumber}</td>
-  //             <td style="padding: 8px; border: 1px solid #ddd;">${user.NICnumber}</td>
-  //           </tr>
-  //         `
-  //       )
-  //       .join('')}
-  //       </tbody>
-  //     </table>
-  //     <br/>
-  //     <p style="text-align: left;">Successfully added <b>${newUsersInserted}</b> new users.</p>
-  //     <p style="text-align: left;">Found <b>${users.length
-  //     }</b> existing users:</p>
-  //   `;
-  // }
-  private buildUserTable(
-    users: ExistingUser[],
-    newUsersInserted: number
-  ): string {
-    return `
-    <div class="dark-mode-content">
-      <p class="text-gray-800 dark:text-gray-200">Please note: These user profiles with redundancy errors were not uploaded.</p>
-      <br/>
-      <hr class="border-gray-300 dark:border-gray-600">
-      <br/>
-      <p class="text-right text-gray-800 dark:text-gray-200">File downloaded.</p>
-      <br/>
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr>
-            <th class="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">First Name</th>
-            <th class="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">Last Name</th>
-            <th class="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">Phone Number</th>
-            <th class="p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">NIC number</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${users
-        .map(
-          (user) => `
-            <tr>
-              <td class="p-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">${user.firstName}</td>
-              <td class="p-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">${user.lastName}</td>
-              <td class="p-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">${user.phoneNumber}</td>
-              <td class="p-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200">${user.NICnumber}</td>
-            </tr>
-          `
-        )
-        .join('')}
-        </tbody>
-      </table>
-      <br/>
-      <p class="text-left text-gray-800 dark:text-gray-200">Successfully added <b class="text-green-600 dark:text-green-400">${newUsersInserted}</b> new users.</p>
-      <p class="text-left text-gray-800 dark:text-gray-200">Found <b class="text-red-600 dark:text-red-400">${users.length}</b> existing users:</p>
-    </div>
-  `;
-  }
-
 
   onCancel() {
     Swal.fire({

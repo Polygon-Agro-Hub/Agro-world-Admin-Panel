@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
@@ -54,7 +54,6 @@ export class AddFiealdOfficerComponent implements OnInit {
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberRequired: boolean = false;
   confirmAccountNumberError: boolean = false;
-  dropdownOpen = false;
   fiealdManagerData: fiealdManager[] = [];
   lastID!: string;
   languagesTouched: boolean = false;
@@ -76,11 +75,24 @@ export class AddFiealdOfficerComponent implements OnInit {
   selectedBackNicImage: string | ArrayBuffer | null = null;
   selectedPassbookImage: string | ArrayBuffer | null = null;
   selectedContractImage: string | ArrayBuffer | null = null;
+  readonly MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB constant
+
+  // Add properties for English name validation
+  englishNameErrors = {
+    firstName: false,
+    lastName: false
+  };
+
+  englishNameTouched = {
+    firstName: false,
+    lastName: false
+  };
 
   constructor(
     private router: Router,
     private stakeHolderSrv: StakeholderService,
     private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   jobRoles = ['Field Officer', 'Chief Field Officer'];
@@ -190,8 +202,9 @@ export class AddFiealdOfficerComponent implements OnInit {
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
-      if (file.size > 5000000) {
-        Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+      // Validate file size (10MB limit)
+      if (file.size > this.MAX_FILE_SIZE) {
+        Swal.fire('Error', 'File size exceeds 10MB. Please upload a smaller image.', 'error');
         return;
       }
 
@@ -228,9 +241,6 @@ export class AddFiealdOfficerComponent implements OnInit {
     return !!this.empType;
   }
 
-  closeDropdown() {
-    this.dropdownOpen = false;
-  }
 
   onCheckboxChange(lang: string, event: any) {
     if (event.target.checked) {
@@ -277,59 +287,74 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   isFieldInvalid(fieldName: keyof Personal): boolean {
-    const isTouched = !!this.touchedFields[fieldName];
+  const isTouched = !!this.touchedFields[fieldName];
 
+  if (!isTouched) {
+    return false;
+  }
+
+  const value = this.personalData[fieldName];
+
+  // Special handling for assignDistrict array
+  if (fieldName === 'assignDistrict') {
+    return !value || (Array.isArray(value) && value.length === 0);
+  }
+
+  // Special handling for jobRole when assignDistrict is empty
+  if (fieldName === 'jobRole' && this.personalData.assignDistrict && 
+      this.personalData.assignDistrict.length === 0) {
+    return false; // Don't show error if assignDistrict is empty
+  }
+
+  // Special handling for email field - check validation even if touched
+  if (fieldName === 'email' && value) {
+    return !this.isValidEmail(value);
+  }
+
+  // Default validation for other fields
+  return !value;
+}
+
+  // New method to specifically check email validation
+  isEmailInvalid(): boolean {
+    const email = this.personalData.email;
+    const isTouched = !!this.touchedFields['email'];
+    
     if (!isTouched) {
       return false;
     }
-
-    const value = this.personalData[fieldName];
-
-    // Special handling for assignDistrict array
-    if (fieldName === 'assignDistrict') {
-      return !value || (Array.isArray(value) && value.length === 0);
+    
+    if (!email) {
+      return true; // Required field is empty
     }
-
-    // Default validation for other fields
-    return !value;
-  }
-
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  selectjobRole(role: string) {
-    this.personalData.jobRole = role;
-    this.toggleDropdown();
-
-    // Reset irmId when job role changes
-    if (role !== 'Field Officer') {
-      this.personalData.irmId = '';
-    }
-
-    this.EpmloyeIdCreate();
+    
+    return !this.isValidEmail(email);
   }
 
   EpmloyeIdCreate() {
-    let rolePrefix: string | undefined;
-
-    const rolePrefixes: { [key: string]: string } = {
-      'Field Officer': 'FIO',
-      'Chief Field Officer': 'CFO',
-    };
-
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
-
-    if (!rolePrefix) {
-      return;
-    }
-
-    this.getLastID(rolePrefix)
-      .then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      })
-      .catch((error) => { });
+  if (!this.personalData.jobRole) {
+    return;
   }
+
+  let rolePrefix: string | undefined;
+
+  const rolePrefixes: { [key: string]: string } = {
+    'Field Officer': 'FIO',
+    'Chief Field Officer': 'CFO',
+  };
+
+  rolePrefix = rolePrefixes[this.personalData.jobRole];
+
+  if (!rolePrefix) {
+    return;
+  }
+
+  this.getLastID(rolePrefix)
+    .then((lastID) => {
+      this.personalData.empId = rolePrefix + lastID;
+    })
+    .catch((error) => { });
+}
 
   getAllCollectionManagers() {
     this.stakeHolderSrv
@@ -338,7 +363,7 @@ export class AddFiealdOfficerComponent implements OnInit {
         this.fiealdManagerData = res;
         // Convert to dropdown options format
         this.managerOptions = this.fiealdManagerData.map((manager) => ({
-          label: manager.firstName + ' ' + manager.lastName,
+          label: manager.empId + " - " +  manager.firstName + ' ' + manager.lastName,
           value: manager.id,
         }));
       });
@@ -372,54 +397,61 @@ export class AddFiealdOfficerComponent implements OnInit {
     }
   }
 
+  // New method to check for non-English characters
+  hasNonEnglishCharacters(fieldName: 'firstName' | 'lastName'): boolean {
+    const value = this.personalData[fieldName];
+    
+    if (!value || !this.englishNameTouched[fieldName]) {
+      return false;
+    }
+    
+    return this.englishNameErrors[fieldName];
+  }
+
   preventSpecialCharacters(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
-    const char = String.fromCharCode(event.which);
-
+    const char = String.fromCharCode(event.which || event.keyCode);
+    
     // Block space if it's at the start (cursor at position 0)
     if (char === ' ' && input.selectionStart === 0) {
       event.preventDefault();
       return;
     }
-
-    // Allow only letters (a-z, A-Z) and spaces elsewhere
-    if (!/[a-zA-Z\s]/.test(char)) {
+    
+    // Allow only English letters, spaces, hyphens, and apostrophes
+    // Also prevent Sinhala and Tamil characters
+    const allowedPattern = /^[A-Za-z\s\-']$/;
+    
+    // Check for Sinhala and Tamil characters specifically
+    const isSinhala = /[\u0D80-\u0DFF]/.test(char);
+    const isTamil = /[\u0B80-\u0BFF]/.test(char);
+    
+    if (isSinhala || isTamil || !allowedPattern.test(char)) {
       event.preventDefault();
     }
   }
 
-  // New methods for Sinhala and Tamil character validation
-  allowSinhalaCharacters(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    const char = String.fromCharCode(event.which);
-
-    // Block space if it's at the start (cursor at position 0)
-    if (char === ' ' && input.selectionStart === 0) {
-      event.preventDefault();
-      return;
+  // New method to validate English names when pasting
+  onEnglishNamePaste(event: ClipboardEvent, fieldName: 'firstName' | 'lastName'): void {
+    event.preventDefault();
+    
+    // Get pasted text
+    const pastedText = event.clipboardData?.getData('text') || '';
+    
+    // Filter out non-English characters
+    const englishOnly = pastedText.replace(/[^A-Za-z\s\-']/g, '');
+    
+    // Update the value
+    if (fieldName === 'firstName') {
+      this.personalData.firstName = englishOnly;
+    } else {
+      this.personalData.lastName = englishOnly;
     }
-
-    // Allow Sinhala Unicode range: \u0D80-\u0DFF
-    if (!/[\u0D80-\u0DFF\s]/.test(char)) {
-      event.preventDefault();
-    }
+    
+    // Trigger capitalization
+    this.capitalizeNames();
   }
 
-  allowTamilCharacters(event: KeyboardEvent): void {
-    const input = event.target as HTMLInputElement;
-    const char = String.fromCharCode(event.which);
-
-    // Block space if it's at the start (cursor at position 0)
-    if (char === ' ' && input.selectionStart === 0) {
-      event.preventDefault();
-      return;
-    }
-
-    // Allow Tamil Unicode range: \u0B80-\u0BFF
-    if (!/[\u0B80-\u0BFF\s]/.test(char)) {
-      event.preventDefault();
-    }
-  }
 
   isValidPhoneNumber(phone: string): boolean {
     if (!phone) return false;
@@ -557,6 +589,8 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       this.personalData.email = value;
     }
+    // Mark email as touched when user types
+    this.markFieldAsTouched('email');
   }
 
   isValidEmail(email: string): boolean {
@@ -665,10 +699,14 @@ export class AddFiealdOfficerComponent implements OnInit {
 
       if (!this.personalData.firstName) {
         missingFields.push('First Name in English is Required');
+      } else if (this.hasNonEnglishCharacters('firstName')) {
+        missingFields.push('First Name should only contain English letters');
       }
 
       if (!this.personalData.lastName) {
         missingFields.push('Last Name in English is Required');
+      } else if (this.hasNonEnglishCharacters('lastName')) {
+        missingFields.push('Last Name should only contain English letters');
       }
 
       // Validate Sinhala and Tamil names
@@ -759,6 +797,9 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Navigate to the selected page
     this.selectedPage = page;
+    
+    // Scroll to top after page change
+    this.scrollToTop();
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
@@ -804,6 +845,28 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     // Navigate to the selected page if validation passes
     this.selectedPage = page;
+    
+    // Scroll to top after page change
+    this.scrollToTop();
+  }
+
+  // Add this method to scroll to top
+  scrollToTop(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      // Use setTimeout to ensure DOM has updated
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        
+        // Also try scrolling the container div
+        const container = document.querySelector('.mx-auto.p-6') as HTMLElement;
+        if (container) {
+          container.scrollTop = 0;
+        }
+      }, 100);
+    }
   }
 
   markPageOneFieldsAsTouched(): void {
@@ -830,6 +893,10 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
+    
+    // Mark English name fields as touched
+    this.englishNameTouched.firstName = true;
+    this.englishNameTouched.lastName = true;
   }
 
   onTrimInput(event: Event, modelRef: any, fieldName: string): void {
@@ -844,6 +911,11 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
+    
+    // Mark field as touched when user types
+    if (fieldName === 'email') {
+      this.markFieldAsTouched('email');
+    }
   }
 
   preventAddressSpecialCharacters(event: KeyboardEvent): void {
@@ -1057,17 +1129,19 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadBanks();
-    this.loadBranches();
-    // this.getAllCompanies(); // Commented out as per HTML
-    this.EpmloyeIdCreate();
-    // Pre-fill country with Sri Lanka
-    this.personalData.country = 'Sri Lanka';
-    this.getAllCollectionManagers();
+  this.loadBanks();
+  this.loadBranches();
+  this.EpmloyeIdCreate();
+  // Pre-fill country with Sri Lanka
+  this.personalData.country = 'Sri Lanka';
+  this.getAllCollectionManagers();
 
-    // Initialize assignDistrict as array
-    this.personalData.assignDistrict = [];
-  }
+  // Initialize assignDistrict as array
+  this.personalData.assignDistrict = [];
+  
+  // Initialize jobRole as empty string
+  this.personalData.jobRole = '';
+}
 
   validateResidentialDetails(): string[] {
     const errors: string[] = [];
@@ -1190,9 +1264,9 @@ export class AddFiealdOfficerComponent implements OnInit {
   }
 
   handleFileUpload(file: File, fileType: 'frontNic' | 'backNic' | 'passbook' | 'contract'): void {
-    // Validate file size (5MB limit)
-    if (file.size > 5000000) {
-      Swal.fire('Error', 'File size should not exceed 5MB', 'error');
+    // Validate file size (10MB limit)
+    if (file.size > this.MAX_FILE_SIZE) {
+      Swal.fire('Error', 'File size exceeds 10MB. Please upload a smaller image.', 'error');
       return;
     }
 
@@ -1324,10 +1398,14 @@ export class AddFiealdOfficerComponent implements OnInit {
 
     if (!this.personalData.firstName) {
       missingFields.push('First Name (in English) is Required');
+    } else if (this.hasNonEnglishCharacters('firstName')) {
+      missingFields.push('First Name should only contain English letters');
     }
 
     if (!this.personalData.lastName) {
       missingFields.push('Last Name (in English) is Required');
+    } else if (this.hasNonEnglishCharacters('lastName')) {
+      missingFields.push('Last Name should only contain English letters');
     }
 
     // Validate Sinhala and Tamil names
@@ -1440,6 +1518,22 @@ export class AddFiealdOfficerComponent implements OnInit {
       missingFields.push('Signed Contract is Required');
     }
 
+    // Add file size validation before submitting
+    const filesToCheck = [
+      { file: this.selectedFile, name: 'Profile Picture' },
+      { file: this.selectedFrontNicFile, name: 'NIC Front Image' },
+      { file: this.selectedBackNicFile, name: 'NIC Back Image' },
+      { file: this.selectedPassbookFile, name: 'Bank Passbook' },
+      { file: this.selectedContractFile, name: 'Signed Contract' }
+    ];
+
+    for (const item of filesToCheck) {
+      if (item.file && item.file.size > this.MAX_FILE_SIZE) {
+        Swal.fire('Error', `${item.name} exceeds 10MB. Please upload a smaller image.`, 'error');
+        return;
+      }
+    }
+
     // If errors, show list and stop - validation messages will now be visible
     if (missingFields.length > 0) {
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
@@ -1525,7 +1619,7 @@ export class AddFiealdOfficerComponent implements OnInit {
             let errorMessage = 'An unexpected error occurred';
             let messages: string[] = [];
 
-                     if (error.error && Array.isArray(error.error.errors)) {
+            if (error.error && Array.isArray(error.error.errors)) {
               // Map backend error keys to user-friendly messages
               messages = error.error.errors.map((err: string) => {
                 switch (err) {
@@ -1616,7 +1710,82 @@ export class AddFiealdOfficerComponent implements OnInit {
     this.languagesTouched = true;
     this.empTypeTouched = true;
     this.jobRoleTouched = true;
+    
+    // Mark English name fields as touched
+    this.englishNameTouched.firstName = true;
+    this.englishNameTouched.lastName = true;
   }
+
+  isValidUrl(value: string): boolean {
+    if (!value) return false;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+
+  }
+
+  getFileName(value: string): string {
+    if (!value) return '';
+    
+    // If it's a URL, extract the filename
+    if (this.isValidUrl(value)) {
+      try {
+        const url = new URL(value);
+        const pathname = url.pathname;
+        const filename = pathname.substring(pathname.lastIndexOf('/') + 1);
+      
+        return decodeURIComponent(filename);
+      } catch {
+        return value;
+      }
+    }
+    
+    // If it's just a filename, return it as-is
+    return value;
+  }
+
+  yourMethod(file: File | null) {
+   console.log('file', this.selectedFrontNicFile)
+  }
+
+  onAssignDistrictClear(): void {
+  // Clear job role and CFO when assign districts are cleared
+  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+    this.personalData.jobRole = '';
+    this.personalData.irmId = '';
+    this.selectedBranchId = null;
+    this.branchOptions = [];
+  }
+}
+
+onJobRoleClear(): void {
+  if (!this.personalData.jobRole) {
+    this.personalData.irmId = '';
+  }
+}
+
+onAssignDistrictChange(event: any): void {
+  // If no districts are selected, clear job role and CFO
+  if (!event.value || event.value.length === 0) {
+    this.personalData.jobRole = '';
+    this.personalData.irmId = '';
+  }
+}
+
+onJobRoleChange(event: DropdownChangeEvent): void {
+  const role = event.value;
+  
+  // Reset irmId when job role changes or is cleared
+  if (!role || role !== 'Field Officer') {
+    this.personalData.irmId = '';
+  }
+
+  // Generate employee ID
+  this.EpmloyeIdCreate();
+}
 
 }
 
@@ -1668,6 +1837,7 @@ class Company {
 
 class fiealdManager {
   id!: number;
+  empId!: string;
   firstName!: string;
   lastName!: string;
 }

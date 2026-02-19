@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-labour-tab',
@@ -11,6 +11,18 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 export class LabourTabComponent implements OnChanges {
 
   @Input() LaborObj!: ILabor;
+  @Input() currentPage: number = 10;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('---------------------------------------------------------------');

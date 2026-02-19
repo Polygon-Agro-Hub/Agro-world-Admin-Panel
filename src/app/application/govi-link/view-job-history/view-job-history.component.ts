@@ -14,6 +14,7 @@ interface FieldAuditHistory {
   jobId: string;
   empId: string;
   farmId: string;
+  farmCode: string;
   regCode: string;
   visitPurpose: string;
   farmerNIC: string;
@@ -137,17 +138,18 @@ export class ViewJobHistoryComponent implements OnInit {
             jobId: item.jobId,
             empId: item.empId,
             farmId: item.farmId,
+            farmCode: item.farmCode,
             regCode: item.regCode,
             visitPurpose: this.formatVisitPurpose(item.visitPurpose),
             farmerNIC: item.farmerNIC,
             district: item.district,
             scheduledDate: this.formatDateTime(item.scheduledDate),
             completedDate: this.formatDateTime(item.completedDate),
-            onScreenTime: item.onScreenTime || '-',
+            onScreenTime: item.onScreenTime || '--',
             status: item.status,
             assignedOn: this.formatDateTime(item.assignedOn),
-            assignedByName: item.assignedByName || '-',
-            assignedOfficer: item.assignedOfficer || '-'
+            assignedByName: item.assignedByName || '--',
+            assignedOfficer: item.assignedOfficer || '--'
           }));
           this.totalItems = this.jobHistory.length;
           this.hasData = this.totalItems > 0;
@@ -248,6 +250,25 @@ export class ViewJobHistoryComponent implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/govi-link']);
+    this.router.navigate(['/govi-link/action']);
   }
+
+  
+viewResponse(jobId: string, purpose: string) {
+
+  if (jobId && jobId.startsWith("FA")) {
+    this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-audit-response'], {
+      queryParams: { jobId },
+    });
+  } else if (jobId && jobId.startsWith("CA")) {
+    this.router.navigate(['/govi-link/action/view-govi-link-jobs-farmer-cluster-audit-response'], {
+      queryParams: { jobId },
+    });
+  } else if (jobId && jobId.startsWith("SR")) {
+    this.router.navigate(['/govi-link/action/view-govi-link-jobs-service-request-response'], {
+      queryParams: { jobId },
+    });
+  }
+  
+}
 }

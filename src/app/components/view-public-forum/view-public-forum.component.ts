@@ -171,7 +171,6 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   deletePost(id: number) {
-    this.isLoading = true;
     this.activeDeleteMenu = null;
 
     Swal.fire({
@@ -231,7 +230,6 @@ export class ViewPublicForumComponent implements OnInit {
   }
 
   deleteReply(id: number) {
-  this.isLoading = true;
 
   Swal.fire({
     title: 'Are you sure?',

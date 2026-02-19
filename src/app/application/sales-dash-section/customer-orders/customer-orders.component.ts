@@ -10,9 +10,11 @@ import { CustomersService } from '../../../services/dash/customers.service';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
+import Swal from 'sweetalert2';
 
 interface Order {
-  id: string;
+  id: number;
   invNo: string;
   sheduleType: string;
   sheduleDate: string;
@@ -72,8 +74,10 @@ export class CustomerOrdersComponent implements OnInit {
     private http: HttpClient,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private finalInvoiceService: FinalinvoiceService
-  ) {}
+    private finalInvoiceService: FinalinvoiceService,
+    private postInvoiceService: PostinvoiceService
+
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -133,6 +137,28 @@ export class CustomerOrdersComponent implements OnInit {
       });
   }
 
+  getPaymentStatusClass(paymentMethod: string, isPaid: number): string {
+    if (isPaid === 1) {
+      if (paymentMethod?.toLowerCase() === 'card') {
+        return 'bg-[#BBFFC6] text-[#308233] rounded-xl px-7 py-2';
+      } else if (paymentMethod?.toLowerCase() === 'cash') {
+        return 'bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2';
+      }
+    }
+    return 'bg-[#DFDFDF] text-[#5C5C5C] rounded-xl px-4 py-2';
+  }
+
+  getPaymentStatusText(paymentMethod: string, isPaid: number): string {
+    if (isPaid === 1) {
+      if (paymentMethod?.toLowerCase() === 'card') {
+        return 'Paid';
+      } else if (paymentMethod?.toLowerCase() === 'cash') {
+        return 'Received';
+      }
+    }
+    return 'Pending';
+  }
+
   getStatusClass(status: string): string {
     const statusClasses: { [key: string]: string } = {
       Assigned: 'bg-[#F5FF85] text-[#878216] rounded-xl px-5 py-2',
@@ -153,11 +179,11 @@ export class CustomerOrdersComponent implements OnInit {
     );
   }
 
-  async downloadInvoice(orderId: string, invoiceNumber: string): Promise<void> {
+  async downloadInvoice(orderId: number, invoiceNumber: string): Promise<void> {
     this.isLoading = true;
     try {
       await this.finalInvoiceService.generateAndDownloadInvoice(
-        parseInt(orderId),
+        orderId,
         invoiceNumber
       );
     } catch (error) {
@@ -166,5 +192,41 @@ export class CustomerOrdersComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  isPostInvoiceEnabled(status: string): boolean {
+    // Define the statuses that allow post-invoice download
+    const enabledStatuses = [
+      'Out For Delivery',
+      'Delivered',
+      'Picked Up',
+      'On the way',
+      'Failed',
+    ];
+
+    return enabledStatuses.includes(status);
+  }
+
+  downloadPostInvoice(id: number, tableInvoiceNo: string): void {
+    this.isLoading = true;
+
+    this.postInvoiceService
+      .generateAndDownloadInvoice(id, tableInvoiceNo)
+      .then(() => {
+        // Success case - no action needed unless you want to show a success message
+      })
+      .catch((error) => {
+        console.error('Error generating invoice:', error);
+        this.errorMessage = 'Failed to download invoice';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to download invoice. Please try again.',
+          confirmButtonColor: '#3085d6',
+        });
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 }

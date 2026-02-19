@@ -1,66 +1,180 @@
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
-  <i class="fa-solid fa-arrow-left"></i>
-  Back
-</button>
+<div *ngIf="isLoading">
+  <app-loading-spinner></app-loading-spinner>
+</div>
 
-<div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex space-x-4 pb-5 border-b border-gray-300">
-      <button *ngIf="
-        permissionService.hasPermission('Polygon centres view dashboard progress tab') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="setActiveTab('Progress')" [ngClass]="
-          activeTab === 'Progress'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Progress'" class="fa fa-check"></i>
-        Progress
-      </button>
+<div class="px-4 py-4 sm:px-6 lg:px-8">
+  <button class="mb-5 text-textLight dark:text-textDark sm:ml-10" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+  </button>
 
-      <button *ngIf="
-        permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="setActiveTab('Out for Delivery')" [ngClass]="
-          activeTab === 'Out for Delivery'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Out for Delivery'" class="fa fa-check"></i>
-        Out for Delivery
-      </button>
+  <div class="flex flex-col items-start justify-start h-screen overflow-x-hidden px-4 sm:px-6 lg:px-10">
+    <!-- Top Row - Single Row Cards -->
+    <div class="grid w-full grid-cols-1 gap-4 pb-8 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
+      <!-- Center Code Card -->
+      <div class="relative flex items-center justify-center rounded-lg shadow-lg">
+        <div
+          class="inline-flex h-[60px] w-full items-center justify-between rounded-lg bg-tileLight px-4 text-sm font-medium text-[#495057] transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
+        >
+          <div class="flex items-center">
+            <span class="ml-4 font-bold text-[#030308] dark:text-white sm:ml-8 lg:ml-24 text-[18px]">{{
+              centerObj.centerRegCode
+            }}</span>
+          </div>
+        </div>
+      </div>
 
-      <button *ngIf="
-        permissionService.hasPermission('Polygon centres view dashboard officers tab') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="setActiveTab('Officers')" [ngClass]="
-          activeTab === 'Officers'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Officers'" class="fa fa-check"></i>
-        Officers
-      </button>
+      <!-- Officers & Targets Card -->
+      <div class="relative flex cursor-pointer items-center justify-center rounded-lg shadow-lg">
+        <div
+          class="inline-flex h-[60px] w-full items-center justify-between rounded-lg bg-tileLight px-4 text-sm font-medium text-[#495057] transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
+          (click)="(permissionService.hasPermission('Polygon center dashboard officers and target') || tokenService.getUserDetails().role === '1') && officersTargets()"
+        >
+          <div class="flex items-center">
+            <span class="ml-2 text-sm font-semibold text-[#292929] dark:text-white sm:ml-4 sm:text-base lg:ml-8 text-[16px]"
+              >Officers & Targets</span
+            >
+          </div>
+          <i
+            class="fa-solid fa-arrow-up-right-from-square text-sm sm:text-base"
+            style="color: #4a90e2"
+          ></i>
+        </div>
+      </div>
 
-      <button *ngIf="
-        permissionService.hasPermission('Polygon centres view dashboard officer target tab') ||
-        tokenService.getUserDetails().role === '1'
-      " (click)="setActiveTab('Officer Target')" [ngClass]="
-          activeTab === 'Officer Target'
-            ? 'border border-[#415CFF] text-[#415CFF]'
-            : 'border border-gray-300 text-textLight dark:text-textDark'
-        " class="h-10 px-5 flex items-center justify-center rounded-full gap-2">
-        <i *ngIf="activeTab === 'Officer Target'" class="fa fa-check"></i>
-        Officer Target
-      </button>
+      <!-- Drivers & Vehicles Card -->
+      <div class="relative flex cursor-pointer items-center justify-center rounded-lg shadow-lg">
+        <div
+          class="inline-flex h-[60px] w-full items-center justify-between rounded-lg bg-tileLight px-4 text-sm font-medium text-[#495057] transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
+          (click)="(permissionService.hasPermission('Polygon center drivers and vehicles') || tokenService.getUserDetails().role === '1') && driversVehicles()"
+        >
+          <div class="flex items-center">
+            <span class="ml-2 text-sm font-semibold text-[#292929] dark:text-white sm:ml-4 sm:text-base lg:ml-8 text[16px]"
+              >Drivers & Vehicles</span
+            >
+          </div>
+          <i
+            class="fa-solid fa-arrow-up-right-from-square text-sm sm:text-base"
+            style="color: #4a90e2"
+          ></i>
+        </div>
+      </div>
     </div>
-    <div class="h-5"></div>
-    <div class="tab-content">
-      <app-progress [centerObj]="centerObj" *ngIf="activeTab === 'Progress' && (permissionService.hasPermission('Polygon centres view dashboard progress tab') || tokenService.getUserDetails().role === '1')"></app-progress>
-      <app-out-of-delivery [centerObj]="centerObj" *ngIf="activeTab === 'Out for Delivery' && (permissionService.hasPermission('Polygon centres view dashboard out for delivery tab') || tokenService.getUserDetails().role === '1')"></app-out-of-delivery>
-      <app-officers [centerObj]="centerObj" *ngIf="activeTab === 'Officers' && (permissionService.hasPermission('Polygon centres view dashboard officers tab') || tokenService.getUserDetails().role === '1')"></app-officers>
-      <app-officer-target [centerObj]="centerObj" *ngIf="activeTab === 'Officer Target' && (permissionService.hasPermission('Polygon centres view dashboard officer target tab') || tokenService.getUserDetails().role === '1')"></app-officer-target>
+
+    <!-- Main Content Area -->
+    <div class="grid w-full grid-cols-1 gap-8 lg:grid-cols-3 xl:gap-16">
+      <!-- Left Column - Feature Cards -->
+      <div class="lg:col-span-2">
+        <!-- Feature Cards Grid -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:gap-16">
+          <!-- Order Packing Progress Card -->
+          <div
+            class="relative h-56 w-full cursor-pointer rounded-lg bg-tileLight shadow-lg transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
+            (click)="(permissionService.hasPermission('Polygon center order packing progress') || tokenService.getUserDetails().role === '1') && packingProgress()"
+          >
+            <div class="flex flex-col items-center justify-center gap-5 h-full">
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-full bg-[#EDF5FC] p-3"
+              >
+                <i class="fa-solid fa-bag-shopping text-lg text-[#415CFF]"></i>
+              </div>
+
+              <div class="flex flex-col items-center justify-center text-center">
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
+                  >Order Packing</span
+                >
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
+                  >Progress</span
+                >
+              </div>
+            </div>
+            <div class="absolute bottom-3 right-3">
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[#415CFF]"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Home Delivery Order Records Card -->
+          <div
+            class="relative h-56 w-full cursor-pointer rounded-lg bg-tileLight shadow-lg transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
+            (click)="(permissionService.hasPermission('Polygon center home delivery order records') || tokenService.getUserDetails().role === '1') && homeDeliveryOrderRecords()"
+          >
+            <div class="flex flex-col items-center justify-center gap-5 h-full">
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-full bg-[#EDF5FC] p-3"
+              >
+                <i class="fa-solid fa-truck-fast text-lg text-[#415CFF]"></i>
+              </div>
+
+              <div class="flex flex-col items-center justify-center text-center">
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
+                  >Home Delivery</span
+                >
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
+                  >Order Records</span
+                >
+              </div>
+            </div>
+            <div class="absolute bottom-3 right-3">
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[#415CFF]"
+              ></i>
+            </div>
+          </div>
+
+          <!-- Pickup Order Records Card -->
+          <div
+            class="relative h-56 w-full cursor-pointer rounded-lg bg-tileLight shadow-lg transition-shadow hover:bg-tileHoverLight hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 group-hover:drop-shadow-md dark:bg-tileBlack dark:text-gray-200 dark:hover:bg-tileHoverDark dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800"
+            (click)="(permissionService.hasPermission('Polygon center pickup order records') || tokenService.getUserDetails().role === '1') && pickUpOrderRecords()"
+          >
+            <div class="h-full flex flex-col items-center justify-center gap-5">
+              <div
+                class="flex h-12 w-12 items-center justify-center rounded-full bg-[#EDF5FC] p-3"
+              >
+                <i class="fa-solid fa-hand-holding-hand text-lg text-[#415CFF]"></i>
+              </div>
+
+              <div class="flex flex-col items-center justify-center text-center">
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
+                  >Pickup Order</span
+                >
+                <span class="block font-semibold text-[#292929] dark:text-white text-[16px]"
+                  >Records</span
+                >
+              </div>
+            </div>
+            <div class="absolute bottom-3 right-3">
+              <i
+                class="fa-solid fa-arrow-up-right-from-square text-[#415CFF]"
+              ></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Cash Card -->
+      <div class="lg:col-span-1">
+        <div
+          class="relative flex cursor-pointer items-center justify-center rounded-lg bg-[#3B82F6] shadow-lg transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)]"
+          (click)="(permissionService.hasPermission('Polygon center received cash') || tokenService.getUserDetails().role === '1') && receivedCashToday()"
+        >
+          <div class="flex h-56 w-full cursor-pointer flex-col items-center justify-center gap-2 p-4">
+            <span class="text-3xl font-semibold text-white sm:text-4xl"
+              ><i class="fa-solid fa-coins"></i
+            ></span>
+            <span class="text-lg font-semibold text-white text-text-[16px]"
+              >Received Cash Today</span
+            >
+            <span class="text-lg font-semibold text-white text-[16px]">{{cashPriceObj.total_orders}} Orders</span>
+            <span class="text-xl font-semibold text-white text-text-[16px]"> Rs. {{cashPriceObj.total_price | number:'1.2-2'}}</span>
+          </div>
+          <div class="absolute bottom-3 right-3 text-white">
+            <span class="mr-2 underline">View All</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

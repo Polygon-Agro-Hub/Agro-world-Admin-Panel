@@ -274,7 +274,15 @@ export interface PaymentHistoryListResponse {
   data: PaymentHistoryListItem[];
 }
 
-
+export interface ApprovedDetails {
+  defineBy: string | null;
+  maxShare: number;
+  minShare: number;
+  totValue: number;
+  approveId: number;
+  definedAt: string;
+  defineShares: number;
+}
 
 export interface GoviCareRequest {
   No: number;
@@ -291,7 +299,8 @@ export interface GoviCareRequest {
   empId: string;
   publishStatus: string;
   Request_Date_Time: string;
-  approvedDetails: any;
+  approvedDetails: ApprovedDetails | null;
+  Farmer_ID: any;
 }
 
 export interface GoviCareRequestsResponse {
@@ -307,13 +316,14 @@ export interface GoviCareRequestDetail {
   Crop: string;
   Variety: string;
   Certificate: string;
-  Extent: string;
+  Extent: number;
+  ExtentH: number;
+  ExtentP: number;
   Expected_Investment: number;
   Expected_Yield: string;
   Expected_Start_Date: string;
   Request_Date_Time: string;
-  approvedDetails: any;
-
+  approvedDetails: ApprovedDetails | null;
 }
 
 export interface GoviCareRequestDetailResponse {
@@ -698,6 +708,7 @@ export class FinanceService {
 
   getAllApprovedGoviCareRequests(
     status?: string,
+    shares?: string,
     search?: string
   ): Observable<ApprovedGoviCareRequestsResponse> {
     const headers = new HttpHeaders({
@@ -708,6 +719,10 @@ export class FinanceService {
 
     if (status && status.trim()) {
       params = params.set('status', status.trim());
+    }
+
+    if (shares && shares.trim()) {
+      params = params.set('shares', shares.trim());
     }
 
     if (search && search.trim()) {
@@ -725,14 +740,16 @@ export class FinanceService {
 
   getOfficersByDistrictAndRoleForInvestment(
     distrct: string,
-    role: string
+    role: string,
+    Farmer_ID: any
   ): Observable<any> {
     return this.http.get<any>(
       `${this.apiUrl}finance/officers`,
       {
         params: {
           district: distrct,
-          jobRole: role
+          jobRole: role,
+          Farmer_ID: Farmer_ID
         }
       }
     );
@@ -944,6 +961,39 @@ export class FinanceService {
       }
     );
   }
+
+  approveRequest(
+    id: number
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
+    return this.http.patch<any>(
+      `${this.apiUrl}finance/approve-request`,
+      {
+        reqId: id,
+      },
+      {
+        headers
+      }
+    );
+  }
+
+   getSalesAgentForFilters(): Observable<any> {
+    const url = `${this.apiUrl}finance/get-sales-agent-for-filter`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+    });
+  }
+
+  getAgentCommisons(data:any): Observable<any> {
+    const url = `${this.apiUrl}finance/get-agent-commissions`;
+    return this.http.post<any>(url, data, {
+      headers: this.getHeaders(),
+    });
+  }
+
 }
 
 

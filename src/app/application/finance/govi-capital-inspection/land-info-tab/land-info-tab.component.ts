@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -11,6 +11,10 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class LandInfoTabComponent implements OnDestroy {
   @Input() landlObj!: ILand;
+  @Input() currentPage: number = 4;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
   
   showMapPopup = false;
   showImagePopup = false;
@@ -18,12 +22,33 @@ export class LandInfoTabComponent implements OnDestroy {
   currentImages: string[] = [];
   currentImageIndex = 0;
   
+  // Zoom functionality for images
+  scale = 1;
+  private readonly MIN_SCALE = 0.5;
+  private readonly MAX_SCALE = 3;
+  private readonly SCALE_STEP = 0.2;
+  
+  // Pan functionality
+  isPanning = false;
+  startX = 0;
+  startY = 0;
+  translateX = 0;
+  translateY = 0;
+  
   // OpenStreetMap properties
   mapUrl: SafeResourceUrl = '';
   mapIframeLoaded = false;
   private mapTimeout: any;
 
   constructor(private sanitizer: DomSanitizer) {}
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
+  }
 
   ngOnDestroy(): void {
     if (this.mapTimeout) {
@@ -62,14 +87,16 @@ export class LandInfoTabComponent implements OnDestroy {
   }
 
   get ownershipDisplay(): string {
-    if (!this.landlObj?.isOwnByFarmer) return 'Not provided';
+    if (this.landlObj?.isOwnByFarmer === null || this.landlObj?.isOwnByFarmer === undefined) {
+      return '--';
+    }
     
     const value = this.landlObj.isOwnByFarmer.toString().trim();
     
     if (value === '1') return 'Yes';
     if (value === '0') return 'No';
     
-    return this.landlObj.isOwnByFarmer;
+    return '--';
   }
 
   openMapPopup(): void {
@@ -156,6 +183,8 @@ export class LandInfoTabComponent implements OnDestroy {
     this.currentImageIndex = 0;
     this.currentImages = [];
     this.mapIframeLoaded = false;
+    this.resetZoom();
+    this.resetPan();
     
     if (this.mapTimeout) {
       clearTimeout(this.mapTimeout);
@@ -171,6 +200,57 @@ export class LandInfoTabComponent implements OnDestroy {
   handleThumbnailError(event: Event): void {
     const imgElement = event.target as HTMLImageElement;
     imgElement.src = 'https://via.placeholder.com/150/9E9E9E/FFFFFF?text=Image';
+  }
+
+  zoomIn(): void {
+    if (this.scale < this.MAX_SCALE) {
+      this.scale += this.SCALE_STEP;
+    }
+  }
+
+  zoomOut(): void {
+    if (this.scale > this.MIN_SCALE) {
+      this.scale -= this.SCALE_STEP;
+    }
+  }
+
+  resetZoom(): void {
+    this.scale = 1;
+  }
+
+  // Pan (drag) functionality
+  onMouseDown(event: MouseEvent): void {
+    if (this.scale > 1) {
+      this.isPanning = true;
+      this.startX = event.clientX - this.translateX;
+      this.startY = event.clientY - this.translateY;
+      event.preventDefault();
+    }
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (this.isPanning && this.scale > 1) {
+      this.translateX = event.clientX - this.startX;
+      this.translateY = event.clientY - this.startY;
+    }
+  }
+
+  onMouseUp(): void {
+    this.isPanning = false;
+  }
+
+  onMouseLeave(): void {
+    this.isPanning = false;
+  }
+
+  resetPan(): void {
+    this.translateX = 0;
+    this.translateY = 0;
+    this.isPanning = false;
+  }
+
+  getImageTransform(): string {
+    return `scale(${this.scale}) translate(${this.translateX / this.scale}px, ${this.translateY / this.scale}px)`;
   }
 }
 

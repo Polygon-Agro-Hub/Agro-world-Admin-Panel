@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import {
   HttpClient,
   HttpClientModule,
@@ -41,10 +41,10 @@ export class RoleSelectionComponent {
   }
 
   closeModal() {
-    this.isModalOpen = false;
-    this.emailError = null; // Clear error when modal closes
-  this.createRolesObj.email = ''; // Clear email field
-  }
+  this.isModalOpen = false;
+  this.emailError = null; // Clear error when modal closes
+  this.createRolesObj = new CreateRoles(); // Reset to new empty object
+}
 
   editModalOpen(role: any) {
     this.selectedRole = { ...role };
@@ -52,9 +52,10 @@ export class RoleSelectionComponent {
   }
 
   editCloseModel() {
-    this.iseditModalOpen = false;
-    this.editEmailError = null; // Clear error when modal closes
-  }
+  this.iseditModalOpen = false;
+  this.editEmailError = null; // Clear error when modal closes
+  this.selectedRole = {}; // Reset selected role
+}
 
   addSection() {
     // Add logic to save the new section
@@ -65,14 +66,14 @@ export class RoleSelectionComponent {
     this.validateCreateEmail();
 
     if (this.emailError) {
-    Swal.fire({
-      title: 'Validation Error!',
-      text: 'Please fix the email validation errors before submitting.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    });
-    return;
-  }
+      Swal.fire({
+        title: 'Validation Error!',
+        text: 'Please fix the email validation errors before submitting.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
 
 
     this.roleSelectionService.createRoles(this.createRolesObj)?.subscribe(
@@ -104,16 +105,16 @@ export class RoleSelectionComponent {
 
   onEditOnSubmit() {
     this.validateEditEmail();
-  
-  if (this.editEmailError) {
-    Swal.fire({
-      title: 'Validation Error!',
-      text: 'Please fix the email validation errors before submitting.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    });
-    return;
-  }
+
+    if (this.editEmailError) {
+      Swal.fire({
+        title: 'Validation Error!',
+        text: 'Please fix the email validation errors before submitting.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
 
     this.updateRole();
   }
@@ -154,8 +155,9 @@ export class RoleSelectionComponent {
     public permissionService: PermissionService,
     private tokenService: TokenService,
     private roleSelectionService: RoleSelectionService,
-    private emailValidationService: EmailvalidationsService
-  ) {}
+    private emailValidationService: EmailvalidationsService,
+    private location: Location
+  ) { }
 
   ngOnInit() {
     this.getAllRoles();
@@ -175,24 +177,114 @@ export class RoleSelectionComponent {
     );
   }
 
-  viewPermissions(id: number) {
-    this.router.navigate([`/settings/give-permissions/${id}`]);
+  viewPermissions(id: number, role: string) {
+    this.router.navigate([`/settings/give-permissions/${id}`],
+      { queryParams: { role: role } }
+    );
   }
 
   validateCreateEmail(): void {
-  if (!this.createRolesObj.email) {
-    this.emailError = this.emailValidationService.validationMessages.required;
-    return;
+    if (!this.createRolesObj.email) {
+      this.emailError = this.emailValidationService.validationMessages.required;
+      return;
+    }
+    this.emailError = this.emailValidationService.getErrorMessage(this.createRolesObj.email);
   }
-  this.emailError = this.emailValidationService.getErrorMessage(this.createRolesObj.email);
+
+  // validateEditEmail(): void {
+  //   this.selectedRole.email = this.selectedRole.email.trim();
+  //   if (!this.selectedRole.email) {
+  //     this.editEmailError = this.emailValidationService.validationMessages.required;
+  //     return;
+  //   }
+  //   this.editEmailError = this.emailValidationService.getErrorMessage(this.selectedRole.email);
+  // }
+
+  back() {
+    this.location.back();
+  }
+
+
+  validateEditEmail(): void {
+    if (!this.selectedRole.email) {
+      this.editEmailError = this.emailValidationService.validationMessages.required;
+      return;
+    }
+    this.editEmailError = this.emailValidationService.getErrorMessage(this.selectedRole.email);
+  }
+
+  trimEmailInput() {
+    if (this.selectedRole.email) {
+      // Trim leading and trailing spaces (for email, we usually want both)
+      const trimmed = this.selectedRole.email.trim();
+      if (trimmed !== this.selectedRole.email) {
+        this.selectedRole.email = trimmed;
+      }
+    }
+    this.validateEditEmail();
+  }
+
+ preventLeadingSpace(event: KeyboardEvent, currentValue: string): void {
+  // Check if space key is pressed
+  if (event.key === ' ' || event.keyCode === 32) {
+    const target = event.target as HTMLInputElement;
+    const cursorPosition = target.selectionStart || 0;
+    
+    if (!currentValue || cursorPosition === 0 || currentValue.trim().length === 0) {
+      event.preventDefault();
+    }
+  }
+}
+onPaste(event: ClipboardEvent, field: 'role' | 'email'): void {
+  event.preventDefault();
+  const pastedText = event.clipboardData?.getData('text') || '';
+  const target = event.target as HTMLInputElement;
+  const cursorPosition = target.selectionStart || 0;
+  const currentValue = this.selectedRole[field] || '';
+  
+  // Remove leading spaces from pasted text
+  const trimmedText = pastedText.replace(/^\s+/, '');
+  
+  // If pasting at the beginning, use trimmed text
+  // Otherwise, insert normally
+  if (cursorPosition === 0) {
+    this.selectedRole[field] = trimmedText + currentValue;
+  } else {
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    const afterCursor = currentValue.substring(cursorPosition);
+    this.selectedRole[field] = beforeCursor + trimmedText + afterCursor;
+  }
+  
+  // Validate email if it's the email field
+  if (field === 'email') {
+    this.validateEditEmail();
+  }
 }
 
-validateEditEmail(): void {
-  if (!this.selectedRole.email) {
-    this.editEmailError = this.emailValidationService.validationMessages.required;
-    return;
+onCreatePaste(event: ClipboardEvent, field: 'role' | 'email'): void {
+  event.preventDefault();
+  const pastedText = event.clipboardData?.getData('text') || '';
+  const target = event.target as HTMLInputElement;
+  const cursorPosition = target.selectionStart || 0;
+  const currentValue = this.createRolesObj[field] || '';
+  
+  // Remove leading spaces from pasted text
+  const trimmedText = pastedText.replace(/^\s+/, '');
+  
+  // If pasting at the beginning, use trimmed text
+  // Otherwise, insert normally
+  if (cursorPosition === 0) {
+    this.createRolesObj[field] = trimmedText + currentValue;
+  } else {
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    const afterCursor = currentValue.substring(cursorPosition);
+    this.createRolesObj[field] = beforeCursor + trimmedText + afterCursor;
   }
-  this.editEmailError = this.emailValidationService.getErrorMessage(this.selectedRole.email);
+  
+  // Validate email if it's the email field
+  if (field === 'email') {
+    this.validateCreateEmail();
+  }
 }
 }
 

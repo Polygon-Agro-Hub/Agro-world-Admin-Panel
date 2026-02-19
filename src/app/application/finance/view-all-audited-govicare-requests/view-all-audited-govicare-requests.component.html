@@ -6,7 +6,7 @@
   </div>
   
   <!-- Main Content -->
-  <div *ngIf="!isLoading" class="p-6">
+  <div *ngIf="!isLoading">
     <!-- Back Button -->
     <button class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
       onclick="history.back()">
@@ -36,7 +36,7 @@
                     d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
                 </svg>
               </i>
-              <span class="text-sm text-[#828282]">Filter By</span>
+              <span class=" text-[#828282]">Filter By</span>
             </div>
 
             <!-- Search Input -->
@@ -67,25 +67,32 @@
           <table class="w-full" *ngIf="govicareRequests.length > 0">
             <thead>
               <tr class="border-b border-gray-200 dark:border-gray-700">
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">No
+                <th class="px-4 py-3 text-left  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">No
                 </th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Request_ID</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Farmer Name</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Phone number</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Audited By</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-left  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap">
                   Audit Date</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th 
+                  class="px-4 py-3 text-center  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap"
+                  *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'"
+                  >
                   NIC Front Image</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-center  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'"
+                >
                   NIC Back Image</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-center  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View audit request result') || tokenService.getUserDetails().role === '1'">
                   Audit Results</th>
-                <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <th class="px-4 py-3 text-center  font-medium text-gray-500 dark:text-[#C8C8C8] whitespace-nowrap"
+                 *ngIf=" permissionService.hasPermission('Audited request other details') || tokenService.getUserDetails().role === '1'">
                   Details</th>
               </tr>
             </thead>
@@ -94,37 +101,39 @@
                 class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
   
                 <!-- No -->
-                <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                <td class="px-4 py-4  text-textLight dark:text-textDark">
                     {{ (i + 1).toString().padStart(3, '0') }}
                   </td>
   
                 <!-- Request ID -->
-                <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                <td class="px-4 py-4  text-textLight dark:text-textDark">
                   {{ request.Request_ID }}
                 </td>
   
                 <!-- Farmer Name -->
-                <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                <td class="px-4 py-4  text-textLight dark:text-textDark">
                   {{ request.Farmer_Name }}
                 </td>
   
                 <!-- Phone Number -->
-                <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                <td class="px-4 py-4  text-textLight dark:text-textDark">
                   {{ request.Phone_number }}
                 </td>
   
                 <!-- Approved By -->
-                <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                <td class="px-4 py-4  text-textLight dark:text-textDark">
                   {{ request.empId }}
                 </td>
   
                 <!-- Approved Time -->
-                <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
-                  {{ request.reqCahangeTime | date:'MMMM dd, yyyy'}}
+                <td class="px-4 py-4  text-textLight dark:text-textDark">
+                  {{ request.reqCahangeTime ? (request.reqCahangeTime | date:'MMMM dd, yyyy') : '--' }}
                 </td>
   
                 <!-- NIC Front Image -->
-                <td class="px-4 py-4 text-center">
+                <td 
+                  class="px-4 py-4 text-center"
+                  *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'">
                     <ng-container *ngIf="request.NIC_Front_Image; else noImage">
                       <button
                         (click)="openImage(request.NIC_Front_Image)"
@@ -140,7 +149,9 @@
                 </td>
 
 
-                <td class="px-4 py-4 text-center">
+                <td 
+                class="px-4 py-4 text-center"
+                *ngIf=" permissionService.hasPermission('Audited request view NIC') || tokenService.getUserDetails().role === '1'">
                     <ng-container *ngIf="request.NIC_Back_Image; else noImage">
                       <button
                         (click)="openImage(request.NIC_Back_Image)"
@@ -155,7 +166,10 @@
                     </ng-template>
                 </td>
 
-                <td class="px-4 py-4 text-center">
+                <td 
+                  class="px-4 py-4 text-center"
+                  *ngIf=" permissionService.hasPermission('View audit request result') || tokenService.getUserDetails().role === '1'"
+                  >
                     <button (click)="auditResults(request.No)"
                       class="text-blue-500 hover:text-blue-600 transition">
                       <i class="fa-solid fa-arrow-up-right-from-square text-xl"></i>
@@ -163,7 +177,10 @@
                   </td>
                   
                 <!-- Details (Eye Icon) -->
-                <td class="px-4 py-4 text-center">
+                <td 
+                  class="px-4 py-4 text-center"
+                  *ngIf=" permissionService.hasPermission('Audited request other details') || tokenService.getUserDetails().role === '1'"
+                  >
                   <button (click)="viewDetails(request.Request_ID)"
                     class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -207,82 +224,82 @@
   
         <!-- Farmer Name -->
         <div class="flex items-start">
-          <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer Name</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-          <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Farmer Name</span>
+          <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+          <span class=" text-textLight dark:text-textDark font-medium flex-1">
             {{ selectedRequest?.Farmer_Name }}
           </span>
         </div>
   
         <!-- NIC Number -->
         <div class="flex items-start">
-          <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">NIC Number</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-          <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">NIC Number</span>
+          <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+          <span class=" text-textLight dark:text-textDark font-medium flex-1">
             {{ selectedRequest?.NIC_Number }}
           </span>
         </div>
   
         <!-- Phone Number -->
         <div class="flex items-start">
-          <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Phone Number</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-          <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Phone Number</span>
+          <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+          <span class=" text-textLight dark:text-textDark font-medium flex-1">
             {{ selectedRequest?.Phone_number }}
           </span>
         </div>
   
         <!-- Crop -->
         <div class="flex items-start">
-          <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Crop</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-          <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Crop</span>
+          <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+          <span class=" text-textLight dark:text-textDark font-medium flex-1">
             {{ selectedRequest?.Crop }}
           </span>
         </div>
   
         <!-- Extent -->
         <div class="flex items-start">
-          <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Extent</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-          <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
-            {{ selectedRequest?.Extent }}
+          <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Extent</span>
+          <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+          <span class=" text-textLight dark:text-textDark font-medium flex-1">
+            {{ totArea.toFixed(3) }} Acres
           </span>
         </div>
   
         <!-- Expected Investment -->
         <div class="flex items-start">
-          <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Investment</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-          <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Investment</span>
+          <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+          <span class=" text-textLight dark:text-textDark font-medium flex-1">
             {{ formatCurrency(selectedRequest?.Expected_Investment || 0) }}
           </span>
         </div>
   
         <!-- Expected Yield -->
         <div class="flex items-start">
-          <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Yield</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-          <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Yield</span>
+          <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+          <span class=" text-textLight dark:text-textDark font-medium flex-1">
             {{ selectedRequest?.Expected_Yield }}
           </span>
         </div>
   
         <!-- Expected Start Date -->
         <div class="flex items-start">
-          <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Start Date</span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-          <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+          <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Expected Start Date</span>
+          <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+          <span class=" text-textLight dark:text-textDark font-medium flex-1">
             {{ selectedRequest?.Expected_Start_Date }}
           </span>
         </div>
 
         <div class="flex items-start">
-            <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">
+            <span class=" text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">
               Request Date & Time
             </span>
-            <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-            <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
+            <span class=" text-gray-600 dark:text-gray-400 mx-3">:</span>
+            <span class=" text-textLight dark:text-textDark font-medium flex-1">
               At {{ selectedRequest?.Expected_Start_Date | date:'hh.mm a' }}
               on {{ selectedRequest?.Expected_Start_Date | date:'MMMM d, y' }}
             </span>
@@ -293,7 +310,7 @@
       <!-- Modal Footer -->
       <div class="px-6 py-4 flex justify-center">
         <button (click)="closeDetailsModal()"
-          class="px-12 py-2 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium text-sm">
+          class="px-12 py-2 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium ">
           Close
         </button>
       </div>

@@ -41,7 +41,7 @@ export class GovicareCertificationMainComponent implements OnInit {
   }
 
   onBack(): void {
-    this.router.navigate(['/finance/action']);
+    this.router.navigate(['/finance/action/govicare-finance']);
   }
 
   loadDashboardData(): void {

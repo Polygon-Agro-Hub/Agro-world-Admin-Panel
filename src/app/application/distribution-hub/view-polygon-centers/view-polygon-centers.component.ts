@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -116,8 +116,9 @@ export class ViewPolygonCentersComponent implements OnInit {
     private router: Router,
     private DestributionSrv: DestributionService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) {}
+    public permissionService: PermissionService,
+    private location: Location
+  ) { }
 
   ngOnInit(): void {
     this.fetchAllCollectionCenter(this.page, this.itemsPerPage);
@@ -139,14 +140,14 @@ export class ViewPolygonCentersComponent implements OnInit {
     this.urlSegment = this.router.url.split('/').filter(segment => segment.length > 0)[0];
   }
 
-  back(): void {
-    this.router.navigate(['/distribution-hub/action/view-destribition-center'], {
-      queryParams: {
-        id: 2,
-        companyName: 'agroworld Distribution (Pvt) Ltd'
-      }
-    });
-  }
+  // back(): void {
+  //   this.router.navigate(['/distribution-hub/action/view-destribition-center'], {
+  //     queryParams: {
+  //       id: 2,
+  //       companyName: 'agroworld Distribution (Pvt) Ltd'
+  //     }
+  //   });
+  // }
   fetchCompanies(): void {
     this.isLoading = true;
     this.DestributionSrv.getCompanies().subscribe({
@@ -309,37 +310,51 @@ export class ViewPolygonCentersComponent implements OnInit {
     // this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
   }
 
- deleteCenter(id: number) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'You will not be able to recover this centre!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    confirmButtonColor: '#2563eb', // Blue confirm
-    cancelButtonColor: '#dc2626',  // Red cancel
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.DestributionSrv.deleteDistributedCenter(id).subscribe(
-        (res) => {
-          if (res.success) {
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'The centre has been deleted.',
-              icon: 'success',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-              },
-              confirmButtonColor: '#2563eb',
-            });
-            this.fetchAllCollectionCenter();
-          } else {
+  deleteCenter(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this centre!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      confirmButtonColor: '#2563eb', // Blue confirm
+      cancelButtonColor: '#dc2626',  // Red cancel
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.DestributionSrv.deleteDistributedCenter(id).subscribe(
+          (res) => {
+            if (res.success) {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'The centre has been deleted.',
+                icon: 'success',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+                confirmButtonColor: '#2563eb',
+              });
+              this.fetchAllCollectionCenter();
+            } else {
+              Swal.fire({
+                title: 'Error!',
+                text: 'Failed to delete the center.',
+                icon: 'error',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                },
+                confirmButtonColor: '#2563eb',
+              });
+            }
+          },
+          (error) => {
+            console.error('Error deleting center:', error);
             Swal.fire({
               title: 'Error!',
               text: 'Failed to delete the center.',
@@ -351,24 +366,10 @@ export class ViewPolygonCentersComponent implements OnInit {
               confirmButtonColor: '#2563eb',
             });
           }
-        },
-        (error) => {
-          console.error('Error deleting center:', error);
-          Swal.fire({
-            title: 'Error!',
-            text: 'Failed to delete the center.',
-            icon: 'error',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
-            },
-            confirmButtonColor: '#2563eb',
-          });
-        }
-      );
-    }
-  });
-}
+        );
+      }
+    });
+  }
 
   viewCenter(id: number) {
     this.router.navigate([
@@ -388,14 +389,14 @@ export class ViewPolygonCentersComponent implements OnInit {
     ]);
   }
 
- viewDistributionCenterDashboard(id: number, name: string, regCode: string): void {
-  this.router.navigate(
-    [`/distribution-hub/action/view-polygon-centers/distribution-center-dashboard/${id}`],
-    {
-      queryParams: { name, regCode }
-    }
-  );
-}
+  viewDistributionCenterDashboard(id: number, name: string, regCode: string): void {
+    this.router.navigate(
+      [`/distribution-hub/action/view-polygon-centers/distribution-center-dashboard/${id}`],
+      {
+        queryParams: { name, regCode }
+      }
+    );
+  }
 
   onSearchKeydown(event: KeyboardEvent): void {
     if (event.key === ' ' || event.keyCode === 32) {
@@ -424,6 +425,14 @@ export class ViewPolygonCentersComponent implements OnInit {
       event.preventDefault();
     }
   }
+
+  back() {
+    if(this.urlSegment === 'distribution-hub'){
+      this.router.navigate(['/distribution-hub/action']);
+    }else{
+      this.router.navigate(['/steckholders/action']);
+    }
+  }
 }
 
 class DistributionCentre {
@@ -441,5 +450,5 @@ class DistributionCentre {
   latitude!: string;
   longitude!: string;
   companyName!: string;
-  companyCenerId!:number;
+  companyCenerId!: number;
 }

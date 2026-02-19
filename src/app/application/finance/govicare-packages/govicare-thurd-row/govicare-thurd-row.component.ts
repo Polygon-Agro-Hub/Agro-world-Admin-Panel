@@ -2,24 +2,30 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { RecentPayment } from '../../../../services/plant-care/plantcare-users.service';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-govicare-thurd-row',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './govicare-thurd-row.component.html',
-  styleUrl: './govicare-thurd-row.component.css'
+  styleUrl: './govicare-thurd-row.component.css',
 })
 export class GovicareThurdRowComponent {
   @Input() recentPayments: RecentPayment[] = [];
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) {}
 
   formatDate(dateTime: string): string {
     const date = new Date(dateTime);
     return date.toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'short',
-      year: 'numeric'
+      year: 'numeric',
     });
   }
 
@@ -28,11 +34,11 @@ export class GovicareThurdRowComponent {
     return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: true
+      hour12: true,
     });
   }
-  
-    ViewAll(): void {
+
+  ViewAll(): void {
     this.router.navigate(['/finance/action/view-all-package-payments']);
   }
 }

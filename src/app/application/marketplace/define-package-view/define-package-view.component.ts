@@ -85,7 +85,7 @@ export class DefinePackageViewComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure you want to go back?',
-      text: 'Your basic package details are saved. If you return to the previous page, the form will not remain filled.\nIf you need to update any basic information, please go to Edit.',
+      text: 'Your basic package details have been saved. If you return to the previous page, you will be redirected to the View Packages list. To update any basic information, please go to Edit after that.',
       showCancelButton: true,
       confirmButtonText: 'Yes, Go Back',
       cancelButtonText: 'No, Stay Here',
@@ -97,7 +97,8 @@ export class DefinePackageViewComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        window.history.back();
+        // window.history.back();
+        this.router.navigate(['/market/action/view-packages-list']);
       }
     });
   }
@@ -106,7 +107,7 @@ export class DefinePackageViewComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure you want to Cancel?',
-      text: 'Your basic package details are saved. If you return to the previous page, the form will not remain filled.\nIf you need to update any basic information, please go to Edit.',
+      text: 'Your basic package details have been saved. If you return to the previous page, you will be redirected to the View Packages list. To update any basic information, please go to Edit after that.',
       showCancelButton: true,
       confirmButtonText: 'Yes, Cancel',
       cancelButtonText: 'No, Keep Editing',
@@ -118,7 +119,8 @@ export class DefinePackageViewComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        window.history.back();
+        // window.history.back();
+        this.router.navigate(['/market/action/view-packages-list']);
       }
     });
   }

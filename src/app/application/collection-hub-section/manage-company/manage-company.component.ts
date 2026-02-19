@@ -285,4 +285,9 @@ class CompanyDetails {
   numOfOfficers!: number;
   numOfCustomerOfficers!: number;
   numOfCenters!: number;
+  oicConCode1!: string;
+  oicConCode2!: string;
+  oicConNum1!: string;
+  oicConNum2!: string;
+  userName!: string;
 }

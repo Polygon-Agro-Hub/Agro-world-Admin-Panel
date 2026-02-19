@@ -55,10 +55,10 @@ export class ViewDriverComponent implements OnInit {
   @ViewChild('selectedCenterIdInput') selectedCenterIdInput!: NgModel;
   @ViewChild('selectedIrmIdInput') selectedIrmIdInput!: NgModel;
   collectionOfficers: CollectionOfficers[] = [];
-  jobRole: JobRole[] = [
-    { id: 1, jobRole: 'Collection Officer' },
-    { id: 2, jobRole: 'Collection Centre Manager' },
-  ];
+  // jobRole: JobRole[] = [
+  //   { id: 1, jobRole: 'Collection Officer' },
+  //   { id: 2, jobRole: 'Collection Centre Manager' },
+  // ];
   centerNames: CenterName[] = [];
   collectionCenterManagerNames: ManagerNames[] = [];
   page: number = 1;

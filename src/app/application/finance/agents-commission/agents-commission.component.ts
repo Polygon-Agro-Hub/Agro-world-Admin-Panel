@@ -1,30 +1,15 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
-
-interface CommissionData {
-  no: string;
-  empId: string;
-  noOfCustomers: number;
-  totalOrderValue: number;
-  eligibility: string;
-  commission: number | string;
-  month: string;
-}
-
-interface FilterOption {
-  label: string;
-  value: string;
-}
-
-interface MonthOption {
-  label: string;
-  value: string;
-}
+import { FinanceService } from '../../../services/finance/finance.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-agents-commission',
@@ -32,6 +17,7 @@ interface MonthOption {
   imports: [
     CommonModule,
     DropdownModule,
+    AutoCompleteModule,
     LoadingSpinnerComponent,
     FormsModule,
     CalendarModule,
@@ -40,172 +26,274 @@ interface MonthOption {
   styleUrl: './agents-commission.component.css',
 })
 export class AgentsCommissionComponent {
-  isLoading = false;
-  commissionData: CommissionData[] = [];
-  filteredCommissionData: CommissionData[] = [];
-  
+  @ViewChild('commissionForm') commissionForm!: NgForm; // Add this
+
+  agentArr: SalesAgents[] = [];
+  filteredAgents: SalesAgents[] = [];
+  salesCommisionsArr: SalesCommisions[] = [];
+  selectedAgent: SalesAgents | null = null;
+  filterObj!: FilterData;
+  selectedFilter: string = '';
+  fromDate!: Date;
+  toDate!: Date;
+  deliveredDate!: Date;
+
+  isLoading = true;
+  isinit = false;
+  hasData = false;
+
+  // Add form submitted flag
+  formSubmitted = false;
+
   // Eligibility filter options
   filterOptions: FilterOption[] = [
-    { label: 'Eligible', value: 'eligible' },
-    { label: 'Not Eligible', value: 'notEligible' },
-    { label: 'All', value: 'all' }
+    { label: 'Completed', value: 'Completed' },
+    { label: 'Pending', value: 'Pending' },
   ];
-  selectedFilter = 'eligible';
-  
-  // Month filter options
-  monthOptions: MonthOption[] = [
-    { label: 'January', value: '1' },
-    { label: 'February', value: '2' },
-    { label: 'March', value: '3' },
-    { label: 'April', value: '4' },
-    { label: 'May', value: '5' },
-    { label: 'June', value: '6' },
-    { label: 'July', value: '7' },
-    { label: 'August', value: '8' },
-    { label: 'September', value: '9' },
-    { label: 'October', value: '10' },
-    { label: 'November', value: '11' },
-    { label: 'December', value: '12' }
-  ];
-  selectedMonth = 'all';
-  
-  searchQuery = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private financeService: FinanceService,
+    private location: Location,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.loadDummyData();
-    this.applyFilters();
+    this.fetchSalesAgent();
   }
 
-  loadDummyData(): void {
-    // Expanded data with different months for testing
-    this.commissionData = [
-      {
-        no: '001',
-        empId: 'SA00004',
-        noOfCustomers: 101,
-        totalOrderValue: 1000000.00,
-        eligibility: 'Eligible',
-        commission: 8585.00,
-        month: 'June'
-      },
-      {
-        no: '002',
-        empId: 'SA00005',
-        noOfCustomers: 205,
-        totalOrderValue: 800000.00,
-        eligibility: 'Eligible',
-        commission: 23575.00,
-        month: 'June'
-      },
-      {
-        no: '003',
-        empId: 'SA00006',
-        noOfCustomers: 201,
-        totalOrderValue: 200000.00,
-        eligibility: 'Eligible',
-        commission: 200000.00,
-        month: 'May'
-      },
-      {
-        no: '004',
-        empId: 'SA00007',
-        noOfCustomers: 450,
-        totalOrderValue: 850000.00,
-        eligibility: 'Eligible',
-        commission: 74250.00,
-        month: 'May'
-      },
-      {
-        no: '005',
-        empId: 'SA00008',
-        noOfCustomers: 90,
-        totalOrderValue: 50000.00,
-        eligibility: 'Not Eligible',
-        commission: '--',
-        month: 'June'
-      },
-      {
-        no: '006',
-        empId: 'SA00009',
-        noOfCustomers: 150,
-        totalOrderValue: 300000.00,
-        eligibility: 'Eligible',
-        commission: 15000.00,
-        month: 'July'
-      },
-      {
-        no: '007',
-        empId: 'SA00010',
-        noOfCustomers: 80,
-        totalOrderValue: 40000.00,
-        eligibility: 'Not Eligible',
-        commission: '--',
-        month: 'July'
+  fetchSalesAgent() {
+    this.isLoading = true;
+    this.financeService.getSalesAgentForFilters().subscribe(
+      (res) => {
+        this.agentArr = res.data;
+        this.filteredAgents = [...this.agentArr];
+        this.isLoading = false;
       }
-    ];
+    )
   }
 
-  applyFilters(): void {
-    let filtered = this.commissionData;
-    
-    // Filter by eligibility
-    if (this.selectedFilter === 'eligible') {
-      filtered = filtered.filter(item => item.eligibility === 'Eligible');
-    } else if (this.selectedFilter === 'notEligible') {
-      filtered = filtered.filter(item => item.eligibility === 'Not Eligible');
+  filterAgents(event: any) {
+    const query = event.query.toLowerCase().trim();
+    this.filteredAgents = this.agentArr.filter(agent =>
+      agent.empId.toLowerCase().includes(query) ||
+      agent.id.toString().includes(query)
+    );
+  }
+
+  onAgentSelect(event: any) {
+    this.selectedAgent = event.value;
+    console.log('Selected Agent:', this.selectedAgent);
+  }
+
+  clearAgent() {
+    this.selectedAgent = null;
+  }
+
+  genarateData() {
+    // Mark form as submitted
+    this.formSubmitted = true;
+
+    // Mark all controls as touched to trigger validation display
+    if (this.commissionForm) {
+      this.markFormGroupTouched(this.commissionForm);
     }
-    
-    // Filter by month
-    if (this.selectedMonth !== 'all') {
-      filtered = filtered.filter(item => item.month === this.selectedMonth);
+
+    // Check if form is valid
+    if (!this.isFormValid()) {
+      console.log('Form is invalid. Please fill all required fields.');
+      return;
     }
-    
-    // Filter by search query
-    if (this.searchQuery.trim()) {
-      filtered = filtered.filter(item => 
-        item.empId.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    }
-    
-    this.filteredCommissionData = filtered;
+    this.isLoading = true;
+    // Format dates and create filter object
+    this.filterObj = {
+      agentId: this.selectedAgent?.id || null,
+      paymentStatus: this.selectedFilter,
+      fromDate: this.formatDateForAPI(this.fromDate),
+      toDate: this.formatDateForAPI(this.toDate),
+      deliveredDate: this.formatDateForAPI(this.deliveredDate),
+    };
+
+    console.log('Filter Object:', this.filterObj);
+
+    this.financeService.getAgentCommisons(this.filterObj).subscribe(
+      (res) => {
+        console.log('API Response:', res);
+        this.salesCommisionsArr = res.data;
+        this.hasData = this.salesCommisionsArr.length > 0;
+        this.isinit = true;
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('API Error:', error);
+        this.isinit = true;
+        this.isLoading = false;
+      }
+    )
+  }
+
+  // Helper method to mark all controls as touched
+  private markFormGroupTouched(formGroup: NgForm) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+
+      // If it's a FormGroup, recursively mark its controls
+      if ((control as any).controls) {
+        this.markFormGroupTouched(control as any);
+      }
+    });
+  }
+
+  // Check if form is valid
+  private isFormValid(): boolean {
+    return !!(
+      this.selectedAgent &&
+      this.selectedFilter &&
+      this.fromDate &&
+      this.toDate &&
+      this.deliveredDate
+    );
   }
 
   back(): void {
     this.router.navigate(['finance/action']);
   }
 
-  getTotalOrders(): number {
-    return this.filteredCommissionData.length;
+
+   generateFileName(): string {
+    const empId = this.selectedAgent?.empId || 'Unknown';
+    const fromDate = this.formatDateForDisplay(this.fromDate);
+    const toDate = this.formatDateForDisplay(this.toDate);
+    const deliveredDate = this.formatDateForDisplay(this.deliveredDate);
+    const paymentStatus = this.selectedFilter;
+    
+    return `${empId} Orders From ${fromDate} To ${toDate} delivered before ${deliveredDate} payment ${paymentStatus}.xlsx`;
   }
 
-  onFilterChange(event: any): void {
-    this.selectedFilter = event.value;
-    this.applyFilters();
-  }
-
-  onMonthChange(event: any): void {
-    this.selectedMonth = event.value;
-    this.applyFilters();
-  }
-
-  onSearch(): void {
-    this.applyFilters();
-  }
-
-  clearSearch(): void {
-    this.searchQuery = '';
-    this.applyFilters();
-  }
-
+  // Download data as Excel
   downloadData(): void {
+    if (this.salesCommisionsArr.length === 0) {
+      alert('No data available to download. Please generate data first.');
+      return;
+    }
+
     this.isLoading = true;
-    // Simulate download process
-    setTimeout(() => {
-      console.log('Downloading data:', this.filteredCommissionData);
+
+    try {
+      // Prepare data for Excel
+      const excelData = this.salesCommisionsArr.map((item, index) => ({
+        'No': (index + 1).toString().padStart(3, '0'),
+        'Order ID': item.invNo || 'N/A',
+        'Ordered Date': item.sheduleDate ? 
+          new Date(item.sheduleDate).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          }) : 'N/A',
+        'Delivered Date': item.deliveredTime ? 
+          new Date(item.deliveredTime).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          }) : 'N/A',
+        'Payment Status': item.isPaid ? 'Completed' : 'Pending'
+       
+      }));
+
+      // Create worksheet
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
+      
+      // Set column widths
+      const wscols = [
+        { wch: 8 },  // No
+        { wch: 15 }, // Order ID
+        { wch: 20 }, // Ordered Date
+        { wch: 20 }, // Delivered Date
+        { wch: 15 } // Payment Status
+      ];
+      worksheet['!cols'] = wscols;
+
+      // Create workbook
+      const workbook: XLSX.WorkBook = {
+        Sheets: { 'Orders Data': worksheet },
+        SheetNames: ['Orders Data']
+      };
+
+      // Generate Excel file
+      const excelBuffer: any = XLSX.write(workbook, { 
+        bookType: 'xlsx', 
+        type: 'array' 
+      });
+
+      // Save file
+      this.saveAsExcelFile(excelBuffer, this.generateFileName());
+      
       this.isLoading = false;
-      alert('Data downloaded successfully!');
-    }, 1000);
+    } catch (error) {
+      console.error('Error generating Excel file:', error);
+      alert('Error downloading data. Please try again.');
+      this.isLoading = false;
+    }
   }
+
+  // Save Excel file
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+    });
+    
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(data);
+    link.download = fileName;
+    link.click();
+    
+    // Clean up
+    setTimeout(() => {
+      window.URL.revokeObjectURL(link.href);
+    }, 100);
+  }
+
+  private formatDateForDisplay(date: Date): string {
+    if (!date) return 'Unknown';
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+
+  private formatDateForAPI(date: Date): string {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+}
+
+interface SalesAgents {
+  id: number;
+  empId: string;
+}
+
+interface FilterOption {
+  label: string;
+  value: string;
+}
+
+interface FilterData {
+  agentId: number | null;
+  paymentStatus: string;
+  fromDate: string;
+  toDate: string;
+  deliveredDate: string;
+}
+
+interface SalesCommisions {
+  invNo: string;
+  sheduleDate: string;
+  deliveredTime: string;
+  isPaid: boolean;
 }

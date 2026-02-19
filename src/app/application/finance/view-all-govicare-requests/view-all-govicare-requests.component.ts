@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { FinanceService, GoviCareRequest, GoviCareRequestDetail, InvestmentOfficer } from '../../../services/finance/finance.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-all-govicare-requests',
@@ -22,10 +24,11 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   // Status Filter
   selectStatus: string = '';
   isStatusDropdownOpen: boolean = false;
-  statusDropdownOptions: string[] = ['Assigned', 'Not Assigned'];
+  statusDropdownOptions = ['Assigned', 'Not Assigned'];
 
   // Search
   search: string = '';
+  Farmer_ID: any;
 
   // Details Modal
   showDetailsModal: boolean = false;
@@ -48,6 +51,8 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   assignError: string = '';
   currentAssignedOfficer: any = null;
 
+  totArea!: number;
+
   // Officer Role Options
   officerRoleOptions = [
     { label: 'Field Officer', value: 'Field Officer' },
@@ -56,7 +61,9 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
   constructor(
     private FinanceService: FinanceService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -72,7 +79,11 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       .getAllGoviCareRequests(status, this.search)
       .subscribe({
         next: (response) => {
-          this.govicareRequests = response.data || [];
+          this.govicareRequests = (response.data || []).sort((a: GoviCareRequest, b: GoviCareRequest) => {
+            if (a.Status === 'Not Assigned' && b.Status !== 'Not Assigned') return -1;
+            if (a.Status !== 'Not Assigned' && b.Status === 'Not Assigned') return 1;
+            return 0;
+          });
           this.totalItems = response.count || 0;
           this.isLoading = false;
         },
@@ -125,19 +136,28 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
   // Details Modal Methods
   viewDetails(requestId: string): void {
-    this.isLoading = true;
-    this.FinanceService.getGoviCareRequestById(requestId).subscribe({
-      next: (response) => {
-        this.selectedRequest = response.data;
-        this.showDetailsModal = true;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading request details:', error);
-        this.isLoading = false;
-      }
-    });
-  }
+  this.isLoading = true;
+  this.FinanceService.getGoviCareRequestById(requestId).subscribe({
+    next: (response) => {
+      this.selectedRequest = response.data;
+      console.log('selectedRequest', this.selectedRequest);
+      
+      // Calculate total area and round to 4 decimal places
+      const totalArea = (this.selectedRequest.ExtentH * 2.47105) + 
+                       this.selectedRequest.Extent + 
+                       (this.selectedRequest.ExtentP / 160);
+      
+      this.totArea = Number(totalArea.toFixed(4));
+      
+      this.showDetailsModal = true;
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Error loading request details:', error);
+      this.isLoading = false;
+    }
+  });
+}
 
   closeDetailsModal(): void {
     this.showDetailsModal = false;
@@ -172,7 +192,7 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       // Load officers for the district and role
       if (this.selectedOfficerRole) {
         const district = request.district;
-        this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, request.empId);
+        this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, request.Farmer_ID, request.empId);
       }
     }
 
@@ -204,17 +224,17 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       const currentEmpId = this.selectedGovicareRequest.Status === 'Assigned'
         ? this.selectedGovicareRequest.empId
         : undefined;
-      this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, currentEmpId);
+      this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, this.selectedGovicareRequest.Farmer_ID, currentEmpId);
     }
   }
 
   // Load officers by district and role
-  loadOfficersByDistrictAndRole(district: string, role: string, currentEmpId?: string): void {
+  loadOfficersByDistrictAndRole(district: string, role: string, Farmer_ID: any, currentEmpId?: string): void {
     this.isLoadingOfficers = true;
     this.assignError = '';
 
     this.FinanceService
-      .getOfficersByDistrictAndRoleForInvestment(district, role)
+      .getOfficersByDistrictAndRoleForInvestment(district, role, Farmer_ID)
       .subscribe({
         next: (response) => {
           this.isLoadingOfficers = false;
@@ -352,8 +372,14 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   // Open image in new window
   openImage(imageUrl: string): void {
     if (imageUrl) {
-      window.open(imageUrl, '_blank', 'width=800,height=600,resizable=yes,scrollbars=yes');
+      window.open(imageUrl, '_blank');
     }
+  }
+
+  formatNumberWithCommas(value: number | string): string {
+    if (!value) return '0';
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    return numValue.toLocaleString('en-US');
   }
 
   // Format currency

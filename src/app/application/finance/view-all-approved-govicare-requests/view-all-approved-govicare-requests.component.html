@@ -40,55 +40,55 @@
           </div>
 
           <!-- Status Filter -->
-          <div class="relative w-52 custom-status-dropdown-container">
-            <!-- Hidden native select -->
-            <select [(ngModel)]="selectStatus" class="hidden" (change)="filterStatus()">
-              <option value="" selected disabled>Status</option>
-              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300" value="Draft">
-                Draft
-              </option>
-              <option class="dark:bg-[#272F45] text-textLight dark:text-textDark hover:bg-gray-300" value="Published">
-                Published
-              </option>
-            </select>
 
-            <!-- Custom dropdown trigger -->
-            <div
-              class="border-[1.8px] border-[#828282] rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
-              (click)="toggleStatusDropdown()">
-              <div class="flex flex-row justify-between items-center px-3 py-1.5 cursor-pointer">
-                <span class="text-sm">{{ selectStatus || 'Status' }}</span>
-                <div class="flex items-center">
-                  <!-- X icon (shown ONLY when option is selected) -->
-                  <i *ngIf="selectStatus" (click)="cancelStatus($event)"
-                    class="fa-solid fa-xmark text-sm text-[#828282] mr-2 hover:text-[#555] dark:hover:text-[#aaa] cursor-pointer"></i>
-                  <!-- Arrow icon -->
-                  <i *ngIf="isStatusDropdownOpen || !selectStatus"
-                    class="fa-solid text-sm text-[#828282] transition-transform duration-200"
-                    [class.fa-angle-down]="!isStatusDropdownOpen" [class.fa-angle-up]="isStatusDropdownOpen"></i>
-                </div>
-              </div>
-            </div>
+          <div class="relative w-40 custom-status-dropdown-container">
+            <p-dropdown
+              styleClass="rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark h-8 w-40"
+              [options]="statusDropdownOptions"
+              [(ngModel)]="selectStatus"
+              [showClear]="!!selectStatus"
+              placeholder="Status"
+              (onChange)="filterStatus()"
+            />
+          </div>
 
-            <!-- Custom dropdown options -->
-            <div *ngIf="isStatusDropdownOpen"
-              class="absolute z-10 w-full mt-1 bg-[#F1F1F1] dark:bg-[#272F45] rounded-xl shadow-lg border border-[#828282]">
-              <div class="py-1">
-                <div *ngFor="let option of statusDropdownOptions" (click)="selectStatusOption(option)"
-                  class="px-3 py-1.5 hover:bg-gray-300 dark:text-textDark dark:hover:bg-gray-600 cursor-pointer flex items-center">
-                  <span class="flex-grow text-sm">{{ option }}</span>
-                </div>
-              </div>
-            </div>
+          <div class="relative w-40 custom-status-dropdown-container">
+            <p-dropdown
+              styleClass="rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark h-8 w-40"
+              [options]="sharesDropdownOptions"
+              [(ngModel)]="selectShares"
+              [showClear]="!!selectShares"
+              placeholder="Shares"
+              (onChange)="filterShares()"
+            />
+          </div>
+
+          <div
+            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
+            <input type="text" placeholder="Search By ID, Phone Number..." [(ngModel)]="search" (keydown.enter)="applySearch()"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="applySearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+              </svg>
+            </button>
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
           <!-- Search Input -->
-          <div class="relative w-64">
+          <!-- <div class="relative w-64">
             <input type="text" [(ngModel)]="search" (keyup.enter)="applySearch()" placeholder="Search..."
               title="Search By Request ID, Phone Number..."
               class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] border-[1.8px] border-[#828282] rounded-xl text-textLight dark:text-textDark text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
-            <!-- Clear/Search Icon -->
             <button *ngIf="hasSearched" (click)="clearSearch()"
               class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-gray-600 dark:hover:text-gray-400">
               <i class="fa-solid fa-xmark text-sm"></i>
@@ -97,7 +97,7 @@
               class="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#828282] hover:text-blue-500">
               <i class="fa-solid fa-magnifying-glass text-sm"></i>
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -120,21 +120,33 @@
                 View Shares</th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Shares Updated By</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                Status</th>
+              <!-- <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                Status</th> -->
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Approved By</th>
               <th class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                 Approved Time</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View approved request NIC') || tokenService.getUserDetails().role === '1'">
                 NIC Front Image</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View approved request NIC') || tokenService.getUserDetails().role === '1'">
                 NIC Back Image</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View approved request other details') || tokenService.getUserDetails().role === '1'"
+                >
                 Details</th>
-              <th class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-4 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('View approved request audit result') || tokenService.getUserDetails().role === '1'">
                 Audit Results</th>
-              <th class="px-8 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <th 
+                class="px-8 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                *ngIf=" permissionService.hasPermission('Publish approved request') || tokenService.getUserDetails().role === '1'"
+              >
               </th>
             </tr>
           </thead>
@@ -187,14 +199,13 @@
               </td>
 
               <!-- Status -->
-              <td class="px-4 py-4 text-center">
-                <button [class]="getStatusClass(request.publishStatus)"
-                  class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
-                  (click)="onStatusClick(request)"
+              <!-- <td class="px-4 py-4 text-center">
+                <span [class]="getStatusClass(request.publishStatus)"
+                  class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium hover:opacity-80 transition-opacity w-28 mx-auto"
                   [title]="request.publishStatus === 'Published' ? 'Cannot change published status' : 'Click to publish to GoViCapital'">
                   {{ request.publishStatus }}
-                </button>
-              </td>
+              </span>
+              </td> -->
 
               <!-- Approved By -->
               <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
@@ -207,7 +218,9 @@
               </td>
 
               <!-- NIC Front Image -->
-              <td class="px-4 py-4 text-center">
+              <td 
+                class="px-4 py-4 text-center" 
+                *ngIf=" permissionService.hasPermission('View approved request NIC') || tokenService.getUserDetails().role === '1'">
                 <button (click)="openImage(request.NIC_Front_Image)"
                   class="text-blue-500 hover:text-blue-600 transition">
                   <i class="fa-regular fa-image text-2xl"></i>
@@ -215,7 +228,10 @@
               </td>
 
               <!-- NIC Back Image -->
-              <td class="px-4 py-4 text-center">
+              <td 
+              class="px-4 py-4 text-center"
+              *ngIf=" permissionService.hasPermission('View approved request NIC') || tokenService.getUserDetails().role === '1'"
+              >
                 <button (click)="openImage(request.NIC_Back_Image)"
                   class="text-blue-500 hover:text-blue-600 transition">
                   <i class="fa-regular fa-image text-2xl"></i>
@@ -223,7 +239,10 @@
               </td>
 
               <!-- Details (Eye Icon) -->
-              <td class="px-4 py-4 text-center">
+              <td 
+                class="px-4 py-4 text-center"
+                 *ngIf=" permissionService.hasPermission('View approved request other details') || tokenService.getUserDetails().role === '1'"
+                >
                 <button (click)="viewDetails(request.Request_ID)"
                   class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -234,18 +253,22 @@
                 </button>
               </td>
 
-              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center">
+              <td 
+                class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center"
+                *ngIf=" permissionService.hasPermission('View approved request audit result') || tokenService.getUserDetails().role === '1'">
                 <button (click)="auditResults(request.No)">
                   <i class="fa-solid fa-arrow-up-right-from-square text-xl text-[#3980C0]"></i>
                 </button>
               </td>
 
-              <td class="px-8 py-4 text-sm text-center">
-                <button class="bg-[#3980C0] text-white px-4 py-2 rounded-lg whitespace-nowrap"
-                  [ngClass]="{'pointer-events-none opacity-50 cursor-not-allowed': request.approvedDetails === null}"
-                  [disabled]="request.approvedDetails === null"
+              <td 
+                class="px-8 py-4 text-sm text-center"
+                *ngIf=" permissionService.hasPermission('Publish approved request') || tokenService.getUserDetails().role === '1'">
+                <button class="bg-[#3980C0] text-white px-4 py-2 rounded-lg whitespace-nowrap w-32"
+                  [ngClass]="{'pointer-events-none opacity-50 cursor-not-allowed': request.approvedDetails === null || request.publishStatus === 'Published'}"
+                  [disabled]="request.approvedDetails === null || request.publishStatus === 'Published'"
                   (click)="openPublishPopup(request)">
-                  Publish Now!
+                  {{ request.publishStatus === 'Published' ? 'Published' : 'Publish Now' }}
                 </button>
               </td>
             </tr>
@@ -339,7 +362,7 @@
         <span class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0">Extent</span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
         <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
-          {{ selectedRequest?.Extent }}
+          {{ calculateExtentInAcres(selectedRequest?.Extent, selectedRequest?.ExtentH, selectedRequest?.ExtentP) }}
         </span>
       </div>
 
@@ -414,54 +437,201 @@
 <!-- shares popup -->
 <div *ngIf="isSharePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   (click)="isSharePopup = false">
-  <div class="bg-white dark:bg-tileBlack px-5 py-4 rounded-lg shadow-2xl max-w-lg" (click)="$event.stopPropagation()">
+  <div class="bg-white dark:bg-tileBlack px-8 py-6 rounded-lg shadow-2xl w-full max-w-md" (click)="$event.stopPropagation()">
 
-    <div class="flex flex-row items-center justify-between">
-      <div class="w-16"></div>
-
-      <p class="mr-12 font-semibold dark:text-white">Request ID : {{selectedShares.Request_ID}}</p>
-
-      <button class="flex flex-row gap-x-3 bg-[#3980C0] text-white px-4 py-2 rounded-lg">
-        <i class="fa-solid fa-pen-to-square"></i>
-        <p>Edit</p>
-      </button>
-
+    <!-- Header with Edit Button -->
+    <div class="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
+      <div class="flex items-center justify-center relative">
+        <h2 class="font-semibold text-lg dark:text-white">Request ID : {{selectedShares.Request_ID}}</h2>
+        <button 
+          *ngIf="(permissionService.hasPermission('Edit divided shares') || tokenService.getUserDetails().role === '1') && selectedShares.publishStatus !== 'Published'"
+          (click)="openEditSharesModal()"
+          class="absolute right-0 flex items-center gap-2 bg-[#3980C0] hover:bg-[#2c6da3] text-white px-4 py-2 rounded-lg transition font-medium">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Edit</span>
+        </button>
+      </div>
     </div>
 
-    <hr class="h-[1px] bg-[#5C5C5C] dark:bg-white my-3" />
+    <!-- Shares Details -->
+    <div class="space-y-3 mb-6">
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">Total Value</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          Rs. {{selectedShares.approvedDetails?.totValue | number: '1.2-2'}}
+        </span>
+      </div>
 
-    <div>
-      <table>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">Total Value</td>
-          <td class="text-[#000000] dark:text-white">: Rs. {{selectedShares.approvedDetails.totValue | number: '1.2-2'}}
-          </td>
-        </tr>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">No. of Sharese</td>
-          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.defineShares}}</td>
-        </tr>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">Value of One Share</td>
-          <td class="text-[#000000] dark:text-white">:
-            Rs.{{divideFunc(selectedShares.approvedDetails.totValue,selectedShares.approvedDetails.defineShares) |
-            number: '1.2-2'}}</td>
-        </tr>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">Minimum Shares</td>
-          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.minShare}}</td>
-        </tr>
-        <tr>
-          <td class="px-8 text-[#5C5C5C] dark:text-white">Maximum Shares</td>
-          <td class="text-[#000000] dark:text-white">: {{selectedShares.approvedDetails.maxShare}}</td>
-        </tr>
-      </table>
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">No. of Sharese</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          {{selectedShares.approvedDetails?.defineShares}}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">Value of One Share</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          Rs. {{divideFunc(selectedShares.approvedDetails?.totValue || 0, selectedShares.approvedDetails?.defineShares || 1) | number: '1.2-2'}}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">Minimum Shares</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          {{selectedShares.approvedDetails?.minShare}}
+        </span>
+      </div>
+
+      <div class="flex items-start">
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0">Maximum Shares</span>
+        <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
+        <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
+          {{selectedShares.approvedDetails?.maxShare}}
+        </span>
+      </div>
     </div>
-    <div class="flex flex-row justify-center items-center my-5">
-      <button class="bg-[#74788D] text-white px-4 py-2 rounded-lg" (click)="isSharePopup = false">
+
+    <!-- Close Button -->
+    <div class="flex justify-center">
+      <button class="bg-[#6B7280] hover:bg-[#4B5563] text-white px-12 py-2 rounded-lg transition font-medium" 
+        (click)="isSharePopup = false">
         Close
       </button>
+    </div>
+  </div>
+</div>
 
+<!-- Edit Shares Modal -->
+<div *ngIf="isEditSharesModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  (click)="closeEditSharesModal()">
+  <div class="bg-white dark:bg-tileBlack shadow-lg rounded-xl px-6 pt-4 pb-10 w-1/4" (click)="$event.stopPropagation()">
+
+    <div class="px-4">
+      <form #editSharesForm="ngForm" (ngSubmit)="updateShares(editSharesForm)">
+        <div class="mb-6 text-center font-semibold dark:text-textDark">
+          <p class="text-xl mb-2">
+            Request ID : {{selectedShares.Request_ID}}
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-y-5 mb-8">
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Total Value (Rs.)
+            </label>
+            <input 
+              id="totalValue" 
+              [value]="selectedShares.approvedDetails?.totValue | number:'1.2-2'" 
+              name="totalValue" 
+              readonly
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          </div>
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Define Number of Shares
+            </label>
+            <input 
+              id="numShares" 
+              required 
+              type="number" 
+              [(ngModel)]="editNumShares" 
+              #numSharesInput="ngModel"
+              name="numShares" 
+              placeholder="--Enter Here--" 
+              (ngModelChange)="onEditSharesChange()"
+              (keypress)="allowIntegerOnly($event)"
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="numSharesInput.touched && !editNumShares" class="text-red-600 text-sm block mt-1">This field is required.</span>
+            <span *ngIf="numSharesInput.touched && editNumShares <= 0" class="text-red-600 text-sm block mt-1">Number of shares cannot be 0 or less than 0.</span>
+          </div>
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Value of One Share (Rs.)
+            </label>
+            <input 
+              id="shareValue" 
+              [value]="editShareValue === 0 ? '--Auto-fill--' : editShareValue" 
+              name="shareValue" 
+              readonly
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          </div>
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Minimum Investment Shares
+            </label>
+            <input 
+              id="minimumShare" 
+              required 
+              type="number" 
+              [(ngModel)]="editMinShares" 
+              #minimumShareInput="ngModel"
+              name="minimumShare" 
+              placeholder="--Enter Here--" 
+              (keypress)="allowDecimalOnly($event)"
+              pattern="^[1-9]\d*(\.\d+)?$"
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="minimumShareInput.touched && minimumShareInput.errors?.['required']" class="text-red-600 text-sm block mt-1">This field is required.</span>
+            <span *ngIf="minimumShareInput.touched && !minimumShareInput.errors?.['required'] && (editMinShares <= 0)" class="text-red-600 text-sm block mt-1">
+              Minimum Investment Shares cannot be 0 or less than 0.
+            </span>
+          </div>
+
+          <div>
+            <label class="block mb-1 dark:text-textDark">
+              Maximum Investment Shares
+            </label>
+            <input 
+              id="maximumShare" 
+              required 
+              type="number" 
+              [(ngModel)]="editMaxShares" 
+              #maximumShareInput="ngModel"
+              name="maximumShare" 
+              placeholder="--Enter Here--" 
+              (keypress)="allowDecimalOnly($event)"
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack" />
+            <span *ngIf="maximumShareInput.touched && maximumShareInput.errors?.['required']" class="text-red-600 text-sm block mt-1">This field is required.</span>
+
+            <span *ngIf="maximumShareInput.touched && !maximumShareInput.errors?.['required'] && (editMaxShares <= 0)" class="text-red-600 text-sm block mt-1">
+              Maximum Investment Shares cannot be 0 or less than 0.
+            </span>
+
+            <span
+              *ngIf="maximumShareInput.touched && minimumShareInput.touched && editMaxShares > 0 && editMinShares > 0 && editMaxShares < editMinShares"
+              class="text-red-600 text-sm block mt-1">
+              Maximum Investment Shares cannot be less than Minimum Investment Shares.
+            </span>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-row justify-between items-center">
+          <button 
+            class="bg-[#74788D] border-[1px] border-[#74788D] px-6 py-2 rounded-xl shadow-md" 
+            type="button"
+            (click)="closeEditSharesModal()">
+            <span class="text-white">Cancel</span>
+          </button>
+          <button 
+            type="submit" 
+            [disabled]="isSavingShares"
+            class="bg-[#3980C0] border-[1px] border-[#3980C0] px-6 py-2 rounded-lg shadow-md disabled:opacity-50">
+            <span class="text-white flex items-center gap-2">
+              <i *ngIf="isSavingShares" class="fa-solid fa-spinner fa-spin"></i>
+              {{ isSavingShares ? 'Saving...' : 'Divide' }}
+            </span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

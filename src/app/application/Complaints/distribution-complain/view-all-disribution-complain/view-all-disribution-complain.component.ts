@@ -43,6 +43,7 @@ export class ViewAllDisributionComplainComponent {
   isPopUpVisible: boolean = false;
   selectedLanguage: string = 'English';
   selectedOfficerName: string = '';
+  roleCategory: string = this.tokenService.getUserDetails().role;
 
 
   rpst: string = '';
@@ -93,7 +94,8 @@ export class ViewAllDisributionComplainComponent {
         this.filterComCategory?.id,
         this.filterCompany?.id,
         this.searchText,
-        this.rpst
+        this.rpst,
+        this.roleCategory
       )
       .subscribe(
         (res) => {

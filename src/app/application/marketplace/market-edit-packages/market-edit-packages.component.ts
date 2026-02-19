@@ -154,7 +154,7 @@ export class MarketEditPackagesComponent {
       Swal.fire({
         icon: 'error',
         title: 'Invalid Input',
-        text: 'At least one quantity field must be greater than 0.',
+        text: 'At least one Product Type must have a quantity greater than 0.',
         confirmButtonText: 'OK',
       });
       this.isLoading = false;

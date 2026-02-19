@@ -5,25 +5,24 @@
 </button>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+  class="overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
-  <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1850px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
-  >
-    <div class="flex justify-between items-center mb-8">
+  <div class="pt-5 pr-12 pl-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <!-- Header with min-width to keep title and search in one line -->
+    <div class="flex justify-between items-center mb-8 min-w-[1100px]">
       <div class="flex items-center">
-        <h2 class="text-2xl font-bold text-textLight dark:text-textDark">
+        <h2 class="text-2xl font-bold text-textLight dark:text-textDark whitespace-nowrap">
           Rejected Requests ({{ (total ?? 0).toString().padStart(2, "0") }})
         </h2>
       </div>
 
-      <div class="mr-8">
+      <div class="ml-4">
         <div
-          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-96 relative group"
+          class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80 relative group"
         >
           <!-- Popover -->
           <div
-            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 whitespace-nowrap"
           >
             Search by Request ID or Phone Number
           </div>
@@ -85,7 +84,8 @@
       </div>
     </div>
 
-    <div>
+    <!-- Table container with separate scroll -->
+    <div class="overflow-x-auto">
       <!-- No Data State -->
       <div
         *ngIf="rejectedRequests.length === 0 && !isLoading"
@@ -136,26 +136,30 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              Rejected Date
+              Rejected Time
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request NIC') || tokenService.getUserDetails().role === '1'"
             >
               NIC Front Image
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request NIC') || tokenService.getUserDetails().role === '1'"
             >
               NIC Back Image
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request other details') || tokenService.getUserDetails().role === '1'"
             >
               Details
             </th>
 
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request audit result') || tokenService.getUserDetails().role === '1'"
             >
               Audit Results
             </th>
@@ -184,27 +188,33 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ formatDate(request.rejectedAt) }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+              class="px-4 py-3 text-center text-textLight dark:text-textDark"
+              *ngIf=" permissionService.hasPermission('View reject request NIC') || tokenService.getUserDetails().role === '1'">
               <button
                 *ngIf="request.nicFront"
                 class="text-blue-600 hover:text-blue-800 underline"
                 (click)="viewNicImage(request.nicFront, 'NIC Front')"
               >
-                <i class="fa-solid fa-image"></i>
+                <i class="fa-solid fa-image text-2xl"></i>
               </button>
               <span *ngIf="!request.nicFront">N/A</span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            *ngIf=" permissionService.hasPermission('View reject request NIC') || tokenService.getUserDetails().role === '1'">
               <button
                 *ngIf="request.nicBack"
                 class="text-blue-600 hover:text-blue-800 underline"
                 (click)="viewNicImage(request.nicBack, 'NIC Back')"
               >
-                <i class="fa-solid fa-image"></i>
+                <i class="fa-solid fa-image text-2xl"></i>
               </button>
               <span *ngIf="!request.nicBack">N/A</span>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td 
+            class="px-4 py-3 text-center text-textLight dark:text-textDark"
+            *ngIf=" permissionService.hasPermission('View reject request other details') || tokenService.getUserDetails().role === '1'">
               <button
                 class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
                 (click)="viewDetails(request)"
@@ -225,7 +235,9 @@
               </button>
             </td>
 
-            <td class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center">
+            <td 
+              class="px-4 py-4 text-sm text-textLight dark:text-textDark text-center"
+              *ngIf=" permissionService.hasPermission('View reject request audit result') || tokenService.getUserDetails().role === '1'"  >
               <button (click)="auditResults(request.id)">
                 <i class="fa-solid fa-arrow-up-right-from-square text-xl text-[#3980C0]"></i>
               </button>
@@ -291,8 +303,7 @@
             NIC Number
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{ selectedRequest.NICnumber }}
+            : {{ selectedRequest.NICnumber || "N/A" }}
           </div>
         </div>
 
@@ -302,7 +313,7 @@
             Phone Number
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.phoneNumber }}
+            : {{ selectedRequest.phoneNumber || "N/A" }}
           </div>
         </div>
 
@@ -312,29 +323,9 @@
             Crop
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.cropNameEnglish }}
+            : {{ selectedRequest.cropNameEnglish || "N/A" }}
           </div>
         </div>
-
-        <!-- Variety -->
-        <!-- <div class="grid grid-cols-2 gap-4">
-          <div class="text-sm font-medium text-textLight dark:text-textDark">
-            Variety
-          </div>
-          <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.varietyNameEnglish }}
-          </div>
-        </div> -->
-
-        <!-- Certificate -->
-        <!-- <div class="grid grid-cols-2 gap-4">
-          <div class="text-sm font-medium text-textLight dark:text-textDark">
-            Certificate
-          </div>
-          <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.certificateName }}
-          </div>
-        </div> -->
 
         <!-- Extent -->
         <div class="grid grid-cols-2 gap-4">
@@ -342,7 +333,7 @@
             Extent
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            : {{ selectedRequest.extentac }} Acres
+            : {{ formatExtent(selectedRequest.extentac) }} Acres
           </div>
         </div>
 
@@ -352,12 +343,7 @@
             Expected Investment
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              formatCurrency(
-                selectedRequest.expectedInvestment || selectedRequest.investment
-              )
-            }}
+            : {{ formatCurrency(selectedRequest.investment) }}
           </div>
         </div>
 
@@ -367,12 +353,7 @@
             Expected Yield
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              selectedRequest.expectedYield
-                ? selectedRequest.expectedYield + "kg"
-                : "2,000kg"
-            }}
+            : {{ (selectedRequest.expectedYield || "0") + " kg" }}
           </div>
         </div>
 
@@ -382,12 +363,7 @@
             Expected Start Date
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              formatDate(
-                selectedRequest.expectedStartDate || selectedRequest.startDate
-              ) || "November 1, 2026"
-            }}
+            : {{ formatDate(selectedRequest.startDate) }}
           </div>
         </div>
 
@@ -397,26 +373,17 @@
             Request Date & Time
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              formatDate(
-                selectedRequest.requestDateTime || selectedRequest.createdAt
-              ) || "At 11.00AM on October 1, 2026"
-            }}
+            : {{ formatDate(selectedRequest.createdAt) }}
           </div>
         </div>
 
         <!-- Rejection Reason -->
         <div class="grid grid-cols-2 gap-4">
           <div class="text-sm font-medium text-textLight dark:text-textDark">
-            Rejected Reason
+            Rejection Reason
           </div>
           <div class="text-sm text-textLight dark:text-textDark">
-            :
-            {{
-              selectedRequest.rejectionReason ||
-                "The farmer currently does not possess such a land to cultivate and new as a farmer to have such a large investment."
-            }}
+            : {{ selectedRequest.rejectionReason || "No reason provided" }}
           </div>
         </div>
       </div>

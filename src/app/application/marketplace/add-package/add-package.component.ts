@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MarketPlaceService } from '../../../services/market-place/market-place.service';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -35,7 +35,7 @@ export class AddPackageComponent implements OnInit {
 
   submitAttempted = false;
 
-  constructor(private marketSrv: MarketPlaceService, private router: Router) { }
+  constructor(private marketSrv: MarketPlaceService, private router: Router, private location: Location) { }
 
 
   back(): void {
@@ -54,7 +54,8 @@ export class AddPackageComponent implements OnInit {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/market/action']);
+        // this.router.navigate(['/market/action']);
+        this.location.back();
       }
     });
   }
@@ -346,7 +347,8 @@ export class AddPackageComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.packageObj = new Package();
-        this.router.navigate(['/market/action']);
+        // this.router.navigate(['/market/action']);
+        this.location.back();
       }
     });
   }

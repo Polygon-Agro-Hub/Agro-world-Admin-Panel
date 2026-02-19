@@ -59,6 +59,7 @@ export class FieldOfficerProfileComponent {
     this.plantcareService
       .fetchAllfieldOfficerProfile(id)
       .subscribe((res: any) => {
+        window.scrollTo(0, 0);
         console.log("this is data", res);
 
         this.isLoading = false;

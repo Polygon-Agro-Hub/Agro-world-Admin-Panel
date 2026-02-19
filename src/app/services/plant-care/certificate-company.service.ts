@@ -434,6 +434,27 @@ export class CertificateCompanyService {
     );
   }
 
+  checkBeforeAddFarmerToCluster(
+    clusterId: number,
+    data: { nic: string; farmId: string }
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      'Content-Type': 'application/json',
+    });
+
+    const payload = {
+      nic: data.nic,
+      farmId: data.farmId,
+    };
+
+    return this.http.post<any>(
+      `${this.apiUrl}certificate-company/check-before-add-single-farmer-to-cluster/${clusterId}`,
+      payload,
+      { headers }
+    );
+  }
+
   // Get all farmer clusters
   getAllFarmerClusters(searchTerm?: string): Observable<{
     status: boolean;

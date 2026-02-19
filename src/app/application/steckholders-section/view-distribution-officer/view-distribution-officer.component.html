@@ -21,13 +21,14 @@
       Claim to a Centre
     </h2>
     <div class="flex align-middle justify-center items-center">
-      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Centre</label>
+      <!-- <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Centre</label> -->
 
       <div class="flex flex-col w-full ml-5">
         <p-dropdown name="selectedCenterId" [(ngModel)]="selectedCenterId" [options]="centerNames"
-          (onChange)="centerValidationError = false; fetchDistributionManagerNames()" optionLabel="centerName"
-          optionValue="id" placeholder="Select a centre" [showClear]="false" [required]="true" [filter]="true"
-          filterBy="centerName"
+          (onChange)="centerValidationError = false; fetchDistributionManagerNames()" optionLabel="displayName"
+          optionValue="id" placeholder="Select Distribution Centre" [showClear]="false" [required]="true"
+          [filter]="true" filterBy="displayName,centerName,regCode"
+          [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'"
           [ngClass]="{'border-red-500': centerValidationError, 'border-gray-300': !centerValidationError}">
         </p-dropdown>
 
@@ -42,13 +43,13 @@
     <!-- Manager Dropdown -->
     <div class="flex mt-4 align-middle justify-center items-center"
       *ngIf="selectedOfficer?.jobRole !== 'Distribution Centre Manager'">
-      <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Manager</label>
+      <!-- <label class="block text-gray-700 dark:text-gray-200 mb-2 w-40">Select Manager</label> -->
 
-      <div class="flex flex-col w-full ml-4">
+      <div class="flex flex-col w-full ml-5">
         <p-dropdown name="selectedIrmId" [(ngModel)]="selectedIrmId" [options]="collectionCenterManagerNames"
-          optionLabel="labelName" optionValue="id" placeholder="Select a manager" [showClear]="false" [required]="true"
-          [filter]="true" filterBy="firstNameEnglish,lastNameEnglish" filterPlaceholder="Search managers..."
-          class="w-full" (onChange)="irmValidationError = false"
+          optionLabel="labelName" optionValue="id" placeholder="Select a Manager" [showClear]="false" [required]="true"
+          [filter]="true" filterBy="empId,firstNameEnglish,lastNameEnglish" filterPlaceholder="Search Managers..."
+          class="w-full" (onChange)="irmValidationError = false"  [styleClass]="'w-full border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white'"
           [ngClass]="{'border-red-500': irmValidationError, 'border-gray-300': !irmValidationError}">
         </p-dropdown>
 
@@ -149,7 +150,7 @@
         <div class="mr-5">
           <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="statusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="selectStatus != null && selectStatus !== ''" placeholder="Status" [(ngModel)]="selectStatus"
             (onChange)="applyStatusFilters()"></p-dropdown>
         </div>
@@ -157,7 +158,7 @@
         <div class="mr-5">
           <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="centerStatusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="centerStatusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="selectCenterStatus != null && selectCenterStatus !== ''" placeholder="Centre Status"
             [(ngModel)]="selectCenterStatus" (onChange)="applyCenterStatusFilters()"></p-dropdown>
         </div>
@@ -165,7 +166,7 @@
         <div class="mr-5">
           <p-dropdown #topfilters
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="role != null && role !== ''"
+            [options]="jobRole" [checkmark]="false" optionLabel="jobRole" [showClear]="role != null && role !== ''"
             placeholder="Role" [(ngModel)]="role" (onChange)="applyFilters()"></p-dropdown>
         </div>
 
@@ -183,7 +184,7 @@
   </div> -->
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search by EMP ID, Centre, NIC" [(ngModel)]="searchNIC"
+          <input type="text" placeholder="Search by EMP ID, NIC, Centre Reg Code" [(ngModel)]="searchNIC"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keyup.enter)="onSearch()"
             (keyup.esc)="offSearch()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">

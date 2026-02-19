@@ -47,6 +47,10 @@ export class MarketAddProductComponent implements OnInit {
   isNoDiscount: boolean = true;
   formSubmitted = false;
 
+  text: string = 'Kg';
+
+  isunitTypeKg!: boolean;
+
   // In your component.ts
   categoryOptions = [
     { label: 'Retail', value: 'Retail' },
@@ -234,17 +238,19 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   // Round all decimal values to 2 places
-  this.productObj.normalPrice = parseFloat(this.productObj.normalPrice.toFixed(2));
-  if (this.productObj.promo) {
-    this.productObj.discountedPrice = parseFloat(this.productObj.discountedPrice.toFixed(2));
-    this.productObj.salePrice = parseFloat(this.productObj.salePrice.toFixed(2));
-  }
-  this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(2));
-  this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(2));
+  // Round all decimal values to appropriate places
+this.productObj.normalPrice = parseFloat(this.productObj.normalPrice.toFixed(2));
+if (this.productObj.promo) {
+  this.productObj.discountedPrice = parseFloat(this.productObj.discountedPrice.toFixed(2));
+  this.productObj.salePrice = parseFloat(this.productObj.salePrice.toFixed(2));
+}
+// Quantity fields - 3 decimal places
+this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(3));
+this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(3));
 
-  if (this.productObj.category === 'WholeSale') {
-    this.productObj.maxQuantity = parseFloat(this.productObj.maxQuantity.toFixed(2));
-  }
+if (this.productObj.category === 'WholeSale') {
+  this.productObj.maxQuantity = parseFloat(this.productObj.maxQuantity.toFixed(3));
+}
 
   this.updateTags();
 
@@ -319,27 +325,29 @@ export class MarketAddProductComponent implements OnInit {
   // Validate decimal places for all numeric fields
   const decimalIssues = [];
 
-  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.normalPrice.toString())) {
-    decimalIssues.push('Price Per kg must have max 2 decimal places');
-  }
+// Price fields - max 2 decimals
+if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.normalPrice.toString())) {
+  decimalIssues.push('Price Per kg must have max 2 decimal places');
+}
 
-  if (this.productObj.promo && this.productObj.discountedPrice &&
-    !/^\d+(\.\d{1,2})?$/.test(this.productObj.discountedPrice.toString())) {
-    decimalIssues.push('Discount Percentage must have max 2 decimal places');
-  }
+if (this.productObj.promo && this.productObj.discountedPrice &&
+  !/^\d+(\.\d{1,2})?$/.test(this.productObj.discountedPrice.toString())) {
+  decimalIssues.push('Discount Percentage must have max 2 decimal places');
+}
 
-  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.startValue.toString())) {
-    decimalIssues.push('Minimum Quantity must have max 2 decimal places');
-  }
+// Quantity fields - max 3 decimals
+if (!/^\d+(\.\d{1,3})?$/.test(this.productObj.startValue.toString())) {
+  decimalIssues.push('Minimum Quantity must have max 3 decimal places');
+}
 
-  if (!/^\d+(\.\d{1,2})?$/.test(this.productObj.changeby.toString())) {
-    decimalIssues.push('Increase/Decrease by must have max 2 decimal places');
-  }
+if (!/^\d+(\.\d{1,3})?$/.test(this.productObj.changeby.toString())) {
+  decimalIssues.push('Increase/Decrease by must have max 3 decimal places');
+}
 
-  if (this.productObj.category === 'WholeSale' &&
-    !/^\d+(\.\d{1,2})?$/.test(this.productObj.maxQuantity.toString())) {
-    decimalIssues.push('Maximum Quantity must have max 2 decimal places');
-  }
+if (this.productObj.category === 'WholeSale' &&
+  !/^\d+(\.\d{1,3})?$/.test(this.productObj.maxQuantity.toString())) {
+  decimalIssues.push('Maximum Quantity must have max 3 decimal places');
+}
 
   if (decimalIssues.length > 0) {
     Swal.fire({
@@ -431,13 +439,13 @@ export class MarketAddProductComponent implements OnInit {
   }
 
   // Convert grams to kg if needed
-  if (this.productObj.unitType == 'g') {
-    this.productObj.startValue = this.productObj.startValue / 1000;
-    this.productObj.changeby = this.productObj.changeby / 1000;
-    if (this.productObj.category === 'WholeSale') {
-      this.productObj.maxQuantity = this.productObj.maxQuantity / 1000;
-    }
-  }
+  // if (this.productObj.unitType == 'g') {
+  //   this.productObj.startValue = this.productObj.startValue / 1000;
+  //   this.productObj.changeby = this.productObj.changeby / 1000;
+  //   if (this.productObj.category === 'WholeSale') {
+  //     this.productObj.maxQuantity = this.productObj.maxQuantity / 1000;
+  //   }
+  // }
 
   if(this.productObj.promo === false){
     this.productObj.salePrice = this.productObj.normalPrice
@@ -569,7 +577,7 @@ export class MarketAddProductComponent implements OnInit {
     if (this.productObj.changeby < 0) {
       this.productObj.changeby = 0;
     }
-    this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(2));
+    this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(3));
 
     // Mark the field as touched to show validation messages
     if (this.productForm && this.productForm.controls['changeby']) {
@@ -593,7 +601,7 @@ export class MarketAddProductComponent implements OnInit {
     if (this.productObj.startValue < 0) {
       this.productObj.startValue = 0;
     }
-    this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(2));
+    this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(3));
 
     // Mark the field as touched to show validation messages
     if (this.productForm && this.productForm.controls['startValue']) {
@@ -656,8 +664,8 @@ export class MarketAddProductComponent implements OnInit {
     }
 
     // Rest of your existing validation for decimal places
-    if (value.includes('.') && value.split('.')[1].length > 2) {
-      const truncatedValue = parseFloat(value).toFixed(2);
+    if (value.includes('.') && value.split('.')[1].length > 3) {
+      const truncatedValue = parseFloat(value).toFixed(3);
       input.value = truncatedValue;
 
       switch (fieldName) {
@@ -697,6 +705,18 @@ export class MarketAddProductComponent implements OnInit {
       return this.productObj.startValue <= this.productObj.maxQuantity;
     }
     return true;
+  }
+
+  onUnitTypeChange(): void {
+    console.log('chanegs')
+    if (this.productObj.unitType === 'g') {
+      this.isunitTypeKg = false;
+      this.text = 'g'
+    } else if (this.productObj.unitType === 'Kg') {
+      this.text = 'Kg'
+      this.isunitTypeKg = true;
+    }
+    console.log('Unit Type changed:', this.isunitTypeKg);
   }
 }
 

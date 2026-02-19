@@ -4,27 +4,27 @@ import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinanceService } from '../../../services/finance/finance.service';
 import { Router } from '@angular/router';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 interface RejectedInvestmentRequest {
   id: string;
-  varietyId: string;
-  certificateId: string;
-  farmerId: string;
-  officerId: string;
+  farmerId: number;
+  officerId: number;
   jobId: string;
   extentha: number;
-  extentac: number;
+  extentac: string; 
   extentp: number;
-  investment: number;
-  expectedYield: number;
+  investment: string; 
+  expectedYield: string; 
   startDate: string;
   nicFront: string;
   nicBack: string;
   assignDate: string;
-  publishDate: string;
-  assignedBy: string;
+  publishDate: string | null;
+  assignedBy: number;
   reqStatus: string;
-  reqCahangeTime: string;
+  reqCahangeTime: string | null;
   publishStatus: string;
   createdAt: string;
   rejectionReason: string;
@@ -32,15 +32,14 @@ interface RejectedInvestmentRequest {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  cropNameEnglish: string;
-  varietyNameEnglish: string;
-  certificateName: string;
-  expectedInvestment?: number;
-  expectedStartDate?: string;
-  requestDateTime?: string;
   NICnumber: string;
-  officerEmpId: string;
-  rejectedBy: string;
+  cropNameEnglish: string;
+  varietyNameEnglish?: string;
+  certificateName?: string;
+  varietyId?: string;
+  certificateId?: string;
+  officerEmpId?: string;
+  rejectedBy: string | null;
 }
 
 @Component({
@@ -63,8 +62,10 @@ export class GovicapitalFinanceComponent implements OnInit {
   constructor(
     private location: Location,
     private financeService: FinanceService,
-    private router: Router
-  ) {}
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.loadRejectedRequests();
@@ -87,7 +88,6 @@ export class GovicapitalFinanceComponent implements OnInit {
         error: (error) => {
           console.error('Error loading rejected requests:', error);
           this.isLoading = false;
-          // You can add a toast notification here
         },
       });
   }
@@ -118,41 +118,88 @@ export class GovicapitalFinanceComponent implements OnInit {
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
 
-    const date = new Date(dateString);
+    try {
+      const date = new Date(dateString);
+      
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        return 'Invalid Date';
+      }
 
-    // Format as "June 01, 2026"
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: '2-digit',
-    });
+      // Format time part (12-hour format with AM/PM)
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+
+      // Format date part
+      const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit'
+      });
+
+      return `${time} on ${formattedDate}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'N/A';
+    }
   }
 
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('en-LK', {
-      style: 'currency',
-      currency: 'LKR',
-      minimumFractionDigits: 2,
-    }).format(amount);
+  formatCurrency(amount: string | number): string {
+    try {
+      // Convert string to number if needed
+      const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
+      
+      // Check if conversion was successful
+      if (isNaN(amountNum)) {
+        return 'LKR 0.00';
+      }
+      
+      return new Intl.NumberFormat('en-LK', {
+        style: 'currency',
+        currency: 'LKR',
+        minimumFractionDigits: 2,
+      }).format(amountNum);
+    } catch (error) {
+      console.error('Error formatting currency:', error);
+      return 'LKR 0.00';
+    }
+  }
+
+  formatExtent(extent: string | number): string {
+    try {
+      if (typeof extent === 'string') {
+        // Parse the string to a number and format with 4 decimal places
+        const extentNum = parseFloat(extent);
+        return isNaN(extentNum) ? '0.0000' : extentNum.toFixed(4);
+      }
+      // If it's already a number
+      return extent.toFixed(4);
+    } catch (error) {
+      console.error('Error formatting extent:', error);
+      return '0.0000';
+    }
   }
 
   viewNicImage(imageUrl: string, imageType: string): void {
-    // Implement image viewing logic
-    // You can open a modal or navigate to a new page
-    console.log(`View ${imageType} image:`, imageUrl);
-
-    // Example: Open image in new tab
     if (imageUrl) {
       window.open(imageUrl, '_blank');
     }
   }
 
   formatNumber(index: number): string {
-    // Format as 3-digit number with leading zeros (001, 002, etc.)
     return (index + 1).toString().padStart(3, '0');
   }
 
   auditResults(requestId: string) {
-    this.router.navigate(['finance/action/finance-govicapital/reject-requests/audit-personal-infor', requestId]);
+    const tree = this.router.createUrlTree([
+      'finance/action/finance-govicapital/reject-requests/audit-personal-infor',
+      requestId
+    ]);
+    
+    const url = this.router.serializeUrl(tree);
+    window.open(window.location.origin + '/admin' + url, '_blank');
   }
 }

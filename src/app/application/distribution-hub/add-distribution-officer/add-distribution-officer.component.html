@@ -17,15 +17,15 @@
 
           <!-- Display default image if no file is selected -->
           <div *ngIf="!selectedImage"
-            class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60">
-            <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
+            class="flex rounded-full border-solid border-2 justify-center items-center w-36 h-36">
+            <i class="fa-regular fa-user text-7xl dark:text-textDark"></i>
           </div>
 
           <!-- Display the selected image if available -->
-          <img *ngIf="selectedImage" class="rounded-full w-60 h-60 object-cover" [src]="selectedImage"
+          <img *ngIf="selectedImage" class="rounded-full w-36 h-36 object-cover" [src]="selectedImage"
             alt="Profile Picture" />
           <span (click)="triggerFileInput($event)"
-            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
+            class="absolute bottom-2 right-2 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-10 h-10 flex items-center justify-center rounded-full cursor-pointer">
             <i class="fa-solid fa-pen text-lg text-white"></i>
           </span>
         </div>
@@ -68,21 +68,21 @@
 
           <div class="flex items-center space-x-4 mt-3">
             <div class="flex items-center space-x-2 cursor-pointer">
-              <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                <input  class="w-5 h-5 cursor-pointer "  type="radio" name="enpType" value="Permanent" [(ngModel)]="empType "
-                  (ngModelChange)="updateEmployeeType($event)" />
+              <input class="w-5 h-5 cursor-pointer " type="radio" name="enpType" value="Permanent" id="Permanent"
+                [(ngModel)]="empType " #empTypeCtrl="ngModel" (ngModelChange)="updateEmployeeType($event)" />
+              <label class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer" for="Permanent">
                 Permanent
               </label>
             </div>
             <div class="flex items-center space-x-2 cursor-pointer">
-              <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
-                <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary" [(ngModel)]="empType"
-                  (ngModelChange)="updateEmployeeType($event)" />
+              <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary" id="Temporary" [(ngModel)]="empType"
+                #empTypeCtrl="ngModel" (ngModelChange)="updateEmployeeType($event)" />
+              <label class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer" for="Temporary">
                 Temporary
               </label>
             </div>
           </div>
-          <p *ngIf="!isEmpTypeSelected()" class="text-red-600 text-sm mt-2">
+          <p *ngIf="!isEmpTypeSelected() && empTypeCtrl.touched" class="text-red-600 text-sm mt-2">
             Please select an employee type.
           </p>
         </div>
@@ -112,9 +112,12 @@
               <label for="tamil" class="text-gray-700 dark:text-textDark font-medium">Tamil</label>
             </div>
 
+            <input type="hidden" name="languages" [(ngModel)]="personalData.languages" required
+              #languagesCtrl="ngModel" />
+
           </div>
 
-          <p *ngIf="!isAtLeastOneLanguageSelected()" class="text-red-600 text-sm mt-2">
+          <p *ngIf="!isAtLeastOneLanguageSelected() && languagesCtrl.touched" class="text-red-600 text-sm mt-2">
             Please select at least one preferred language.
           </p>
         </div>
@@ -163,7 +166,8 @@
             Last Name *
           </label>
           <input id="lastNameEnglish" name="lastNameEnglish" required [(ngModel)]="personalData.lastNameEnglish"
-            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$" (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"
+            #lastNameEnglishRef="ngModel" pattern="^[A-Z][a-zA-Z ]*$"
+            (input)="onTrimInputFirstCapital($event, personalData, 'lastNameEnglish')"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="lastNameEnglishRef.invalid && (lastNameEnglishRef.dirty || lastNameEnglishRef.touched)"
             class="text-red-600 text-sm">
@@ -265,27 +269,30 @@
 
 
         <div>
-          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            NIC Number *
-          </label>
-          <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
-            (input)="capitalizeV(); enforceNicLength($event)" (input)="trimLeadingSpace($event)"
-            (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
-            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-          <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
-            class="text-red-600 text-sm">
-            Please enter a valid NIC number (12 digits or 10 digits followed by 'V')
-          </span>
-          <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm">
-            NIC is a required field.
-          </span>
-        </div>
+  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    NIC Number *
+  </label>
+  <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
+    (input)="capitalizeV(); enforceNicLength($event)" (input)="trimLeadingSpace($event)"
+    (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
+    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
+    maxlength="12" />
+  
+  <!-- Validation messages -->
+  <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
+    class="text-red-600 text-sm block mt-1">
+    Please enter a valid NIC number (12 digits or 9 digits followed by 'V')
+  </span>
+  <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm block mt-1">
+    NIC is a required field.
+  </span>
+</div>
 
 
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
-          <input type="email" id="email" name="nic" [(ngModel)]="personalData.email"
-             (blur)="onBlur('email')" (input)="onTrimInput($event, personalData, 'email')"
+          <input type="email" id="email" name="nic" [(ngModel)]="personalData.email" (blur)="onBlur('email')"
+            (input)="onTrimInput($event, personalData, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <!-- Show detailed error messages from service -->
@@ -397,9 +404,8 @@
           Account Holder’s Name *
         </label>
         <input maxlength="50" id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-        (input)="onTrimInput($event, personalData, 'accHolderName')" #accHolderNameRef="ngModel" required
-          pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$" 
-           (blur)="onBlur('accHolderName')"
+          (input)="onTrimInput($event, personalData, 'accHolderName')" #accHolderNameRef="ngModel" required
+          pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$" (blur)="onBlur('accHolderName')"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
         <span *ngIf="accHolderNameRef.invalid && (accHolderNameRef.dirty || accHolderNameRef.touched)"
           class="text-red-600 text-sm">

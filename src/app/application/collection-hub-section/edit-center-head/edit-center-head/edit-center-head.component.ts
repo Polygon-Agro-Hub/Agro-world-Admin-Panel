@@ -627,6 +627,14 @@ onTrimInput(event: Event, modelRef: any, fieldName: string): void {
 
     // Navigate to the requested page
     this.selectedPage = page;
+
+    setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, 100);
+
   }
   updateProvince(event: any): void {
     const selectedDistrict = event.value;

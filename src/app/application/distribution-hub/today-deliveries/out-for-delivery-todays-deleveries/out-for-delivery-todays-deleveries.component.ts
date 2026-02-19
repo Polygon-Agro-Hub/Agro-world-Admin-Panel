@@ -1,0 +1,85 @@
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+interface DeliveryItem {
+  id: number;
+  invNo: string;
+  regCode: string;
+  centerName: string;
+  sheduleTime: string;
+  sheduleDate: string;
+  createdAt: string;
+  status: string;
+  outDlvrTime: string;
+  collectTime: string;
+  driverEmpId: string;
+  driverStartTime: string;
+  returnTime: string;
+  deliveryTime: string;
+}
+
+@Component({
+  selector: 'app-out-for-delivery-todays-deleveries',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './out-for-delivery-todays-deleveries.component.html',
+  styleUrl: './out-for-delivery-todays-deleveries.component.css',
+})
+export class OutForDeliveryTodaysDeleveriesComponent implements OnChanges {
+  @Input() deliveries: DeliveryItem[] = [];
+
+  searchTerm: string = '';
+  filteredDeliveries: DeliveryItem[] = [];
+
+  // Local copy of deliveries for filtering
+  localDeliveries: DeliveryItem[] = [];
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['deliveries']) {
+      this.localDeliveries = [...this.deliveries];
+      this.filteredDeliveries = [...this.deliveries];
+    }
+  }
+
+  search() {
+    this.searchTerm = this.searchTerm.trim();
+    if (!this.searchTerm) {
+      this.filteredDeliveries = [...this.localDeliveries];
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredDeliveries = this.localDeliveries.filter(
+        (item) =>
+          (item.invNo && item.invNo.toLowerCase().includes(term)) ||
+          (item.regCode && item.regCode.toLowerCase().includes(term)) ||
+          (item.sheduleTime && item.sheduleTime.toLowerCase().includes(term)) ||
+          (item.outDlvrTime && item.outDlvrTime.toLowerCase().includes(term))
+      );
+    }
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.filteredDeliveries = [...this.localDeliveries];
+  }
+
+  // Helper method to format time slot
+  formatTimeSlot(scheduleTime: string): string {
+    if (!scheduleTime) return '';
+
+    try {
+      const date = new Date(scheduleTime);
+      const hours = date.getHours();
+
+      if (hours < 12) {
+        return '8 AM - 2 PM';
+      } else if (hours < 18) {
+        return '2 PM - 8 PM';
+      } else {
+        return '8 PM - 12 AM';
+      }
+    } catch (e) {
+      return scheduleTime;
+    }
+  }
+}

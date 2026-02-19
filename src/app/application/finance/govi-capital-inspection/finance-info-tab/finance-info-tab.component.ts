@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-finance-info-tab',
@@ -10,6 +10,18 @@ import { Component, Input } from '@angular/core';
 })
 export class FinanceInfoTabComponent {
   @Input() financeInfo!: IFinance;
+  @Input() currentPage: number = 3;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
+  }
 }
 
 export interface IFinance {
@@ -18,10 +30,10 @@ export interface IFinance {
   bank: string;
   branch: string;
   debtsOfFarmer: string;
-  noOfDepartments: number;
-  assetsLand: { Land: string[] };
-  assetsBuilding: { Building: string[] };
-  assetsVehicle: { Vehicle: string[] };
-  assetsMachinery: { Machinery: string[] };
+  noOfDependents: number;
+  assetsLand: string[] | null;
+  assetsBuilding: string[] | null;
+  assetsVehicle: string[] | null;
+  assetsMachinery: string[] | null;
   assetsFarmTool: string;
 }

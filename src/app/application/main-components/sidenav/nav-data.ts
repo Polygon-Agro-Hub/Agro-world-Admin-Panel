@@ -123,6 +123,25 @@ export const navbarData = [
     Permission: 'Dispatch Tab',
   },
   {
+    RouterLink: 'call-centers',
+    icon: 'fa-solid fa-headset',
+    label: 'Call Center',
+    expanded: false,
+    Permission: 'CallCenter Tab',
+    children: [
+      {
+        RouterLink: '/call-centers/dashboard',
+        childIcon: 'fa-solid fa-gauge',
+        label: 'Dashboard',
+      },
+      {
+        RouterLink: '/call-centers/action',
+        childIcon: 'fa-brands fa-creative-commons-nd',
+        label: 'Action',
+      },
+    ],
+  },
+  {
     RouterLink: 'market',
     icon: 'fa-solid fa-shop',
     label: 'GoViMart',

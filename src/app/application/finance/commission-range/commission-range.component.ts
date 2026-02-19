@@ -13,6 +13,8 @@ import {
 } from '../../../services/finance/finance.service';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-commission-range',
@@ -27,14 +29,16 @@ export class CommissionRangeComponent implements OnInit {
   isLoading = false;
   isEditing = false;
   hasNewRows = false;
-  lastModifiedBy: string | null = 'Kelum';
+  lastModifiedBy: string | null = '--';
   originalCommissions: AgentCommission[] = [];
 
   constructor(
     private fb: FormBuilder,
     private financeService: FinanceService,
-    private location: Location
-  ) {}
+    private location: Location,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.initForm();

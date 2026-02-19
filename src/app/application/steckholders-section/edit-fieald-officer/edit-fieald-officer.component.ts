@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
@@ -53,7 +53,6 @@ export class EditFiealdOfficerComponent implements OnInit {
   touchedFields: { [key in keyof Personal]?: boolean } = {};
   confirmAccountNumberRequired: boolean = false;
   confirmAccountNumberError: boolean = false;
-  dropdownOpen = false;
   fiealdManagerData: fiealdManager[] = [];
   lastID!: string;
   languagesTouched: boolean = false;
@@ -112,9 +111,13 @@ export class EditFiealdOfficerComponent implements OnInit {
     private route: ActivatedRoute,
     private stakeHolderSrv: StakeholderService,
     private http: HttpClient,
+    private location: Location
   ) { }
 
-  jobRoles = ['Field Officer', 'Chief Field Officer'];
+  jobRoles = [
+  { label: 'Field Officer', value: 'Field Officer' },
+  { label: 'Chief Field Officer', value: 'Chief Field Officer' }
+];
 
   districts = [
     { name: 'Ampara', province: 'Eastern' },
@@ -309,7 +312,7 @@ getFileName(value: string): string {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.router.navigate(['/steckholders/action/field-inspectors']);
+         this.location.back();
       }
     });
   }
@@ -359,10 +362,6 @@ getFileName(value: string): string {
     return !!this.empType;
   }
 
-  closeDropdown() {
-    this.dropdownOpen = false;
-  }
-
   onCheckboxChange(lang: string, event: any) {
     if (event.target.checked) {
       if (this.personalData.language) {
@@ -408,39 +407,30 @@ getFileName(value: string): string {
     return !!this.touchedFields[fieldName] && !value;
   }
 
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  selectjobRole(role: string) {
-    this.personalData.jobRole = role;
-    this.toggleDropdown();
-    console.log('personalData', this.personalData);
-
-    this.EpmloyeIdCreate(); // call your method
-  }
-
   EpmloyeIdCreate() {
-    this.getAllCollectionManagers();
-    let rolePrefix: string | undefined;
-
-    const rolePrefixes: { [key: string]: string } = {
-      'Field Officer': 'FIO',
-      'Chief Field Officer': 'CFO',
-    };
-
-    rolePrefix = rolePrefixes[this.personalData.jobRole];
-
-    if (!rolePrefix) {
-      return;
-    }
-
-    this.getLastID(rolePrefix)
-      .then((lastID) => {
-        this.personalData.empId = rolePrefix + lastID;
-      })
-      .catch((error) => { });
+  if (!this.personalData.jobRole) {
+    return;
   }
+
+  let rolePrefix: string | undefined;
+
+  const rolePrefixes: { [key: string]: string } = {
+    'Field Officer': 'FIO',
+    'Chief Field Officer': 'CFO',
+  };
+
+  rolePrefix = rolePrefixes[this.personalData.jobRole];
+
+  if (!rolePrefix) {
+    return;
+  }
+
+  this.getLastID(rolePrefix)
+    .then((lastID) => {
+      this.personalData.empId = rolePrefix + lastID;
+    })
+    .catch((error) => { });
+}
 
   getAllCollectionManagers() {
   this.stakeHolderSrv
@@ -449,7 +439,7 @@ getFileName(value: string): string {
       this.fiealdManagerData = res;
       // Convert to dropdown options format
       this.managerOptions = this.fiealdManagerData.map((manager) => ({
-        label: manager.firstName + ' ' + manager.lastName,
+        label: manager.empId + ' - ' + manager.firstName + ' ' + manager.lastName,
         value: manager.id,
       }));
 
@@ -747,7 +737,7 @@ getFileName(value: string): string {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.navigatePath('/steckholders/action/field-inspectors');
+       this.location.back();
       }
     });
   }
@@ -874,6 +864,10 @@ getFileName(value: string): string {
 
     // Navigate to the selected page
     this.selectedPage = page;
+
+    setTimeout(() => {
+    this.scrollToTop();
+  }, 0);
   }
 
   nextFormCreate2(page: 'pageOne' | 'pageTwo' | 'pageThree') {
@@ -919,6 +913,10 @@ getFileName(value: string): string {
 
     // Navigate to the selected page if validation passes
     this.selectedPage = page;
+
+    setTimeout(() => {
+    this.scrollToTop();
+  }, 0);
   }
 
   markPageOneFieldsAsTouched(): void {
@@ -2379,11 +2377,67 @@ validateDocumentFieldsForUpdate(): string[] {
   return errors;
 }
 
+clearChiefFieldOfficer(): void {
+  this.personalData.irmId = null;
+  this.touchedFields['irmId'] = true;
+}
+
+onAssignedDistrictsChange(): void {
+  // Check if assignDistrict is cleared (empty array)
+  if (!this.personalData.assignDistrict || this.personalData.assignDistrict.length === 0) {
+    // Clear Job Role (p-dropdown will handle this automatically)
+    // No need to manually set personalData.jobRole = ''
+    
+    // Clear Chief Field Officer
+    this.clearChiefFieldOfficer();
+    
+    // Also reset the employee ID
+    this.personalData.empId = '';
+  }
+}
+
+onJobRoleChange(event: DropdownChangeEvent): void {
+  const role = event.value;
+  
+  // Clear CFO if job role is not 'Field Officer'
+  if (!role || role !== 'Field Officer') {
+    this.clearChiefFieldOfficer();
+  }
+  
+  // Generate employee ID
+  this.EpmloyeIdCreate();
+}
+
+onJobRoleClear(): void {
+  // Clear Chief Field Officer when job role is cleared
+  this.clearChiefFieldOfficer();
+  
+  // Mark field as touched for validation
+  this.touchedFields['jobRole'] = true;
+}
+
+scrollToTop(): void {
+  // Method 1: Direct window scrolling
+  window.scrollTo(0, 0);
+  
+  // Method 2: With smooth scrolling
+  // window.scrollTo({
+  //   top: 0,
+  //   behavior: 'smooth'
+  // });
+  
+  // Method 3: Scroll to specific container
+  // const container = document.querySelector('.mx-auto.p-6');
+  // if (container) {
+  //   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // }
+}
+
 }
 
 class Personal {
   id!: number;
-  irmId!: number | string;
+  irmId!: number | string | null;
   firstName!: string;
   lastName!: string;
   firstNameSinhala!: string;
@@ -2424,6 +2478,7 @@ class Personal {
 
 class fiealdManager {
   id!: number;
+  empId!: string;
   firstName!: string;
   lastName!: string;
 }

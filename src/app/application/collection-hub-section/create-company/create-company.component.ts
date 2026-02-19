@@ -1,10 +1,11 @@
 import { CommonModule, Location } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   FormsModule,
+  NgModel,
   ReactiveFormsModule,
   Validators,
 
@@ -47,6 +48,16 @@ interface BranchesData {
   styleUrl: './create-company.component.css',
 })
 export class CreateCompanyComponent implements OnInit {
+
+  @ViewChild('accHolderName') accHolderName!: NgModel;
+  @ViewChild('languagesCtrl') languagesCtrl!: NgModel;
+  @ViewChild('accNumberInput') accNumberInput!: NgModel;
+  @ViewChild('confirmAccNumberInput') confirmAccNumberInput!: NgModel;
+  @ViewChild('bankDropdown') bankDropdown!: NgModel;
+  @ViewChild('branchDropdown') branchDropdown!: NgModel;
+  @ViewChild('financeOfficerInput') financeOfficerInput!: NgModel;
+  @ViewChild('oicConNum1Ref') oicConNum1Ref!: NgModel;
+
   companyData: Company = new Company();
   userForm: FormGroup;
   selectedPage: 'pageOne' | 'pageTwo' = 'pageOne';
@@ -582,7 +593,7 @@ export class CreateCompanyComponent implements OnInit {
     this.companyData.logo = '';
     this.selectedLogoFile = null;
     this.companyData.logoFile = undefined;
-    const logoInput = document.getElementById('logoUploadEdit') as HTMLInputElement;
+    const logoInput = document.getElementById('logoUpload') as HTMLInputElement;
     if (logoInput) logoInput.value = '';
     this.touchedFields['logo'] = true;
   }
@@ -591,7 +602,7 @@ export class CreateCompanyComponent implements OnInit {
     event.stopPropagation();
     this.companyData.favicon = '';
     this.selectedFaviconFile = null;
-    const faviconInput = document.getElementById('faviconUploadEdit') as HTMLInputElement;
+    const faviconInput = document.getElementById('faviconUpload') as HTMLInputElement;
     if (faviconInput) faviconInput.value = '';
     this.touchedFields['favicon'] = true;
   }
@@ -757,6 +768,16 @@ export class CreateCompanyComponent implements OnInit {
   }
 
   saveCompanyData() {
+
+  this.accHolderName?.control.markAsTouched();
+  this.accNumberInput?.control.markAsTouched();
+  this.confirmAccNumberInput?.control.markAsTouched();
+  this.bankDropdown?.control.markAsTouched();
+  this.branchDropdown?.control.markAsTouched();
+  this.financeOfficerInput?.control.markAsTouched();
+  this.oicConNum1Ref?.control.markAsTouched();
+  // this.accNumberInput?.control.accNumberInput();
+
   if (this.companyNameError) {
     Swal.fire({
       icon: 'error',

@@ -91,7 +91,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       this.filterCategory.type = 'Call Center';
     }
     else if (this.tokenService.getUserDetails().role === '5') {
-      this.filterCategory.type = 'Procuiment';
+      this.filterCategory.type = 'Procurement';
     }
 
     console.log(this.filterCategory);

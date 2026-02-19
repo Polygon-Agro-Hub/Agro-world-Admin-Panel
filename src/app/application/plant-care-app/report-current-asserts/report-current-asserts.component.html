@@ -1,13 +1,13 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button class="mb-5 text-textLight dark:text-textDark" (click)="navigatePath('/plant-care/action/report-farmer-list')">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
 
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <p class="text-textLight dark:text-textDark text-xl py-8">
-        {{name}}
+        {{name}} - {{farmName}}
     </p>
     <div *ngIf="assertReport.length > 0; else noData" class="flex justify-center overflow-x-auto">
         <table class="w-full divide-y divide-gray-200">

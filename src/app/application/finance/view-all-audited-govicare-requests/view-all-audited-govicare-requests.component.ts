@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FinanceService, GoviCareRequest, GoviCareRequestDetail } from '../../../services/finance/finance.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-all-audited-govicare-requests',
@@ -23,6 +25,8 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
   isStatusDropdownOpen: boolean = false;
   statusDropdownOptions: string[] = ['Draft', 'Published'];
 
+  totArea!: number;
+
   // Search
   search: string = '';
   hasSearched: boolean = false;
@@ -38,7 +42,9 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
 
   constructor(
     private financeService: FinanceService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -108,6 +114,7 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
     this.financeService.getGoviCareRequestById(requestId).subscribe({
       next: (response) => {
         this.selectedRequest = response.data;
+        this.totArea = (this.selectedRequest.ExtentH*2.47105) + this.selectedRequest.Extent + (this.selectedRequest.ExtentP / 160);
         this.showDetailsModal = true;
         this.isLoading = false;
       },
@@ -119,7 +126,13 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
   }
 
   auditResults(requestId: number) {
-    this.router.navigate(['finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests/audit-personal-infor', String(requestId)]);
+    const tree = this.router.createUrlTree([
+      'finance/action/finance-govicapital/view-Govicare-approved-requests/approve-audit-personal-infor',
+      requestId
+    ]);
+    
+    const url = this.router.serializeUrl(tree);
+    window.open(window.location.origin + '/admin' + url, '_blank');
   }
 
   closeDetailsModal(): void {
@@ -229,8 +242,9 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
     }
   }
 
-  formatCurrency(amount: number): string {
-    return 'Rs. ' + amount.toLocaleString('en-US', {
+  formatCurrency(amount: number | string): string {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return 'Rs. ' + numAmount.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });

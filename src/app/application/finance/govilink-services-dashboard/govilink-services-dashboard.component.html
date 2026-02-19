@@ -98,6 +98,10 @@
         Recent Service Payments
       </h2>
       <button
+      *ngIf="
+        permissionService.hasPermission('Service Payments View') ||
+        tokenService.getUserDetails().role === '1'
+      "
         (click)="ViewAll()"
         class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
       >

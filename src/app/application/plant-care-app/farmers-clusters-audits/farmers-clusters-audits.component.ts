@@ -71,7 +71,7 @@ export class FarmersClustersAuditsComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private certificateCompanyService: CertificateCompanyService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAudits();
@@ -257,9 +257,8 @@ export class FarmersClustersAuditsComponent implements OnInit {
             this.availableOfficers = response.data.map(
               (officer: FieldOfficer) => ({
                 ...officer,
-                displayName: `${officer.firstName} ${officer.lastName} - ${
-                  officer.empId
-                } (Jobs: ${officer.jobCount || 0})`,
+                displayName: `${officer.firstName} ${officer.lastName} - ${officer.empId
+                  } (Jobs: ${officer.jobCount || 0})`,
                 activeJobCount: officer.jobCount || 0,
               })
             );
@@ -304,6 +303,19 @@ export class FarmersClustersAuditsComponent implements OnInit {
   }
   // Handle schedule date changes
   onScheduleDateChange(): void {
+    if (this.checkDate(this.selectedScheduleDate)) {
+      Swal.fire({
+        title: 'Invalid Date',
+        text: 'The selected date cannot be in the past.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      this.onScheduleDateClear();
+      return;
+    }
     // Reload officers when schedule date changes
     if (
       this.selectedOfficerRole &&
@@ -315,6 +327,12 @@ export class FarmersClustersAuditsComponent implements OnInit {
         this.selectedOfficerRole
       );
     }
+  }
+
+  checkDate(date: Date | null): boolean {
+    const today = new Date();
+    if (!date) return false;
+    return date < today;
   }
 
   // Handle schedule date clear

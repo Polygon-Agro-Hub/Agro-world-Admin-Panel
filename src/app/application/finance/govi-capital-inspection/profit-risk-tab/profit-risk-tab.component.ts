@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 interface InvestmentDataItem {
   id: string;
@@ -18,6 +18,18 @@ interface InvestmentDataItem {
 export class ProfitRiskTabComponent implements OnChanges {
 
   @Input() profitRiskObj!: IProfitRisk;
+  @Input() currentPage: number = 8;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('---------------------------------------------------------------');

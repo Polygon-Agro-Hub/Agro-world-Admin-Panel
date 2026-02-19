@@ -28,3 +28,32 @@
   -moz-user-select: none;
   -ms-user-select: none;
 }
+
+/* Center content in dropdown items and selected item */
+.custom-dropdown .p-dropdown-label {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  height: 100% !important;
+}
+
+/* Center the dropdown panel items */
+.custom-dropdown .p-dropdown-items-wrapper .p-dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Ensure the dropdown panel itself has proper styling */
+.custom-dropdown .p-dropdown-panel {
+  min-width: 100% !important;
+}
+
+/* Make sure the dropdown trigger is properly centered */
+.custom-dropdown .p-dropdown-trigger {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}

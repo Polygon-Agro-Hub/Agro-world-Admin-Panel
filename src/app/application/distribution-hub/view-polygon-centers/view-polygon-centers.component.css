@@ -32,11 +32,11 @@
 
 /* Reduce dropdown item padding */
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+  padding-left: 0.8rem !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+  padding-left: 0.8rem !important;
 }
 
 /* The rest of your existing calendar styles... */

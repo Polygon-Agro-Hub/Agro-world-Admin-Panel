@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   HttpClient,
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { CollectionOfficerService } from '../../../services/collection-officer/collection-officer.service';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -52,6 +52,11 @@ interface PhoneCode {
 
 
 export class CollectiveofficersPersonalComponent implements OnInit {
+  @ViewChild('empTypeCtrl') empTypeCtrl!: NgModel;
+  @ViewChild('languagesCtrl') languagesCtrl!: NgModel;
+   @ViewChild('topScroll') topScrollElement!: ElementRef;
+  private shouldScrollToTop = false;
+  
   officerId: number | null = null;
   selectedFile: File | null = null;
   languages: string[] = ['Sinhala', 'English', 'Tamil'];
@@ -109,7 +114,6 @@ dropdownOpen = false;
   jobRoles = [
     'Collection Centre Manager',
     'Collection Officer',
-    'Customer Officer'
   ];
 
   districts = [
@@ -547,6 +551,9 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   if (page === 'pageTwo') {
     this.markPageOneFieldsAsTouched();
 
+    this.empTypeCtrl?.control.markAsTouched();
+    this.languagesCtrl?.control.markAsTouched();
+
     const missingFields: string[] = [];
 
     if (!this.personalData.empType) {
@@ -647,6 +654,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       });
       return;
     }
+    this.shouldScrollToTop = true;
   }
 
   this.selectedPage = page;
@@ -733,8 +741,9 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
   this.collectionCenterSrv.getAllCollectionCenterByCompany(id).subscribe(
     (res) => {
       this.collectionCenterData = res;
+      // Modify this line to include regCode in the label
       this.centerOptions = this.collectionCenterData.map(center => ({
-        label: center.centerName,
+        label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
         value: center.id
       }));
       this.loaded = true;
@@ -766,7 +775,7 @@ nextFormCreate(page: 'pageOne' | 'pageTwo') {
       .subscribe((res) => {
         this.collectionManagerData = res;
         this.managerOptions = this.collectionManagerData.map(manager => ({
-          label: manager.firstNameEnglish + " " + manager.lastNameEnglish,
+          label: manager.empId + " - " + manager.firstNameEnglish + " " + manager.lastNameEnglish,
           value: manager.id
         }));
       });
@@ -1488,6 +1497,19 @@ preventSpecialCharacters(event: KeyboardEvent): void {
   
   return 'Please enter a valid email in the format: example@domain.com';
 }
+
+ngAfterViewChecked(): void {
+    // Scroll to top when page changes to pageTwo
+    if (this.selectedPage === 'pageTwo' && this.shouldScrollToTop && this.topScrollElement) {
+      setTimeout(() => {
+        this.topScrollElement.nativeElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+        this.shouldScrollToTop = false; // Reset the flag
+      }, 100); // Small delay to ensure DOM is updated
+    }
+  }
   
 }
 
@@ -1530,11 +1552,13 @@ class Personal {
 
 class CollectionCenter {
   id!: number;
+  regCode!: string;
   centerName!: string;
 }
 
 class CollectionManager {
   id!: number;
+  empId!: string;
   firstNameEnglish!: string;
   lastNameEnglish!: string;
 }

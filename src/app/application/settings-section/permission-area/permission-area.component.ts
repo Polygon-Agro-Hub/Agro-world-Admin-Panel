@@ -42,11 +42,13 @@ export class PermissionAreaComponent {
   featureCategoryList: any[] = [];
   positionList: any[] = [];
   FeatureList: any[] = [];
+  filteredFeatureList: any[] = [];
   RoleFeatureList: any[] = [];
   editFeatureObj: Feature = new Feature();
   editCategoryObj: EditCategory = new EditCategory();
 
   role_id!: number;
+  roleName!: string;
   createCategroyObj: CreateCategory = new CreateCategory();
   categories: { id: number; category: string }[] = [];
   selectedCategory: string | number = '';
@@ -56,6 +58,8 @@ export class PermissionAreaComponent {
 
   isCategoryEdit: boolean = false;
   existCategoryName: string = '';
+  searchText: string = '';
+  hasData: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -69,11 +73,14 @@ export class PermissionAreaComponent {
 
   ngOnInit() {
     this.role_id = this.route.snapshot.params['id'];
+    this.roleName = this.route.snapshot.queryParams['role'];
     console.log(this.role_id);
     this.getAllPosition();
     this.getAllFeatures();
     this.getAllRoleFeatures();
     this.getAllfeatureCategory();
+
+    this.filteredFeatureList = [...this.FeatureList];
   }
 
   getAllPosition() {
@@ -103,70 +110,73 @@ export class PermissionAreaComponent {
   }
 
   addCategory() {
-    this.permissionManagerService
-      .createCategory(
-        this.createCategroyObj.category,
-        this.selectedCategory,
-        this.newCategory
-      )
-      ?.subscribe(
-        (response) => {
-          if (response.status) {
-            Swal.fire({
-              title: 'Success!',
-              text: 'New feature has been added to the list successfully.',
-              icon: 'success',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              }
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.getAllPosition();
-                this.getAllFeatures();
-                this.getAllRoleFeatures();
-                this.getAllfeatureCategory();
-                this.newCategory = '';
-                this.createCategroyObj.category = '';
-
-              }
-            });
-          } else {
-            Swal.fire("Error!", response.message, 'error');
-          }
-        },
-        (error) => {
+  this.permissionManagerService
+    .createCategory(
+      this.createCategroyObj.category,
+      this.selectedCategory,
+      this.newCategory
+    )
+    ?.subscribe(
+      (response) => {
+        if (response.status) {
           Swal.fire({
-            title: 'Error!',
-            text: 'Failed to create feature.',
-            icon: 'error',
+            title: 'Success!',
+            text: 'New feature has been added to the list successfully.',
+            icon: 'success',
             confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Refresh all data
+              this.getAllPosition();
+              this.getAllFeatures(); // This will update hasData
+              this.getAllRoleFeatures();
+              this.getAllfeatureCategory();
+              this.newCategory = '';
+              this.createCategroyObj.category = '';
+            }
           });
+        } else {
+          Swal.fire("Error!", response.message, 'error');
         }
-      );
-  }
+      },
+      (error) => {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to create feature.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    );
+}
 
   getAllFeatures() {
-    this.isLoading = true;
-    const token = this.tokenService.getToken();
-    if (!token) {
-      console.error('No token found');
-      return;
-    }
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
+  this.isLoading = true;
+  const token = this.tokenService.getToken();
+  if (!token) {
+    console.error('No token found');
+    return;
+  }
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+  });
 
-    this.http
-      .get<any>(`${environment.API_URL}permission/get-all-features`, {
-        headers,
-      })
-      .subscribe(
-        (response) => {
+  this.http
+    .get<any>(`${environment.API_URL}permission/get-all-features`, {
+      headers,
+    })
+    .subscribe(
+      (response) => {
+        console.log('Main response -> ', response);
+        this.isLoading = false;
+        
+        // Check if response has features data
+        if (response.features && response.features.length > 0) {
           // Transform API response to group features by category
-          console.log('Main responce -> ', response);
-          this.isLoading = false;
           const groupedFeatures = response.features.reduce(
             (acc: any[], feature: any) => {
               let category = acc.find((c) => c.category === feature.category);
@@ -185,13 +195,27 @@ export class PermissionAreaComponent {
           );
 
           this.FeatureList = groupedFeatures;
-          console.log(this.FeatureList);
-        },
-        (error) => {
-          console.error('Error fetching features:', error);
+          this.filteredFeatureList = [...this.FeatureList];
+          this.hasData = true; // Set to true since we have data
+        } else {
+          // No features found
+          this.FeatureList = [];
+          this.filteredFeatureList = [];
+          this.hasData = false; // Set to false since no data
         }
-      );
-  }
+        
+        console.log(this.FeatureList);
+      },
+      (error) => {
+        this.isLoading = false;
+        console.error('Error fetching features:', error);
+        // Handle error case - no data available due to error
+        this.FeatureList = [];
+        this.filteredFeatureList = [];
+        this.hasData = false;
+      }
+    );
+}
 
   getAllRoleFeatures() {
     const token = this.tokenService.getToken();
@@ -509,6 +533,40 @@ export class PermissionAreaComponent {
     console.log("categories", this.categories);
 
   }
+
+  onSearch() {
+  if (!this.searchText) {
+    // If search is empty, show all features
+    this.filteredFeatureList = [...this.FeatureList];
+    // Update hasData based on whether FeatureList has data
+    this.hasData = this.FeatureList && this.FeatureList.length > 0;
+    return;
+  }
+
+  const searchTerm = this.searchText.toLowerCase().trim();
+
+  // Filter features based on the search term
+  this.filteredFeatureList = this.FeatureList.map(category => {
+    // Create a deep copy of the category
+    const filteredCategory = {
+      ...category,
+      features: category.features.filter((feature: any) =>
+        feature.name.toLowerCase().includes(searchTerm)
+      )
+    };
+    return filteredCategory;
+  }).filter(category => category.features.length > 0); // Remove categories with no matching features
+
+  // Update hasData based on whether filtered results exist
+  this.hasData = this.filteredFeatureList.length > 0;
+}
+
+  clearSearch() {
+  this.searchText = '';
+  this.filteredFeatureList = [...this.FeatureList];
+  // Update hasData based on whether FeatureList has data
+  this.hasData = this.FeatureList && this.FeatureList.length > 0;
+}
 }
 
 export class CreateCategory {

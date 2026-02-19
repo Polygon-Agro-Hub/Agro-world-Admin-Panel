@@ -107,6 +107,10 @@ export class ViewDistributionOfficerComponent {
   ) { }
 
   ngOnInit() {
+    window.scrollTo({
+    top: 0,
+    behavior: 'smooth' // Optional: adds smooth scrolling animation
+  });
     this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
     this.getAllcompany();
     this.fetchDistributionCenterNames();
@@ -199,13 +203,16 @@ export class ViewDistributionOfficerComponent {
   }
 
   fetchDistributionCenterNames() {
-    this.distributionService.getDistributionCenterNames().subscribe(
-      (response) => {
-        this.centerNames = response;
-      },
-      (error) => { }
-    );
-  }
+  this.distributionService.getDistributionCenterNames().subscribe(
+    (response) => {
+      this.centerNames = response.map((center: CenterName) => ({
+        ...center,
+        displayName: `${center.regCode} - ${center.centerName}` // Combine regCode and centerName
+      }));
+    },
+    (error) => { }
+  );
+}
 
   fetchDistributionManagerNames() {
     this.distributionService.getDistributionCenterManagerNames(this.selectedCenterId).subscribe(

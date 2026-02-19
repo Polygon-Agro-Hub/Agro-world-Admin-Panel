@@ -4,11 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FinanceService, GoviCareRequest, GoviCareRequestDetail } from '../../../services/finance/finance.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-view-all-approved-govicare-requests',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './view-all-approved-govicare-requests.component.html',
   styleUrl: './view-all-approved-govicare-requests.component.css'
 })
@@ -22,6 +25,9 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   selectStatus: string = '';
   isStatusDropdownOpen: boolean = false;
   statusDropdownOptions: string[] = ['Draft', 'Published'];
+
+  selectShares: string = '';
+  sharesDropdownOptions: string[] = ['Divided', 'Not Divided'];
 
   // Search
   search: string = '';
@@ -38,9 +44,19 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   isPublishing: boolean = false;
   isSharePopup: boolean = false;
 
+  // Edit Shares Modal
+  isEditSharesModal: boolean = false;
+  editNumShares: number = 0;
+  editShareValue: number = 0;
+  editMinShares: number = 0;
+  editMaxShares: number = 0;
+  isSavingShares: boolean = false;
+
   constructor(
     private financeService: FinanceService,
-    private router: Router
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -51,9 +67,10 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     this.isLoading = true;
 
     const status = this.selectStatus || undefined;
+    const shares = this.selectShares || undefined;
 
     this.financeService
-      .getAllApprovedGoviCareRequests(status, this.search)
+      .getAllApprovedGoviCareRequests(status, shares, this.search)
       .subscribe({
         next: (response) => {
           this.govicareRequests = response.data || [];
@@ -72,6 +89,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     this.isStatusDropdownOpen = !this.isStatusDropdownOpen;
   }
 
+
   selectStatusOption(option: string): void {
     this.selectStatus = option;
     this.isStatusDropdownOpen = false;
@@ -81,6 +99,11 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   filterStatus(): void {
     this.loadGovicareRequests();
   }
+
+  filterShares(): void {
+    this.loadGovicareRequests();
+  }
+
 
   cancelStatus(event: Event): void {
     event.stopPropagation();
@@ -227,8 +250,9 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     }
   }
 
-  formatCurrency(amount: number): string {
-    return 'Rs. ' + amount.toLocaleString('en-US', {
+  formatCurrency(amount: number | string): string {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return 'Rs. ' + numAmount.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
@@ -240,12 +264,6 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     if (!target.closest('.custom-status-dropdown-container')) {
       this.isStatusDropdownOpen = false;
     }
-  }
-
-  getStatusClass(status: string): string {
-    return status === 'Published'
-      ? 'bg-[#BBFFC6] text-[#308233]'
-      : 'bg-[#D1D5DB] text-[#4B5563]';
   }
 
   // Updated format methods with leading zeros
@@ -272,6 +290,145 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   }
 
   auditResults(requestId: number) {
-    this.router.navigate(['finance/action/finance-govicapital/view-Govicare-approved-requests/audit-personal-infor', String(requestId)]);
+    const tree = this.router.createUrlTree([
+      'finance/action/finance-govicapital/view-Govicare-approved-requests/edit-audit-personal-infor',
+      String(requestId)
+    ]);
+    
+    const url = this.router.serializeUrl(tree);
+    window.open(window.location.origin + '/admin' + url, '_blank');
+  }
+
+  // Calculate total extent in Acres
+  calculateExtentInAcres(extent: number = 0, extentH: number = 0, extentP: number = 0): string { 
+    const hectaresToAcres = extentH * 2.471;
+    const perchesToAcres = extentP * 0.00625;
+    const totalAcres = extent + hectaresToAcres + perchesToAcres;
+    
+    return totalAcres.toFixed(4) + ' Acres';
+  }
+
+  openEditSharesModal() {
+    this.editNumShares = this.selectedShares.approvedDetails?.defineShares || 0;
+    this.editMinShares = this.selectedShares.approvedDetails?.minShare || 0;
+    this.editMaxShares = this.selectedShares.approvedDetails?.maxShare || 0;
+    this.onEditSharesChange(); // Calculate share value
+    
+    this.isSharePopup = false; // Close view popup
+    this.isEditSharesModal = true; // Open edit popup
+  }
+
+  closeEditSharesModal() {
+    this.isEditSharesModal = false;
+  }
+
+  onEditSharesChange() {
+    if (this.editNumShares > 0 && this.selectedShares.approvedDetails?.totValue) {
+      this.editShareValue = this.selectedShares.approvedDetails.totValue / this.editNumShares;
+    } else {
+      this.editShareValue = 0;
+    }
+  }
+
+  updateShares(form: any) {
+    if (form.invalid || this.editNumShares <= 0 || this.editMinShares <= 0 || this.editMaxShares <= 0) {
+      return;
+    }
+
+    if (this.editMaxShares < this.editMinShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum shares cannot be less than minimum shares',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    this.isSavingShares = true;
+
+    const updateData = {
+      id: this.selectedShares.No,
+      jobId: this.selectedShares.Request_ID,
+      totalValue: this.selectedShares.approvedDetails?.totValue,
+      numShares: this.editNumShares,
+      shareValue: this.editShareValue,
+      minimumShare: this.editMinShares,
+      maximumShare: this.editMaxShares,
+      devideType: 'Edit'
+    };
+
+    this.financeService.devideSharesRequest(updateData).subscribe({
+      next: (response) => {
+        this.isSavingShares = false;
+        if (response.status) {
+          Swal.fire({
+            title: 'Success',
+            text: 'Shares updated successfully',
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+          this.closeEditSharesModal();
+          this.loadGovicareRequests(); 
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.message || 'Failed to update shares',
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      },
+      error: (error) => {
+        this.isSavingShares = false;
+        console.error('Error updating shares:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'An error occurred while updating shares',
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+      }
+    });
+  }
+
+  // Helper methods for input validation
+  allowIntegerOnly(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const key = event.key;
+
+    // Block everything except numbers
+    if (!allowedKeys.includes(key)) {
+      event.preventDefault();
+      return;
+    }
+  }
+
+  allowDecimalOnly(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    const key = event.key;
+
+    // Block everything except numbers and dot
+    if (!allowedKeys.includes(key)) {
+      event.preventDefault();
+      return;
+    }
+
+    // Prevent multiple dots
+    if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+      event.preventDefault();
+    }
   }
 }

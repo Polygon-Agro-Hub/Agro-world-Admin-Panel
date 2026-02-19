@@ -115,8 +115,11 @@ export class ViewCompanyHeadComponent implements OnInit {
   }
 
   navigatePath(path: string) {
-    this.router.navigate([path]);
+    this.router.navigate([path], {
+      queryParams: { companyId: this.companyId }
+    });
   }
+  
 
   onSearch() {
     if (this.searchText) {

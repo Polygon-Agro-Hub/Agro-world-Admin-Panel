@@ -8,6 +8,8 @@ import { OfficersComponent } from '../officers/officers.component';
 import { OfficerTargetComponent } from "../officer-target/officer-target.component";
 import { TokenService } from '../../../../services/token/services/token.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { LoadingSpinnerComponent } from "../../../../components/loading-spinner/loading-spinner.component";
+import { DistributionHubService } from '../../../../services/distribution-hub/distribution-hub.service';
 
 @Component({
   selector: 'app-main-dashboard-layout',
@@ -15,10 +17,11 @@ import { PermissionService } from '../../../../services/roles-permission/permiss
   imports: [
     CommonModule,
     HttpClientModule,
-    ProgressComponent,
-    OutOfDeliveryComponent,
-    OfficersComponent,
-    OfficerTargetComponent
+    // ProgressComponent,
+    // OutOfDeliveryComponent,
+    // OfficersComponent,
+    // OfficerTargetComponent,
+    LoadingSpinnerComponent
   ],
   templateUrl: './main-dashboard-layout.component.html',
   styleUrl: './main-dashboard-layout.component.css',
@@ -26,13 +29,20 @@ import { PermissionService } from '../../../../services/roles-permission/permiss
 export class MainDashboardLayoutComponent implements OnInit {
   activeTab: string = 'Progress';
   centerObj: CenterDetails = {
-    centerId: 0,
+    centerId: null,
     centerName: '',
     centerRegCode: ''
   };
+  cashPriceObj!: CashPrice;
+  isLoading: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, public tokenService: TokenService,
-      public permissionService: PermissionService) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+    private distributionHubService: DistributionHubService
+  ) { }
 
   ngOnInit(): void {
     // Get route parameters and query parameters
@@ -46,17 +56,18 @@ export class MainDashboardLayoutComponent implements OnInit {
       if (tab && ['Progress', 'Out for Delivery', 'Officers', 'Officer Target'].includes(tab)) {
         this.activeTab = tab;
       }
-      
+
       // Set center details from query params
       this.centerObj.centerName = params['name'] || '';
       this.centerObj.centerRegCode = params['regCode'] || '';
     });
 
+    this.fetchData();
   }
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
-    
+
     // Update URL with tab query parameter without reloading
     this.router.navigate([], {
       relativeTo: this.route,
@@ -64,10 +75,99 @@ export class MainDashboardLayoutComponent implements OnInit {
       queryParamsHandling: 'merge'
     });
   }
+
+  packingProgress() {
+    const id = this.centerObj.centerId
+    const name = this.centerObj.centerName
+    const regCode = this.centerObj.centerRegCode
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/order-packing-progress-dashboard/${id}`],
+      {
+        queryParams: { name, regCode }
+      }
+    );
+  }
+
+  officersTargets() {
+    const id = this.centerObj.centerId
+    const name = this.centerObj.centerName
+    const regCode = this.centerObj.centerRegCode
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/officer-and-target-dashboard/${id}`],
+      {
+        queryParams: { name, regCode }
+      }
+    );
+  }
+
+  driversVehicles() {
+    const id = this.centerObj.centerId;
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/view-distribution-drivers/${id}`]);
+  }
+
+  homeDeliveryOtherRecords() {
+
+  }
+
+  pickUpOrderRecords() {
+    const id = this.centerObj.centerId
+    const name = this.centerObj.centerName
+    const regCode = this.centerObj.centerRegCode
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/pikup-oder-records-main/${id}`],
+      {
+        queryParams: { name, regCode }
+      }
+    );
+  }
+
+  receivedCashToday() {
+    const id = this.centerObj.centerId
+    const name = this.centerObj.centerName
+    const regCode = this.centerObj.centerRegCode
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/received-cash-today/${id}`],
+      {
+        queryParams: { name, regCode }
+      }
+    );
+  }
+
+  homeDeliveryOrderRecords() {
+    const id = this.centerObj.centerId
+    const name = this.centerObj.centerName
+    const regCode = this.centerObj.centerRegCode
+    this.router.navigate([`/distribution-hub/action/view-polygon-centers/home-delivery-order-records`],
+      {
+        queryParams: { type: 'distribution', id, name, regCode }
+      }
+    );
+  }
+
+  back(): void {
+    this.isLoading = true;
+    this.router.navigate(['/distribution-hub/action/view-polygon-centers']).then(() => {
+      this.isLoading = false;
+    });
+  }
+
+
+  fetchData() {
+    this.isLoading = true;
+    this.distributionHubService.getPolygonCenterDashbordDetails(this.centerObj.centerId as number).subscribe(
+      (res) => {
+        console.log(res);
+        this.cashPriceObj = res.data;
+        this.isLoading = false;
+      }
+    )
+  }
+
 }
 
 interface CenterDetails {
-  centerId: number;
+  centerId: number | null;
   centerName: string;
   centerRegCode: string;
+}
+
+interface CashPrice{
+  total_price:number;
+  total_orders:number;
 }

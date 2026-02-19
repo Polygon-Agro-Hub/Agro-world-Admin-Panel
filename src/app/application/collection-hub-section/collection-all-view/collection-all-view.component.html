@@ -14,9 +14,13 @@
   Add New
 </button>
 
+<p *ngIf="( urlSegment === 'collection-hub')">
+asdasd
+</p>
+
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -37,7 +41,7 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="provinceOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="provinceOptions" optionLabel="label" optionValue="value"
             [showClear]="!!selectProvince" placeholder="Province" [(ngModel)]="selectProvince"
             (onChange)="applyProvinceFilters()"></p-dropdown>
         </div>
@@ -46,7 +50,7 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="districtOptions" optionLabel="label" optionValue="value"
             [showClear]="!!selectDistrict" placeholder="District" [(ngModel)]="selectDistrict"
             (onChange)="applyDistrictFilters()"></p-dropdown>
         </div>
@@ -72,7 +76,7 @@
         </div>
       </div>
     </div>
-    <div class="overflow-x-auto">
+    <div>
       <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
         <thead>
           <tr>
@@ -118,7 +122,7 @@
             class="py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;"></th>
             <th 
             *ngIf="
-                  (urlSegment === 'collection-hub' && permissionService.hasPermission('Delete Collection Center')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Delete(remove) Collation Centre')) ||
+                  (urlSegment === 'collection-hub' && permissionService.hasPermission('Delete Collection Center')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Delete(remove) Collection Centre')) ||
                   tokenService.getUserDetails().role === '1'
                 "
             class="py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;"></th>
@@ -141,10 +145,10 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               {{ item.regCode }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark">
               {{ item.centerName }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark">
               <ng-container *ngIf="item.companies.length > 0; else noCompanies">
                 <span *ngFor="let company of item.companies; let last = last" style="display: block;">
                   {{ company.companyNameEnglish }}
@@ -161,7 +165,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.city }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark whitespace-nowrap">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
               <span *ngIf="item.contact01 === null" class="text-center">-</span>
               <span *ngIf="item.contact01 != null">{{ item.code1 }}{{ ' ' + item.contact01 }}</span>
             </td>
@@ -220,7 +224,7 @@
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button *ngIf="
-                  (urlSegment === 'collection-hub' && permissionService.hasPermission('Delete Collection Center')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Delete(remove) Collation Centre')) ||
+                  (urlSegment === 'collection-hub' && permissionService.hasPermission('Delete Collection Center')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Delete(remove) Collection Centre')) ||
                   tokenService.getUserDetails().role === '1'
                 " class="text-red-500 hover:text-red-700" (click)="deleteCollectionCenter(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"

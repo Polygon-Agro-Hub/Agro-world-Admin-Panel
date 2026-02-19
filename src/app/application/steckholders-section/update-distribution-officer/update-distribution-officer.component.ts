@@ -1,6 +1,6 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule, NgModel } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import Swal from 'sweetalert2';
@@ -62,6 +62,14 @@ interface DistributionOfficers {
   styleUrl: './update-distribution-officer.component.css',
 })
 export class UpdateDistributionOfficerComponent {
+
+  @ViewChild('licNoInput') licNoModel!: NgModel;
+  @ViewChild('confirmLicNoInput') confirmLicNoModel!: NgModel;
+  @ViewChild('insurenceNoInput') insurenceNoModel!: NgModel;
+  @ViewChild('confirmInsurenceNoInput') confirmInsurenceNoModel!: NgModel;
+  @ViewChild('vRegNoInput') vRegNoModel!: NgModel;
+  @ViewChild('confirmVRegNoInput') confirmVRegNoModel!: NgModel;
+
   userForm: FormGroup = new FormGroup({});
   page: number = 1;
   itemId!: number;
@@ -91,6 +99,7 @@ export class UpdateDistributionOfficerComponent {
   role: any = '';
   totalItems: number = 0;
   isApproved: boolean = false;
+  urlSegment: string = '';
 
   banks: Bank[] = [];
   branches: Branch[] = [];
@@ -120,34 +129,42 @@ export class UpdateDistributionOfficerComponent {
   licenseFrontImageFileName!: string;
   licenseFrontImagePreview: string | ArrayBuffer | null = null;
   licenseFrontImageFile: File | null = null;
+  licenseFrontImageUpdated: boolean = false;
 
   licenseBackImageFileName!: string;
   licenseBackImagePreview: string | ArrayBuffer | null = null;
   licenseBackImageFile: File | null = null;
+  licenseBackImageUpdated: boolean = false;
 
   insurenceFrontImageFileName!: string;
   insurenceFrontImagePreview: string | ArrayBuffer | null = null;
   insurenceFrontImageFile: File | null = null;
+  insurenceFrontImageUpdated: boolean = false;
 
   insurenceBackImageFileName!: string;
   insurenceBackImagePreview: string | ArrayBuffer | null = null;
   insurenceBackImageFile: File | null = null;
+  insurenceBackImageUpdated: boolean = false;
 
   vehicleFrontImageFileName!: string;
   vehicleFrontImagePreview: string | ArrayBuffer | null = null;
   vehicleFrontImageFile: File | null = null;
+  vehicleFrontImageUpdated: boolean = false;
 
   vehicleBackImageFileName!: string;
   vehicleBackImagePreview: string | ArrayBuffer | null = null;
   vehicleBackImageFile: File | null = null;
+  vehicleBackImageUpdated: boolean = false;
 
   vehicleSideAImageFileName!: string;
   vehicleSideAImagePreview: string | ArrayBuffer | null = null;
   vehicleSideAImageFile: File | null = null;
+  vehicleSideAImageUpdated: boolean = false;
 
   vehicleSideBImageFileName!: string;
   vehicleSideBImagePreview: string | ArrayBuffer | null = null;
   vehicleSideBImageFile: File | null = null;
+  vehicleSideBImageUpdated: boolean = false;
 
   selectVehicletype: any = { name: '', capacity: '' };
 
@@ -185,11 +202,7 @@ export class UpdateDistributionOfficerComponent {
     { name: 'Vavuniya', province: 'Northern' },
   ];
 
-  jobRoleOptions: any[] = [
-    { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
-    { label: 'Distribution Officer', value: 'Distribution Officer' },
-    { label: 'Driver', value: 'Driver' }
-  ];
+  jobRoleOptions: any[] = [];
 
   setupDropdownOptions() {
     this.districts = this.districts.sort((a, b) =>
@@ -211,6 +224,7 @@ export class UpdateDistributionOfficerComponent {
   ];
 
   isLanguageRequired = false;
+  minInsuranceDate: Date = new Date(new Date().setDate(new Date().getDate() + 1)); // Tomorrow - blocks current and past dates
 
   constructor(
     private http: HttpClient,
@@ -221,11 +235,24 @@ export class UpdateDistributionOfficerComponent {
   ) { }
 
   ngOnInit() {
+    this.scrollToTop();
+    // Set minimum date to tomorrow to block current and past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
+    
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    this.minInsuranceDate = tomorrow;
+    
     this.loadBanks();
     this.loadBranches();
     this.setupDropdownOptions();
     this.itemId = this.route.snapshot.params['id'];
-
+    // If you want the last segment of the URL
+    const urlSegments = this.router.url.split('/').filter(segment => segment.length > 0);
+    this.urlSegment = urlSegments[urlSegments.length - 2];
+    this.chooseJobRole();
     if (this.itemId) {
       this.fetchData();
     }
@@ -286,6 +313,21 @@ export class UpdateDistributionOfficerComponent {
           this.driverObj.vCapacity = driverData.vCapacity || '';
           this.driverObj.vRegNo = driverData.vRegNo || '';
 
+          this.driverObj.confirmLicNo = driverData.licNo || '';
+          this.driverObj.confirmInsNo = driverData.insNo || '';
+          this.driverObj.confirmVRegNo = driverData.vRegNo || '';
+
+
+
+          this.driverObj.licenseFrontImage = driverData.licFrontImg || '';
+          this.driverObj.licenseBackImage = driverData.licBackImg || '';
+          this.driverObj.insurenceFrontImage = driverData.insFrontImg || '';
+          this.driverObj.insurenceBackImage = driverData.insBackImg || '';
+          this.driverObj.vehicleFrontImage = driverData.vehFrontImg || '';
+          this.driverObj.vehicleBackImage = driverData.vehBackImg || '';
+          this.driverObj.vehicleSideAImage = driverData.vehSideImgA || '';
+          this.driverObj.vehicleSideBImage = driverData.vehSideImgB || '';
+
           // Set existing image file names
           this.licenseFrontImageFileName = driverData.licFrontName || '';
           this.licenseBackImageFileName = driverData.licBackName || '';
@@ -302,6 +344,8 @@ export class UpdateDistributionOfficerComponent {
             this.selectVehicletype = vehicleType;
           }
         }
+
+        console.log('this.driverObj', this.driverObj)
 
         this.isApproved = this.personalData.status === 'Approved';
         this.selectedLanguages = this.personalData.languages ? this.personalData.languages.split(',') : [];
@@ -321,6 +365,13 @@ export class UpdateDistributionOfficerComponent {
         console.error('Error fetching officer data:', error);
         this.isLoading = false;
       },
+    });
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Use 'auto' for instant scroll
     });
   }
 
@@ -397,6 +448,7 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
+  // Update loadBranches method to set allBranches directly
   loadBranches() {
     this.http
       .get<BranchesData>('assets/json/branches.json')
@@ -405,6 +457,15 @@ export class UpdateDistributionOfficerComponent {
           data[bankID].sort((a, b) => a.name.localeCompare(b.name));
         });
         this.allBranches = data;
+
+        // If bank is already selected, set branches for the bank
+        if (this.selectedBankId) {
+          this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+          this.branchOptions = this.branches.map((branch) => ({
+            label: branch.name,
+            value: branch.name,
+          }));
+        }
       });
   }
 
@@ -500,6 +561,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.licenseFrontImageFile = file;
       this.licenseFrontImageFileName = file.name;
+      this.licenseFrontImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -513,6 +575,7 @@ export class UpdateDistributionOfficerComponent {
     this.licenseFrontImageFile = null;
     this.licenseFrontImageFileName = '';
     this.licenseFrontImagePreview = null;
+    this.licenseFrontImageUpdated = false;
     const fileInput = document.getElementById('licenseFrontImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -549,6 +612,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.licenseBackImageFile = file;
       this.licenseBackImageFileName = file.name;
+      this.licenseBackImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -562,6 +626,7 @@ export class UpdateDistributionOfficerComponent {
     this.licenseBackImageFile = null;
     this.licenseBackImageFileName = '';
     this.licenseBackImagePreview = null;
+    this.licenseBackImageUpdated = false;
     const fileInput = document.getElementById('licenseBackImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -598,6 +663,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.insurenceFrontImageFile = file;
       this.insurenceFrontImageFileName = file.name;
+      this.insurenceFrontImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -611,6 +677,7 @@ export class UpdateDistributionOfficerComponent {
     this.insurenceFrontImageFile = null;
     this.insurenceFrontImageFileName = '';
     this.insurenceFrontImagePreview = null;
+    this.insurenceFrontImageUpdated = false;
     const fileInput = document.getElementById('insurenceFrontImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -647,6 +714,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.insurenceBackImageFile = file;
       this.insurenceBackImageFileName = file.name;
+      this.insurenceBackImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -660,6 +728,7 @@ export class UpdateDistributionOfficerComponent {
     this.insurenceBackImageFile = null;
     this.insurenceBackImageFileName = '';
     this.insurenceBackImagePreview = null;
+    this.insurenceBackImageUpdated = false;
     const fileInput = document.getElementById('insuranceBackImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -696,6 +765,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.vehicleFrontImageFile = file;
       this.vehicleFrontImageFileName = file.name;
+      this.vehicleFrontImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -709,6 +779,7 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleFrontImageFile = null;
     this.vehicleFrontImageFileName = '';
     this.vehicleFrontImagePreview = null;
+    this.vehicleFrontImageUpdated = false;
     const fileInput = document.getElementById('vehicleFrontImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -745,6 +816,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.vehicleBackImageFile = file;
       this.vehicleBackImageFileName = file.name;
+      this.vehicleBackImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -758,6 +830,7 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleBackImageFile = null;
     this.vehicleBackImageFileName = '';
     this.vehicleBackImagePreview = null;
+    this.vehicleBackImageUpdated = false;
     const fileInput = document.getElementById('vehicleBackImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -794,6 +867,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.vehicleSideAImageFile = file;
       this.vehicleSideAImageFileName = file.name;
+      this.vehicleSideAImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -807,6 +881,7 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleSideAImageFile = null;
     this.vehicleSideAImageFileName = '';
     this.vehicleSideAImagePreview = null;
+    this.vehicleSideAImageUpdated = false;
     const fileInput = document.getElementById('vehicleSideAImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -843,6 +918,7 @@ export class UpdateDistributionOfficerComponent {
 
       this.vehicleSideBImageFile = file;
       this.vehicleSideBImageFileName = file.name;
+      this.vehicleSideBImageUpdated = true;
 
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -856,6 +932,7 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleSideBImageFile = null;
     this.vehicleSideBImageFileName = '';
     this.vehicleSideBImagePreview = null;
+    this.vehicleSideBImageUpdated = false;
     const fileInput = document.getElementById('vehicleSideBImageUpload') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
@@ -919,6 +996,9 @@ export class UpdateDistributionOfficerComponent {
   isValidEmail(email: string): boolean {
     if (!email) return false;
 
+    // Trim the email
+    email = email.trim();
+
     // Basic email regex pattern
     const emailRegex =
       /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
@@ -930,11 +1010,24 @@ export class UpdateDistributionOfficerComponent {
     if (email.startsWith('.') || email.endsWith('.')) {
       return false; // Leading or trailing dots
     }
+    const [localPart] = email.split('@');
+    if (localPart && (localPart.endsWith('.') || localPart.startsWith('.'))) {
+      return false; // Dot before @ or after local part
+    }
     if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
       return false; // Invalid special characters
     }
 
     return emailRegex.test(email);
+  }
+
+  getEmailErrorMessage(email: string): string {
+    if (!email) return 'Email is required';
+    if (email.startsWith('.')) return 'Email cannot start with a dot';
+    const [localPart] = email.split('@');
+    if (localPart && localPart.endsWith('.')) return 'Email cannot have a dot before @';
+    if (email.includes('..')) return 'Email cannot contain consecutive dots';
+    return 'Please enter a valid email address';
   }
 
   isValidNIC(nic: string): boolean {
@@ -946,8 +1039,16 @@ export class UpdateDistributionOfficerComponent {
 
   isValidPhoneNumber(phone: string): boolean {
     if (!phone) return false;
-    const phoneRegex = /^[0-9]{9}$/;
+    // Must be exactly 9 digits and start with 7
+    const phoneRegex = /^7[0-9]{8}$/;
     return phoneRegex.test(phone);
+  }
+
+  getPhoneErrorMessage(phone: string): string {
+    if (!phone) return 'Mobile number is required';
+    if (!phone.startsWith('7')) return 'Mobile number must start with 7';
+    if (phone.length < 9) return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+    return 'Please enter a valid mobile number (9 digits)';
   }
 
   formatTextInput(fieldName: keyof Personal): void {
@@ -959,9 +1060,16 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
-  preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal): void {
+  preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal | string): void {
     const input = event.target as HTMLInputElement;
-    const fieldValue = this.personalData[fieldName];
+    let fieldValue;
+    
+    if (typeof fieldName === 'string' && fieldName in this.personalData) {
+      fieldValue = this.personalData[fieldName as keyof Personal];
+    } else {
+      fieldValue = input.value;
+    }
+    
     // Prevent space if it's the first character or if the field is empty
     if (event.key === ' ' && (input.selectionStart === 0 || !fieldValue)) {
       event.preventDefault();
@@ -986,11 +1094,59 @@ export class UpdateDistributionOfficerComponent {
       // Remove leading spaces
       value = value.replace(/^\s+/, '');
 
+      // For English names, remove numbers and special characters
+      if (fieldName === 'firstNameEnglish' || fieldName === 'lastNameEnglish') {
+        value = value.replace(/[^a-zA-Z\s]/g, '');
+      }
+
       // Replace multiple consecutive spaces with single space
       value = value.replace(/\s{2,}/g, ' ');
 
       this.personalData[fieldName] = value;
     }
+  }
+
+  // Add method to handle NIC input restriction
+  onNICInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.toUpperCase();
+    
+    // If it's 9 digits followed by V, block further input
+    if (/^\d{9}V$/.test(value)) {
+      input.maxLength = 10;
+    }
+    // If it's 12 digits, block further input
+    else if (/^\d{12}$/.test(value)) {
+      input.maxLength = 12;
+    } else {
+      input.maxLength = 12;
+    }
+    
+    this.personalData.nic = value;
+  }
+
+  // Add method to handle phone input - only allow starting with 7
+  onPhoneInput(event: Event, fieldName: 'contact1' | 'contact2'): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+    
+    // If first digit is not 7, clear the input
+    if (value.length > 0 && !value.startsWith('7')) {
+      this.personalData[fieldName] = '';
+      input.value = '';
+      return;
+    }
+    
+    // Only allow digits
+    value = value.replace(/\D/g, '');
+    
+    // Limit to 9 digits
+    if (value.length > 9) {
+      value = value.substring(0, 9);
+    }
+    
+    this.personalData[fieldName] = value;
+    input.value = value;
   }
 
 
@@ -1423,6 +1579,13 @@ export class UpdateDistributionOfficerComponent {
     }
 
     this.selectedPage = page;
+
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Add smooth scrolling effect
+      });
+    }, 100);
   }
 
 
@@ -1463,37 +1626,41 @@ export class UpdateDistributionOfficerComponent {
     this.distributionOfficerServ
       .getDistributionCentreList(
         this.personalData.companyId,
-
       )
       .subscribe((res) => {
         this.collectionCenterData = res;
 
-        // Convert to dropdown options format
+        // Convert to dropdown options format with regCode
         this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.centerName,
+          label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
           value: center.id,
+          // Store original data if needed
+          originalLabel: center.centerName,
+          regCode: center.regCode
         }));
       });
   }
 
   getAllCollectionCenters() {
-    //miss func
+    // Reset center data
     this.collectionCenterData = []
     this.personalData.centerId = null;
     this.managerOptions = [];
     this.personalData.irmId = null;
+
     this.distributionOfficerServ
       .getDistributionCentreList(
         this.personalData.companyId,
-
       )
       .subscribe((res) => {
         this.collectionCenterData = res;
 
-        // Convert to dropdown options format
+        // Convert to dropdown options format with regCode
         this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.centerName,
+          label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
           value: center.id,
+          originalLabel: center.centerName,
+          regCode: center.regCode
         }));
       });
   }
@@ -1510,7 +1677,7 @@ export class UpdateDistributionOfficerComponent {
 
         // Convert to dropdown options format
         this.managerOptions = this.collectionManagerData.map((manager) => ({
-          label: manager.firstNameEnglish,
+          label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
           value: manager.id,
         }));
       });
@@ -1534,6 +1701,8 @@ export class UpdateDistributionOfficerComponent {
   }
 
   onSubmit() {
+
+    console.log('submitted')
     // Log personalData to verify phone numbers
     console.log('personalData before submit:', {
       contact1: this.personalData.contact1,
@@ -1541,6 +1710,13 @@ export class UpdateDistributionOfficerComponent {
       contact2: this.personalData.contact2,
       contact2Code: this.personalData.contact2Code,
     });
+
+    this.licNoModel.control.markAsTouched();
+    this.confirmLicNoModel.control.markAsTouched();
+    this.insurenceNoModel.control.markAsTouched();
+    this.confirmInsurenceNoModel.control.markAsTouched();
+    this.vRegNoModel.control.markAsTouched();
+    this.confirmVRegNoModel.control.markAsTouched();
 
     const missingFields: string[] = [];
 
@@ -1690,17 +1866,43 @@ export class UpdateDistributionOfficerComponent {
 
     if (this.personalData.jobRole === 'Driver') {
       if (!this.driverObj.licNo) {
-        missingFields.push('License Number is Required');
+        missingFields.push('Driving License ID number is Required');
+      } else if (!/^([A-Z]\d{7}|\d{10,12})$/.test(this.driverObj.licNo)) {
+        missingFields.push('Please enter a valid License ID number (1 capital letter + 7 digits or 10–12 digits).');
       }
+  
+      if (!this.driverObj.confirmLicNo) {
+        missingFields.push('Confirm Driving License ID number is Required');
+      } else if (this.driverObj.licNo !== this.driverObj.confirmLicNo) {
+        missingFields.push('Confirm Driving License ID number should match the Driving License ID number.');
+      }
+  
+      if (!this.driverObj.insNo) {
+        missingFields.push('Insurance Number is Required');
+      }
+      if (!this.driverObj.confirmInsNo) {
+        missingFields.push('Confirm Insurance Number is Required');
+      } else if (this.driverObj.insNo !== this.driverObj.confirmInsNo) {
+        missingFields.push('Confirm Insurance Number should match the Insurance Number.');
+      }
+  
+      if (!this.driverObj.vRegNo) {
+        missingFields.push('Vehicle Registration Number is Required');
+      }
+  
+      if (!this.driverObj.confirmVRegNo) {
+        missingFields.push(' Confirm Vehicle Registration Number is Required');
+      } else if (this.driverObj.vRegNo !== this.driverObj.confirmVRegNo) {
+        missingFields.push('Confirm Vehicle Registration Number should match the Vehicle Registration Number.');
+      }
+
       if (!this.licenseFrontImageFileName) {
         missingFields.push("License's Front Image is Required");
       }
       if (!this.licenseBackImageFileName) {
         missingFields.push("License's Back Image is Required");
       }
-      if (!this.driverObj.insNo) {
-        missingFields.push('Insurance Number is Required');
-      }
+     
       if (!this.driverObj.insExpDate) {
         missingFields.push('Insurance Expire Date is Required');
       }
@@ -1710,9 +1912,7 @@ export class UpdateDistributionOfficerComponent {
       if (!this.insurenceBackImageFileName) {
         missingFields.push("Insurance's Back Image is Required");
       }
-      if (!this.driverObj.vRegNo) {
-        missingFields.push('Vehicle Registration Number is Required');
-      }
+
       if (!this.driverObj.vType) {
         missingFields.push('Vehicle Type is Required');
       }
@@ -1868,45 +2068,47 @@ export class UpdateDistributionOfficerComponent {
             (error: any) => {
               this.isLoading = false;
               let errorMessage = 'An unexpected error occurred';
+              let messages: string[] = [];
 
-              if (error.error && error.error.error) {
-                switch (error.error.error) {
-                  case 'NIC already exists':
-                    errorMessage = 'The NIC number is already registered.';
-                    break;
-                  case 'Email already exists':
-                    errorMessage = 'The email address is already in use.';
-                    break;
-                  case 'Primary phone number already exists':
-                    errorMessage =
-                      'The primary phone number is already registered.';
-                    break;
-                  case 'Secondary phone number already exists':
-                    errorMessage =
-                      'The secondary phone number is already registered.';
-                    break;
-                  case 'Invalid file format or file upload error':
-                    errorMessage =
-                      'Invalid file format or error uploading the file.';
-                    break;
-                  default:
-                    errorMessage =
-                      error.error.error || 'An unexpected error occurred';
-                }
+              if (error.error && Array.isArray(error.error.errors)) {
+                messages = error.error.errors.map((err: string) => {
+                  console.log('error',)
+                  switch (err) {
+                    case 'NIC':
+                      return 'The NIC number is already registered.';
+                    case 'Email':
+                      return 'Email already exists.';
+                    case 'PhoneNumber01':
+                      return 'Mobile Number 1 already exists.';
+                    case 'PhoneNumber02':
+                      return 'Mobile Number 2 already exists.';
+                    default:
+                      return 'Validation error: ' + err;
+                  }
+                });
               }
 
-              this.errorMessage = errorMessage;
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: this.errorMessage,
-                confirmButtonText: 'OK',
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-                },
-              });
+              if (messages.length > 0) {
+                errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+                messages.forEach(m => {
+                  errorMessage += `<li>${m}</li>`;
+                });
+                errorMessage += '</ul></div>';
+
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Duplicate Information',
+                  html: errorMessage,
+                  confirmButtonText: 'OK',
+                  customClass: {
+                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                    htmlContainer: 'text-left',
+                    confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                  },
+                });
+                return;
+              }
             }
           );
       }
@@ -1953,23 +2155,38 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
-  getEmailErrorMessage(email: string): string {
-    if (!email) return 'Email is required';
+  preventSpecialCharacters(event: KeyboardEvent) {
+    const allowedPattern = /^[a-zA-Z0-9]$/;
+    const inputChar = event.key;
 
-    if (email.includes('..')) {
-      return 'Email cannot contain consecutive dots';
+    if (!allowedPattern.test(inputChar)) {
+      event.preventDefault();
     }
-    if (email.startsWith('.')) {
-      return 'Email cannot start with a dot';
-    }
-    if (email.endsWith('.')) {
-      return 'Email cannot end with a dot';
-    }
-    if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
-      return 'Email contains invalid special characters';
+  }
+
+  // New method to prevent special characters AND numbers (only letters and spaces allowed)
+  preventSpecialCharactersAndNumbers(event: KeyboardEvent) {
+    const allowedPattern = /^[a-zA-Z\s]$/;
+    const inputChar = event.key;
+
+    // Allow control keys (Backspace, Delete, Arrow keys, Tab, etc.)
+    const controlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+    if (controlKeys.includes(event.key)) {
+      return;
     }
 
-    return 'Please enter a valid email in the format: example@domain.com';
+    if (!allowedPattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  preventSpecialCharactersPaste(event: ClipboardEvent) {
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const allowedPattern = /^[a-zA-Z0-9]+$/;
+
+    if (!allowedPattern.test(pastedText)) {
+      event.preventDefault();
+    }
   }
 
   openPopup(item: any) {
@@ -2182,6 +2399,60 @@ export class UpdateDistributionOfficerComponent {
       }
     });
   }
+
+  chooseJobRole() {
+    if (this.urlSegment === 'edit-driver') {
+      this.jobRoleOptions = [
+        { label: 'Driver', value: 'Driver' }
+      ];
+    } else {
+      this.jobRoleOptions = [
+        { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
+        { label: 'Distribution Officer', value: 'Distribution Officer' },
+        // { label: 'Driver', value: 'Driver' }
+      ];
+    }
+  }
+
+  // Method to preview/view uploaded images
+  // Method to open image preview in new tab
+  viewImagePreview(imagePreview: string | ArrayBuffer | null, imageName: string): void {
+    if (imagePreview) {
+      const imageUrl = typeof imagePreview === 'string' ? imagePreview : '';
+      
+      // Create a new window with the image
+      const newWindow = window.open('', '_blank');
+      if (newWindow) {
+        newWindow.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>${imageName}</title>
+              <style>
+                body {
+                  margin: 0;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  min-height: 100vh;
+                  background-color: #000;
+                }
+                img {
+                  max-width: 100%;
+                  max-height: 100vh;
+                  object-fit: contain;
+                }
+              </style>
+            </head>
+            <body>
+              <img src="${imageUrl}" alt="${imageName}" />
+            </body>
+          </html>
+        `);
+        newWindow.document.close();
+      }
+    }
+  }
 }
 
 class Personal {
@@ -2227,11 +2498,14 @@ class Personal {
 class CollectionCenter {
   id!: number;
   centerName!: string;
+  regCode!: string;
 }
 
 class CollectionManager {
   id!: number;
+  empId!: string;
   firstNameEnglish!: string;
+  lastNameEnglish!: string;
 }
 
 class Company {
@@ -2247,6 +2521,10 @@ class Drivers {
   vCapacity!: string;
   vRegNo!: string;
 
+  confirmLicNo!: string;
+  confirmInsNo!: string;
+  confirmVRegNo!: string;
+
   licFrontName!: string;
   licBackName!: string;
   insFrontName!: string;
@@ -2255,4 +2533,13 @@ class Drivers {
   vBackName!: string;
   vSideAName!: string;
   vSideBName!: string;
+
+  licenseFrontImage!: string;
+  licenseBackImage!: string;
+  insurenceFrontImage!: string;
+  insurenceBackImage!: string;
+  vehicleFrontImage!: string;
+  vehicleBackImage!: string;
+  vehicleSideAImage!: string;
+  vehicleSideBImage!: string;
 }

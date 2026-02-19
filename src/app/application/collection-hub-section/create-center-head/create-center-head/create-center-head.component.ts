@@ -52,6 +52,7 @@ interface FieldConfig {
   styleUrl: './create-center-head.component.css',
 })
 export class CreateCenterHeadComponent implements OnInit {
+  companyId: number | null = null;
   isLoading = false;
   empType!: string;
   personalData: Personal = new Personal();
@@ -154,11 +155,19 @@ export class CreateCenterHeadComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.route.queryParams.subscribe((params) => {
+      this.companyId = params['companyId'] ? +params['companyId'] : null;
+
+    });
+
+    this.personalData.companyId = this.companyId
+    console.log('coompanyId', this.personalData.companyId)
+
     this.getAllCompanies();
     this.EpmloyeIdCreate();
     this.loadBanks();
     this.loadBranches();
-
     this.districtOptions = this.districts.map(district => ({
       label: district.name,
       value: district.name,
@@ -248,7 +257,7 @@ export class CreateCenterHeadComponent implements OnInit {
   validateNIC(event: any) {
     let value: string = event.target.value.toUpperCase();
 
-   
+
     value = value.replace(/[^0-9V]/g, '');
 
     if (value.length > 12) {
@@ -417,11 +426,11 @@ export class CreateCenterHeadComponent implements OnInit {
   onTrimInputFirstCapital(event: Event, modelRef: any, fieldName: string): void {
     const inputElement = event.target as HTMLInputElement;
     let trimmedValue = inputElement.value.trimStart();
-  
+
     if (trimmedValue.length > 0) {
       trimmedValue = trimmedValue.charAt(0).toUpperCase() + trimmedValue.slice(1);
     }
-  
+
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
   }
@@ -476,7 +485,7 @@ export class CreateCenterHeadComponent implements OnInit {
   loadBranches() {
     this.http.get<BranchesData>('assets/json/branches.json').subscribe(
       (data) => {
-        
+
         for (const bankId in data) {
           if (data.hasOwnProperty(bankId)) {
             data[bankId] = data[bankId].sort((a, b) =>
@@ -991,6 +1000,7 @@ export class CreateCenterHeadComponent implements OnInit {
 
   navigateToPage(page: 'pageOne' | 'pageTwo'): void {
     this.selectedPage = page;
+     this.scrollToTop();
   }
 
 
@@ -1042,6 +1052,13 @@ export class CreateCenterHeadComponent implements OnInit {
     } else {
       this.emailErrorMessage = '';
     }
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // This makes the scroll smooth
+    });
   }
 
 }

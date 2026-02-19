@@ -33,13 +33,13 @@
             <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)"
               #fileInput />
             <div *ngIf="!imagePreview"
-              class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60">
-              <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
+              class="flex rounded-full border-solid border-2 justify-center items-center w-36 h-36">
+              <i class="fa-regular fa-user text-7xl dark:text-textDark"></i>
             </div>
-            <img *ngIf="imagePreview" class="rounded-full w-60 h-60 object-cover" [src]="imagePreview"
+            <img *ngIf="imagePreview" class="rounded-full w-36 h-36 object-cover" [src]="imagePreview"
               alt="Profile Picture" />
             <span (click)="fileInput.click()"
-              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
+              class="absolute bottom-2 right-2 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-10 h-10 flex items-center justify-center rounded-full cursor-pointer">
               <i class="fa-solid fa-pen text-lg text-white"></i>
             </span>
           </div>
@@ -158,7 +158,7 @@
           <div>
             <label for="language" class="block text-sm font-medium text-gray-700 dark:text-textDark">Language *</label>
             <p-dropdown formControlName="language" id="language" name="language" [options]="language"
-              optionLabel="languageName" optionValue="languageName" [filter]="true" filterBy="languageName"
+              optionLabel="languageName" optionValue="languageName" [filter]="false" filterBy="languageName"
               [showClear]="false" placeholder="-- select --" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
               class="p-dropdown-custom">
             </p-dropdown>
@@ -265,13 +265,13 @@
             <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)"
               #fileInput />
             <div *ngIf="!imagePreview"
-              class="flex rounded-full border-solid border-2 justify-center items-center w-60 h-60">
-              <i class="fa-regular fa-user text-8xl dark:text-textDark"></i>
+              class="flex rounded-full border-solid border-2 justify-center items-center w-36 h-36">
+              <i class="fa-regular fa-user text-7xl dark:text-textDark"></i>
             </div>
             <img *ngIf="imagePreview" class="rounded-full w-60 h-60 object-cover" [src]="imagePreview"
               alt="Profile Picture" />
             <span (click)="fileInput.click()"
-              class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
+              class="absolute bottom-2 right-2 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-10 h-10 flex items-center justify-center rounded-full cursor-pointer">
               <i class="fa-solid fa-pen text-lg text-white"></i>
             </span>
           </div>
@@ -395,7 +395,7 @@
           <div>
             <label for="language" class="block text-sm font-medium text-gray-700 dark:text-textDark">Language *</label>
             <p-dropdown formControlName="language" id="language" name="language" [options]="language"
-              optionLabel="languageName" optionValue="languageName" [filter]="true" filterBy="languageName"
+              optionLabel="languageName" optionValue="languageName" [filter]="false" filterBy="languageName"
               [showClear]="false" placeholder="-- select --" styleClass="w-full" panelStyleClass="custom-dropdown-panel"
               class="p-dropdown-custom">
             </p-dropdown>

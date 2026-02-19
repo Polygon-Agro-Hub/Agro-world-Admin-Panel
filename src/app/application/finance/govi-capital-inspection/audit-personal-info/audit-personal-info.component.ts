@@ -16,6 +16,8 @@ import { LabourTabComponent } from '../labour-tab/labour-tab.component';
 import { HarvestStorageTabComponent } from '../harvest-storage-tab/harvest-storage-tab.component';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-audit-personal-info',
@@ -49,15 +51,22 @@ export class AuditPersonalInfoComponent implements OnInit {
   rejectReason: string = '';
   openDevideSharesPopUp: boolean = false;
 
-  numShares!: number;
+  numShares: number = 0;
   shareValue: number = 0.0;
-  minimumShare!: number;
-  maximumShare!: number;
+  minimumShare: number = 0;
+  maximumShare: number = 0;
 
   sharesData: Partial<Shares> = {};
+  devideRequestObj: Partial<DevideRequest> = {};
   lastSegment!: string;
 
-  constructor(private financeService: FinanceService, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private financeService: FinanceService,
+    private router: Router,
+    private route: ActivatedRoute,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
 
@@ -66,8 +75,8 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.reqId = Number(requestId);
 
     const segments = this.route.snapshot.url;
-    this.lastSegment = segments[segments.length - 3]?.path;
-  
+    this.lastSegment = segments[segments.length - 2]?.path;
+
     console.log('Last route part:', this.lastSegment);
 
     this.fetchData();
@@ -81,6 +90,45 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.activeTab = tabName;
   }
 
+  // Tab navigation methods for pagination
+  tabs: string[] = [
+    'Personal',
+    'IDProof',
+    'Finance',
+    'Land',
+    'Investment',
+    'Cultivation',
+    'CroppingSystems',
+    'ProfitRisk',
+    'Economical',
+    'Labour',
+    'HarvestStorage'
+  ];
+
+  getCurrentTabIndex(): number {
+    return this.tabs.indexOf(this.activeTab);
+  }
+
+  goToNextTab(): void {
+    const currentIndex = this.getCurrentTabIndex();
+    if (currentIndex < this.tabs.length - 1) {
+      this.activeTab = this.tabs[currentIndex + 1];
+      this.scrollToTop();
+    }
+  }
+
+  goToPreviousTab(): void {
+    const currentIndex = this.getCurrentTabIndex();
+    if (currentIndex > 0) {
+      this.activeTab = this.tabs[currentIndex - 1];
+      this.scrollToTop();
+    }
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   fetchData() {
     this.isLoading = true;
     this.financeService
@@ -88,22 +136,38 @@ export class AuditPersonalInfoComponent implements OnInit {
       .subscribe((res: any) => {
         this.inspectionArray = res.data;
         this.sharesData = res.shares;
-        console.log('sharesData', this.sharesData);
-        console.log(res.data);
 
-        console.log(this.inspectionArray);
+        if (this.sharesData.devideData) {
+          this.minimumShare = this.sharesData.devideData.minShare;
+          this.maximumShare = this.sharesData.devideData.maxShare;
+          this.numShares = this.sharesData.devideData.defineShares;
+          this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
+        }
+        
+        this.fetchPublishStatus();
 
         this.isLoading = false;
       });
   }
 
+  fetchPublishStatus() {
+    this.financeService.getAllApprovedGoviCareRequests().subscribe((res: any) => {
+      if (res.data && Array.isArray(res.data)) {
+        const request = res.data.find((req: any) => req.No === this.reqId);
+        if (request) {
+          this.sharesData.publishStatus = request.publishStatus;
+          console.log('Updated publishStatus:', this.sharesData.publishStatus);
+        }
+      }
+    });
+  }
+
   onNumSharesChange(value: number) {
     this.numShares = value; // optional, ngModel already does this
-    console.log('numShares', this.numShares);
-    if (this.numShares !== null) {
-      this.shareValue = Number(this.sharesData.totalValue) / this.numShares;
-    } else if (this.numShares === null) {
-      this.shareValue = 0.0;
+    if (this.numShares !== null && this.numShares > 0) {
+      this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
+    } else {
+      this.shareValue = 0;
     }
     console.log('shareValue', this.shareValue);
   }
@@ -125,8 +189,33 @@ export class AuditPersonalInfoComponent implements OnInit {
   }
 
   ApproveRequest() {
-    this.approvePopUpOpen = false;
-    this.openDevideSharesPopUp = true;
+    this.financeService.approveRequest(this.reqId).subscribe(
+      (res)=>{
+        if(res.status){
+          Swal.fire({
+            title: 'Success',
+            text: `Request Approved Successfully`,
+            icon: 'success',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+          this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests']);
+        }else if(!res.status){ 
+          Swal.fire({
+            title: 'error',
+            text: `Failed to Approve the Request`,
+            icon: 'error',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+      }
+    )
+    // this.openDevideSharesPopUp = true;
   }
 
   RejectRequest() {
@@ -147,6 +236,17 @@ export class AuditPersonalInfoComponent implements OnInit {
                 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
+          }).then(() => {
+            if (window.opener) {
+              window.opener.location.reload();
+              window.close();
+            } else {
+              if (this.lastSegment === 'viewAll-Govicare-AuditedRequests') {
+                this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests']);
+              } else {
+                window.history.back();
+              }
+            }
           });
         } else if (!res.status) {
           Swal.fire({
@@ -166,14 +266,36 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   cancelDevidePopUp() {
     this.openDevideSharesPopUp = false;
+    this.numShares = 0;
+    this.shareValue = 0.0;
+    this.minimumShare = 0;
+    this.maximumShare = 0;
   }
 
   DevideRequest(form: any) {
 
-    console.log('devind')
-
     if (form.invalid) {
       form.form.markAllAsTouched();
+      return;
+    }
+
+    if (
+        this.numShares <= 0 || 
+        (this.numShares < this.minimumShare) ||
+        (this.numShares < this.maximumShare)
+      ) return;
+
+    // Validate Maximum Investment Shares >= Minimum Investment Shares
+    if (this.maximumShare < this.minimumShare) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum Investment Shares cannot be less than Minimum Investment Shares',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
       return;
     }
 
@@ -181,30 +303,36 @@ export class AuditPersonalInfoComponent implements OnInit {
 
     this.isLoading = true;
 
-    let devideRequestObj: Partial<DevideRequest> = {};
 
-    devideRequestObj.totalValue = this.sharesData.totalValue;
-    devideRequestObj.numShares = this.numShares;
-    devideRequestObj.shareValue = Number(this.shareValue.toFixed(2));
-    devideRequestObj.minimumShare = this.minimumShare;
-    devideRequestObj.maximumShare = this.maximumShare;
-    devideRequestObj.id = this.sharesData.id;
-    devideRequestObj.jobId = this.sharesData.jobId;
-    devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime;
-    devideRequestObj.empId = this.sharesData.empId;
-    console.log('devideRequestObj', devideRequestObj);
+    this.devideRequestObj.totalValue = this.sharesData.totalValue;
+    this.devideRequestObj.numShares = this.numShares;
+    this.devideRequestObj.shareValue = Number(this.shareValue.toFixed(2));
+    this.devideRequestObj.minimumShare = this.minimumShare;
+    this.devideRequestObj.maximumShare = this.maximumShare;
+    this.devideRequestObj.id = this.sharesData.id;
+    this.devideRequestObj.jobId = this.sharesData.jobId;
+    this.devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime;
+    this.devideRequestObj.empId = this.sharesData.empId;
+    console.log('devideRequestObj', this.devideRequestObj);
 
-    this.financeService.devideSharesRequest(devideRequestObj).subscribe((res: any) => {
+    this.financeService.devideSharesRequest(this.devideRequestObj).subscribe((res: any) => {
 
       if (res.status) {
         Swal.fire({
           title: 'Success',
-          text: `Request Approved Successfully`,
+          text: `Shares Saved Successfully`,
           icon: 'success',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',
           },
+        }).then(() => {
+          if (window.opener) {
+            window.opener.location.reload();
+            window.close();
+          } else {
+            this.router.navigate(['/finance/action/finance-govicapital/view-Govicare-approved-requests']);
+          }
         });
       } else if (!res.status) {
         Swal.fire({
@@ -221,21 +349,50 @@ export class AuditPersonalInfoComponent implements OnInit {
     })
   }
 
-allowDecimalOnly(event: KeyboardEvent) {
-  const allowedKeys = ['0','1','2','3','4','5','6','7','8','9','.'];
-  const key = event.key;
+  allowDecimalOnly(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+    const key = event.key;
 
-  // Block everything except numbers and dot
-  if (!allowedKeys.includes(key)) {
-    event.preventDefault();
-    return;
+    // Block everything except numbers and dot
+    if (!allowedKeys.includes(key)) {
+      event.preventDefault();
+      return;
+    }
+
+    // Prevent multiple dots
+    if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+      event.preventDefault();
+    }
   }
 
-  // Prevent multiple dots
-  if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
-    event.preventDefault();
+  // Method to block decimal values (only allow integers)
+  allowIntegerOnly(event: KeyboardEvent) {
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const key = event.key;
+
+    // Block everything except numbers
+    if (!allowedKeys.includes(key)) {
+      event.preventDefault();
+      return;
+    }
   }
-}
+
+  devideSharesPopUp(devideType: 'Create' | 'Edit') {
+    this.openDevideSharesPopUp = true;
+    this.devideRequestObj.devideType = devideType;
+    
+    // If creating a new division (not editing), reset fields to empty
+    if (devideType === 'Create') {
+      this.numShares = 0;
+      this.shareValue = 0.0;
+      this.minimumShare = 0;
+      this.maximumShare = 0;
+    }
+  }
+
+  editSharesPopUp() {
+
+  }
 
 }
 
@@ -268,6 +425,15 @@ class Shares {
   empId!: string;
   officerPhone!: string;
   totalValue: string = '';
+  devideData: DevideData | null = null;
+  publishStatus?: string;
+}
+
+class DevideData {
+  totValue!: number
+  defineShares!: number
+  maxShare!: number
+  minShare!: number
 }
 
 class DevideRequest {
@@ -280,6 +446,7 @@ class DevideRequest {
   shareValue!: number;
   minimumShare!: number;
   maximumShare!: number;
+  devideType: 'Create' | 'Edit' = 'Create';
 }
 
 interface IPersonal {
@@ -333,11 +500,11 @@ interface IFinance {
   bank: string;
   branch: string;
   debtsOfFarmer: string;
-  noOfDepartments: number;
-  assetsLand: { Land: string[] };
-  assetsBuilding: { Building: string[] };
-  assetsVehicle: { Vehicle: string[] };
-  assetsMachinery: { Machinery: string[] };
+  noOfDependents: number;
+  assetsLand: string[] | null;
+  assetsBuilding: string[] | null;
+  assetsVehicle: string[] | null;
+  assetsMachinery: string[] | null;
   assetsFarmTool: string;
 }
 
@@ -397,20 +564,20 @@ interface ILabor {
 }
 
 export interface ICultivation {
-  temperature: number;         
-  rainfall: number;            
-  sunShine: number;            
-  humidity: number;            
-  windVelocity: number;        
-  windDirection: number;       
+  temperature: number;
+  rainfall: number;
+  sunShine: number;
+  humidity: number;
+  windVelocity: number;
+  windDirection: number;
   zone: number;
-  isCropSuitale: number;       
-  ph: number;                  
+  isCropSuitale: number;
+  ph: number;
   soilType: string;
   soilfertility: string;
   waterSources: string[];
-  waterImage: string[]; 
-  isRecevieRainFall: number;   
+  waterImage: string[];
+  isRecevieRainFall: number;
   isRainFallSuitableCrop: number;
   isRainFallSuitableCultivation: number;
   isElectrocityAvailable: number;

@@ -20,7 +20,7 @@
         [(ngModel)]="serviceData.englishName" name="englishName" #englishName="ngModel" [disabled]="isView" required
         pattern="^\S.*$" (keydown)="!isView && blockFirstSpace($event)" (keydown)="!isView && blockLeadingSpace($event)"
         (blur)="!isView && formatEnglishName()" (input)="!isView && capitalizeFirstLetter()"
-        (keypress)="allowOnlyLetters($event)" />
+         />
       <div *ngIf="!isView && englishName.invalid && (englishName.touched || englishName.dirty)"
         class="text-red-600 text-sm mt-1">
         <div *ngIf="englishName.errors?.['required']">English name is required.</div>
@@ -35,7 +35,7 @@
       <input type="text"
         class="w-full p-2 border rounded-md border-gray-300 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [(ngModel)]="serviceData.sinhalaName" name="sinhalaName" #sinhalaName="ngModel" [disabled]="isView" required
-        pattern="^\S.*$" (keydown)="!isView && blockLeadingSpace($event)" (keypress)="allowOnlyLetters($event)" />
+        pattern="^\S.*$" (keydown)="!isView && blockLeadingSpace($event)" />
       <div *ngIf="!isView && sinhalaName.invalid && (sinhalaName.touched || sinhalaName.dirty)"
         class="text-red-600 text-sm mt-1">
         <div *ngIf="sinhalaName.errors?.['required']">Sinhala name is required.</div>
@@ -50,7 +50,7 @@
       <input type="text"
         class="w-full p-2 border rounded-md border-gray-300 text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
         [(ngModel)]="serviceData.tamilName" name="tamilName" #tamilName="ngModel" [disabled]="isView" required
-        pattern="^\S.*$" (keydown)="!isView && blockLeadingSpace($event)" (keypress)="allowOnlyLetters($event)" />
+        pattern="^\S.*$" (keydown)="!isView && blockLeadingSpace($event)" />
       <div *ngIf="!isView && tamilName.invalid && (tamilName.touched || tamilName.dirty)"
         class="text-red-600 text-sm mt-1">
         <div *ngIf="tamilName.errors?.['required']">Tamil name is required.</div>

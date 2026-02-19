@@ -1,0 +1,91 @@
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
+}
+
+/* Show clear icon only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
+}
+
+/* ===== Dropdown Panel Styling ===== */
+::ng-deep .p-dropdown-panel {
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 6px !important;
+  padding: 0;
+  font-size: 1rem; 
+}
+
+/* Dropdown items */
+::ng-deep .p-dropdown-item {
+  white-space: nowrap;
+  min-width: max-content;
+  padding: 0.5rem 1rem;
+}
+
+/* ===== Dark Mode Dropdown ===== */
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+/* Dark mode dropdown items */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+/* Dark mode filter input */
+::ng-deep .dark .p-dropdown-filter {
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280;
+}
+
+::ng-deep .dark .p-dropdown-filter::placeholder {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark .p-dropdown-filter-container {
+  background-color: #374151 !important;
+  border-bottom-color: #6b7280 !important;
+}
+
+::ng-deep .dark .p-dropdown-filter-icon {
+  color: #9ca3af !important;
+}
+
+/* Focused filter input in dark mode */
+::ng-deep .dark .p-dropdown-filter:focus {
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+  outline: none;
+}
+
+/* Dropdown header in dark mode */
+::ng-deep .dark .p-dropdown-header {
+  background-color: #4b5563 !important;
+}
+
+/* Scrollbar styling (for horizontal overflow) */
+::ng-deep .p-dropdown-panel::-webkit-scrollbar {
+  height: 6px;
+}
+
+::ng-deep .p-dropdown-panel::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}

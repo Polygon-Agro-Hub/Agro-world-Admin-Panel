@@ -19,15 +19,15 @@
           <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
           <!-- Display default image if no file is selected -->
-          <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-60 h-60 object-cover"
+          <img *ngIf="!selectedImage && personalData.image" class="rounded-full w-40 h-40 object-cover"
             [src]="personalData.image" alt="Profile Picture" />
 
-          <img *ngIf="!personalData.image && !selectedImage" class="rounded-full w-60 h-60" [src]="
+          <img *ngIf="!personalData.image && !selectedImage" class="rounded-full w-36 h-36" [src]="
               'https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3407.jpg?w=360'
             " alt="Profile Picture" />
 
           <!-- Display the selected image if available -->
-          <img *ngIf="selectedImage" class="rounded-full w-60 h-60" [src]="selectedImage" alt="Profile Picture" />
+          <img *ngIf="selectedImage" class="rounded-full w-36 h-36" [src]="selectedImage" alt="Profile Picture" />
 
           <!-- <span (click)="triggerFileInput($event)"
             class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-white p-1 rounded-full cursor-pointer">
@@ -35,7 +35,7 @@
           </span> -->
 
           <span (click)="triggerFileInput($event)"
-            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
+            class="absolute bottom-5 right-5 transform translate-x-1/4 translate-y-1/4 bg-[#3980C0] w-11 h-11 flex items-center justify-center rounded-full cursor-pointer">
             <i class="fa-solid fa-pen text-lg text-white"></i>
           </span>
         </div>
@@ -204,10 +204,11 @@
           </label>
           <input id="firstNameEnglish" [(ngModel)]="personalData.firstNameEnglish" name="firstNameEnglish"
             (keydown)="preventLeadingSpace($event, 'firstNameEnglish')"
+            (keypress)="preventSpecialCharactersAndNumbers($event)"
             class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            (blur)="onBlur('firstNameEnglish')" (input)="formatName('firstNameEnglish')" />
+            (blur)="onBlur('firstNameEnglish')" (input)="formatName('firstNameEnglish')" required />
           <span *ngIf="isFieldInvalid('firstNameEnglish')" class="text-red-600 text-sm">
-            First Name is a required field
+            First Name is required
           </span>
         </div>
 
@@ -218,10 +219,11 @@
           </label>
           <input id="lastName" name="lastNameEnglish" [(ngModel)]="personalData.lastNameEnglish"
             (keydown)="preventLeadingSpace($event, 'lastNameEnglish')"
+            (keypress)="preventSpecialCharactersAndNumbers($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            (blur)="onBlur('lastNameEnglish')" (input)="formatName('lastNameEnglish')" />
+            (blur)="onBlur('lastNameEnglish')" (input)="formatName('lastNameEnglish')" required />
           <span *ngIf="isFieldInvalid('lastNameEnglish')" class="text-red-600 text-sm">
-            Last Name is a required field
+            Last Name is required
           </span>
         </div>
 
@@ -306,21 +308,26 @@
                 </ng-template>
               </p-dropdown>
               <input id="phoneNumber01" name="contact1" type="tel" [(ngModel)]="personalData.contact1"
-                (keydown)="preventLeadingSpace($event, 'contact1')" (input)="onInputChange($event, 'phone')"
+                (keydown)="preventLeadingSpace($event, 'contact1')" (input)="onPhoneInput($event, 'contact1')"
                 maxlength="9"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-                placeholder="7XXXXXXXX" (blur)="onBlur('contact1')" />
+                placeholder="7XXXXXXXX" (blur)="onBlur('contact1')" required />
             </div>
             <!-- Error messages outside the flex container -->
             <div class="mt-1">
+              <span *ngIf="isFieldInvalid('contact1')" class="text-red-600 text-sm block">
+                Mobile Number - 01 is required
+              </span>
               <span *ngIf="
-                  touchedFields.contact1 &&
+                  personalData.contact1 && touchedFields.contact1 &&
                   !isValidPhoneNumber(personalData.contact1)
                 " class="text-red-600 text-sm block">
-                Please enter a valid mobile number (9 digits)
+                {{ getPhoneErrorMessage(personalData.contact1) }}
               </span>
-              <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
-                Contact Number 1 and Contact Number 2 cannot be the same
+              <span
+                *ngIf="isValidPhoneNumber(personalData.contact1) && isValidPhoneNumber(personalData.contact2) && arePhoneNumbersSame()"
+                class="text-red-600 text-sm block">
+                Mobile Number – 01 and Mobile Number – 02 cannot be the same
               </span>
             </div>
           </div>
@@ -353,7 +360,7 @@
                 </ng-template>
               </p-dropdown>
               <input id="phoneNumber02" name="contact2" type="tel" [(ngModel)]="personalData.contact2"
-                (keydown)="preventLeadingSpace($event, 'contact2')" (input)="onInputChange($event, 'phone')"
+                (keydown)="preventLeadingSpace($event, 'contact2')" (input)="onPhoneInput($event, 'contact2')"
                 maxlength="9"
                 class="block w-full p-2 border border-gray-300 rounded-r-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
                 placeholder="7XXXXXXXX" (blur)="onBlur('contact2')" />
@@ -364,10 +371,12 @@
                   personalData.contact2 &&
                   !isValidPhoneNumber(personalData.contact2)
                 " class="text-red-600 text-sm block">
-                Please enter a valid mobile number (9 digits)
+                {{ getPhoneErrorMessage(personalData.contact2) }}
               </span>
-              <span *ngIf="arePhoneNumbersSame()" class="text-red-600 text-sm block">
-                Contact Number 1 and Contact Number 2 cannot be the same
+              <span
+                *ngIf="isValidPhoneNumber(personalData.contact1) && isValidPhoneNumber(personalData.contact2) && arePhoneNumbersSame()"
+                class="text-red-600 text-sm block">
+                Mobile Number – 01 and Mobile Number – 02 cannot be the same
               </span>
             </div>
           </div>
@@ -377,9 +386,13 @@
           <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">NIC Number *</label>
           <input id="nic" name="nic" [(ngModel)]="personalData.nic" (keydown)="preventLeadingSpace($event, 'nic')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            (blur)="onBlur('nic')" />
-          <span *ngIf="touchedFields.nic && !isValidNIC(personalData.nic)" class="text-red-600 text-sm">
-            Please enter a valid NIC number (12 digits or 10 digits followed by
+            (input)="onNICInput($event)" (blur)="onBlur('nic')" required />
+          <span *ngIf="isFieldInvalid('nic')" class="text-red-600 text-sm">
+            NIC Number is required
+          </span>
+          <span *ngIf="personalData.nic && touchedFields.nic && !isValidNIC(personalData.nic)"
+            class="text-red-600 text-sm">
+            Please enter a valid NIC number (12 digits or 9 digits followed by
             'V')
           </span>
         </div>
@@ -387,10 +400,14 @@
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
-            (keydown)="preventLeadingSpace($event, 'email')"
+            (keydown)="preventLeadingSpace($event, 'email')" (input)="personalData.email = personalData.email.trim()"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
-            (blur)="onBlur('email')" />
-          <span *ngIf="touchedFields.email && !isValidEmail(personalData.email)" class="text-red-600 text-sm">
+            (blur)="onBlur('email')" required />
+          <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">
+            Email is required
+          </span>
+          <span *ngIf="personalData.email && touchedFields.email && !isValidEmail(personalData.email)"
+            class="text-red-600 text-sm">
             {{ getEmailErrorMessage(personalData.email) }}
           </span>
         </div>
@@ -438,7 +455,7 @@
         </span>
       </div> -->
 
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end my-10 ml-10">
         <button (click)="back()" type="button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Cancel
         </button>
@@ -596,11 +613,11 @@
           (keypress)="allowOnlyNumbers($event)"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
-        <span *ngIf="confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span *ngIf="confirmAccountNumberRequired" class="text-red-500 text-sm">
           Confirm Account Number is required.
         </span>
 
-        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-600 text-sm">
+        <span *ngIf="confirmAccountNumberError && !confirmAccountNumberRequired" class="text-red-500 text-sm">
           Account Numbers do not match.
         </span>
 
@@ -641,12 +658,13 @@
           Branch Name *
         </label>
         <p-dropdown [(ngModel)]="personalData.branchName" [options]="branchOptions" optionLabel="label"
-          optionValue="value" [filter]="true" filterBy="label" [showClear]="true" [disabled]="!branchOptions.length"
-          placeholder="Select a branch" styleClass="w-full mt-1" panelStyleClass="custom-dropdown-panel"
-          class="mt-1 block w-full p-dropdown-custom" (onChange)="onBranchChange($event)">
+          optionValue="value" [filter]="true" filterBy="label" [showClear]="!!personalData.branchName"
+          [disabled]="!branchOptions.length" placeholder="Select a branch" styleClass="w-full mt-1"
+          panelStyleClass="custom-dropdown-panel" class="mt-1 block w-full p-dropdown-custom"
+          (onChange)="onBranchChange($event)">
         </p-dropdown>
       </div>
-      <div class="flex justify-end m-10">
+      <div class="flex justify-end my-10 ml-10">
         <button (click)="nextFormCreate('pageOne')" type="button"
           class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
           Back
@@ -671,15 +689,55 @@
       Driving Details
     </h2>
 
-    <div>
+    <!-- <div>
       <label for="licNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
         Driving License ID *
       </label>
-      <input id="licNo" type="text" name="licNo" [(ngModel)]="driverObj.licNo" (keypress)="preventNonNumbers($event)"
+      <input id="licNo" type="text" name="licNo" [(ngModel)]="driverObj.licNo"
+        (keypress)="preventSpecialCharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
         class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-    </div>
+    </div> -->
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+
+      <div>
+        <label for="licNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Driving License ID *
+        </label>
+        <input id="licNo" #licNoInput="ngModel" type="text" name="licNo" [(ngModel)]="driverObj.licNo" pattern="^([A-Z]\d{7}|\d{10,12})$"
+          (keypress)="preventSpecialCharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
+          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+        <div>
+          <span class="text-red-600 text-sm" *ngIf="licNoInput.touched && licNoInput.errors?.['pattern'] && driverObj.licNo">
+            Please enter a valid License ID number (1 capital letter + 7 digits or 10–12 digits).
+          </span>
+
+          <span class="text-red-600 text-sm" *ngIf="licNoInput.touched && !driverObj.licNo">
+            Driving License ID number is Required.
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <label for="confirmLicNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Confirm Driving License ID *
+        </label>
+        <input id="confirmLicNo" #confirmLicNoInput="ngModel" type="text" name="confirmLicNo" [(ngModel)]="driverObj.confirmLicNo"
+          (keypress)="preventSpecialCharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
+          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+          <div>
+            <span class="text-red-600 text-sm" *ngIf="confirmLicNoInput.touched && (driverObj.licNo !== driverObj.confirmLicNo) && driverObj.confirmLicNo">
+              Confirm Driving License ID number should match the Driving License ID number.
+            </span>
+  
+            <span class="text-red-600 text-sm" *ngIf="confirmLicNoInput.touched && !driverObj.confirmLicNo">
+              Confirm Driving License ID number is Required.
+            </span>
+          </div>
+        
+      </div>
       <!-- License Front Image -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
@@ -687,14 +745,28 @@
         </label>
         <input id="licenseFrontImageUpload" type="file" accept="image/*" (change)="onLicenseFrontImageSelected($event)"
           class="hidden" />
-        <div (click)="triggerFileInputForDriver($event, 'licenseFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+        <div (click)="triggerFileInputForDriver($event, 'licenseFrontImageUpload')" class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 shadow-md gap-x-3 border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors 
+            w-[381px] h-[50px] rounded-[10px] border-[1px]">
+
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload License Front Image</p>
         </div>
         <div *ngIf="licenseFrontImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ licenseFrontImageFileName }}</span>
+          <span class="text-sm font-semibold">
+            Attached:
+            <a *ngIf="driverObj.licenseFrontImage && !licenseFrontImageUpdated" [href]="driverObj.licenseFrontImage"
+              target="_blank" class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ licenseFrontImageFileName }}
+            </a>
+            <span *ngIf="licenseFrontImageUpdated && licenseFrontImagePreview"
+              (click)="viewImagePreview(licenseFrontImagePreview, licenseFrontImageFileName)"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ licenseFrontImageFileName }}
+            </span>
+            <span *ngIf="!driverObj.licenseFrontImage && !licenseFrontImageUpdated"
+              class="text-gray-700 dark:text-textDark font-normal ml-1">
+              {{ licenseFrontImageFileName }}
+            </span>
           </span>
           <button (click)="clearLicenseFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -709,14 +781,28 @@
         </label>
         <input id="licenseBackImageUpload" type="file" accept="image/*" (change)="onLicenseBackImageSelected($event)"
           class="hidden" />
-        <div (click)="triggerFileInputForDriver($event, 'licenseBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+        <div (click)="triggerFileInputForDriver($event, 'licenseBackImageUpload')" class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 shadow-md gap-x-3 border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors
+            w-[381px] h-[50px] rounded-[10px] border-[1px]">
+
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload License Back Image</p>
         </div>
         <div *ngIf="licenseBackImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ licenseBackImageFileName }}</span>
+          <span class="text-sm font-semibold">
+            Attached:
+            <a *ngIf="driverObj.licenseBackImage && !licenseBackImageUpdated" [href]="driverObj.licenseBackImage"
+              target="_blank" class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ licenseBackImageFileName }}
+            </a>
+            <span *ngIf="licenseBackImageUpdated && licenseBackImagePreview"
+              (click)="viewImagePreview(licenseBackImagePreview, licenseBackImageFileName)"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ licenseBackImageFileName }}
+            </span>
+            <span *ngIf="!driverObj.licenseBackImage && !licenseBackImageUpdated"
+              class="text-gray-700 dark:text-textDark font-normal ml-1">
+              {{ licenseBackImageFileName }}
+            </span>
           </span>
           <button (click)="clearLicenseBackImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -731,19 +817,129 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
       <!-- Insurance Number -->
-      <div>
+      <!-- <div>
         <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Number *
         </label>
         <input id="insNo" type="text" name="insNo" [(ngModel)]="driverObj.insNo" (keypress)="preventNonNumbers($event)"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-      </div>
+      </div> -->
+
       <div>
+        <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Insurance Number *
+        </label>
+        <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo" 
+          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          <div>
+            <!-- <span class="text-red-600 text-sm" *ngIf="licNoInput.touched && licNoInput.errors?.['pattern'] && driverObj.licNo">
+              Please enter a valid License ID number (1 letter + 7 digits or 10–12 digits).
+            </span> -->
+  
+            <span class="text-red-600 text-sm" *ngIf="insurenceNoInput.touched && !driverObj.insNo">
+              Insurance Number Required.
+            </span>
+          </div>
+      </div>
+
+      <div>
+        <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Confirm Insurance Number *
+        </label>
+        <input id="insNo" type="text" #confirmInsurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.confirmInsNo" 
+          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+
+          <div>
+            <span class="text-red-600 text-sm" *ngIf="confirmInsurenceNoInput.touched && (driverObj.insNo !== driverObj.confirmInsNo) && driverObj.confirmInsNo">
+              Confirm Insurance Number should match the Insurance Number.
+            </span>
+  
+            <span class="text-red-600 text-sm" *ngIf="confirmInsurenceNoInput.touched && !driverObj.confirmInsNo">
+              Confirm Insurance Number is Required.
+            </span>
+          </div>
+      </div>
+
+      
+
+      <!-- Insurance Front Image -->
+      <div class="mt-2">
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          Insurance's Front Image *
+        </label>
+        <input id="insurenceFrontImageUpload" type="file" accept="image/*"
+          (change)="onInsurenceFrontImageSelected($event)" class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'insurenceFrontImageUpload')" class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 shadow-md gap-x-3 border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors 
+            w-[381px] h-[50px] rounded-[10px] border-[1px]">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload Insurance Front Image</p>
+        </div>
+        <div *ngIf="insurenceFrontImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">
+            Attached:
+            <a *ngIf="driverObj.insurenceFrontImage && !insurenceFrontImageUpdated"
+              [href]="driverObj.insurenceFrontImage" target="_blank"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ insurenceFrontImageFileName }}
+            </a>
+            <span *ngIf="insurenceFrontImageUpdated && insurenceFrontImagePreview"
+              (click)="viewImagePreview(insurenceFrontImagePreview, insurenceFrontImageFileName)"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ insurenceFrontImageFileName }}
+            </span>
+            <span *ngIf="!driverObj.insurenceFrontImage && !insurenceFrontImageUpdated"
+              class="text-gray-700 dark:text-textDark font-normal ml-1">
+              {{ insurenceFrontImageFileName }}
+            </span>
+          </span>
+          <button (click)="clearInsurenceFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Insurance Back Image -->
+      <div class="mt-2">
+        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
+          Insurance's Back Image *
+        </label>
+        <input id="insuranceBackImageUpload" type="file" accept="image/*"
+          (change)="onInsurenceBackImageSelected($event)" class="hidden" />
+        <div (click)="triggerFileInputForDriver($event, 'insuranceBackImageUpload')" class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 shadow-md gap-x-3 border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors 
+            w-[381px] h-[50px] rounded-[10px] border-[1px]">
+          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
+          <p class="text-gray-700 dark:text-textDark">Upload Insurance Back Image</p>
+        </div>
+        <div *ngIf="insurenceBackImageFileName" class="mt-2 flex items-center gap-2">
+          <span class="text-sm font-semibold">
+            Attached:
+            <a *ngIf="driverObj.insurenceBackImage && !insurenceBackImageUpdated" [href]="driverObj.insurenceBackImage"
+              target="_blank" class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ insurenceBackImageFileName }}
+            </a>
+            <span *ngIf="insurenceBackImageUpdated && insurenceBackImagePreview"
+              (click)="viewImagePreview(insurenceBackImagePreview, insurenceBackImageFileName)"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ insurenceBackImageFileName }}
+            </span>
+            <span *ngIf="!driverObj.insurenceBackImage && !insurenceBackImageUpdated"
+              class="text-gray-700 dark:text-textDark font-normal ml-1">
+              {{ insurenceBackImageFileName }}
+            </span>
+          </span>
+          <button (click)="clearInsurenceBackImage()" class="text-red-500 hover:text-red-700 text-sm">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-4">
         <label for="insExpDate" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Expire Date *
         </label>
-        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="true" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
+        <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [showIcon]="true" [showClear]="false"
+          [showButtonBar]="false" [minDate]="minInsuranceDate" [readonlyInput]="true" [selectOtherMonths]="false"
+          [showOtherMonths]="false" iconDisplay="input" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
           [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                      [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -754,65 +950,59 @@
           inputStyleClass="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack cursor-pointer"
           [appendTo]="'body'" />
       </div>
-
-      <!-- Insurance Front Image -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
-          Insurance's Front Image *
-        </label>
-        <input id="insurenceFrontImageUpload" type="file" accept="image/*"
-          (change)="onInsurenceFrontImageSelected($event)" class="hidden" />
-        <div (click)="triggerFileInputForDriver($event, 'insurenceFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
-          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
-          <p class="text-gray-700 dark:text-textDark">Upload Insurance Front Image</p>
-        </div>
-        <div *ngIf="insurenceFrontImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ insurenceFrontImageFileName }}</span>
-          </span>
-          <button (click)="clearInsurenceFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Insurance Back Image -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark my-2">
-          Insurance's Back Image *
-        </label>
-        <input id="insuranceBackImageUpload" type="file" accept="image/*"
-          (change)="onInsurenceBackImageSelected($event)" class="hidden" />
-        <div (click)="triggerFileInputForDriver($event, 'insuranceBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
-          <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
-          <p class="text-gray-700 dark:text-textDark">Upload Insurance Back Image</p>
-        </div>
-        <div *ngIf="insurenceBackImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ insurenceBackImageFileName }}</span>
-          </span>
-          <button (click)="clearInsurenceBackImage()" class="text-red-500 hover:text-red-700 text-sm">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
     </div>
 
     <h2 class="text-2xl mt-16 mb-6 text-textLight dark:text-textDark">
       Vehicle Details
     </h2>
 
-    <div>
+    <!-- <div>
       <label for="vRegNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
         Vehicle Registration Number *
       </label>
-      <input id="vRegNo" type="text" name="vRegNo" [(ngModel)]="driverObj.vRegNo" (keypress)="preventNonNumbers($event)"
+      <input id="vRegNo" type="text" name="vRegNo" [(ngModel)]="driverObj.vRegNo"
+        (keypress)="preventSpecialCharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
         class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-    </div>
+    </div> -->
+
+    
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-5">
+
+      <div class="mt-2">
+        <label for="vRegNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Vehicle Registration Number *
+        </label>
+        <input id="vRegNo" type="text" #vRegNoInput="ngModel" name="vRegNo" [(ngModel)]="driverObj.vRegNo"
+          (keypress)="preventSpecialCharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
+          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          
+          <div>
+            
+            <span class="text-red-600 text-sm" *ngIf="vRegNoInput.touched && !driverObj.vRegNo">
+              Vehicle Registration Number is Required.
+            </span>
+          </div>
+      </div>
+  
+      <div class="mt-2">
+        <label for="confirmVRegNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+          Confirm Vehicle Registration Number *
+        </label>
+        <input id="confirmVRegNo" type="text" #confirmVRegNoInput="ngModel" name="confirmVRegNo" [(ngModel)]="driverObj.confirmVRegNo"
+          (keypress)="preventSpecialCharacters($event)" (paste)="preventSpecialCharactersPaste($event)"
+          class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          
+          <div>
+            <span class="text-red-600 text-sm" *ngIf="confirmVRegNoInput.touched && (driverObj.vRegNo !== driverObj.confirmVRegNo) && driverObj.confirmVRegNo">
+              Confirm Vehicle Registration Number should match the Vehicle Registration Number.
+            </span>
+  
+            <span class="text-red-600 text-sm" *ngIf="confirmVRegNoInput.touched && !driverObj.confirmVRegNo">
+              Confirm Vehicle Registration Number is Required.
+            </span>
+          </div>
+      </div>
       <!-- Vehicle Type Dropdown -->
       <div>
         <label for="selectVehicletype" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -827,7 +1017,7 @@
       <!-- Vehicle Capacity (Read-only) -->
       <div>
         <label for="capacity" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-          Vehicle Capacity
+          Vehicle Capacity (kg)
         </label>
         <input id="capacity" placeholder="------------" [value]="selectVehicletype?.capacity"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-gray-100 dark:bg-gray-800"
@@ -841,15 +1031,30 @@
         </label>
         <input id="vehicleFrontImageUpload" type="file" accept="image/*" (change)="onVehicleFrontImageSelected($event)"
           class="hidden" />
-        <div (click)="triggerFileInputForDriver($event, 'vehicleFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+        <div (click)="triggerFileInputForDriver($event, 'vehicleFrontImageUpload')" class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 shadow-md gap-x-3 border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors 
+            w-[381px] h-[50px] rounded-[10px] border-[1px]">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Front Image</p>
         </div>
         <div *ngIf="vehicleFrontImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ vehicleFrontImageFileName }}</span>
+
+          <span class="text-sm font-semibold">
+            Attached:
+            <a *ngIf="driverObj.vehicleFrontImage && !vehicleFrontImageUpdated" [href]="driverObj.vehicleFrontImage"
+              target="_blank" class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ vehicleFrontImageFileName }}
+            </a>
+            <span *ngIf="vehicleFrontImageUpdated && vehicleFrontImagePreview"
+              (click)="viewImagePreview(vehicleFrontImagePreview, vehicleFrontImageFileName)"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ vehicleFrontImageFileName }}
+            </span>
+            <span *ngIf="!driverObj.vehicleFrontImage && !vehicleFrontImageUpdated"
+              class="text-gray-700 dark:text-textDark font-normal ml-1">
+              {{ vehicleFrontImageFileName }}
+            </span>
           </span>
+
           <button (click)="clearVehicleFrontImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
           </button>
@@ -862,14 +1067,28 @@
         </label>
         <input id="vehicleBackImageUpload" type="file" accept="image/*" (change)="onVehicleBackImageSelected($event)"
           class="hidden" />
-        <div (click)="triggerFileInputForDriver($event, 'vehicleBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+        <div (click)="triggerFileInputForDriver($event, 'vehicleBackImageUpload')" class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 shadow-md gap-x-3 border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors 
+            w-[381px] h-[50px] rounded-[10px] border-[1px]">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Back Image</p>
         </div>
         <div *ngIf="vehicleBackImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ vehicleBackImageFileName }}</span>
+
+          <span class="text-sm font-semibold">
+            Attached:
+            <a *ngIf="driverObj.vehicleBackImage && !vehicleBackImageUpdated" [href]="driverObj.vehicleBackImage"
+              target="_blank" class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ vehicleBackImageFileName }}
+            </a>
+            <span *ngIf="vehicleBackImageUpdated && vehicleBackImagePreview"
+              (click)="viewImagePreview(vehicleBackImagePreview, vehicleBackImageFileName)"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ vehicleBackImageFileName }}
+            </span>
+            <span *ngIf="!driverObj.vehicleBackImage && !vehicleBackImageUpdated"
+              class="text-gray-700 dark:text-textDark font-normal ml-1">
+              {{ vehicleBackImageFileName }}
+            </span>
           </span>
           <button (click)="clearVehicleBackImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -883,14 +1102,27 @@
         </label>
         <input id="vehicleSideAImageUpload" type="file" accept="image/*" (change)="onVehicleSideAImageSelected($event)"
           class="hidden" />
-        <div (click)="triggerFileInputForDriver($event, 'vehicleSideAImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+        <div (click)="triggerFileInputForDriver($event, 'vehicleSideAImageUpload')" class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 shadow-md gap-x-3 border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors 
+            w-[381px] h-[50px] rounded-[10px] border-[1px]">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 1</p>
         </div>
         <div *ngIf="vehicleSideAImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ vehicleSideAImageFileName }}</span>
+          <span class="text-sm font-semibold">
+            Attached:
+            <a *ngIf="driverObj.vehicleSideAImage && !vehicleSideAImageUpdated" [href]="driverObj.vehicleSideAImage"
+              target="_blank" class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ vehicleSideAImageFileName }}
+            </a>
+            <span *ngIf="vehicleSideAImageUpdated && vehicleSideAImagePreview"
+              (click)="viewImagePreview(vehicleSideAImagePreview, vehicleSideAImageFileName)"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ vehicleSideAImageFileName }}
+            </span>
+            <span *ngIf="!driverObj.vehicleSideAImage && !vehicleSideAImageUpdated"
+              class="text-gray-700 dark:text-textDark font-normal ml-1">
+              {{ vehicleSideAImageFileName }}
+            </span>
           </span>
           <button (click)="clearVehicleSideAImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>
@@ -904,14 +1136,28 @@
         </label>
         <input id="vehicleSideBImageUpload" type="file" accept="image/*" (change)="onVehicleSideBImageSelected($event)"
           class="hidden" />
-        <div (click)="triggerFileInputForDriver($event, 'vehicleSideBImageUpload')"
-          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-4 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+        <div (click)="triggerFileInputForDriver($event, 'vehicleSideBImageUpload')" class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 shadow-md gap-x-3 border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors 
+            w-[381px] h-[50px] rounded-[10px] border-[1px]">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 2</p>
         </div>
         <div *ngIf="vehicleSideBImageFileName" class="mt-2 flex items-center gap-2">
-          <span class="text-sm font-semibold">Attached:
-            <span class="text-blue-600 font-normal">{{ vehicleSideBImageFileName }}</span>
+
+          <span class="text-sm font-semibold">
+            Attached:
+            <a *ngIf="driverObj.vehicleSideBImage && !vehicleSideBImageUpdated" [href]="driverObj.vehicleSideBImage"
+              target="_blank" class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ vehicleSideBImageFileName }}
+            </a>
+            <span *ngIf="vehicleSideBImageUpdated && vehicleSideBImagePreview"
+              (click)="viewImagePreview(vehicleSideBImagePreview, vehicleSideBImageFileName)"
+              class="text-blue-600 font-normal underline ml-1 cursor-pointer">
+              {{ vehicleSideBImageFileName }}
+            </span>
+            <span *ngIf="!driverObj.vehicleSideBImage && !vehicleSideBImageUpdated"
+              class="text-gray-700 dark:text-textDark font-normal ml-1">
+              {{ vehicleSideBImageFileName }}
+            </span>
           </span>
           <button (click)="clearVehicleSideBImage()" class="text-red-500 hover:text-red-700 text-sm">
             <i class="fas fa-times"></i>

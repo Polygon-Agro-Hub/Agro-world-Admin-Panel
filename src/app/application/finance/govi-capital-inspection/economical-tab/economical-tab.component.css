@@ -1,0 +1,4 @@
+input[readonly] {
+  cursor: default !important;
+  user-select: none !important;
+}

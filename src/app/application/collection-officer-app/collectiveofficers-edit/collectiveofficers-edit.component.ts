@@ -129,7 +129,6 @@ export class CollectiveofficersEditComponent {
   jobRoleOptions = [
     { label: 'Collection Centre Manager', value: 'Collection Centre Manager' },
     { label: 'Collection Officer', value: 'Collection Officer' },
-    { label: 'Customer Officer', value: 'Customer Officer' }
   ];
 
   isLanguageRequired = false;
@@ -147,6 +146,7 @@ export class CollectiveofficersEditComponent {
   ) { }
 
   ngOnInit() {
+    this.scrollToTop();
     this.loadBanks();
     this.loadBranches();
     this.setupDropdownOptions();
@@ -225,6 +225,12 @@ export class CollectiveofficersEditComponent {
     });
   }
 
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Use 'auto' for instant scroll
+    });
+  }
   onCompanyChange(event: any): void {
 
     this.personalData.centerId = null;
@@ -984,6 +990,22 @@ export class CollectiveofficersEditComponent {
         });
         return;
       }
+
+      setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // or 'auto' for instant scroll
+            });
+            
+            // Alternatively, scroll to the container
+            const container = document.querySelector('.mx-auto.p-6');
+            if (container) {
+                container.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 100); // Small delay to ensure DOM is updated
     }
 
     this.selectedPage = page;
@@ -1021,39 +1043,35 @@ export class CollectiveofficersEditComponent {
   }
 
   getAllCollectionCetnter() {
-    this.collectionCenterSrv
-      .getAllCentreList(
-        this.personalData.companyId,
-
-      )
-      .subscribe((res) => {
-        this.collectionCenterData = res;
-
-        this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.centerName,
-          value: center.id,
-        }));
-      });
-  }
+  this.collectionCenterSrv
+    .getAllCentreList(this.personalData.companyId)
+    .subscribe((res) => {
+      this.collectionCenterData = res;
+      this.centerOptions = this.collectionCenterData.map((center) => ({
+        label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`, // Combine regCode with name
+        value: center.id,
+        regCode: center.regCode // Keep regCode if needed
+      }));
+    });
+}
 
   getAllCollectionCenters() {
-    this.collectionCenterData = []
-    this.personalData.centerId = null;
-    this.managerOptions = [];
-    this.personalData.irmId = null;
-    this.collectionCenterSrv
-      .getAllCentreList(
-        this.personalData.companyId,
-
-      )
-      .subscribe((res) => {
-        this.collectionCenterData = res;
-        this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.centerName,
-          value: center.id,
-        }));
-      });
-  }
+  this.collectionCenterData = [];
+  this.personalData.centerId = null;
+  this.managerOptions = [];
+  this.personalData.irmId = null;
+  
+  this.collectionCenterSrv
+    .getAllCentreList(this.personalData.companyId)
+    .subscribe((res) => {
+      this.collectionCenterData = res;
+      this.centerOptions = this.collectionCenterData.map((center) => ({
+        label: `${center.regCode ? center.regCode + ' - ' : ''}${center.centerName}`, // Combine regCode with name
+        value: center.id,
+        regCode: center.regCode // Keep regCode if needed
+      }));
+    });
+}
 
 
   getAllCollectionManagers() {
@@ -1066,7 +1084,7 @@ export class CollectiveofficersEditComponent {
         .subscribe((res) => {
           this.collectionManagerData = res;
           this.managerOptions = this.collectionManagerData.map(manager => ({
-            label: manager.firstNameEnglish,
+            label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
             value: manager.id
           }));
         });
@@ -1500,11 +1518,14 @@ class Personal {
 class CollectionCenter {
   id!: number;
   centerName!: string;
+  regCode!: string;
 }
 
 class CollectionManager {
   id!: number;
+  empId!: string;
   firstNameEnglish!: string;
+  lastNameEnglish!: string;
 }
 
 class Company {

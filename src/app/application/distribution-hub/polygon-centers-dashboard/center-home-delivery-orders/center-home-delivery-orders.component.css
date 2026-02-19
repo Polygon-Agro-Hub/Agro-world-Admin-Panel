@@ -1,0 +1,340 @@
+/* Make the calendar popup smaller */
+::ng-deep .p-calendar .p-datepicker {
+  transform: scale(0.9);
+  transform-origin: top left;
+  width: 300px !important;
+  min-width: 300px !important;
+}
+
+::ng-deep .p-calendar .p-datepicker table td {
+  padding: 0.1rem !important;
+}
+
+::ng-deep .p-calendar .p-datepicker table td > span {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  font-size: 0.8rem !important;
+}
+
+/* Reduce the size of selected date (blue highlight) */
+::ng-deep .p-datepicker .p-datepicker-calendar td > span.p-highlight {
+  width: 2rem !important;
+  height: 2rem !important;
+  font-size: 0.75rem !important;
+  line-height: 2rem !important;
+}
+
+/* Reduce size of today's date marker */
+::ng-deep .p-datepicker .p-datepicker-calendar td.p-datepicker-today > span {
+  width: 2rem !important;
+  height: 2rem !important;
+  font-size: 0.75rem !important;
+}
+
+/* Reduce size when both today and selected */
+::ng-deep
+  .p-datepicker
+  .p-datepicker-calendar
+  td.p-datepicker-today
+  > span.p-highlight {
+  width: 2rem !important;
+  height: 2rem !important;
+}
+
+::ng-deep .p-calendar .p-datepicker .p-datepicker-header {
+  padding: 0.3rem !important;
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .p-calendar .p-datepicker .p-datepicker-title {
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .p-calendar .p-datepicker .p-datepicker-prev,
+::ng-deep .p-calendar .p-datepicker .p-datepicker-next {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+/* Calendar button color styles */
+:host ::ng-deep .p-calendar .p-button {
+  color: black;
+}
+
+:host-context(.dark) ::ng-deep .p-calendar .p-button {
+  color: white;
+}
+
+/* Light mode placeholder */
+:host ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #6c6c6c;
+}
+
+/* Dark mode placeholder */
+:host-context(.dark) ::ng-deep .p-calendar .p-inputtext::placeholder {
+  color: #8b8b8b;
+}
+
+/* Reduce calendar popup size */
+:host ::ng-deep .p-datepicker {
+  font-size: 0.75rem !important;
+  padding: 0.25rem !important;
+  min-width: 5rem !important;
+}
+
+/* Reduce padding and cell size inside popup */
+:host ::ng-deep .p-datepicker td > span {
+  padding: 0.25rem !important;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+}
+
+/* ===== COMPACT CALENDAR STYLES - FIXED ===== */
+/* Compact calendar container positioning */
+::ng-deep .calendar-compact {
+  position: relative !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+::ng-deep .calendar-compact .p-calendar {
+  position: relative !important;
+}
+
+/* Compact calendar input */
+::ng-deep .calendar-compact .p-inputtext {
+  padding-right: 2.5rem !important;
+}
+
+/* Dark mode clear icon color */
+::ng-deep .dark-calendar .p-calendar-clear-icon {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark-calendar .p-calendar-clear-icon:hover {
+  color: #313030 !important;
+}
+
+/* Reduce panel size for compact calendar */
+::ng-deep .calendar-compact .p-datepicker {
+  transform: scale(0.9);
+  transform-origin: top left;
+  width: 300px !important;
+}
+
+/* ===== DROPDOWN STYLES ===== */
+/* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
+}
+
+/* Dark mode dropdown styles */
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #b1b1b1 !important;
+}
+
+/* Dark mode fix for dropdown filter search input */
+::ng-deep .dark .p-dropdown-filter {
+  border-color: #6b7280;
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+/* Dark mode for filter input placeholder */
+::ng-deep .dark .p-dropdown-filter::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Dark mode for filter container */
+::ng-deep .dark .p-dropdown-filter-container {
+  background-color: #374151 !important;
+  border-bottom-color: #6b7280 !important;
+}
+
+/* Dark mode for filter icon */
+::ng-deep .dark .p-dropdown-filter-icon {
+  color: #9ca3af !important;
+}
+
+/* Ensure the input text is visible in dark mode */
+::ng-deep .dark .p-dropdown-filter:focus {
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+  outline: none;
+}
+
+::ng-deep .dark .p-dropdown-header {
+  background-color: #4b5563;
+}
+
+/* Add cursor pointer to the calendar input field */
+::ng-deep .p-calendar .p-inputtext {
+  cursor: pointer !important;
+}
+
+/* Optional: Also add to the clear icon if you want */
+::ng-deep .p-calendar .p-calendar-clear-icon {
+  right: 1.2rem !important;
+  /* Position clear button to the left of calendar icon */
+  top: 8.2px !important;
+  /* Move clear button slightly down */
+  order: 1;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-month {
+  margin-right: 2px !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
+  margin-left: 2px !important;
+}
+
+/* ===== COMPACT DROPDOWN STYLES ===== */
+/* Reduce dropdown box width */
+::ng-deep .p-dropdown {
+  min-width: 120px !important;
+  max-width: 150px !important;
+  width: 150px !important;
+}
+
+/* Reduce left and right padding in dropdown options */
+::ng-deep .p-dropdown-panel .p-dropdown-item {
+  padding-left: 0.001rem !important;
+  padding-top: 0.375rem !important;
+  padding-bottom: 0.375rem !important;
+}
+
+/* Reduce dropdown panel width to match the dropdown */
+::ng-deep .p-dropdown-panel {
+  min-width: 120px !important;
+  width: auto !important;
+  max-width: 200px !important;
+}
+
+/* Reduce padding in dropdown panel */
+::ng-deep .p-dropdown-panel .p-dropdown-items {
+  padding: 0.25rem !important;
+}
+
+/* Make sure the selected item in dropdown has the same padding */
+::ng-deep .p-dropdown-panel .p-dropdown-item.p-highlight {
+  padding-left: 0.1rem !important;
+  
+}
+
+/* Reduce filter input padding if filter is enabled */
+::ng-deep .p-dropdown-filter-container {
+  padding: 0.5rem !important;
+}
+
+::ng-deep .p-dropdown-filter {
+  padding: 0.375rem 0.5rem !important;
+}
+
+/* Ensure dropdown toggle button doesn't overflow */
+::ng-deep .p-dropdown .p-dropdown-label {
+  padding: 0.375rem 0.5rem !important;
+  font-size: 0.875rem !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Reduce dropdown trigger button size */
+::ng-deep .p-dropdown .p-dropdown-trigger {
+  width: 2rem !important;
+}
+
+/* Reduce clear icon size inside dropdown */
+::ng-deep .p-dropdown .p-dropdown-clear-icon {
+  font-size: 0.75rem !important;
+  right: 2rem !important;
+}
+
+/* For dark mode dropdown panel width adjustment */
+::ng-deep .dark .p-dropdown-panel {
+  min-width: 120px !important;
+  width: auto !important;
+  max-width: 200px !important;
+}
+
+/* Optional: Further reduce width if needed */
+::ng-deep .p-dropdown.smaller-dropdown {
+  min-width: 100px !important;
+  max-width: 130px !important;
+  width: 130px !important;
+}
+
+::ng-deep .p-dropdown.smaller-dropdown .p-dropdown-label {
+  padding: 0.25rem 0.375rem !important;
+  font-size: 0.75rem !important;
+}
+
+::ng-deep .p-dropdown.smaller-dropdown .p-dropdown-trigger {
+  width: 1.75rem !important;
+}
+
+/* Add space between checkmark and dropdown items */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item .p-dropdown-check-icon {
+  margin-right: 0.5rem !important;
+}
+
+/* Adjust text alignment when checkmark is present */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 0.5rem !important;
+}
+
+/* Ensure the check icon has proper spacing */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item .p-dropdown-check-icon {
+  font-size: 0.875rem !important;
+}
+
+/* For the "checkmark: true" property specifically */
+::ng-deep .p-dropdown-panel[checkmark="true"] .p-dropdown-item,
+::ng-deep .p-dropdown-panel .p-dropdown-item[hascheckmark="true"] {
+  padding-left: 0.5rem !important;
+}
+
+/* If you need even more control, target the check icon directly */
+::ng-deep .pi-check:before {
+  margin-right: 0.5rem !important;
+}
+
+/* Alternative approach - adjust the icon container */
+::ng-deep .p-dropdown-item .p-dropdown-check-icon {
+  margin-right: 8px !important;
+  width: 16px !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+}
+
+/* Make sure the text aligns properly */
+::ng-deep .p-dropdown-item .p-dropdown-item-text {
+  margin-left: 0.25rem !important;
+}

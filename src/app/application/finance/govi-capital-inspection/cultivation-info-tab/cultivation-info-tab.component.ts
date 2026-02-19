@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-cultivation-info-tab',
@@ -10,6 +10,10 @@ import { Component, Input, OnDestroy } from '@angular/core';
 })
 export class CultivationInfoTabComponent implements OnDestroy {
   @Input() cultivationData!: ICultivation;
+  @Input() currentPage: number = 6;
+  @Input() totalPages: number = 11;
+  @Output() nextPage = new EventEmitter<void>();
+  @Output() previousPage = new EventEmitter<void>();
 
   showImageModal = false;
   currentImageIndex = 0;
@@ -17,6 +21,27 @@ export class CultivationInfoTabComponent implements OnDestroy {
   
   imageLoaded = false;
   private imageTimeout: any;
+  
+  // Zoom functionality
+  scale = 1;
+  private readonly MIN_SCALE = 0.5;
+  private readonly MAX_SCALE = 3;
+  private readonly SCALE_STEP = 0.2;
+  
+  // Pan functionality
+  isPanning = false;
+  startX = 0;
+  startY = 0;
+  translateX = 0;
+  translateY = 0;
+
+  onNextPage(): void {
+    this.nextPage.emit();
+  }
+
+  onPreviousPage(): void {
+    this.previousPage.emit();
+  }
 
   ngOnInit() {
     if (this.cultivationData) {
@@ -31,7 +56,7 @@ export class CultivationInfoTabComponent implements OnDestroy {
   }
 
   getYesNo(value: number | undefined): string {
-    if (value === undefined) return 'Not provided';
+    if (value === undefined) return '--';
     return value === 1 ? 'Yes' : 'No';
   }
 
@@ -41,7 +66,7 @@ export class CultivationInfoTabComponent implements OnDestroy {
 
   getFormattedPh(): string {
     if (!this.cultivationData || this.cultivationData.ph === undefined) {
-      return 'Not provided';
+      return '--';
     }
     return parseFloat(this.cultivationData.ph.toString()).toString();
   }
@@ -51,7 +76,7 @@ export class CultivationInfoTabComponent implements OnDestroy {
       !this.cultivationData?.waterSources ||
       this.cultivationData.waterSources.length === 0
     ) {
-      return 'Not provided';
+      return '--';
     }
     return this.cultivationData.waterSources.join(', ');
   }
@@ -97,6 +122,8 @@ export class CultivationInfoTabComponent implements OnDestroy {
     this.currentImageIndex = 0;
     this.currentImages = [];
     this.imageLoaded = false;
+    this.resetZoom();
+    this.resetPan();
     
     if (this.imageTimeout) {
       clearTimeout(this.imageTimeout);
@@ -121,6 +148,68 @@ export class CultivationInfoTabComponent implements OnDestroy {
     if (index >= 0 && index < this.currentImages.length) {
       this.currentImageIndex = index;
     }
+  }
+
+  zoomIn(): void {
+    if (this.scale < this.MAX_SCALE) {
+      this.scale += this.SCALE_STEP;
+    }
+  }
+
+  zoomOut(): void {
+    if (this.scale > this.MIN_SCALE) {
+      this.scale -= this.SCALE_STEP;
+    }
+  }
+
+  resetZoom(): void {
+    this.scale = 1;
+  }
+
+  // Pan (drag) functionality
+  onMouseDown(event: MouseEvent): void {
+    if (this.scale > 1) {
+      this.isPanning = true;
+      this.startX = event.clientX - this.translateX;
+      this.startY = event.clientY - this.translateY;
+      event.preventDefault();
+    }
+  }
+
+  onMouseMove(event: MouseEvent): void {
+    if (this.isPanning && this.scale > 1) {
+      this.translateX = event.clientX - this.startX;
+      this.translateY = event.clientY - this.startY;
+    }
+  }
+
+  onMouseUp(): void {
+    this.isPanning = false;
+  }
+
+  onMouseLeave(): void {
+    this.isPanning = false;
+  }
+
+  resetPan(): void {
+    this.translateX = 0;
+    this.translateY = 0;
+    this.isPanning = false;
+  }
+
+  getImageTransform(): string {
+    return `scale(${this.scale}) translate(${this.translateX / this.scale}px, ${this.translateY / this.scale}px)`;
+  }
+
+  handleImageError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/800x600/9E9E9E/FFFFFF?text=Image+Not+Available';
+    imgElement.classList.add('p-4');
+  }
+
+  handleThumbnailError(event: Event): void {
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.src = 'https://via.placeholder.com/150/9E9E9E/FFFFFF?text=Image';
   }
 }
 

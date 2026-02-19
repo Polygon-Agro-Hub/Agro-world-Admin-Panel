@@ -74,13 +74,17 @@ export class OngoingCultivationComponent {
       .subscribe({
         next: (response) => {
           console.log('response', response);
-          this.ongoingCultivation = response.items;
-          this.hasData = this.ongoingCultivation.length > 0;
-          this.totalItems = response.total;
+          this.ongoingCultivation = response.items || [];
+          // Check if array has items
+          this.hasData = this.ongoingCultivation && this.ongoingCultivation.length > 0;
+          this.totalItems = response.total || 0;
           this.isLoading = false;
         },
         error: (err) => {
           console.error(err);
+          this.ongoingCultivation = [];
+          this.hasData = false;
+          this.totalItems = 0;
           this.isLoading = false;
         },
       });

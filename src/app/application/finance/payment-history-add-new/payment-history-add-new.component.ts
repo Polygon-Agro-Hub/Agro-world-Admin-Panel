@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FinanceService } from '../../../services/finance/finance.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-payment-history-add-new',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './payment-history-add-new.component.html',
   styleUrl: './payment-history-add-new.component.css'
 })
@@ -21,6 +22,8 @@ export class PaymentHistoryAddNewComponent {
   isDragging: boolean = false;
   isUploading: boolean = false;
   uploadedFileNames: Set<string> = new Set(); // Track uploaded file names
+
+  readonly MAX_REFERENCE_LENGTH = 50;
 
   receiverOptions = [
     { label: 'Farmers', value: 'Farmers' }
@@ -38,12 +41,29 @@ export class PaymentHistoryAddNewComponent {
       this.amount &&
       parseFloat(this.amount.replace(/,/g, '')) > 0 &&
       this.paymentReference.trim() &&
+      this.paymentReference.length <= this.MAX_REFERENCE_LENGTH &&
       this.uploadedFile
     );
   }
 
   back(): void {
-    this.router.navigate(['/finance/action/viewAll-payments']);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be redirected to the payments page',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/finance/action/viewAll-payments']);
+      }
+    });
   }
 
   onFileSelected(event: Event): void {
@@ -134,7 +154,7 @@ export class PaymentHistoryAddNewComponent {
     // Show success notification
     Swal.fire({
       icon: 'success',
-      title: 'File Selected',
+      title: 'Confirm Upload',
       text: `${file.name} has been selected successfully`,
       timer: 2000,
       showConfirmButton: false,
@@ -165,6 +185,8 @@ export class PaymentHistoryAddNewComponent {
 
     if (!this.paymentReference.trim()) {
       missingFields.push('Payment Reference');
+    } else if (this.paymentReference.length > this.MAX_REFERENCE_LENGTH) {
+      missingFields.push(`Payment Reference (exceeds ${this.MAX_REFERENCE_LENGTH} characters)`);
     }
 
     if (!this.uploadedFile) {
@@ -197,6 +219,30 @@ export class PaymentHistoryAddNewComponent {
       return;
     }
 
+    // Confirmation dialog before proceeding with upload
+    Swal.fire({
+      icon: 'question',
+      title: 'Confirm Upload',
+      html: 'Are you sure you want to upload this file?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, upload',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#3B82F6',
+      cancelButtonColor: '#6B7280',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 hover:bg-blue-600',
+        cancelButton: 'bg-gray-500 hover:bg-gray-600',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.proceedWithUpload();
+      }
+    });
+  }
+
+  private proceedWithUpload(): void {
     // Show loading indicator
     Swal.fire({
       title: 'Uploading...',
@@ -269,45 +315,128 @@ export class PaymentHistoryAddNewComponent {
     });
   }
 
-  onCancel(): void {
-    // Check if there's unsaved data
-    if (this.amount || this.paymentReference || this.uploadedFile) {
-      Swal.fire({
-        icon: 'question',
-        title: 'Discard Changes?',
-        text: 'You have unsaved changes. Are you sure you want to cancel?',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, discard',
-        cancelButtonText: 'No, keep editing',
-        confirmButtonColor: '#EF4444',
-        cancelButtonColor: '#6B7280',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-          confirmButton: 'bg-red-500 hover:bg-red-600',
-          cancelButton: 'bg-gray-500 hover:bg-gray-600',
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.router.navigate(['/finance/action/viewAll-payments']);
-        }
-      });
-    } else {
-      this.router.navigate(['/finance/action/viewAll-payments']);
+  onCancel() {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Are you sure?',
+          text: 'You may lose the added data after canceling!',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Cancel',
+          cancelButtonText: 'No, Keep Editing',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+          },
+          buttonsStyling: true,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.navigatePath('/finance/action/viewAll-payments');
+          }
+        });
+      }
+  
+       navigatePath(path: string) {
+      this.router.navigate([path]);
     }
-  }
 
   formatAmount(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/,/g, '');
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/[^\d.]/g, ''); // Remove all non-numeric except decimal point
+  
+  // Handle multiple decimal points
+  const decimalCount = (value.match(/\./g) || []).length;
+  if (decimalCount > 1) {
+    const parts = value.split('.');
+    value = parts[0] + '.' + parts.slice(1).join('');
+  }
+  
+  // Ensure only two decimal places
+  const parts = value.split('.');
+  if (parts[1]) {
+    parts[1] = parts[1].slice(0, 2);
+    value = parts.join('.');
+  }
+  
+  if (value && !isNaN(Number(value))) {
+    // Format with commas for thousands
+    const [integerPart, decimalPart] = value.split('.');
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     
-    if (value && !isNaN(Number(value))) {
-      // Format with commas for thousands
-      const parts = value.split('.');
-      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      this.amount = parts.join('.');
+    if (decimalPart !== undefined) {
+      this.amount = formattedInteger + '.' + decimalPart;
+    } else {
+      this.amount = formattedInteger;
+    }
+  } else if (value === '') {
+    this.amount = '';
+  }
+}
+
+onAmountInput(event: Event): void {
+  this.formatAmount(event);
+}
+
+onAmountKeyPress(event: KeyboardEvent): void {
+  const key = event.key;
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value.replace(/,/g, '');
+  
+  // Allow: backspace, delete, tab, escape, enter, decimal point
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+  
+  // Check if key is allowed
+  if (allowedKeys.includes(key)) {
+    return;
+  }
+  
+  // Allow only numbers
+  if (!/^\d$/.test(key)) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Prevent more than 2 decimal places
+  if (currentValue.includes('.')) {
+    const decimalParts = currentValue.split('.');
+    if (decimalParts[1] && decimalParts[1].length >= 2) {
+      event.preventDefault();
+      return;
     }
   }
+}
+
+onAmountBlur(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/,/g, '');
+  
+  // If the field is empty, keep it empty
+  if (value === '') {
+    this.amount = '';
+    return;
+  }
+  
+  // If the value ends with a decimal point, add '00'
+  if (value.endsWith('.')) {
+    value = value + '00';
+  }
+  
+  // If there's no decimal point, add '.00'
+  if (!value.includes('.')) {
+    value = value + '.00';
+  }
+  
+  // Ensure exactly two decimal places
+  const parts = value.split('.');
+  if (parts[1]) {
+    parts[1] = parts[1].padEnd(2, '0').slice(0, 2);
+    value = parts.join('.');
+  }
+  
+  // Format with commas
+  const [integerPart, decimalPart] = value.split('.');
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  this.amount = formattedInteger + '.' + decimalPart;
+}
 
   // Helper method to remove file
   removeFile(): void {
@@ -349,6 +478,92 @@ export class PaymentHistoryAddNewComponent {
           },
         });
       }
+    });
+  }
+
+  onPaymentReferenceInput(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const cursorPosition = input.selectionStart;
+  
+  // Get the current value
+  let currentValue = input.value;
+  
+  // Remove leading spaces only (allow spaces in the middle)
+  const trimmedValue = currentValue.replace(/^\s+/, '');
+  
+  // Check character limit
+  if (trimmedValue.length > this.MAX_REFERENCE_LENGTH) {
+    this.paymentReference = trimmedValue.substring(0, this.MAX_REFERENCE_LENGTH);
+    
+    // Show warning
+    this.showCharacterLimitWarning();
+  } else {
+    this.paymentReference = trimmedValue;
+  }
+  
+  // If leading spaces were removed, adjust cursor position
+  if (currentValue !== trimmedValue) {
+    setTimeout(() => {
+      const spacesRemoved = currentValue.length - trimmedValue.length;
+      const newCursorPosition = Math.max(0, (cursorPosition || 0) - spacesRemoved);
+      input.setSelectionRange(newCursorPosition, newCursorPosition);
+    });
+  }
+}
+
+// Helper method to count spaces before a specific position
+private countSpacesBeforePosition(text: string, position: number): number {
+  let count = 0;
+  for (let i = 0; i < Math.min(position, text.length); i++) {
+    if (text.charAt(i) === ' ') {
+      count++;
+    }
+  }
+  return count;
+}
+
+onPaymentReferenceKeyPress(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const currentValue = input.value;
+  const cursorPosition = input.selectionStart || 0;
+  
+  // Prevent space if it's at the beginning
+  if (event.key === ' ' && cursorPosition === 0) {
+    event.preventDefault();
+    return;
+  }
+  
+  // Optional: Prevent multiple consecutive spaces
+  if (event.key === ' ') {
+    const beforeCursor = currentValue.substring(0, cursorPosition);
+    if (beforeCursor.endsWith(' ')) {
+      event.preventDefault();
+      return;
+    }
+  }
+}
+
+  private showCharacterLimitWarning(): void {
+    // You can show a small notification or change border color
+    const inputElement = document.querySelector('input[type="text"][(ngModel)]="paymentReference"') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.classList.add('border-red-500');
+      setTimeout(() => {
+        inputElement.classList.remove('border-red-500');
+      }, 2000);
+    }
+    
+    // Or show a toast notification
+    Swal.fire({
+      icon: 'warning',
+      title: 'Character Limit Exceeded',
+      text: `Payment reference cannot exceed ${this.MAX_REFERENCE_LENGTH} characters`,
+      timer: 2000,
+      showConfirmButton: false,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
     });
   }
 }

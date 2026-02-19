@@ -508,10 +508,12 @@ onSubmit() {
   // }
 
   validateChangeBy() {
-    if (this.productObj.changeby <= 0.0) {
-      this.productObj.changeby = 0.0;
-    }
+  if (this.productObj.changeby < 0) {
+    this.productObj.changeby = 0;
   }
+  // Ensure 3 decimal places
+  this.productObj.changeby = parseFloat(this.productObj.changeby.toFixed(3));
+}
 
   validateMaxQuantity() {
     if (this.productObj.maxQuantity <= 0.0) {
@@ -520,51 +522,61 @@ onSubmit() {
   }
 
   validateMinQuantity() {
-    if (this.productObj.startValue <= 0.0) {
-      this.productObj.startValue = 0.0;
-    }
+  if (this.productObj.startValue < 0) {
+    this.productObj.startValue = 0;
   }
+  // Ensure 3 decimal places
+  this.productObj.startValue = parseFloat(this.productObj.startValue.toFixed(3));
+}
 
   validateDecimalInput(event: KeyboardEvent): boolean {
-    const input = event.target as HTMLInputElement;
-    const value = input.value;
-    const key = event.key;
+  const input = event.target as HTMLInputElement;
+  const value = input.value;
+  const key = event.key;
+  const fieldName = input.id; // or you can pass fieldName as parameter
 
-    // Allow control keys
-    const controlKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Clear', 'Copy', 'Paste'];
-    if (controlKeys.includes(key)) {
-      return true;
-    }
-
-    // Allow numbers and decimal point
-    if (!/^[0-9.]$/.test(key)) {
-      event.preventDefault();
-      return false;
-    }
-
-    // Prevent multiple decimal points
-    if (key === '.' && value.includes('.')) {
-      event.preventDefault();
-      return false;
-    }
-
-    // Check if adding this character would exceed 2 decimal places
-    if (value.includes('.')) {
-      const decimalPart = value.split('.')[1];
-      if (decimalPart && decimalPart.length >= 2 && key !== '.') {
-        event.preventDefault();
-        return false;
-      }
-    }
-
-    // Prevent decimal point at the beginning
-    if (key === '.' && value === '') {
-      event.preventDefault();
-      return false;
-    }
-
+  // Allow control keys
+  const controlKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Clear', 'Copy', 'Paste'];
+  if (controlKeys.includes(key)) {
     return true;
   }
+
+  // Allow numbers and decimal point
+  if (!/^[0-9.]$/.test(key)) {
+    event.preventDefault();
+    return false;
+  }
+
+  // Prevent multiple decimal points
+  if (key === '.' && value.includes('.')) {
+    event.preventDefault();
+    return false;
+  }
+
+  // Check decimal places based on field type
+  if (value.includes('.')) {
+    const decimalPart = value.split('.')[1];
+    
+    // Determine max decimal places based on field
+    let maxDecimals = 2; // Default for price fields
+    if (input.id === 'startValue' || input.id === 'changeby' || input.id === 'maxQuantity') {
+      maxDecimals = 3; // 3 decimals for quantity fields
+    }
+    
+    if (decimalPart && decimalPart.length >= maxDecimals && key !== '.') {
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  // Prevent decimal point at the beginning
+  if (key === '.' && value === '') {
+    event.preventDefault();
+    return false;
+  }
+
+  return true;
+}
 
   validatePriceFormat(value: any, fieldName: string): boolean {
     if (value === null || value === undefined || value === '') {
@@ -586,44 +598,57 @@ onSubmit() {
   }
 
   formatPrice(event: any, fieldName: string): void {
-    const input = event.target;
-    let value = input.value;
+  const input = event.target;
+  let value = input.value;
 
-    if (value && !isNaN(value)) {
-      const numericValue = parseFloat(value);
-      if (numericValue >= 0) {
-        const formattedValue = numericValue.toFixed(2);
-        input.value = formattedValue;
+  if (value && !isNaN(value)) {
+    const numericValue = parseFloat(value);
+    if (numericValue >= 0) {
+      // Different decimal places for different field types
+      let formattedValue;
+      
+      // Price fields - 2 decimal places
+      if (fieldName === 'normalPrice' || fieldName === 'discountedPrice' || fieldName === 'salePrice') {
+        formattedValue = numericValue.toFixed(2);
+      } 
+      // Quantity fields - 3 decimal places
+      else if (fieldName === 'startValue' || fieldName === 'changeby' || fieldName === 'maxQuantity') {
+        formattedValue = numericValue.toFixed(3);
+      } else {
+        formattedValue = numericValue.toFixed(2); // Default
+      }
+      
+      input.value = formattedValue;
 
-        // Update the model based on field name
-        switch (fieldName) {
-          case 'normalPrice':
-            this.productObj.normalPrice = parseFloat(formattedValue);
-            break;
-          case 'discountedPrice':
-            this.productObj.discountedPrice = parseFloat(formattedValue);
-            break;
-          case 'salePrice':
-            this.productObj.salePrice = parseFloat(formattedValue);
-            break;
-          case 'startValue':
-            this.productObj.startValue = parseFloat(formattedValue);
-            break;
-          case 'changeby':
-            this.productObj.changeby = parseFloat(formattedValue);
-            break;
-          case 'maxQuantity':
-            this.productObj.maxQuantity = parseFloat(formattedValue);
-            break;
-        }
+      // Update the model based on field name
+      switch (fieldName) {
+        case 'normalPrice':
+          this.productObj.normalPrice = parseFloat(formattedValue);
+          break;
+        case 'discountedPrice':
+          this.productObj.discountedPrice = parseFloat(formattedValue);
+          break;
+        case 'salePrice':
+          this.productObj.salePrice = parseFloat(formattedValue);
+          break;
+        case 'startValue':
+          this.productObj.startValue = parseFloat(formattedValue);
+          break;
+        case 'changeby':
+          this.productObj.changeby = parseFloat(formattedValue);
+          break;
+        case 'maxQuantity':
+          this.productObj.maxQuantity = parseFloat(formattedValue);
+          break;
+      }
 
-        // Recalculate sale price if needed
-        if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
-          this.calculeSalePrice();
-        }
+      // Recalculate sale price if needed
+      if (fieldName === 'normalPrice' || fieldName === 'discountedPrice') {
+        this.calculeSalePrice();
       }
     }
   }
+}
 
   validateMinMaxQuantities(): boolean {
     if (this.productObj.category === 'WholeSale' &&
@@ -635,11 +660,20 @@ onSubmit() {
   }
 
 getMinQuantityError(): string {
-    const startValue = parseFloat(this.productObj.startValue.toString());
+    const startValue = parseFloat(this.productObj.startValue?.toString() || '0');
     const maxQuantity = parseFloat(this.productObj.maxQuantity?.toString() || '0');
+    
     if (isNaN(startValue) || startValue <= 0) {
       return 'Please enter a value greater than 0.';
     }
+    
+    // Check if it has more than 3 decimal places
+    if (this.productObj.startValue && 
+        this.productObj.startValue.toString().includes('.') && 
+        this.productObj.startValue.toString().split('.')[1].length > 3) {
+      return 'Minimum quantity cannot have more than 3 decimal places.';
+    }
+    
     if (
       this.productObj.category === 'WholeSale' &&
       maxQuantity > 0 &&
@@ -648,7 +682,8 @@ getMinQuantityError(): string {
       return 'Minimum quantity cannot be greater than maximum quantity.';
     }
     return '';
-  }
+}
+
 
   getMaxQuantityError(): string {
     const maxQuantity = parseFloat(this.productObj.maxQuantity?.toString() || '0');

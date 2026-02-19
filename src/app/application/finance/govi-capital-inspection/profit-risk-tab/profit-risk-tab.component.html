@@ -2,92 +2,84 @@
 
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-400 dark:text-textDark">01.</span> How much profit are you expecting from the proposed crop / cropping system
-      
+      <span class="text-gray-500 dark:text-textDark">
+        01. How much profit are you expecting from the proposed crop / cropping system?
+      </span>
     </label>
-    <input
-          type="number"
-          [value]="profitRiskObj.profit"
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
-          readonly
-        />
+    <input type="text" [value]="'Rs. ' + ((profitRiskObj.profit || 0) | number:'1.2-2')" readonly class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+         bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark" />
   </div>
 
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-400 dark:text-textDark">02.</span> Is this profitable than the existing crop / cropping system?
-      
+      <span class="text-gray-500 dark:text-textDark">02. Is this profitable than the existing crop / cropping system?</span>
     </label>
-    <input
-      type="text"
-      [value]="profitRiskObj.isProfitable == 1 ? 'Yes' : 'No'"
+    <input type="text" [value]="profitRiskObj.isProfitable == 1 ? 'Yes' : 'No'"
       class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
-      readonly
-    />
+      readonly />
   </div>
 
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-400 dark:text-textDark">03.</span> Are there any risks?
-      
+      <span class="text-gray-500 dark:text-textDark">03. Are there any risks?</span>
     </label>
-    <input
-          type="text"
-          [value]="profitRiskObj.isRisk == 1 ? 'Yes' : 'No'"
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
-          readonly
-        />
+    <input type="text" [value]="profitRiskObj.isRisk == 1 ? 'Yes' : 'No'"
+      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+      readonly />
   </div>
 
-  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+  <div *ngIf="profitRiskObj.isRisk == 1" class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-400 dark:text-textDark">04.</span> What are the risks you are anticipating in the proposed crop / cropping system?
-      
+      <span class="text-gray-500 dark:text-textDark">04. What are the risks you are anticipating in the proposed crop /
+        cropping system?</span>
     </label>
-    <input
-          type="text"
-          [value]="profitRiskObj.risk"
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
-          readonly
-        />
+    <input type="text" [value]="profitRiskObj.risk"
+      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+      readonly />
   </div>
 
-  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+  <div *ngIf="profitRiskObj.isRisk == 1" class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-400 dark:text-textDark">05.</span> Do you have the solution?
-      
+      <span class="text-gray-500 dark:text-textDark">05. Do you have the solution?</span>
     </label>
-    <input
-          type="text"
-          [value]="profitRiskObj.solution"
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
-          readonly
-        />
+    <input type="text" [value]="profitRiskObj.solution"
+      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+      readonly />
   </div>
 
-  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+  <div *ngIf="profitRiskObj.isRisk == 1" class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-400 dark:text-textDark">06.</span> Can the farmer manage the risks?
-      
+      <span class="text-gray-500 dark:text-textDark">06. Can the farmer manage the risks?</span>
     </label>
-    <input
-          type="text"
-          [value]="profitRiskObj.manageRisk"
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
-          readonly
-        />
+    <input type="text" [value]="profitRiskObj.manageRisk"
+      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+      readonly />
   </div>
 
-  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+  <div *ngIf="profitRiskObj.isRisk == 1" class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-400 dark:text-textDark">07.</span> Is it worth to take risks for anticipated profits?
-      
+      <span class="text-gray-500 dark:text-textDark">07. Is it worth to take risks for anticipated profits?</span>
     </label>
-    <input
-          type="text"
-          [value]="profitRiskObj.worthToTakeRisk"
-          class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
-          readonly
-        />
+    <input type="text" [value]="profitRiskObj.worthToTakeRisk"
+      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-tileBlack text-gray-900 dark:text-textDark"
+      readonly />
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex justify-center items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <button (click)="onPreviousPage()" [disabled]="currentPage === 1"
+      class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <span class="text-sm font-medium text-gray-700 dark:text-textDark">
+      Page [ {{ currentPage }} / {{ totalPages }} ]
+    </span>
+
+    <button (click)="onNextPage()" [disabled]="currentPage === totalPages"
+      class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
   </div>
 </div>

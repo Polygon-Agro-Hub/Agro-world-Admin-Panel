@@ -42,10 +42,6 @@ export class PublishedProjectsComponent implements OnInit {
   searchText: string = '';
   errorMessage: string | null = null;
 
-  progress: number = 50
-
-  
-
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -103,7 +99,7 @@ export class PublishedProjectsComponent implements OnInit {
   }
 
   Back(): void {
-    this.router.navigate(['/finance/action']);
+    window.history.back();
   }
 
   navigatePath(path: string) {
@@ -129,6 +125,24 @@ export class PublishedProjectsComponent implements OnInit {
     this.isPopupVisible = false;
   }
 
+  // Calculate total extent in Acres
+  calculateExtentInAcres(extentAc: number = 0, extentHa: number = 0, extentP: number = 0): string {
+    const hectaresToAcres = extentHa * 2.471;
+    const perchesToAcres = extentP * 0.00625;
+    const totalAcres = extentAc + hectaresToAcres + perchesToAcres;
+    
+    return totalAcres.toFixed(2);
+  }
+
+  // Calculate progress percentage based on shares sold vs defined shares
+  calculateProgress(sharesSold: number = 0, defineShares: number = 0): number {
+    if (defineShares === 0) {
+      return 0; 
+    }
+    const progress = (sharesSold / defineShares) * 100;
+    return Math.round(progress); 
+  }
+
   
 }
 
@@ -147,11 +161,15 @@ class PublishedProjects {
   reqStatus!: string;
   nicFront!: string;
   nicBack!: string;
-  extentac!: number;
+  extentha!: number;  
+  extentac!: number;  
+  extentp!: number;   
   expectedYield!: number;
   startDate!: Date;
   investment!: number;
   srtName!: string;
   publishDate!: Date;
-  publishedBy!: string
+  publishedBy!: string;
+  defineShares!: number;  
+  shares!: number;        
 }

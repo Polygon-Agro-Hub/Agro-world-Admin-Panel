@@ -158,7 +158,7 @@
                             {{ item.createdAt | date: 'hh.mm a' : 'Asia/Colombo' }}
                         </td>
                         <td class="py-3 dark:text-textDark text-center">
-                            <div *ngIf="item.status === 'Assigned'">
+                            <div *ngIf="item.status === 'Opened'">
                                 <span
                                     class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{
                                     item.status }}</span>
@@ -173,6 +173,12 @@
                                     class="w-32 h-8 inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-3 py-1 text-sm">{{
                                     item.status }}</span>
                             </div>
+
+                            <div *ngIf="item.status === 'Assigned'">
+                                <span
+                                  class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{
+                                  item.status }}</span>
+                              </div>
                         </td>
                         <td *ngIf="permissionService.hasPermission('Reply Driver complaint') || tokenService.getUserDetails().role === '1'"
                             class="py-3 dark:text-textDark text-center">
@@ -217,8 +223,11 @@
             </table>
         </div>
         <div class="dark:bg-[#262f45]">
-            <pagination-controls></pagination-controls>
-        </div>
+            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+              [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+              [screenReaderCurrentLabel]="'Youre on page'">
+            </pagination-controls>
+          </div>
     </div>
 </div>
 
@@ -275,13 +284,9 @@
             </p>
 
             <p class="mt-3">
-                {{ selectedLanguage === 'Tamil' ? 'இதற்கு' :
-                selectedLanguage === 'Sinhala' ? 'මෙයට' : 'Sincerely' }},
+                Sincerely,
                 <br />
-                <span *ngIf="selectedLanguage === 'English'">Polygon Customer Support Team</span>
-                <span *ngIf="selectedLanguage === 'Sinhala'">Polygon පාරිභෝගික සහාය කණ්ඩායම</span>
-                <span *ngIf="selectedLanguage === 'Tamil'">Polygon வாடிக்கையாளர் ஆதரவு குழு</span>
-
+                Polygon Customer Support Team
             </p>
         </div>
 

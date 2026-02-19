@@ -12,11 +12,14 @@ import { PermissionService } from '../../../services/roles-permission/permission
   styleUrl: './finance-action.component.css',
 })
 export class FinanceActionComponent {
+  popupVisiblePentionRequests = false;
+  popupVisibleFarmerPension = false;
+
   constructor(
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   farmerPayments(): void {
     this.router.navigate(['/finance/action/farmer-payments']);
@@ -44,5 +47,25 @@ export class FinanceActionComponent {
 
   back(): void {
     this.router.navigate(['finance/action']);
+  }
+
+  viewPentionRequests(): void {
+    this.router.navigate(['/finance/action/pension-requests']);
+  }
+
+  togglePopupPentionRequests() {
+    this.popupVisiblePentionRequests = !this.popupVisiblePentionRequests;
+  }
+
+  togglePopupFarmerPension() {
+    this.popupVisibleFarmerPension = !this.popupVisibleFarmerPension;
+  }
+
+  viewUnder5YearsFarmersPension(): void {
+    this.router.navigate(['/finance/action/farmer-pension-under-5-years']);
+  }
+
+  viewFarmerPension5YearsPlus(): void {
+    this.router.navigate(['/finance/action/farmer-pension-5-years-plus']);
   }
 }

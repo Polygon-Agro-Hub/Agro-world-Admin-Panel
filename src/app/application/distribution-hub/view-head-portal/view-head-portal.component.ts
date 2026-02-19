@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import { forkJoin } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -112,6 +112,7 @@ getFlagUrl(countryCode: string): string {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private distributionHubService: DistributionHubService
   ) {
     this.headForm = this.fb.group({
@@ -269,12 +270,17 @@ getFlagUrl(countryCode: string): string {
     });
   }
   back(): void {
-    this.router.navigate(['/distribution-hub/action/view-distribution-company'], {
-      queryParams: {
-        id: 2,
-        companyName: 'agroworld Distribution (Pvt) Ltd'
-      }
-    });
-  }
+  // Use history state to pass data
+  window.history.replaceState(
+    { 
+      id: 2, 
+      companyName: 'agroworld Distribution (Pvt) Ltd' 
+    },
+    '',
+    window.location.href
+  );
+  
+  this.location.back();
+}
 
 }

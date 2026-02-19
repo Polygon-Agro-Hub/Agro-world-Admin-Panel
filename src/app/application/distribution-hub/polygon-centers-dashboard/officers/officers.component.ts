@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { DistributionHubService } from '../../../../services/distribution-hub/distribution-hub.service';
 import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-officers',
@@ -63,6 +64,7 @@ export class OfficersComponent implements OnChanges {
     private DestributionSrv: DestributionService,
     private distributionService: DistributionHubService,
     public tokenService: TokenService,
+    public permissionService: PermissionService
 
   ) { }
 
@@ -331,10 +333,23 @@ export class OfficersComponent implements OnChanges {
     });
   }
 
-  navigateProfile(id:number){
-     this.router.navigate([
+  navigateProfile(id: number) {
+    this.router.navigate([
       `/distribution-hub/action/view-polygon-centers/distributed-officer-profile/${id}`,
     ]);
+  }
+
+  onInputChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    // Trim leading spaces from the input value
+    this.searchText = target.value.trimStart();
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    // Prevent space as the first character
+    if (event.key === ' ' && this.searchText.length === 0) {
+      event.preventDefault();
+    }
   }
 }
 

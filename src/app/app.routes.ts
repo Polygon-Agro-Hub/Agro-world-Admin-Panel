@@ -243,8 +243,7 @@ import { DistributionhubTransportActionComponent } from './application/distribut
 import { TransportReasonsToReturnComponent } from './application/distribution-hub/transport-reasons-to-return/transport-reasons-to-return.component';
 import { ViewDriverComponent } from './application/steckholders-section/view-driver/view-driver.component';
 import { PreviewDriverComponent } from './application/steckholders-section/preview-driver/preview-driver.component';
-import { EditDriverComponent } from './application/steckholders-section/edit-driver/edit-driver.component';
-import { TodaysDeliveriesComponent } from './application/distribution-hub/todays-deliveries/todays-deliveries.component';
+import { TodaysDeliveriesComponent } from './application/distribution-hub/today-deliveries/todays-deliveries/todays-deliveries.component';
 import { TransportReasonsToHoldComponent } from './application/distribution-hub/transport-reasons-to-hold/transport-reasons-to-hold.component';
 import { DriverComplainComponent } from './application/Complaints/driver-complain/driver-complain.component';
 import { ViewDriverComplaintsComponent } from './application/Complaints/view-driver-complaints/view-driver-complaints.component';
@@ -253,6 +252,27 @@ import { DistributionViewCustomerOrdersComponent } from './application/distribut
 import { AuditPersonalInfoComponent } from './application/finance/govi-capital-inspection/audit-personal-info/audit-personal-info.component';
 import { ViewAllAuditedGovicareRequestsComponent } from './application/finance/view-all-audited-govicare-requests/view-all-audited-govicare-requests.component';
 import { ViewVehiclesComponent } from './application/distribution-hub/view-vehicles/view-vehicles.component';
+import { RecievedReturnsComponent } from './application/distribution-hub/recieved-returns/recieved-returns.component';
+import { DriversAndVehiclesComponent } from './application/distribution-hub/polygon-centers-dashboard/drivers-and-vehicles/drivers-and-vehicles.component';
+import { PikupOderRecordsMainComponent } from './application/distribution-hub/polygon-centers-dashboard/pickup-orders-records/pikup-oder-records-main/pikup-oder-records-main.component';
+import { OrderPackingProgressDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/order-packing-progress-dashboard/order-packing-progress-dashboard.component';
+import { OfficerAndTargetDashboardComponent } from './application/distribution-hub/polygon-centers-dashboard/officer-and-target-dashboard/officer-and-target-dashboard.component';
+import { ReceivedCashTodayComponent } from './application/distribution-hub/polygon-centers-dashboard/received-cash-today/received-cash-today.component';
+import { CenterHomeDeliveryOrdersComponent } from './application/distribution-hub/polygon-centers-dashboard/center-home-delivery-orders/center-home-delivery-orders.component';
+import { ViewGoviLinkJobsFarmerAuditResponseComponent } from './application/govi-link/view-govi-link-jobs-farmer-audit-response/view-govi-link-jobs-farmer-audit-response.component';
+import { GoviLinkJobsServiceRequestResponseComponent } from './application/govi-link/govi-link-jobs-service-request-response/govi-link-jobs-service-request-response.component';
+import { ViewJobHistoryFarmerClusterAuditResponseComponent } from './application/govi-link/view-job-history-farmer-cluster-audit-response/view-job-history-farmer-cluster-audit-response.component';
+import { ViewPikupCashRevenueComponent } from './application/distribution-hub/polygon-centers-dashboard/view-pikup-cash-revenue/view-pikup-cash-revenue.component';
+import { ViewDeliveryRevenueComponent } from './application/distribution-hub/polygon-centers-dashboard/view-delivery-revenue/view-delivery-revenue.component';
+import { ViewFarmerPensionUnder5YearsComponent } from './application/finance/view-farmer-pension-under-5-years/view-farmer-pension-under-5-years.component';
+import { PensionRequestsComponent } from './application/finance/pension-requests/pension-requests.component';
+import { CultivationHistoryComponent } from './application/finance/cultivation-history/cultivation-history.component';
+import { ViewFarmerPension5YearsPlusComponent } from './application/finance/view-farmer-pension-5-years-plus/view-farmer-pension-5-years-plus.component';
+import { PensionRequestsViewDocumentsComponent } from './application/finance/pension-requests-view-documents/pension-requests-view-documents.component';
+import { CallCenterDashboardComponent } from './application/call-centers/call-center-dashboard/call-center-dashboard.component';
+import { CallCenterActionComponent } from './application/call-centers/action/call-center-action/call-center-action.component';
+import { CallCenterComponentComponent } from './application/call-centers/action/call-center-component/call-center-component.component';
+import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
 
 export const routes: Routes = [
   {
@@ -393,7 +413,7 @@ export const routes: Routes = [
                 data: { permission: 'View farms assets' },
               },
               {
-                path: 'report-farmer-current-assert/:userId/:name/:farmId',
+                path: 'report-farmer-current-assert/:userId/:name/:farmId/:farmName',
                 component: ReportCurrentAssertsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'View farms current assets' },
@@ -594,7 +614,12 @@ export const routes: Routes = [
             path: 'action',
             children: [
               { path: '', component: FinanceActionMainComponent },
-              { path: 'govicare-finance', component: FinanceActionComponent },
+              {
+                path: 'govicare-finance',
+                component: FinanceActionComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'GoViCare Finance' },
+              },
               {
                 path: 'govicare-packages',
                 component: GovicarePackagesMainComponent,
@@ -619,6 +644,8 @@ export const routes: Routes = [
               {
                 path: 'commission-range',
                 component: CommissionRangeComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Commission Range' },
               },
               {
                 path: 'view-all-service-payments',
@@ -631,15 +658,22 @@ export const routes: Routes = [
               {
                 path: 'add-new-payment',
                 component: PaymentHistoryAddNewComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Add payment history' },
               },
               {
                 path: 'update-payment/:id',
                 component: PaymentHistoryUpdateComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Edit payment history' },
               },
               {
                 path: 'viewAll-payments',
                 component: ViewAllPaymentHistoryComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Finance Payment History' },
               },
+
               {
                 path: 'finance-govicapital',
                 children: [
@@ -650,30 +684,44 @@ export const routes: Routes = [
                   {
                     path: 'viewAll-Govicare-requests',
                     component: ViewAllGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'GoViCare Request' },
                   },
                   {
                     path: 'view-Govicare-approved-requests',
                     component: ViewAllApprovedGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Approved Requests' },
                   },
                   {
                     path: 'viewAll-Govicare-AuditedRequests',
                     component: ViewAllAuditedGovicareRequestsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Audited Request' },
                   },
                   {
                     path: 'reject-requests',
                     component: GovicapitalFinanceComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'GoViCare Reject Request' },
                   },
                   {
                     path: 'project-investments',
                     component: ProjectInvestmentsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Project Investments' },
                   },
                   {
                     path: 'project-investments-transactions/:id',
                     component: ProjectInvestmentsTransactionsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'View each investment transaction' },
                   },
                   {
                     path: 'published-projects',
                     component: PublishedProjectsComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'GoViCare Publish Request' },
                   },
                   {
                     path: 'viewAll-Govicare-AuditedRequests/audit-personal-infor/:requestId',
@@ -684,16 +732,46 @@ export const routes: Routes = [
                     path: 'view-Govicare-approved-requests/audit-personal-infor/:requestId',
                     component: AuditPersonalInfoComponent,
                   },
+                  {
+                    //for edit define shares
+                    path: 'view-Govicare-approved-requests/edit-audit-personal-infor/:requestId',
+                    component: AuditPersonalInfoComponent,
+                  },
+                  {
+                    //for approve define shares
+                    path: 'view-Govicare-approved-requests/approve-audit-personal-infor/:requestId',
+                    component: AuditPersonalInfoComponent,
+                  },
 
                   {
                     path: 'reject-requests/audit-personal-infor/:requestId',
                     component: AuditPersonalInfoComponent,
-                  }
+                  },
                 ],
+              },
+              {
+                path: 'pension-requests',
+                component: PensionRequestsComponent,
+              },
+              {
+                path: 'cultivation-history/:id',
+                component: CultivationHistoryComponent,
               },
               {
                 path: 'agents-commission',
                 component: AgentsCommissionComponent,
+              },
+              {
+                path: 'pension-requests-view-documents/:id',
+                component: PensionRequestsViewDocumentsComponent,
+              },
+              {
+                path: 'farmer-pension-under-5-years',
+                component: ViewFarmerPensionUnder5YearsComponent,
+              },
+              {
+                path: 'farmer-pension-5-years-plus',
+                component: ViewFarmerPension5YearsPlusComponent,
               },
             ],
           },
@@ -985,6 +1063,10 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: ViewDriverComponent,
+                    canActivate: [PermissionGuard],
+                    data: {
+                      permission: 'Onboard individual collection CO / CCM / DO',
+                    },
                   },
 
                   {
@@ -993,7 +1075,7 @@ export const routes: Routes = [
                   },
                   {
                     path: 'edit-driver/:id',
-                    component: EditDriverComponent,
+                    component: UpdateDistributionOfficerComponent,
                   },
                   {
                     path: 'add-driver',
@@ -1651,13 +1733,6 @@ export const routes: Routes = [
             data: { permission: 'GoviLink Complaint' },
           },
           {
-            path: 'driver-complain/:id',
-            component: DriverComplainComponent,
-            canActivate: [PermissionGuard],
-            data: { permission: 'Reply Driver complaint' },
-          },
-
-          {
             path: 'driver-complaints',
             canActivate: [PermissionGuard],
             data: { permission: 'driver Complaints' },
@@ -1667,6 +1742,12 @@ export const routes: Routes = [
                 component: ViewDriverComplaintsComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'view driver Complaints' },
+              },
+              {
+                path: 'view-each-complain/:id',
+                component: DriverComplainComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Reply Driver complaint' },
               },
             ],
           },
@@ -1700,18 +1781,33 @@ export const routes: Routes = [
               {
                 path: 'reasons-to-return',
                 component: TransportReasonsToReturnComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation reason to return' },
               },
               {
                 path: 'todays-deliveries',
                 component: TodaysDeliveriesComponent,
               },
+
+              {
+                path: 'recieved-returns',
+                component: RecievedReturnsComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation received returns' },
+              },
+
               {
                 path: 'reasons-to-hold',
                 component: TransportReasonsToHoldComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation reason to hold' },
               },
+
               {
                 path: 'view-vehicles',
                 component: ViewVehiclesComponent,
+                canActivate: [PermissionGuard],
+                data: { permission: 'Transportation view vehicles' },
               },
               {
                 path: 'create-company',
@@ -1731,6 +1827,8 @@ export const routes: Routes = [
                   {
                     path: '',
                     component: DistributionhubTransportActionComponent,
+                    canActivate: [PermissionGuard],
+                    data: { permission: 'Distribution Hub transpotation' },
                   },
                 ],
               },
@@ -1772,6 +1870,17 @@ export const routes: Routes = [
                     path: 'distribution-center-dashboard/:id',
                     component: MainDashboardLayoutComponent,
                   },
+
+                  {
+                    path: 'order-packing-progress-dashboard/:id',
+                    component: OrderPackingProgressDashboardComponent,
+                  },
+
+                  {
+                    path: 'officer-and-target-dashboard/:id',
+                    component: OfficerAndTargetDashboardComponent,
+                  },
+
                   {
                     path: 'edit-distribution-officer/:id',
                     component: UpdateDistributionOfficerComponent,
@@ -1784,6 +1893,30 @@ export const routes: Routes = [
                   {
                     path: 'distributed-officer-profile/:id',
                     component: ViewCollectiveOfficerProfileComponent,
+                  },
+                  {
+                    path: 'view-distribution-drivers/:id',
+                    component: DriversAndVehiclesComponent,
+                  },
+                  {
+                    path: 'pikup-oder-records-main/:id',
+                    component: PikupOderRecordsMainComponent,
+                  },
+                  {
+                    path: 'received-cash-today/:id',
+                    component: ReceivedCashTodayComponent,
+                  },
+                  {
+                    path: 'home-delivery-order-records',
+                    component: CenterHomeDeliveryOrdersComponent,
+                  },
+                  {
+                    path: 'view-pikup-chash-revenue/:id',
+                    component: ViewPikupCashRevenueComponent,
+                  },
+                  {
+                    path: 'view-delivery-revenue/:id',
+                    component: ViewDeliveryRevenueComponent,
                   },
                 ],
               },
@@ -1846,6 +1979,45 @@ export const routes: Routes = [
               {
                 path: 'view-job-history',
                 component: ViewJobHistoryComponent,
+              },
+              {
+                path: 'view-govi-link-jobs-farmer-audit-response',
+                component: ViewGoviLinkJobsFarmerAuditResponseComponent,
+              },
+
+              {
+                path: 'view-govi-link-jobs-service-request-response',
+                component: GoviLinkJobsServiceRequestResponseComponent,
+              },
+              {
+                path: 'view-govi-link-jobs-farmer-cluster-audit-response',
+                component: ViewJobHistoryFarmerClusterAuditResponseComponent,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'call-centers',
+        children: [
+          {
+            path: 'dashboard',
+            component: CallCenterDashboardComponent,
+          },
+          {
+            path: 'action',
+            children: [
+              {
+                path: '',
+                component: CallCenterActionComponent,
+              },
+              {
+                path: 'govi-care-call',
+                component: CallCenterComponentComponent,
+              },
+              {
+                path: 'call-logs',
+                component: AllCallLogsComponent,
               },
             ],
           },

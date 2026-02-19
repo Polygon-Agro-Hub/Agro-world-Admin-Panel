@@ -27,7 +27,7 @@
       <div
         class="flex items-center rounded-full mr-56 px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark">
 
-        <input type="text" placeholder="Search..." title="Search By EMP ID, First Name / Last Name & Email"
+        <input type="text" placeholder="Search by EMP ID, First / Last Name..." title="Search By EMP ID, First Name / Last Name & Email"
           [(ngModel)]="searchText" (keydown)="handleSearchKeydown($event)"
           class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
 
@@ -84,10 +84,10 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Phone Number-2
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center whitespace-nowrap">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               Last Modified By
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Created At
             </th>
             <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center"></th>
@@ -147,10 +147,10 @@
                 {{ item.phoneNumber02 !== null ? item.phoneCode02 + "" + item.phoneNumber02 : '--' }}
               </span>
             </td>
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.adminModify !== null ? item.adminModify : item.officeModify !== null ? item.officeModify : '--'}}
             </td>
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.createdAtFormatted }}
             </td>
 

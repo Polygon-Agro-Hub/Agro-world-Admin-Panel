@@ -229,7 +229,7 @@
 
         <div class="pb-6">
           <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Account Number * <span class="text-[#2E2E2E]">*</span>
+            Account Number *
           </label>
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
             (ngModelChange)="validateAccNumber()" (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
@@ -250,7 +250,7 @@
 
         <div class="pb-6">
           <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Confirm Account Number * <span class="text-[#2E2E2E]">*</span>
+            Confirm Account Number *
           </label>
           <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
             (blur)="onBlur('confirmAccNumber')" (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"

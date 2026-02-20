@@ -994,6 +994,22 @@ export class FinanceService {
     });
   }
 
+  getGocicareAllInvestmentUsers(
+    search?: string
+  ): Observable<any> {
+    let params = new HttpParams();
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/govicare-investment-users`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+      params: params,
+    });
+  }
+
 }
 
 

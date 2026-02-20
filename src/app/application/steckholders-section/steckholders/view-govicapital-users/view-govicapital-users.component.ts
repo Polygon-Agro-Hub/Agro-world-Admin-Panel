@@ -3,6 +3,8 @@ import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
+import { FinanceService } from '../../../../services/finance/finance.service';
 
 @Component({
   selector: 'app-view-govicapital-users',
@@ -14,81 +16,99 @@ import { FormsModule } from '@angular/forms';
 export class ViewGovicapitalUsersComponent implements OnInit {
   isLoading = false;
   searchQuery: string = '';
-  
-  // Dummy data based on the image
-  users = [
-    {
-      no: '01',
-      investorId: 'IR2511200001',
-      name: 'Mr. J.K. Rowling',
-      phone: '+94 787811001',
-      nic: '88788822V',
-      email: 'jk1990@gmail.com',
-      address: '11/A, Galle Rd, Dehiwala',
-      joinedOn: 'July 10, 2025'
-    },
-    {
-      no: '02',
-      investorId: 'IR2511200001',
-      name: 'Mr. B. Gates',
-      phone: '+94 787811002',
-      nic: '88788821V',
-      email: 'bg1990@gmail.com',
-      address: '11/A, Galle Rd, Dehiwala',
-      joinedOn: 'July 09, 2025'
-    },
-    {
-      no: '03',
-      investorId: 'IR2511200001',
-      name: 'Mr. N.M.K. Sumanadasa',
-      phone: '+94 787811003',
-      nic: '88788825V',
-      email: 'sum@gmail.com',
-      address: '11/A, Galle Rd, Dehiwala',
-      joinedOn: 'July 08, 2025'
-    },
-    {
-      no: '04',
-      investorId: 'IR2511200001',
-      name: 'Mr. P.D. Nimesha',
-      phone: '+94 787811004',
-      nic: '88788811V',
-      email: 'nim@gmail.com',
-      address: '11/A, Galle Rd, Dehiwala',
-      joinedOn: 'July 07, 2025'
-    }
-  ];
+  users: any[] = [];
+  totalUsers: number = 0;
+  private searchTimeout: any;
+  hasData = false;
 
-  // Filtered users for search functionality
-  filteredUsers: any[] = [];
-
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private financeService: FinanceService
+  ) {}
 
   ngOnInit(): void {
-    // Initialize filtered users with all users
-    this.filteredUsers = [...this.users];
+    this.loadUsers();
   }
+
+  loadUsers(searchTerm: string = ''): void {
+    this.isLoading = true;
+    
+    console.log('Loading users with search term:', searchTerm); // Debug log
+    
+    this.financeService.getGocicareAllInvestmentUsers(searchTerm)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Raw API response:', response); // Debug log
+          
+          // Make sure we're accessing the correct property
+          const items = response.items || response || [];
+          this.users = this.transformUserData(items);
+          this.totalUsers = this.users.length;
+          console.log('Transformed users:', this.users);
+          this.hasData = this.users.length > 0;
+        },
+        error: (error) => {
+          console.error('Error loading users:', error);
+          this.users = [];
+          this.totalUsers = 0;
+          this.hasData = false;
+        }
+      });
+  }
+
+  transformUserData(users: any[]): any[] {
+  if (!users || !Array.isArray(users)) {
+    return [];
+  }
+  
+  return users.map((user, index) => ({
+    no: (index + 1).toString().padStart(2, '0'),
+    investorId: user.regCode || `IR${user.id}`,
+    name: user.title && user.userName ? `${user.title}. ${user.userName}` : (user.userName || 'N/A'),
+    // Fixed: Removed the space between phoneCode and phoneNumber
+    phone: user.phoneCode && user.phoneNumber ? `${user.phoneCode}${user.phoneNumber}` : (user.phoneNumber || 'N/A'),
+    nic: user.nic || 'N/A',
+    email: user.email || 'N/A',
+    address: user.address || 'N/A',
+    joinedOn: user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }) : 'N/A'
+  }));
+}
 
   back(): void {
     this.router.navigate(['steckholders/action']);
   }
 
-  // Search function
-  search(): void {
-    if (this.searchQuery.trim() === '') {
-      this.filteredUsers = [...this.users];
+  onSearchClick(): void {
+    console.log('Search clicked with query:', this.searchQuery);
+    
+    // Trim the search query to remove whitespace
+    const searchTerm = this.searchQuery ? this.searchQuery.trim() : '';
+    
+    // Only search if there's a term, otherwise load all
+    if (searchTerm !== '') {
+      this.loadUsers(searchTerm);
     } else {
-      const query = this.searchQuery.toLowerCase().trim();
-      this.filteredUsers = this.users.filter(user => 
-        user.phone.toLowerCase().includes(query) ||
-        user.nic.toLowerCase().includes(query)
-      );
+      this.loadUsers(''); // Load all users when search is empty
     }
   }
 
-  // Clear search
+  onSearchKeyPress(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.onSearchClick();
+    }
+  }
+
   clearSearch(): void {
     this.searchQuery = '';
-    this.filteredUsers = [...this.users];
+    this.loadUsers(''); // Reload all users
   }
 }

@@ -31,13 +31,16 @@ interface ProjectInvestment {
   styleUrls: ['./project-investments.component.css'],
 })
 export class ProjectInvestmentsComponent implements OnInit {
-  isLoading = false;
   searchTerm = '';
   totalCount = 0;
   defaultImage = 'assets/placeholder-image.png';
 
   projectInvestments: ProjectInvestment[] = [];
   filteredProjects: ProjectInvestment[] = [];
+
+  hasData:boolean = false;
+  isLoading = false;
+
 
   constructor(
     private router: Router,
@@ -57,6 +60,7 @@ export class ProjectInvestmentsComponent implements OnInit {
         finalize(() => this.isLoading = false),
         catchError(error => {
           console.error('Error loading project investments:', error);
+          this.hasData = false;
           return of({ count: 0, data: [] });
         })
       )
@@ -78,6 +82,7 @@ export class ProjectInvestmentsComponent implements OnInit {
           
           this.filteredProjects = [...this.projectInvestments];
           this.totalCount = response.count;
+          this.hasData = response.count > 0 ? true : false;
 
           this.loadAllImages();
         },

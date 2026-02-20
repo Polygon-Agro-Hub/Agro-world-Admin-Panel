@@ -183,23 +183,55 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.router.navigate([path]);
   }
 
+  // capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
+  //   let value = this.personalData[field] || '';
+
+  //   if (field === 'houseNumber') {
+  //     value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
+  //   } else {
+  //     value = value.replace(/[^A-Za-z ]/g, '');
+  //   }
+
+  //   value = value.replace(/^\s+/, '');
+
+  //   if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
+  //     value = value.charAt(0).toUpperCase() + value.slice(1);
+  //   }
+
+  //   this.personalData[field] = value;
+  // }
+
   capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
     let value = this.personalData[field] || '';
 
     if (field === 'houseNumber') {
+      // For house numbers: allow alphanumeric, slash, hyphen, hash, and space
       value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
-    } else {
+    } 
+    else if (field === 'streetName') {
+      // For street names: allow letters, numbers, spaces, hyphens, periods, commas, etc.
+      // Adjust this regex based on what characters you want to allow
+      value = value.replace(/[^A-Za-z0-9\s\-\.\,\(\)]/g, '');
+    }
+    else if (field === 'city') {
+      // For city names: allow letters, spaces, and maybe hyphens
+      value = value.replace(/[^A-Za-z\s\-]/g, '');
+    }
+    else {
+      // For other text fields: only letters and spaces
       value = value.replace(/[^A-Za-z ]/g, '');
     }
 
+    // Remove leading spaces
     value = value.replace(/^\s+/, '');
 
+    // Capitalize first letter if it's a letter field (excluding houseNumber)
     if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
       value = value.charAt(0).toUpperCase() + value.slice(1);
     }
 
     this.personalData[field] = value;
-  }
+}
 
   blockInvalidNameInput(event: KeyboardEvent, currentValue: string) {
     const key = event.key;
@@ -1079,6 +1111,8 @@ export class AddDistributionOfficerComponent implements OnInit {
 
     return null;
   }
+
+  
 
 }
 

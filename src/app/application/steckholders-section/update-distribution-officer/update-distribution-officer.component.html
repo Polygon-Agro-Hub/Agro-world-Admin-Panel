@@ -324,11 +324,6 @@
                 " class="text-red-600 text-sm block">
                 {{ getPhoneErrorMessage(personalData.contact1) }}
               </span>
-              <span
-                *ngIf="isValidPhoneNumber(personalData.contact1) && isValidPhoneNumber(personalData.contact2) && arePhoneNumbersSame()"
-                class="text-red-600 text-sm block">
-                Mobile Number – 01 and Mobile Number – 02 cannot be the same
-              </span>
             </div>
           </div>
         </div>
@@ -400,7 +395,7 @@
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
           <input type="email" id="email" name="email" [(ngModel)]="personalData.email"
-            (keydown)="preventLeadingSpace($event, 'email')" (input)="personalData.email = personalData.email.trim()"
+            (keydown)="preventLeadingSpace($event, 'email')" (input)="personalData.email = personalData.email ? personalData.email.trimStart() : ''"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             (blur)="onBlur('email')" required />
           <span *ngIf="isFieldInvalid('email')" class="text-red-600 text-sm">

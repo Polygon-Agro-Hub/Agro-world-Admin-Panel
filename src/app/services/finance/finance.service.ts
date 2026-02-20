@@ -320,7 +320,7 @@ export interface GoviCareRequestDetail {
   ExtentH: number;
   ExtentP: number;
   Expected_Investment: number;
-  Expected_Yield: string;
+  Expected_Yield: number;
   Expected_Start_Date: string;
   Request_Date_Time: string;
   approvedDetails: ApprovedDetails | null;
@@ -991,6 +991,22 @@ export class FinanceService {
     const url = `${this.apiUrl}finance/get-agent-commissions`;
     return this.http.post<any>(url, data, {
       headers: this.getHeaders(),
+    });
+  }
+
+  getGocicareAllInvestmentUsers(
+    search?: string
+  ): Observable<any> {
+    let params = new HttpParams();
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    const url = `${this.apiUrl}finance/govicare-investment-users`;
+    return this.http.get<any>(url, {
+      headers: this.getHeaders(),
+      params: params,
     });
   }
 

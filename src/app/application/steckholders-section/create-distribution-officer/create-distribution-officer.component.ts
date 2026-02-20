@@ -330,16 +330,16 @@ firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
     if (!this.personalData.phoneNumber01) {
   missingFields.push('Mobile Number - 01 is Required');
 } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: 7XXXXXXXX)');
 }
 
 if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: 7XXXXXXXX)');
 }
 
-    if (this.areDuplicatePhoneNumbers()) {
-      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
-    }
+if (this.shouldShowDuplicateError()) {
+  missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+}
 
     if (!this.personalData.nic) {
       missingFields.push('NIC Number is Required');
@@ -801,16 +801,16 @@ if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalDat
       if (!this.personalData.phoneNumber01) {
   missingFields.push('Mobile Number - 01 is Required');
 } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: 7XXXXXXXX)');
 }
 
 if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: 7XXXXXXXX)');
 }
 
-      if (this.personalData.phoneNumber01 && this.personalData.phoneNumber02 && this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
-        missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
-      }
+if (this.shouldShowDuplicateError()) {
+  missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+}
 
       if (!this.personalData.nic) {
         missingFields.push('NIC Number is Required');
@@ -2427,6 +2427,17 @@ preventInvalidPhonePaste(event: ClipboardEvent, fieldName: 'phoneNumber01' | 'ph
   }
   
   this.personalData[fieldName] = finalValue;
+}
+
+shouldShowDuplicateError(): boolean {
+  const phone1 = this.personalData.phoneNumber01;
+  const phone2 = this.personalData.phoneNumber02;
+  
+  if (!phone1 || !phone2) return false;
+  
+  if (!this.isValidPhoneNumber(phone1) || !this.isValidPhoneNumber(phone2)) return false;
+  
+  return phone1 === phone2;
 }
 
 

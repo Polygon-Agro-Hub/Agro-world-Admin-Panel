@@ -78,7 +78,7 @@ export class ViewSendToDispatchComponent implements OnInit {
             this.totalItems = response.total || 0;
           } else {
             this.orders = response.data
-            this.totalItems = this.orders.length;
+            // this.totalItems = this.orders.length;
           }
           console.log('Orders:', this.orders.length, 'Total:', this.totalItems);
           this.isLoading = false;

@@ -257,9 +257,15 @@
           (touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) ? 'border-red-500' : 'border-gray-300')" />
     </div>
     <div class="mt-1">
+      <!-- Required message -->
       <span *ngIf="touchedFields.phoneNumber01 && !personalData.phoneNumber01"
         class="text-red-600 text-sm block">
         Mobile Number - 01 is required
+      </span>
+      <!-- Format validation message -->
+      <span *ngIf="touchedFields.phoneNumber01 && personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
+        class="text-red-600 text-sm block">
+        Mobile Number - 01 - Please enter a valid mobile number (format: 7XXXXXXXX)
       </span>
     </div>
   </div>
@@ -300,8 +306,13 @@
           (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) ? 'border-red-500' : 'border-gray-300')" />
     </div>
     <div class="mt-1">
-      <!-- MOVED HERE: Duplicate validation message now appears under Mobile Number - 02 -->
-      <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
+      <!-- Format validation message for phone 02 -->
+      <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)"
+        class="text-red-600 text-sm block">
+        Mobile Number - 02 - Please enter a valid mobile number (format: 7XXXXXXXX)
+      </span>
+      <!-- Duplicate validation message - only shown when both numbers are valid -->
+      <span *ngIf="shouldShowDuplicateError()" class="text-red-600 text-sm block">
         Mobile Number - 01 and Mobile Number - 02 cannot be the same
       </span>
     </div>

@@ -1022,12 +1022,30 @@ export class UpdateDistributionOfficerComponent {
   }
 
   getEmailErrorMessage(email: string): string {
-    if (!email) return 'Email is required';
-    if (email.startsWith('.')) return 'Email cannot start with a dot';
-    const [localPart] = email.split('@');
-    if (localPart && localPart.endsWith('.')) return 'Email cannot have a dot before @';
-    if (email.includes('..')) return 'Email cannot contain consecutive dots';
-    return 'Please enter a valid email address';
+     if (!email) {
+      return 'Email is required';
+    }
+
+    if (email.includes('..')) {
+      return 'Email cannot contain consecutive dots';
+    }
+    if (email.startsWith('.')) {
+      return 'Email cannot start with a dot';
+    }
+    if (email.endsWith('.')) {
+      return 'Email cannot end with a dot';
+    }
+    if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
+      return 'Email contains invalid special characters';
+    }
+    if (!/@/.test(email)) {
+      return 'Email must contain an @ symbol';
+    }
+    if (!/\./.test(email.split('@')[1])) {
+      return 'Email domain must contain a dot (.)';
+    }
+
+    return 'Please enter a valid email in the format: example@domain.com';
   }
 
   isValidNIC(nic: string): boolean {
@@ -1070,9 +1088,37 @@ export class UpdateDistributionOfficerComponent {
       fieldValue = input.value;
     }
     
-    // Prevent space if it's the first character or if the field is empty
-    if (event.key === ' ' && (input.selectionStart === 0 || !fieldValue)) {
-      event.preventDefault();
+    // Special handling for email field
+    if (fieldName === 'email') {
+      const charCode = event.which ? event.which : event.keyCode;
+      
+      if (
+        event.ctrlKey || event.metaKey || 
+        charCode === 8 ||  // Backspace
+        charCode === 9 ||  // Tab
+        charCode === 13 || // Enter
+        charCode === 27 || // Escape
+        charCode === 46 || // Delete
+        (charCode >= 35 && charCode <= 40) // Home, End, Arrow keys
+      ) {
+        return; 
+      }
+
+      const char = String.fromCharCode(charCode);
+
+      if (charCode === 32) {
+        event.preventDefault();
+        return;
+      }
+
+      if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
+        event.preventDefault();
+        return;
+      }
+    } else {
+      if (event.key === ' ' && (input.selectionStart === 0 || !fieldValue)) {
+        event.preventDefault();
+      }
     }
   }
 

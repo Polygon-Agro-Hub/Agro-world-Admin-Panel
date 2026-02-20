@@ -1833,7 +1833,7 @@ export const routes: Routes = [
                     path: '',
                     component: DistributionhubTransportActionComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Distribution Hub transpotation' },
+                    data: { permission: 'Distribution Hub transportation' },
                   },
                 ],
               },

@@ -14,7 +14,7 @@
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
         <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          GoViCapital Users ({{ filteredUsers.length }})
+          GoViCapital Users ({{ totalUsers }})
         </h2>
       </div>
       <div class="flex items-center mr-5">
@@ -24,15 +24,17 @@
           <input
             type="text"
             [(ngModel)]="searchQuery"
-            (ngModelChange)="search()"
-            placeholder="Search by Phone Number, NIC.."
+            (keypress)="onSearchKeyPress($event)"
+            placeholder="Search by Phone Number or NIC..."
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            [disabled]="isLoading"
           />
+          <!-- Search Icon - Always visible, triggers search on click -->
           <button
             type="button"
-            *ngIf="searchQuery === ''"
             class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
-            (click)="search()"
+            (click)="onSearchClick()"
+            [disabled]="isLoading"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -49,11 +51,13 @@
               />
             </svg>
           </button>
+          <!-- Clear Icon - Only visible when there's text -->
           <button
             type="button"
             *ngIf="searchQuery !== ''"
-            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
             (click)="clearSearch()"
+            [disabled]="isLoading"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +125,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of filteredUsers">
+          <tr *ngFor="let user of users">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ user.no }}
             </td>
@@ -147,12 +151,26 @@
               {{ user.joinedOn }}
             </td>
           </tr>
-          <tr *ngIf="filteredUsers.length === 0">
+          <tr *ngIf="users.length === 0 && !isLoading">
             <td
               colspan="8"
               class="px-4 py-8 text-center text-textLight dark:text-textDark"
             >
               No users found matching your search criteria.
+            </td>
+          </tr>
+          <tr *ngIf="isLoading">
+            <td
+              colspan="8"
+              class="px-4 py-8 text-center text-textLight dark:text-textDark"
+            >
+              <div class="flex justify-center items-center">
+                <svg class="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Loading users...
+              </div>
             </td>
           </tr>
         </tbody>

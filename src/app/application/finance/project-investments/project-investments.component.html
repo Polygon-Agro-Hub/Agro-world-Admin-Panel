@@ -41,7 +41,7 @@
     </div>
 
     <!-- Project Investments Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div *ngIf="hasData" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <div *ngFor="let project of filteredProjects"
         class="bg-white dark:bg-[#505974] rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
         <div class="border-b border-gray-200 dark:border-gray-700 cursor-pointer"
@@ -95,6 +95,12 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div *ngIf="!hasData"
+      class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-tileBlack dark:text-textDark mt-6">
+      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Availabale--</p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 dark:text-textDark" />
     </div>
   </div>
 </div>

@@ -320,7 +320,7 @@ export interface GoviCareRequestDetail {
   ExtentH: number;
   ExtentP: number;
   Expected_Investment: number;
-  Expected_Yield: string;
+  Expected_Yield: number;
   Expected_Start_Date: string;
   Request_Date_Time: string;
   approvedDetails: ApprovedDetails | null;

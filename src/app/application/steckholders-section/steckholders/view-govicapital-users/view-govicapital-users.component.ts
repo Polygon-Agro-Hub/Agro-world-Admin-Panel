@@ -18,7 +18,8 @@ export class ViewGovicapitalUsersComponent implements OnInit {
   searchQuery: string = '';
   users: any[] = [];
   totalUsers: number = 0;
-  private searchTimeout: any; // For debouncing if needed
+  private searchTimeout: any;
+  hasData = false;
 
   constructor(
     private router: Router,
@@ -49,11 +50,13 @@ export class ViewGovicapitalUsersComponent implements OnInit {
           this.users = this.transformUserData(items);
           this.totalUsers = this.users.length;
           console.log('Transformed users:', this.users);
+          this.hasData = this.users.length > 0;
         },
         error: (error) => {
           console.error('Error loading users:', error);
           this.users = [];
           this.totalUsers = 0;
+          this.hasData = false;
         }
       });
   }

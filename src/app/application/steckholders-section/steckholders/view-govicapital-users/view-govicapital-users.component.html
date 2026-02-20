@@ -80,11 +80,11 @@
       class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
     >
       <div
-        *ngIf="!hasData"
-        class="flex flex-col items-center w-full h-screen px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6"
+        *ngIf="!isLoading && !hasData"
+        class="flex flex-col items-center w-full px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6"
       >
         <p class="text-[#494949] my-6 dark:text-textDark">
-          --No Data Availabale--
+          --No Data Available--
         </p>
         <img
           src="assets/images/NoData.png"
@@ -92,9 +92,11 @@
           class="w-20 h-20 dark:text-textDark"
         />
       </div>
+
+      <!-- Show table only when has data and not loading -->
       <table
         class="w-full divide-y divide-gray-200 table-auto whitespace-nowrap"
-        *ngIf="hasData"
+        *ngIf="!isLoading && hasData"
       >
         <thead>
           <tr class="whitespace-nowrap">

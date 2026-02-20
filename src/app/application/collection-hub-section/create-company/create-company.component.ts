@@ -942,6 +942,7 @@ export class CreateCompanyComponent implements OnInit {
 
   nextFormCreate(page: 'pageOne' | 'pageTwo') {
     if (page === 'pageTwo') {
+      this.scrollToTop();
       this.touchedFields = {
         regNumber: true,
         companyNameEnglish: true,
@@ -1631,6 +1632,11 @@ export class CreateCompanyComponent implements OnInit {
     modelRef[fieldName] = trimmedValue;
     inputElement.value = trimmedValue;
   }
+
+  scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 
 }
 

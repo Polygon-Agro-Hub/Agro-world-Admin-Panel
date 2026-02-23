@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 
@@ -65,17 +65,23 @@ export class ViewDispatchOrdersComponent implements OnInit {
   isWithinLimit = true;
   isLoading: boolean = false;
   additionalItemsCount: number = 0;
+  tab: string = 'sent';
 
   showAdditionalItemsModal = false;
   showExcludedItemsModal = false;
 
   constructor(
     private procurementService: ProcumentsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public location: Location,
+    private router: Router,
   ) { }
 
   goBack() {
-    window.history.back();
+    const tab = this.tab
+    this.router.navigate(['/procurement/define-packages'], {
+      queryParams: { tab },
+    });
   }
 
   ngOnInit() {

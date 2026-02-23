@@ -28,6 +28,7 @@
           <p-dropdown [options]="centerNames" optionLabel="fullCenterName" optionValue="id" placeholder="Select Collection Centre"
             [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
             name="selectedCenterId" required
+            [filter]="true" filterBy="regCode,centerName" filterPlaceholder="Search managers..."
             [styleClass]="'border min-w-max ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white custom-center-dropdown'"
             [style]="{'width': '400px'}"
             >

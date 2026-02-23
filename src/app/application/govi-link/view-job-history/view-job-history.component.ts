@@ -67,7 +67,8 @@ export class ViewJobHistoryComponent implements OnInit {
   statusOptions: DropdownOption[] = [
     { label: 'All Status', value: '' },
     { label: 'Pending', value: 'Pending' },
-    { label: 'Completed', value: 'Completed' }
+    { label: 'Completed', value: 'Completed' },
+    { label: 'Ongoing', value: 'Ongoing' }
   ];
 
   districtOptions: DropdownOption[] = [

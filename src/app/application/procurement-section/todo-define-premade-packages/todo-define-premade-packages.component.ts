@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -99,12 +99,15 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   selectCategoryId: number | string = '';
   newItem: OrderItem = new OrderItem();
 
+  tab: string = 'todo';
+
   constructor(
     private procurementService: ProcumentsService,
     private route: ActivatedRoute,
     private router: Router,
     public permissionService: PermissionService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
+    public location: Location
   ) { }
 
   goBack(): void {
@@ -123,8 +126,11 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // Only go back if user confirms
-        window.history.back();
-      }
+        const tab = this.tab
+        this.router.navigate(['/procurement/define-packages'], {
+          queryParams: { tab },
+        });
+        }
       // If user clicks "No" or dismisses, the modal will automatically close
     });
   }

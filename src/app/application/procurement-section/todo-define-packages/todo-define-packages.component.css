@@ -159,3 +159,35 @@
   height: 1.0rem !important;
   line-height: 1.0rem !important;
 }
+
+
+
+
+
+
+
+/* Today's date */
+.calendar-popup-small .p-datepicker-today span {
+  background-color: #3b82f6 !important; /* blue-500 */
+  color: white !important;
+  border-radius: 9999px !important;
+  font-weight: 700 !important;
+}
+
+/* Selected date */
+.calendar-popup-small .p-datepicker-calendar td span.p-highlight {
+  background-color: #4f46e5 !important; /* indigo-600 */
+  color: white !important;
+  border-radius: 9999px !important;
+}
+
+/* Dark mode overrides */
+.dark .calendar-popup-small .p-datepicker-today span {
+  background-color: #60a5fa !important; /* blue-400 */
+  color: #1e293b !important;
+}
+
+.dark .calendar-popup-small .p-datepicker-calendar td span.p-highlight {
+  background-color: #6366f1 !important; /* indigo-500 */
+  color: white !important;
+}

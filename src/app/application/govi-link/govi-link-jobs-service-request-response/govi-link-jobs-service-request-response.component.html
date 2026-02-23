@@ -181,10 +181,18 @@
         </div>
 
         <div class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 
-      rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative">
+      rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative"
+            (mousedown)="startDrag($event)"
+            (mousemove)="onDrag($event)"
+            (mouseup)="stopDrag()"
+            (mouseleave)="stopDrag()"
+            [style.cursor]="scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default'">
 
-            <img [src]="modalImage" [style.transform]="'scale(' + scale + ')'"
-                class="max-w-[545px] max-h-[545px] object-contain transition-transform duration-200" />
+            <img [src]="modalImage" 
+                [style.transform]="'translate(' + positionX + 'px, ' + positionY + 'px) scale(' + scale + ')'"
+                [style.transition]="isDragging ? 'none' : 'transform 0.2s'"
+                class="max-w-[545px] max-h-[545px] object-contain select-none"
+                draggable="false" />
 
             <div class="absolute right-4 bottom-4 flex flex-col gap-2">
                 <button (click)="zoomOut()" class="w-12 h-12 rounded-md bg-white dark:bg-gray-600 
@@ -198,6 +206,12 @@
           text-gray-700 dark:text-white
           hover:bg-gray-50 dark:hover:bg-gray-500 transition
           flex items-center justify-center font-bold">+</button>
+            </div>
+            
+            <!-- Optional: Add zoom indicator -->
+            <div class="absolute left-4 bottom-4 bg-white dark:bg-gray-600 px-2 py-1 rounded-md text-sm shadow-md"
+                *ngIf="scale > 1">
+                {{ (scale * 100).toFixed(0) }}%
             </div>
         </div>
 

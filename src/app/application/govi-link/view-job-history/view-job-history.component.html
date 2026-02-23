@@ -95,7 +95,7 @@
               </th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Visit
                 Purpose</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Status
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">Status
               </th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
                 Scheduled Date</th>
@@ -103,7 +103,7 @@
                 Completed Date</th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Response
               </th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Farmer
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">Farmer
                 NIC</th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">District
               </th>
@@ -141,7 +141,7 @@
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
                 {{ item.visitPurpose || '--' }}
               </td>
-              <td class="px-6 py-3 text-center text-sm font-medium whitespace-nowrap"
+              <td class="px-6 py-3 text-left text-sm font-medium whitespace-nowrap"
                 [ngClass]="getStatusClass(item.status)">
                 {{ item.status}}
               </td>
@@ -167,7 +167,7 @@
     </svg>
   </button>
 </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
                 {{ item.farmerNIC || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">

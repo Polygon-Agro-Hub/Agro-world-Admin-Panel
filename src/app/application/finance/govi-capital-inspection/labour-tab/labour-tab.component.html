@@ -39,10 +39,9 @@
         />
   </div>
 
-  <!-- Q3 - Only show when Q1 answer is Yes (isManageFamilyLabour == 1) -->
-  <div *ngIf="LaborObj.isManageFamilyLabour == 1" class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
+  <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-500 dark:text-textDark">03. Are there any mechanization options to substitute the labour?</span>
+      <span class="text-gray-500 dark:text-textDark">{{ LaborObj.isManageFamilyLabour == 0 ? '03' : '03' }}. Are there any mechanization options to substitute the labour?</span>
     </label>
 
     <input
@@ -55,7 +54,7 @@
 
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-500 dark:text-textDark">04. Is machinery available?</span>
+      <span class="text-gray-500 dark:text-textDark">{{ LaborObj.isManageFamilyLabour == 0 ? '04' : '04' }}. Is machinery available?</span>
     </label>
 
     <input
@@ -68,7 +67,7 @@
 
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-500 dark:text-textDark">05. Is machinery affordable?</span>
+      <span class="text-gray-500 dark:text-textDark">{{ LaborObj.isManageFamilyLabour == 0 ? '05' : '05' }}. Is machinery affordable?</span>
     </label>
 
     <input
@@ -81,7 +80,7 @@
 
   <div class="bg-[#F9FAFC] dark:bg-gray-800 p-5 rounded-lg mb-5">
     <label class="block text-sm font-medium text-gray-700 dark:text-textDark mb-2">
-      <span class="text-gray-500 dark:text-textDark">06. Is machinery cost effective?</span>
+      <span class="text-gray-500 dark:text-textDark">{{ LaborObj.isManageFamilyLabour == 0 ? '06' : '06' }}. Is machinery cost effective?</span>
     </label>
 
     <input

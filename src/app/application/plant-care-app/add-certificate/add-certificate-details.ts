@@ -99,7 +99,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     private certificateCompanyService: CertificateCompanyService
   ) { }
 
- ngOnInit(): void {
+  ngOnInit(): void {
     this.certificateForm = this.fb.group({
       srtName: ['', Validators.required],
       srtNameSinhala: ['', Validators.required],
@@ -173,7 +173,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     }
   }
 
-onLogoSelected(event: Event): void {
+  onLogoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input || !input.files || input.files.length === 0) {
       this.logoError = 'Please select a valid image file.';
@@ -185,56 +185,56 @@ onLogoSelected(event: Event): void {
 
     const file = input.files[0];
     const fileName = file.name.toLowerCase();
-    
+
     // Validate file type (only JPG, JPEG, PNG, WebP allowed)
     const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-    
+
     // Blocked file types that need explicit error messages
     const blockedExtensions = ['.tiff', '.tif', '.svg'];
-    
+
     // Get file extension
     const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
-    
+
     // Check if it's a blocked format
     if (blockedExtensions.includes(fileExtension.toLowerCase())) {
-        this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
-        this.uploadedLogo = null;
-        this.logoPreview = null;
-        this.certificateForm.patchValue({ logo: null });
-        
-        // Reset the file input
-        if (this.logoInput && this.logoInput.nativeElement) {
-            this.logoInput.nativeElement.value = '';
-        }
-        return;
+      this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      this.certificateForm.patchValue({ logo: null });
+
+      // Reset the file input
+      if (this.logoInput && this.logoInput.nativeElement) {
+        this.logoInput.nativeElement.value = '';
+      }
+      return;
     }
-    
+
     // Check if file type is allowed
     const isMimeTypeValid = allowedMimeTypes.includes(file.type.toLowerCase());
     const isExtensionValid = allowedExtensions.includes(fileExtension.toLowerCase());
-    
+
     if (!isMimeTypeValid && !isExtensionValid) {
-        this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
-        this.uploadedLogo = null;
-        this.logoPreview = null;
-        this.certificateForm.patchValue({ logo: null });
-        
-        // Reset the file input
-        if (this.logoInput && this.logoInput.nativeElement) {
-            this.logoInput.nativeElement.value = '';
-        }
-        return;
+      this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      this.certificateForm.patchValue({ logo: null });
+
+      // Reset the file input
+      if (this.logoInput && this.logoInput.nativeElement) {
+        this.logoInput.nativeElement.value = '';
+      }
+      return;
     }
 
     // Check file size (5MB limit)
     const maxSizeBytes = 5 * 1024 * 1024;
     if (file.size > maxSizeBytes) {
-        this.logoError = 'Logo must be smaller than 5 MB.';
-        this.uploadedLogo = null;
-        this.logoPreview = null;
-        this.certificateForm.patchValue({ logo: null });
-        return;
+      this.logoError = 'Logo must be smaller than 5 MB.';
+      this.uploadedLogo = null;
+      this.logoPreview = null;
+      this.certificateForm.patchValue({ logo: null });
+      return;
     }
 
     // All good
@@ -245,7 +245,7 @@ onLogoSelected(event: Event): void {
 
     const reader = new FileReader();
     reader.onload = () => {
-        this.logoPreview = reader.result;
+      this.logoPreview = reader.result;
     };
     reader.readAsDataURL(file);
   }
@@ -268,7 +268,7 @@ onLogoSelected(event: Event): void {
   onFileUpload(event: any): void {
     const file = event.target.files[0];
     this.fileSizeError = ''; // Clear previous error
-    
+
     if (file) {
       // Validate PDF file type
       if (file.type !== 'application/pdf') {
@@ -425,6 +425,33 @@ onLogoSelected(event: Event): void {
 
   onSubmit(): void {
     this.certificateForm.markAllAsTouched();
+    const missingFields = this.getMissingFields();
+    const validationErrors = this.getValidationErrors();
+
+    // If there are any missing fields or validation errors, show the warning
+    if (missingFields.length > 0 || validationErrors.length > 0) {
+      // Scroll to first error
+      this.scrollToFirstError();
+
+      let errorMessage = '';
+
+      if (missingFields.length > 0) {
+        errorMessage += missingFields.map((field) => `${field}`).join('<br>');
+      }
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Missing Information',
+        html: errorMessage,
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+        },
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
 
     // Validate logo
     if (!this.uploadedLogo) {
@@ -673,7 +700,7 @@ onLogoSelected(event: Event): void {
     // Prevent any other key
     event.preventDefault();
   }
-  
+
   trimLeadingSpaces(event: any, fieldName: string) {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(/^\s+/, '');
@@ -681,4 +708,107 @@ onLogoSelected(event: Event): void {
     control?.setValue(input.value);
     control?.markAsTouched();
   }
+
+  // Get missing field names for the alert
+  private getMissingFields(): string[] {
+    const missingFields: string[] = [];
+
+    if(this.logoPreview === null || this.logoPreview === undefined){
+      missingFields.push('Logo');
+    }
+
+    if (this.certificateForm.get('srtName')?.errors?.['required']) {
+      missingFields.push('Certificate Name (English)');
+    }
+
+    if (this.certificateForm.get('srtNumber')?.errors?.['required']) {
+      missingFields.push('Certificate Number');
+    }
+
+    if (this.certificateForm.get('srtcomapnyId')?.errors?.['required']) {
+      missingFields.push('Company');
+    }
+
+    if (this.certificateForm.get('applicable')?.errors?.['required']) {
+      missingFields.push('Applicable For');
+    }
+
+    if (this.certificateForm.get('accreditation')?.errors?.['required']) {
+      missingFields.push('Accreditation');
+    }
+
+    if (this.certificateForm.get('serviceAreas')?.errors?.['required']) {
+      missingFields.push('Service Areas');
+    }
+
+    if (this.certificateForm.get('price')?.errors?.['required']) {
+      missingFields.push('Price');
+    } else if (this.certificateForm.get('price')?.errors?.['min']) {
+      missingFields.push('Price (must be greater than or equal to 0)');
+    } else if (this.certificateForm.get('price')?.errors?.['pattern']) {
+      missingFields.push('Price (must be a valid number)');
+    }
+
+    if (this.certificateForm.get('timeLine')?.errors?.['required']) {
+      missingFields.push('Timeline');
+    } else if (this.certificateForm.get('timeLine')?.errors?.['min']) {
+      missingFields.push('Timeline (must be at least 1 day)');
+    }
+
+    if (this.certificateForm.get('commission')?.errors?.['required']) {
+      missingFields.push('Commission');
+    } else if (this.certificateForm.get('commission')?.errors?.['min']) {
+      missingFields.push('Commission (must be between 0% and 100%)');
+    } else if (this.certificateForm.get('commission')?.errors?.['max']) {
+      missingFields.push('Commission (must be between 0% and 100%)');
+    } else if (this.certificateForm.get('commission')?.errors?.['pattern']) {
+      missingFields.push('Commission (must be a valid number)');
+    }
+
+    if (this.certificateForm.get('tearmsFile')?.errors?.['required']) {
+      missingFields.push('Payment Terms File');
+    }
+
+    if (this.certificateForm.get('scope')?.errors?.['required']) {
+      missingFields.push('Scope');
+    }
+
+    if (this.certificateForm.get('noOfVisit')?.errors?.['required']) {
+      missingFields.push('Number of Visits');
+    } else if (this.certificateForm.get('noOfVisit')?.errors?.['min']) {
+      missingFields.push('Number of Visits (cannot be negative)');
+    }
+
+    return missingFields;
+  }
+
+  // Get validation errors for the alert
+  private getValidationErrors(): string[] {
+    const errors: string[] = [];
+    const applicable = this.certificateForm.get('applicable')?.value;
+
+    // Check for target crops validation
+    if (
+      applicable === 'For Selected Crops' &&
+      this.selectedCrops.length === 0
+    ) {
+      errors.push(
+        'Please select at least one target crop for "For Selected Crops" option.'
+      );
+    }
+
+    return errors;
+  }
+
+  // Helper method to scroll to first error
+  private scrollToFirstError(): void {
+    const firstErrorElement = document.querySelector('.border-red-500');
+    if (firstErrorElement) {
+      firstErrorElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }
+
 }

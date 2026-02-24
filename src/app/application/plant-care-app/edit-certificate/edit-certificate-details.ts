@@ -89,7 +89,7 @@ export class EditCertificateDetailsComponent implements OnInit {
   filteredCropOptions: { label: string; value: number }[] = [];
   selectedCrops: { id: number; cropNameEnglish: string }[] = [];
 
-  // New properties for conditional logic
+  // New properties for conditional logica
   showTargetCropsSection = false;
   isForSelectedCrops = false;
 
@@ -115,7 +115,7 @@ export class EditCertificateDetailsComponent implements OnInit {
       accreditation: ['', Validators.required],
       serviceAreas: [[], Validators.required],
       price: ['', [
-        Validators.required, 
+        Validators.required,
         Validators.min(0),
         Validators.pattern(/^\d*\.?\d*$/)
       ]],
@@ -473,6 +473,10 @@ export class EditCertificateDetailsComponent implements OnInit {
   private getMissingFields(): string[] {
     const missingFields: string[] = [];
 
+    if (this.logoPreview === null || this.logoPreview === undefined) {
+      missingFields.push('Logo');
+    }
+
     if (this.certificateForm.get('srtName')?.errors?.['required']) {
       missingFields.push('Certificate Name (English)');
     }
@@ -519,6 +523,10 @@ export class EditCertificateDetailsComponent implements OnInit {
       missingFields.push('Commission (must be between 0% and 100%)');
     } else if (this.certificateForm.get('commission')?.errors?.['pattern']) {
       missingFields.push('Commission (must be a valid number)');
+    }
+
+     if (this.certificateForm.get('tearmsFile')?.errors?.['required']) {
+      missingFields.push('Payment Terms File');
     }
 
     if (this.certificateForm.get('scope')?.errors?.['required']) {

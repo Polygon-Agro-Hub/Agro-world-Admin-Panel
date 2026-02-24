@@ -710,11 +710,7 @@
       <button
         type="submit"
         class="px-6 py-2 bg-[#3980C0] text-white rounded-md w-40"
-        [disabled]="
-          isLoading ||
-          certificateForm.invalid ||
-          (isForSelectedCrops && selectedCrops.length === 0)
-        "
+        
       >
         <span *ngIf="!isLoading">Save</span>
         <span *ngIf="isLoading">Saving...</span>
@@ -722,3 +718,8 @@
     </div>
   </form>
 </div>
+<!-- [disabled]="
+          isLoading ||
+          certificateForm.invalid ||
+          (isForSelectedCrops && selectedCrops.length === 0)
+        " -->

@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
+<button (click)="onBack()" class="text-textLight dark:text-textDark mb-3 flex items-center gap-2">
     <i class="fa-solid fa-arrow-left"></i>
     Back
 </button>
@@ -18,14 +18,14 @@
                 <div class="space-y-2">
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
                         Job ID :
-                        <span class="font-bold text-gray-900 dark:text-white text-base">
+                        <span class="font-medium text-gray-900 dark:text-white">
                             {{ jobData.jobId }}
                         </span>
                     </p>
 
                     <p class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                        Registration Code :
-                        <span class="font-semibold text-gray-900 dark:text-white">
+                        Farm ID :
+                        <span class="font-medium text-gray-900 dark:text-white">
                             {{ jobData.farmId }}
                         </span>
                     </p>
@@ -58,12 +58,15 @@
 
                 <!-- Question Header -->
                 <div class="flex justify-between items-center p-2 mb-1">
-                    <div class="flex items-center gap-4">
-                        <span class="text-base font-bold text-gray-900 dark:text-white">
+                    <div class="flex items-center gap-2">
+                        <span class="px-4 py-1 bg-gray-50 dark:bg-[#272F45]
+                     text-gray-500 dark:text-gray-300
+                     rounded-md text-sm font-medium
+                     border border-gray-100 dark:border-[#394157]">
                             {{ question.id }}
                         </span>
 
-                        <span class="px-3 py-1 bg-gray-50 dark:bg-[#272F45]
+                        <span class="px-4 py-1 bg-gray-50 dark:bg-[#272F45]
                      text-gray-500 dark:text-gray-300
                      rounded-md text-sm font-medium
                      border border-gray-100 dark:border-[#394157]">

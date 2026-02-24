@@ -45,9 +45,7 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
   loadData() {
     this.isLoading = true;
 
-    const jobId = 'FA20251203003';
-
-    this.service.getFieldAudit(jobId).subscribe({
+    this.service.getFieldAudit(this.jobId).subscribe({
       next: (res) => {
         const api = res.data;
 
@@ -93,7 +91,21 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
         const map = new Map<string, Problem>();
 
         api.data.forEach((item: ApiItem) => {
-          if (item.problem && item.solution) {
+          if (item.suggestions && Array.isArray(item.suggestions)) {
+            item.suggestions.forEach((suggestion: any) => {
+              if (suggestion.problem && suggestion.solution) {
+                const key = suggestion.problem + suggestion.solution;
+                if (!map.has(key)) {
+                  map.set(key, {
+                    id: String(map.size + 1).padStart(2, '0'),
+                    problem: suggestion.problem,
+                    solution: suggestion.solution,
+                  });
+                }
+              }
+            });
+          }
+          else if (item.problem && item.solution) {
             const key = item.problem + item.solution;
             if (!map.has(key)) {
               map.set(key, {
@@ -146,6 +158,10 @@ interface ApiItem {
   officerTickResult: number;
   problem: string | null;
   solution: string | null;
+  suggestions?: Array<{
+    problem: string;
+    solution: string;
+  }>;
 }
 
 interface Question {

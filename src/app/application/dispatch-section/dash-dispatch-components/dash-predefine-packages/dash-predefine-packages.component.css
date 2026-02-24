@@ -159,3 +159,200 @@
   height: 1.0rem !important;
   line-height: 1.0rem !important;
 }
+
+/* ===== COMPACT CALENDAR STYLES ===== */
+/* Make the calendar popup smaller */
+::ng-deep .p-calendar .p-datepicker {
+  transform: scale(0.9);
+  transform-origin: top left;
+  width: 300px !important;
+  min-width: 300px !important;
+}
+
+::ng-deep .p-calendar .p-datepicker table td {
+  padding: 0.1rem !important;
+}
+
+::ng-deep .p-calendar .p-datepicker table td > span {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  font-size: 0.8rem !important;
+}
+
+/* Reduce the size of selected date (blue highlight) */
+::ng-deep .p-datepicker .p-datepicker-calendar td > span.p-highlight {
+  width: 2rem !important;
+  height: 2rem !important;
+  font-size: 0.75rem !important;
+  line-height: 2rem !important;
+  background-color: #3b82f6 !important;
+  color: white !important;
+  border-radius: 50% !important;
+}
+
+/* Reduce size of today's date marker - ash color */
+::ng-deep .p-datepicker .p-datepicker-calendar td.p-datepicker-today > span {
+  width: 2rem !important;
+  height: 2rem !important;
+  font-size: 0.75rem !important;
+  background-color: #9ca3af !important;
+  color: white !important;
+  border-radius: 50% !important;
+}
+
+/* When today is selected, show blue (selected takes priority) */
+::ng-deep .p-datepicker .p-datepicker-calendar td.p-datepicker-today > span.p-highlight {
+  width: 2rem !important;
+  height: 2rem !important;
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+::ng-deep .p-calendar .p-datepicker .p-datepicker-header {
+  padding: 0.3rem !important;
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .p-calendar .p-datepicker .p-datepicker-title {
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .p-calendar .p-datepicker .p-datepicker-prev,
+::ng-deep .p-calendar .p-datepicker .p-datepicker-next {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+/* Reduce calendar popup size */
+:host ::ng-deep .p-datepicker {
+  font-size: 0.75rem !important;
+  padding: 0.25rem !important;
+  min-width: 5rem !important;
+}
+
+/* Reduce padding and cell size inside popup */
+:host ::ng-deep .p-datepicker td > span {
+  padding: 0.25rem !important;
+  width: 1.75rem !important;
+  height: 1.75rem !important;
+}
+
+/* Hover effect for calendar dates */
+::ng-deep .p-datepicker-calendar td > span:hover {
+  background-color: #e5e7eb !important;
+  border-radius: 50% !important;
+}
+
+/* ===== COMPACT CALENDAR CONTAINER STYLES ===== */
+/* Compact calendar container positioning */
+::ng-deep .calendar-compact {
+  position: relative !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+::ng-deep .calendar-compact .p-calendar {
+  position: relative !important;
+}
+
+/* Compact calendar input */
+::ng-deep .calendar-compact .p-inputtext {
+  padding-right: 2.5rem !important;
+}
+
+/* Clear icon positioning - FIXED to be inside input */
+::ng-deep .calendar-compact .p-calendar-clear-icon {
+  position: absolute !important;
+  right: 0.5rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin-top: 0 !important;
+  z-index: 1 !important;
+  cursor: pointer !important;
+}
+
+/* Dark mode clear icon color */
+::ng-deep .dark-calendar .p-calendar-clear-icon {
+  color: #9ca3af !important;
+}
+
+::ng-deep .dark-calendar .p-calendar-clear-icon:hover {
+  color: #313030 !important;
+}
+
+/* Reduce panel size for compact calendar */
+::ng-deep .calendar-compact .p-datepicker {
+  transform: scale(0.9);
+  transform-origin: top left;
+  width: 300px !important;
+}
+
+/* Add cursor pointer to the calendar input field */
+::ng-deep .p-calendar .p-inputtext {
+  cursor: pointer !important;
+}
+
+/* Optional: Also add to the clear icon if you want */
+::ng-deep .p-calendar .p-calendar-clear-icon {
+  cursor: pointer !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-month {
+  margin-right: 2px !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
+  margin-left: 2px !important;
+}
+
+/* Dark mode - today's date (ash color) */
+:host-context(.dark) ::ng-deep .p-datepicker-calendar td.p-datepicker-today > span {
+  background-color: #6b7280 !important;
+  color: white !important;
+}
+
+/* Dark mode - selected date (blue) */
+:host-context(.dark) ::ng-deep .p-datepicker-calendar td > span.p-highlight {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+/* Dark mode - hover effect */
+:host-context(.dark) ::ng-deep .p-datepicker-calendar td > span:hover {
+  background-color: #4a5568 !important;
+}
+
+/* Dark mode fix for dropdown filter search input */
+::ng-deep .dark .p-dropdown-filter {
+  border-color: #6b7280;
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+/* Dark mode for filter input placeholder */
+::ng-deep .dark .p-dropdown-filter::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Dark mode for filter container */
+::ng-deep .dark .p-dropdown-filter-container {
+  background-color: #374151 !important;
+  border-bottom-color: #6b7280 !important;
+}
+
+/* Dark mode for filter icon */
+::ng-deep .dark .p-dropdown-filter-icon {
+  color: #9ca3af !important;
+}
+
+/* Ensure the input text is visible in dark mode */
+::ng-deep .dark .p-dropdown-filter:focus {
+  background-color: #4b5563 !important;
+  color: #f9fafb !important;
+  border-color: #6b7280 !important;
+  outline: none;
+}
+
+::ng-deep .dark .p-dropdown-header {
+  background-color: #4b5563;
+}

@@ -92,7 +92,7 @@ export class TodaysDeliveriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchCentreOptions();
-    this.fetchDeliveries();
+    // this.fetchDeliveries();
     this.initTabSelection()
     this.selectTab(this.activeTab);
 

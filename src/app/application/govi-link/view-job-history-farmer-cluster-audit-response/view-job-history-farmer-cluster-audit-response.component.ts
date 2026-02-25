@@ -51,94 +51,90 @@ export class ViewJobHistoryFarmerClusterAuditResponseComponent implements OnInit
   }
 
   loadData() {
-    this.isLoading = true;
+  this.isLoading = true;
 
-    if (!this.jobId) {
-      console.error('No jobId provided');
-      this.isLoading = false;
-      return;
-    }
+  if (!this.jobId) {
+    console.error('No jobId provided');
+    this.isLoading = false;
+    return;
+  }
 
-    this.goviLinkService.getFarmerClusterAudith(this.jobId).subscribe({
-      next: (res) => {
-        console.log('API Response:', res);
+  this.goviLinkService.getFarmerClusterAudith(this.jobId).subscribe({
+    next: (res) => {
+      console.log('API Response:', res);
 
-        if (!res.success) {
-          console.error('API returned success: false');
-          this.isLoading = false;
-          return;
-        }
+      if (!res.success) {
+        console.error('API returned success: false');
+        this.isLoading = false;
+        return;
+      }
 
-        const header = res.header;
-        const farms = res.farms;
+      const header = res.header;
+      const farms = res.farms;
 
-        this.jobData.jobId = header.jobId;
-        this.jobData.certificate = `${header.srtName} for farmer cluster`;
+      this.jobData.jobId = header.jobId;
+      this.jobData.certificate = `${header.srtName} for farmer cluster`;
+      
+      this.jobData.completedFarms = `${header.completedFarms || 0}/${header.totalFarms || 0} Farms`;
 
-        this.farmsData = farms.map((farm: ApiFarm) => {
-          const questions = farm.questions.map((q: ApiQuestion, index: number) => {
-            const isPhoto = q.type.toLowerCase().includes('photo');
-            let completed = false;
+      this.farmsData = farms.map((farm: ApiFarm) => {
+        const questions = farm.questions.map((q: ApiQuestion, index: number) => {
+          const isPhoto = q.type.toLowerCase().includes('photo');
+          let completed = false;
 
-            if (isPhoto) {
-              completed = !!q.uploadImage;
-            } else {
-              completed = q.officerTickResult === 1;
-            }
-
-            return {
-              id: String(index + 1).padStart(2, '0'),
-              type: q.type,
-              question: q.qEnglish,
-              status: completed ? 'Completed' : 'Incomplete',
-              hasPhoto: isPhoto && !!q.uploadImage,
-              photoUrl: q.uploadImage || '',
-            };
-          });
-
-          const completedCount = questions.filter(q => q.status === 'Completed').length;
-
-          const problemMap = new Map<string, Problem>();
-          farm.questions.forEach((item: ApiQuestion) => {
-            if (item.problem && item.solution) {
-              const key = item.problem + item.solution;
-              if (!problemMap.has(key)) {
-                problemMap.set(key, {
-                  id: String(problemMap.size + 1).padStart(2, '0'),
-                  problem: item.problem,
-                  solution: item.solution,
-                });
-              }
-            }
-          });
+          if (isPhoto) {
+            completed = !!q.uploadImage;
+          } else {
+            completed = q.officerTickResult === 1;
+          }
 
           return {
-            regCode: farm.regCode,
-            questions: questions,
-            problems: Array.from(problemMap.values()),
-            completedQuestions: `${completedCount}/${questions.length} Questions`
+            id: String(index + 1).padStart(2, '0'),
+            type: q.type,
+            question: q.qEnglish,
+            status: completed ? 'Completed' : 'Incomplete',
+            hasPhoto: isPhoto && !!q.uploadImage,
+            photoUrl: q.uploadImage || '',
           };
         });
 
-        this.farmNav.total = this.farmsData.length;
-        this.farmNav.current = 1;
+        const completedCount = questions.filter(q => q.status === 'Completed').length;
 
-        const completedFarms = this.farmsData.filter(farm => {
-          const completed = farm.questions.filter(q => q.status === 'Completed').length;
-          return completed === farm.questions.length;
-        }).length;
-        this.jobData.completedFarms = `${completedFarms}/${this.farmsData.length} Farms`;
+        const problemMap = new Map<string, Problem>();
+        farm.questions.forEach((item: ApiQuestion) => {
+          if (item.problem && item.solution) {
+            const key = item.problem + item.solution;
+            if (!problemMap.has(key)) {
+              problemMap.set(key, {
+                id: String(problemMap.size + 1).padStart(2, '0'),
+                problem: item.problem,
+                solution: item.solution,
+              });
+            }
+          }
+        });
 
-        this.loadFarmData();
+        return {
+          regCode: farm.regCode,
+          questions: questions,
+          problems: Array.from(problemMap.values()),
+          completedQuestions: `${completedCount}/${questions.length} Questions`
+        };
+      });
 
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-        this.isLoading = false;
-      },
-    });
-  }
+      this.farmNav.total = this.farmsData.length;
+      this.farmNav.current = 1;
+
+      this.loadFarmData();
+
+      this.isLoading = false;
+    },
+    error: (err) => {
+      console.error('API Error:', err);
+      this.isLoading = false;
+    },
+  });
+}
 
   loadFarmData() {
     if (this.farmsData.length === 0) return;

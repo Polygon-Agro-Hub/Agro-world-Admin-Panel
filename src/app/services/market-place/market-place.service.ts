@@ -783,14 +783,6 @@ export class MarketPlaceService {
     return this.http.get<any>(url, { headers });
   }
 
-   manageSeo(data: any): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-
-    const url = `${this.apiUrl}market-place/manage-seo`;
-    return this.http.post<any>(url, data, { headers });
-  }
 }
 
 

@@ -31,6 +31,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   isLastOrder: boolean = false;
   isAllPacked: boolean = false;
   isShouldAllblock:boolean = true;
+  isCompleted: boolean = false; 
 
 
   ngOnInit(): void {
@@ -58,6 +59,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
         this.packageArr = res.packageData;
         this.orderDetails = res.orderDetails
         this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
+        this.isCompleted = this.isShouldAllblock;
         this.isLoading = false
       }
     )
@@ -65,6 +67,11 @@ export class DispatchAdditionalItemsComponent implements OnInit {
 
 
   onCancel() {
+    if (this.isCompleted) {
+      this.location.back();
+      return;
+    }
+
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',

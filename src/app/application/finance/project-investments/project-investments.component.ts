@@ -343,11 +343,13 @@ export class ProjectInvestmentsComponent implements OnInit {
   }
 
   filterProjects(): void {
-    if (!this.searchTerm.trim()) {
+    const trimmedSearch = this.searchTerm.trim();
+    if (!trimmedSearch) {
       this.filteredProjects = [...this.projectInvestments];
+      this.loadProjectInvestments();
       return;
     }
-    this.loadProjectInvestments(this.searchTerm.trim());
+    this.loadProjectInvestments(trimmedSearch);
   }
 
   clearSearch(): void {

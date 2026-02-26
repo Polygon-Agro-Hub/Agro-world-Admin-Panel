@@ -204,6 +204,11 @@
               Centre Head Portals
             </th>
             <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
+              Last Modified By
+            </th>
+            <th
               *ngIf="
                 (urlSegment === 'distribution-hub' &&
                   permissionService.hasPermission(
@@ -299,8 +304,8 @@
               >
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <span *ngIf="item.contact02 === null">-</span>
-              <span *ngIf="item.contact02 != null"
+              <span *ngIf="item.contact02 === null || item.contact02 === ''">-</span>
+              <span *ngIf="item.contact02 !== null && item.contact02 !== ''"
                 >{{ item.code2 }}{{ " " + item.contact02 }}</span
               >
             </td>

@@ -300,6 +300,7 @@ export interface GoviCareRequest {
   publishStatus: string;
   Request_Date_Time: string;
   approvedDetails: ApprovedDetails | null;
+  Approved_By:string;
   Farmer_ID: any;
 }
 

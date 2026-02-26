@@ -28,7 +28,7 @@
         </button>
 
         <button
-          *ngIf="permissionService.hasPermission('Pickup orders ready to pickup tab') || permissionService.hasPermission('Pickup orders ready to pickup tab') || tokenService.getUserDetails().role === '1'"
+          *ngIf="permissionService.hasPermission('Pickup orders all tab') || permissionService.hasPermission('Pickup orders ready to pickup tab') || tokenService.getUserDetails().role === '1'"
           (click)="setActiveTab('Ready to Pickup')"
           [ngClass]="
             activeTab === 'Ready to Pickup'
@@ -42,7 +42,7 @@
         </button>
 
         <button
-          *ngIf="permissionService.hasPermission('Pickup orders picked up tab') || permissionService.hasPermission('Pickup orders ready to pickup tab') || tokenService.getUserDetails().role === '1'"
+          *ngIf="permissionService.hasPermission('Pickup orders all tab') || permissionService.hasPermission('Pickup orders picked up tab') || tokenService.getUserDetails().role === '1'"
           (click)="setActiveTab('Picked Up')"
           [ngClass]="
             activeTab === 'Picked Up'

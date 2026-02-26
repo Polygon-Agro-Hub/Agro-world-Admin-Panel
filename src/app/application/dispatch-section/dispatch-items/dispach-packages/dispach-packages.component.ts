@@ -43,6 +43,7 @@ export class DispachPackagesComponent implements OnInit {
   isInvalidPriceRange: boolean = false;
 
   isShouldAllblock:boolean = true;
+  isCompleted: boolean = false; 
 
 
   ngOnInit(): void {
@@ -79,12 +80,18 @@ export class DispachPackagesComponent implements OnInit {
         this.productArr = res.marketplaceItems
         this.isLoading = false;
         this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
+        this.isCompleted = this.isShouldAllblock;
         this.total = this.packageArr.length;
         
       }
     )
   }
   onCancel() {
+    if (this.isCompleted) {
+      this.location.back();
+      return;
+    }
+
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',

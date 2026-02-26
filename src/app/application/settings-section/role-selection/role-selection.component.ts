@@ -36,15 +36,29 @@ export class RoleSelectionComponent {
   emailError: string | null = null; // Add error state for create modal
   editEmailError: string | null = null; // Add error state for edit modal
 
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    public permissionService: PermissionService,
+    private tokenService: TokenService,
+    private roleSelectionService: RoleSelectionService,
+    private emailValidationService: EmailvalidationsService,
+    private location: Location
+  ) { }
+
+  ngOnInit() {
+    this.getAllRoles();
+  }
+
   openModal() {
     this.isModalOpen = true;
   }
 
   closeModal() {
-  this.isModalOpen = false;
-  this.emailError = null; // Clear error when modal closes
-  this.createRolesObj = new CreateRoles(); // Reset to new empty object
-}
+    this.isModalOpen = false;
+    this.emailError = null; // Clear error when modal closes
+    this.createRolesObj = new CreateRoles(); // Reset to new empty object
+  }
 
   editModalOpen(role: any) {
     this.selectedRole = { ...role };
@@ -52,10 +66,10 @@ export class RoleSelectionComponent {
   }
 
   editCloseModel() {
-  this.iseditModalOpen = false;
-  this.editEmailError = null; // Clear error when modal closes
-  this.selectedRole = {}; // Reset selected role
-}
+    this.iseditModalOpen = false;
+    this.editEmailError = null; // Clear error when modal closes
+    this.selectedRole = {}; // Reset selected role
+  }
 
   addSection() {
     // Add logic to save the new section
@@ -149,19 +163,7 @@ export class RoleSelectionComponent {
 
   rolesList: any[] = [];
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    public permissionService: PermissionService,
-    private tokenService: TokenService,
-    private roleSelectionService: RoleSelectionService,
-    private emailValidationService: EmailvalidationsService,
-    private location: Location
-  ) { }
 
-  ngOnInit() {
-    this.getAllRoles();
-  }
 
   getAllRoles() {
     this.isLoading = true;
@@ -191,14 +193,6 @@ export class RoleSelectionComponent {
     this.emailError = this.emailValidationService.getErrorMessage(this.createRolesObj.email);
   }
 
-  // validateEditEmail(): void {
-  //   this.selectedRole.email = this.selectedRole.email.trim();
-  //   if (!this.selectedRole.email) {
-  //     this.editEmailError = this.emailValidationService.validationMessages.required;
-  //     return;
-  //   }
-  //   this.editEmailError = this.emailValidationService.getErrorMessage(this.selectedRole.email);
-  // }
 
   back() {
     this.location.back();
@@ -224,68 +218,68 @@ export class RoleSelectionComponent {
     this.validateEditEmail();
   }
 
- preventLeadingSpace(event: KeyboardEvent, currentValue: string): void {
-  // Check if space key is pressed
-  if (event.key === ' ' || event.keyCode === 32) {
-    const target = event.target as HTMLInputElement;
-    const cursorPosition = target.selectionStart || 0;
-    
-    if (!currentValue || cursorPosition === 0 || currentValue.trim().length === 0) {
-      event.preventDefault();
+  preventLeadingSpace(event: KeyboardEvent, currentValue: string): void {
+    // Check if space key is pressed
+    if (event.key === ' ' || event.keyCode === 32) {
+      const target = event.target as HTMLInputElement;
+      const cursorPosition = target.selectionStart || 0;
+
+      if (!currentValue || cursorPosition === 0 || currentValue.trim().length === 0) {
+        event.preventDefault();
+      }
     }
   }
-}
-onPaste(event: ClipboardEvent, field: 'role' | 'email'): void {
-  event.preventDefault();
-  const pastedText = event.clipboardData?.getData('text') || '';
-  const target = event.target as HTMLInputElement;
-  const cursorPosition = target.selectionStart || 0;
-  const currentValue = this.selectedRole[field] || '';
-  
-  // Remove leading spaces from pasted text
-  const trimmedText = pastedText.replace(/^\s+/, '');
-  
-  // If pasting at the beginning, use trimmed text
-  // Otherwise, insert normally
-  if (cursorPosition === 0) {
-    this.selectedRole[field] = trimmedText + currentValue;
-  } else {
-    const beforeCursor = currentValue.substring(0, cursorPosition);
-    const afterCursor = currentValue.substring(cursorPosition);
-    this.selectedRole[field] = beforeCursor + trimmedText + afterCursor;
-  }
-  
-  // Validate email if it's the email field
-  if (field === 'email') {
-    this.validateEditEmail();
-  }
-}
+  onPaste(event: ClipboardEvent, field: 'role' | 'email'): void {
+    event.preventDefault();
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const target = event.target as HTMLInputElement;
+    const cursorPosition = target.selectionStart || 0;
+    const currentValue = this.selectedRole[field] || '';
 
-onCreatePaste(event: ClipboardEvent, field: 'role' | 'email'): void {
-  event.preventDefault();
-  const pastedText = event.clipboardData?.getData('text') || '';
-  const target = event.target as HTMLInputElement;
-  const cursorPosition = target.selectionStart || 0;
-  const currentValue = this.createRolesObj[field] || '';
-  
-  // Remove leading spaces from pasted text
-  const trimmedText = pastedText.replace(/^\s+/, '');
-  
-  // If pasting at the beginning, use trimmed text
-  // Otherwise, insert normally
-  if (cursorPosition === 0) {
-    this.createRolesObj[field] = trimmedText + currentValue;
-  } else {
-    const beforeCursor = currentValue.substring(0, cursorPosition);
-    const afterCursor = currentValue.substring(cursorPosition);
-    this.createRolesObj[field] = beforeCursor + trimmedText + afterCursor;
+    // Remove leading spaces from pasted text
+    const trimmedText = pastedText.replace(/^\s+/, '');
+
+    // If pasting at the beginning, use trimmed text
+    // Otherwise, insert normally
+    if (cursorPosition === 0) {
+      this.selectedRole[field] = trimmedText + currentValue;
+    } else {
+      const beforeCursor = currentValue.substring(0, cursorPosition);
+      const afterCursor = currentValue.substring(cursorPosition);
+      this.selectedRole[field] = beforeCursor + trimmedText + afterCursor;
+    }
+
+    // Validate email if it's the email field
+    if (field === 'email') {
+      this.validateEditEmail();
+    }
   }
-  
-  // Validate email if it's the email field
-  if (field === 'email') {
-    this.validateCreateEmail();
+
+  onCreatePaste(event: ClipboardEvent, field: 'role' | 'email'): void {
+    event.preventDefault();
+    const pastedText = event.clipboardData?.getData('text') || '';
+    const target = event.target as HTMLInputElement;
+    const cursorPosition = target.selectionStart || 0;
+    const currentValue = this.createRolesObj[field] || '';
+
+    // Remove leading spaces from pasted text
+    const trimmedText = pastedText.replace(/^\s+/, '');
+
+    // If pasting at the beginning, use trimmed text
+    // Otherwise, insert normally
+    if (cursorPosition === 0) {
+      this.createRolesObj[field] = trimmedText + currentValue;
+    } else {
+      const beforeCursor = currentValue.substring(0, cursorPosition);
+      const afterCursor = currentValue.substring(cursorPosition);
+      this.createRolesObj[field] = beforeCursor + trimmedText + afterCursor;
+    }
+
+    // Validate email if it's the email field
+    if (field === 'email') {
+      this.validateCreateEmail();
+    }
   }
-}
 }
 
 export class CreateRoles {

@@ -56,9 +56,7 @@ export class DriverComplainComponent {
     this.goviLinkService.getDriverComplainById(this.complainId).subscribe(
       (res) => {
         this.isLoading = false;
-        console.log('this is the data', res);
 
-        // Format the date
         if (res.createdAt) {
           const date = new Date(res.createdAt);
           res.createdAt = date.toLocaleDateString('en-US', {

@@ -399,7 +399,6 @@
   </div>
 </div>
 
-<!-- complain popup -->
 <div
   *ngIf="isPopUpVisible"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -431,7 +430,6 @@
         Dear <strong>{{ selectedOfficerName }}</strong
         >,
       </p>
-      <!-- second part -->
       <p
         class="mt-5"
         *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'"

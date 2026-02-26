@@ -66,7 +66,6 @@
 
 
     <div class="text-center">
-      <!-- <button pButton type="button" label="Open Popup" icon="pi pi-envelope" (click)="showDialog()"></button> -->
       <button
         (click)="showReplyPopUp(complain.language === 'Sinhala' ? complain.officerNameSinhala : complain.language === 'Tamil' ? complain.officerNameTamil : complain.officerName, complain.language)"
         class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
@@ -78,7 +77,6 @@
 
 
 
-<!-- complain popup -->
 <div *ngIf="isPopUpVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
   <div class="bg-white dark:bg-[#262f45] rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4 relative">
     <div class="flex justify-center items-center">
@@ -100,7 +98,6 @@
       <p *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
         Dear <strong>{{ selectedOfficerName }}</strong>,
       </p>
-      <!-- second part -->
       <p class="mt-5" *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
         We are pleased to inform you that your complaint has been resolved
       </p>
@@ -154,87 +151,3 @@
 
 
 
-<!-- <p-dialog
-  header=""
-  [(visible)]="display"
-  [modal]="true"
-  [closable]="true"
-  [style]="{ width: '600px' }"
-  [contentStyle]="{ 'padding': '0' }"
->
-  <div class="dialog-header text-center">
-    
-    <i class="fa-regular fa-envelope" style="font-size: 2rem; color: #999;"></i>
-    <h3 class="header-title">Reply as AgroWorld</h3>
-  </div>
-
-  <div class="dialog-content">
-    <p>Dear <strong>{{this.farmerName}}</strong>,</p>
-    <p>
-      We are pleased to inform you that your complaint has been resolved.
-    </p>
-
-    <div class="message-box" *ngIf="!complain.reply">
-      <textarea
-      [(ngModel)]="messageContent"
-      placeholder="Add your message here..."
-      rows="5"
-      style="
-        width: 100%;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 0.5rem;
-        font-size: 1rem;
-        background-color: #ffffff; /* Normal white background */
-        color: #333;
-      "
-    ></textarea>
-    </div>
-
-    <div class="message-box" *ngIf="complain.reply">
-      <textarea
-      [(ngModel)]="complain.reply"
-      placeholder="Add your message here..."
-      rows="5"
-      style="
-        width: 100%;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 0.5rem;
-        font-size: 1rem;
-        background-color: #ffffff; /* Normal white background */
-        color: #333;
-      "
-    ></textarea>
-    </div>
-
-    <p>
-      If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.
-    </p>
-
-    <p>
-      Sincerely,<br />
-      AgroWorld Customer Support Team
-    </p>
-  </div>
-
-  <p-footer>
-    <div class="dialog-footer text-right">
-      <button
-        pButton
-        type="button"
-        label="Cancel"
-        class="p-button-secondary"
-        style="margin-right: 8px"
-        
-      ></button>
-      <button
-        pButton
-        type="button"
-        label="Send"
-        class="p-button-primary"
-        
-      ></button>
-    </div>
-  </p-footer>
-</p-dialog> -->

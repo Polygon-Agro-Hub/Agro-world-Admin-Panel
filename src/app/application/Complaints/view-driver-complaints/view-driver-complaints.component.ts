@@ -121,7 +121,6 @@ export class ViewDriverComplaintsComponent {
   }
 
   applyFilters() {
-    console.log('status', this.filterStatus)
     this.fetchAllComplain(this.page, this.itemsPerPage);
     if (this.dropdown) {
       this.dropdown.hide();

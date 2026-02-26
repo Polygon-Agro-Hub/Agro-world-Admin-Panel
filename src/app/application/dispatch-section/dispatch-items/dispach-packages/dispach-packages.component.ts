@@ -200,6 +200,20 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   openPopUp(item: PakageItem) {
+    if(item.isPacked === 1) {
+      Swal.fire({
+        icon: 'warning', 
+        title: 'Cannot replace this product',
+        text: 'This product is already packed.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
     this.isPopupOpen = true;
     this.selectProduct = item;
     // this.newProductObj.displayName = item.displayName;
@@ -311,6 +325,7 @@ interface PakageItem {
   price: number;
   discountedPrice: number;
   displayName: string;
+  typeName: string;
 }
 
 interface MarketPlaceItems {

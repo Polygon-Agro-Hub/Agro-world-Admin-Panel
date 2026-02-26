@@ -63,7 +63,6 @@ export class FiealdOfficerComplaintsComponent implements OnInit {
   initializeStatus(): void {
     this.status = [
       { id: 1, type: "Assigned" },
-      // { id: 2, type: "Pending" },
       { id: 3, type: "Closed" },
     ];
   }

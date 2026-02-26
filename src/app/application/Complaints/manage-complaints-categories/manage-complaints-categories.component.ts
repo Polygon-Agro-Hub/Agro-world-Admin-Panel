@@ -29,7 +29,7 @@ export class ManageComplaintsCategoriesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.appId = +this.route.snapshot.params['id']; // + converts string to number
+    this.appId = +this.route.snapshot.params['id'];
     this.fetchApplicationName(this.appId);
     this.fetchCategories();
   }

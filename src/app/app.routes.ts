@@ -274,6 +274,7 @@ import { CallCenterComponentComponent } from './application/call-centers/action/
 import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
 import { ViewGovicapitalUsersComponent } from './application/steckholders-section/steckholders/view-govicapital-users/view-govicapital-users.component';
 import { ViewGovishopSupliersComponent } from './application/steckholders-section/steckholders/view-govishop-supliers/view-govishop-supliers.component';
+import { ViewGoviShopSuppliersComponent } from './application/steckholders-section/view-govi-shop-suppliers/view-govi-shop-suppliers.component';
 
 export const routes: Routes = [
   {

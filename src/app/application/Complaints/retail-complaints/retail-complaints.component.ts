@@ -91,18 +91,6 @@ export class RetailComplaintsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // if (this.tokenService.getUserDetails().role === "2") {
-    //   this.roleCategory = "Agriculture";
-    // } else if (this.tokenService.getUserDetails().role === "3") {
-    //   this.roleCategory = "Finance";
-    // }
-    // else if (this.tokenService.getUserDetails().role === "4") {
-    //   this.roleCategory = "Call Center";
-    // }
-    // else if (this.tokenService.getUserDetails().role === "5") {
-    //   this.roleCategory = "Procurement";
-    // }
-    // this.tokenService.getUserDetails().role = this.roleCategory;
 
     this.fetchComplaints();
     this.fetchComplaintCategories();
@@ -124,7 +112,7 @@ export class RetailComplaintsComponent implements OnInit {
             complainCategory: item.categoryEnglish,
             firstName: item.firstName,
             lastName: item.lastName,
-            contactNumber: item.ContactNumber ? item.ContactNumber.replace(/-/g, '') : '', // Remove hyphens here
+            contactNumber: item.ContactNumber ? item.ContactNumber.replace(/-/g, '') : '',
             createdAt: this.formatDate(item.createdAt),
             status: this.normalizeStatus(item.status, item.createdAt),
             reply: item.reply || undefined,
@@ -266,6 +254,5 @@ export class RetailComplaintsComponent implements OnInit {
   }
 
   submitReply(): void {
-    // Implementation for submitting reply if needed
   }
 }

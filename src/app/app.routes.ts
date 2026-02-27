@@ -273,6 +273,7 @@ import { CallCenterActionComponent } from './application/call-centers/action/cal
 import { CallCenterComponentComponent } from './application/call-centers/action/call-center-component/call-center-component.component';
 import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
 import { ViewGovicapitalUsersComponent } from './application/steckholders-section/steckholders/view-govicapital-users/view-govicapital-users.component';
+import { ViewGovishopSupliersComponent } from './application/steckholders-section/steckholders/view-govishop-supliers/view-govishop-supliers.component';
 
 export const routes: Routes = [
   {
@@ -1056,19 +1057,15 @@ export const routes: Routes = [
                   },
                 ],
               },
-              // {
-              //   path:'govi-shop-suppliers',
-              //   children:[
-              //     {
-              //       path:'',
-              //       component:Biman
-              //     },
-              //     {
-              //       path:'view-govi-shop-suppliers',
-              //       component:Dumith
-              //     }
-              //   ]
-              // }
+              {
+                path: 'govi-shop-suppliers',
+                children: [
+                  {
+                    path: '',
+                    component: ViewGovishopSupliersComponent,
+                  },
+                ],
+              },
 
               {
                 path: 'drivers',

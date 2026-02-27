@@ -26,6 +26,9 @@ export class ViewGovishopSupliersComponent implements OnInit {
   searchTerm = '';
   selectedPlan: string | null = null;
 
+  showDeleteModal = false;
+  supplierToDelete: Supplier | null = null;
+
   planOptions = [
     { label: 'All', value: null },
     { label: 'Free', value: 'Free' },
@@ -89,5 +92,23 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
   back(): void {
     this.router.navigate(['steckholders/action']);
+  }
+
+  openDeleteModal(supplier: Supplier): void {
+    this.supplierToDelete = supplier;
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.supplierToDelete = null;
+  }
+
+  confirmDelete(): void {
+    if (this.supplierToDelete) {
+      this.suppliers = this.suppliers.filter((s) => s !== this.supplierToDelete);
+    }
+    this.showDeleteModal = false;
+    this.supplierToDelete = null;
   }
 }

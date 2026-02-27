@@ -190,7 +190,11 @@
               {{ supplier.joinedOn }}
             </td>
             <td class="py-4">
-              <button class="text-red-400 hover:text-red-600" title="Remove">
+              <button
+                class="text-red-400 hover:text-red-600"
+                title="Remove"
+                (click)="openDeleteModal(supplier)"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-6"
@@ -211,6 +215,40 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div
+  *ngIf="showDeleteModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+>
+  <div
+    class="bg-white dark:bg-tileBlack rounded-2xl shadow-xl p-8 w-auto flex flex-col items-center text-center"
+  >
+    <h3
+      class="text-xl font-medium text-gray-800 dark:text-textDark mb-3 whitespace-nowrap"
+    >
+      Are you sure you want to delete this supplier?
+    </h3>
+    <p class="text-gray-500 dark:text-gray-400 text-xl mb-4">
+      Removing this supplier will erase all the products they <br />
+      made and the purchase history from buyers.
+    </p>
+    <div class="flex gap-4 w-full justify-center">
+      <button
+        (click)="cancelDelete()"
+        class="px-8 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="confirmDelete()"
+        class="px-8 py-2 rounded-lg bg-[#D16D6A] hover:bg-[#a8463b] text-white transition-colors font-medium"
+      >
+        Yes, Delete
+      </button>
     </div>
   </div>
 </div>

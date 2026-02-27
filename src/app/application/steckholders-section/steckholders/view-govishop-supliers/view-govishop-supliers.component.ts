@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 
 export interface Supplier {
@@ -86,12 +86,22 @@ export class ViewGovishopSupliersComponent implements OnInit {
     });
   }
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {}
 
   back(): void {
     this.router.navigate(['steckholders/action']);
+  }
+
+  viewSupplierDetails(supplier: Supplier): void {
+    this.router.navigate(['view-govi-shop-suppliers'], {
+      relativeTo: this.route,
+      state: { supplier }
+    });
   }
 
   openDeleteModal(supplier: Supplier): void {

@@ -1065,6 +1065,10 @@ export const routes: Routes = [
                     path: '',
                     component: ViewGovishopSupliersComponent,
                   },
+                  {
+                    path: 'view-govi-shop-suppliers',
+                    component: ViewGoviShopSuppliersComponent,
+                  },
                 ],
               },
 

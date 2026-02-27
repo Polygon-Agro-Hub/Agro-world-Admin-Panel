@@ -1056,6 +1056,19 @@ export const routes: Routes = [
                   },
                 ],
               },
+              // {
+              //   path:'govi-shop-suppliers',
+              //   children:[
+              //     {
+              //       path:'',
+              //       component:Biman
+              //     },
+              //     {
+              //       path:'view-govi-shop-suppliers',
+              //       component:Dumith
+              //     }
+              //   ]
+              // }
 
               {
                 path: 'drivers',

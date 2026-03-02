@@ -159,3 +159,69 @@
   height: 1.0rem !important;
   line-height: 1.0rem !important;
 }
+
+
+/* Resize the selected date circle */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span.p-highlight {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  line-height: 1.8rem !important;
+  font-size: 0.85rem !important;
+  background-color: #3182ce !important;
+  color: white !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+}
+
+/* Dark mode selected date circle */
+:host-context(.dark) ::ng-deep .calendar-popup-small .p-datepicker-calendar td span.p-highlight {
+  background-color: #3182ce !important;
+  color: white !important;
+}
+
+/* Ensure the cell itself has proper alignment */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.15rem !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* Make all date circles uniform in shape */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  line-height: 1.8rem !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Today's date styling */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span.p-datepicker-today {
+  background-color: #e2e8f0 !important;
+  font-weight: bold !important;
+}
+
+/* Today's date when selected */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span.p-datepicker-today.p-highlight {
+  background-color: #3182ce !important;
+  color: white !important;
+}
+
+/* Hover effect for all dates */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span:hover {
+  background-color: #4a5568 !important;
+  color: white !important;
+  transform: scale(1.05) !important;
+}
+
+/* Dark mode hover */
+:host-context(.dark) ::ng-deep .calendar-popup-small .p-datepicker-calendar td span:hover {
+  background-color: #4a5568 !important;
+  color: white !important;
+}

@@ -263,8 +263,7 @@ downloadTemplate1(): void {
       fileName += `_Scheduled_Delivery_Date_${this.deliveryDateFilter}`;
     }
     
-    // Add date stamp
-    fileName += `_${new Date().toISOString().split('T')[0]}.pdf`;
+    fileName += `.pdf`;
     
     doc.save(fileName);
 

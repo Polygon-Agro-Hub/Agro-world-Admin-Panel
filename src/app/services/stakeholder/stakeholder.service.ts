@@ -229,4 +229,14 @@ export class StakeholderService {
     const url = `${this.apiUrl}stakeholder/update-status-send-password/${id}/${status}`;
     return this.http.put<any>(url, {}, { headers });
   }
+
+  viewGoviShopSupplierById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/view-govi-shop-supplier/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
 }

@@ -1011,6 +1011,28 @@ export class FinanceService {
     });
   }
 
+  getAllShopViewAction(
+    status: string,
+    searchText: string = '',
+   
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    
+    let url = `${this.apiUrl}shop/get-all-shop-view-action?page=${1}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
 }
+
 
 

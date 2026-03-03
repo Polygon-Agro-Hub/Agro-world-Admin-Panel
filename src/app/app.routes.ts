@@ -275,6 +275,7 @@ import { AllCallLogsComponent } from './application/call-centers/all-call-logs/a
 import { ViewGovicapitalUsersComponent } from './application/steckholders-section/steckholders/view-govicapital-users/view-govicapital-users.component';
 import { ViewGovishopSupliersComponent } from './application/steckholders-section/steckholders/view-govishop-supliers/view-govishop-supliers.component';
 import { ViewGoviShopSuppliersComponent } from './application/steckholders-section/view-govi-shop-suppliers/view-govi-shop-suppliers.component';
+import { GoviShopViewActionComponent } from './application/finance/govi-shop-view-action/govi-shop-view-action.component';
 
 export const routes: Routes = [
   {
@@ -775,6 +776,18 @@ export const routes: Routes = [
                 path: 'farmer-pension-5-years-plus',
                 component: ViewFarmerPension5YearsPlusComponent,
               },
+
+              {
+                path: 'finance-govishop',
+                children: [
+                  {
+                    path: 'view-action',
+                    component: GoviShopViewActionComponent,
+                  },
+                 
+                ],
+              },
+
             ],
           },
         ],

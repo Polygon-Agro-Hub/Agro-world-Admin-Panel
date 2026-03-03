@@ -265,4 +265,14 @@ export class StakeholderService {
       },
     );
   }
+
+  viewGoviShopSupplierById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/view-govi-shop-supplier/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
 }

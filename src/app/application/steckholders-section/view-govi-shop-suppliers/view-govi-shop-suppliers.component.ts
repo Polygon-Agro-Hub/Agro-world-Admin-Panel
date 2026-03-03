@@ -4,21 +4,22 @@ import { Location, DatePipe } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StakeholderService } from '../../../services/stakeholder/stakeholder.service';
+import Swal from 'sweetalert2';
 
 interface ShopData {
   id: number;
   shopName: string;
   email: string;
-  joinedDate: string;
-  phoneNumber: string;
-  brImage: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  ownerName: string;
-  ownerNIC: string;
-  ownerPhoneNumber: string;
-  image: string;
+  createdAt: string;
+  shopPhone: string;
+  brImg: string;
+  adress: string;
+  latitude: string;
+  longitude: string;
+  ownername: string;
+  nic: string;
+  currentPlan: string;
 }
 
 @Component({
@@ -32,6 +33,7 @@ export class ViewGoviShopSuppliersComponent implements OnInit {
   isLoading = false;
   shopData: ShopData | null = null;
   defaultImage = 'assets/images/defaultImg.png';
+  shopId: number | null = null;
 
   // Image Modal Properties
   isModalOpen = false;
@@ -55,29 +57,74 @@ export class ViewGoviShopSuppliersComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
+    private stakeholderService: StakeholderService
   ) {}
 
   ngOnInit(): void {
-    this.loadShopData();
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.shopId = +params['id'];
+        if (this.shopId) {
+          this.loadShopData(this.shopId);
+        }
+      } else {
+        const navigation = this.router.getCurrentNavigation();
+        if (navigation?.extras?.state) {
+          const supplier = navigation.extras.state['supplier'];
+          if (supplier && supplier.id) {
+            this.shopId = supplier.id;
+            if (this.shopId) {
+              this.loadShopData(this.shopId);
+            }
+          } else {
+            this.showError('No shop ID provided');
+            this.back();
+            // Use sample ID for testing
+            // const sampleId = 1;
+            // this.loadShopData(sampleId);
+          }
+        } else {
+          this.showError('No shop ID provided');
+          this.back();
+          // Use sample ID for testing
+          // const sampleId = 1;
+          // this.loadShopData(sampleId);
+        }
+      }
+    });
   }
 
-  loadShopData(): void {
-    this.shopData = {
-      id: 1,
-      shopName: 'Agri Shop',
-      email: 'agri@gmail.com',
-      joinedDate: '2026-06-03',
-      phoneNumber: '0113333800',
-      brImage:
-        'https://pub-79ee03a4a23e4dbbb70c7d799d3cb786.r2.dev/inspection/idproof/74fb4d0b-1a47-42b3-b790-d7d6dceca521.jpg',
-      address: '1/A, Galle Road, Dehiwala',
-      latitude: 7.2008,
-      longitude: 79.8358,
-      ownerName: 'Gayani Perera',
-      ownerNIC: '918700050V',
-      ownerPhoneNumber: '0771122888',
-      image: '',
-    };
+  loadShopData(id: number): void {
+    this.isLoading = true;
+    this.stakeholderService.viewGoviShopSupplierById(id).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success && response.data) {
+          this.shopData = response.data;
+        } else {
+          this.showError('Failed to load shop data');
+          this.back();
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Error loading shop data:', error);
+        this.showError('Failed to load shop data');
+        this.back();
+      }
+    });
+  }
+
+  showError(message: string): void {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: message,
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
   }
 
   back(): void {
@@ -159,8 +206,8 @@ export class ViewGoviShopSuppliersComponent implements OnInit {
   openMapModal(): void {
     if (this.shopData?.latitude && this.shopData?.longitude) {
       this.hasCoordinates = true;
-      const lat = this.shopData.latitude;
-      const lon = this.shopData.longitude;
+      const lat = parseFloat(this.shopData.latitude);
+      const lon = parseFloat(this.shopData.longitude);
 
       // OpenStreetMap embed URL
       const mapUrlString = `https://www.openstreetmap.org/export/embed.html?bbox=${lon - 0.01},${lat - 0.01},${lon + 0.01},${lat + 0.01}&layer=mapnik&marker=${lat},${lon}`;

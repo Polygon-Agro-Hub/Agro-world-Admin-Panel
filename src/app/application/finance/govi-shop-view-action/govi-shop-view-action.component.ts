@@ -134,7 +134,7 @@ export class GoviShopViewActionComponent implements OnInit {
   }
 
   Back(): void {
-    this.router.navigate(['/sales-dash']);
+    this.router.navigate(['/finance/action']);
   }
 
   navigatePath(path: string) {

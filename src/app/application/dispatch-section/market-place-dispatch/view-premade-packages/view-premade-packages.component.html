@@ -21,16 +21,16 @@
             <table class=" divide-y divide-gray-200 table-auto">
                 <thead>
                     <tr>
-                        <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
+                        <th class="py-3 px-10 font-normal text-[#4B5563] dark:text-textDark text-left">
                             Packages
                         </th>
-                        <th class="py-3 px-4 font-normal text-[#4B5563] dark:text-textDark text-center">
+                        <th class="py-3 px-10 font-normal text-[#4B5563] dark:text-textDark text-center">
                             Count
                         </th>
-                        <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">
-                            Price of Products (Rs.)
+                        <th class="px-10 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                            Price of <br> Products (Rs.)
                         </th>
-                        <th *ngIf="permissionService.hasPermission('View dispatch package items') || tokenService.getUserDetails().role === '1'" class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                        <th *ngIf="permissionService.hasPermission('View dispatch package items') || tokenService.getUserDetails().role === '1'" class="px-10 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                             Package Items
                         </th>
 
@@ -38,20 +38,20 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let item of packageObj.packageData; let i=index;">
-                        <td class="py-3 text-[#000000] dark:text-textDark text-left">
+                        <td class="py-3 px-10 text-[#000000] dark:text-textDark text-left">
                             {{item.name}}
                         </td>
 
-                        <td class="py-3 px-4 text-[#000000] dark:text-textDark text-center">
+                        <td class="py-3 px-10 text-[#000000] dark:text-textDark text-center">
                             {{item.packageQty}}
                         </td>
 
-                        <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
+                        <td class="px-10 py-3 font-normal text-[#000000] dark:text-textDark text-start">
                             {{item.price | number : '1.2-2'}}
                         </td>
 
                         <td *ngIf="permissionService.hasPermission('View dispatch package items') || tokenService.getUserDetails().role === '1'"
-                            class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
+                            class="px-10 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
                             <!-- (click)="navigateDispatchItems(item.packageId)" -->
                             <!-- (click)="checkLastOrderStatus(true,false,i)" -->
 

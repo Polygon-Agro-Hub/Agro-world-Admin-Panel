@@ -16,6 +16,9 @@ export class FinanceActionMainComponent {
   popupVisibleNews = false;
   popupVisibleMarketPrice = false;
 
+  popupVisibleGoviShopCalender = false;
+  popupVisibleView = false;
+
   constructor(
       private router: Router,
       public tokenService: TokenService,
@@ -58,6 +61,18 @@ export class FinanceActionMainComponent {
     if ((this.popupVisibleMarketPrice = true)) {
       this.popupVisibleMarketPrice = !this.popupVisibleMarketPrice;
     }
+  }
+
+
+  togglePopupGoviShopCalender() {
+    this.popupVisibleGoviShopCalender = !this.popupVisibleGoviShopCalender;
+    if ((this.popupVisibleView = true)) {
+      this.popupVisibleView = !this.popupVisibleView;
+    }
+  }
+
+  viewAction(): void {
+    this.router.navigate(['/finance/action/finance-govishop/view-action']);
   }
 
   invesmentRequest(): void {

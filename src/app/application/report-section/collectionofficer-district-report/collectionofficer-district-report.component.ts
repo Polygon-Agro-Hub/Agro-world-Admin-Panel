@@ -47,7 +47,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
   constructor(
     private collectionOfficerSrv: CollectionOfficerReportService,
     private router: Router,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {}
 
   ngOnInit(): void {
@@ -95,7 +95,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         this.loadingTable = false;
         this.updateChart();
       },
-      (error) => {}
+      (error) => {},
     );
   }
 
@@ -147,19 +147,19 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
       },
       axisY: {
-  title: 'Total Weight (Kg)',
-  includeZero: true,
-  titleFontColor: '#738AC0',
-  labelFontColor: '#666666',
-  lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
-  tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
-  gridColor: isDarkMode ? '#374151' : '#e5e7eb',
-  labelFontSize: 12, // Adjust if needed
-  titleFontSize: 14,
-  titleFontWeight: 'normal',
-  labelWrap: true,
-  margin: 15 // Add margin between axis line and labels
-},
+        title: 'Total Weight (Kg)',
+        includeZero: true,
+        titleFontColor: '#738AC0',
+        labelFontColor: '#666666',
+        lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
+        gridColor: isDarkMode ? '#374151' : '#e5e7eb',
+        labelFontSize: 12, // Adjust if needed
+        titleFontSize: 14,
+        titleFontWeight: 'normal',
+        labelWrap: true,
+        margin: 15, // Add margin between axis line and labels
+      },
       legend: {
         fontColor: '#666666',
       },
@@ -224,7 +224,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         `${this.selectedDistrict.name} - Crop Weights`,
         pageWidth / 2,
         25,
-        { align: 'center' }
+        { align: 'center' },
       );
 
       if (!this.reportDetails || this.reportDetails.length === 0) {
@@ -238,7 +238,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       // Crop list on the left (y-axis labels)
       const cropNames = this.reportDetails.map((crop) => crop.cropName);
       const maxCropNameLength = Math.max(
-        ...cropNames.map((name) => name.length)
+        ...cropNames.map((name) => name.length),
       );
       const cropNameAreaWidth = 35; // Fixed width for crop names
 
@@ -272,7 +272,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
           yAxisX,
           currentBarY + barHeight / 2,
           yAxisX - 2,
-          currentBarY + barHeight / 2
+          currentBarY + barHeight / 2,
         );
 
         // Draw crop name
@@ -291,8 +291,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       // Find maximum total weight for scaling
       const maxWeight = Math.max(
         ...this.reportDetails.map(
-          (crop) => (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0)
-        )
+          (crop) => (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0),
+        ),
       );
 
       // Scale factor to fit within chartWidth
@@ -337,7 +337,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
           doc.text(
             `${totalWeight}kg`,
             labelX,
-            currentBarY + barHeight / 2 + 1.5
+            currentBarY + barHeight / 2 + 1.5,
           );
         }
 
@@ -397,7 +397,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       doc.text(
         'Grade A',
         chartStartX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1
+        legendY + legendSquareSize / 2 + 1,
       );
 
       // Grade B
@@ -407,7 +407,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       doc.text(
         'Grade B',
         legendBX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1
+        legendY + legendSquareSize / 2 + 1,
       );
 
       // Grade C
@@ -417,7 +417,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       doc.text(
         'Grade C',
         legendCX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1
+        legendY + legendSquareSize / 2 + 1,
       );
 
       // Summary Table (optional - you can remove this if you don't want it)

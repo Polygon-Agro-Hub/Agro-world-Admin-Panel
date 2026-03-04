@@ -105,6 +105,12 @@ export class FarmerListReportComponent {
   try {
     const doc = new jsPDF();
 
+    doc.setFontSize(10);
+    
+    // Add Invoice Number and Date on the left side
+    doc.text(`INV NO: ${inv}`, 10, 10);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 10, 15);
+
     // Helper function to fetch and convert image to base64
     function loadImageAsBase64(url: string): Promise<string> {
       return new Promise((resolve, reject) => {
@@ -166,11 +172,7 @@ export class FarmerListReportComponent {
 
     // Set Document Title
     doc.setFontSize(14);
-    doc.text('Farmer Report', 105, 10, { align: 'center' });
     doc.setFontSize(10);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, 20, {
-      align: 'center',
-    });
 
     let yPosition = 30;
 

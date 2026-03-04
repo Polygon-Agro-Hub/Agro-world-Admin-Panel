@@ -46,6 +46,11 @@
         </h2>
       </div>
     </div>
+    
+<!-- <div class="pt-16" style="height: 500px;">
+  <canvas id="provinceBarChart" ></canvas>
+</div> -->
+    
 
     <div
       *ngIf="loadingChart; else chartContent"
@@ -56,11 +61,8 @@
 
     <!-- Corrected canvasjs-chart tag -->
     <ng-template #chartContent>
-      <div class="pt-16">
-        <canvasjs-chart
-          *ngIf="chartOptions"
-          [options]="chartOptions"
-        ></canvasjs-chart>
+      <div class="pt-16" style="height: 500px;">
+        <canvas id="provinceBarChart"></canvas>
       </div>
     </ng-template>
 
@@ -131,7 +133,7 @@
       </div>
     </ng-template>
 
-    <div class="flex justify-center items-center my-10">
+    <!-- <div class="flex justify-center items-center my-10">
       <button
         class="bg-[#3980C0] px-6 py-3 rounded-lg text-white text-lg"
         (click)="exportToPDF()"
@@ -141,6 +143,6 @@
         <i class="fa-solid fa-spinner fa-spin px-1" *ngIf="isDownloading"></i>
         {{ isDownloading ? " Downloading..." : " Download" }}
       </button>
-    </div>
+    </div> -->
   </div>
 </div>

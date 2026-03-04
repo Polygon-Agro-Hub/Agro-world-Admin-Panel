@@ -22,7 +22,7 @@
                 <!-- <h2 class="  text-[#212121] dark:text-white">{{orderName}} : Rs.{{orderPrice}}</h2> -->
                 <h2 class="  text-[#212121] dark:text-white"> {{packageName}}<span
                         *ngIf="packgeQty !== undefined && packgeQty > 1"
-                        class="text-[#FF0000] text-lg font-medium mx-2">(x{{packgeQty}})</span> : Rs.{{price | number :
+                        class="text-[#FF0000] text-lg font-medium mx-2">(x{{packgeQty}})</span> : Rs.{{(packgeQty * price) | number :
                     '1.2-2'}}</h2>
             </div>
         </div>
@@ -210,13 +210,13 @@
                 class="px-8 py-2.5 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium">
                 Cancel
             </button>
-            <button (click)="replaceProduct()" [disabled]="newProductObj === null || isInvalidPriceRange"
+            <button (click)="replaceProduct()" [disabled]="newProductObj === null || isInvalidPriceRange || newProductObj.qty <= 0"
                 class="px-8 py-2.5 rounded-lg font-medium transition-colors"
-                [class.bg-gray-300]="newProductObj === null || isInvalidPriceRange"
-                [class.text-gray-500]="newProductObj === null || isInvalidPriceRange"
-                [class.cursor-not-allowed]="newProductObj === null || isInvalidPriceRange"
-                [class.bg-blue-600]="newProductObj !== null && !isInvalidPriceRange" 
-                [class.hover:bg-blue-700]="newProductObj !== null && !isInvalidPriceRange"
+                [class.bg-gray-300]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
+                [class.text-gray-500]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
+                [class.cursor-not-allowed]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
+                [class.bg-blue-600]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0" 
+                [class.hover:bg-blue-700]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty >= 0"
                 [class.text-white]="newProductObj !== null && !isInvalidPriceRange">
                 Update
             </button>

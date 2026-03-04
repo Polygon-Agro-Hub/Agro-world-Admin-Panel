@@ -18,6 +18,10 @@ export interface Supplier {
   address?: string;
   isAvailable?: number;
   userStatus?: string;
+  planPrice?: number;
+  currentPlanExpireDate?: string;
+  planStatus?: string;
+  daysRemaining?: number;
 }
 
 @Component({
@@ -34,6 +38,8 @@ export class ViewGovishopSupliersComponent implements OnInit {
   searchTerm = '';
   selectedPlan: string | null = null;
   totalSuppliers = 0;
+  expiredCount = 0;
+  activeCount = 0;
 
   showDeleteModal = false;
   supplierToDelete: Supplier | null = null;
@@ -64,43 +70,111 @@ export class ViewGovishopSupliersComponent implements OnInit {
   loadSuppliers(): void {
     this.isLoading = true;
     
+    console.log('Fetching suppliers with params:', {
+      search: this.searchTerm || undefined,
+      currentPlan: this.selectedPlan || undefined
+    });
+    
     this.goviShopService.getAllGoviShopUsers(
       this.searchTerm || undefined,
       this.selectedPlan || undefined
     ).subscribe({
       next: (response) => {
-        this.suppliers = response.shopUsers.map((user: any) => ({
-          id: user.id,
-          shopName: user.shopName,
-          ownerName: user.ownername,
-          nic: user.nic,
-          phone: user.shopPhone,
-          pricePlan: user.currentPlan || 'Free',
-          joinedOn: this.formatDate(user.createdAt),
-          email: user.email,
-          address: user.adress,
-          isAvailable: user.isAvailable,
-          userStatus: user.userStatus
-        }));
+        console.log('Raw API Response:', response);
         
-        this.totalSuppliers = response.total;
+        // Check different possible response structures
+        let shopUsers = [];
+        let total = 0;
+        let expired = 0;
+        let active = 0;
+        
+        if (response.data && Array.isArray(response.data.shopUsers)) {
+          // New structure: { success: true, data: { shopUsers: [], total: 0, expiredCount: 0, activeCount: 0 } }
+          console.log('Using new response structure with data wrapper');
+          shopUsers = response.data.shopUsers;
+          total = response.data.total || 0;
+          expired = response.data.expiredCount || 0;
+          active = response.data.activeCount || 0;
+        } else if (response.shopUsers && Array.isArray(response.shopUsers)) {
+          // Old structure: { shopUsers: [], total: 0 }
+          console.log('Using old response structure');
+          shopUsers = response.shopUsers;
+          total = response.total || 0;
+        } else if (Array.isArray(response)) {
+          // Direct array response
+          console.log('Response is direct array');
+          shopUsers = response;
+          total = response.length;
+        } else {
+          console.error('Unexpected response structure:', response);
+        }
+        
+        this.suppliers = shopUsers.map((user: any) => {
+          console.log('Mapping user:', user);
+          return {
+            id: user.id,
+            shopName: user.shopName || '',
+            ownerName: user.ownername || user.ownerName || '',
+            nic: user.nic || '',
+            phone: user.shopPhone || user.phone || '',
+            pricePlan: this.determinePricePlan(user.currentPlan, user.planStatus),
+            joinedOn: this.formatDate(user.createdAt),
+            email: user.email || '',
+            address: user.adress || user.address || '',
+            isAvailable: user.isAvailable,
+            userStatus: user.userStatus,
+            planPrice: user.planPrice,
+            currentPlanExpireDate: user.currentPlanExpireDate ? this.formatDate(user.currentPlanExpireDate) : undefined,
+            planStatus: user.planStatus,
+            daysRemaining: user.daysRemaining
+          };
+        });
+        
+        this.totalSuppliers = total;
+        this.expiredCount = expired;
+        this.activeCount = active;
+        
+        console.log('Mapped suppliers:', this.suppliers);
+        console.log('Total suppliers:', this.totalSuppliers);
+        
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading suppliers:', error);
         this.isLoading = false;
         // You might want to show an error message to the user
+        alert('Error loading suppliers: ' + error.message);
       }
     });
   }
 
+  determinePricePlan(currentPlan: string, planStatus: string): 'Free' | 'Premium' | 'Expired' {
+    console.log('Determining price plan for:', { currentPlan, planStatus });
+    
+    // If plan status is expired, show Expired
+    if (planStatus === 'expired') {
+      return 'Expired';
+    }
+    // Otherwise show the actual plan (Premium or Free)
+    if (currentPlan === 'Premium' || currentPlan === 'premium') {
+      return 'Premium';
+    }
+    return 'Free';
+  }
+
   formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+    if (!dateString) return 'Not available';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } catch (e) {
+      console.error('Error formatting date:', e);
+      return 'Invalid date';
+    }
   }
 
   // Search when clicking search icon or pressing Enter
@@ -165,6 +239,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
           this.showDeleteModal = false;
           this.supplierToDelete = null;
           // Show error message to user
+          alert('Error deleting supplier: ' + error.message);
         }
       });
     }

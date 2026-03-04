@@ -246,10 +246,24 @@ export class StakeholderService {
       params = params.set('currentPlan', currentPlan);
     }
 
-    return this.http.get(`${this.apiUrl}shop/view-govi-shop-users`, {
-      headers,
-      params,
-    });
+    return this.http
+      .get(`${this.apiUrl}shop/view-govi-shop-users`, {
+        headers,
+        params,
+      })
+      .pipe(
+        map((response: any) => {
+          if (response.success) {
+            return {
+              shopUsers: response.data.shopUsers,
+              total: response.data.total,
+              expiredCount: response.data.expiredCount,
+              activeCount: response.data.activeCount,
+            };
+          }
+          throw new Error(response.message || 'Failed to fetch shop users');
+        }),
+      );
   }
 
   deleteGoviShopUser(id: number): Observable<any> {
@@ -258,12 +272,9 @@ export class StakeholderService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.delete(
-      `${this.apiUrl}shop/delete-govi-shop-user/${id}`,
-      {
-        headers,
-      },
-    );
+    return this.http.delete(`${this.apiUrl}shop/delete-govi-shop-user/${id}`, {
+      headers,
+    });
   }
 
   viewGoviShopSupplierById(id: number): Observable<any> {

@@ -253,12 +253,14 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       doc.setLineWidth(0.5);
       doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5);
 
-      // Draw y-axis title
+      // ============== UPDATED Y-AXIS LABEL ==============
+      // Draw y-axis title - positioned closer to the axis
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      const textX = yAxisX - 5;
-      const textY = (barAreaStartY + barAreaEndY) / 3;
-      doc.text('Crops', textX, textY, { angle: 360, align: 'center' });
+      const textX = yAxisX - 5; // Reduced from -5 to -12 to bring closer
+      const textY = (barAreaStartY + barAreaEndY) / 3 + 12; // Adjusted to center vertically
+      doc.text('Crop', textX, textY, { angle: 360, align: 'center' });
+      // ==================================================
 
       // Draw y-axis tick marks for each crop
       let currentBarY = barAreaStartY;
@@ -368,17 +370,19 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         doc.text(labelText, tickX, xAxisY + 6, { align: 'center' });
       }
 
+      // ============== UPDATED X-AXIS LABEL ==============
+      // Draw x-axis title - positioned closer to the axis
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 15, {
+      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, { // Reduced from +15 to +10
         align: 'right',
       });
+      // ==================================================
 
-      // ============== UPDATED LEGEND SECTION ==============
-      // Draw legend with reduced spacing
+      // Legend section (unchanged)
       const legendY = chartStartY - 15;
       const legendSquareSize = 6;
-      const legendSpacing = 25; // Reduced from 45 to 25 to bring items closer
+      const legendSpacing = 25;
 
       // Grade A
       doc.setFillColor(255, 146, 99);
@@ -391,8 +395,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         legendY + legendSquareSize / 2 + 1,
       );
 
-      // Grade B (closer to Grade A)
-      const legendBX = chartStartX + legendSpacing; // Reduced spacing
+      // Grade B
+      const legendBX = chartStartX + legendSpacing;
       doc.setFillColor(95, 117, 233);
       doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
       doc.text(
@@ -401,8 +405,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         legendY + legendSquareSize / 2 + 1,
       );
 
-      // Grade C (closer to Grade B)
-      const legendCX = legendBX + legendSpacing; // Reduced spacing
+      // Grade C
+      const legendCX = legendBX + legendSpacing;
       doc.setFillColor(61, 225, 136);
       doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
       doc.text(
@@ -410,26 +414,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         legendCX + legendSquareSize + 3,
         legendY + legendSquareSize / 2 + 1,
       );
-
-      // Alternative: Even tighter spacing with different arrangement
-      // If you want them even closer together, you can use:
-      /*
-      // Grade A
-      doc.setFillColor(255, 146, 99);
-      doc.rect(chartStartX, legendY, legendSquareSize, legendSquareSize, 'F');
-      doc.text('Grade A', chartStartX + legendSquareSize + 3, legendY + legendSquareSize / 2 + 1);
-
-      // Grade B (closer)
-      doc.setFillColor(95, 117, 233);
-      doc.rect(chartStartX + 40, legendY, legendSquareSize, legendSquareSize, 'F');
-      doc.text('Grade B', chartStartX + 40 + legendSquareSize + 3, legendY + legendSquareSize / 2 + 1);
-
-      // Grade C (closer)
-      doc.setFillColor(61, 225, 136);
-      doc.rect(chartStartX + 75, legendY, legendSquareSize, legendSquareSize, 'F');
-      doc.text('Grade C', chartStartX + 75 + legendSquareSize + 3, legendY + legendSquareSize / 2 + 1);
-      */
-      // ===================================================
 
       // Summary Table
       const tableStartY = xAxisY + 30;

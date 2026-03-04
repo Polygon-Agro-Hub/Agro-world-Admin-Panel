@@ -170,10 +170,6 @@ export class FarmerListReportComponent {
       });
     };
 
-    // Set Document Title
-    doc.setFontSize(14);
-    doc.setFontSize(10);
-
     let yPosition = 30;
 
     // Utility Function to Center Text in a Cell
@@ -399,11 +395,11 @@ export class FarmerListReportComponent {
     const total = this.getTotal();
     doc.text(`Full Total (Rs.): ${formatNumber(total)}`, 10, yPosition);
 
-    // QR Codes Section
-    yPosition += 20;
+    // QR Codes Section - REDUCED SIZE
+    yPosition += 15; // Reduced spacing
     const pageWidth = doc.internal.pageSize.width;
-    const imageWidth = 50;
-    const imageSpacing = 10;
+    const imageWidth = 30; // Reduced from 50 to 30
+    const imageSpacing = 8; // Reduced from 10 to 8
     const totalImageWidth = imageWidth * 2 + imageSpacing;
     const startX = (pageWidth - totalImageWidth) / 2;
 
@@ -427,9 +423,10 @@ export class FarmerListReportComponent {
         officerQrBase64 = await loadImageAsBase64(modifiedOfficerUrl);
       }
 
-      // Add Farmer QR Code (if available)
+      // Add Farmer QR Code (if available) - WITH SMALLER TEXT
       if (farmerQrBase64) {
-        doc.text('Farmer QR Code:', startX, yPosition - 5);
+        doc.setFontSize(8); // Smaller font for QR labels
+        doc.text('Farmer QR:', startX, yPosition - 3); // Shorter label
         doc.addImage(
           farmerQrBase64,
           'PNG',
@@ -440,10 +437,11 @@ export class FarmerListReportComponent {
         );
       }
 
-      // Add Collection Officer QR Code (if available)
+      // Add Collection Officer QR Code (if available) - WITH SMALLER TEXT
       if (officerQrBase64) {
         const secondImageX = startX + imageWidth + imageSpacing;
-        doc.text('Collection Officer QR Code:', secondImageX, yPosition - 5);
+        doc.setFontSize(8); // Smaller font for QR labels
+        doc.text('Officer QR:', secondImageX, yPosition - 3); // Shorter label
         doc.addImage(
           officerQrBase64,
           'PNG',
@@ -454,12 +452,15 @@ export class FarmerListReportComponent {
         );
       }
 
-      yPosition += imageWidth + 20;
+      doc.setFontSize(10); // Reset font size
+      yPosition += imageWidth + 10; // Reduced spacing after QR codes
     } catch (error) {
       console.error('Error adding QR codes:', error);
       doc.setTextColor(255, 0, 0);
+      doc.setFontSize(8);
       doc.text('Error loading QR codes', 10, yPosition);
       doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
     }
 
     console.log('Saving PDF...');

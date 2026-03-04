@@ -147,14 +147,19 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
       },
       axisY: {
-        title: 'Total Weight (Kg)',
-        includeZero: true,
-        titleFontColor: '#738AC0',
-        labelFontColor: '#666666',
-        lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
-        tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
-        gridColor: isDarkMode ? '#374151' : '#e5e7eb',
-      },
+  title: 'Total Weight (Kg)',
+  includeZero: true,
+  titleFontColor: '#738AC0',
+  labelFontColor: '#666666',
+  lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
+  tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
+  gridColor: isDarkMode ? '#374151' : '#e5e7eb',
+  labelFontSize: 12, // Adjust if needed
+  titleFontSize: 14,
+  titleFontWeight: 'normal',
+  labelWrap: true,
+  margin: 15 // Add margin between axis line and labels
+},
       legend: {
         fontColor: '#666666',
       },

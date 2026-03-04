@@ -11,7 +11,10 @@ export class StakeholderService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+  ) {}
 
   getAdminUserData(): Observable<any> {
     const headers = new HttpHeaders({
@@ -64,15 +67,15 @@ export class StakeholderService {
               : 'N/A',
             nic: item.nic || 'N/A',
             modifyBy: item.modifyBy || '--',
-            assignDistrict: (item.assignDistrict)
+            assignDistrict: item.assignDistrict
               ? item.assignDistrict.split(',')
-              : ['--']
+              : ['--'],
           }));
         }),
         catchError((error) => {
           console.error('API Error:', error);
           throw error;
-        })
+        }),
       );
   }
 
@@ -113,12 +116,9 @@ export class StakeholderService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.get(
-      `${this.apiUrl}auth/get-all-manager-list`,
-      {
-        headers,
-      }
-    );
+    return this.http.get(`${this.apiUrl}auth/get-all-manager-list`, {
+      headers,
+    });
   }
 
   getForCreateId(role: string): Observable<any> {
@@ -137,7 +137,7 @@ export class StakeholderService {
     nicFront?: File | null,
     nicBack?: File | null,
     passbook?: File | null,
-    contract?: File | null
+    contract?: File | null,
   ): Observable<any> {
     const formData = new FormData();
     formData.append('officerData', JSON.stringify(person));
@@ -184,7 +184,7 @@ export class StakeholderService {
     nicFront?: File,
     nicBack?: File,
     passbook?: File,
-    contract?: File
+    contract?: File,
   ): Observable<any> {
     const formData = new FormData();
 
@@ -215,7 +215,7 @@ export class StakeholderService {
     return this.http.put(
       `${this.apiUrl}auth/update-field-officers/${id}`,
       formData,
-      { headers }
+      { headers },
     );
   }
 
@@ -228,5 +228,51 @@ export class StakeholderService {
 
     const url = `${this.apiUrl}stakeholder/update-status-send-password/${id}/${status}`;
     return this.http.put<any>(url, {}, { headers });
+  }
+
+  getAllGoviShopUsers(search?: string, currentPlan?: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let params = new HttpParams();
+
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    if (currentPlan) {
+      params = params.set('currentPlan', currentPlan);
+    }
+
+    return this.http.get(`${this.apiUrl}shop/view-govi-shop-users`, {
+      headers,
+      params,
+    });
+  }
+
+  deleteGoviShopUser(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete(
+      `${this.apiUrl}shop/delete-govi-shop-user/${id}`,
+      {
+        headers,
+      },
+    );
+  }
+
+  viewGoviShopSupplierById(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/view-govi-shop-supplier/${id}`;
+    return this.http.get<any>(url, { headers });
   }
 }

@@ -20,6 +20,9 @@ interface ShopData {
   ownername: string;
   nic: string;
   currentPlan: string;
+  planPrice?: string;
+  expireDate?: string;
+  planStatus?: string;
 }
 
 @Component({
@@ -79,16 +82,10 @@ export class ViewGoviShopSuppliersComponent implements OnInit {
           } else {
             this.showError('No shop ID provided');
             this.back();
-            // Use sample ID for testing
-            // const sampleId = 1;
-            // this.loadShopData(sampleId);
           }
         } else {
           this.showError('No shop ID provided');
           this.back();
-          // Use sample ID for testing
-          // const sampleId = 1;
-          // this.loadShopData(sampleId);
         }
       }
     });

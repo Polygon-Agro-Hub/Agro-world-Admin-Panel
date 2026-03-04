@@ -1032,7 +1032,24 @@ export class FinanceService {
 
     return this.http.get<any>(url, { headers });
   }
+
+  goviShopViewDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/govi-shop-view-document/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateGoviShopUserStatus(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/update-govi-shop-user-status/${id}`;
+    return this.http.put<any>(url, { status }, { headers });
+  }
 }
-
-
-

@@ -139,7 +139,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         fontColor: '#666666',
       },
       axisX: {
-        title: 'Crops',
+        title: 'Crop',
         reversed: true,
         titleFontColor: '#666666',
         labelFontColor: '#666666',

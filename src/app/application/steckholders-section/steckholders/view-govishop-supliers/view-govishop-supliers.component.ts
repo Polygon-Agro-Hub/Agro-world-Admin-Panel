@@ -22,6 +22,7 @@ export interface Supplier {
   currentPlanExpireDate?: string;
   planStatus?: string;
   daysRemaining?: number;
+  currentPlan?: string;
 }
 
 @Component({
@@ -45,7 +46,6 @@ export class ViewGovishopSupliersComponent implements OnInit {
   supplierToDelete: Supplier | null = null;
 
   planOptions = [
-    { label: 'All', value: null },
     { label: 'Free', value: 'Free' },
     { label: 'Premium', value: 'Premium' },
     { label: 'Expired', value: 'Expired' },
@@ -70,14 +70,28 @@ export class ViewGovishopSupliersComponent implements OnInit {
   loadSuppliers(): void {
     this.isLoading = true;
     
+    // Separate currentPlan and planStatus based on selected filter
+    let currentPlan: string | undefined;
+    let planStatus: string | undefined;
+    
+    if (this.selectedPlan === 'Expired') {
+      planStatus = 'expired';
+      currentPlan = undefined;
+    } else if (this.selectedPlan) {
+      currentPlan = this.selectedPlan;
+      planStatus = undefined;
+    }
+    
     console.log('Fetching suppliers with params:', {
       search: this.searchTerm || undefined,
-      currentPlan: this.selectedPlan || undefined
+      currentPlan: currentPlan,
+      planStatus: planStatus
     });
     
     this.goviShopService.getAllGoviShopUsers(
       this.searchTerm || undefined,
-      this.selectedPlan || undefined
+      currentPlan,
+      planStatus
     ).subscribe({
       next: (response) => {
         console.log('Raw API Response:', response);
@@ -109,7 +123,8 @@ export class ViewGovishopSupliersComponent implements OnInit {
           console.error('Unexpected response structure:', response);
         }
         
-        this.suppliers = shopUsers.map((user: any) => {
+        // Map the raw data to supplier objects
+        let mappedSuppliers = shopUsers.map((user: any) => {
           console.log('Mapping user:', user);
           return {
             id: user.id,
@@ -126,15 +141,30 @@ export class ViewGovishopSupliersComponent implements OnInit {
             planPrice: user.planPrice,
             currentPlanExpireDate: user.currentPlanExpireDate ? this.formatDate(user.currentPlanExpireDate) : undefined,
             planStatus: user.planStatus,
-            daysRemaining: user.daysRemaining
+            daysRemaining: user.daysRemaining,
+            currentPlan: user.currentPlan
           };
         });
         
-        this.totalSuppliers = total;
+        // Apply client-side filtering to ensure correct results
+        if (this.selectedPlan === 'Expired') {
+          mappedSuppliers = mappedSuppliers.filter((s: Supplier) => s.planStatus === 'expired');
+        } else if (this.selectedPlan === 'Premium') {
+          mappedSuppliers = mappedSuppliers.filter((s: Supplier) => 
+            s.pricePlan === 'Premium' && s.planStatus !== 'expired'
+          );
+        } else if (this.selectedPlan === 'Free') {
+          mappedSuppliers = mappedSuppliers.filter((s: Supplier) => 
+            s.pricePlan === 'Free' && s.planStatus !== 'expired'
+          );
+        }
+        
+        this.suppliers = mappedSuppliers;
+        this.totalSuppliers = mappedSuppliers.length;
         this.expiredCount = expired;
         this.activeCount = active;
         
-        console.log('Mapped suppliers:', this.suppliers);
+        console.log('Filtered suppliers:', this.suppliers);
         console.log('Total suppliers:', this.totalSuppliers);
         
         this.isLoading = false;

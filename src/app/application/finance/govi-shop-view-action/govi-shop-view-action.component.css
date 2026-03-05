@@ -1,0 +1,87 @@
+/* Dropdown panel background */
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+  border: 1px solid #4a5568 !important;
+}
+
+/* Dropdown items container */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items {
+  background-color: #2d354d !important;
+  padding: 0.5rem 0 !important;
+}
+
+/* Regular dropdown items */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  padding: 0.75rem 1rem !important;
+  transition: background-color 0.2s ease !important;
+  border: none !important;
+}
+
+/* Hover state for dropdown items */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #ffffff !important;
+}
+
+/* SELECTED ITEM HIGHLIGHTING - FIXED */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #3182ce !important; /* Your design color - blue */
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Selected item hover state - maintain highlight color */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight:hover {
+  background-color: #3182ce !important;
+  color: #ffffff !important;
+  opacity: 0.9 !important;
+}
+
+/* Dropdown trigger and label styles */
+::ng-deep .dark .p-dropdown .p-dropdown-label {
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown .p-dropdown-trigger {
+  color: #B1B1B1 !important;
+}
+
+/* Focus state for dropdown */
+::ng-deep .dark .p-dropdown:not(.p-disabled).p-focus {
+  border-color: #3182ce !important;
+  box-shadow: 0 0 0 1px #3182ce !important;
+}
+
+/* Empty message in dropdown */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-empty-message {
+  color: #B1B1B1 !important;
+  background-color: #2d354d !important;
+  padding: 0.75rem 1rem !important;
+}
+
+/* Group header if you use grouping */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-header {
+  background-color: #1a202c !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid #4a5568 !important;
+}
+
+/* Filter input if you add search to dropdown */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-container .p-dropdown-filter {
+  background-color: #1a202c !important;
+  color: #ffffff !important;
+  border: 1px solid #4a5568 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-container .p-dropdown-filter::placeholder {
+  color: #8B8B8B !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-container .p-dropdown-filter-icon {
+  color: #B1B1B1 !important;
+}

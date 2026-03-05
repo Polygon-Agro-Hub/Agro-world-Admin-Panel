@@ -24,7 +24,7 @@
                 <div class="mr-5">
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                        [options]="replyStatus" [checkmark]="true" optionLabel="status" optionValue="value"
+                        [options]="replyStatus"  optionLabel="status" optionValue="value"
                         [showClear]="!!rpst" placeholder="Reply" [(ngModel)]="rpst" (onChange)="regStatusFil()" />
                 </div>
 
@@ -32,7 +32,7 @@
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="comCategories"
-                        [(ngModel)]="filterComCategory" [checkmark]="true" optionLabel="categoryEnglish"
+                        [(ngModel)]="filterComCategory"  optionLabel="categoryEnglish"
                         [showClear]="!!filterComCategory" placeholder="Category" (onChange)="applyFilters()"
                         appendTo="body"></p-dropdown>
                 </div>
@@ -41,7 +41,7 @@
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="company"
-                        [(ngModel)]="filterCompany" [checkmark]="true" optionLabel="companyNameEnglish"
+                        [(ngModel)]="filterCompany"  optionLabel="companyNameEnglish"
                         [showClear]="!!filterCompany" placeholder="Company" (onChange)="applyFilters()"
                         appendTo="body"></p-dropdown>
                 </div>
@@ -49,7 +49,7 @@
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="statusfilterArr"
-                        [(ngModel)]="filterStatus" name="filterStatus" [checkmark]="true" optionLabel="label"
+                        [(ngModel)]="filterStatus" name="filterStatus"  optionLabel="label"
                         optionValue="value" [showClear]="!!filterStatus" placeholder="Status"
                         (onChange)="applyFilters()" appendTo="body"></p-dropdown>
                 </div>

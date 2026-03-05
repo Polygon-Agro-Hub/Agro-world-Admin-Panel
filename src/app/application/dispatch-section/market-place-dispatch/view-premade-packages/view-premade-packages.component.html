@@ -30,7 +30,8 @@
                         <th class="px-10 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                             Price of <br> Products (Rs.)
                         </th>
-                        <th *ngIf="permissionService.hasPermission('View dispatch package items') || tokenService.getUserDetails().role === '1'" class="px-10 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+                        <th *ngIf="permissionService.hasPermission('View dispatch package items') || tokenService.getUserDetails().role === '1'"
+                            class="px-10 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                             Package Items
                         </th>
 
@@ -47,7 +48,7 @@
                         </td>
 
                         <td class="px-10 py-3 font-normal text-[#000000] dark:text-textDark text-start">
-                            {{item.price | number : '1.2-2'}}
+                            {{(item.packageQty * item.price) | number : '1.2-2'}}
                         </td>
 
                         <td *ngIf="permissionService.hasPermission('View dispatch package items') || tokenService.getUserDetails().role === '1'"

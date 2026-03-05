@@ -276,6 +276,7 @@ import { ViewGovicapitalUsersComponent } from './application/steckholders-sectio
 import { ViewGovishopSupliersComponent } from './application/steckholders-section/steckholders/view-govishop-supliers/view-govishop-supliers.component';
 import { ViewGoviShopSuppliersComponent } from './application/steckholders-section/view-govi-shop-suppliers/view-govi-shop-suppliers.component';
 import { GoviShopViewActionComponent } from './application/finance/govi-shop-view-action/govi-shop-view-action.component';
+import { GoviShopViewDocumentComponent } from './application/finance/govi-shop-view-document/govi-shop-view-document.component';
 
 export const routes: Routes = [
   {
@@ -784,7 +785,10 @@ export const routes: Routes = [
                     path: 'view-action',
                     component: GoviShopViewActionComponent,
                   },
-                 
+                 {
+                   path: 'view-documents/:id',
+                   component: GoviShopViewDocumentComponent,
+                 },
                 ],
               },
 

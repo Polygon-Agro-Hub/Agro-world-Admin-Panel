@@ -127,8 +127,8 @@
                 {{ order.userName === null ? '--': order.userName }}
               </td>
               <td class="px-4 py-3 text-center text-[#000000] dark:text-textDark">
-                {{ order.sheduleDate | date : "d MMM, y" }}<br />
-                {{ order.sheduleDate | date : "hh:mm a" }}
+                {{ order.processCreatedAt | date : "d MMM, y" }}<br />
+                {{ order.processCreatedAt | date : "hh:mm a" }}
               </td>
 
               <td class="px-1 py-3 text-center">

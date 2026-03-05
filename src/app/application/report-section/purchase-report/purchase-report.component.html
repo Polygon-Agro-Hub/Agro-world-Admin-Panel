@@ -10,76 +10,75 @@
 >
   <!-- Date Range Selector -->
   <div
-    class="mb-10 p-6 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center justify-between space-x-8"
+    class="mb-10 py-6 pr-12 gap-x-12 pl-10 w-full dark:bg-tileBlack rounded-lg shadow-md flex justify-start"
   >
     
-    <!-- From Date -->
-    <!-- From Date -->
-<div class="flex items-center gap-2 w-full">
-  <label
-    for="fromDate"
-    class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
-    >From:</label
-  >
-  <p-calendar
-    id="fromDate"
-    [(ngModel)]="fromDate"
-    placeholder="YYYY/MM/DD"
-    [showIcon]="true"
-    [showClear]="true"
-    [showButtonBar]="true"
-    iconDisplay="input"
-    [style]="{ width: '20rem', height: '2.5rem' }"
-    [maxDate]="maxDate"
-    [selectOtherMonths]="false"
-    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-           [&_.p-datepicker-header]:dark:text-white
-           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-           [&_.p-button:hover]:dark:bg-[#6b7280]"
-    inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
-    (onSelect)="onFromDateSelect()" 
-    (onClear)="onFromDateClear()"
-  />
+<div class="flex w-1/2 gap-x-12 ml-12">
+  <div class="flex items-center gap-2 w-full ">
+    <label
+      for="fromDate"
+      class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
+      >From:</label
+    >
+    <p-calendar
+      id="fromDate"
+      [(ngModel)]="fromDate"
+      placeholder="YYYY/MM/DD"
+      [showIcon]="true"
+      [showClear]="true"
+      [showButtonBar]="true"
+      iconDisplay="input"
+      [style]="{ width: '20rem', height: '2.5rem' }"
+      [maxDate]="maxDate"
+      [selectOtherMonths]="false"
+      panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+             [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+             [&_.p-datepicker-header]:dark:text-white
+             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+             [&_.p-button:hover]:dark:bg-[#6b7280]"
+      inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
+      (onSelect)="onFromDateSelect()" 
+      (onClear)="onFromDateClear()"
+    />
+  </div>
+  
+  <!-- To Date -->
+  <div class="flex items-center gap-2 w-full">
+    <label
+      for="toDate"
+      class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
+      >To:</label
+    >
+    <p-calendar
+      id="toDate"
+      [(ngModel)]="toDate"
+      placeholder="YYYY/MM/DD"
+      [showIcon]="true"
+      [showClear]="true"
+      [showButtonBar]="true"
+      iconDisplay="input"
+      [style]="{ width: '20rem', height: '2.5rem' }"
+      [minDate]="fromDate"
+      [maxDate]="maxDate"
+      [selectOtherMonths]="false"
+      panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+             [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+             [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+             [&_.p-datepicker-header]:dark:text-white
+             [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+             [&_.p-button:hover]:dark:bg-[#6b7280]"
+      inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
+      [disabled]="!fromDate"
+      (onSelect)="onToDateSelect()"
+      (onClear)="onToDateClear()"
+    />
+  </div>
 </div>
-
-<!-- To Date -->
-<div class="flex items-center gap-2 w-full">
-  <label
-    for="toDate"
-    class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
-    >To:</label
-  >
-  <p-calendar
-    id="toDate"
-    [(ngModel)]="toDate"
-    placeholder="YYYY/MM/DD"
-    [showIcon]="true"
-    [showClear]="true"
-    [showButtonBar]="true"
-    iconDisplay="input"
-    [style]="{ width: '20rem', height: '2.5rem' }"
-    [minDate]="fromDate"
-    [maxDate]="maxDate"
-    [selectOtherMonths]="false"
-    panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-           [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-           [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-           [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-           [&_.p-datepicker-header]:dark:text-white
-           [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-           [&_.p-button:hover]:dark:bg-[#6b7280]"
-    inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10"
-    [disabled]="!fromDate"
-    (onSelect)="onToDateSelect()"
-    (onClear)="onToDateClear()"
-  />
-</div>
-
     <!-- Go Button -->
-    <div class="flex items-center">
+    <div class="flex justify-end w-1/4 ml-20">
       <button
         (click)="fetchAllPurchaseReport()"
         [disabled]="!fromDate" 
@@ -104,7 +103,7 @@
       <!-- Header Section - Only show when there's data -->
       <div *ngIf="hasData" class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-          <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
+          <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
             All Transactions ({{ this.totalItems }})
           </h2>
         </div>
@@ -187,8 +186,10 @@
 
       <!-- Total and Download Button - Only show when there's data -->
       <div *ngIf="hasData" class="flex justify-between items-center mb-5">
-        <h4 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          Total : Rs. {{ this.grandTotal | number : "1.2-2" }}
+        <h4 class="text-lg font-normal text-[#292929] dark:text-textDark">
+
+          <span class="text-[#74788D]">Total :</span>
+           Rs. {{ this.grandTotal | number : "1.2-2" }}
         </h4>
 
         <button
@@ -222,12 +223,12 @@
                 Amount (Rs.)
               </th>
               <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
               >
                 Centre Code
               </th>
               <th
-                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center"
+                class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-left"
               >
                 Centre Name
               </th>
@@ -269,12 +270,12 @@
                 {{ item.amount | number : "1.2-2" }}
               </td>
               <td
-                class="px-4 py-3 text-gray-500 dark:text-textDark text-center"
+                class="px-4 py-3 text-gray-500 dark:text-textDark text-left"
               >
                 {{ item.regCode }}
               </td>
               <td
-                class="px-4 py-3 text-gray-500 dark:text-textDark text-center"
+                class="px-4 py-3 text-gray-500 dark:text-textDark text-left"
               >
                 {{ item.centerName }}
               </td>

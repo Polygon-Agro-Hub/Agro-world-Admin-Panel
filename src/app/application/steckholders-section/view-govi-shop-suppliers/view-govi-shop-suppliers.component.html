@@ -39,11 +39,11 @@
             <div
                 class="px-8 py-2 rounded-lg font-inter font-[400] shadow-md"
                 [ngClass]="{
-                  'bg-[#D7EEFF] text-[#002AFF]': shopData?.currentPlan === 'Free',
-                  'bg-[#FFFF9F] text-[#D8B800]': shopData?.currentPlan === 'Premium',
-                  'bg-[#FFD5D5] text-[#FF0000]': shopData?.currentPlan === 'Expired'
+                  'bg-[#D7EEFF] text-[#002AFF]': (shopData?.planStatus === 'ACTIVE' || shopData?.planStatus === 'NO_PLAN') && shopData?.currentPlan === 'Free',
+                  'bg-[#FFFF9F] text-[#D8B800]': shopData?.planStatus === 'ACTIVE' && shopData?.currentPlan === 'Premium',
+                  'bg-[#FFD5D5] text-[#FF0000]': shopData?.planStatus === 'EXPIRED'
                 }">
-                {{ shopData?.currentPlan || 'Free' }}
+                {{ shopData?.planStatus === 'EXPIRED' ? 'Expired' : (shopData?.currentPlan || 'Free') }}
             </div>
         </div>
 

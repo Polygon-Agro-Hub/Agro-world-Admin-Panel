@@ -151,4 +151,5 @@ class Payment {
   officerFirstName!: string;
   officerLastName!: string;
   paymentDate!: string;
+  totalAmount!: number;
 }

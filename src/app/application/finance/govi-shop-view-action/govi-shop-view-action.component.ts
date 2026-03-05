@@ -84,13 +84,10 @@ export class GoviShopViewActionComponent implements OnInit {
       )
       .subscribe(
         (data) => {
-          console.log(data);
           this.isLoading = false;
           this.ordersArr = data.items;
-
           this.hasData = this.ordersArr.length > 0;
           this.totalItems = data.total;
-          console.log(this.ordersArr);
         },
         (error) => {
           console.error('Error fetch news:', error);
@@ -141,6 +138,9 @@ export class GoviShopViewActionComponent implements OnInit {
     this.router.navigate([path]);
   }
 
+  viewDocuments(id: number) {
+    this.router.navigate(['/finance/action/finance-govishop/view-documents', id]);
+  }
 }
 
 class Orders {

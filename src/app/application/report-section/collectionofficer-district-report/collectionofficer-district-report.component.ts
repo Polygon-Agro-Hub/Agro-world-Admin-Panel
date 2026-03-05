@@ -47,7 +47,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
   constructor(
     private collectionOfficerSrv: CollectionOfficerReportService,
     private router: Router,
-    private themeService: ThemeService
+    private themeService: ThemeService,
   ) {}
 
   ngOnInit(): void {
@@ -95,7 +95,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         this.loadingTable = false;
         this.updateChart();
       },
-      (error) => {}
+      (error) => {},
     );
   }
 
@@ -139,7 +139,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         fontColor: '#666666',
       },
       axisX: {
-        title: 'Crops',
+        title: 'Crop',
         reversed: true,
         titleFontColor: '#666666',
         labelFontColor: '#666666',
@@ -154,6 +154,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
         tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
         gridColor: isDarkMode ? '#374151' : '#e5e7eb',
+        labelFontSize: 12, // Adjust if needed
+        titleFontSize: 14,
+        titleFontWeight: 'normal',
+        labelWrap: true,
+        margin: 15, // Add margin between axis line and labels
       },
       legend: {
         fontColor: '#666666',
@@ -200,11 +205,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
 
       const margin = 20;
       const chartStartX = 50;
-      const chartStartY = 70; // Increased from 60 to give more space for title
+      const chartStartY = 70;
       const barHeight = 8;
-      const gap = 2;
-      const chartHeight = 100; // Fixed height for the chart area
-      const chartWidth = 100; // Width of the bar area
+      const gap = 2; // Keep as is for row spacing
+      const chartHeight = 100;
+      const chartWidth = 100;
 
       const colors = {
         gradeA: '#FF9263',
@@ -212,14 +217,14 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         gradeC: '#3DE188',
       };
 
-      // Title - Match the screenshot style
+      // Title
       doc.setFontSize(16);
-      doc.setTextColor(102, 102, 102); // Gray color #666666
+      doc.setTextColor(102, 102, 102);
       doc.text(
         `${this.selectedDistrict.name} - Crop Weights`,
         pageWidth / 2,
         25,
-        { align: 'center' }
+        { align: 'center' },
       );
 
       if (!this.reportDetails || this.reportDetails.length === 0) {
@@ -230,49 +235,47 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         return;
       }
 
-      // Crop list on the left (y-axis labels)
+      // Crop list on the left
       const cropNames = this.reportDetails.map((crop) => crop.cropName);
       const maxCropNameLength = Math.max(
-        ...cropNames.map((name) => name.length)
+        ...cropNames.map((name) => name.length),
       );
-      const cropNameAreaWidth = 35; // Fixed width for crop names
+      const cropNameAreaWidth = 35;
 
       // Calculate positions
       const totalBarsHeight = cropNames.length * (barHeight + gap);
-      const barAreaStartY = chartStartY + (chartHeight - totalBarsHeight) / 2; // Center bars vertically
+      const barAreaStartY = chartStartY + (chartHeight - totalBarsHeight) / 2;
       const barAreaEndY = barAreaStartY + totalBarsHeight;
 
       // Draw y-axis line
-      const yAxisX = chartStartX - 0.5; // X position for y-axis line
+      const yAxisX = chartStartX - 0.5;
       doc.setDrawColor(0, 0, 0);
       doc.setLineWidth(0.5);
-      doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5); // Extended slightly above and below bars
+      doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5);
 
-      // Draw y-axis title "Crops" (vertical text on the left)
+      // ============== UPDATED Y-AXIS LABEL ==============
+      // Draw y-axis title - positioned closer to the axis
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-
-      // Use text rotation for vertical text
-      const textX = yAxisX - 5;
-      const textY = (barAreaStartY + barAreaEndY) / 3;
-      doc.text('Crops', textX, textY, { angle: 360, align: 'center' });
+      const textX = yAxisX - 5; // Reduced from -5 to -12 to bring closer
+      const textY = (barAreaStartY + barAreaEndY) / 3 + 12; // Adjusted to center vertically
+      doc.text('Crop', textX, textY, { angle: 360, align: 'center' });
+      // ==================================================
 
       // Draw y-axis tick marks for each crop
       let currentBarY = barAreaStartY;
       cropNames.forEach((cropName, index) => {
-        // Draw small tick mark on y-axis
         doc.setDrawColor(0, 0, 0);
         doc.setLineWidth(0.5);
         doc.line(
           yAxisX,
           currentBarY + barHeight / 2,
           yAxisX - 2,
-          currentBarY + barHeight / 2
+          currentBarY + barHeight / 2,
         );
 
-        // Draw crop name
         doc.setFontSize(10);
-        doc.setTextColor(102, 102, 102); // Gray color #666666
+        doc.setTextColor(102, 102, 102);
         doc.text(cropName, chartStartX - 10, currentBarY + barHeight / 2 + 2, {
           align: 'right',
         });
@@ -283,48 +286,48 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       // Draw the horizontal bars
       currentBarY = barAreaStartY;
 
-      // Find maximum total weight for scaling
       const maxWeight = Math.max(
         ...this.reportDetails.map(
-          (crop) => (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0)
-        )
+          (crop) => Number(crop.qtyA || 0) + Number(crop.qtyB || 0) + Number(crop.qtyC || 0),
+        ),
       );
 
-      // Scale factor to fit within chartWidth
       const scaleFactor = chartWidth / maxWeight;
 
-      // Draw bars for each crop
       this.reportDetails.forEach((crop, index) => {
-        const totalWeight =
-          (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0);
+        const qtyA = Number(crop.qtyA) || 0;
+        const qtyB = Number(crop.qtyB) || 0;
+        const qtyC = Number(crop.qtyC) || 0;
+        
+        const totalWeight = qtyA + qtyB + qtyC;
+
+        let widthA = qtyA * scaleFactor;
+        let widthB = qtyB * scaleFactor;
+        let widthC = qtyC * scaleFactor;
 
         let currentX = chartStartX;
 
         // Draw Grade A
-        if (crop.qtyA > 0) {
-          const segmentWidth = crop.qtyA * scaleFactor;
-          doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
-          doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
-          currentX += segmentWidth;
+        if (qtyA > 0) {
+          doc.setFillColor(255, 146, 99);
+          doc.rect(currentX, currentBarY, widthA, barHeight, 'F');
+          currentX += widthA;
         }
 
         // Draw Grade B
-        if (crop.qtyB > 0) {
-          const segmentWidth = crop.qtyB * scaleFactor;
-          doc.setFillColor(95, 117, 233); // #5F75E9 - Grade B color
-          doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
-          currentX += segmentWidth;
+        if (qtyB > 0) {
+          doc.setFillColor(95, 117, 233);
+          doc.rect(currentX, currentBarY, widthB, barHeight, 'F');
+          currentX += widthB;
         }
 
-        // Draw Grade C (first segment - appears on the left in horizontal bar)
-        if (crop.qtyC > 0) {
-          const segmentWidth = crop.qtyC * scaleFactor;
-          doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
-          doc.rect(currentX, currentBarY, segmentWidth, barHeight, 'F');
-          currentX += segmentWidth;
+        // Draw Grade C
+        if (qtyC > 0) {
+          doc.setFillColor(61, 225, 136);
+          doc.rect(currentX, currentBarY, widthC, barHeight, 'F');
         }
 
-        // Draw total weight label at the end of the bar
+        // Draw total weight label
         if (totalWeight > 0) {
           doc.setFontSize(8);
           doc.setTextColor(0, 0, 0);
@@ -332,7 +335,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
           doc.text(
             `${totalWeight}kg`,
             labelX,
-            currentBarY + barHeight / 2 + 1.5
+            currentBarY + barHeight / 2 + 1.5,
           );
         }
 
@@ -341,22 +344,17 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
 
       // Draw x-axis line and labels
       const xAxisStartX = chartStartX;
-      const xAxisEndX = chartStartX + chartWidth + 30; // Extra space for labels
+      const xAxisEndX = chartStartX + chartWidth + 30;
       const xAxisY = barAreaStartY + totalBarsHeight + 5;
 
-      // Draw x-axis line (connected to y-axis)
       doc.setDrawColor(0, 0, 0);
       doc.setLineWidth(0.5);
       doc.line(xAxisStartX, xAxisY, xAxisEndX, xAxisY);
+      doc.line(yAxisX, xAxisY, yAxisX, barAreaEndY + 5);
 
-      // Connect y-axis to x-axis
-      doc.line(yAxisX, xAxisY, yAxisX, barAreaEndY + 5); // Extend y-axis down to x-axis
-
-      // Draw x-axis labels (0 to maxWeight with increments)
       doc.setFontSize(8);
       doc.setTextColor(102, 102, 102);
 
-      // Calculate tick intervals
       const maxTickValue = Math.ceil(maxWeight / 100) * 100;
       const tickCount = Math.min(8, Math.ceil(maxTickValue / 100));
 
@@ -364,62 +362,64 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         const tickValue = (maxTickValue / tickCount) * i;
         const tickX = chartStartX + tickValue * scaleFactor;
 
-        // Draw tick mark on x-axis
         doc.setDrawColor(0, 0, 0);
         doc.setLineWidth(0.5);
         doc.line(tickX, xAxisY, tickX, xAxisY + 2);
 
-        // Draw label
         const labelText = tickValue === 0 ? '0' : tickValue.toLocaleString();
         doc.text(labelText, tickX, xAxisY + 6, { align: 'center' });
       }
 
-      // Draw x-axis title
+      // ============== UPDATED X-AXIS LABEL ==============
+      // Draw x-axis title - positioned closer to the axis
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 15, {
+      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, { // Reduced from +15 to +10
         align: 'right',
       });
+      // ==================================================
 
-      // Draw legend
+      // Legend section (unchanged)
       const legendY = chartStartY - 15;
       const legendSquareSize = 6;
+      const legendSpacing = 25;
 
-      doc.setFillColor(255, 146, 99); // #FF9263 - Grade A color
+      // Grade A
+      doc.setFillColor(255, 146, 99);
       doc.rect(chartStartX, legendY, legendSquareSize, legendSquareSize, 'F');
       doc.setFontSize(9);
       doc.setTextColor(102, 102, 102);
       doc.text(
         'Grade A',
         chartStartX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1
+        legendY + legendSquareSize / 2 + 1,
       );
 
       // Grade B
-      const legendBX = chartStartX + 45;
-      doc.setFillColor(95, 117, 233); // #5F75E9 - Grade B color
+      const legendBX = chartStartX + legendSpacing;
+      doc.setFillColor(95, 117, 233);
       doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
       doc.text(
         'Grade B',
         legendBX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1
+        legendY + legendSquareSize / 2 + 1,
       );
 
       // Grade C
-      const legendCX = legendBX + 45;
-      doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
+      const legendCX = legendBX + legendSpacing;
+      doc.setFillColor(61, 225, 136);
       doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
       doc.text(
         'Grade C',
         legendCX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1
+        legendY + legendSquareSize / 2 + 1,
       );
 
-      // Summary Table (optional - you can remove this if you don't want it)
+      // Summary Table
       const tableStartY = xAxisY + 30;
       const cellHeight = 8;
       const tableColWidths = [40, 30, 30, 30, 30];
-      const tableStartX = (pageWidth - 160) / 2; // Center the table
+      const tableStartX = (pageWidth - 160) / 2;
       let rowY = tableStartY;
 
       const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
@@ -427,7 +427,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       doc.setDrawColor(200, 200, 200);
       doc.setLineWidth(0.2);
 
-      // Draw header row
       let cellX = tableStartX;
       headers.forEach((header, index) => {
         doc.setFillColor(245, 245, 245);
@@ -441,15 +440,17 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
 
       rowY += cellHeight;
 
-      // Draw data rows
       this.reportDetails.forEach((crop) => {
-        const totalWeight =
-          (crop.qtyA || 0) + (crop.qtyB || 0) + (crop.qtyC || 0);
+        const qtyA = Number(crop.qtyA) || 0;
+        const qtyB = Number(crop.qtyB) || 0;
+        const qtyC = Number(crop.qtyC) || 0;
+        const totalWeight = qtyA + qtyB + qtyC;
+        
         const values = [
           crop.cropName,
-          crop.qtyA ? `${crop.qtyA}kg` : '-',
-          crop.qtyB ? `${crop.qtyB}kg` : '-',
-          crop.qtyC ? `${crop.qtyC}kg` : '-',
+          qtyA ? `${qtyA}kg` : '-',
+          qtyB ? `${qtyB}kg` : '-',
+          qtyC ? `${qtyC}kg` : '-',
           `${totalWeight}kg`,
         ];
 

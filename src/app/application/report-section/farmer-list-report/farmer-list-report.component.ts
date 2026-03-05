@@ -170,6 +170,12 @@ export class FarmerListReportComponent {
       });
     };
 
+    // Set Document Title
+    doc.setFontSize(10);
+    doc.text(`INV NO: ${this.todayDate[0].invNo}`, 10, 14 )
+    doc.setFontSize(10);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 10, 20);
+
     let yPosition = 30;
 
     // Utility Function to Center Text in a Cell
@@ -395,11 +401,12 @@ export class FarmerListReportComponent {
     const total = this.getTotal();
     doc.text(`Full Total (Rs.): ${formatNumber(total)}`, 10, yPosition);
 
-    // QR Codes Section - REDUCED SIZE
-yPosition += 15; // Reduced spacing
+    // QR Codes Section
+yPosition += 10;
 const pageWidth = doc.internal.pageSize.width;
-const imageWidth = 30; // Reduced from 50 to 30
-const imageSpacing = 8; // Reduced from 10 to 8
+const imageWidth = 25;  // Reduced from 50
+const imageHeight = 25; // Slightly taller than wide for a bit of height reduction
+const imageSpacing = 10;
 const totalImageWidth = imageWidth * 2 + imageSpacing;
 const startX = (pageWidth - totalImageWidth) / 2;
 
@@ -423,59 +430,34 @@ try {
     officerQrBase64 = await loadImageAsBase64(modifiedOfficerUrl);
   }
 
-  // Add Farmer QR Code (if available) - WITH TEXT UNDERNEATH
+  // Add Farmer QR Code (if available)
   if (farmerQrBase64) {
-    doc.setFontSize(8); // Smaller font for QR labels
-    
-    // Add QR code image
-    doc.addImage(
-      farmerQrBase64,
-      'PNG',
-      startX,
-      yPosition,
-      imageWidth,
-      imageWidth
-    );
-    
-    // Add text directly under the QR code (center-aligned)
-    const farmerText = 'Farmer’s QR Code';
-    const farmerTextWidth = doc.getTextWidth(farmerText);
-    const farmerTextX = startX + (imageWidth - farmerTextWidth) / 2;
-    doc.text(farmerText, farmerTextX, yPosition + imageWidth + 4);
+    doc.addImage(farmerQrBase64, 'PNG', startX, yPosition, imageWidth, imageHeight);
+
+    // Centered text below the image
+    const farmerTextX = startX + imageWidth / 2;
+    doc.setFontSize(10);
+    doc.text('Farmer QR Code', farmerTextX, yPosition + imageHeight + 5, { align: 'center' });
   }
 
-  // Add Collection Officer QR Code (if available) - WITH TEXT UNDERNEATH
+  // Add Collection Officer QR Code (if available)
   if (officerQrBase64) {
     const secondImageX = startX + imageWidth + imageSpacing;
-    doc.setFontSize(8); // Smaller font for QR labels
-    
-    // Add QR code image
-    doc.addImage(
-      officerQrBase64,
-      'PNG',
-      secondImageX,
-      yPosition,
-      imageWidth,
-      imageWidth
-    );
-    
-    // Add text directly under the QR code (center-aligned)
-    const officerText = 'Officer’s QR Code';
-    const officerTextWidth = doc.getTextWidth(officerText);
-    const officerTextX = secondImageX + (imageWidth - officerTextWidth) / 2;
-    doc.text(officerText, officerTextX, yPosition + imageWidth + 4);
+    doc.addImage(officerQrBase64, 'PNG', secondImageX, yPosition, imageWidth, imageHeight);
+
+    // Centered text below the image
+    const officerTextX = secondImageX + imageWidth / 2;
+    doc.setFontSize(10);
+    doc.text(`Officer's QR Code`, officerTextX, yPosition + imageHeight + 5, { align: 'center' });
   }
 
-  doc.setFontSize(10); // Reset font size
-  yPosition += imageWidth + 15; // Increased spacing to accommodate text under QR codes
-} catch (error) {
-  console.error('Error adding QR codes:', error);
-  doc.setTextColor(255, 0, 0);
-  doc.setFontSize(8);
-  doc.text('Error loading QR codes', 10, yPosition);
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(10);
-}
+  yPosition += imageHeight + 20;
+    } catch (error) {
+      console.error('Error adding QR codes:', error);
+      doc.setTextColor(255, 0, 0);
+      doc.text('Error loading QR codes', 10, yPosition);
+      doc.setTextColor(0, 0, 0);
+    }
 
 console.log('Saving PDF...');
 doc.save(`${inv}.pdf`);

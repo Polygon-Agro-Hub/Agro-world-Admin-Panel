@@ -996,20 +996,36 @@ export class FinanceService {
   }
 
   getGocicareAllInvestmentUsers(
-    search?: string
-  ): Observable<any> {
-    let params = new HttpParams();
+  page: number,
+  limit: number,
+  search?: string,
+  id?: number,
+  status?: string
+): Observable<any> {
+  console.log('Fetching investment users - Page:', page, 'Limit:', limit, 'Search:', search, 'ID:', id, 'Status:', status);
 
-    if (search && search.trim()) {
-      params = params.set('search', search.trim());
-    }
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+  });
 
-    const url = `${this.apiUrl}finance/govicare-investment-users`;
-    return this.http.get<any>(url, {
-      headers: this.getHeaders(),
-      params: params,
-    });
+  // Build URL with pagination parameters
+  let url = `${this.apiUrl}finance/govicare-investment-users?page=${page}&limit=${limit}`;
+
+  // Add optional parameters if they exist
+  if (search && search.trim()) {
+    url += `&search=${encodeURIComponent(search.trim())}`;
   }
+
+  if (id) {
+    url += `&id=${id}`;
+  }
+
+  if (status) {
+    url += `&status=${encodeURIComponent(status)}`;
+  }
+
+  return this.http.get<any>(url, { headers: headers });
+}
 
   getAllShopViewAction(
     status: string,

@@ -57,13 +57,17 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   contentToConvert!: ElementRef;
   id: string | null = null;
   name: string | null = null;
-  createdDate: string = new Date().toISOString().split("T")[0];
+  createdDate: Date = new Date();
+  createdDateForPdf!: string;
 
   reportData: CropReport = {};
   chartOptions: any;
   loadingChart = true;
   loadingTable = true;
   isDownloading = false;
+
+  empId: string | null = null;
+  lastName: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -78,11 +82,22 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       this.id = params.get("id");
       this.name = params.get("name");
+      this.empId = params.get("empId");
+      this.lastName = params.get("lastName");
+
     });
 
     setTimeout(() => {
       this.fetchReport();
     }, 1000);
+  }
+
+  // ── Helper ──────────────────────────────────────────────────────────
+  hexToRgb(hex: string): [number, number, number] {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+      : [0, 0, 0];
   }
 
   fetchReport(): void {
@@ -96,9 +111,14 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     this.loadingTable = true;
 
     let formattedDate = '';
+    console.log('createdDate', this.createdDate)
     if (this.createdDate) {
+      this.createdDateForPdf = new Date().toISOString().split("T")[0];
+      console.log('date for pdf', this.createdDateForPdf)
       formattedDate = this.convertToISO(this.createdDate);
     }
+
+    console.log('formattedDate', formattedDate)
 
     const url = `${environment.API_URL}auth/collection-officer/get-collection-officer-report/${this.id}/${formattedDate}`;
 
@@ -106,6 +126,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       this.http.get<CropReport>(url, { headers }).subscribe(
         (data) => {
           this.reportData = data;
+          // this.empId = data.empId
           this.loadingTable = false;
           this.updateChartOptions();
         },
@@ -155,7 +176,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       
       // ── Y Axis ──────────────────────────────────────────────────────
       axisY: {
-        title: "Weight (Kg)",
+        title: "Weight (kg)",
         titleFontSize: 14,
         titleFontColor: titleColor,
         titlePadding: 10,        // ← space between title and axis labels
@@ -255,25 +276,6 @@ legend: {
     this.cdr.detectChanges();
   }
 
-  onDateChange(): void {
-    if (this.createdDate === "") {
-      Swal.fire({
-        title: "Error!",
-        text: "Please select a date",
-        icon: "error",
-        confirmButtonText: "OK",
-      }).then(() => {
-        this.createdDate = new Date().toISOString().split("T")[0];
-        console.log('date', this.createdDate)
-        this.fetchReport();
-      });
-    } else {
-      console.log('date', this.createdDate)
-      this.fetchReport();
-
-    }
-  }
-
   get reportEntries(): [
     string,
     { "Grade A": number; "Grade B": number; "Grade C": number; Total: number },
@@ -288,126 +290,223 @@ legend: {
   }
 
   async downloadPDF(): Promise<void> {
-    this.isDownloading = true; 
-
+    this.isDownloading = true;
     setTimeout(() => {
       const doc = new jsPDF('p', 'mm', 'a4');
       const pageWidth = doc.internal.pageSize.getWidth();
-      const startX = 30;
-      const startY = 30;
-      const barHeight = 10;
-      const gap = 15;
-      const chartWidth = 140;
-      const titleFontSize = 14;
-      const contentFontSize = 10;
+  
       const colors = {
         gradeA: '#FF9263',
         gradeB: '#5F75E9',
         gradeC: '#3DE188',
       };
-
-      doc.setFontSize(titleFontSize);
-      doc.text(`${this.name}'s Report`, pageWidth / 2, 20, { align: 'center' });
-
+  
+      // ── Header ────────────────────────────────────────────────────
+      doc.setFontSize(12);
+      doc.text(`${this.name} ${this.lastName}`, pageWidth / 2, 18, { align: 'center' });
+      doc.text(`${this.createdDateForPdf}`, pageWidth / 2, 24, { align: 'center' });
+  
       if (Object.keys(this.reportData).length === 0) {
-        doc.setFontSize(contentFontSize);
-        doc.text('No data available to display.', startX, startY);
-        doc.save(`${this.createdDate}_Report.pdf`);
-        this.isDownloading = false; 
+        doc.setFontSize(10);
+        doc.text('No data available to display.', 30, 35);
+        doc.save(`${this.createdDateForPdf}_Report.pdf`);
+        this.isDownloading = false;
         return;
       }
-
-      const groupedData = Object.entries(this.reportData).map(
-        ([cropName, grades]) => ({
-          cropName,
-          gradeA: grades['Grade A'] || 0,
-          gradeB: grades['Grade B'] || 0,
-          gradeC: grades['Grade C'] || 0,
-          totalWeight: grades['Total'] || 0,
-        }),
-      );
-
-      const maxWeight = Math.max(...groupedData.map((crop) => crop.totalWeight));
-
-      let currentY = startY;
-      groupedData.forEach((crop) => {
-        let currentX = startX;
-        const labelYOffset = currentY + barHeight / 2 + 3;
-
-        doc.setFontSize(contentFontSize);
+  
+      const groupedData = Object.entries(this.reportData).map(([cropName, grades]) => ({
+        cropName,
+        gradeA: grades['Grade A'] || 0,
+        gradeB: grades['Grade B'] || 0,
+        gradeC: grades['Grade C'] || 0,
+        totalWeight: grades['Total'] || 0,
+      }));
+  
+      // ── Legend ────────────────────────────────────────────────────
+      const legendY = 32;
+      const legendItems = [
+        { label: 'Grade A', color: colors.gradeA },
+        { label: 'Grade B', color: colors.gradeB },
+        { label: 'Grade C', color: colors.gradeC },
+      ];
+      const legendBoxSize = 4;
+      const legendItemWidth = 30;
+      const legendStartX = pageWidth / 2 - (legendItems.length * legendItemWidth) / 2;
+  
+      legendItems.forEach((item, i) => {
+        const lx = legendStartX + i * legendItemWidth;
+        const [r, g, b] = this.hexToRgb(item.color);
+        doc.setFillColor(r, g, b);
+        doc.rect(lx, legendY, legendBoxSize, legendBoxSize, 'F');
+        doc.setFontSize(8);
         doc.setTextColor(0, 0, 0);
-        doc.text(crop.cropName, startX - 20, labelYOffset);
-
-        const grades = [
+        doc.text(item.label, lx + legendBoxSize + 2, legendY + legendBoxSize - 1);
+      });
+  
+      // ── Chart layout ──────────────────────────────────────────────
+      // Left margin reserved for crop labels (handle long names)
+      const labelAreaWidth = 38;   // px reserved for Y-axis crop labels
+      const chartStartX = 15 + labelAreaWidth;  // where bars begin
+      const chartStartY = legendY + 12;
+      const barHeight = 9;
+      const rowGap = 14;           // total row height including spacing
+      const chartWidth = 120;      // max bar width
+  
+      const maxWeight = Math.max(...groupedData.map((c) => c.totalWeight));
+  
+      // ── Y-axis title (rotated) ────────────────────────────────────
+      const totalChartHeight = groupedData.length * rowGap;
+      const chartMidY = chartStartY + totalChartHeight / 2;
+      doc.setFontSize(9);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Crop Variety', 35, chartMidY, { angle: 90, align: 'center' });
+  
+      // ── Draw each crop row ────────────────────────────────────────
+      groupedData.forEach((crop, rowIndex) => {
+        const rowY = chartStartY + rowIndex * rowGap;
+        const barMidY = rowY + barHeight / 2;
+  
+        // Wrap long crop names to 2 lines (max ~16 chars per line)
+        const maxChars = 14;
+        let labelLines: string[];
+        if (crop.cropName.length <= maxChars) {
+          labelLines = [crop.cropName];
+        } else {
+          // Split at last space before maxChars, else force-split
+          const spaceIdx = crop.cropName.lastIndexOf(' ', maxChars);
+          if (spaceIdx > 0) {
+            labelLines = [
+              crop.cropName.substring(0, spaceIdx),
+              crop.cropName.substring(spaceIdx + 1),
+            ];
+          } else {
+            labelLines = [
+              crop.cropName.substring(0, maxChars),
+              crop.cropName.substring(maxChars),
+            ];
+          }
+        }
+  
+        // Draw label lines centred on bar
+        doc.setFontSize(7.5);
+        doc.setTextColor(0, 0, 0);
+        const lineHeight = 3.5;
+        const labelBaseY =
+          labelLines.length === 1
+            ? barMidY + 1
+            : barMidY - lineHeight / 2 + 1;
+  
+        labelLines.forEach((line, li) => {
+          doc.text(line, chartStartX - 2, labelBaseY + li * lineHeight, { align: 'right' });
+        });
+  
+        // Draw stacked bars
+        let currentX = chartStartX;
+        const gradeKeys = [
           { key: 'gradeA', color: colors.gradeA },
           { key: 'gradeB', color: colors.gradeB },
           { key: 'gradeC', color: colors.gradeC },
         ];
-
-        grades.forEach(({ key, color }) => {
-          const gradeWeight = crop[key as keyof typeof crop] as number;
-          if (gradeWeight > 0) {
-            const barWidth = (gradeWeight / maxWeight) * chartWidth;
-            doc.setFillColor(color);
-            doc.rect(currentX, currentY, barWidth, barHeight, 'F');
-
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(8);
-            doc.text(
-              `${gradeWeight} kg`,
-              currentX + barWidth / 2,
-              currentY + barHeight / 2 + 3,
-              { align: 'center' },
-            );
+  
+        gradeKeys.forEach(({ key, color }) => {
+          const weight = crop[key as keyof typeof crop] as number;
+          if (weight > 0) {
+            const barWidth = (weight / maxWeight) * chartWidth;
+            const [r, g, b] = this.hexToRgb(color);
+            doc.setFillColor(r, g, b);
+            doc.rect(currentX, rowY, barWidth, barHeight, 'F');
+  
+            // Label inside bar (only if wide enough)
+            if (barWidth > 12) {
+              doc.setFontSize(6.5);
+              doc.setTextColor(255, 255, 255);
+              doc.text(
+                `${weight}kg`,
+                currentX + barWidth / 2,
+                rowY + barHeight / 2 + 2,
+                { align: 'center' }
+              );
+            }
             currentX += barWidth;
           }
         });
-
-        currentY += gap;
       });
-
-      const tableStartY = currentY + 20;
-      const cellPadding = 5;
-      const cellHeight = 8;
-      const tableColWidths = [50, 30, 30, 30, 30];
-      let rowY = tableStartY;
-
-      const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
-      doc.setFontSize(contentFontSize);
+  
+      // ── X-axis line + title ───────────────────────────────────────
+      const axisY = chartStartY + groupedData.length * rowGap + 2;
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.4);
+      doc.line(chartStartX, chartStartY, chartStartX, axisY);        // Y-axis spine
+      doc.line(chartStartX, axisY, chartStartX + chartWidth, axisY); // X-axis baseline
+  
+      // X-axis tick labels
+      const tickCount = 5;
+      doc.setFontSize(7);
+      doc.setTextColor(80, 80, 80);
+      for (let t = 0; t <= tickCount; t++) {
+        const tickX = chartStartX + (t / tickCount) * chartWidth;
+        const tickValue = Math.round((t / tickCount) * maxWeight);
+        doc.line(tickX, axisY, tickX, axisY + 1.5);
+        doc.text(`${tickValue}`, tickX, axisY + 5, { align: 'center' });
+      }
+  
+      // X-axis title
+      doc.setFontSize(9);
       doc.setTextColor(0, 0, 0);
-      headers.forEach((header, index) => {
-        const cellX =
-          startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-        doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
-        doc.text(header, cellX + cellPadding, rowY + cellHeight / 2 + 3);
-      });
+      doc.text('Weight (kg)', chartStartX + chartWidth / 2, axisY + 10, { align: 'center' });
+  
+      // ── Table ─────────────────────────────────────────────────────
+const tableStartY = axisY + 18;
+const cellHeight = 8;
+const cellPadding = 2;
+const tableColWidths = [50, 30, 30, 30, 30];
 
-      rowY += cellHeight;
+// Centre the table horizontally
+const totalTableWidth = tableColWidths.reduce((a, b) => a + b, 0); // 170
+const startX = (pageWidth - totalTableWidth) / 2;
 
-      groupedData.forEach((crop) => {
-        const cropValues = [
-          crop.cropName,
-          crop.gradeA ? `${crop.gradeA} kg` : '-',
-          crop.gradeB ? `${crop.gradeB} kg` : '-',
-          crop.gradeC ? `${crop.gradeC} kg` : '-',
-          `${crop.totalWeight} kg`,
-        ];
+let rowY = tableStartY;
 
-        cropValues.forEach((value, index) => {
-          const cellX =
-            startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
-          doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
-          doc.text(value, cellX + cellPadding, rowY + cellHeight / 2 + 3);
-        });
+const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
 
-        rowY += cellHeight;
-      });
+doc.setLineWidth(0.2);
+doc.setDrawColor(180, 180, 180);
 
-      doc.save(`${this.createdDate}_CropGradeReport.pdf`);
+doc.setFontSize(9);
+doc.setFont('helvetica', 'bold');
+doc.setTextColor(60, 60, 60);
+headers.forEach((header, index) => {
+  const cellX = startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
+  doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
+  doc.text(header, cellX + cellPadding, rowY + cellHeight / 2 + 2.5);
+});
+rowY += cellHeight;
 
-      this.isDownloading = false; 
-    }, 0); 
+doc.setFont('helvetica', 'normal');
+doc.setFontSize(8.5);
+doc.setTextColor(90, 90, 90);
+groupedData.forEach((crop) => {
+  const cropValues = [
+    crop.cropName,
+    crop.gradeA ? `${crop.gradeA} kg` : '-',
+    crop.gradeB ? `${crop.gradeB} kg` : '-',
+    crop.gradeC ? `${crop.gradeC} kg` : '-',
+    `${crop.totalWeight} kg`,
+  ];
+  cropValues.forEach((value, index) => {
+    const cellX = startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
+    doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
+    doc.text(value, cellX + cellPadding, rowY + cellHeight / 2 + 2.5);
+  });
+  rowY += cellHeight;
+});
+  
+      doc.save(`Daily Report_${this.empId}_${this.createdDateForPdf}.pdf`);
+      this.isDownloading = false;
+    }, 0);
   }
+  
+  
 
   back(): void {
     this.router.navigate(["/reports/collective-officer-report"]);

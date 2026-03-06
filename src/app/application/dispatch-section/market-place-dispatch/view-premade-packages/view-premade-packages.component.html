@@ -77,19 +77,19 @@
 
                     </tr>
                     <tr *ngIf="packageObj.additionalData !== null">
-                        <td class="py-3 text-[#000000] dark:text-textDark text-left">
+                        <td class="py-3 px-10 text-[#000000] dark:text-textDark text-left">
                             Additional
                         </td>
-                        <td class="py-3 text-[#000000] dark:text-textDark text-left">
+                        <td class="py-3 px-10 text-[#000000] dark:text-textDark text-left">
                             <!-- empty column for package count -->
                         </td>
 
-                        <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-start">
+                        <td class="px-10 py-3 font-normal text-[#000000] dark:text-textDark text-start">
                             {{packageObj.additionalData.price| number : '1.2-2'}}
                         </td>
 
                         <td *ngIf="permissionService.hasPermission('View dispatch package items') || tokenService.getUserDetails().role === '1'"
-                            class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
+                            class="px-10 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
                             <!-- (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)" -->
 
                             <button (click)="checkAdditionalLastOrderStatus(packageObj.additionalData.orderId)"

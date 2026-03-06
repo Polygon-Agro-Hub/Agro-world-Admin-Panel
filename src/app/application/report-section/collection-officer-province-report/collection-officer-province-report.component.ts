@@ -104,6 +104,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
   }
 
   fetchAllProvinceReportDetails(district: string) {
+    console.log('first district', district)
     this.loadingChart = true;
     this.loadingTable = true;
 
@@ -115,7 +116,9 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
           qtyB: Number(item.qtyB) || 0,
           qtyC: Number(item.qtyC) || 0,
         }));
+        console.log('reportDetails', this.reportDetails)
         this.loadingTable = false;
+        this.loadingChart = false;
         this.updateChart();
       },
       (error) => {}
@@ -124,6 +127,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
 
   applyFilters() {
     if (this.selectedProvince) {
+      console.log('selectedProvince', this.selectedProvince)
       this.fetchAllProvinceReportDetails(this.selectedProvince.name);
     }
   }
@@ -131,95 +135,96 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
   updateChart() {
     if (this.provinceChart) {
       this.provinceChart.destroy();
+      this.provinceChart = null!;
     }
   
-    const { textColor, gridColor, titleColor } = this.getChartThemeColors(); 
+    const { textColor, gridColor, titleColor } = this.getChartThemeColors();
   
     const labels = this.reportDetails.map(crop => crop.cropName);
-  
     const gradeAData = this.reportDetails.map(crop => crop.qtyA || 0);
     const gradeBData = this.reportDetails.map(crop => crop.qtyB || 0);
     const gradeCData = this.reportDetails.map(crop => crop.qtyC || 0);
   
-    this.provinceChart = new Chart('provinceBarChart', {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: 'Grade A',
-            data: gradeAData,
-            backgroundColor: '#FF9263',
-          },
-          {
-            label: 'Grade B',
-            data: gradeBData,
-            backgroundColor: '#5F75E9',
-          },
-          {
-            label: 'Grade C',
-            data: gradeCData,
-            backgroundColor: '#3DE188',
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'y', 
-        plugins: {
-          title: {
-            display: true,
-            text: `${this.selectedProvince.name} - Crop Weights`,
-            color: titleColor,      
-            padding: { top: 10, bottom: 30 },
-            font: { size: 18, weight: 600 }
-          },
-          legend: {
-            position: 'bottom',
-            labels: {
-              padding: 30,
-              color: textColor,    
-              font: { size: 14, weight: 400 }
+    // ✅ Defer canvas lookup until after Angular finishes DOM update
+    setTimeout(() => {
+      const canvas = document.getElementById('provinceBarChart') as HTMLCanvasElement;
+      if (!canvas) return;
+  
+      this.provinceChart = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Grade A',
+              data: gradeAData,
+              backgroundColor: '#FF9263',
+            },
+            {
+              label: 'Grade B',
+              data: gradeBData,
+              backgroundColor: '#5F75E9',
+            },
+            {
+              label: 'Grade C',
+              data: gradeCData,
+              backgroundColor: '#3DE188',
             }
-          }
+          ]
         },
-        scales: {
-          x: {
-            stacked: true,
-            ticks: { color: textColor },         
-            grid: { color: gridColor },            
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          plugins: {
             title: {
               display: true,
-              text: 'Total Weight (Kg)',
-              color: textColor,                    
-              font: { size: 12 },
-              padding: 20
+              text: `${this.selectedProvince.name} - Crop Weights`,
+              color: titleColor,
+              padding: { top: 10, bottom: 30 },
+              font: { size: 18, weight: 600 }
+            },
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 30,
+                color: textColor,
+                font: { size: 14, weight: 400 }
+              }
             }
           },
-          y: {
-            stacked: true,
-            ticks: { color: textColor },         
-            grid: { color: gridColor },
-            title: {
-              display: true,
-              text: 'Crop Variety',
-              color: textColor,
-              font: {
-                size: 12,
-                weight: 500
-              },
-              padding: 20 
+          scales: {
+            x: {
+              stacked: true,
+              ticks: { color: textColor },
+              grid: { color: gridColor },
+              title: {
+                display: true,
+                text: 'Total Weight (Kg)',
+                color: textColor,
+                font: { size: 12 },
+                padding: 20
+              }
+            },
+            y: {
+              stacked: true,
+              ticks: { color: textColor },
+              grid: { color: gridColor },
+              title: {
+                display: true,
+                text: 'Crop Variety',
+                color: textColor,
+                font: { size: 12, weight: 500 },
+                padding: 20
+              }
             }
           }
         }
-      }
-    });
+      });
   
-    this.loadingChart = false;
-    console.log('loadingChart', this.loadingChart)
+      this.loadingChart = false;
+    }, 0);
   }
-
 
   async exportToPDF(): Promise<void> {
     this.isDownloading = true;
@@ -230,12 +235,15 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
       const pageHeight = doc.internal.pageSize.getHeight();
       
       const margin = 20;
-      const chartStartX = 50;
-      const chartStartY = 70; // Increased from 60 to give more space for title
+      const yAxisTitleX = 25;  // Fixed far-left position for rotated "Crop Variety" title
+      const labelRightEdge = 55; // Crop name labels right-align here
+      const chartStartX = 58;   // Bar chart starts here — moderate push right for label space
+      const chartStartY = 55;
       const barHeight = 8;
       const gap = 2;
       const chartHeight = 100; // Fixed height for the chart area
-      const chartWidth = 100; // Width of the bar area
+      const chartWidth = 100;  // Width of the bar area
+      const labelMaxWidth = 30; // Max mm for label text wrapping
       
       const colors = {
         gradeA: '#FF9263',
@@ -249,7 +257,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
       doc.text(
         `${this.selectedProvince.name} - Crop Weights`,
         pageWidth / 2,
-        25,
+        25, // Reduced from 35
         { align: 'center' }
       );
   
@@ -286,16 +294,13 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
       doc.setLineWidth(0.5);
       doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5); // Extended slightly above and below bars
   
-      // Draw y-axis title "Crops" (vertical text on the left)
+      // Draw y-axis title "Crop Variety" rotated 90° — anchored far left, clear of crop name labels
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
+      const textY = (barAreaStartY + barAreaEndY) / 2;
+      doc.text('Crop Variety', yAxisTitleX, textY, { angle: 90, align: 'center' });
       
-      // Use text rotation for vertical text
-      const textX = yAxisX - 5;
-      const textY = (barAreaStartY + barAreaEndY) / 3;
-      doc.text('Crops', textX, textY, { angle: 360, align: 'center' });
-      
-      // Draw y-axis tick marks for each crop
+      // Draw y-axis tick marks for each crop (with 2-line label wrapping)
       let currentBarY = barAreaStartY;
       cropNames.forEach((cropName, index) => {
         // Draw small tick mark on y-axis
@@ -303,10 +308,18 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
         doc.setLineWidth(0.5);
         doc.line(yAxisX, currentBarY + barHeight / 2, yAxisX - 2, currentBarY + barHeight / 2);
         
-        // Draw crop name
-        doc.setFontSize(10);
-        doc.setTextColor(102, 102, 102); // Gray color #666666
-        doc.text(cropName, chartStartX - 10, currentBarY + barHeight / 2 + 2, { align: 'right' });
+        // Wrap crop name into max 2 lines if too long
+        doc.setFontSize(8);
+        doc.setTextColor(102, 102, 102);
+        const wrappedLines = doc.splitTextToSize(cropName, labelMaxWidth); // split to fit labelMaxWidth
+        const displayLines = wrappedLines.slice(0, 2); // max 2 lines
+        const lineHeight = 3.5;
+        const totalTextHeight = displayLines.length * lineHeight;
+        const textStartY = currentBarY + (barHeight / 2) - (totalTextHeight / 2) + lineHeight;
+        
+        displayLines.forEach((line: string, lineIndex: number) => {
+          doc.text(line, labelRightEdge, textStartY + lineIndex * lineHeight, { align: 'right' });
+        });
         
         currentBarY += barHeight + gap;
       });
@@ -394,13 +407,13 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
         doc.text(labelText, tickX, xAxisY + 6, { align: 'center' });
       }
       
-      // Draw x-axis title
+      // Draw x-axis title — centered under chart, closer to axis
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 15, { align: 'right' });
-  
-      // Draw legend
-      const legendY = chartStartY - 15;
+      doc.text('Total Weight (kg)', xAxisStartX + (chartWidth / 2), xAxisY + 12, { align: 'center' });
+
+      // Draw legend — tightened gap from title
+      const legendY = chartStartY - 10; // Reduced from chartStartY - 15
       const legendSquareSize = 6;
       
       // Grade A
@@ -411,13 +424,13 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
       doc.text('Grade A', chartStartX + legendSquareSize + 3, legendY + legendSquareSize/2 + 1);
       
       // Grade B
-      const legendBX = chartStartX + 45;
+      const legendBX = chartStartX + 35;
       doc.setFillColor(95, 117, 233); // #5F75E9 - Grade B color
       doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
       doc.text('Grade B', legendBX + legendSquareSize + 3, legendY + legendSquareSize/2 + 1);
       
       // Grade C
-      const legendCX = legendBX + 45;
+      const legendCX = legendBX + 35;
       doc.setFillColor(61, 225, 136); // #3DE188 - Grade C color
       doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
       doc.text('Grade C', legendCX + legendSquareSize + 3, legendY + legendSquareSize/2 + 1);
@@ -478,5 +491,9 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
       this.isDownloading = false;
     }, 0);
   }
-  
+
 }
+
+
+
+

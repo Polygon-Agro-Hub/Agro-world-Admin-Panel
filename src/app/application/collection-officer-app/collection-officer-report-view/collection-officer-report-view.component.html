@@ -9,10 +9,8 @@
 
 
   <div #contentToConvert class="min-w-[1100px]">
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">{{this.name}}'s Report</h2>
-      </div>
+    <div class="flex justify-end items-center mb-8 mt-4 mr-4 ">
+      
       <div class="flex  ml-45">
         <i class="mr-6 w-6 h-6 fill-current text-gray-500">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -34,6 +32,11 @@
       </div>
     </div>
 
+    <div class="flex flex-col items-center mb-6">
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">{{name}} {{lastName}}</h2>
+      <h2 class="text-2xl font-normal text-textLight dark:text-textDark">{{createdDate | date: 'yyyy/MM/dd' }}</h2>
+    </div>
+
     <div *ngIf="loadingChart; else chartContent" class="flex justify-center items-center h-48">
       <app-loading-spinner></app-loading-spinner>
     </div>
@@ -51,12 +54,12 @@
     <ng-template #tableContent>
       <table class="table-auto border-collapse w-full">
         <thead>
-          <tr class="border-b">
-            <th class="px-4 py-2 text-textLight dark:text-textDark">Crop</th>
-            <th class="px-4 py-2 text-textLight dark:text-textDark">Grade A</th>
-            <th class="px-4 py-2 text-textLight dark:text-textDark">Grade B</th>
-            <th class="px-4 py-2 text-textLight dark:text-textDark">Grade C</th>
-            <th class="px-4 py-2 text-textLight dark:text-textDark">Total</th>
+          <tr >
+            <th class="border border-gray-300 px-4 py-2 text-textLight dark:text-textDark">Crop Variety</th>
+            <th class="border border-gray-300 px-4 py-2 text-textLight dark:text-textDark">Grade A</th>
+            <th class="border border-gray-300 px-4 py-2 text-textLight dark:text-textDark">Grade B</th>
+            <th class="border border-gray-300 px-4 py-2 text-textLight dark:text-textDark">Grade C</th>
+            <th class="border border-gray-300 px-4 py-2 text-textLight dark:text-textDark">Total</th>
           </tr>
         </thead>
         <tbody>

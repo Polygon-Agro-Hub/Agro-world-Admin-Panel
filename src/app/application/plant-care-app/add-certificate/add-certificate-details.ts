@@ -96,8 +96,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     private location: Location,
     private router: Router,
     private cropCalendarService: CropCalendarService,
-    private certificateCompanyService: CertificateCompanyService
-  ) { }
+    private certificateCompanyService: CertificateCompanyService,
+  ) {}
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
@@ -114,8 +114,8 @@ export class AddCertificateDetailsComponent implements OnInit {
         [
           Validators.required,
           Validators.min(0.01), // Changed from 0 to 0.01
-          Validators.pattern(/^\d*\.?\d*$/)
-        ]
+          Validators.pattern(/^\d*\.?\d*$/),
+        ],
       ],
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
@@ -130,11 +130,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       scope: ['', Validators.required],
       noOfVisit: [
         '',
-        [
-          Validators.required,
-          Validators.min(0),
-          Validators.pattern(/^\d+$/)
-        ]
+        [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)],
       ],
       tearmsFile: [null, Validators.required],
       logo: [null, Validators.required],
@@ -153,7 +149,7 @@ export class AddCertificateDetailsComponent implements OnInit {
 
   // Add this new method for realtime validation
   enableRealtimeValidation(): void {
-    Object.keys(this.certificateForm.controls).forEach(key => {
+    Object.keys(this.certificateForm.controls).forEach((key) => {
       const control = this.certificateForm.get(key);
       control?.valueChanges.subscribe(() => {
         if (control.touched || control.dirty) {
@@ -187,7 +183,12 @@ export class AddCertificateDetailsComponent implements OnInit {
     const fileName = file.name.toLowerCase();
 
     // Validate file type (only JPG, JPEG, PNG, WebP allowed)
-    const allowedMimeTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const allowedMimeTypes = [
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/webp',
+    ];
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
 
     // Blocked file types that need explicit error messages
@@ -198,7 +199,8 @@ export class AddCertificateDetailsComponent implements OnInit {
 
     // Check if it's a blocked format
     if (blockedExtensions.includes(fileExtension.toLowerCase())) {
-      this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
+      this.logoError =
+        'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
       this.uploadedLogo = null;
       this.logoPreview = null;
       this.certificateForm.patchValue({ logo: null });
@@ -212,10 +214,13 @@ export class AddCertificateDetailsComponent implements OnInit {
 
     // Check if file type is allowed
     const isMimeTypeValid = allowedMimeTypes.includes(file.type.toLowerCase());
-    const isExtensionValid = allowedExtensions.includes(fileExtension.toLowerCase());
+    const isExtensionValid = allowedExtensions.includes(
+      fileExtension.toLowerCase(),
+    );
 
     if (!isMimeTypeValid && !isExtensionValid) {
-      this.logoError = 'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
+      this.logoError =
+        'Unsupported file format. Please upload JPG, PNG, or WebP files only.';
       this.uploadedLogo = null;
       this.logoPreview = null;
       this.certificateForm.patchValue({ logo: null });
@@ -280,7 +285,8 @@ export class AddCertificateDetailsComponent implements OnInit {
       // Validate file size (1MB limit)
       const maxSizeBytes = 1 * 1024 * 1024; // 1MB in bytes
       if (file.size > maxSizeBytes) {
-        this.fileSizeError = 'File size exceeds 1MB. Please upload a file smaller than 1MB.';
+        this.fileSizeError =
+          'File size exceeds 1MB. Please upload a file smaller than 1MB.';
         this.resetFileInput(event);
         return;
       }
@@ -354,7 +360,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     const searchTerm = event.target.value.toLowerCase();
     if (searchTerm) {
       this.filteredCropOptions = this.cropDropdownOptions.filter((option) =>
-        option.label.toLowerCase().includes(searchTerm)
+        option.label.toLowerCase().includes(searchTerm),
       );
     } else {
       this.filteredCropOptions = [...this.cropDropdownOptions];
@@ -365,7 +371,7 @@ export class AddCertificateDetailsComponent implements OnInit {
     if (!this.selectedCrop) return;
 
     const selected = this.cropDropdownOptions.find(
-      (c) => c.value === this.selectedCrop
+      (c) => c.value === this.selectedCrop,
     );
 
     if (selected && !this.selectedCrops.some((c) => c.id === selected.value)) {
@@ -399,7 +405,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        window.history.back()
+        window.history.back();
       }
     });
   }
@@ -515,7 +521,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Double-check file size in submit (optional extra validation)
     const maxSizeBytes = 1 * 1024 * 1024;
     if (this.uploadedFile.size > maxSizeBytes) {
-      this.fileSizeError = 'File size exceeds 1MB. Please upload a file smaller than 1MB.';
+      this.fileSizeError =
+        'File size exceeds 1MB. Please upload a file smaller than 1MB.';
       Swal.fire({
         icon: 'error',
         title: 'File Too Large',
@@ -569,8 +576,8 @@ export class AddCertificateDetailsComponent implements OnInit {
     // Service areas as JSON string
     const serviceAreas = Array.isArray(formValue.serviceAreas)
       ? formValue.serviceAreas.map((area: any) =>
-        typeof area === 'object' ? area.value : area
-      )
+          typeof area === 'object' ? area.value : area,
+        )
       : [];
     formData.append('serviceAreas', JSON.stringify(serviceAreas));
 
@@ -623,7 +630,9 @@ export class AddCertificateDetailsComponent implements OnInit {
           Swal.fire({
             icon: 'error',
             title: 'Validation Error',
-            text: res.message || 'Failed to add certificate details. Please try again.',
+            text:
+              res.message ||
+              'Failed to add certificate details. Please try again.',
             customClass: {
               popup:
                 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -637,7 +646,8 @@ export class AddCertificateDetailsComponent implements OnInit {
         console.error('Error creating certificate:', err);
 
         // Handle backend validation errors
-        const errorMessage = err.error?.message ||
+        const errorMessage =
+          err.error?.message ||
           err.message ||
           'Failed to add certificate details. Please try again.';
 
@@ -710,15 +720,24 @@ export class AddCertificateDetailsComponent implements OnInit {
   }
 
   // Get missing field names for the alert
+  // Get missing field names for the alert
   private getMissingFields(): string[] {
     const missingFields: string[] = [];
 
-    if(this.logoPreview === null || this.logoPreview === undefined){
+    if (this.logoPreview === null || this.logoPreview === undefined) {
       missingFields.push('Logo');
     }
 
     if (this.certificateForm.get('srtName')?.errors?.['required']) {
       missingFields.push('Certificate Name (English)');
+    }
+
+    if (this.certificateForm.get('srtNameSinhala')?.errors?.['required']) {
+      missingFields.push('Certificate Name (Sinhala)');
+    }
+
+    if (this.certificateForm.get('srtNameTamil')?.errors?.['required']) {
+      missingFields.push('Certificate Name (Tamil)');
     }
 
     if (this.certificateForm.get('srtNumber')?.errors?.['required']) {
@@ -793,7 +812,7 @@ export class AddCertificateDetailsComponent implements OnInit {
       this.selectedCrops.length === 0
     ) {
       errors.push(
-        'Please select at least one target crop for "For Selected Crops" option.'
+        'Please select at least one target crop for "For Selected Crops" option.',
       );
     }
 
@@ -810,5 +829,4 @@ export class AddCertificateDetailsComponent implements OnInit {
       });
     }
   }
-
 }

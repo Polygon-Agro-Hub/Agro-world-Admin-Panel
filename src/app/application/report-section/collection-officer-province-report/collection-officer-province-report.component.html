@@ -42,7 +42,7 @@
     <div class="flex items-center justify-center">
       <div>
         <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          Province Reports
+          Province Report
         </h2>
       </div>
     </div>
@@ -54,7 +54,7 @@
 
     <div
       *ngIf="loadingChart; else chartContent"
-      class="flex justify-center items-center h-48"
+      class="flex justify-center items-center h-48 mb-10"
     >
       <app-loading-spinner></app-loading-spinner>
     </div>
@@ -74,7 +74,7 @@
     </div>
 
     <ng-template #tableContent>
-      <div class="relative overflow-x-auto shadow-md pt-20">
+      <div class="relative overflow-x-auto shadow-md">
         <table class="w-full text-sm text-center rtl:text-right border-[2px]">
           <thead class="text-xs border-[2px]">
             <tr>

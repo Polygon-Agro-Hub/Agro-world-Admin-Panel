@@ -106,10 +106,6 @@ export class FarmerListReportComponent {
     const doc = new jsPDF();
 
     doc.setFontSize(10);
-    
-    // Add Invoice Number and Date on the left side
-    doc.text(`INV NO: ${inv}`, 10, 10);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 10, 15);
 
     // Helper function to fetch and convert image to base64
     function loadImageAsBase64(url: string): Promise<string> {

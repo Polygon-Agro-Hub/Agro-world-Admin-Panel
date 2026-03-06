@@ -85,10 +85,8 @@ export class ViewDispatchOrdersComponent implements OnInit {
   }
 
   ngOnInit() {
-    // console.log('Component initialized');
     this.route.queryParamMap.subscribe((params) => {
       const id = params.get('id');
-      // console.log('Query parameter ID:', id);
       if (!id) {
         this.error = 'No order ID provided in URL';
         this.loading = false;
@@ -113,11 +111,7 @@ export class ViewDispatchOrdersComponent implements OnInit {
       .getExcludedItems(orderId)
       .subscribe(
         (response) => {
-          // console.log('response', response);
-
           this.excludedItemsArr = response;
-          // console.log('excludeItemsArr', this.excludedItemsArr)
-
           this.loading = false;
         },
         (error) => {
@@ -132,7 +126,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
       .subscribe({
         next: (items) => {
           this.packageItems = Array.isArray(items) ? items : [items];
-          // console.log('Fetched package items:', this.packageItems);
           this.updateProductSelections();
         },
         error: (err) => {
@@ -182,7 +175,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
           discountedPrice: item.discountedPrice,
           isExcluded: false,
         }));
-        // console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
         this.isLoading = false;
       },
@@ -203,9 +195,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
       next: (response) => {
         this.additionalItems = response.additionalItems || [];
         this.additionalItemsCount = this.additionalItems.length;
-        
-        console.log("Additional Items:", this.additionalItems);
-        console.log("Additional Items Count:", this.additionalItemsCount);
 
         if (!response || !response.packages) {
           throw new Error('Invalid response structure from API');
@@ -291,11 +280,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
 
       // Validate if current total is within the allowed limit
       this.isWithinLimit = currentTotal <= allowedLimit;
-
-      // console.log('Calculated total price:', this.totalPrice);
-      // console.log('Allowed limit:', allowedLimit);
-      // console.log('Current total:', currentTotal);
-      // console.log('Is within limit:', this.isWithinLimit);
     } else {
       this.totalPrice = 0;
       this.isWithinLimit = true;
@@ -423,8 +407,6 @@ export class ViewDispatchOrdersComponent implements OnInit {
   }
 
   openAdditionalItemsModal() {
-    console.log("Trigger additional Items");
-
     this.showAdditionalItemsModal = true;
   }
 

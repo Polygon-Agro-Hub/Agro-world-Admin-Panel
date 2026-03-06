@@ -13,11 +13,6 @@
         </div>
 
         <div>
-            <!-- <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen mt-6">
-            <p class="text-[#494949] my-6 dark:text-white">--No Data Available--</p>
-            <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-        </div> -->
-
             <table class=" divide-y divide-gray-200 table-auto">
                 <thead>
                     <tr>
@@ -34,11 +29,10 @@
                             class="px-10 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                             Package Items
                         </th>
-
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of packageObj.packageData; let i=index;">
+                    <tr *ngFor="let item of packageObj?.packageData; let i=index;">
                         <td class="py-3 px-10 text-[#000000] dark:text-textDark text-left">
                             {{item.name}}
                         </td>
@@ -53,9 +47,6 @@
 
                         <td *ngIf="permissionService.hasPermission('View dispatch package items') || tokenService.getUserDetails().role === '1'"
                             class="px-10 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
-                            <!-- (click)="navigateDispatchItems(item.packageId)" -->
-                            <!-- (click)="checkLastOrderStatus(true,false,i)" -->
-
                             <button class="w-6 h-6 mr-3"
                                 (click)="checkPackageLastOrderStatus(item.packageId,i, item.price, item.name, item.packageQty)"
                                 [disabled]="item.packStatus === 'Unknown'" [ngClass]="{
@@ -76,7 +67,7 @@
                         </td>
 
                     </tr>
-                    <tr *ngIf="packageObj.additionalData !== null">
+                    <tr *ngIf="packageObj?.additionalData !== null">
                         <td class="py-3 text-[#000000] dark:text-textDark text-left">
                             Additional
                         </td>

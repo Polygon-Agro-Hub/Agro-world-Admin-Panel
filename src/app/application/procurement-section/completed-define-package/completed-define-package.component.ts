@@ -69,7 +69,6 @@ export class CompletedDefinePackageComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response);
           this.hasData = response.total === 0 ? false : true;
 
           if (response && response.data) {
@@ -85,8 +84,7 @@ export class CompletedDefinePackageComponent implements OnInit {
             );
             this.totalItems = this.orders.length;
           }
-
-          console.log('Orders:', this.orders.length, 'Total:', this.totalItems);
+          
           this.isLoading = false;
         },
         error: (error) => {

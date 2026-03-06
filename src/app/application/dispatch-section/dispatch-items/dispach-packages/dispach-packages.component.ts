@@ -50,10 +50,10 @@ export class DispachPackagesComponent implements OnInit {
     this.packageId = this.route.snapshot.params['id']
     this.orderId = this.route.snapshot.params['orderId']
     this.isLastOrder = this.route.snapshot.queryParams['status'] === 'true' ? true : false;
-    this.price = this.route.snapshot.queryParams['price'];
+    this.price = parseFloat(this.route.snapshot.queryParams['price']) || 0;
     this.invNo = this.route.snapshot.queryParams['invNo'];
     this.packageName = this.route.snapshot.queryParams['packageName'];
-    this.packgeQty = this.route.snapshot.queryParams['packgeQty'];
+    this.packgeQty = parseInt(this.route.snapshot.queryParams['packgeQty']) || 1;
 
 
 
@@ -75,7 +75,6 @@ export class DispachPackagesComponent implements OnInit {
     this.isLoading = true;
     this.dispatchService.getPackageItemsForDispatch(this.packageId, this.orderId).subscribe(
       (res) => {
-        // this.packageObj = res
         this.packageArr = res.packageData;
         this.productArr = res.marketplaceItems
         this.isLoading = false;
@@ -216,8 +215,6 @@ export class DispachPackagesComponent implements OnInit {
 
     this.isPopupOpen = true;
     this.selectProduct = item;
-    // this.newProductObj.displayName = item.displayName;
-    // this.newProductObj.id = item.
   }
   onCancelPopup() {
     this.isPopupOpen = false;
@@ -246,7 +243,6 @@ export class DispachPackagesComponent implements OnInit {
               title: 'font-semibold text-lg',
             },
           });
-          // this.router.navigate(['/dispatch/salesdash-orders']);
           this.isPopupOpen = false;
           this.newProductObj = null;
           this.fetchData();
@@ -339,7 +335,6 @@ interface MarketPlaceItems {
   startValue: number
   changeby: number
   isExcluded: boolean
-
   price: number;
   qty: number;
 }

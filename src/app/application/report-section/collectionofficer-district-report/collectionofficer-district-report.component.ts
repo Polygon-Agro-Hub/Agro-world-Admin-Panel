@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
 import { CollectionOfficerReportService } from '../../../services/collection-officer/collection-officer-report.service';
 import { CommonModule } from '@angular/common';
-import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { Chart } from 'chart.js/auto';
 import jsPDF from 'jspdf';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../../services/theme.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 interface IdistrictReport {
   cropName: string;
@@ -29,20 +31,23 @@ interface IdistrictReport {
     NgxPaginationModule,
     FormsModule,
     CommonModule,
-    CanvasJSAngularChartsModule,
     LoadingSpinnerComponent,
   ],
   templateUrl: './collectionofficer-district-report.component.html',
   styleUrls: ['./collectionofficer-district-report.component.css'],
 })
-export class CollectionofficerDistrictReportComponent implements OnInit {
+export class CollectionofficerDistrictReportComponent implements OnInit, OnDestroy {
+
+  private destroy$ = new Subject<void>();
+
   districts: any[] = [];
   selectedDistrict: any = { name: 'Colombo', code: 'COL' };
   reportDetails: IdistrictReport[] = [];
-  chartOptions: any;
   loadingChart = true;
   loadingTable = true;
   isDownloading = false;
+
+  districtChart!: Chart;
 
   constructor(
     private collectionOfficerSrv: CollectionOfficerReportService,
@@ -78,7 +83,35 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       { name: 'Trincomalee', code: 'TRI' },
       { name: 'Vavuniya', code: 'VAV' },
     ];
+
     this.fetchAllDistrictReportDetails(this.selectedDistrict.name);
+
+    this.themeService.themeChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.updateChart();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.districtChart) {
+      this.districtChart.destroy();
+    }
+  }
+
+  private getChartThemeColors() {
+    const isDark = this.themeService.isDarkTheme();
+    return {
+      textColor: isDark ? '#E5E7EB' : '#000000',
+      gridColor: isDark ? '#374151' : '#E5E7EB',
+      titleColor: isDark ? '#F9FAFB' : '#111827',
+    };
+  }
+
+  back(): void {
+    this.router.navigate(['reports']);
   }
 
   fetchAllDistrictReportDetails(district: string) {
@@ -99,10 +132,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
     );
   }
 
-  back(): void {
-    this.router.navigate(['reports']);
-  }
-
   applyFilters() {
     if (this.selectedDistrict) {
       this.fetchAllDistrictReportDetails(this.selectedDistrict.name);
@@ -110,96 +139,89 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
   }
 
   updateChart() {
-    const gradeAData = this.reportDetails.map((crop) => ({
-      label: crop.cropName,
-      y: crop.qtyA || 0,
-      color: '#FF9263',
-    }));
-
-    const gradeBData = this.reportDetails.map((crop) => ({
-      label: crop.cropName,
-      y: crop.qtyB || 0,
-      color: '#5F75E9',
-    }));
-
-    const gradeCData = this.reportDetails.map((crop) => ({
-      label: crop.cropName,
-      y: crop.qtyC || 0,
-      color: '#3DE188',
-    }));
-
-    const isDarkMode = this.themeService.isDarkTheme();
-
-    this.chartOptions = {
-      animationEnabled: true,
-      // theme: isDarkMode ? 'dark2' : 'light2',
-      backgroundColor: 'transparent', // Changed to transparent
-      title: {
-        text: `${this.selectedDistrict.name} - Crop Weights`,
-        fontColor: '#666666',
-      },
-      axisX: {
-        title: 'Crop',
-        reversed: true,
-        titleFontColor: '#666666',
-        labelFontColor: '#666666',
-        lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
-        tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
-      },
-      axisY: {
-        title: 'Total Weight (Kg)',
-        includeZero: true,
-        titleFontColor: '#738AC0',
-        labelFontColor: '#666666',
-        lineColor: isDarkMode ? '#4b5563' : '#d1d5db',
-        tickColor: isDarkMode ? '#4b5563' : '#d1d5db',
-        gridColor: isDarkMode ? '#374151' : '#e5e7eb',
-        labelFontSize: 12, // Adjust if needed
-        titleFontSize: 14,
-        titleFontWeight: 'normal',
-        labelWrap: true,
-        margin: 15, // Add margin between axis line and labels
-      },
-      legend: {
-        fontColor: '#666666',
-      },
-      toolTip: {
-        backgroundColor: isDarkMode ? '#374151' : '#ffffff',
-        fontColor: '#666666',
-        borderColor: isDarkMode ? '#4b5563' : '#d1d5db',
-      },
-      data: [
-        {
-          type: 'stackedBar',
-          name: 'Grade A',
-          showInLegend: true,
-          dataPoints: gradeAData,
-          color: '#FF9263',
-        },
-        {
-          type: 'stackedBar',
-          name: 'Grade B',
-          showInLegend: true,
-          dataPoints: gradeBData,
-          color: '#5F75E9',
-        },
-        {
-          type: 'stackedBar',
-          name: 'Grade C',
-          showInLegend: true,
-          dataPoints: gradeCData,
-          color: '#3DE188',
-        },
-      ],
-    };
-    this.loadingChart = false;
+  if (this.districtChart) {
+    this.districtChart.destroy();
   }
+
+  // ✅ Set false FIRST so Angular renders the canvas
+  this.loadingChart = false;
+
+  // ✅ Wait for Angular to render the canvas in the DOM
+  setTimeout(() => {
+    const { textColor, gridColor, titleColor } = this.getChartThemeColors();
+
+    const labels = this.reportDetails.map(crop => crop.cropName);
+    const gradeAData = this.reportDetails.map(crop => crop.qtyA || 0);
+    const gradeBData = this.reportDetails.map(crop => crop.qtyB || 0);
+    const gradeCData = this.reportDetails.map(crop => crop.qtyC || 0);
+
+    this.districtChart = new Chart('districtBarChart', {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Grade A', data: gradeAData, backgroundColor: '#FF9263' },
+          { label: 'Grade B', data: gradeBData, backgroundColor: '#5F75E9' },
+          { label: 'Grade C', data: gradeCData, backgroundColor: '#3DE188' },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          title: {
+            display: true,
+            text: `${this.selectedDistrict.name} - Crop Weights`,
+            color: titleColor,
+            padding: { top: 10, bottom: 30 },
+            font: { size: 18, weight: 600 },
+          },
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 30,
+              color: textColor,
+              font: { size: 14, weight: 400 },
+            },
+          },
+        },
+        scales: {
+          x: {
+            stacked: true,
+            ticks: { color: textColor },
+            grid: { color: gridColor },
+            title: {
+              display: true,
+              text: 'Total Weight (Kg)',
+              color: textColor,
+              font: { size: 12 },
+              padding: 20,
+            },
+          },
+          y: {
+            stacked: true,
+            ticks: { color: textColor },
+            grid: { color: gridColor },
+            title: {
+              display: true,
+              text: 'Crop Variety',
+              color: textColor,
+              font: { size: 12, weight: 500 },
+              padding: 20,
+            },
+          },
+        },
+      },
+    });
+  }, 0);
+}
 
   async exportToPDF(): Promise<void> {
     this.isDownloading = true;
 
     setTimeout(() => {
-      const doc = new jsPDF('p', 'mm', 'a4'); // Portrait
+      const doc = new jsPDF('p', 'mm', 'a4');
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
 
@@ -207,7 +229,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       const chartStartX = 50;
       const chartStartY = 70;
       const barHeight = 8;
-      const gap = 2; // Keep as is for row spacing
+      const gap = 2;
       const chartHeight = 100;
       const chartWidth = 100;
 
@@ -235,14 +257,9 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         return;
       }
 
-      // Crop list on the left
       const cropNames = this.reportDetails.map((crop) => crop.cropName);
-      const maxCropNameLength = Math.max(
-        ...cropNames.map((name) => name.length),
-      );
       const cropNameAreaWidth = 35;
 
-      // Calculate positions
       const totalBarsHeight = cropNames.length * (barHeight + gap);
       const barAreaStartY = chartStartY + (chartHeight - totalBarsHeight) / 2;
       const barAreaEndY = barAreaStartY + totalBarsHeight;
@@ -253,18 +270,16 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
       doc.setLineWidth(0.5);
       doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5);
 
-      // ============== UPDATED Y-AXIS LABEL ==============
-      // Draw y-axis title - positioned closer to the axis
+      // Draw y-axis title
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      const textX = yAxisX - 5; // Reduced from -5 to -12 to bring closer
-      const textY = (barAreaStartY + barAreaEndY) / 3 + 12; // Adjusted to center vertically
-      doc.text('Crop', textX, textY, { angle: 360, align: 'center' });
-      // ==================================================
+      const textX = yAxisX - 5;
+      const textY = (barAreaStartY + barAreaEndY) / 3 + 12;
+      doc.text('Crop ', textX, textY, { angle: 360, align: 'center' });
 
-      // Draw y-axis tick marks for each crop
+      // Draw y-axis tick marks and crop name labels
       let currentBarY = barAreaStartY;
-      cropNames.forEach((cropName, index) => {
+      cropNames.forEach((cropName) => {
         doc.setDrawColor(0, 0, 0);
         doc.setLineWidth(0.5);
         doc.line(
@@ -288,46 +303,44 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
 
       const maxWeight = Math.max(
         ...this.reportDetails.map(
-          (crop) => Number(crop.qtyA || 0) + Number(crop.qtyB || 0) + Number(crop.qtyC || 0),
+          (crop) =>
+            Number(crop.qtyA || 0) +
+            Number(crop.qtyB || 0) +
+            Number(crop.qtyC || 0),
         ),
       );
 
       const scaleFactor = chartWidth / maxWeight;
 
-      this.reportDetails.forEach((crop, index) => {
+      this.reportDetails.forEach((crop) => {
         const qtyA = Number(crop.qtyA) || 0;
         const qtyB = Number(crop.qtyB) || 0;
         const qtyC = Number(crop.qtyC) || 0;
-        
         const totalWeight = qtyA + qtyB + qtyC;
 
-        let widthA = qtyA * scaleFactor;
-        let widthB = qtyB * scaleFactor;
-        let widthC = qtyC * scaleFactor;
+        const widthA = qtyA * scaleFactor;
+        const widthB = qtyB * scaleFactor;
+        const widthC = qtyC * scaleFactor;
 
         let currentX = chartStartX;
 
-        // Draw Grade A
         if (qtyA > 0) {
           doc.setFillColor(255, 146, 99);
           doc.rect(currentX, currentBarY, widthA, barHeight, 'F');
           currentX += widthA;
         }
 
-        // Draw Grade B
         if (qtyB > 0) {
           doc.setFillColor(95, 117, 233);
           doc.rect(currentX, currentBarY, widthB, barHeight, 'F');
           currentX += widthB;
         }
 
-        // Draw Grade C
         if (qtyC > 0) {
           doc.setFillColor(61, 225, 136);
           doc.rect(currentX, currentBarY, widthC, barHeight, 'F');
         }
 
-        // Draw total weight label
         if (totalWeight > 0) {
           doc.setFontSize(8);
           doc.setTextColor(0, 0, 0);
@@ -370,21 +383,18 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         doc.text(labelText, tickX, xAxisY + 6, { align: 'center' });
       }
 
-      // ============== UPDATED X-AXIS LABEL ==============
-      // Draw x-axis title - positioned closer to the axis
+      // Draw x-axis title
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, { // Reduced from +15 to +10
+      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, {
         align: 'right',
       });
-      // ==================================================
 
-      // Legend section (unchanged)
+      // Legend
       const legendY = chartStartY - 15;
       const legendSquareSize = 6;
       const legendSpacing = 25;
 
-      // Grade A
       doc.setFillColor(255, 146, 99);
       doc.rect(chartStartX, legendY, legendSquareSize, legendSquareSize, 'F');
       doc.setFontSize(9);
@@ -395,7 +405,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         legendY + legendSquareSize / 2 + 1,
       );
 
-      // Grade B
       const legendBX = chartStartX + legendSpacing;
       doc.setFillColor(95, 117, 233);
       doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
@@ -405,7 +414,6 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         legendY + legendSquareSize / 2 + 1,
       );
 
-      // Grade C
       const legendCX = legendBX + legendSpacing;
       doc.setFillColor(61, 225, 136);
       doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
@@ -445,7 +453,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit {
         const qtyB = Number(crop.qtyB) || 0;
         const qtyC = Number(crop.qtyC) || 0;
         const totalWeight = qtyA + qtyB + qtyC;
-        
+
         const values = [
           crop.cropName,
           qtyA ? `${qtyA}kg` : '-',

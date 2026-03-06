@@ -40,11 +40,12 @@
     </div>
     <!-- Corrected canvasjs-chart tag -->
     <div class="bg-gray-100 mb-10">
-      <ng-template #chartContent>
-      <div class="pt-16">
-        <canvasjs-chart *ngIf="chartOptions" [options]="chartOptions"></canvasjs-chart>
-      </div>
-    </ng-template>
+      <!-- Remove the bg-gray-100 div with canvasjs-chart and replace with: -->
+<ng-template #chartContent>
+  <div class="pt-16" style="height: 500px;">
+    <canvas id="districtBarChart"></canvas>
+  </div>
+</ng-template>
     </div>
 
     <div *ngIf="loadingTable; else tableContent" class="flex justify-center items-center h-48">
@@ -57,7 +58,7 @@
           <thead class="text-xs border-[2px]">
             <tr>
               <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
-                Crop
+                Crop Vraiety
               </th>
               <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
                 Grade A

@@ -37,9 +37,7 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id'];
     this.isLastOrder = this.route.snapshot.queryParams['status'] === 'true' ? true : false;
-
     this.fetchData();
-
   }
 
   constructor(
@@ -64,7 +62,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
       }
     )
   }
-
 
   onCancel() {
     if (this.isCompleted) {
@@ -160,7 +157,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
     );
   }
 
-
   onCheckboxChange(item: PakageItem, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     item.isPacked = isChecked ? 1 : 0;
@@ -179,7 +175,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   }
 
 }
-
 
 interface PakageItem {
   id: number;

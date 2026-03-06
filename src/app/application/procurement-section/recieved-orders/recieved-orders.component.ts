@@ -120,7 +120,6 @@ export class RecievedOrdersComponent {
 
   onPageChange(event: number) {
     this.page = event;
-    console.log('page', this.page);
     this.fetchAllPurchaseReport(this.page, this.itemsPerPage);
   }
 

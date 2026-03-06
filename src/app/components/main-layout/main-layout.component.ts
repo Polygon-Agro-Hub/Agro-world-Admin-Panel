@@ -20,7 +20,6 @@ export class MainLayoutComponent {
   ngOnInit(): void {
     // Check if the body already has the dark mode class
     const isDarkMode = document.body.classList.contains('dark');
-    console.log('Is dark mode active?', isDarkMode);
   }
 
   toggleTheme() {

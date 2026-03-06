@@ -9,8 +9,6 @@
 
         <div class="flex items-center justify-between mb-6 mx-5">
             <div class="flex items-center gap-3">
-                <!-- <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
-            {{orderInv}}</span></h1> -->
                 <h1 class="flex items-center gap-2 font-semibold leading-none">
                     <span class="text-[#627189] dark:text-gray-400">INV No :</span>
                     <span class="text-[#212121] dark:text-white">{{invNo}}</span>
@@ -19,11 +17,16 @@
             </div>
 
             <div class="">
-                <!-- <h2 class="  text-[#212121] dark:text-white">{{orderName}} : Rs.{{orderPrice}}</h2> -->
-                <h2 class="  text-[#212121] dark:text-white"> {{packageName}}<span
-                        *ngIf="packgeQty !== undefined && packgeQty > 1"
-                        class="text-[#FF0000] text-lg font-medium mx-2">(x{{packgeQty}})</span> : Rs.{{(packgeQty * price) | number :
-                    '1.2-2'}}</h2>
+                <h2 class="text-[#212121] dark:text-white">
+                    {{packageName}}
+                    <span *ngIf="packgeQty !== undefined && packgeQty > 1"
+                        class="text-[#FF0000] text-lg font-medium mx-2">
+                        (x{{packgeQty}})
+                    </span>
+                    <span *ngIf="price && packgeQty">
+                        : Rs. {{(packgeQty * price) | number : '1.2-2'}}
+                    </span>
+                </h2>
             </div>
         </div>
 
@@ -32,12 +35,13 @@
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                 <thead class="">
                     <tr>
-                        <th *ngIf="permissionService.hasPermission('Dispatch package item replace') || tokenService.getUserDetails().role === '1'" class=" text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                        <th *ngIf="permissionService.hasPermission('Dispatch package item replace') || tokenService.getUserDetails().role === '1'"
+                            class=" text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
 
                         </th>
                         <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             ITEM
-                            ({{total === 0 ? '0' : total < 10 ? '0'+ total : total}})</th>
+                            ({{total === 0 ? '0' : total < 10 ? '0' + total : total}})</th>
                         <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                             QUANTITY
                         </th>
@@ -57,9 +61,8 @@
 
                     <tr *ngFor=" let item of packageArr">
                         <td *ngIf="permissionService.hasPermission('Dispatch package item replace') || tokenService.getUserDetails().role === '1'"
-                        class=" whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
+                            class=" whitespace-nowrap text-sm text-[#212121] dark:text-white text-left">
                             <div *ngIf="!isShouldAllblock">
-                                <!-- (click)="openPopUp(item.productId, item.displayName, item.quantity, item.price)" -->
                                 <button (click)="openPopUp(item)">
                                     <i class="fa-solid fa-square-minus text-[red] text-lg"></i>
                                 </button>
@@ -112,7 +115,8 @@
                 class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
                 Cancel
             </button>
-            <button (click)="saveCheckedItems()" *ngIf="!isShouldAllblock && !isCompleted && (permissionService.hasPermission('Dispatch package item packing') || tokenService.getUserDetails().role === '1')"
+            <button (click)="saveCheckedItems()"
+                *ngIf="!isShouldAllblock && !isCompleted && (permissionService.hasPermission('Dispatch package item packing') || tokenService.getUserDetails().role === '1')"
                 class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
                 Save
             </button>
@@ -132,13 +136,14 @@
     <div class="max-w-4xl w-full mx-4 p-8 bg-white dark:bg-gray-800 rounded-xl shadow-2xl">
         <!-- Title -->
         <h2 class="text-2xl font-[500] text-center text-[#212121] dark:text-white mb-6">Replace Product</h2>
-        
+
         <!-- Selected Product Info -->
         <div class="flex justify-center mb-8">
             <div class="border-2 border-dashed border-red-400 rounded-lg p-6 text-center w-full max-w-lg">
                 <p class="text-sm font-medium text-gray-400 tracking-wide mb-2">Selected product</p>
                 <p class="text-lg font-[500] text-[#212121] dark:text-white">
-                    {{selectProduct.displayName}} - {{selectProduct.qty | number:'1.0'}}kg - Rs. {{ selectProduct.price | number:'1.2-2' }}
+                    {{selectProduct.displayName}} - {{selectProduct.qty | number:'1.0'}}kg - Rs. {{ selectProduct.price
+                    | number:'1.2-2' }}
                 </p>
                 <p class="text-sm font-medium text-gray-400 tracking-wide mt-4 mb-1">Relevant Product Type :</p>
                 <p class="text-base font-medium text-[#212121] dark:text-white">{{selectProduct.typeName}}</p>
@@ -152,15 +157,17 @@
         <div class="grid grid-cols-4 gap-6 mb-6">
             <!-- Product Name Dropdown -->
             <div class="col-span-4 sm:col-span-1">
-                <label class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3">PRODUCT NAME</label>
+                <label
+                    class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3">PRODUCT
+                    NAME</label>
                 <p-dropdown [options]="productArr" [(ngModel)]="newProductObj" optionLabel="displayName"
                     placeholder="--Product Name--" [filter]="true" [scrollHeight]="'200px'"
-                    (onChange)="onProductChange()" [showClear]="true" optionDisabled="isExcluded" 
-                    appendTo="body" 
+                    (onChange)="onProductChange()" [showClear]="true" optionDisabled="isExcluded" appendTo="body"
                     styleClass="w-full h-[44px] border-gray-300 dark:border-gray-600 rounded-lg">
                     <ng-template let-product pTemplate="item">
                         <div class="flex items-center gap-2 py-1">
-                            <span [class.text-gray-400]="product.isExcluded" [class.text-gray-700]="!product.isExcluded" [class.dark:text-white]="!product.isExcluded">
+                            <span [class.text-gray-400]="product.isExcluded" [class.text-gray-700]="!product.isExcluded"
+                                [class.dark:text-white]="!product.isExcluded">
                                 {{ product.displayName }}
                             </span>
                         </div>
@@ -170,7 +177,8 @@
 
             <!-- Quantity Input -->
             <div class="col-span-4 sm:col-span-1">
-                <label class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3 text-center">
+                <label
+                    class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3 text-center">
                     QUANTITY (KG)
                 </label>
                 <input type="number" placeholder="--Qty in kg--"
@@ -181,16 +189,23 @@
 
             <!-- Unit Price -->
             <div class="col-span-4 sm:col-span-1">
-                <label class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3 text-left">UNIT PRICE (RS.)</label>
-                <div class="w-full border border-gray-200 dark:border-gray-600 text-center rounded-lg py-2.5 px-3 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white font-medium min-h-[44px] flex items-center justify-center">
-                    {{ newProductObj?.discountedPrice != null ? (newProductObj?.discountedPrice | number:'1.2-2') : '----' }}
+                <label
+                    class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3 text-left">UNIT
+                    PRICE (RS.)</label>
+                <div
+                    class="w-full border border-gray-200 dark:border-gray-600 text-center rounded-lg py-2.5 px-3 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white font-medium min-h-[44px] flex items-center justify-center">
+                    {{ newProductObj?.discountedPrice != null ? (newProductObj?.discountedPrice | number:'1.2-2') :
+                    '----' }}
                 </div>
             </div>
 
             <!-- Total -->
             <div class="col-span-4 sm:col-span-1">
-                <label class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3 text-left">TOTAL (RS.)</label>
-                <div class="w-full border border-gray-200 dark:border-gray-600 text-center rounded-lg py-2.5 px-3 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white font-medium min-h-[44px] flex items-center justify-center">
+                <label
+                    class="block text-xs font-[700] text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3 text-left">TOTAL
+                    (RS.)</label>
+                <div
+                    class="w-full border border-gray-200 dark:border-gray-600 text-center rounded-lg py-2.5 px-3 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-white font-medium min-h-[44px] flex items-center justify-center">
                     {{ newProductObj?.price != null ? (newProductObj?.price | number:'1.2-2') : '----' }}
                 </div>
             </div>
@@ -210,12 +225,13 @@
                 class="px-8 py-2.5 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium">
                 Cancel
             </button>
-            <button (click)="replaceProduct()" [disabled]="newProductObj === null || isInvalidPriceRange || newProductObj.qty <= 0"
+            <button (click)="replaceProduct()"
+                [disabled]="newProductObj === null || isInvalidPriceRange || newProductObj.qty <= 0"
                 class="px-8 py-2.5 rounded-lg font-medium transition-colors"
                 [class.bg-gray-300]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
                 [class.text-gray-500]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
                 [class.cursor-not-allowed]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
-                [class.bg-blue-600]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0" 
+                [class.bg-blue-600]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0"
                 [class.hover:bg-blue-700]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty >= 0"
                 [class.text-white]="newProductObj !== null && !isInvalidPriceRange">
                 Update

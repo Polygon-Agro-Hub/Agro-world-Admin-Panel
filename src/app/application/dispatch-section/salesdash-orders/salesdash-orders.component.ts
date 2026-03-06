@@ -7,8 +7,6 @@ import { SalesdashCustomePackageComponent } from '../dash-dispatch-components/sa
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 
-
-
 @Component({
   selector: 'app-salesdash-orders',
   standalone: true,
@@ -21,12 +19,10 @@ import { PermissionService } from '../../../services/roles-permission/permission
   styleUrl: './salesdash-orders.component.css'
 })
 export class SalesdashOrdersComponent{
-
+  
   isPremade = true;
 
-
   constructor(
-    // private dispatchService: DispatchService,
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,

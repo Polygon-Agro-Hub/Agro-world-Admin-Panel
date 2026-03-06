@@ -86,6 +86,7 @@ export class CollectionOfficerReportViewComponent implements OnInit {
   }
 
   fetchReport(): void {
+    console.log('called')
     const Token = this.tokenService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${Token}`,
@@ -117,7 +118,8 @@ export class CollectionOfficerReportViewComponent implements OnInit {
 
   updateChartOptions(): void {
     let chartData: any[] = [];
-
+    
+  
     if (Object.keys(this.reportData).length > 0) {
       chartData = Object.entries(this.reportData).map(([crop, grades]) => ({
         label: crop,
@@ -128,25 +130,61 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       }));
     }
 
-
-    const isDarkMode = this.themeService.isDarkTheme();
-
+    const labelColor = "#000000"
+    const titleColor = "#000000"
+    const gridColor = "#000000"
+    const tickColor = "#000000"
+  
     this.chartOptions = {
-      animationEnabled: true,
-      exportEnabled: true,
       backgroundColor: "transparent",
-      title: {
-        text: `Crop Report by Grade ${this.formatDateForDisplay(this.createdDate)}`,
-        fontColor: isDarkMode ? '#ffffff' : '#000000',
+      
+      axisX: {
+        title: "Crop Variety",
+        titleFontSize: 14,
+        titleFontColor: '#000000',
+        titlePadding: 10,        // ← space between title and axis labels
+      
+        labelFontSize: 12,
+        labelFontColor: '#000000',
+        labelPadding: 8,         // ← space between labels and axis line
+      
+        gridColor: gridColor,
+        gridThickness: 1,
+        margin: 10,              // ← outer margin around the axis block
       },
+      
+      // ── Y Axis ──────────────────────────────────────────────────────
       axisY: {
         title: "Weight (Kg)",
-        fontColor: isDarkMode ? '#ffffff' : '#000000',
-        includeZero: true
+        titleFontSize: 14,
+        titleFontColor: titleColor,
+        titlePadding: 10,        // ← space between title and axis labels
+      
+        labelFontSize: 12,
+        labelFontColor: labelColor,
+        labelPadding: 8,         // ← space between labels and axis line
+      
+        gridColor: gridColor,
+        gridThickness: 1,
+        includeZero: true,
+        margin: 10,              // ← outer margin around the axis block
       },
-      legend: {
-        verticalAlign: "top",
-      },
+  
+      // ── Legend ────────────────────────────────────────────────────
+      
+legend: {
+  verticalAlign: "top",
+  horizontalAlign: "center",
+  fontSize: 13,
+  fontColor: labelColor,
+  fontWeight: "normal",
+  padding: 16,
+  markerMargin: 8,
+  itemWidth: 110,
+  margin: 20,              // ← pushes legend away from the chart area
+},
+  
+      // ── Data series ───────────────────────────────────────────────
       data: [
         {
           type: "stackedBar",
@@ -154,6 +192,17 @@ export class CollectionOfficerReportViewComponent implements OnInit {
           showInLegend: true,
           yValueFormatString: "#,### Kg",
           color: "#FF9263",
+  
+          // Bar styling
+          lineColor: "transparent",  // border around each bar segment
+          lineThickness: 0,
+          fillOpacity: 0.92,
+  
+          // Tooltip / data-label text
+          indexLabelFontSize: 11,
+          indexLabelFontColor: "#FFFFFF",
+          indexLabelPlacement: "inside",
+  
           dataPoints: chartData.map((item) => ({
             label: item.label,
             y: item.gradeA,
@@ -165,6 +214,15 @@ export class CollectionOfficerReportViewComponent implements OnInit {
           showInLegend: true,
           yValueFormatString: "#,### Kg",
           color: "#5F75E9",
+  
+          lineColor: "transparent",
+          lineThickness: 0,
+          fillOpacity: 0.92,
+  
+          indexLabelFontSize: 11,
+          indexLabelFontColor: "#FFFFFF",
+          indexLabelPlacement: "inside",
+  
           dataPoints: chartData.map((item) => ({
             label: item.label,
             y: item.gradeB,
@@ -176,6 +234,15 @@ export class CollectionOfficerReportViewComponent implements OnInit {
           showInLegend: true,
           yValueFormatString: "#,### Kg",
           color: "#3DE188",
+  
+          lineColor: "transparent",
+          lineThickness: 0,
+          fillOpacity: 0.92,
+  
+          indexLabelFontSize: 11,
+          indexLabelFontColor: "#333333",   // darker text on light green
+          indexLabelPlacement: "inside",
+  
           dataPoints: chartData.map((item) => ({
             label: item.label,
             y: item.gradeC,
@@ -183,9 +250,8 @@ export class CollectionOfficerReportViewComponent implements OnInit {
         },
       ],
     };
-
+  
     this.loadingChart = false;
-
     this.cdr.detectChanges();
   }
 
@@ -198,10 +264,13 @@ export class CollectionOfficerReportViewComponent implements OnInit {
         confirmButtonText: "OK",
       }).then(() => {
         this.createdDate = new Date().toISOString().split("T")[0];
+        console.log('date', this.createdDate)
         this.fetchReport();
       });
     } else {
+      console.log('date', this.createdDate)
       this.fetchReport();
+
     }
   }
 

@@ -230,7 +230,7 @@ export class StakeholderService {
     return this.http.put<any>(url, {}, { headers });
   }
 
-  getAllGoviShopUsers(search?: string, currentPlan?: string): Observable<any> {
+  getAllGoviShopUsers(search?: string, currentPlan?: string, planStatus?: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -244,6 +244,10 @@ export class StakeholderService {
 
     if (currentPlan) {
       params = params.set('currentPlan', currentPlan);
+    }
+
+    if (planStatus) {
+      params = params.set('planStatus', planStatus);
     }
 
     return this.http

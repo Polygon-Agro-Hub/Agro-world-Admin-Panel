@@ -39,7 +39,7 @@
       <app-loading-spinner></app-loading-spinner>
     </div>
     <!-- Corrected canvasjs-chart tag -->
-    <div class="bg-gray-100">
+    <div class="bg-gray-100 mb-10">
       <ng-template #chartContent>
       <div class="pt-16">
         <canvasjs-chart *ngIf="chartOptions" [options]="chartOptions"></canvasjs-chart>
@@ -52,7 +52,7 @@
     </div>
 
     <ng-template #tableContent>
-      <div class="relative overflow-x-auto shadow-md pt-20">
+      <div class="relative overflow-x-auto shadow-md">
         <table class="w-full text-sm text-center rtl:text-right border-[2px]">
           <thead class="text-xs border-[2px]">
             <tr>

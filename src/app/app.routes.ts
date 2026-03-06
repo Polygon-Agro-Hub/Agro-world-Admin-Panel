@@ -813,7 +813,7 @@ export const routes: Routes = [
             },
           },
           {
-            path: 'collective-officer-report/view/:id/:name',
+            path: 'collective-officer-report/view/:id/:name/:lastName/:empId',
             component: CollectionOfficerReportViewComponent,
             canActivate: [PermissionGuard],
             data: { permission: 'Collection Officer Daily Report' },

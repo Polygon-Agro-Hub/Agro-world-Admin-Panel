@@ -134,9 +134,9 @@ export class CollectionOfficerReportComponent implements OnInit {
     this.fetchAllNews(this.page, this.itemsPerPage);
   }
 
-  navigateToReport(id: number, name: string): void {
+  navigateToReport(id: number, name: string, lastName: string, empId: string): void {
     this.router.navigate([
-      `/reports/collective-officer-report/view/${id}/${name}`,
+      `/reports/collective-officer-report/view/${id}/${name}/${lastName}/${empId}`,
     ]);
   }
 

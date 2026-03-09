@@ -8,7 +8,7 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
 
 
-  <div #contentToConvert class="min-w-[1100px]">
+  <div class="min-w-[1100px]">
     <div class="flex justify-end items-center mb-8 mt-4 mr-4 ">
       
       <div class="flex  ml-45">
@@ -37,15 +37,13 @@
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">{{createdDate | date: 'yyyy/MM/dd' }}</h2>
     </div>
 
-    <div *ngIf="loadingChart; else chartContent" class="flex justify-center items-center h-48">
+    <div *ngIf="loadingChart" class="flex justify-center items-center h-48">
       <app-loading-spinner></app-loading-spinner>
     </div>
-
-    <ng-template #chartContent>
-      <div *ngIf="chartOptions" class="pb-10">
-        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '360px'}"></canvasjs-chart>
-      </div>
-    </ng-template>
+    
+    <div [style.display]="loadingChart ? 'none' : 'block'" class="pt-16 pb-10" style="height: 500px;">
+      <canvas id="reportBarChart"></canvas>
+    </div>
 
     <div *ngIf="loadingTable; else tableContent" class="flex justify-center items-center h-48">
       <app-loading-spinner></app-loading-spinner>
@@ -63,12 +61,26 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let entry of reportEntries">
-            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[0] }}</td>
-            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[1]['Grade A'] }}kg</td>
-            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[1]['Grade B'] }}kg</td>
-            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[1]['Grade C'] }}kg</td>
-            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">{{ entry[1]['Total'] }}kg</td>
+          <tr *ngFor="let entry of reportData | keyvalue">
+            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">
+              {{ entry.key }}
+            </td>
+        
+            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">
+              {{ entry.value['Grade A'] }}kg
+            </td>
+        
+            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">
+              {{ entry.value['Grade B'] }}kg
+            </td>
+        
+            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">
+              {{ entry.value['Grade C'] }}kg
+            </td>
+        
+            <td class="border border-gray-300 p-2 text-textLight dark:text-textDark">
+              {{ entry.value['Total'] }}kg
+            </td>
           </tr>
         </tbody>
       </table>
@@ -78,14 +90,7 @@
 
 
   </div>
-  <div class="flex justify-center min-w-[1100px]">
-    <button (click)="downloadPDF()" class="bg-[#3980C0] hover:bg-[#2b6293] text-white font-bold py-2 px-4 rounded"
-      [disabled]="isDownloading">
-      <i class="fas fa-download" *ngIf="!isDownloading"></i>
-      <i class="fas fa-spinner fa-spin" *ngIf="isDownloading"></i>
-      {{ isDownloading ? ' Downloading...' : ' Download PDF' }}
-    </button>
-  </div>
+
 
   <div class="h-[25px] min-w-[1100px]"></div>
 

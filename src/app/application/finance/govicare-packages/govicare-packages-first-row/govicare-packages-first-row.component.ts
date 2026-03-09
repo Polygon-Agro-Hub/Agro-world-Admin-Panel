@@ -7,7 +7,7 @@ import { DashboardData } from '../../../../services/plant-care/plantcare-users.s
   standalone: true,
   imports: [CommonModule],
   templateUrl: './govicare-packages-first-row.component.html',
-  styleUrl: './govicare-packages-first-row.component.css'
+  styleUrl: './govicare-packages-first-row.component.css',
 })
 export class GovicarePackagesFirstRowComponent {
   @Input() dashboardData: DashboardData | null = null;
@@ -17,7 +17,7 @@ export class GovicarePackagesFirstRowComponent {
       style: 'currency',
       currency: 'LKR',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(value);
   }
 }

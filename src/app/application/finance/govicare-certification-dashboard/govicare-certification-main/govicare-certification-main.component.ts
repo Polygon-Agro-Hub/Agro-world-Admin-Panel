@@ -33,7 +33,7 @@ export class GovicareCertificationMainComponent implements OnInit {
   constructor(
     private location: Location,
     private router: Router,
-    private financeService: FinanceService
+    private financeService: FinanceService,
   ) {}
 
   ngOnInit(): void {

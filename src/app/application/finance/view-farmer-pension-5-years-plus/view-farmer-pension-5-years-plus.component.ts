@@ -8,12 +8,17 @@ import { FarmerPensionService } from '../../../services/finance/farmer-pension.s
 @Component({
   selector: 'app-view-farmer-pension-5-years-plus',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, NgxPaginationModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+    NgxPaginationModule,
+  ],
   templateUrl: './view-farmer-pension-5-years-plus.component.html',
-  styleUrl: './view-farmer-pension-5-years-plus.component.css'
+  styleUrl: './view-farmer-pension-5-years-plus.component.css',
 })
 export class ViewFarmerPension5YearsPlusComponent {
-searchText: string = '';
+  searchText: string = '';
   isLoading = false;
   showDetailsModal = false;
   dataObject: Farmer | null = null;
@@ -134,7 +139,7 @@ searchText: string = '';
       const prevMonth = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
-        0
+        0,
       );
       days += prevMonth.getDate();
     }

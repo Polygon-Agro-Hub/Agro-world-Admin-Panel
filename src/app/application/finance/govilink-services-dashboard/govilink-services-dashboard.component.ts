@@ -72,7 +72,7 @@ export class GovilinkServicesDashboardComponent
     private financeService: FinanceService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit(): void {
@@ -216,7 +216,7 @@ export class GovilinkServicesDashboardComponent
     data: ChartData,
     padding: ChartPadding,
     chartWidth: number,
-    chartHeight: number
+    chartHeight: number,
   ): void {
     const maxValue = Math.max(...data.values) || 100000;
     const points: ChartPoint[] = data.values.map(
@@ -225,14 +225,14 @@ export class GovilinkServicesDashboardComponent
           padding.left + (index * chartWidth) / (data.labels.length - 1);
         const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
         return { x, y, value };
-      }
+      },
     );
 
     const gradient = ctx.createLinearGradient(
       0,
       padding.top,
       0,
-      padding.top + chartHeight
+      padding.top + chartHeight,
     );
     gradient.addColorStop(0, 'rgba(250, 204, 21, 0.6)');
     gradient.addColorStop(1, 'rgba(250, 204, 21, 0.05)');
@@ -278,7 +278,7 @@ export class GovilinkServicesDashboardComponent
     data: ChartData,
     padding: ChartPadding,
     chartWidth: number,
-    chartHeight: number
+    chartHeight: number,
   ): void {
     const maxValue = Math.max(...data.values) || 100000;
     const yLabels: number[] = this.generateYLabels(maxValue);
@@ -297,7 +297,7 @@ export class GovilinkServicesDashboardComponent
             maximumFractionDigits: 0,
           }),
         padding.left - 15,
-        y + 4
+        y + 4,
       );
     });
 

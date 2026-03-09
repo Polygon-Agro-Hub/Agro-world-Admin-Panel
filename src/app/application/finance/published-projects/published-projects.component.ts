@@ -30,7 +30,7 @@ import { FinanceService } from '../../../services/finance/finance.service';
     CalendarModule,
   ],
   templateUrl: './published-projects.component.html',
-  styleUrl: './published-projects.component.css'
+  styleUrl: './published-projects.component.css',
 })
 export class PublishedProjectsComponent implements OnInit {
   publishedProjectsArr: PublishedProjects[] = [];
@@ -49,53 +49,40 @@ export class PublishedProjectsComponent implements OnInit {
     private finalInvoiceService: FinalinvoiceService,
     private financeSrv: FinanceService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit() {
     this.fetchAllPublishedProjects();
   }
 
-  fetchAllPublishedProjects(
-    search: string = this.searchText
-  ) {
+  fetchAllPublishedProjects(search: string = this.searchText) {
     this.isLoading = true;
-    this.financeSrv
-      .getAllPublishedProjects(
-        search
-      )
-      .subscribe(
-        (res) => {
-          console.log(res);
-          this.isLoading = false;
-          this.publishedProjectsArr = res.items;
+    this.financeSrv.getAllPublishedProjects(search).subscribe(
+      (res) => {
+        this.isLoading = false;
+        this.publishedProjectsArr = res.items;
 
-          this.hasData = this.publishedProjectsArr.length > 0;
-          this.totalItems = this.publishedProjectsArr.length | 0;
-          console.log(this.publishedProjectsArr);
-          console.log('tot items', this.totalItems);
-        },
-        (error) => {
-          console.error('Error fetch news:', error);
-          if (error.status === 401) {
-            this.isLoading = false;
-          }
+        this.hasData = this.publishedProjectsArr.length > 0;
+        this.totalItems = this.publishedProjectsArr.length | 0;
+      },
+      (error) => {
+        console.error('Error fetch news:', error);
+        if (error.status === 401) {
+          this.isLoading = false;
         }
-      );
+      },
+    );
   }
 
   onSearch() {
-    this.searchText = this.searchText?.trim() || ''
-    this.fetchAllPublishedProjects(
-      this.searchText
-    );
+    this.searchText = this.searchText?.trim() || '';
+    this.fetchAllPublishedProjects(this.searchText);
   }
 
   offSearch() {
     this.searchText = '';
-    this.fetchAllPublishedProjects(
-      this.searchText
-    );
+    this.fetchAllPublishedProjects(this.searchText);
   }
 
   Back(): void {
@@ -117,8 +104,7 @@ export class PublishedProjectsComponent implements OnInit {
 
   viewDetails(item: PublishedProjects) {
     this.isPopupVisible = true;
-    this.itemDetailsToViewObj = item
-    console.log('itemDetailsToViewArr', this.itemDetailsToViewObj)
+    this.itemDetailsToViewObj = item;
   }
 
   closePopUp() {
@@ -126,24 +112,26 @@ export class PublishedProjectsComponent implements OnInit {
   }
 
   // Calculate total extent in Acres
-  calculateExtentInAcres(extentAc: number = 0, extentHa: number = 0, extentP: number = 0): string {
+  calculateExtentInAcres(
+    extentAc: number = 0,
+    extentHa: number = 0,
+    extentP: number = 0,
+  ): string {
     const hectaresToAcres = extentHa * 2.471;
     const perchesToAcres = extentP * 0.00625;
     const totalAcres = extentAc + hectaresToAcres + perchesToAcres;
-    
+
     return totalAcres.toFixed(2);
   }
 
   // Calculate progress percentage based on shares sold vs defined shares
   calculateProgress(sharesSold: number = 0, defineShares: number = 0): number {
     if (defineShares === 0) {
-      return 0; 
+      return 0;
     }
     const progress = (sharesSold / defineShares) * 100;
-    return Math.round(progress); 
+    return Math.round(progress);
   }
-
-  
 }
 
 class PublishedProjects {
@@ -161,15 +149,15 @@ class PublishedProjects {
   reqStatus!: string;
   nicFront!: string;
   nicBack!: string;
-  extentha!: number;  
-  extentac!: number;  
-  extentp!: number;   
+  extentha!: number;
+  extentac!: number;
+  extentp!: number;
   expectedYield!: number;
   startDate!: Date;
   investment!: number;
   srtName!: string;
   publishDate!: Date;
   publishedBy!: string;
-  defineShares!: number;  
-  shares!: number;        
+  defineShares!: number;
+  shares!: number;
 }

@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { FinanceService, GoviCareRequest, GoviCareRequestDetail } from '../../../services/finance/finance.service';
+import {
+  FinanceService,
+  GoviCareRequest,
+  GoviCareRequestDetail,
+} from '../../../services/finance/finance.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { DropdownModule } from 'primeng/dropdown';
@@ -13,7 +17,7 @@ import { DropdownModule } from 'primeng/dropdown';
   standalone: true,
   imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './view-all-approved-govicare-requests.component.html',
-  styleUrl: './view-all-approved-govicare-requests.component.css'
+  styleUrl: './view-all-approved-govicare-requests.component.css',
 })
 export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   isLoading: boolean = false;
@@ -56,8 +60,8 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     private financeService: FinanceService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.loadGovicareRequests();
@@ -80,7 +84,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
         error: (error) => {
           console.error('Error loading approved govicare requests:', error);
           this.isLoading = false;
-        }
+        },
       });
   }
 
@@ -88,7 +92,6 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   toggleStatusDropdown(): void {
     this.isStatusDropdownOpen = !this.isStatusDropdownOpen;
   }
-
 
   selectStatusOption(option: string): void {
     this.selectStatus = option;
@@ -103,7 +106,6 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   filterShares(): void {
     this.loadGovicareRequests();
   }
-
 
   cancelStatus(event: Event): void {
     event.stopPropagation();
@@ -139,7 +141,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       error: (error) => {
         console.error('Error loading request details:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -177,9 +179,9 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       confirmButtonColor: '#6B7280',
       customClass: {
         popup: 'bg-white dark:bg-tileBlack rounded-lg shadow-2xl',
-        confirmButton: 'px-8 py-2 rounded-lg font-medium'
+        confirmButton: 'px-8 py-2 rounded-lg font-medium',
       },
-      width: '500px'
+      width: '500px',
     });
   }
 
@@ -209,10 +211,13 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
 
             Swal.fire({
               title: 'Success',
-              text: response.message || 'Project published successfully to GoViCapital',
+              text:
+                response.message ||
+                'Project published successfully to GoViCapital',
               icon: 'success',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
@@ -222,7 +227,8 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
               text: response.message || 'Failed to publish project',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
@@ -236,26 +242,34 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
             text: 'An error occurred while publishing the project',
             icon: 'error',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
-        }
+        },
       });
   }
 
   openImage(imageUrl: string): void {
     if (imageUrl) {
-      window.open(imageUrl, '_blank', 'width=800,height=600,resizable=yes,scrollbars=yes');
+      window.open(
+        imageUrl,
+        '_blank',
+        'width=800,height=600,resizable=yes,scrollbars=yes',
+      );
     }
   }
 
   formatCurrency(amount: number | string): string {
     const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-    return 'Rs. ' + numAmount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+    return (
+      'Rs. ' +
+      numAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    );
   }
 
   @HostListener('document:click', ['$event'])
@@ -282,7 +296,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
 
   divideFunc(num1: number, num2: number): number {
     if (num2 === 0) {
-      console.error("Division by zero error");
+      console.error('Division by zero error');
       return 0; // or throw an error
     }
     const result = num1 / num2;
@@ -292,19 +306,23 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   auditResults(requestId: number) {
     const tree = this.router.createUrlTree([
       'finance/action/finance-govicapital/view-Govicare-approved-requests/edit-audit-personal-infor',
-      String(requestId)
+      String(requestId),
     ]);
-    
+
     const url = this.router.serializeUrl(tree);
     window.open(window.location.origin + '/admin' + url, '_blank');
   }
 
   // Calculate total extent in Acres
-  calculateExtentInAcres(extent: number = 0, extentH: number = 0, extentP: number = 0): string { 
+  calculateExtentInAcres(
+    extent: number = 0,
+    extentH: number = 0,
+    extentP: number = 0,
+  ): string {
     const hectaresToAcres = extentH * 2.471;
     const perchesToAcres = extentP * 0.00625;
     const totalAcres = extent + hectaresToAcres + perchesToAcres;
-    
+
     return totalAcres.toFixed(4) + ' Acres';
   }
 
@@ -313,7 +331,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     this.editMinShares = this.selectedShares.approvedDetails?.minShare || 0;
     this.editMaxShares = this.selectedShares.approvedDetails?.maxShare || 0;
     this.onEditSharesChange(); // Calculate share value
-    
+
     this.isSharePopup = false; // Close view popup
     this.isEditSharesModal = true; // Open edit popup
   }
@@ -323,15 +341,24 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
   }
 
   onEditSharesChange() {
-    if (this.editNumShares > 0 && this.selectedShares.approvedDetails?.totValue) {
-      this.editShareValue = this.selectedShares.approvedDetails.totValue / this.editNumShares;
+    if (
+      this.editNumShares > 0 &&
+      this.selectedShares.approvedDetails?.totValue
+    ) {
+      this.editShareValue =
+        this.selectedShares.approvedDetails.totValue / this.editNumShares;
     } else {
       this.editShareValue = 0;
     }
   }
 
   updateShares(form: any) {
-    if (form.invalid || this.editNumShares <= 0 || this.editMinShares <= 0 || this.editMaxShares <= 0) {
+    if (
+      form.invalid ||
+      this.editNumShares <= 0 ||
+      this.editMinShares <= 0 ||
+      this.editMaxShares <= 0
+    ) {
       return;
     }
 
@@ -358,7 +385,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       shareValue: this.editShareValue,
       minimumShare: this.editMinShares,
       maximumShare: this.editMaxShares,
-      devideType: 'Edit'
+      devideType: 'Edit',
     };
 
     this.financeService.devideSharesRequest(updateData).subscribe({
@@ -370,19 +397,21 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
             text: 'Shares updated successfully',
             icon: 'success',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
           this.closeEditSharesModal();
-          this.loadGovicareRequests(); 
+          this.loadGovicareRequests();
         } else {
           Swal.fire({
             title: 'Error',
             text: response.message || 'Failed to update shares',
             icon: 'error',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
@@ -400,7 +429,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
             title: 'font-semibold text-lg',
           },
         });
-      }
+      },
     });
   }
 

@@ -1,5 +1,4 @@
 <div class="grid grid-cols-2 gap-8">
-  <!-- Front Photo -->
   <div>
     <h3
       class="text-center text-sm font-semibold mb-4 text-gray-900 dark:text-white"
@@ -12,7 +11,6 @@
       <div
         class="w-full h-[400px] overflow-hidden flex items-center justify-center"
       >
-        <!-- Added wrapper with fixed height and overflow-hidden -->
         <img
           [src]="frontImageUrl"
           [alt]="frontTitle"
@@ -46,7 +44,6 @@
     </div>
   </div>
 
-  <!-- Back Photo -->
   <div>
     <h3
       class="text-center text-sm font-semibold mb-4 text-gray-900 dark:text-white"
@@ -59,7 +56,6 @@
       <div
         class="w-full h-[400px] overflow-hidden flex items-center justify-center"
       >
-        <!-- Added wrapper with fixed height and overflow-hidden -->
         <img
           [src]="backImageUrl"
           [alt]="backTitle"
@@ -94,7 +90,6 @@
   </div>
 </div>
 
-<!-- Modal for Fullscreen View -->
 <div
   *ngIf="isModalOpen"
   class="fixed inset-0 bg-black bg-opacity-90 z-[9999] flex items-center justify-center p-4"
@@ -104,7 +99,6 @@
     class="relative w-full h-full flex items-center justify-center"
     (click)="$event.stopPropagation()"
   >
-    <!-- Close Button -->
     <button
       (click)="closeModal()"
       class="absolute top-4 right-4 bg-white dark:bg-gray-700 p-3 rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors z-10"
@@ -113,7 +107,6 @@
       <i class="fa-solid fa-times text-xl text-gray-600 dark:text-gray-300"></i>
     </button>
 
-    <!-- Title -->
     <div
       class="absolute top-4 left-4 bg-white dark:bg-gray-700 px-4 py-2 rounded shadow-lg z-10"
     >
@@ -122,7 +115,6 @@
       </h3>
     </div>
 
-    <!-- Zoom Controls -->
     <div class="absolute bottom-4 right-4 flex gap-2 z-10">
       <button
         (click)="modalZoomOut()"
@@ -149,7 +141,6 @@
       </button>
     </div>
 
-    <!-- Image Container -->
     <div class="flex items-center justify-center max-w-full max-h-full p-16">
       <img
         [src]="modalImageUrl"

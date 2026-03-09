@@ -88,8 +88,8 @@
       <div *ngIf="secondRow.salsesAnalize.precentage >= 0" class="flex items-center justify-end">
         <i class="fa-solid fa-arrow-trend-up text-teal-600"></i>
         <p class="text-teal-600 text-lg font-semibold ml-2">
-          {{ secondRow.salsesAnalize.precentage }}%
-        </p>
+  {{ secondRow.salsesAnalize.precentage | number:'2.0-0' }}%
+</p>
       </div>
 
       <div *ngIf="secondRow.salsesAnalize.precentage < 0" class="flex items-center justify-end">

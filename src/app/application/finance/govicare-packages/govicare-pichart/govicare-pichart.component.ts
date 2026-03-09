@@ -1,4 +1,10 @@
-import { Component, AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import Chart from 'chart.js/auto';
 import { PackageEnrollments } from '../../../../services/plant-care/plantcare-users.service';
 
@@ -46,22 +52,22 @@ export class GovicarePichartComponent implements AfterViewInit, OnChanges {
       afterDatasetDraw(chart: any) {
         const { ctx, data } = chart;
         const meta = chart.getDatasetMeta(0);
-        
+
         meta.data.forEach((element: any, index: number) => {
           const { x, y } = element.tooltipPosition();
-          
+
           ctx.save();
           ctx.font = 'bold 16px Arial';
           ctx.fillStyle = '#FFFFFF';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          
+
           const value = data.datasets[0].data[index];
           ctx.fillText(value.toString(), x, y);
-          
+
           ctx.restore();
         });
-      }
+      },
     };
 
     this.chart = new Chart(ctx, {
@@ -95,9 +101,10 @@ export class GovicarePichartComponent implements AfterViewInit, OnChanges {
                 const value = context.parsed;
                 const total = context.dataset.data.reduce(
                   (a: number, b: number) => a + b,
-                  0
+                  0,
                 );
-                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
+                const percentage =
+                  total > 0 ? ((value / total) * 100).toFixed(1) : '0';
                 return `${label}: ${value} (${percentage}%)`;
               },
             },

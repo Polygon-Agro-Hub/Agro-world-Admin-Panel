@@ -35,9 +35,8 @@ export class CultivationHistoryComponent implements OnInit {
     private farmerPensionService: FarmerPensionService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private route: ActivatedRoute
-  ) { }
-
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.params['id'];
@@ -47,8 +46,9 @@ export class CultivationHistoryComponent implements OnInit {
 
   fetchData() {
     this.isLoading = true;
-    this.farmerPensionService.getPensionForCultivation(this.userId).subscribe(
-      (res) => {
+    this.farmerPensionService
+      .getPensionForCultivation(this.userId)
+      .subscribe((res) => {
         if (res.status) {
           this.cultivationArray = res.data;
           this.hasData = this.cultivationArray.length > 0;
@@ -57,8 +57,7 @@ export class CultivationHistoryComponent implements OnInit {
           this.hasData = false;
           this.isLoading = false;
         }
-      }
-    )
+      });
   }
 
   calPrograss(complete: number, total: number): number {

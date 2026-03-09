@@ -1,4 +1,10 @@
-import { Component, AfterViewInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { MonthlyStatistic } from '../../../../services/plant-care/plantcare-users.service';
 
 interface ChartPoint {
@@ -24,7 +30,7 @@ interface ChartPadding {
   standalone: true,
   imports: [],
   templateUrl: './govicare-area-chart.component.html',
-  styleUrl: './govicare-area-chart.component.css'
+  styleUrl: './govicare-area-chart.component.css',
 })
 export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
   @Input() monthlyStats: MonthlyStatistic[] = [];
@@ -75,41 +81,49 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
     if (!this.monthlyStats || this.monthlyStats.length === 0) {
       return {
         labels: [],
-        values: []
+        values: [],
       };
     }
 
-    const labels = this.monthlyStats.map(stat => stat.monthName);
-    const values = this.monthlyStats.map(stat => Number(stat.revenue) || 0);
+    const labels = this.monthlyStats.map((stat) => stat.monthName);
+    const values = this.monthlyStats.map((stat) => Number(stat.revenue) || 0);
 
     return { labels, values };
   }
 
   private drawAreaChart(
-    ctx: CanvasRenderingContext2D, 
-    data: ChartData, 
-    padding: ChartPadding, 
-    chartWidth: number, 
-    chartHeight: number
+    ctx: CanvasRenderingContext2D,
+    data: ChartData,
+    padding: ChartPadding,
+    chartWidth: number,
+    chartHeight: number,
   ): void {
     const maxValue = Math.max(...data.values) || 100000;
-    const points: ChartPoint[] = data.values.map((value: number, index: number) => {
-      const x = padding.left + (index * chartWidth) / (data.labels.length - 1);
-      const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
-      return { x, y, value };
-    });
+    const points: ChartPoint[] = data.values.map(
+      (value: number, index: number) => {
+        const x =
+          padding.left + (index * chartWidth) / (data.labels.length - 1);
+        const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
+        return { x, y, value };
+      },
+    );
 
-    const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartHeight);
+    const gradient = ctx.createLinearGradient(
+      0,
+      padding.top,
+      0,
+      padding.top + chartHeight,
+    );
     gradient.addColorStop(0, 'rgba(217, 70, 239, 0.6)');
     gradient.addColorStop(1, 'rgba(217, 70, 239, 0.05)');
 
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top + chartHeight);
-    
+
     points.forEach((point: ChartPoint) => {
       ctx.lineTo(point.x, point.y);
     });
-    
+
     ctx.lineTo(padding.left + chartWidth, padding.top + chartHeight);
     ctx.closePath();
     ctx.fillStyle = gradient;
@@ -117,13 +131,13 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
 
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
-    
+
     points.forEach((point: ChartPoint, index: number) => {
       if (index > 0) {
         ctx.lineTo(point.x, point.y);
       }
     });
-    
+
     ctx.strokeStyle = '#D946EF';
     ctx.lineWidth = 2.5;
     ctx.stroke();
@@ -140,26 +154,29 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
   }
 
   private drawAxes(
-    ctx: CanvasRenderingContext2D, 
-    data: ChartData, 
-    padding: ChartPadding, 
-    chartWidth: number, 
-    chartHeight: number
+    ctx: CanvasRenderingContext2D,
+    data: ChartData,
+    padding: ChartPadding,
+    chartWidth: number,
+    chartHeight: number,
   ): void {
     const maxValue = Math.max(...data.values) || 100000;
     const yLabels: number[] = this.generateYLabels(maxValue);
-    
+
     // Draw Y-axis labels
     ctx.fillStyle = '#FFFFFF';
     ctx.font = 'bold 12px Arial';
     ctx.textAlign = 'right';
-    
+
     yLabels.forEach((value: number) => {
       const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
       ctx.fillText(
-        value.toLocaleString('en-LK', { style: 'decimal', maximumFractionDigits: 0 }), 
-        padding.left - 15, 
-        y + 4
+        value.toLocaleString('en-LK', {
+          style: 'decimal',
+          maximumFractionDigits: 0,
+        }),
+        padding.left - 15,
+        y + 4,
       );
     });
 
@@ -177,7 +194,7 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
     ctx.textAlign = 'center';
     ctx.fillStyle = '#888888';
     ctx.font = '12px Arial';
-    
+
     data.labels.forEach((label: string, index: number) => {
       const x = padding.left + (index * chartWidth) / (data.labels.length - 1);
       const y = padding.top + chartHeight + 20;
@@ -187,12 +204,12 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
     // Draw legend - Income label with pink dot at center top
     const legendX = padding.left + chartWidth / 2;
     const legendY = padding.top - 25;
-    
+
     ctx.beginPath();
     ctx.arc(legendX - 30, legendY, 5, 0, 2 * Math.PI);
     ctx.fillStyle = '#D946EF';
     ctx.fill();
-    
+
     ctx.fillStyle = '#888888';
     ctx.font = '12px Arial';
     ctx.textAlign = 'left';
@@ -202,7 +219,7 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
     ctx.strokeStyle = '#1E293B';
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 3]);
-    
+
     yLabels.forEach((value: number) => {
       if (value > 0) {
         const y = padding.top + chartHeight - (value / maxValue) * chartHeight;
@@ -217,13 +234,13 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
     ctx.setLineDash([]);
     ctx.strokeStyle = '#4B5563';
     ctx.lineWidth = 1;
-    
+
     // Y-axis
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top);
     ctx.lineTo(padding.left, padding.top + chartHeight);
     ctx.stroke();
-    
+
     // X-axis
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top + chartHeight);
@@ -240,7 +257,7 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
     // Calculate appropriate step size based on magnitude
     const magnitude = Math.pow(10, Math.floor(Math.log10(maxValue)));
     const normalizedMax = maxValue / magnitude;
-    
+
     let stepDivisor: number;
     if (normalizedMax <= 2) {
       stepDivisor = 0.5;
@@ -249,16 +266,16 @@ export class GovicareAreaChartComponent implements AfterViewInit, OnChanges {
     } else {
       stepDivisor = 2;
     }
-    
+
     const step = stepDivisor * magnitude;
     const numSteps = Math.ceil(maxValue / step);
-    
+
     // Generate labels from 0 to just above maxValue
     const labels: number[] = [];
     for (let i = 0; i <= numSteps; i++) {
       labels.push(i * step);
     }
-    
+
     return labels;
   }
 }

@@ -43,8 +43,6 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
     // Get ID from route params
     this.route.params.subscribe((params) => {
       const requestId = params['id'];
-      console.log('Route params:', params);
-      console.log('Request ID from params:', requestId);
 
       if (requestId) {
         this.currentRequestId = requestId;
@@ -86,12 +84,6 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
         }
       }
     }
-
-    console.log('Current User Info:', {
-      userId: this.currentUserId,
-      userName: this.currentUserName,
-      userDetails: userDetails,
-    });
   }
 
   // Getter for safe access to request data
@@ -139,23 +131,10 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    console.log('Calling viewDetails with ID:', requestId);
-
     this.farmerPensionService.getPensionRequestById(requestId).subscribe({
       next: (response) => {
-        console.log('Full API Response:', response);
-
         if (response && response.status && response.data) {
           this.selectedRequest = response.data;
-          console.log('Selected Request Data:', this.selectedRequest);
-          console.log('Image URLs:', {
-            NIC_Front_Image: this.selectedRequest?.NIC_Front_Image,
-            NIC_Back_Image: this.selectedRequest?.NIC_Back_Image,
-            Successor_NIC_Front_Image:
-              this.selectedRequest?.Successor_NIC_Front_Image,
-            Successor_NIC_Back_Image:
-              this.selectedRequest?.Successor_NIC_Back_Image,
-          });
         } else {
           console.error('Invalid response structure:', response);
           this.errorMessage = 'Invalid data received from server';
@@ -191,7 +170,8 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
       confirmButtonColor: '#3980C0',
       cancelButtonColor: '#6B7280',
       customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-lg',
+        popup:
+          'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-lg',
         title: 'font-semibold text-lg',
         actions: 'flex-row-reverse justify-start', // Add this line
       },
@@ -211,7 +191,8 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
       confirmButtonColor: '#C40D0D',
       cancelButtonColor: '#6B7280',
       customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-lg',
+        popup:
+          'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-lg',
         title: 'font-semibold text-lg',
         actions: 'flex-row-reverse justify-start', // Add this line
       },
@@ -262,13 +243,6 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
     }
 
     this.isProcessingAction = true;
-
-    console.log('Updating request with data:', {
-      requestId: this.currentRequestId,
-      status: status,
-      userId: this.currentUserId,
-      userName: this.currentUserName,
-    });
 
     this.farmerPensionService
       .updatePensionRequestStatus(

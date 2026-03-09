@@ -25,10 +25,10 @@ interface PackagePayment {
     FormsModule,
     NgxPaginationModule,
     LoadingSpinnerComponent,
-    CalendarModule
+    CalendarModule,
   ],
   templateUrl: './view-all-package-payments.component.html',
-  styleUrl: './view-all-package-payments.component.css'
+  styleUrl: './view-all-package-payments.component.css',
 })
 export class ViewAllPackagePaymentsComponent implements OnInit {
   packagePayments: PackagePayment[] = [];
@@ -45,7 +45,7 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private financeService: FinanceService
+    private financeService: FinanceService,
   ) {}
 
   ngOnInit() {
@@ -58,7 +58,7 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
     this.fromDate = null;
     this.toDate = null;
     this.minToDate = null;
-    
+
     // Reset to first page and clear the table data
     this.page = 1;
     this.clearTableData();
@@ -77,12 +77,12 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
       // Set minimum date for "To" field (day after fromDate)
       this.minToDate = new Date(this.fromDate);
       this.minToDate.setDate(this.minToDate.getDate() + 1);
-      
+
       // If toDate is already set and is invalid, clear it
       if (this.toDate) {
         const fromTime = this.fromDate.getTime();
         const toTime = this.toDate.getTime();
-        
+
         // Clear toDate if it's the same as or before fromDate
         if (toTime <= fromTime) {
           this.toDate = null;
@@ -103,31 +103,33 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
     }
 
     this.isLoading = true;
-    
+
     // Convert Date objects to string format for API
     const fromDateStr = this.fromDate ? this.formatDate(this.fromDate) : '';
     const toDateStr = this.toDate ? this.formatDate(this.toDate) : '';
-    
-    this.financeService.getAllPackagePayments(
-      this.page,
-      this.itemsPerPage,
-      this.searchTerm,
-      fromDateStr,
-      toDateStr
-    ).subscribe(
-      (response) => {
-        this.isLoading = false;
-        this.packagePayments = response.items;
-        this.totalItems = response.total;
-        this.hasData = response.total > 0;
-      },
-      (error) => {
-        this.isLoading = false;
-        console.error('Error fetching package payments:', error);
-        this.hasData = false;
-        this.clearTableData();
-      }
-    );
+
+    this.financeService
+      .getAllPackagePayments(
+        this.page,
+        this.itemsPerPage,
+        this.searchTerm,
+        fromDateStr,
+        toDateStr,
+      )
+      .subscribe(
+        (response) => {
+          this.isLoading = false;
+          this.packagePayments = response.items;
+          this.totalItems = response.total;
+          this.hasData = response.total > 0;
+        },
+        (error) => {
+          this.isLoading = false;
+          console.error('Error fetching package payments:', error);
+          this.hasData = false;
+          this.clearTableData();
+        },
+      );
   }
 
   formatDate(date: Date): string {
@@ -145,7 +147,7 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
   onSearch() {
     this.searchTerm = this.searchTerm?.trim() || '';
     this.page = 1; // Reset to first page on search
-    
+
     // Only fetch if dates are selected
     if (this.fromDate && this.toDate) {
       this.fetchPackagePayments();
@@ -157,7 +159,7 @@ export class ViewAllPackagePaymentsComponent implements OnInit {
   offSearch() {
     this.searchTerm = '';
     this.page = 1;
-    
+
     // Only fetch if dates are selected
     if (this.fromDate && this.toDate) {
       this.fetchPackagePayments();

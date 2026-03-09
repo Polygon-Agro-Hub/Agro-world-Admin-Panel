@@ -22,8 +22,6 @@ export class SalesDashService {
 
     let url = `${this.apiUrl}sales-agent-dash/get-all-sales-agents?page=${page}&limit=${limit}`;
 
-
-
     if (status) {
       url += `&status=${status}`
     }
@@ -52,21 +50,8 @@ export class SalesDashService {
     // Create request body
     const body = {targetValue };
   
-    
     return this.http.post(url, body, { headers });
   }
-
-  //not useg should remove
-  // getDailyTarget(): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${this.token}`,
-  //     'Content-Type': 'application/json',
-  //   });
-  
-  //   const url = `${this.apiUrl}sales-agent-dash/get-daily-target`;
-  
-  //   return this.http.get(url, { headers });
-  // }
 
   getAllOrders(
     page: number,
@@ -79,7 +64,6 @@ export class SalesDashService {
     date: string
    
   ): Observable<any> {
-    console.log('date', date)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });

@@ -79,8 +79,6 @@ export class PostinvoiceService {
   ): Promise<void> {
     try {
       const response = await this.getPostInvoiceDetails(processOrderId).toPromise();
-      console.log('Full API Response:', response);
-
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch invoice details');
       }
@@ -94,16 +92,7 @@ export class PostinvoiceService {
       const deliveryCharge = response.data?.deliveryCharge || null;
 
       const apiInvoiceNo = invoiceDetails.invoiceNumber;
-      console.log(
-        'API InvoiceNo:',
-        apiInvoiceNo,
-        'Table InvoiceNo:',
-        tableInvoiceNo
-      );
-
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
-      console.log('Using InvoiceNo:', finalInvoiceNo);
-
       if (!finalInvoiceNo || finalInvoiceNo === 'N/A') {
         console.error('No valid invoice number found');
         Swal.fire({
@@ -176,8 +165,6 @@ export class PostinvoiceService {
         familyPackTotal: familyPackTotal.toFixed(2),
         additionalItemsTotal: additionalItemsTotal.toFixed(2),
       };
-
-      console.log('Final Invoice Data:', invoiceData);
       await this.generatePDF(invoiceData);
     } catch (error) {
       console.error('Error generating invoice:', error);
@@ -297,12 +284,9 @@ export class PostinvoiceService {
     }
   }
 
-  // Only show address if delivery method is not Pickup
   if (invoice.deliveryMethod?.toLowerCase() !== 'pickup') {
-    // Add space before address
     yPosition += 3;
 
-    // Address display - updated to match the image examples
     if (invoice.buildingType === 'Apartment') {
       doc.setFont('helvetica', 'bold');
       doc.text('Apartment Address:', 15, yPosition);
@@ -320,16 +304,13 @@ export class PostinvoiceService {
       ];
 
       aptAddress.forEach((line) => {
-        // Split the line to separate label and value
         const colonIndex = line.indexOf(':');
         const label = line.substring(0, colonIndex + 1);
         const value = line.substring(colonIndex + 1);
         
-        // Draw label in gray color
         doc.setTextColor(146, 146, 146); // #929292 in RGB
         doc.text(label, 15, yPosition);
         
-        // Draw value in black color
         const labelWidth = doc.getTextWidth(label);
         doc.setTextColor(0, 0, 0);
         doc.text(value, 15 + labelWidth, yPosition);
@@ -349,16 +330,13 @@ export class PostinvoiceService {
       ];
 
       houseAddress.forEach((line) => {
-        // Split the line to separate label and value
         const colonIndex = line.indexOf(':');
         const label = line.substring(0, colonIndex + 1);
         const value = line.substring(colonIndex + 1);
         
-        // Draw label in gray color
-        doc.setTextColor(146, 146, 146); // #929292 in RGB
+        doc.setTextColor(146, 146, 146); 
         doc.text(label, 15, yPosition);
         
-        // Draw value in black color
         const labelWidth = doc.getTextWidth(label);
         doc.setTextColor(0, 0, 0);
         doc.text(value, 15 + labelWidth, yPosition);
@@ -367,11 +345,9 @@ export class PostinvoiceService {
       });
     }
 
-    // Add space after address
     yPosition += 5;
   }
 
-  // Add small space above Invoice No
   yPosition += 3;
 
   // Invoice Details

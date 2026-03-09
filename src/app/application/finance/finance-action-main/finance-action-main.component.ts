@@ -9,7 +9,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   standalone: true,
   imports: [CommonModule],
   templateUrl: './finance-action-main.component.html',
-  styleUrl: './finance-action-main.component.css'
+  styleUrl: './finance-action-main.component.css',
 })
 export class FinanceActionMainComponent {
   popupVisibleCropCalender = false;
@@ -20,12 +20,12 @@ export class FinanceActionMainComponent {
   popupVisibleView = false;
 
   constructor(
-      private router: Router,
-      public tokenService: TokenService,
-      public permissionService: PermissionService
-    ) { }
+    private router: Router,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) {}
 
-    farmerPayments(): void {
+  farmerPayments(): void {
     this.router.navigate(['/finance/action/govicare-finance']);
   }
 
@@ -63,7 +63,6 @@ export class FinanceActionMainComponent {
     }
   }
 
-
   togglePopupGoviShopCalender() {
     this.popupVisibleGoviShopCalender = !this.popupVisibleGoviShopCalender;
     if ((this.popupVisibleView = true)) {
@@ -76,10 +75,14 @@ export class FinanceActionMainComponent {
   }
 
   invesmentRequest(): void {
-    this.router.navigate(['/finance/action/finance-govicapital/ivesment-requests']);
+    this.router.navigate([
+      '/finance/action/finance-govicapital/ivesment-requests',
+    ]);
   }
 
   publishedProjects() {
-    this.router.navigate(['/finance/action/finance-govicapital/published-projects']);
+    this.router.navigate([
+      '/finance/action/finance-govicapital/published-projects',
+    ]);
   }
 }

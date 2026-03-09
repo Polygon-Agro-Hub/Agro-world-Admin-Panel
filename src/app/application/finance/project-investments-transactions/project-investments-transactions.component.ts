@@ -20,11 +20,11 @@ export class ProjectInvestmentsTransactionsComponent {
   isLoading = false;
   hasData: boolean = true;
   investmentsArr: Investments[] = [];
-  statusFilter: string = ''
+  statusFilter: string = '';
   id!: number;
   isPopUpOpen: boolean = false;
   itemId!: number;
-  searchText: string = ''
+  searchText: string = '';
 
   // Project details
   projectId: string = '';
@@ -42,8 +42,8 @@ export class ProjectInvestmentsTransactionsComponent {
     private financeService: FinanceService,
     private route: ActivatedRoute,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -70,61 +70,61 @@ export class ProjectInvestmentsTransactionsComponent {
       error: (error) => {
         console.error('Error loading project details:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
-  fetchAllInvestments(id: number, status: string = this.statusFilter, search: string = this.searchText): void {
+  fetchAllInvestments(
+    id: number,
+    status: string = this.statusFilter,
+    search: string = this.searchText,
+  ): void {
     this.isLoading = true;
 
-    this.financeService.getAllInvestments(
-      id, status, search
-    )
-      .subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          if (response) {
-            this.investmentsArr = response.items;
-            this.investmentsArr.sort((a, b) => {
-              return a.id - b.id;
-            });
-            
-            this.hasData = this.investmentsArr.length > 0;
-            if (this.investmentsArr.length > 0 && this.sharePrice === 0) {
-              const firstInvestment = this.investmentsArr[0];
-              if (firstInvestment.totInvt && firstInvestment.shares && firstInvestment.shares > 0) {
-                this.sharePrice = firstInvestment.totInvt / firstInvestment.shares;
-              }
-            }
+    this.financeService.getAllInvestments(id, status, search).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response) {
+          this.investmentsArr = response.items;
+          this.investmentsArr.sort((a, b) => {
+            return a.id - b.id;
+          });
 
-          } else {
-            this.hasData = false;
-            this.investmentsArr = [];
+          this.hasData = this.investmentsArr.length > 0;
+          if (this.investmentsArr.length > 0 && this.sharePrice === 0) {
+            const firstInvestment = this.investmentsArr[0];
+            if (
+              firstInvestment.totInvt &&
+              firstInvestment.shares &&
+              firstInvestment.shares > 0
+            ) {
+              this.sharePrice =
+                firstInvestment.totInvt / firstInvestment.shares;
+            }
           }
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Error loading farmer payments:', error);
+        } else {
           this.hasData = false;
           this.investmentsArr = [];
         }
-      });
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('Error loading farmer payments:', error);
+        this.hasData = false;
+        this.investmentsArr = [];
+      },
+    });
   }
 
   applystatusFilters() {
-    console.log(this.statusFilter);
-    this.fetchAllInvestments(
-      this.id,
-      this.statusFilter,
-    );
+    this.fetchAllInvestments(this.id, this.statusFilter);
   }
-
 
   // Method to format currency
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }).format(amount);
   }
 
@@ -143,7 +143,7 @@ export class ProjectInvestmentsTransactionsComponent {
   }
 
   openPopUp(id: number) {
-    this.itemId = id
+    this.itemId = id;
     this.isPopUpOpen = true;
   }
 
@@ -152,132 +152,130 @@ export class ProjectInvestmentsTransactionsComponent {
   }
 
   onReject() {
-    this.rejectInvestmentStatus(this.itemId)
+    this.rejectInvestmentStatus(this.itemId);
     this.isPopUpOpen = false;
   }
 
   rejectInvestmentStatus(id: number): void {
     this.isLoading = true;
 
-    this.financeService.rejectInvestmentStatus(id)
-      .subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          if (response.success) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Transaction record Rejected successfully',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-              },
-
-            })
-
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'error',
-              text: 'Error Rejecting transaction record',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-              },
-
-            })
-          }
-          this.fetchAllInvestments(this.id)
-        },
-        error: (error) => {
-          this.isLoading = false;
+    this.financeService.rejectInvestmentStatus(id).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Transaction record Rejected successfully',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
+            },
+          });
+        } else {
           Swal.fire({
             icon: 'error',
             title: 'error',
             text: 'Error Rejecting transaction record',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
             },
-
-          })
-          this.fetchAllInvestments(this.id)
+          });
         }
-      });
+        this.fetchAllInvestments(this.id);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'error',
+          text: 'Error Rejecting transaction record',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton:
+              'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
+          },
+        });
+        this.fetchAllInvestments(this.id);
+      },
+    });
   }
 
   onApprove() {
-    this.approveInvestmentStatus(this.itemId)
+    this.approveInvestmentStatus(this.itemId);
     this.isPopUpOpen = false;
   }
 
   approveInvestmentStatus(id: number): void {
     this.isLoading = true;
 
-    this.financeService.approveInvestmentStatus(id)
-      .subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          console.log('response', response)
+    this.financeService.approveInvestmentStatus(id).subscribe({
+      next: (response) => {
+        this.isLoading = false;
 
-          if (response.success) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Transaction record approved successfully',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-              },
-
-            })
-
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'error',
-              text: 'Error approving transaction record',
-              confirmButtonText: 'OK',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
-              },
-
-            })
-          }
-          this.fetchAllInvestments(this.id)
-        },
-        error: (error) => {
-          this.isLoading = false;
+        if (response.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Transaction record approved successfully',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
+            },
+          });
+        } else {
           Swal.fire({
             icon: 'error',
             title: 'error',
             text: 'Error approving transaction record',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold',
-              confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              confirmButton:
+                'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
             },
-
-          })
-          this.fetchAllInvestments(this.id)
+          });
         }
-      });
+        this.fetchAllInvestments(this.id);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'error',
+          text: 'Error approving transaction record',
+          confirmButtonText: 'OK',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold',
+            confirmButton:
+              'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700',
+          },
+        });
+        this.fetchAllInvestments(this.id);
+      },
+    });
   }
 
   onSearch() {
-    this.searchText = this.searchText?.trim() || ''
-    console.log('searchText', "'", this.searchText, "'")
+    this.searchText = this.searchText?.trim() || '';
     this.fetchAllInvestments(this.id);
   }
 
@@ -299,7 +297,6 @@ export class ProjectInvestmentsTransactionsComponent {
   viewBankSlip(url: string) {
     window.open(url, '_blank', 'noopener,noreferrer');
   }
-
 }
 class Investments {
   id!: number;
@@ -307,11 +304,11 @@ class Investments {
   refCode!: string;
   phoneCode!: string;
   phoneNumber!: string;
-  shares!: number
-  totInvt!: number
-  createdAt!: Date
-  nicFront!: string
-  nicBack!: string
-  bankSlip!: string
-  invtStatus!: string
+  shares!: number;
+  totInvt!: number;
+  createdAt!: Date;
+  nicFront!: string;
+  nicBack!: string;
+  bankSlip!: string;
+  invtStatus!: string;
 }

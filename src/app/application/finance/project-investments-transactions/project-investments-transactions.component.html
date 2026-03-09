@@ -196,7 +196,7 @@
             <td  class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button 
                 (click)="openPopUp(item.id)"
-                [disabled]="(!permissionService.hasPermission('Approve or Reject invester request') && tokenService.getUserDetails().role !== '1') || item.invtStatus !== 'To Review'"
+                [disabled]="(!permissionService.hasPermission('Approve or Reject investor request') && tokenService.getUserDetails().role !== '1') || item.invtStatus !== 'To Review'"
                 class="px-3 py-2 rounded-lg font-inter font-[400] cursor-pointer {{getStatusClass(item.invtStatus)}}"
               >
                 {{item.invtStatus}}

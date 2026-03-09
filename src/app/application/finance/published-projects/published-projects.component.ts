@@ -60,14 +60,11 @@ export class PublishedProjectsComponent implements OnInit {
     this.isLoading = true;
     this.financeSrv.getAllPublishedProjects(search).subscribe(
       (res) => {
-        console.log(res);
         this.isLoading = false;
         this.publishedProjectsArr = res.items;
 
         this.hasData = this.publishedProjectsArr.length > 0;
         this.totalItems = this.publishedProjectsArr.length | 0;
-        console.log(this.publishedProjectsArr);
-        console.log('tot items', this.totalItems);
       },
       (error) => {
         console.error('Error fetch news:', error);
@@ -108,7 +105,6 @@ export class PublishedProjectsComponent implements OnInit {
   viewDetails(item: PublishedProjects) {
     this.isPopupVisible = true;
     this.itemDetailsToViewObj = item;
-    console.log('itemDetailsToViewArr', this.itemDetailsToViewObj);
   }
 
   closePopUp() {

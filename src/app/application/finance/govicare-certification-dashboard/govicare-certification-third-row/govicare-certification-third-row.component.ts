@@ -18,7 +18,7 @@ export class GovicareCertificationThirdRowComponent {
   constructor(
     private router: Router,
     public permissionService: PermissionService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
   ) {}
 
   formatDate(dateTime: string): string {

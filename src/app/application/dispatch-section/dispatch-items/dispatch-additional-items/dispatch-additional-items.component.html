@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="">
-                    <h2 class="  text-[#212121] dark:text-white font-bold">Additional Items: Rs.{{orderDetails ? (orderDetails.additionalPrice | number:'1.2-2') : '0.00'}}</h2>
+                    <h2 class="  text-[#212121] dark:text-white font-bold">{{isCustom === '1' ?  'Custom Package' : isCustom === '0' ? 'Custom Items' : 'Additional Items'}} : Rs.{{orderDetails ? (orderDetails.additionalPrice | number:'1.2-2') : '0.00'}}</h2>
                 </div>
             </div>
 

@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './view-document-image.component.html',
-  styleUrl: './view-document-image.component.css'
+  styleUrl: './view-document-image.component.css',
 })
 export class ViewDocumentImageComponent {
   @Input() frontTitle: string = '';
@@ -23,7 +23,10 @@ export class ViewDocumentImageComponent {
   modalZoomLevel: number = 1;
 
   onImageError(event: Event, type: string): void {
-    console.error(`Failed to load ${type} image:`, type === 'front' ? this.frontImageUrl : this.backImageUrl);
+    console.error(
+      `Failed to load ${type} image:`,
+      type === 'front' ? this.frontImageUrl : this.backImageUrl,
+    );
     const target = event.target as HTMLImageElement;
     target.src = 'assets/placeholder-image.png';
   }

@@ -1,5 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { FinanceService, GoviCareRequest, GoviCareRequestDetail, InvestmentOfficer } from '../../../services/finance/finance.service';
+import {
+  FinanceService,
+  GoviCareRequest,
+  GoviCareRequestDetail,
+  InvestmentOfficer,
+} from '../../../services/finance/finance.service';
 
 import { ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
@@ -32,7 +37,7 @@ import { PostinvoiceService } from '../../../services/invoice/postinvoice.servic
     CalendarModule,
   ],
   templateUrl: './govi-shop-view-action.component.html',
-  styleUrl: './govi-shop-view-action.component.css'
+  styleUrl: './govi-shop-view-action.component.css',
 })
 export class GoviShopViewActionComponent implements OnInit {
   ordersArr: Orders[] = [];
@@ -64,7 +69,7 @@ export class GoviShopViewActionComponent implements OnInit {
     private FinanceService: FinanceService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private postInvoiceService: PostinvoiceService
+    private postInvoiceService: PostinvoiceService,
   ) {}
 
   ngOnInit() {
@@ -73,29 +78,23 @@ export class GoviShopViewActionComponent implements OnInit {
 
   fetchAllOrders(
     status: string = this.orderStatusFilter,
-    search: string = this.searchText
+    search: string = this.searchText,
   ) {
     this.isLoading = true;
-    console.log('date', this.date);
-    this.FinanceService
-      .getAllShopViewAction(
-        status,
-        search
-      )
-      .subscribe(
-        (data) => {
+    this.FinanceService.getAllShopViewAction(status, search).subscribe(
+      (data) => {
+        this.isLoading = false;
+        this.ordersArr = data.items;
+        this.hasData = this.ordersArr.length > 0;
+        this.totalItems = data.total;
+      },
+      (error) => {
+        console.error('Error fetch news:', error);
+        if (error.status === 401) {
           this.isLoading = false;
-          this.ordersArr = data.items;
-          this.hasData = this.ordersArr.length > 0;
-          this.totalItems = data.total;
-        },
-        (error) => {
-          console.error('Error fetch news:', error);
-          if (error.status === 401) {
-            this.isLoading = false;
-          }
         }
-      );
+      },
+    );
   }
 
   formatDateForBackend(date: Date | null): string {
@@ -109,10 +108,8 @@ export class GoviShopViewActionComponent implements OnInit {
   }
 
   applyOrderStatusFilters() {
-    console.log(this.orderStatusFilter);
     this.fetchAllOrders();
   }
-
 
   formatTotalItems(): string {
     return this.totalItems < 10
@@ -139,7 +136,10 @@ export class GoviShopViewActionComponent implements OnInit {
   }
 
   viewDocuments(id: number) {
-    this.router.navigate(['/finance/action/finance-govishop/view-documents', id]);
+    this.router.navigate([
+      '/finance/action/finance-govishop/view-documents',
+      id,
+    ]);
   }
 }
 

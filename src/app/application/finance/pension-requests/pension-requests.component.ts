@@ -84,12 +84,6 @@ export class PensionRequestsComponent implements OnInit {
         }
       }
     }
-
-    console.log('Current User Info:', {
-      userId: this.currentUserId,
-      userName: this.currentUserName,
-      userDetails: userDetails,
-    });
   }
 
   loadPensionRequests(): void {
@@ -180,11 +174,6 @@ export class PensionRequestsComponent implements OnInit {
     this.showApproveRejectModal = true;
 
     // Log which user is trying to approve/reject
-    console.log('Opening approve/reject modal for user:', {
-      userId: this.currentUserId,
-      userName: this.currentUserName,
-      requestId: request.Request_ID,
-    });
   }
 
   closeApproveRejectModal(): void {
@@ -220,13 +209,6 @@ export class PensionRequestsComponent implements OnInit {
     }
 
     this.isProcessingAction = true;
-
-    console.log('Updating request with data:', {
-      requestId: this.selectedRequestForAction.Request_ID,
-      status: status,
-      userId: this.currentUserId,
-      userName: this.currentUserName,
-    });
 
     // Pass userId as parameter
     this.farmerPensionService
@@ -396,8 +378,6 @@ export class PensionRequestsComponent implements OnInit {
       console.error('Request_ID not found in request');
       return;
     }
-
-    console.log('Navigating to view documents for Request_ID:', id);
 
     this.router.navigate(
       [`/finance/action/pension-requests-view-documents/${id}`],

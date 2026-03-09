@@ -112,7 +112,6 @@ export class CustomerOrdersComponent implements OnInit {
     this.hasData = false;
 
     const apiStatus = this.statusMap[this.activeButton] || 'Ordered';
-    console.log(this.activeButton, apiStatus);
 
     this.dasService
       .fetchUserOrders(this.userId, apiStatus)
@@ -213,7 +212,6 @@ export class CustomerOrdersComponent implements OnInit {
     this.postInvoiceService
       .generateAndDownloadInvoice(id, tableInvoiceNo)
       .then(() => {
-        // Success case - no action needed unless you want to show a success message
       })
       .catch((error) => {
         console.error('Error generating invoice:', error);

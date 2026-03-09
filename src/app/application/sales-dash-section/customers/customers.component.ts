@@ -182,10 +182,10 @@ onSearchClick() {
   const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
 
   const fieldsToSearch = [
-    customer.cusId,                // Customer ID
-    fullName,                       // Customer Name
-    customer.phoneNumber,           // Contact
-    customer.empId                  // Agent ID
+    customer.cusId,                
+    fullName,                      
+    customer.phoneNumber,          
+    customer.empId                 
   ];
 
   return fieldsToSearch.some((field) =>

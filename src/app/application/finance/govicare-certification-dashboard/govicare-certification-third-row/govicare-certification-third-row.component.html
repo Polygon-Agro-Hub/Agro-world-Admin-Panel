@@ -4,11 +4,11 @@
       Recent Certificate Payments
     </h2>
     <button
-    *ngIf="
+      *ngIf="
         permissionService.hasPermission('Certificate Payments View') ||
         tokenService.getUserDetails().role === '1'
       "
-    (click)="ViewAll()"
+      (click)="ViewAll()"
       class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
     >
       View All
@@ -61,7 +61,6 @@
           <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
             {{ payment.dateTime }}
           </td>
-
         </tr>
         <tr *ngIf="recentPayments.length === 0">
           <td

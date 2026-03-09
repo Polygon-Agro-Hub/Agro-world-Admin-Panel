@@ -4,7 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-import { FinanceService, PaymentHistoryListItem } from '../../../services/finance/finance.service';
+import {
+  FinanceService,
+  PaymentHistoryListItem,
+} from '../../../services/finance/finance.service';
 import Swal from 'sweetalert2';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
@@ -17,14 +20,9 @@ interface ReceiverOption {
 @Component({
   selector: 'app-view-all-payment-history',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    CalendarModule,
-    DropdownModule
-  ],
+  imports: [CommonModule, FormsModule, CalendarModule, DropdownModule],
   templateUrl: './view-all-payment-history.component.html',
-  styleUrl: './view-all-payment-history.component.css'
+  styleUrl: './view-all-payment-history.component.css',
 })
 export class ViewAllPaymentHistoryComponent implements OnInit {
   isLoading: boolean = false;
@@ -39,7 +37,7 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
   receiverOptions: ReceiverOption[] = [
     { label: 'Farmers', value: 'Farmers' },
     { label: 'HR Section', value: 'HR Section' },
-    { label: 'IT Section', value: 'IT Section' }
+    { label: 'IT Section', value: 'IT Section' },
   ];
   selectedReceiver: ReceiverOption | null = null;
 
@@ -54,8 +52,8 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
     private financeService: FinanceService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.loadPaymentHistory();
@@ -64,14 +62,12 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
   loadPaymentHistory(): void {
     this.isLoading = true;
 
-    const receivers = this.selectedReceiver ? this.selectedReceiver.value : undefined;
+    const receivers = this.selectedReceiver
+      ? this.selectedReceiver.value
+      : undefined;
 
     this.financeService
-      .getAllPaymentHistory(
-        receivers,
-        this.issuedDateFilter,
-        this.search
-      )
+      .getAllPaymentHistory(receivers, this.issuedDateFilter, this.search)
       .subscribe({
         next: (response) => {
           this.paymentHistory = response.data || [];
@@ -81,7 +77,7 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
         error: (error) => {
           console.error('Error loading payment history:', error);
           this.isLoading = false;
-        }
+        },
       });
   }
 
@@ -148,7 +144,8 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
             text: 'Payment history deleted successfully',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             },
           });
           this.loadPaymentHistory();
@@ -163,11 +160,12 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
             text: 'Failed to delete payment history',
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             },
           });
           this.resetDeleteState();
-        }
+        },
       });
     }
   }
@@ -197,30 +195,43 @@ export class ViewAllPaymentHistoryComponent implements OnInit {
   }
 
   getFormattedDate(dateString: string): string {
-  const date = new Date(dateString);
-  const day = date.getDate();
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  
-  return `${day} ${month}, ${year}`;
-}
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
 
-getFormattedTime(dateString: string): string {
-  const date = new Date(dateString);
-  const hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  const formattedHours = hours % 12 || 12;
-  
-  return `${formattedHours}:${minutes} ${ampm}`;
-}
+    return `${day} ${month}, ${year}`;
+  }
+
+  getFormattedTime(dateString: string): string {
+    const date = new Date(dateString);
+    const hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+
+    return `${formattedHours}:${minutes} ${ampm}`;
+  }
 
   formatAmount(amount: number | string): string {
     const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
     return numAmount.toLocaleString('en-IN', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     });
   }
 }

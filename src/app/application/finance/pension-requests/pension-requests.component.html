@@ -1,6 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <div *ngIf="!isLoading" class="p-6">
-  <!-- Back Button -->
   <button
     class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
     onclick="history.back()"
@@ -31,7 +30,6 @@
                 class="bg-transparent outline-none w-full text-gray-700 dark:text-white placeholder:text-gray-400"
               />
 
-              <!-- Clear Button -->
               <button
                 *ngIf="search"
                 (click)="clearSearch()"
@@ -40,7 +38,6 @@
                 <i class="fa-solid fa-times"></i>
               </button>
 
-              <!-- Search Button -->
               <button
                 (click)="applySearch()"
                 class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300"
@@ -52,7 +49,6 @@
         </div>
       </div>
 
-      <!-- Table Section -->
       <div *ngIf="pensionRequests.length > 0">
         <table class="w-full">
           <thead>
@@ -96,17 +92,14 @@
               *ngFor="let request of pensionRequests; let i = index"
               class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
-              <!-- No -->
               <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left">
                 {{ (i + 1).toString().padStart(3, "0") }}
               </td>
 
-              <!-- Farmer NIC -->
               <td class="px-4 py-3 text-[#000000] dark:text-textDark">
                 {{ formatNIC(request.NIC) }}
               </td>
 
-              <!-- Details -->
               <td class="px-4 py-3 text-center">
                 <button
                   (click)="viewDetails(request.Request_ID)"
@@ -145,7 +138,6 @@
                 </button>
               </td>
 
-              <!-- Date & Time -->
               <td
                 class="px-4 py-3 text-[#000000] text-center dark:text-textDark"
               >
@@ -158,14 +150,11 @@
                   }}</span>
                 </div>
               </td>
-
-              <!-- To Review -->
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Empty State -->
       <div
         *ngIf="pensionRequests.length === 0"
         class="flex flex-col items-center w-full px-10 py-7 mt-6"
@@ -179,7 +168,6 @@
   </div>
 </div>
 
-<!-- Details Modal -->
 <div
   *ngIf="showDetailsModal"
   class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
@@ -189,7 +177,6 @@
     class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-lg mx-4"
     (click)="$event.stopPropagation()"
   >
-    <!-- Modal Header -->
     <div
       class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg"
     >
@@ -200,9 +187,7 @@
       </h2>
     </div>
 
-    <!-- Modal Body -->
     <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-      <!-- Farmer's Full Name -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
@@ -217,7 +202,6 @@
         </span>
       </div>
 
-      <!-- Farmer's NIC Number -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
@@ -259,7 +243,6 @@
         </span>
       </div>
 
-      <!-- Farmer's DOB -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
@@ -274,7 +257,6 @@
         </span>
       </div>
 
-      <!-- Successor Type -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
@@ -289,7 +271,6 @@
         </span>
       </div>
 
-      <!-- Successor's NIC Number -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
@@ -304,7 +285,6 @@
         </span>
       </div>
 
-      <!-- Successor's DOB -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
@@ -319,7 +299,6 @@
         </span>
       </div>
 
-      <!-- Request Date & Time -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
@@ -334,7 +313,6 @@
         </span>
       </div>
 
-      <!-- Applied By - Shows "Farmer" when Collection_Officer_EmpID is null -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
@@ -350,7 +328,6 @@
       </div>
     </div>
 
-    <!-- Modal Footer -->
     <div class="px-6 py-4 flex justify-center rounded-b-lg">
       <button
         (click)="closeDetailsModal()"

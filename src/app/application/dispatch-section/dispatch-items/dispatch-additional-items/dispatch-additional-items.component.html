@@ -12,13 +12,13 @@
                 <div class="flex items-center gap-3">
                     <h1 class="flex items-center gap-2 font-semibold leading-none">
                     <span class="text-[#627189] dark:text-gray-400">INV No :</span>
-                    <span class="text-[#212121] dark:text-white">{{orderDetails?.invNo}}</span>
+                    <span class="text-[#212121] dark:text-white">{{orderDetails ? orderDetails.invNo : 'N/A'}}</span>
                     <span *ngIf="isCompleted" class="text-[#308233] dark:text-[#308233] ml-1">(Completed)</span>
                 </h1>
                 </div>
 
                 <div class="">
-                    <h2 class="  text-[#212121] dark:text-white font-bold">Custom Pack : Rs.{{orderDetails?.additionalPrice | number:'1.2-2'}}</h2>
+                    <h2 class="  text-[#212121] dark:text-white font-bold">Additional Items: Rs.{{orderDetails ? (orderDetails.additionalPrice | number:'1.2-2') : '0.00'}}</h2>
                 </div>
             </div>
 

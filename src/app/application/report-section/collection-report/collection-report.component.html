@@ -9,86 +9,86 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="mb-10 p-6 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md flex items-center space-x-8"
-  >
-    <div class="flex flex-col md:flex-row items-stretch gap-4 p-4 justify-between w-full">
-      <!-- From Date -->
-      <div class="flex items-center gap-2 w-full">
-        <label
-          for="fromDate"
-          class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
-          >From:</label
-        >
-        <p-calendar
-          id="fromDate"
-          [(ngModel)]="fromDate"
-          placeholder="YYYY/MM/DD"
-          [showIcon]="true"
-          [showClear]="true"
-          [showButtonBar]="true"
-          [maxDate]="maxDate"
-          iconDisplay="input"
-          [style]="{ width: '25rem', height: '2.5rem' }"
-          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                     [&_.p-datepicker-header]:dark:text-white
-                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                     [&_.p-button:hover]:dark:bg-[#6b7280]"
-          inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-[25rem] h-10 pr-12"
-          (onSelect)="onFromDateChange()"
-          (onClear)="onFromDateClear()"
-        />
-      </div>
+  class="mb-10 py-6 pr-12 gap-x-12 pl-10 w-full bg-white dark:bg-tileBlack rounded-lg shadow-md flex justify-start"
+>
+  <div class="flex w-1/2 gap-x-12 ml-12">
+    <!-- From Date -->
+    <div class="flex items-center gap-2 w-full">
+      <label
+        for="fromDate"
+        class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
+        >From:</label
+      >
+      <p-calendar
+        id="fromDate"
+        [(ngModel)]="fromDate"
+        placeholder="YYYY/MM/DD"
+        [showIcon]="true"
+        [showClear]="true"
+        [showButtonBar]="true"
+        [maxDate]="maxDate"
+        iconDisplay="input"
+        [style]="{ width: '20rem', height: '2.5rem' }"
+        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                 [&_.p-datepicker-header]:dark:text-white
+                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                 [&_.p-button:hover]:dark:bg-[#6b7280]"
+        inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12"
+        (onSelect)="onFromDateChange()"
+        (onClear)="onFromDateClear()"
+      />
+    </div>
 
-      <!-- To Date -->
-      <div class="flex items-center gap-2 w-full">
-        <label
-          for="toDate"
-          class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
-          >To:</label
-        >
-        <p-calendar
-          id="toDate"
-          [(ngModel)]="toDate"
-          placeholder="YYYY/MM/DD"
-          [showIcon]="true"
-          [showClear]="true"
-          [showButtonBar]="true"
-          [minDate]="minToDate"
-          iconDisplay="input"
-          [style]="{ width: '25rem', height: '2.5rem' }"
-          [disabled]="!isFromDateSelected"
-          panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                     [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                     [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                     [&_.p-datepicker-header]:dark:text-white
-                     [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                     [&_.p-button:hover]:dark:bg-[#6b7280]"
-          inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-[25rem] h-10 pr-12"
-          [ngClass]="{ 'opacity-50 cursor-not-allowed': !isFromDateSelected }"
-          (onClear)="onToDateClear()"
-        />
-
-        <div class="flex items-center">
-          <button
-            (click)="fetchAllCollectionReport()"
-            [disabled]="!isFromDateSelected"
-            class="bg-[#3980C0] text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-200 h-10"
-            [ngClass]="{
-              'opacity-50 cursor-not-allowed hover:bg-[#3980C0]':
-                !isFromDateSelected
-            }"
-          >
-            Go
-          </button>
-        </div>
-      </div>
-      <!-- Go Button -->
+    <!-- To Date -->
+    <div class="flex items-center gap-2 w-full">
+      <label
+        for="toDate"
+        class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap"
+        >To:</label
+      >
+      <p-calendar
+        id="toDate"
+        [(ngModel)]="toDate"
+        placeholder="YYYY/MM/DD"
+        [showIcon]="true"
+        [showClear]="true"
+        [showButtonBar]="true"
+        [minDate]="fromDate || minToDate"
+        [maxDate]="maxDate"
+        iconDisplay="input"
+        [style]="{ width: '20rem', height: '2.5rem' }"
+        [disabled]="!fromDate"
+        panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+                 [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+                 [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+                 [&_.p-datepicker-header]:dark:text-white
+                 [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+                 [&_.p-button:hover]:dark:bg-[#6b7280]"
+        inputStyleClass="p-2 border cursor-pointer rounded-lg bg-white dark:bg-[#272F45] text-textLight dark:text-textDark w-full h-10 pr-12"
+        [ngClass]="{ 'opacity-50 cursor-not-allowed': !fromDate }"
+        (onClear)="onToDateClear()"
+      />
     </div>
   </div>
+
+  <!-- Go Button -->
+  <div class="flex justify-end w-1/4 ml-20">
+    <button
+      (click)="fetchAllCollectionReport()"
+      [disabled]="!fromDate"
+      [class.opacity-50]="!fromDate"
+      [class.cursor-not-allowed]="!fromDate"
+      class="bg-[#3980C0] text-white px-6 py-2 rounded-md hover:bg-blue-600 h-10 transition-all duration-200"
+      [class.hover:bg-[#3980C0]]="!fromDate"
+    >
+      Go
+    </button>
+  </div>
+</div>
 
   <!-- Date Range Selector -->
   <div

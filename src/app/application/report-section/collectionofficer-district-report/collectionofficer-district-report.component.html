@@ -30,7 +30,7 @@
     <div class="flex items-center justify-center">
       <div>
         <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          District Reports
+          District Report
         </h2>
       </div>
     </div>
@@ -39,12 +39,13 @@
       <app-loading-spinner></app-loading-spinner>
     </div>
     <!-- Corrected canvasjs-chart tag -->
-    <div class="bg-gray-100">
-      <ng-template #chartContent>
-      <div class="pt-16">
-        <canvasjs-chart *ngIf="chartOptions" [options]="chartOptions"></canvasjs-chart>
-      </div>
-    </ng-template>
+    <div class="bg-gray-100 mb-10">
+      <!-- Remove the bg-gray-100 div with canvasjs-chart and replace with: -->
+<ng-template #chartContent>
+  <div class="pt-16" style="height: 500px;">
+    <canvas id="districtBarChart"></canvas>
+  </div>
+</ng-template>
     </div>
 
     <div *ngIf="loadingTable; else tableContent" class="flex justify-center items-center h-48">
@@ -52,12 +53,12 @@
     </div>
 
     <ng-template #tableContent>
-      <div class="relative overflow-x-auto shadow-md pt-20">
+      <div class="relative overflow-x-auto shadow-md">
         <table class="w-full text-sm text-center rtl:text-right border-[2px]">
           <thead class="text-xs border-[2px]">
             <tr>
               <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
-                Crop
+                Crop Vraiety
               </th>
               <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
                 Grade A

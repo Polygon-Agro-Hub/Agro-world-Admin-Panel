@@ -48,9 +48,11 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
     this.service.getFieldAudit(this.jobId).subscribe({
       next: (res) => {
         const api = res.data;
+        console.log(res.data.farmId);
+        
 
         this.jobData.jobId = api.jobId;
-        this.jobData.farmId = api.regCode;
+        this.jobData.farmId = api.farmId;
         
         const payType = (api.payType || '').toLowerCase();
         const cropName = api.cropNameEnglish?.trim();

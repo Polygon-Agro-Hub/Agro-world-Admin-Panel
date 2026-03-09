@@ -1,41 +1,19 @@
 import { CommonModule } from "@angular/common";
-import {
-  HttpClient,
-  HttpClientModule,
-  HttpHeaders,
-} from "@angular/common/http";
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
+import { HttpClient, HttpClientModule, HttpHeaders } from "@angular/common/http";
+import { ChangeDetectorRef, AfterViewInit, Component, OnInit, OnDestroy } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-
-import { CanvasJSAngularChartsModule } from "@canvasjs/angular-charts";
+import { Chart } from "chart.js/auto";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import jsPDF from 'jspdf';
 
 import { LoadingSpinnerComponent } from "../../../components/loading-spinner/loading-spinner.component";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { CalendarModule } from "primeng/calendar";
 import { FloatLabelModule } from "primeng/floatlabel";
-import Swal from "sweetalert2";
 import { environment } from "../../../environment/environment";
 import { TokenService } from "../../../services/token/services/token.service";
 import { ThemeService } from "../../../services/theme.service";
-
-declare var html2pdf: any;
-
-interface CropReport {
-  [crop: string]: {
-    "Grade A": number;
-    "Grade B": number;
-    "Grade C": number;
-    Total: number;
-  };
-}
 
 @Component({
   selector: "app-collection-officer-report-view",
@@ -44,7 +22,6 @@ interface CropReport {
     CommonModule,
     HttpClientModule,
     FormsModule,
-    CanvasJSAngularChartsModule,
     LoadingSpinnerComponent,
     CalendarModule,
     FloatLabelModule,
@@ -52,22 +29,25 @@ interface CropReport {
   templateUrl: "./collection-officer-report-view.component.html",
   styleUrl: "./collection-officer-report-view.component.css",
 })
-export class CollectionOfficerReportViewComponent implements OnInit {
-  @ViewChild("contentToConvert", { static: false })
-  contentToConvert!: ElementRef;
+export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   id: string | null = null;
   name: string | null = null;
   createdDate: Date = new Date();
   createdDateForPdf!: string;
 
   reportData: CropReport = {};
-  chartOptions: any;
   loadingChart = true;
   loadingTable = true;
   isDownloading = false;
 
   empId: string | null = null;
   lastName: string | null = null;
+
+  reportChart!: Chart;
+
+  hasData: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -76,32 +56,42 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     private tokenService: TokenService,
     private router: Router,
     private themeService: ThemeService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
+    console.log('ngonit')
     this.route.paramMap.subscribe((params) => {
       this.id = params.get("id");
       this.name = params.get("name");
       this.empId = params.get("empId");
       this.lastName = params.get("lastName");
 
+      this.fetchReport();
     });
 
-    setTimeout(() => {
-      this.fetchReport();
-    }, 1000);
+    this.themeService.themeChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.updateChart();
+      });
   }
 
-  // ── Helper ──────────────────────────────────────────────────────────
-  hexToRgb(hex: string): [number, number, number] {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
-      : [0, 0, 0];
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
+
+  private getChartThemeColors() {
+    const isDark = this.themeService.isDarkTheme();
+    return {
+      textColor: isDark ? '#E5E7EB' : '#000000',
+      gridColor: isDark ? '#374151' : '#E5E7EB',
+      titleColor: isDark ? '#F9FAFB' : '#111827',
+    };
+  }
+  
 
   fetchReport(): void {
-    console.log('called')
     const Token = this.tokenService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${Token}`,
@@ -110,15 +100,18 @@ export class CollectionOfficerReportViewComponent implements OnInit {
     this.loadingChart = true;
     this.loadingTable = true;
 
+    console.log('loadingChart', this.loadingChart)
+
     let formattedDate = '';
-    console.log('createdDate', this.createdDate)
     if (this.createdDate) {
       this.createdDateForPdf = new Date().toISOString().split("T")[0];
-      console.log('date for pdf', this.createdDateForPdf)
-      formattedDate = this.convertToISO(this.createdDate);
+      formattedDate =
+        this.createdDate.getFullYear() +
+        "-" +
+        String(this.createdDate.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(this.createdDate.getDate()).padStart(2, "0");
     }
-
-    console.log('formattedDate', formattedDate)
 
     const url = `${environment.API_URL}auth/collection-officer/get-collection-officer-report/${this.id}/${formattedDate}`;
 
@@ -126,167 +119,92 @@ export class CollectionOfficerReportViewComponent implements OnInit {
       this.http.get<CropReport>(url, { headers }).subscribe(
         (data) => {
           this.reportData = data;
-          // this.empId = data.empId
+          this.hasData = Object.keys(this.reportData).length > 0;
+          console.log('hasData', this.hasData);
+          console.log('reportData', this.reportData)
           this.loadingTable = false;
-          this.updateChartOptions();
+          console.log('loadingTable', this.loadingTable)
+          this.updateChart();
         },
         (error) => {
           console.error("Error fetching report:", error);
-        },
+        }
       );
     }
   }
 
-  updateChartOptions(): void {
-    let chartData: any[] = [];
-    
-  
-    if (Object.keys(this.reportData).length > 0) {
-      chartData = Object.entries(this.reportData).map(([crop, grades]) => ({
-        label: crop,
-        y: grades["Total"],
-        gradeA: grades["Grade A"],
-        gradeB: grades["Grade B"],
-        gradeC: grades["Grade C"],
-      }));
+  updateChart(): void {
+    if (this.reportChart) {
+      this.reportChart.destroy();
+      this.reportChart = null!;
     }
-
-    const labelColor = "#000000"
-    const titleColor = "#000000"
-    const gridColor = "#000000"
-    const tickColor = "#000000"
   
-    this.chartOptions = {
-      backgroundColor: "transparent",
-      
-      axisX: {
-        title: "Crop Variety",
-        titleFontSize: 14,
-        titleFontColor: '#000000',
-        titlePadding: 10,        // ← space between title and axis labels
-      
-        labelFontSize: 12,
-        labelFontColor: '#000000',
-        labelPadding: 8,         // ← space between labels and axis line
-      
-        gridColor: gridColor,
-        gridThickness: 1,
-        margin: 10,              // ← outer margin around the axis block
+    const { textColor, gridColor, titleColor } = this.getChartThemeColors();
+  
+    const chartData = Object.keys(this.reportData).length > 0
+      ? Object.entries(this.reportData).map(([crop, grades]) => ({
+          label: crop,
+          gradeA: grades["Grade A"] || 0,
+          gradeB: grades["Grade B"] || 0,
+          gradeC: grades["Grade C"] || 0,
+        }))
+      : [];
+  
+    const labels = chartData.map(item => item.label);
+    const gradeAData = chartData.map(item => item.gradeA);
+    const gradeBData = chartData.map(item => item.gradeB);
+    const gradeCData = chartData.map(item => item.gradeC);
+  
+    const canvas = document.getElementById('reportBarChart') as HTMLCanvasElement;
+    if (!canvas) return;
+  
+    this.reportChart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Grade A', data: gradeAData, backgroundColor: '#FF9263' },
+          { label: 'Grade B', data: gradeBData, backgroundColor: '#5F75E9' },
+          { label: 'Grade C', data: gradeCData, backgroundColor: '#3DE188' },
+        ],
       },
-      
-      // ── Y Axis ──────────────────────────────────────────────────────
-      axisY: {
-        title: "Weight (kg)",
-        titleFontSize: 14,
-        titleFontColor: titleColor,
-        titlePadding: 10,        // ← space between title and axis labels
-      
-        labelFontSize: 12,
-        labelFontColor: labelColor,
-        labelPadding: 8,         // ← space between labels and axis line
-      
-        gridColor: gridColor,
-        gridThickness: 1,
-        includeZero: true,
-        margin: 10,              // ← outer margin around the axis block
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          title: {
+            display: true,
+            text: `${this.name} ${this.lastName} - Crop Weights`,
+            color: titleColor,
+            padding: { top: 10, bottom: 30 },
+            font: { size: 18, weight: 600 },
+          },
+          legend: {
+            position: 'bottom',
+            labels: { padding: 30, color: textColor, font: { size: 14, weight: 400 } },
+          },
+        },
+        scales: {
+          x: {
+            stacked: true,
+            ticks: { color: textColor },
+            grid: { color: gridColor },
+            title: { display: true, text: 'Total Weight (Kg)', color: textColor, font: { size: 12 }, padding: 20 },
+          },
+          y: {
+            stacked: true,
+            ticks: { color: textColor },
+            grid: { color: gridColor },
+            title: { display: true, text: 'Crop Variety', color: textColor, font: { size: 12, weight: 500 }, padding: 20 },
+          },
+        },
       },
-  
-      // ── Legend ────────────────────────────────────────────────────
-      
-legend: {
-  verticalAlign: "top",
-  horizontalAlign: "center",
-  fontSize: 13,
-  fontColor: labelColor,
-  fontWeight: "normal",
-  padding: 16,
-  markerMargin: 8,
-  itemWidth: 110,
-  margin: 20,              // ← pushes legend away from the chart area
-},
-  
-      // ── Data series ───────────────────────────────────────────────
-      data: [
-        {
-          type: "stackedBar",
-          name: "Grade A",
-          showInLegend: true,
-          yValueFormatString: "#,### Kg",
-          color: "#FF9263",
-  
-          // Bar styling
-          lineColor: "transparent",  // border around each bar segment
-          lineThickness: 0,
-          fillOpacity: 0.92,
-  
-          // Tooltip / data-label text
-          indexLabelFontSize: 11,
-          indexLabelFontColor: "#FFFFFF",
-          indexLabelPlacement: "inside",
-  
-          dataPoints: chartData.map((item) => ({
-            label: item.label,
-            y: item.gradeA,
-          })),
-        },
-        {
-          type: "stackedBar",
-          name: "Grade B",
-          showInLegend: true,
-          yValueFormatString: "#,### Kg",
-          color: "#5F75E9",
-  
-          lineColor: "transparent",
-          lineThickness: 0,
-          fillOpacity: 0.92,
-  
-          indexLabelFontSize: 11,
-          indexLabelFontColor: "#FFFFFF",
-          indexLabelPlacement: "inside",
-  
-          dataPoints: chartData.map((item) => ({
-            label: item.label,
-            y: item.gradeB,
-          })),
-        },
-        {
-          type: "stackedBar",
-          name: "Grade C",
-          showInLegend: true,
-          yValueFormatString: "#,### Kg",
-          color: "#3DE188",
-  
-          lineColor: "transparent",
-          lineThickness: 0,
-          fillOpacity: 0.92,
-  
-          indexLabelFontSize: 11,
-          indexLabelFontColor: "#333333",   // darker text on light green
-          indexLabelPlacement: "inside",
-  
-          dataPoints: chartData.map((item) => ({
-            label: item.label,
-            y: item.gradeC,
-          })),
-        },
-      ],
-    };
+    });
   
     this.loadingChart = false;
-    this.cdr.detectChanges();
-  }
-
-  get reportEntries(): [
-    string,
-    { "Grade A": number; "Grade B": number; "Grade C": number; Total: number },
-  ][] {
-    return Object.entries(this.reportData);
-  }
-
-  ngAfterViewInit(): void {
-    if (!this.contentToConvert) {
-      console.error("contentToConvert is undefined");
-    }
+    console.log('loadingChart', this.loadingChart)
+    console.log('table', this.loadingTable)
   }
 
   async downloadPDF(): Promise<void> {
@@ -322,7 +240,6 @@ legend: {
         totalWeight: grades['Total'] || 0,
       }));
   
-      // ── Legend ────────────────────────────────────────────────────
       const legendY = 32;
       const legendItems = [
         { label: 'Grade A', color: colors.gradeA },
@@ -343,36 +260,31 @@ legend: {
         doc.text(item.label, lx + legendBoxSize + 2, legendY + legendBoxSize - 1);
       });
   
-      // ── Chart layout ──────────────────────────────────────────────
-      // Left margin reserved for crop labels (handle long names)
-      const labelAreaWidth = 38;   // px reserved for Y-axis crop labels
-      const chartStartX = 15 + labelAreaWidth;  // where bars begin
+
+      const labelAreaWidth = 38;   
+      const chartStartX = 15 + labelAreaWidth;  
       const chartStartY = legendY + 12;
       const barHeight = 9;
-      const rowGap = 14;           // total row height including spacing
-      const chartWidth = 120;      // max bar width
+      const rowGap = 14;           
+      const chartWidth = 120;      
   
       const maxWeight = Math.max(...groupedData.map((c) => c.totalWeight));
   
-      // ── Y-axis title (rotated) ────────────────────────────────────
       const totalChartHeight = groupedData.length * rowGap;
       const chartMidY = chartStartY + totalChartHeight / 2;
       doc.setFontSize(9);
       doc.setTextColor(0, 0, 0);
       doc.text('Crop Variety', 35, chartMidY, { angle: 90, align: 'center' });
   
-      // ── Draw each crop row ────────────────────────────────────────
       groupedData.forEach((crop, rowIndex) => {
         const rowY = chartStartY + rowIndex * rowGap;
         const barMidY = rowY + barHeight / 2;
   
-        // Wrap long crop names to 2 lines (max ~16 chars per line)
         const maxChars = 14;
         let labelLines: string[];
         if (crop.cropName.length <= maxChars) {
           labelLines = [crop.cropName];
         } else {
-          // Split at last space before maxChars, else force-split
           const spaceIdx = crop.cropName.lastIndexOf(' ', maxChars);
           if (spaceIdx > 0) {
             labelLines = [
@@ -432,12 +344,12 @@ legend: {
         });
       });
   
-      // ── X-axis line + title ───────────────────────────────────────
+      
       const axisY = chartStartY + groupedData.length * rowGap + 2;
       doc.setDrawColor(0, 0, 0);
       doc.setLineWidth(0.4);
-      doc.line(chartStartX, chartStartY, chartStartX, axisY);        // Y-axis spine
-      doc.line(chartStartX, axisY, chartStartX + chartWidth, axisY); // X-axis baseline
+      doc.line(chartStartX, chartStartY, chartStartX, axisY);        
+      doc.line(chartStartX, axisY, chartStartX + chartWidth, axisY); 
   
       // X-axis tick labels
       const tickCount = 5;
@@ -455,37 +367,36 @@ legend: {
       doc.setTextColor(0, 0, 0);
       doc.text('Weight (kg)', chartStartX + chartWidth / 2, axisY + 10, { align: 'center' });
   
-      // ── Table ─────────────────────────────────────────────────────
-const tableStartY = axisY + 18;
-const cellHeight = 8;
-const cellPadding = 2;
-const tableColWidths = [50, 30, 30, 30, 30];
-
-// Centre the table horizontally
-const totalTableWidth = tableColWidths.reduce((a, b) => a + b, 0); // 170
-const startX = (pageWidth - totalTableWidth) / 2;
-
-let rowY = tableStartY;
-
-const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
-
-doc.setLineWidth(0.2);
-doc.setDrawColor(180, 180, 180);
-
-doc.setFontSize(9);
-doc.setFont('helvetica', 'bold');
-doc.setTextColor(60, 60, 60);
-headers.forEach((header, index) => {
+  const tableStartY = axisY + 18;
+  const cellHeight = 8;
+  const cellPadding = 2;
+  const tableColWidths = [50, 30, 30, 30, 30];
+  
+  // Centre the table horizontally
+  const totalTableWidth = tableColWidths.reduce((a, b) => a + b, 0); // 170
+  const startX = (pageWidth - totalTableWidth) / 2;
+  
+  let rowY = tableStartY;
+  
+  const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
+  
+  doc.setLineWidth(0.2);
+  doc.setDrawColor(180, 180, 180);
+  
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(60, 60, 60);
+  headers.forEach((header, index) => {
   const cellX = startX + tableColWidths.slice(0, index).reduce((a, b) => a + b, 0);
   doc.rect(cellX, rowY, tableColWidths[index], cellHeight);
   doc.text(header, cellX + cellPadding, rowY + cellHeight / 2 + 2.5);
-});
-rowY += cellHeight;
-
-doc.setFont('helvetica', 'normal');
-doc.setFontSize(8.5);
-doc.setTextColor(90, 90, 90);
-groupedData.forEach((crop) => {
+  });
+  rowY += cellHeight;
+  
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(90, 90, 90);
+  groupedData.forEach((crop) => {
   const cropValues = [
     crop.cropName,
     crop.gradeA ? `${crop.gradeA} kg` : '-',
@@ -499,59 +410,37 @@ groupedData.forEach((crop) => {
     doc.text(value, cellX + cellPadding, rowY + cellHeight / 2 + 2.5);
   });
   rowY += cellHeight;
-});
+  });
   
       doc.save(`Daily Report_${this.empId}_${this.createdDateForPdf}.pdf`);
       this.isDownloading = false;
     }, 0);
   }
-  
-  
+
+  hexToRgb(hex: string): [number, number, number] {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+      : [0, 0, 0];
+  }
 
   back(): void {
     this.router.navigate(["/reports/collective-officer-report"]);
   }
-
-  convertToISO(date: any): string {
-    if (date instanceof Date) {
-      const utcDate = new Date(Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate()
-      ));
-      return utcDate.toISOString();
-    } else if (typeof date === 'string') {
-      const parsedDate = new Date(date);
-      if (!isNaN(parsedDate.getTime())) {
-        const utcDate = new Date(Date.UTC(
-          parsedDate.getFullYear(),
-          parsedDate.getMonth(),
-          parsedDate.getDate()
-        ));
-        return utcDate.toISOString();
-      }
-    }
-    return date;
-  }
-
-  formatDateForDisplay(date: any): string {
-    if (!date) return '';
-
-    let dateObj: Date;
-
-    if (date instanceof Date) {
-      dateObj = date;
-    } else if (typeof date === 'string') {
-      dateObj = new Date(date);
-      if (isNaN(dateObj.getTime())) return '';
-    } else {
-      return '';
-    }
-
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const day = String(dateObj.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-  }
 }
+
+class CropReport {
+  [crop: string]: {
+    "Grade A": number;
+    "Grade B": number;
+    "Grade C": number;
+    Total: number;
+  };
+}
+
+
+
+
+
+
+

@@ -240,7 +240,12 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     }
 
     // If years becomes negative or equals 5 with negative months, they're past 5 years
-    if (years < 0 || (years === 0 && months < 0) || (years === 5 && months > 0) || years > 5) {
+    if (
+      years < 0 ||
+      (years === 0 && months < 0) ||
+      (years === 5 && months > 0) ||
+      years > 5
+    ) {
       return 'Eligible';
     }
 

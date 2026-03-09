@@ -1,13 +1,10 @@
-<!-- Loading Spinner -->
 <div *ngIf="isLoading" class="flex items-center justify-center min-h-screen">
   <div class="text-center">
     <i class="fa-solid fa-spinner fa-spin text-5xl text-blue-500 mb-4"></i>
   </div>
 </div>
 
-<!-- Main Content -->
 <div *ngIf="!isLoading">
-  <!-- Back Button -->
   <button
     class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
     onclick="history.back()"
@@ -16,23 +13,18 @@
     <span>Back</span>
   </button>
 
-  <!-- Main Card with Horizontal Scroll -->
   <div
     class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
   >
     <div
       class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6 min-w-[1400px]"
     >
-      <!-- Header Section - Title and Filters in Same Line -->
       <div class="flex justify-between items-center mb-6">
-        <!-- Title with count -->
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
           GoViCare Requests ({{ formatTwoDigits(totalItems) }})
         </h1>
 
-        <!-- Filters Container -->
         <div class="flex items-center gap-3">
-          <!-- Filter By Label -->
           <div class="flex items-center gap-2">
             <i class="mr-3 w-6 h-6 fill-current text-gray-500">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -44,7 +36,6 @@
             <span class="text-[#828282]">Filter By</span>
           </div>
 
-          <!-- Status Filter -->
           <div class="relative w-40 custom-status-dropdown-container">
             <p-dropdown
               styleClass="rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] dark:text-textDark h-8 w-40"
@@ -56,7 +47,6 @@
             />
           </div>
 
-          <!-- Search Input -->
           <div class="relative w-64">
             <input
               type="text"
@@ -67,7 +57,6 @@
               class="w-full px-4 py-1.5 pl-4 pr-10 bg-[#F1F1F1] dark:bg-[#272F45] rounded-xl text-textLight dark:text-textDark focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
-            <!-- Clear/Search Icon -->
             <button
               *ngIf="search"
               (click)="clearSearch()"
@@ -85,7 +74,6 @@
           </div>
         </div>
       </div>
-      <!-- Table Section - Only show if there's data -->
       <div *ngIf="govicareRequests.length > 0" class="overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -122,13 +110,21 @@
               </th>
               <th
                 class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
-                *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Govicare request View NIC'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
               >
                 NIC Front Image
               </th>
               <th
                 class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
-                 *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Govicare request View NIC'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
               >
                 NIC Back Image
               </th>
@@ -139,7 +135,11 @@
               </th>
               <th
                 class="px-4 py-3 text-center font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
-                *ngIf=" permissionService.hasPermission('Govicare request view other details') || tokenService.getUserDetails().role === '1'"
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Govicare request view other details'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
               >
                 Details
               </th>
@@ -155,48 +155,49 @@
               *ngFor="let request of govicareRequests; let i = index"
               class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition"
             >
-              <!-- No -->
               <td class="px-4 py-4 text-textLight dark:text-textDark">
-                {{ i + 1 | number : "3.0-0" }}
+                {{ i + 1 | number: "3.0-0" }}
               </td>
 
-              <!-- Request ID -->
               <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Request_ID }}
               </td>
 
-              <!-- Farmer Name -->
               <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Farmer_Name }}
               </td>
 
-              <!-- Phone Number -->
               <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Phone_number }}
               </td>
 
-              <!-- Status -->
               <td class="px-4 py-4 text-center">
                 <button
                   [class]="getAssignClass(request.Status)"
                   class="flex text-center justify-center px-4 py-2 rounded-lg text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity w-28 mx-auto"
                   (click)="onAssignStatusClick(request)"
                   title="Click to assign or view officer"
-                  [disabled]="!permissionService.hasPermission('Govicare request assign officer') && tokenService.getUserDetails().role !== '1'"
+                  [disabled]="
+                    !permissionService.hasPermission(
+                      'Govicare request assign officer'
+                    ) && tokenService.getUserDetails().role !== '1'
+                  "
                 >
                   {{ getAssignText(request.Status) }}
                 </button>
               </td>
-              <!-- Officer ID -->
               <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Officer_ID }}
               </td>
 
-              <!-- NIC Front Image -->
-              <td 
+              <td
                 class="px-4 py-4 text-center"
-                *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
-                >
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Govicare request View NIC'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+              >
                 <button
                   (click)="openImage(request.NIC_Front_Image)"
                   class="text-blue-500 hover:text-blue-600 transition"
@@ -205,11 +206,14 @@
                 </button>
               </td>
 
-              <!-- NIC Back Image -->
-              <td 
+              <td
                 class="px-4 py-4 text-center"
-                 *ngIf=" permissionService.hasPermission('Govicare request View NIC') || tokenService.getUserDetails().role === '1'"
-                >
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Govicare request View NIC'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+              >
                 <button
                   (click)="openImage(request.NIC_Back_Image)"
                   class="text-blue-500 hover:text-blue-600 transition"
@@ -218,16 +222,18 @@
                 </button>
               </td>
 
-              <!-- Requested On -->
               <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Requested_On }}
               </td>
 
-              <!-- Details (Eye Icon) -->
-              <td 
+              <td
                 class="px-4 py-4 text-center"
-                 *ngIf=" permissionService.hasPermission('Govicare request view other details') || tokenService.getUserDetails().role === '1'"
-                >
+                *ngIf="
+                  permissionService.hasPermission(
+                    'Govicare request view other details'
+                  ) || tokenService.getUserDetails().role === '1'
+                "
+              >
                 <button
                   (click)="viewDetails(request.Request_ID)"
                   class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block"
@@ -248,7 +254,6 @@
                 </button>
               </td>
 
-              <!-- Assigned By -->
               <td class="px-4 py-4 text-textLight dark:text-textDark">
                 {{ request.Assigned_By }}
               </td>
@@ -257,7 +262,6 @@
         </table>
       </div>
 
-      <!-- Empty State - Show when no data -->
       <div
         *ngIf="govicareRequests.length === 0"
         class="flex flex-col items-center w-full px-10 py-7 mt-6"
@@ -280,7 +284,6 @@
     class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-lg mx-4"
     (click)="$event.stopPropagation()"
   >
-    <!-- Modal Header -->
     <div
       class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg"
     >
@@ -291,9 +294,7 @@
       </h2>
     </div>
 
-    <!-- Modal Body -->
     <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-      <!-- Farmer Name -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -307,7 +308,6 @@
         </span>
       </div>
 
-      <!-- NIC Number -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -321,7 +321,6 @@
         </span>
       </div>
 
-      <!-- Phone Number -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -335,7 +334,6 @@
         </span>
       </div>
 
-      <!-- Crop -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -349,7 +347,6 @@
         </span>
       </div>
 
-      <!-- Extent -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -363,7 +360,6 @@
         </span>
       </div>
 
-      <!-- Expected Investment -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -373,13 +369,13 @@
         <span
           class="text-sm text-textLight dark:text-textDark font-medium flex-1"
         >
-          Rs. {{
+          Rs.
+          {{
             formatNumberWithCommas(selectedRequest?.Expected_Investment || 0)
           }}
         </span>
       </div>
 
-      <!-- Expected Yield -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -389,11 +385,10 @@
         <span
           class="text-sm text-textLight dark:text-textDark font-medium flex-1"
         >
-         {{ formatNumberWithCommas(selectedRequest?.Expected_Yield || 0) }}Kg
+          {{ formatNumberWithCommas(selectedRequest?.Expected_Yield || 0) }}Kg
         </span>
       </div>
 
-      <!-- Expected Start Date -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -407,7 +402,6 @@
         </span>
       </div>
 
-      <!-- Request Date & Time -->
       <div class="flex items-start">
         <span
           class="text-sm text-gray-600 dark:text-gray-400 w-44 flex-shrink-0"
@@ -422,7 +416,6 @@
       </div>
     </div>
 
-    <!-- Modal Footer -->
     <div class="px-6 py-4 flex justify-center rounded-b-lg">
       <button
         (click)="closeDetailsModal()"
@@ -434,7 +427,6 @@
   </div>
 </div>
 
-<!-- Assigned Officer Popup -->
 <div
   *ngIf="isOfficerPopUp"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -471,7 +463,6 @@
   </div>
 </div>
 
-<!-- Assign Inspector Popup -->
 <div
   *ngIf="isAssignPopup"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -481,7 +472,6 @@
     class="bg-[#FFFFFF] dark:bg-tileBlack rounded-lg shadow-md flex flex-col justify-center items-center max-w-lg min-h-[50%] p-10"
     (click)="$event.stopPropagation()"
   >
-    <!-- Popup Header -->
     <div class="flex justify-center items-center mb-4 px-10">
       <h3 class="text-lg font-semibold dark:text-white">
         {{
@@ -491,7 +481,6 @@
         }}
       </h3>
     </div>
-    <!-- Officer Role Selection -->
     <div class="flex flex-col mb-4 w-full">
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
@@ -511,7 +500,6 @@
       </p-dropdown>
     </div>
 
-    <!-- Officer Selection -->
     <div class="flex flex-col mb-4 w-full">
       <label
         class="block text-sm font-medium text-textLight dark:text-textDark mb-2"
@@ -543,20 +531,6 @@
         Loading officers...
       </div>
     </div>
-
-    <!-- Selected Officer Info -->
-    <!-- <div
-      *ngIf="selectedOfficerInfo"
-      class="mb-4 p-5 text-center rounded-lg border border-blue-500 w-full mt-2"
-    >
-      <p class="text-md font-semibold text-textLight dark:text-textDark">
-        {{ selectedOfficerInfo.empId }} - {{ selectedOfficerInfo.firstName }}
-        {{ selectedOfficerInfo.lastName }}
-      </p>
-      <p class="text-sm text-textLight dark:text-textDark">
-        District: {{ selectedOfficerInfo.district }}
-      </p>
-    </div> -->
 
     <div *ngIf="assignError" class="mt-3 p-2 text-red-700 rounded text-sm">
       {{ assignError }}

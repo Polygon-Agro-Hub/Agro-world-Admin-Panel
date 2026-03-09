@@ -71,13 +71,10 @@ export class AuditPersonalInfoComponent implements OnInit {
   ngOnInit(): void {
 
     const requestId = this.route.snapshot.paramMap.get('requestId');
-    console.log(requestId);
     this.reqId = Number(requestId);
 
     const segments = this.route.snapshot.url;
     this.lastSegment = segments[segments.length - 2]?.path;
-
-    console.log('Last route part:', this.lastSegment);
 
     this.fetchData();
   }
@@ -156,7 +153,6 @@ export class AuditPersonalInfoComponent implements OnInit {
         const request = res.data.find((req: any) => req.No === this.reqId);
         if (request) {
           this.sharesData.publishStatus = request.publishStatus;
-          console.log('Updated publishStatus:', this.sharesData.publishStatus);
         }
       }
     });
@@ -169,7 +165,6 @@ export class AuditPersonalInfoComponent implements OnInit {
     } else {
       this.shareValue = 0;
     }
-    console.log('shareValue', this.shareValue);
   }
 
   openApprovePopUp() {
@@ -313,7 +308,6 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.devideRequestObj.jobId = this.sharesData.jobId;
     this.devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime;
     this.devideRequestObj.empId = this.sharesData.empId;
-    console.log('devideRequestObj', this.devideRequestObj);
 
     this.financeService.devideSharesRequest(this.devideRequestObj).subscribe((res: any) => {
 

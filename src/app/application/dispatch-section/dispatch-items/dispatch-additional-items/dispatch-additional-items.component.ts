@@ -31,12 +31,14 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   isLastOrder: boolean = false;
   isAllPacked: boolean = false;
   isShouldAllblock:boolean = true;
-  isCompleted: boolean = false; 
+  isCompleted: boolean = false;
+  isCustom: string = '';
 
 
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id'];
     this.isLastOrder = this.route.snapshot.queryParams['status'] === 'true' ? true : false;
+    this.isCustom = this.route.snapshot.queryParams['isCustom'];
     this.fetchData();
   }
 

@@ -230,45 +230,55 @@ export class StakeholderService {
     return this.http.put<any>(url, {}, { headers });
   }
 
-  getAllGoviShopUsers(search?: string, currentPlan?: string, planStatus?: string): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
-    });
+  getAllGoviShopUsers(
+  search?: string, 
+  currentPlan?: string, 
+  planStatus?: string,
+  page: number = 1,
+  limit: number = 10
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
 
-    let params = new HttpParams();
+  let params = new HttpParams();
 
-    if (search) {
-      params = params.set('search', search);
-    }
+  // Add pagination parameters
+  params = params.set('page', page.toString());
+  params = params.set('limit', limit.toString());
 
-    if (currentPlan) {
-      params = params.set('currentPlan', currentPlan);
-    }
-
-    if (planStatus) {
-      params = params.set('planStatus', planStatus);
-    }
-
-    return this.http
-      .get(`${this.apiUrl}shop/view-govi-shop-users`, {
-        headers,
-        params,
-      })
-      .pipe(
-        map((response: any) => {
-          if (response.success) {
-            return {
-              shopUsers: response.data.shopUsers,
-              total: response.data.total,
-              expiredCount: response.data.expiredCount,
-              activeCount: response.data.activeCount,
-            };
-          }
-          throw new Error(response.message || 'Failed to fetch shop users');
-        }),
-      );
+  // Add filter parameters if provided
+  if (search) {
+    params = params.set('search', search);
   }
+
+  if (currentPlan) {
+    params = params.set('currentPlan', currentPlan);
+  }
+
+  if (planStatus) {
+    params = params.set('planStatus', planStatus);
+  }
+
+  return this.http
+    .get(`${this.apiUrl}shop/view-govi-shop-users`, {
+      headers,
+      params,
+    })
+    .pipe(
+      map((response: any) => {
+        if (response.success) {
+          return {
+            shopUsers: response.data.shopUsers,
+            pagination: response.data.pagination,
+            stats: response.data.stats,
+          };
+        }
+        throw new Error(response.message || 'Failed to fetch shop users');
+      }),
+    );
+}
 
   deleteGoviShopUser(id: number): Observable<any> {
     const headers = new HttpHeaders({

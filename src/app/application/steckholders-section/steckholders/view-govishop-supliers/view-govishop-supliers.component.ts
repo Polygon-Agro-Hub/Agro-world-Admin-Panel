@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 export interface Supplier {
   id: number;
@@ -28,7 +29,7 @@ export interface Supplier {
 @Component({
   selector: 'app-view-govishop-supliers',
   standalone: true,
-  imports: [LoadingSpinnerComponent, CommonModule, FormsModule, DropdownModule],
+  imports: [LoadingSpinnerComponent, CommonModule, FormsModule, DropdownModule, NgxPaginationModule],
   templateUrl: './view-govishop-supliers.component.html',
   styleUrl: './view-govishop-supliers.component.css',
 })
@@ -41,6 +42,11 @@ export class ViewGovishopSupliersComponent implements OnInit {
   totalSuppliers = 0;
   expiredCount = 0;
   activeCount = 0;
+
+  // Pagination properties
+  page: number = 1;
+  itemsPerPage: number = 10;
+  totalItems: number = 0;
 
   showDeleteModal = false;
   supplierToDelete: Supplier | null = null;
@@ -85,37 +91,38 @@ export class ViewGovishopSupliersComponent implements OnInit {
     console.log('Fetching suppliers with params:', {
       search: this.searchTerm || undefined,
       currentPlan: currentPlan,
-      planStatus: planStatus
+      planStatus: planStatus,
+      page: this.page,
+      limit: this.itemsPerPage
     });
     
     this.goviShopService.getAllGoviShopUsers(
       this.searchTerm || undefined,
       currentPlan,
-      planStatus
+      planStatus,
+      this.page,
+      this.itemsPerPage
     ).subscribe({
       next: (response) => {
         console.log('Raw API Response:', response);
         
-        // Check different possible response structures
+        // Handle the response structure
         let shopUsers = [];
         let total = 0;
         let expired = 0;
         let active = 0;
         
         if (response.data && Array.isArray(response.data.shopUsers)) {
-          // New structure: { success: true, data: { shopUsers: [], total: 0, expiredCount: 0, activeCount: 0 } }
           console.log('Using new response structure with data wrapper');
           shopUsers = response.data.shopUsers;
-          total = response.data.total || 0;
-          expired = response.data.expiredCount || 0;
-          active = response.data.activeCount || 0;
+          total = response.data.pagination?.total || response.data.total || 0;
+          expired = response.data.stats?.expiredCount || 0;
+          active = response.data.stats?.activeCount || 0;
         } else if (response.shopUsers && Array.isArray(response.shopUsers)) {
-          // Old structure: { shopUsers: [], total: 0 }
           console.log('Using old response structure');
           shopUsers = response.shopUsers;
           total = response.total || 0;
         } else if (Array.isArray(response)) {
-          // Direct array response
           console.log('Response is direct array');
           shopUsers = response;
           total = response.length;
@@ -160,6 +167,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
         }
         
         this.suppliers = mappedSuppliers;
+        this.totalItems = total;
         this.totalSuppliers = mappedSuppliers.length;
         this.expiredCount = expired;
         this.activeCount = active;
@@ -209,12 +217,14 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
   // Search when clicking search icon or pressing Enter
   onSearch(): void {
+    this.page = 1; // Reset to first page on search
     this.loadSuppliers();
   }
 
   // Clear search term and reload data
   clearSearch(): void {
     this.searchTerm = '';
+    this.page = 1; // Reset to first page
     this.loadSuppliers();
     // Focus back on search input
     setTimeout(() => this.searchInput?.nativeElement?.focus(), 0);
@@ -222,12 +232,20 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
   // Filter when plan changes
   onPlanChange(): void {
+    this.page = 1; // Reset to first page on filter change
     this.loadSuppliers();
   }
 
   // Clear plan filter and reload data
   clearPlanFilter(): void {
     this.selectedPlan = null;
+    this.page = 1; // Reset to first page
+    this.loadSuppliers();
+  }
+
+  // Pagination method
+  onPageChange(event: number): void {
+    this.page = event;
     this.loadSuppliers();
   }
 
@@ -259,9 +277,16 @@ export class ViewGovishopSupliersComponent implements OnInit {
         next: () => {
           this.suppliers = this.suppliers.filter(s => s.id !== this.supplierToDelete?.id);
           this.totalSuppliers--;
+          this.totalItems--; // Update total items
           this.showDeleteModal = false;
           this.supplierToDelete = null;
           this.isLoading = false;
+          
+          // If current page becomes empty after delete, go to previous page
+          if (this.suppliers.length === 0 && this.page > 1) {
+            this.page--;
+            this.loadSuppliers();
+          }
         },
         error: (error) => {
           console.error('Error deleting supplier:', error);

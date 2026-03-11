@@ -77,11 +77,13 @@ export class GoviShopViewActionComponent implements OnInit {
   }
 
   fetchAllOrders(
+    page: number = this.page,
+    limit: number = this.itemsPerPage,
     status: string = this.orderStatusFilter,
     search: string = this.searchText,
   ) {
     this.isLoading = true;
-    this.FinanceService.getAllShopViewAction(status, search).subscribe(
+    this.FinanceService.getAllShopViewAction(page, limit, status, search).subscribe(
       (data) => {
         this.isLoading = false;
         this.ordersArr = data.items;
@@ -140,6 +142,12 @@ export class GoviShopViewActionComponent implements OnInit {
       '/finance/action/finance-govishop/view-documents',
       id,
     ]);
+  }
+
+  onPageChange(event: number) {
+    this.page = event;
+    console.log('page', this.page)
+    this.fetchAllOrders();
   }
 }
 

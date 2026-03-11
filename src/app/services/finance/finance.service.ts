@@ -1028,7 +1028,9 @@ export class FinanceService {
 }
 
   getAllShopViewAction(
-    status: string,
+    page: number,
+    limit: number,
+    status: string = '',
     searchText: string = '',
    
   ): Observable<any> {
@@ -1036,7 +1038,7 @@ export class FinanceService {
       Authorization: `Bearer ${this.token}`,
     });
     
-    let url = `${this.apiUrl}shop/get-all-shop-view-action?page=${1}`;
+    let url = `${this.apiUrl}shop/get-all-shop-view-action?page=${page}&limit=${limit}`;
 
     if (status) {
       url += `&status=${status}`;

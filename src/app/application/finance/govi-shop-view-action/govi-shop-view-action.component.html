@@ -167,7 +167,12 @@
         </thead>
         <tbody>
           <tr
-            *ngFor="let item of ordersArr; let i = index"
+            *ngFor="let item of ordersArr | paginate
+            : {
+                itemsPerPage: itemsPerPage,
+                currentPage: page,
+                totalItems: totalItems
+              };; let i = index"
             class="border-b border-gray-200 dark:border-[#4B555A]"
           >
             <td class="px-3 py-3 text-[#000000] dark:text-textDark text-left">
@@ -224,6 +229,13 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div *ngIf="hasData" class="dark:bg-[#262f45] mt-4">
+      <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'You are on page'">
+      </pagination-controls>
     </div>
   </div>
 </div>

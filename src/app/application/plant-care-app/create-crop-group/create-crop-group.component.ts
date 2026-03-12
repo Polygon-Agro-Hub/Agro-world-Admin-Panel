@@ -20,6 +20,13 @@ interface NewsItem {
   incomeFeild: string;
   bgColor: string;
   image: string;
+  seedRate: string;   // ADD
+  rowSpace: string;   // ADD
+  plantSpace: string; // ADD
+  AvgYield: string;   // ADD
+  nitrogen: string;   // ADD
+  phosphorus: string; // ADD
+  potassium: string;  // ADD
 }
 
 @Component({
@@ -94,15 +101,22 @@ export class CreateCropGroupComponent {
   }
 
   cropGroup = {
-    cropNameEnglish: '',
-    cropNameSinahala: '',
-    cropNameTamil: '',
-    parentCategory: '',
-    costFeild: '',
-    incomeFeild: '',
-    bgColor: '',
-    fileName: '',
-  };
+  cropNameEnglish: '',
+  cropNameSinahala: '',
+  cropNameTamil: '',
+  parentCategory: '',
+  costFeild: '',
+  incomeFeild: '',
+  bgColor: '',
+  fileName: '',
+  seedRate: '',    // ADD
+  rowSpace: '',    // ADD
+  plantSpace: '',  // ADD
+  AvgYield: '',    // ADD
+  nitrogen: '',    // ADD
+  phosphorus: '',  // ADD
+  potassium: '',   // ADD
+};
 
   imagePreview: string | ArrayBuffer | null = null;
   isLoading = false;
@@ -242,6 +256,22 @@ export class CreateCropGroupComponent {
       errors.push('Please fill the Cost per acre field');
     }
 
+    if (!this.cropGroup.seedRate) {
+  errors.push('Please fill the Recommended Seed Rate');
+}
+if (!this.cropGroup.rowSpace) {
+  errors.push('Please fill the Row Spacing');
+}
+if (!this.cropGroup.plantSpace) {
+  errors.push('Please fill the Plant Spacing');
+}
+if (!this.cropGroup.AvgYield) {
+  errors.push('Please fill the Average Yield');
+}
+if (!this.cropGroup.nitrogen || !this.cropGroup.phosphorus || !this.cropGroup.potassium) {
+  errors.push('Please fill all NPK Ratio values');
+}
+
     if (!this.cropGroup.bgColor) {
       errors.push('Please choose a Background Color');
     }
@@ -357,15 +387,22 @@ export class CreateCropGroupComponent {
         this.selectedImage = null;
         this.imageTouched = false;
         this.cropGroup = {
-          cropNameEnglish: '',
-          cropNameSinahala: '',
-          cropNameTamil: '',
-          parentCategory: '',
-          costFeild: '',
-          incomeFeild: '',
-          bgColor: '',
-          fileName: '',
-        };
+  cropNameEnglish: '',
+  cropNameSinahala: '',
+  cropNameTamil: '',
+  parentCategory: '',
+  costFeild: '',
+  incomeFeild: '',
+  bgColor: '',
+  fileName: '',
+  seedRate: '',
+  rowSpace: '',
+  plantSpace: '',
+  AvgYield: '',
+  nitrogen: '',
+  phosphorus: '',
+  potassium: '',
+};
         this.location.back();
       }
     });
@@ -497,6 +534,13 @@ export class CreateCropGroupComponent {
   formData.append('costFeild', newsItem.costFeild || ''); // Add cost field
   formData.append('incomeFeild', newsItem.incomeFeild || ''); // Add income field
   formData.append('bgColor', newsItem.bgColor || '');
+  formData.append('seedRate', this.cropGroup.seedRate);
+formData.append('rowSpace', this.cropGroup.rowSpace);
+formData.append('plantSpace', this.cropGroup.plantSpace);
+formData.append('AvgYield', this.cropGroup.AvgYield);
+formData.append('nitrogen', this.cropGroup.nitrogen);
+formData.append('phosphorus', this.cropGroup.phosphorus);
+formData.append('potassium', this.cropGroup.potassium);
 
   // Add the file only if it exists
   if (this.selectedFile) {
@@ -636,6 +680,63 @@ allowOnlyNumbers(event: KeyboardEvent): void {
   if (!/^\d$/.test(char) && !allowedKeys.includes(char)) {
     event.preventDefault();
   }
+}
+
+allowDecimal3Places(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const char = event.key;
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight'];
+
+  if (allowedKeys.includes(char)) return;
+
+  if (char === '.') {
+    if (input.value.includes('.')) { event.preventDefault(); return; }
+    return;
+  }
+
+  if (input.value.includes('.')) {
+    const dotIndex = input.value.indexOf('.');
+    const selStart = input.selectionStart || 0;
+    const decimalPart = input.value.split('.')[1];
+    if (selStart > dotIndex && decimalPart.length >= 3) {
+      event.preventDefault(); return;
+    }
+  }
+
+  if (!/^\d$/.test(char)) event.preventDefault();
+}
+
+allowDecimal1Place(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const char = event.key;
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight'];
+
+  if (allowedKeys.includes(char)) return;
+
+  if (char === '.') {
+    if (input.value.includes('.')) { event.preventDefault(); return; }
+    return;
+  }
+
+  if (input.value.includes('.')) {
+    const dotIndex = input.value.indexOf('.');
+    const selStart = input.selectionStart || 0;
+    const decimalPart = input.value.split('.')[1];
+    if (selStart > dotIndex && decimalPart.length >= 1) {
+      event.preventDefault(); return;
+    }
+  }
+
+  if (!/^\d$/.test(char)) event.preventDefault();
+}
+
+allowOnlyIntegers(event: KeyboardEvent): void {
+  const input = event.target as HTMLInputElement;
+  const char = event.key;
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight'];
+
+  if (allowedKeys.includes(char)) return;
+  if (!/^\d$/.test(char)) event.preventDefault();
 }
 
 }

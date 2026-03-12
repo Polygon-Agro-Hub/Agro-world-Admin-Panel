@@ -136,6 +136,134 @@
   </div>
 </div>
 
+<!-- Seed Rate -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Recommended Seed Rate per Unit (kg/ha) *
+  </label>
+  <input type="text" [(ngModel)]="cropGroup.seedRate" name="seedRate"
+    (keydown)="allowDecimal3Places($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #seedRateInput="ngModel" pattern="^\d+(\.\d{1,3})?$" required />
+  <div *ngIf="seedRateInput.touched">
+    <div *ngIf="seedRateInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Seed Rate is required
+    </div>
+    <div *ngIf="seedRateInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Max 3 decimal places allowed
+    </div>
+    <div *ngIf="!seedRateInput.errors?.['required'] && !seedRateInput.errors?.['pattern'] && +seedRateInput.value < 0.001"
+      class="text-red-500 text-sm mt-1">
+      Minimum value is 0.001
+    </div>
+  </div>
+</div>
+
+<!-- Row Spacing -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Row Spacing (cm) *
+  </label>
+  <input type="text" [(ngModel)]="cropGroup.rowSpace" name="rowSpace"
+    (keydown)="allowDecimal1Place($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #rowSpaceInput="ngModel" pattern="^\d+(\.\d{1})?$" required />
+  <div *ngIf="rowSpaceInput.touched">
+    <div *ngIf="rowSpaceInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Row Spacing is required
+    </div>
+    <div *ngIf="rowSpaceInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Max 1 decimal place allowed
+    </div>
+    <div *ngIf="!rowSpaceInput.errors?.['required'] && !rowSpaceInput.errors?.['pattern'] && +rowSpaceInput.value < 0.1"
+      class="text-red-500 text-sm mt-1">
+      Minimum value is 0.1
+    </div>
+  </div>
+</div>
+
+<!-- Plant Spacing -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Plant Spacing (cm) *
+  </label>
+  <input type="text" [(ngModel)]="cropGroup.plantSpace" name="plantSpace"
+    (keydown)="allowDecimal1Place($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #plantSpaceInput="ngModel" pattern="^\d+(\.\d{1})?$" required />
+  <div *ngIf="plantSpaceInput.touched">
+    <div *ngIf="plantSpaceInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Plant Spacing is required
+    </div>
+    <div *ngIf="plantSpaceInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Max 1 decimal place allowed
+    </div>
+    <div *ngIf="!plantSpaceInput.errors?.['required'] && !plantSpaceInput.errors?.['pattern'] && +plantSpaceInput.value < 0.1"
+      class="text-red-500 text-sm mt-1">
+      Minimum value is 0.1
+    </div>
+  </div>
+</div>
+
+<!-- Average Yield -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Average Yield per Plant (kg) *
+  </label>
+  <input type="text" [(ngModel)]="cropGroup.AvgYield" name="AvgYield"
+    (keydown)="allowDecimal3Places($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #avgYieldInput="ngModel" pattern="^\d+(\.\d{1,3})?$" required />
+  <div *ngIf="avgYieldInput.touched">
+    <div *ngIf="avgYieldInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Average Yield is required
+    </div>
+    <div *ngIf="avgYieldInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Max 3 decimal places allowed
+    </div>
+    <div *ngIf="!avgYieldInput.errors?.['required'] && !avgYieldInput.errors?.['pattern'] && +avgYieldInput.value < 0.001"
+      class="text-red-500 text-sm mt-1">
+      Minimum value is 0.001
+    </div>
+  </div>
+</div>
+
+<!-- NPK Ratio -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Recommended NPK Ratio (kg/ha) *
+  </label>
+  <div class="flex items-center gap-4 mt-1 flex-wrap">
+    <span class="text-sm text-textLight dark:text-textDark">Nitrogen</span>
+    <input type="text" [(ngModel)]="cropGroup.nitrogen" name="nitrogen"
+      (keydown)="allowOnlyIntegers($event)"
+      class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+      #nitrogenInput="ngModel" pattern="^\d+$" required />
+    <span class="text-sm text-textLight dark:text-textDark">Phosphorus</span>
+    <input type="text" [(ngModel)]="cropGroup.phosphorus" name="phosphorus"
+      (keydown)="allowOnlyIntegers($event)"
+      class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+      #phosphorusInput="ngModel" pattern="^\d+$" required />
+    <span class="text-sm text-textLight dark:text-textDark">Potassium</span>
+    <input type="text" [(ngModel)]="cropGroup.potassium" name="potassium"
+      (keydown)="allowOnlyIntegers($event)"
+      class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+      #potassiumInput="ngModel" pattern="^\d+$" required />
+  </div>
+  <div *ngIf="(nitrogenInput.touched && nitrogenInput.errors?.['required']) ||
+              (phosphorusInput.touched && phosphorusInput.errors?.['required']) ||
+              (potassiumInput.touched && potassiumInput.errors?.['required'])"
+    class="text-red-500 text-sm mt-1">
+    All NPK values are required
+  </div>
+  <div *ngIf="(nitrogenInput.touched && nitrogenInput.errors?.['pattern']) ||
+              (phosphorusInput.touched && phosphorusInput.errors?.['pattern']) ||
+              (potassiumInput.touched && potassiumInput.errors?.['pattern'])"
+    class="text-red-500 text-sm mt-1">
+    Only whole numbers allowed for NPK values
+  </div>
+</div>
+
       <!-- Add Image -->
       <input type="file" id="imageUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
 
@@ -340,6 +468,134 @@
     <div *ngIf="incomeperacreInputEdit.errors?.['pattern']" class="text-red-500 text-sm mt-1">
       Please enter a valid amount (e.g., 2000 or 2000.75)
     </div>
+  </div>
+</div>
+
+<!-- Seed Rate Edit -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Recommended Seed Rate per Unit (kg/ha) *
+  </label>
+  <input type="text" [(ngModel)]="newsItems[0].seedRate" name="seedRate"
+    (keydown)="allowDecimal3Places($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #seedRateEditInput="ngModel" pattern="^\d+(\.\d{1,3})?$" required />
+  <div *ngIf="seedRateEditInput.touched">
+    <div *ngIf="seedRateEditInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Seed Rate is required
+    </div>
+    <div *ngIf="seedRateEditInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Max 3 decimal places allowed
+    </div>
+    <div *ngIf="!seedRateEditInput.errors?.['required'] && !seedRateEditInput.errors?.['pattern'] && +seedRateEditInput.value < 0.001"
+      class="text-red-500 text-sm mt-1">
+      Minimum value is 0.001
+    </div>
+  </div>
+</div>
+
+<!-- Row Spacing Edit -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Row Spacing (cm) *
+  </label>
+  <input type="text" [(ngModel)]="newsItems[0].rowSpace" name="rowSpace"
+    (keydown)="allowDecimal1Place($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #rowSpaceEditInput="ngModel" pattern="^\d+(\.\d{1})?$" required />
+  <div *ngIf="rowSpaceEditInput.touched">
+    <div *ngIf="rowSpaceEditInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Row Spacing is required
+    </div>
+    <div *ngIf="rowSpaceEditInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Max 1 decimal place allowed
+    </div>
+    <div *ngIf="!rowSpaceEditInput.errors?.['required'] && !rowSpaceEditInput.errors?.['pattern'] && +rowSpaceEditInput.value < 0.1"
+      class="text-red-500 text-sm mt-1">
+      Minimum value is 0.1
+    </div>
+  </div>
+</div>
+
+<!-- Plant Spacing Edit -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Plant Spacing (cm) *
+  </label>
+  <input type="text" [(ngModel)]="newsItems[0].plantSpace" name="plantSpace"
+    (keydown)="allowDecimal1Place($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #plantSpaceEditInput="ngModel" pattern="^\d+(\.\d{1})?$" required />
+  <div *ngIf="plantSpaceEditInput.touched">
+    <div *ngIf="plantSpaceEditInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Plant Spacing is required
+    </div>
+    <div *ngIf="plantSpaceEditInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Max 1 decimal place allowed
+    </div>
+    <div *ngIf="!plantSpaceEditInput.errors?.['required'] && !plantSpaceEditInput.errors?.['pattern'] && +plantSpaceEditInput.value < 0.1"
+      class="text-red-500 text-sm mt-1">
+      Minimum value is 0.1
+    </div>
+  </div>
+</div>
+
+<!-- Average Yield Edit -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Average Yield per Plant (kg) *
+  </label>
+  <input type="text" [(ngModel)]="newsItems[0].AvgYield" name="AvgYield"
+    (keydown)="allowDecimal3Places($event)"
+    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+    #avgYieldEditInput="ngModel" pattern="^\d+(\.\d{1,3})?$" required />
+  <div *ngIf="avgYieldEditInput.touched">
+    <div *ngIf="avgYieldEditInput.errors?.['required']" class="text-red-500 text-sm mt-1">
+      Average Yield is required
+    </div>
+    <div *ngIf="avgYieldEditInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+      Max 3 decimal places allowed
+    </div>
+    <div *ngIf="!avgYieldEditInput.errors?.['required'] && !avgYieldEditInput.errors?.['pattern'] && +avgYieldEditInput.value < 0.001"
+      class="text-red-500 text-sm mt-1">
+      Minimum value is 0.001
+    </div>
+  </div>
+</div>
+
+<!-- NPK Ratio Edit -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+    Recommended NPK Ratio (kg/ha) *
+  </label>
+  <div class="flex items-center gap-4 mt-1 flex-wrap">
+    <span class="text-sm text-textLight dark:text-textDark">Nitrogen</span>
+    <input type="text" [(ngModel)]="newsItems[0].nitrogen" name="nitrogen"
+      (keydown)="allowOnlyIntegers($event)"
+      class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+      #nitrogenEditInput="ngModel" pattern="^\d+$" required />
+    <span class="text-sm text-textLight dark:text-textDark">Phosphorus</span>
+    <input type="text" [(ngModel)]="newsItems[0].phosphorus" name="phosphorus"
+      (keydown)="allowOnlyIntegers($event)"
+      class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+      #phosphorusEditInput="ngModel" pattern="^\d+$" required />
+    <span class="text-sm text-textLight dark:text-textDark">Potassium</span>
+    <input type="text" [(ngModel)]="newsItems[0].potassium" name="potassium"
+      (keydown)="allowOnlyIntegers($event)"
+      class="w-28 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-blue-500 dark:bg-tileBlack text-textLight dark:text-textDark"
+      #potassiumEditInput="ngModel" pattern="^\d+$" required />
+  </div>
+  <div *ngIf="(nitrogenEditInput.touched && nitrogenEditInput.errors?.['required']) ||
+              (phosphorusEditInput.touched && phosphorusEditInput.errors?.['required']) ||
+              (potassiumEditInput.touched && potassiumEditInput.errors?.['required'])"
+    class="text-red-500 text-sm mt-1">
+    All NPK values are required
+  </div>
+  <div *ngIf="(nitrogenEditInput.touched && nitrogenEditInput.errors?.['pattern']) ||
+              (phosphorusEditInput.touched && phosphorusEditInput.errors?.['pattern']) ||
+              (potassiumEditInput.touched && potassiumEditInput.errors?.['pattern'])"
+    class="text-red-500 text-sm mt-1">
+    Only whole numbers allowed for NPK values
   </div>
 </div>
 

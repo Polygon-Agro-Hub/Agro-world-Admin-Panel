@@ -111,60 +111,6 @@ export class ViewJobHistoryComponent implements OnInit {
     this.fetchJobHistory();
   }
 
-  // fetchJobHistory() {
-  //   this.isLoading = true;
-
-  //   const filters = {
-  //     status: this.selectedStatus || undefined,
-  //     district: this.selectedDistrict || undefined,
-  //     completedDateFrom: this.completedDateFrom ? this.formatDate(this.completedDateFrom) : undefined,
-  //     searchJobId: this.getSearchParam('jobId'),
-  //     searchFarmId: this.getSearchParam('farmId'),
-  //     searchNic: this.getSearchParam('nic')
-  //   };
-
-  //   // Remove undefined values
-  //   Object.keys(filters).forEach(key => {
-  //     if (filters[key as keyof typeof filters] === undefined) {
-  //       delete filters[key as keyof typeof filters];
-  //     }
-  //   });
-
-
-  //   this.goviLinkService.getFieldAuditHistory(filters).subscribe(
-  //     (response) => {
-  //       this.isLoading = false;
-  //       if (response.success) {
-  //         this.jobHistory = response.data.map((item: any) => ({
-  //           jobId: item.jobId,
-  //           empId: item.empId,
-  //           farmId: item.farmId,
-  //           farmCode: item.farmCode,
-  //           regCode: item.regCode,
-  //           visitPurpose: this.formatVisitPurpose(item.visitPurpose),
-  //           farmerNIC: item.farmerNIC,
-  //           district: item.district,
-  //           scheduledDate: this.formatDateTime(item.scheduledDate),
-  //           completedDate: this.formatDateTime(item.completedDate),
-  //           onScreenTime: item.onScreenTime || '--',
-  //           status: item.status,
-  //           assignedOn: this.formatDateTime(item.assignedOn),
-  //           assignedByName: item.assignedByName || '--',
-  //           assignedOfficer: item.assignedOfficer || '--'
-  //         }));
-  //         this.totalItems = this.jobHistory.length;
-  //         this.hasData = this.totalItems > 0;
-  //       } else {
-  //         this.hasData = false;
-  //       }
-  //     },
-  //     (error) => {
-  //       this.isLoading = false;
-  //       console.error('Error fetching job history:', error);
-  //       this.hasData = false;
-  //     }
-  //   );
-  // }
 
   fetchJobHistory() {
   this.isLoading = true;

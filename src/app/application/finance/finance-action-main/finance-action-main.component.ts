@@ -74,6 +74,14 @@ export class FinanceActionMainComponent {
     this.router.navigate(['/finance/action/finance-govishop/view-action']);
   }
 
+  viewAllSuppliers(): void {
+    const isAllSuppliers = true;
+    console.log('isAllSuppliers', isAllSuppliers)
+    this.router.navigate(['/finance/action/finance-govishop/view-all-suppliers'],
+    { queryParams: { isAllSuppliers } }
+    );
+  }
+
   invesmentRequest(): void {
     this.router.navigate([
       '/finance/action/finance-govicapital/ivesment-requests',

@@ -1032,13 +1032,14 @@ export class FinanceService {
     limit: number,
     status: string = '',
     searchText: string = '',
+    allSuppliers: boolean
    
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
     
-    let url = `${this.apiUrl}shop/get-all-shop-view-action?page=${page}&limit=${limit}`;
+    let url = `${this.apiUrl}shop/get-all-shop-view-action?allSuppliers=${allSuppliers}&page=${page}&limit=${limit}`;
 
     if (status) {
       url += `&status=${status}`;
@@ -1069,5 +1070,15 @@ export class FinanceService {
 
     const url = `${this.apiUrl}shop/update-govi-shop-user-status/${id}`;
     return this.http.put<any>(url, { status }, { headers });
+  }
+
+  deleteGoviShopSupplier(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}shop/delete-govishop-supplier/${id}`;
+    return this.http.delete<any>(url, { headers });
   }
 }

@@ -312,13 +312,20 @@ if (!this.cropGroup.nitrogen || !this.cropGroup.phosphorus || !this.cropGroup.po
     this.isLoading = true;
 
     const formData = new FormData();
-    formData.append('cropNameEnglish', this.cropGroup.cropNameEnglish);
-    formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala);
-    formData.append('cropNameTamil', this.cropGroup.cropNameTamil);
-    formData.append('category', this.cropGroup.parentCategory);
-    formData.append('costFeild', this.cropGroup.costFeild);
-    formData.append('incomeFeild', this.cropGroup.incomeFeild);
-    formData.append('bgColor', this.cropGroup.bgColor);
+formData.append('cropNameEnglish', this.cropGroup.cropNameEnglish);
+formData.append('cropNameSinhala', this.cropGroup.cropNameSinahala);
+formData.append('cropNameTamil', this.cropGroup.cropNameTamil);
+formData.append('category', this.cropGroup.parentCategory);
+formData.append('costFeild', this.cropGroup.costFeild);
+formData.append('incomeFeild', this.cropGroup.incomeFeild);
+formData.append('seedRate', this.cropGroup.seedRate);       // ADD
+formData.append('rowSpace', this.cropGroup.rowSpace);       // ADD
+formData.append('plantSpace', this.cropGroup.plantSpace);   // ADD
+formData.append('AvgYield', this.cropGroup.AvgYield);       // ADD
+formData.append('nitrogen', this.cropGroup.nitrogen);       // ADD
+formData.append('phosphorus', this.cropGroup.phosphorus);   // ADD
+formData.append('potassium', this.cropGroup.potassium);     // ADD
+formData.append('bgColor', this.cropGroup.bgColor);
 
     // Add the file only if it exists
     if (this.selectedFile) {

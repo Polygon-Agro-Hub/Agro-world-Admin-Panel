@@ -271,3 +271,22 @@
 .sidenav-child-link.active .child-text {
     color: #fff;
 }
+
+.child-link-icon-collapsed {
+    font-size: 0.7rem;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.sidenav-child-link-collapsed.active {
+    background-color: #03042c2d;
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    border: 2px solid #d8cccc33;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

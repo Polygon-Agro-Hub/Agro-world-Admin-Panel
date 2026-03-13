@@ -273,9 +273,9 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       // Draw y-axis title
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      const textX = yAxisX - 5;
+      const textX = yAxisX - 15;
       const textY = (barAreaStartY + barAreaEndY) / 3 + 12;
-      doc.text('Crop ', textX, textY, { angle: 360, align: 'center' });
+      doc.text('Crop Variety', textX, textY, { angle: 360, align: 'center' });
 
       // Draw y-axis tick marks and crop name labels
       let currentBarY = barAreaStartY;
@@ -430,7 +430,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       const tableStartX = (pageWidth - 160) / 2;
       let rowY = tableStartY;
 
-      const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
+      const headers = ['Crop Variety', 'Grade A', 'Grade B', 'Grade C', 'Total'];
       doc.setFontSize(9);
       doc.setDrawColor(200, 200, 200);
       doc.setLineWidth(0.2);

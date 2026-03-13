@@ -54,7 +54,6 @@ export class GoviShopViewActionComponent implements OnInit {
   isAllSuppliers: boolean = false;
 
   orderStatusArr = [
-    { orderStatus: 'Activated', value: 'Activate' },
     { orderStatus: 'Deactivated', value: 'Deactivate' },
     { orderStatus: 'Rejected', value: 'Rejected' },
   ];

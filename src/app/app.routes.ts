@@ -795,6 +795,10 @@ export const routes: Routes = [
                     path: 'view-all-suppliers',
                     component: GoviShopViewSuppliersComponent,
                   },
+                  {
+                    path: 'view-documents/:id',
+                    component: GoviShopViewDocumentComponent,
+                  },
                 ],
               },
 

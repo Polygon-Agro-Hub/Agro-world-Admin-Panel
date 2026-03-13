@@ -25,7 +25,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
 import { PostinvoiceService } from '../../../services/invoice/postinvoice.service';
 
 @Component({
-  selector: 'app-govi-shop-view-action',
+  selector: 'app-govi-shop-view-suppliers',
   standalone: true,
   imports: [
     HttpClientModule,
@@ -34,12 +34,11 @@ import { PostinvoiceService } from '../../../services/invoice/postinvoice.servic
     NgxPaginationModule,
     FormsModule,
     DropdownModule,
-    CalendarModule,
-  ],
-  templateUrl: './govi-shop-view-action.component.html',
-  styleUrl: './govi-shop-view-action.component.css',
+    CalendarModule,],
+  templateUrl: './govi-shop-view-suppliers.component.html',
+  styleUrl: './govi-shop-view-suppliers.component.css'
 })
-export class GoviShopViewActionComponent implements OnInit {
+export class GoviShopViewSuppliersComponent implements OnInit {
   ordersArr: Orders[] = [];
   date: Date | null = null;
   isLoading = false;
@@ -54,9 +53,8 @@ export class GoviShopViewActionComponent implements OnInit {
   isAllSuppliers: boolean = false;
 
   orderStatusArr = [
-    { orderStatus: 'Activated', value: 'Activate' },
-    { orderStatus: 'Deactivated', value: 'Deactivate' },
-    { orderStatus: 'Rejected', value: 'Rejected' },
+    { orderStatus: 'Free', value: 'Free' },
+    { orderStatus: 'Premium', value: 'Premium' },
   ];
 
   orderStatusFilter: string = '';
@@ -75,7 +73,12 @@ export class GoviShopViewActionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.fetchAllOrders();
+    this.route.queryParams.subscribe(params => {
+      this.isAllSuppliers = params['isAllSuppliers'];
+  
+      console.log('isAllSuppliers', this.isAllSuppliers);
+      this.fetchAllOrders();
+    });
   }
 
   fetchAllOrders(
@@ -140,17 +143,78 @@ export class GoviShopViewActionComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  viewDocuments(id: number) {
-    this.router.navigate([
-      '/finance/action/finance-govishop/view-documents',
-      id,
-    ]);
-  }
-
   onPageChange(event: number) {
     this.page = event;
     console.log('page', this.page)
     this.fetchAllOrders();
+  }
+
+  deleteSupplier(id: number) {
+    
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this Supplier? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700',
+        cancelButton: 'bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2'
+      },
+      buttonsStyling: false, // let Tailwind handle button styling
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        this.FinanceService.deleteGoviShopSupplier(id).subscribe(
+          (data) => {
+            this.isLoading = false;
+            if (data.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'The GoviShop Supplier has been deleted.',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+                },
+                buttonsStyling: false
+              });
+              this.fetchAllOrders();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'There was an error deleting the GoviShop Supplier.',
+                customClass: {
+                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  title: 'font-semibold',
+                  confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+                },
+                buttonsStyling: false
+              });
+            }
+          },
+          () => {
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'There was an error deleting the GoviShop Supplier.',
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold',
+                confirmButton: 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700'
+              },
+              buttonsStyling: false
+            });
+          }
+        );
+      }
+    });
   }
 }
 
@@ -163,4 +227,5 @@ class Orders {
   userStatus!: string;
   acticatedAt!: Date;
   userName!: string;
+  currentPlan!: string;
 }

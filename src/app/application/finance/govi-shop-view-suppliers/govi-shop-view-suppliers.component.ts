@@ -50,7 +50,7 @@ export class GoviShopViewSuppliersComponent implements OnInit {
   searchText: string = '';
   errorMessage: string | null = null;
 
-  isAllSuppliers: boolean = false;
+  isAllSuppliers: boolean = true;
 
   orderStatusArr = [
     { orderStatus: 'Free', value: 'Free' },
@@ -70,15 +70,10 @@ export class GoviShopViewSuppliersComponent implements OnInit {
     public tokenService: TokenService,
     public permissionService: PermissionService,
     private postInvoiceService: PostinvoiceService,
-  ) {}
+  ) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.isAllSuppliers = params['isAllSuppliers'];
-  
-      console.log('isAllSuppliers', this.isAllSuppliers);
-      this.fetchAllOrders();
-    });
+    this.fetchAllOrders();
   }
 
   fetchAllOrders(
@@ -136,7 +131,7 @@ export class GoviShopViewSuppliersComponent implements OnInit {
   }
 
   Back(): void {
-    this.router.navigate(['/finance/action']);
+    this.router.navigate(['/finance/action/finance-govishop']);
   }
 
   navigatePath(path: string) {
@@ -150,7 +145,7 @@ export class GoviShopViewSuppliersComponent implements OnInit {
   }
 
   deleteSupplier(id: number) {
-    
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this Supplier? This action cannot be undone.',

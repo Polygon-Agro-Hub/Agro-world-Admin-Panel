@@ -278,6 +278,7 @@ import { ViewGoviShopSuppliersComponent } from './application/steckholders-secti
 import { GoviShopViewActionComponent } from './application/finance/govi-shop-view-action/govi-shop-view-action.component';
 import { GoviShopViewDocumentComponent } from './application/finance/govi-shop-view-document/govi-shop-view-document.component';
 import { GoviShopViewSuppliersComponent } from './application/finance/govi-shop-view-suppliers/govi-shop-view-suppliers.component';
+import { GoviShopFinanceComponent } from './application/finance/govi-shop-finance/govi-shop-finance.component';
 
 export const routes: Routes = [
   {
@@ -783,13 +784,21 @@ export const routes: Routes = [
                 path: 'finance-govishop',
                 children: [
                   {
+                    path: '',
+                    component: GoviShopFinanceComponent,
+                  },
+                  {
                     path: 'view-action',
                     component: GoviShopViewActionComponent,
                   },
-                 {
-                   path: 'view-all-suppliers',
-                   component: GoviShopViewSuppliersComponent,
-                 },
+                  {
+                    path: 'view-all-suppliers',
+                    component: GoviShopViewSuppliersComponent,
+                  },
+                  {
+                    path: 'view-documents/:id',
+                    component: GoviShopViewDocumentComponent,
+                  },
                 ],
               },
 
@@ -2067,4 +2076,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

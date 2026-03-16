@@ -226,13 +226,13 @@
                 Cancel
             </button>
             <button (click)="replaceProduct()"
-                [disabled]="newProductObj === null || isInvalidPriceRange || newProductObj.qty <= 0"
+                [disabled]="newProductObj === null || isInvalidPriceRange || newProductObj.qty <= 0 || newProductObj.qty === null"
                 class="px-8 py-2.5 rounded-lg font-medium transition-colors"
-                [class.bg-gray-300]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
-                [class.text-gray-500]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
-                [class.cursor-not-allowed]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0"
-                [class.bg-blue-600]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0"
-                [class.hover:bg-blue-700]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty >= 0"
+                [class.bg-gray-300]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0 || newProductObj.qty === null"
+                [class.text-gray-500]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0 || newProductObj.qty === null"
+                [class.cursor-not-allowed]="newProductObj === null || isInvalidPriceRange || newProductObj.qty === 0 || newProductObj.qty === null"
+                [class.bg-blue-600]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0 && newProductObj.qty !== null"
+                [class.hover:bg-blue-700]="newProductObj !== null && !isInvalidPriceRange && newProductObj.qty > 0 && newProductObj.qty !== null"
                 [class.text-white]="newProductObj !== null && !isInvalidPriceRange">
                 Update
             </button>

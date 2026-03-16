@@ -213,20 +213,6 @@
       >
         <p>Recent Collections</p>
       </div>
-      <div
-        class="py-1 font-semibold text-[#627189] cursor-pointer whitespace-nowrap"
-        [ngClass]="{
-          'border-b-2 border-[#415CFF] text-black dark:text-white':
-            selectTable === 'sale',
-        }"
-        *ngIf="
-          permissionService.hasPermission('Recent Sales') ||
-          tokenService.getUserDetails().role === '1'
-        "
-        (click)="chooseTable('sale')"
-      >
-        <p>Recent Sales</p>
-      </div>
     </div>
 
     <div

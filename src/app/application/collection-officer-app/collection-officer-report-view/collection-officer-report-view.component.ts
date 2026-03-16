@@ -59,7 +59,7 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('ngonit')
+    console.log('ngonit', this.createdDate)
     this.route.paramMap.subscribe((params) => {
       this.id = params.get("id");
       this.name = params.get("name");
@@ -104,7 +104,7 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
 
     let formattedDate = '';
     if (this.createdDate) {
-      this.createdDateForPdf = new Date().toISOString().split("T")[0];
+      this.createdDateForPdf = new Date(this.createdDate).toLocaleDateString('en-CA');
       formattedDate =
         this.createdDate.getFullYear() +
         "-" +
@@ -208,6 +208,7 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
   }
 
   async downloadPDF(): Promise<void> {
+    console.log('created date', this.createdDateForPdf)
     this.isDownloading = true;
     setTimeout(() => {
       const doc = new jsPDF('p', 'mm', 'a4');
@@ -365,7 +366,7 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
       // X-axis title
       doc.setFontSize(9);
       doc.setTextColor(0, 0, 0);
-      doc.text('Weight (kg)', chartStartX + chartWidth / 2, axisY + 10, { align: 'center' });
+      doc.text('Total Weight (kg)', chartStartX + chartWidth / 2, axisY + 10, { align: 'center' });
   
   const tableStartY = axisY + 18;
   const cellHeight = 8;
@@ -378,7 +379,7 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
   
   let rowY = tableStartY;
   
-  const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
+  const headers = ['Crop Variety', 'Grade A', 'Grade B', 'Grade C', 'Total'];
   
   doc.setLineWidth(0.2);
   doc.setDrawColor(180, 180, 180);

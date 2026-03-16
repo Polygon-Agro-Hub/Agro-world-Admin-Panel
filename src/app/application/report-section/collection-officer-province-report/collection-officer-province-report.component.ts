@@ -442,7 +442,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
       const tableStartX = (pageWidth - 160) / 2; // Center the table
       let rowY = tableStartY;
   
-      const headers = ['Crop', 'Grade A', 'Grade B', 'Grade C', 'Total'];
+      const headers = ['Crop Variety', 'Grade A', 'Grade B', 'Grade C', 'Total'];
       doc.setFontSize(9);
       doc.setDrawColor(200, 200, 200);
       doc.setLineWidth(0.2);

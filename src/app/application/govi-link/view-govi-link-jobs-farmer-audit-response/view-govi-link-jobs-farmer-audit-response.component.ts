@@ -12,7 +12,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './view-govi-link-jobs-farmer-audit-response.component.css',
 })
 export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
-  constructor(private service: GoviLinkService, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private service: GoviLinkService,
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {}
 
   isLoading = false;
   isModalOpen = false;
@@ -33,11 +37,9 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
   problems: Problem[] = [];
 
   ngOnInit(): void {
-
-    this.route.queryParams.subscribe(queryParams => {
+    this.route.queryParams.subscribe((queryParams) => {
       this.jobId = queryParams['jobId'] || '';
-      console.log('jobId', this.jobId);
-  
+
       this.loadData();
     });
   }
@@ -48,12 +50,10 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
     this.service.getFieldAudit(this.jobId).subscribe({
       next: (res) => {
         const api = res.data;
-        console.log(res.data.farmId);
-        
 
         this.jobData.jobId = api.jobId;
         this.jobData.farmId = api.farmId;
-        
+
         const payType = (api.payType || '').toLowerCase();
         const cropName = api.cropNameEnglish?.trim();
         if (payType === 'farm' || !cropName) {
@@ -86,7 +86,7 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
         });
 
         const completedCount = this.questions.filter(
-          (q) => q.status === 'Completed'
+          (q) => q.status === 'Completed',
         ).length;
         this.jobData.completedQuestions = `${completedCount}/${this.questions.length} Questions`;
 
@@ -106,8 +106,7 @@ export class ViewGoviLinkJobsFarmerAuditResponseComponent implements OnInit {
                 }
               }
             });
-          }
-          else if (item.problem && item.solution) {
+          } else if (item.problem && item.solution) {
             const key = item.problem + item.solution;
             if (!map.has(key)) {
               map.set(key, {

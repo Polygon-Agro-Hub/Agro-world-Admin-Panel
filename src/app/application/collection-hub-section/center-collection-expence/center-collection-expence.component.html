@@ -164,7 +164,7 @@
             <th class="px-3 py-3 text-center text-sm font-medium"></th>
           </tr>
         </thead>
-        <tbody class="bg-white text-[#000000] font-semibold dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
+        <tbody class="bg-white text-[#000000] dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
           <tr
             *ngFor="
               let item of farmerPaymentsArr
@@ -177,20 +177,20 @@
               let i = index
             "
           >
-            <td class="px-4 py-4 text-sm text-[#000000] dark:text-gray-300">
+            <td class="px-4 py-4 text-[#000000] dark:text-gray-300">
               {{
                 (page - 1) * itemsPerPage + i + 1 < 10
                   ? "0" + ((page - 1) * itemsPerPage + i + 1)
                   : (page - 1) * itemsPerPage + i + 1
               }}
             </td>
-            <td class="px-3 py-4 text-sm text-[#000000] dark:text-gray-300">
+            <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
               {{ item.invNo }}
             </td>
-            <td class="px-3 py-4 text-sm text-[#000000] dark:text-gray-300">
+            <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
               {{ item.totalAmount | number : "1.2-2" }}
             </td>
-            <td class="px-3 py-4 text-sm text-left text-[#000000] dark:text-gray-300">
+            <td class="px-3 py-4 text-left text-[#000000] dark:text-gray-300">
               {{ item.nic }}
             </td>
             <td class="px-3 py-4 text-center text-[#646464] dark:text-gray-300">

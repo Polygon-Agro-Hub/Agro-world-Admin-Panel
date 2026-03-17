@@ -6,9 +6,12 @@
 </button>
 
 <div
-    class="w-full overflow-x-auto px-10 py-7 bg-tileLight shadow-lg rounded-lg dark:text-[#FFFFFF] dark:bg-[#363636]">
+class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
 
-    <div class="flex justify-between items-center mb-5 mt-3"
+    <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg" >
+
+        <div class="flex justify-between items-center mb-5 mt-3"
     *ngIf="
       permissionService.hasPermission('Download Current Centre Target') ||
       tokenService.getUserDetails().role === '1'
@@ -24,11 +27,9 @@
         </button>
     </div>
 
-    <div>
-
         <div class="flex flex-row items-center justify-between mt-5">
             <div class="flex flex-col justify-between" >
-                <p class="font-medium text-lg mb-1"> Centre Target on {{today}} </p>
+                <p class="font-medium text-lg mb-1 text-[#030308] dark:text-white"> Centre Target on {{today}} </p>
             </div>
             <div class="flex flex-row items-center gap-8 ">
                 <i class="fa-solid fa-list text-2xl ml-8"></i>
@@ -42,7 +43,7 @@
                       placeholder="Status" (onChange)="filterStatus()" panelStyleClass="custom-top-dropdown" />
                   </div>
 
-                <div class="flex items-center mr-5 rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]">
+                <div class="flex items-center dark:bg-[#272F45] mr-5 rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] ">
                     <input (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" type="text"
                         placeholder="Search by Variety Name" [(ngModel)]="searchText"
                         class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
@@ -71,9 +72,9 @@
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>
 
-        <div *ngIf="hasData" class="min-w-max mt-8 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
-            <table class="w-full min-w-max divide-y-2">
-                <thead class=" text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021]">
+        <div *ngIf="hasData" class="overflow-x-auto mt-6">
+            <table class="min-w-full divide-y divide-gray-200 table-auto">
+                <thead >
                     <tr>
                         <th class="px-6 py-3 text-left text-[#4B5563] dark:text-textDark font-medium">No</th>
                         <th class="px-6 py-3 text-left text-[#4B5563] dark:text-textDark font-medium">Crop Name</th>
@@ -86,7 +87,7 @@
                         <!-- <th class="px-6 py-3 text-left text-[#4B5563] dark:text-textDark font-medium">Ends At</th> -->
                     </tr>
                 </thead>
-                <tbody class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
+                <tbody >
                     <!-- <tr *ngFor="let item of targetArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"> -->
                     <tr *ngFor="let item of targetArr; let i = index">
                         <!--  -->

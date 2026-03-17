@@ -26,7 +26,7 @@ export class ViewCenterPriceComponent {
   centerId!: any;
   companyId!: any;
   centerName!: any;
-  Cname!: any; // Add this property
+  Cname!: any;
   isLoading = false;
   currentDate: string;
   market: MarketPrice[] = [];
@@ -41,6 +41,11 @@ export class ViewCenterPriceComponent {
   searchNIC: string = '';
   search: string = '';
 
+  // Add these properties for last upload info
+  lastUploadDate: string = '';
+  lastUploadTime: string = '';
+  lastUploadBy: string = '';
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -51,17 +56,13 @@ export class ViewCenterPriceComponent {
   }
 
   ngOnInit(): void {
-    // Get route parameters
     this.centerId = this.route.snapshot.params['centerId'];
     this.companyId = this.route.snapshot.params['companyId'];
     this.centerName = this.route.snapshot.params['centerName'];
     
-    // IMPORTANT: Get Cname from query parameters (not from route params)
-    // Use snapshot for immediate value
     this.Cname = this.route.snapshot.queryParams['Cname'];
-    console.log('Cname from query params:', this.Cname); // Debug: Check if Cname is received
+    console.log('Cname from query params:', this.Cname);
     
-    // If you want to handle changes in query params (optional)
     this.route.queryParams.subscribe(params => {
       this.Cname = params['Cname'];
       console.log('Cname updated:', this.Cname);
@@ -88,6 +89,9 @@ export class ViewCenterPriceComponent {
         this.isLoading = false;
         this.market = res.results;
         this.totalItems = res.total;
+        
+        // Extract last upload information from the response
+        this.extractLastUploadInfo(res.results);
       },
       (error) => {
         console.error('Error fetching market price:', error);
@@ -99,6 +103,39 @@ export class ViewCenterPriceComponent {
         );
       }
     );
+  }
+
+  // Add this method to extract last upload information
+  extractLastUploadInfo(marketData: MarketPrice[]) {
+    if (marketData && marketData.length > 0) {
+      // Find the most recent update date
+      const validDates = marketData
+        .filter(item => item.updateAt)
+        .map(item => new Date(item.updateAt));
+      
+      if (validDates.length > 0) {
+        const latestDate = new Date(Math.max(...validDates.map(date => date.getTime())));
+        
+        // Format date as YYYY/MM/DD
+        const year = latestDate.getFullYear();
+        const month = String(latestDate.getMonth() + 1).padStart(2, '0');
+        const day = String(latestDate.getDate()).padStart(2, '0');
+        this.lastUploadDate = `${year}/${month}/${day}`;
+        
+        // Format time as HH.MM AM/PM
+        let hours = latestDate.getHours();
+        const minutes = String(latestDate.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        const formattedHours = String(hours).padStart(2, '0');
+        this.lastUploadTime = `${formattedHours}.${minutes} ${ampm}`;
+      }
+    }
+    
+    // For now, set a default uploader name since it might not be in the response
+    // You might need to get this from a different API endpoint or from the response
+    this.lastUploadBy = 'System'; // Change this as needed
   }
 
   getAllCrops() {
@@ -161,6 +198,8 @@ class MarketPrice {
   date!: string;
   startTime!: Date;
   endTime!: Date;
+  updateAt!: string;
+  updatedBy?: string; // Add this if available in your API response
 }
 
 class Crop {

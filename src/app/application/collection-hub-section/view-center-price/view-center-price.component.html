@@ -28,6 +28,11 @@
             Market Prices on {{ currentDate }}
           </h2>
         </div>
+        <div class="flex justify-left items-left mb-2">
+  <h2 class="text-[14px] font-normal text-left text-[#636D81] dark:text-textDark">
+    Last upload at {{ lastUploadTime }} on {{ lastUploadDate }} By {{ lastUploadBy }}
+  </h2>
+</div>
       </div>
       <!-- <div class="flex justify-center items-center mb-8">
         <h3 class="text-lg font-normal text-center text-textLight dark:text-textDark">{{formatDateTime(market[0].startTime)}} to {{formatDateTime(market[0].endTime)}}</h3>
@@ -168,7 +173,7 @@
               No
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
+              class="py-3 px-4 font-normal text-textLight dark:text-textDark text-left text-lg"
             >
               Crop Name
             </th>
@@ -202,7 +207,7 @@
             <td class="py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1 + i + 1).toString().padStart(2, "0") }}
             </td>
-            <td class="py-3 text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-textLight dark:text-textDark">
               {{ item.cropName }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">

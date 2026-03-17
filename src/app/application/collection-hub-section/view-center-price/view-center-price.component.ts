@@ -8,6 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { MarketPriceService } from '../../../services/market-price/market-price.service';
 import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-view-center-price',
   standalone: true,
@@ -16,14 +17,16 @@ import { Location } from '@angular/common';
       LoadingSpinnerComponent,
       NgxPaginationModule,
       DropdownModule,
-      FormsModule,],
+      FormsModule,
+  ],
   templateUrl: './view-center-price.component.html',
   styleUrl: './view-center-price.component.css'
 })
 export class ViewCenterPriceComponent {
   centerId!: any;
-  companyId!: any
+  companyId!: any;
   centerName!: any;
+  Cname!: any;
   isLoading = false;
   currentDate: string;
   market: MarketPrice[] = [];
@@ -38,17 +41,32 @@ export class ViewCenterPriceComponent {
   searchNIC: string = '';
   search: string = '';
 
+  // Add these properties for last upload info
+  lastUploadDate: string = '';
+  lastUploadTime: string = '';
+  lastUploadBy: string = '';
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private marketSrv: MarketPriceService,
     private location: Location 
-  ) { this.currentDate = new Date().toLocaleDateString();}
+  ) { 
+    this.currentDate = new Date().toLocaleDateString();
+  }
 
   ngOnInit(): void {
     this.centerId = this.route.snapshot.params['centerId'];
     this.companyId = this.route.snapshot.params['companyId'];
     this.centerName = this.route.snapshot.params['centerName'];
+    
+    this.Cname = this.route.snapshot.queryParams['Cname'];
+    console.log('Cname from query params:', this.Cname);
+    
+    this.route.queryParams.subscribe(params => {
+      this.Cname = params['Cname'];
+      console.log('Cname updated:', this.Cname);
+    });
 
     this.fetchAllMarketPrices();
     this.getAllCrops();
@@ -60,89 +78,115 @@ export class ViewCenterPriceComponent {
     ];
   }
 
-    fetchAllMarketPrices() {
-      this.isLoading = true;
-  
-      const cropId = this.selectedCrop?.id || ''; 
-      const grade = this.selectedGrade?.Vgrade || ''; 
-  
-      this.marketSrv.getAllMarketPriceAgro(cropId, grade, this.searchNIC, this.centerId, this.companyId).subscribe(
-        (res) => {
-          this.isLoading = false;
-          this.market = res.results;
-          this.totalItems = res.total;
-        },
-        (error) => {
-          console.error('Error fetching market price:', error);
-          this.isLoading = false;
-          Swal.fire(
-            'Error!',
-            'There was an error fetching market prices.',
-            'error'
-          );
-        }
-      );
-    }
+  fetchAllMarketPrices() {
+    this.isLoading = true;
 
+    const cropId = this.selectedCrop?.id || ''; 
+    const grade = this.selectedGrade?.Vgrade || ''; 
 
-
-     getAllCrops() {
-        this.marketSrv.getAllCropName().subscribe(
-          (res) => {
-            this.crops = res;
-          },
-          (error) => {
-            console.error('Error fetching crops:', error);
-            Swal.fire(
-              'Error!',
-              'There was an error fetching crops.',
-              'error'
-            );
-          }
+    this.marketSrv.getAllMarketPriceAgro(cropId, grade, this.searchNIC, this.centerId, this.companyId).subscribe(
+      (res) => {
+        this.isLoading = false;
+        this.market = res.results;
+        this.totalItems = res.total;
+        
+        // Extract last upload information from the response
+        this.extractLastUploadInfo(res.results);
+      },
+      (error) => {
+        console.error('Error fetching market price:', error);
+        this.isLoading = false;
+        Swal.fire(
+          'Error!',
+          'There was an error fetching market prices.',
+          'error'
         );
       }
+    );
+  }
 
-
-      applyFiltersCrop() {
-        this.fetchAllMarketPrices();
+  // Add this method to extract last upload information
+  extractLastUploadInfo(marketData: MarketPrice[]) {
+    if (marketData && marketData.length > 0) {
+      // Find the most recent update date
+      const validDates = marketData
+        .filter(item => item.updateAt)
+        .map(item => new Date(item.updateAt));
+      
+      if (validDates.length > 0) {
+        const latestDate = new Date(Math.max(...validDates.map(date => date.getTime())));
+        
+        // Format date as YYYY/MM/DD
+        const year = latestDate.getFullYear();
+        const month = String(latestDate.getMonth() + 1).padStart(2, '0');
+        const day = String(latestDate.getDate()).padStart(2, '0');
+        this.lastUploadDate = `${year}/${month}/${day}`;
+        
+        // Format time as HH.MM AM/PM
+        let hours = latestDate.getHours();
+        const minutes = String(latestDate.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        const formattedHours = String(hours).padStart(2, '0');
+        this.lastUploadTime = `${formattedHours}.${minutes} ${ampm}`;
       }
+    }
     
-      applyFiltersGrade() {
-        this.fetchAllMarketPrices();
+    // For now, set a default uploader name since it might not be in the response
+    // You might need to get this from a different API endpoint or from the response
+    this.lastUploadBy = 'System'; // Change this as needed
+  }
+
+  getAllCrops() {
+    this.marketSrv.getAllCropName().subscribe(
+      (res) => {
+        this.crops = res;
+      },
+      (error) => {
+        console.error('Error fetching crops:', error);
+        Swal.fire(
+          'Error!',
+          'There was an error fetching crops.',
+          'error'
+        );
       }
+    );
+  }
 
+  applyFiltersCrop() {
+    this.fetchAllMarketPrices();
+  }
 
-      searchPlantCareUsers() {
-        this.page = 1;
-        this.fetchAllMarketPrices();
-      }
-    
-      clearSearch(): void {
-        this.searchNIC = '';
-        this.fetchAllMarketPrices();
-      }
-    
-    
-    back(): void {
-  this.location.back();
-}
+  applyFiltersGrade() {
+    this.fetchAllMarketPrices();
+  }
 
+  searchPlantCareUsers() {
+    this.page = 1;
+    this.fetchAllMarketPrices();
+  }
 
-get hasData(): boolean {
-  return this.market && this.market.length > 0;
-}
+  clearSearch(): void {
+    this.searchNIC = '';
+    this.fetchAllMarketPrices();
+  }
 
-preventLeadingSpace(event: KeyboardEvent): void {
-  const input = event.target as HTMLInputElement;
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
+  back(): void {
+    this.location.back();
+  }
+
+  get hasData(): boolean {
+    return this.market && this.market.length > 0;
+  }
+
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
   }
 }
-
-
-}
-
-
 
 class MarketPrice {
   id!: string;
@@ -154,6 +198,8 @@ class MarketPrice {
   date!: string;
   startTime!: Date;
   endTime!: Date;
+  updateAt!: string;
+  updatedBy?: string; // Add this if available in your API response
 }
 
 class Crop {

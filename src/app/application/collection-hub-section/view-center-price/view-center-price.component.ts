@@ -8,6 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { MarketPriceService } from '../../../services/market-price/market-price.service';
 import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-view-center-price',
   standalone: true,
@@ -16,14 +17,16 @@ import { Location } from '@angular/common';
       LoadingSpinnerComponent,
       NgxPaginationModule,
       DropdownModule,
-      FormsModule,],
+      FormsModule,
+  ],
   templateUrl: './view-center-price.component.html',
   styleUrl: './view-center-price.component.css'
 })
 export class ViewCenterPriceComponent {
   centerId!: any;
-  companyId!: any
+  companyId!: any;
   centerName!: any;
+  Cname!: any; // Add this property
   isLoading = false;
   currentDate: string;
   market: MarketPrice[] = [];
@@ -43,12 +46,26 @@ export class ViewCenterPriceComponent {
     private route: ActivatedRoute,
     private marketSrv: MarketPriceService,
     private location: Location 
-  ) { this.currentDate = new Date().toLocaleDateString();}
+  ) { 
+    this.currentDate = new Date().toLocaleDateString();
+  }
 
   ngOnInit(): void {
+    // Get route parameters
     this.centerId = this.route.snapshot.params['centerId'];
     this.companyId = this.route.snapshot.params['companyId'];
     this.centerName = this.route.snapshot.params['centerName'];
+    
+    // IMPORTANT: Get Cname from query parameters (not from route params)
+    // Use snapshot for immediate value
+    this.Cname = this.route.snapshot.queryParams['Cname'];
+    console.log('Cname from query params:', this.Cname); // Debug: Check if Cname is received
+    
+    // If you want to handle changes in query params (optional)
+    this.route.queryParams.subscribe(params => {
+      this.Cname = params['Cname'];
+      console.log('Cname updated:', this.Cname);
+    });
 
     this.fetchAllMarketPrices();
     this.getAllCrops();
@@ -60,89 +77,79 @@ export class ViewCenterPriceComponent {
     ];
   }
 
-    fetchAllMarketPrices() {
-      this.isLoading = true;
-  
-      const cropId = this.selectedCrop?.id || ''; 
-      const grade = this.selectedGrade?.Vgrade || ''; 
-  
-      this.marketSrv.getAllMarketPriceAgro(cropId, grade, this.searchNIC, this.centerId, this.companyId).subscribe(
-        (res) => {
-          this.isLoading = false;
-          this.market = res.results;
-          this.totalItems = res.total;
-        },
-        (error) => {
-          console.error('Error fetching market price:', error);
-          this.isLoading = false;
-          Swal.fire(
-            'Error!',
-            'There was an error fetching market prices.',
-            'error'
-          );
-        }
-      );
-    }
+  fetchAllMarketPrices() {
+    this.isLoading = true;
 
+    const cropId = this.selectedCrop?.id || ''; 
+    const grade = this.selectedGrade?.Vgrade || ''; 
 
-
-     getAllCrops() {
-        this.marketSrv.getAllCropName().subscribe(
-          (res) => {
-            this.crops = res;
-          },
-          (error) => {
-            console.error('Error fetching crops:', error);
-            Swal.fire(
-              'Error!',
-              'There was an error fetching crops.',
-              'error'
-            );
-          }
+    this.marketSrv.getAllMarketPriceAgro(cropId, grade, this.searchNIC, this.centerId, this.companyId).subscribe(
+      (res) => {
+        this.isLoading = false;
+        this.market = res.results;
+        this.totalItems = res.total;
+      },
+      (error) => {
+        console.error('Error fetching market price:', error);
+        this.isLoading = false;
+        Swal.fire(
+          'Error!',
+          'There was an error fetching market prices.',
+          'error'
         );
       }
+    );
+  }
 
-
-      applyFiltersCrop() {
-        this.fetchAllMarketPrices();
+  getAllCrops() {
+    this.marketSrv.getAllCropName().subscribe(
+      (res) => {
+        this.crops = res;
+      },
+      (error) => {
+        console.error('Error fetching crops:', error);
+        Swal.fire(
+          'Error!',
+          'There was an error fetching crops.',
+          'error'
+        );
       }
-    
-      applyFiltersGrade() {
-        this.fetchAllMarketPrices();
-      }
+    );
+  }
 
+  applyFiltersCrop() {
+    this.fetchAllMarketPrices();
+  }
 
-      searchPlantCareUsers() {
-        this.page = 1;
-        this.fetchAllMarketPrices();
-      }
-    
-      clearSearch(): void {
-        this.searchNIC = '';
-        this.fetchAllMarketPrices();
-      }
-    
-    
-    back(): void {
-  this.location.back();
-}
+  applyFiltersGrade() {
+    this.fetchAllMarketPrices();
+  }
 
+  searchPlantCareUsers() {
+    this.page = 1;
+    this.fetchAllMarketPrices();
+  }
 
-get hasData(): boolean {
-  return this.market && this.market.length > 0;
-}
+  clearSearch(): void {
+    this.searchNIC = '';
+    this.fetchAllMarketPrices();
+  }
 
-preventLeadingSpace(event: KeyboardEvent): void {
-  const input = event.target as HTMLInputElement;
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
+  back(): void {
+    this.location.back();
+  }
+
+  get hasData(): boolean {
+    return this.market && this.market.length > 0;
+  }
+
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
   }
 }
-
-
-}
-
-
 
 class MarketPrice {
   id!: string;

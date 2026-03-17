@@ -188,20 +188,20 @@ export class PaymentHistoryUpdateComponent implements OnInit {
       .substring(file.name.lastIndexOf('.'))
       .toLowerCase();
 
-    if (!validExtensions.includes(fileExtension)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Invalid File Type',
-        text: 'Please upload an Excel file (.xlsx, .xls, or .csv)',
-        confirmButtonColor: '#3B82F6',
-        customClass: {
-          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-          title: 'font-semibold',
-          confirmButton: 'bg-blue-500 hover:bg-blue-600',
-        },
-      });
-      return;
-    }
+    if (this.uploadedFileName && this.uploadedFileName === file.name) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Duplicate File',
+      text: 'This file is already selected. Please choose a different file.',
+      confirmButtonColor: '#3B82F6',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+        confirmButton: 'bg-blue-500 hover:bg-blue-600',
+      },
+    });
+    return;
+  }
 
     // Validate file size (max 10MB)
     const maxSize = 10 * 1024 * 1024;

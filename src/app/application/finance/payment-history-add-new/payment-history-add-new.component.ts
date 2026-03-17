@@ -95,7 +95,7 @@ export class PaymentHistoryAddNewComponent {
 
   handleFile(file: File): void {
     // Check if file with same name already uploaded
-    if (this.uploadedFileNames.has(file.name)) {
+    if (this.uploadedFileNames.has(file.name) || this.uploadedFileName === file.name) {
       Swal.fire({
         icon: 'error',
         title: 'Duplicate File',

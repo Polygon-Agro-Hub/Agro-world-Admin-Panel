@@ -18,7 +18,7 @@
         <i class="fa-solid fa-list  dark:text-white"></i>
         <p class=" dark:text-white">Filter By</p>
 
-        <!-- Status Filter Dropdown -->
+<!-- Status Filter Dropdown -->
 <div class="relative w-40 custom-status-dropdown-container">
   <select [(ngModel)]="selectStatus" class="hidden" (change)="filterStatus()">
     <option value="" selected disabled>Status</option>
@@ -43,7 +43,7 @@
   </div>
 
   <div *ngIf="isStatusDropdownOpen"
-    class="absolute z-10 w-full mt-1 bg-white dark:bg-[#292929] rounded-xl shadow-lg border border-[#828282]">
+    class="absolute z-10 w-full mt-1 bg-white dark:bg-[#292929] rounded-xl shadow-lg border border-[#828282] overflow-hidden">
     <div class="py-1">
       <div *ngFor="let option of statusDropdownOptions" (click)="selectStatusOption(option)"
         class="px-3 py-2 hover:bg-gray-300 dark:text-textDark dark:hover:bg-gray-600 cursor-pointer flex items-center"
@@ -55,7 +55,7 @@
   </div>
 </div>
 
-        <!-- Completing Status Filter Dropdown -->
+<!-- Completing Status Filter Dropdown -->
 <div class="relative w-48 custom-completing-status-dropdown-container">
   <select [(ngModel)]="selectCompletingStatus" class="hidden" (change)="filterCompletingStatus()">
     <option value="" selected disabled>Completing Status</option>
@@ -80,7 +80,7 @@
   </div>
 
   <div *ngIf="isCompletingStatusDropdownOpen"
-    class="absolute z-10 w-full mt-1 bg-white dark:bg-[#292929] rounded-xl shadow-lg border border-[#828282]">
+    class="absolute z-10 w-full mt-1 bg-white dark:bg-[#292929] rounded-xl shadow-lg border border-[#828282] overflow-hidden">
     <div class="py-1">
       <div *ngFor="let option of completingStatusDropdownOptions" (click)="selectCompletingStatusOption(option)"
         class="px-3 py-2 hover:bg-gray-300 dark:text-textDark dark:hover:bg-gray-600 cursor-pointer flex items-center"

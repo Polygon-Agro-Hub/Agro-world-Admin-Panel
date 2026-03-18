@@ -1,0 +1,169 @@
+/* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+    display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+    display: inline-flex !important;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+    border-radius: 6px !important;
+    /* <-- add this for rounded corners */
+    overflow: hidden;
+    /* ensures child items don't spill over rounded corners */
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+    background-color: #3a4160 !important;
+    color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+}
+
+/* Reduce dropdown item padding */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
+}
+
+.dark .p-dropdown .p-dropdown-label {
+    color: #ffffff !important;
+  }
+/* ::ng-deep .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important;
+  }
+
+::ng-deep .dark .custom-dropdown-panel .custom-dropdown-panel .custom-dropdown-panel {
+    padding-left: 15px !important; 
+} */
+
+
+/* Change the color of the selected value inside the dropdown button */
+
+  
+  /* Change the text color of the active/selected option inside the panel */
+  /* ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    color: #16a34a !important; 
+    background-color: #f0fdf4; 
+  } */
+
+  ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+    color: white;
+  }
+
+  /* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
+}
+
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+/* Reduce dropdown item padding */
+::ng-deep .custom-top-dropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.1rem !important;
+}
+
+::ng-deep .custom-top-dropdown .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 0.1rem !important;
+}
+
+::ng-deep .custom-center-dropdown .p-dropdown {
+  padding-left: 16px !important;
+}
+
+::ng-deep .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 16px !important;
+}
+
+/* For dark mode */
+::ng-deep .dark .custom-center-dropdown .p-dropdown {
+  padding-left: 16px !important;
+}
+
+::ng-deep .dark .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 16px !important;
+}
+
+/* Focus states for search input */
+::ng-deep .p-dropdown-panel .p-dropdown-filter:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Dark mode search input */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter {
+  background-color: #374151 !important;
+  color: #B1B1B1 !important;
+  border: 1px solid #4a5568 !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+/* Light mode search/filter container */
+::ng-deep .p-dropdown-panel .p-dropdown-filter-container {
+  background-color: white !important;
+}
+
+/* Dark mode search/filter container */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-container {
+  background-color: #2d354d !important;
+}
+
+/* Light mode search input */
+::ng-deep .p-dropdown-panel .p-dropdown-filter {
+  background-color: white !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+/* Dark mode search/filter input styles */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border: 1px solid #4a5568 !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+/* The rest of your existing calendar styles... */
+

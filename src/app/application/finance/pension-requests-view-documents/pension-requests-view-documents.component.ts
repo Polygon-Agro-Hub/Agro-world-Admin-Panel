@@ -10,6 +10,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import Swal from 'sweetalert2';
 
 import { ViewDocumentImageComponent } from '../../../components/finance-component/view-document-image/view-document-image.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-pension-requests-view-documents',
@@ -34,8 +35,9 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private farmerPensionService: FarmerPensionService,
-    private tokenService: TokenService,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.getCurrentUserInfo();
@@ -170,10 +172,11 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
       confirmButtonColor: '#3980C0',
       cancelButtonColor: '#6B7280',
       customClass: {
-        popup:
-          'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-lg',
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-xl',
         title: 'font-semibold text-lg',
-        actions: 'flex-row-reverse justify-start', // Add this line
+        actions: 'flex-row-reverse justify-start',
+        confirmButton: 'rounded-lg', // Add rounded corners to confirm button
+        cancelButton: 'rounded-lg',   // Add rounded corners to cancel button
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -191,10 +194,11 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
       confirmButtonColor: '#C40D0D',
       cancelButtonColor: '#6B7280',
       customClass: {
-        popup:
-          'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-lg',
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-xl',
         title: 'font-semibold text-lg',
-        actions: 'flex-row-reverse justify-start', // Add this line
+        actions: 'flex-row-reverse justify-start',
+        confirmButton: 'rounded-lg', // Add rounded corners to confirm button
+        cancelButton: 'rounded-lg',   // Add rounded corners to cancel button
       },
     }).then((result) => {
       if (result.isConfirmed) {

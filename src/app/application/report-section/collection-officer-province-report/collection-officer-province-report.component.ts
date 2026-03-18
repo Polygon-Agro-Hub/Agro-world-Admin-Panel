@@ -46,11 +46,14 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
   selectedProvince: any = { name: 'Western', code: 'WEST' };
   reportDetails: IProvinceReport[] = [];
   chartOptions: any;
-  loadingChart = true;
-  loadingTable = true;
+  // loadingChart = true;
+  // loadingTable = true;
   isDownloading = false;
 
   provinceChart!: Chart;
+
+  isLoading = true;
+  hasData = false;
 
   ngAfterViewInit() {
     this.updateChart();
@@ -104,9 +107,10 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
   }
 
   fetchAllProvinceReportDetails(district: string) {
+    this.isLoading = true;
     console.log('first district', district)
-    this.loadingChart = true;
-    this.loadingTable = true;
+    // this.loadingChart = true;
+    // this.loadingTable = true;
 
     this.collectionOfficerSrv.getProvinceReport(district).subscribe(
       (response) => {
@@ -116,9 +120,10 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
           qtyB: Number(item.qtyB) || 0,
           qtyC: Number(item.qtyC) || 0,
         }));
+        this.hasData = this.reportDetails.length > 0;
         console.log('reportDetails', this.reportDetails)
-        this.loadingTable = false;
-        this.loadingChart = false;
+        // this.loadingTable = false;
+        // this.loadingChart = false;
         this.updateChart();
       },
       (error) => {}
@@ -145,6 +150,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
     const gradeBData = this.reportDetails.map(crop => crop.qtyB || 0);
     const gradeCData = this.reportDetails.map(crop => crop.qtyC || 0);
   
+    this.isLoading = false;
     // ✅ Defer canvas lookup until after Angular finishes DOM update
     setTimeout(() => {
       const canvas = document.getElementById('provinceBarChart') as HTMLCanvasElement;
@@ -222,7 +228,7 @@ export class CollectionOfficerProvinceReportComponent implements OnInit, OnDestr
         }
       });
   
-      this.loadingChart = false;
+      
     }, 0);
   }
 

@@ -38,30 +38,33 @@ export class OfficerAndTargetDashboardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Get route parameters and query parameters
-    this.route.params.subscribe(params => {
-      this.centerObj.centerId = params['id'];
-    });
+  this.route.params.subscribe(params => {
+    this.centerObj.centerId = params['id'];
+  });
 
-    this.route.queryParams.subscribe(params => {
-      // Set tab based on query parameter
-      const tab = params['tab'];
-      if (tab && ['Officers', 'Officer Target'].includes(tab)) {
-        this.activeTab = tab;
+  this.route.queryParams.subscribe(params => {
+    const tab = params['tab'];
+    this.centerObj.centerName = params['name'] || '';
+    this.centerObj.centerRegCode = params['regCode'] || '';
+
+    // Only set default tab if NO tab query param is present
+    if (tab && ['Officers', 'Officer Target'].includes(tab)) {
+      this.activeTab = tab;
+    } else {
+      // Set default tab based on permissions only when no tab param exists
+      if (
+        this.tokenService.getUserDetails().role === '1' ||
+        this.permissionService.hasPermission('Polygon centres view dashboard officers tab')
+      ) {
+        this.activeTab = 'Officers';
+      } else if (
+        this.permissionService.hasPermission('Polygon centres dashboard officer target tab')
+      ) {
+        this.activeTab = 'Officer Target';
       }
-      
-      // Set center details from query params
-      this.centerObj.centerName = params['name'] || '';
-      this.centerObj.centerRegCode = params['regCode'] || '';
-    });
-
-    if( this.tokenService.getUserDetails().role === '1' || this.permissionService.hasPermission('Polygon centres view dashboard officers tab')) {
-      this.activeTab = 'Officers'
-    }else if (this.permissionService.hasPermission('Polygon centres view dashboard officers tab')){
-      this.activeTab = 'Officer Target'
     }
-
-  }
+  });
+}
 
   setActiveTab(tab: string) {
     this.activeTab = tab;

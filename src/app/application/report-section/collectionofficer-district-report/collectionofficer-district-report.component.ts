@@ -43,9 +43,12 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
   districts: any[] = [];
   selectedDistrict: any = { name: 'Colombo', code: 'COL' };
   reportDetails: IdistrictReport[] = [];
-  loadingChart = true;
-  loadingTable = true;
+  // loadingChart = true;
+  // loadingTable = true;
   isDownloading = false;
+
+  isLoading = true;
+  hasData = false;
 
   districtChart!: Chart;
 
@@ -115,8 +118,9 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
   }
 
   fetchAllDistrictReportDetails(district: string) {
-    this.loadingChart = true;
-    this.loadingTable = true;
+    this.isLoading = true;
+    // this.loadingChart = true;
+    // this.loadingTable = true;
     this.collectionOfficerSrv.getDistrictReport(district).subscribe(
       (response) => {
         this.reportDetails = response.map((item) => ({
@@ -125,7 +129,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
           qtyB: Number(item.qtyB) || 0,
           qtyC: Number(item.qtyC) || 0,
         }));
-        this.loadingTable = false;
+        this.hasData = this.reportDetails.length > 0;
         this.updateChart();
       },
       (error) => {},
@@ -144,7 +148,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
   }
 
   // ✅ Set false FIRST so Angular renders the canvas
-  this.loadingChart = false;
+  this.isLoading = false;
 
   // ✅ Wait for Angular to render the canvas in the DOM
   setTimeout(() => {

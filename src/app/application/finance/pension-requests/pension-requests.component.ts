@@ -299,40 +299,42 @@ formatDate(dateString: string): string {
 
   // Add this function to your component class (you can place it near formatNIC and formatDate methods)
   calculateAge(dob: string | null | undefined): string {
-    if (!dob) return '--';
+  if (!dob) return '--';
 
-    const birthDate = new Date(dob);
-    const today = new Date();
+  const birthDate = new Date(dob);
+  const today = new Date();
 
-    // Check if date is valid
-    if (isNaN(birthDate.getTime())) return '--';
+  // Check if date is valid
+  if (isNaN(birthDate.getTime())) return '--';
 
-    let years = today.getFullYear() - birthDate.getFullYear();
-    let months = today.getMonth() - birthDate.getMonth();
-    let days = today.getDate() - birthDate.getDate();
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
 
-    // Adjust for negative months
+  // Adjust for negative months
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  // Adjust for negative days (use a simple approach)
+  if (days < 0) {
+    months--;
+    // Add days from previous month
+    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    days += prevMonth.getDate();
+
+    // If months become negative after adjusting for days
     if (months < 0) {
       years--;
       months += 12;
     }
-
-    // Adjust for negative days (use a simple approach)
-    if (days < 0) {
-      months--;
-      // Add days from previous month
-      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-      days += prevMonth.getDate();
-
-      // If months become negative after adjusting for days
-      if (months < 0) {
-        years--;
-        months += 12;
-      }
-    }
-
-    return `${years} Years, ${months} Months`;
   }
+
+  // Return with singular/plural for months
+  const monthText = months === 1 ? 'Month' : 'Months';
+  return `${years} Years, ${months} ${monthText}`;
+}
 
   openReviewRequest(request: PensionRequest): void {
     // Get the NIC from the current request

@@ -1,13 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<div *ngIf="!isLoading" class="p-6">
-  <button
-    class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
-    onclick="history.back()"
-  >
-    <i class="fa-solid fa-arrow-left"></i>
-    <span>Back</span>
-  </button>
 
+<div *ngIf="!isLoading" class="p-6">
   <div
     class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
   >

@@ -231,8 +231,32 @@ fetchSelectedOfficerTargets(
   }
 
   goBack() {
+  const centerId = this.route.snapshot.queryParams['centerId'];
+  const centerName = this.route.snapshot.queryParams['centerName'];
+  const regCode = this.route.snapshot.queryParams['regCode'];
+
+  // Debug — check if values are coming through
+  console.log('centerId:', centerId);
+  console.log('centerName:', centerName);
+  console.log('regCode:', regCode);
+
+  if (!centerId) {
+    // Fallback if params are missing
     this.location.back();
+    return;
   }
+
+  this.router.navigate(
+    ['/admin/distribution-hub/action/view-polygon-centers/officer-and-target-dashboard', centerId],
+    {
+      queryParams: {
+        name: centerName,
+        regCode: regCode,
+        tab: 'Officer Target'
+      }
+    }
+  );
+}
 
   getStatus(item: orders): string {
     console.log('Setting status');

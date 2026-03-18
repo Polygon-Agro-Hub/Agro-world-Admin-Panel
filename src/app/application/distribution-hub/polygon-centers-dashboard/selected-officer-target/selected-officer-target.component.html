@@ -1,5 +1,5 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button class="mb-5 text-textLight dark:text-textDark" onclick="history.back()">
+<button class="mb-5 text-textLight dark:text-textDark" (click)="goBack()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>

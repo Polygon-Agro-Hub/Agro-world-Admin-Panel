@@ -286,16 +286,16 @@ export class PensionRequestsComponent implements OnInit {
   return nic; // Return the NIC as-is without any formatting
 }
 
-  // Format date for display
-  formatDate(dateString: string): string {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  }
+  // Format date for display with full month name
+formatDate(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',  // Changed from 'short' to 'long' for full month name
+    day: 'numeric',
+  });
+}
 
   // Add this function to your component class (you can place it near formatNIC and formatDate methods)
   calculateAge(dob: string | null | undefined): string {

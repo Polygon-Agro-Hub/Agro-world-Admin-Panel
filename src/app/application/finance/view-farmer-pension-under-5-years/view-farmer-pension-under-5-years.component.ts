@@ -158,7 +158,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     years = Math.max(years, 0);
     months = Math.max(months, 0);
 
-    return `${years} Years, ${months} ${months === 1 ? 'Month' : 'Months'}`;
+    return `${years} ${years > 0 ? 'Years' : 'Year'}, ${months} ${months > 0 ? 'Months' : 'Month'}`;
   }
 
   // Calculate if a year is a leap year
@@ -264,7 +264,9 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
       parts.push(`${months} ${months === 1 ? 'Month' : 'Months'}`);
     }
     // Always show days
-    parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
+    if(days > 0) {
+      parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
+    }
 
     return parts.join(' ');
   }

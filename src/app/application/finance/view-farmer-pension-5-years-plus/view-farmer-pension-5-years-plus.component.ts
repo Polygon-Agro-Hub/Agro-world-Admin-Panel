@@ -159,16 +159,16 @@ export class ViewFarmerPension5YearsPlusComponent {
     // Build the string
     const parts: string[] = [];
     if (years > 0) {
-      parts.push(`${years} ${years === 1 ? 'Year' : 'Years'}`);
+      parts.push(`${years} ${years > 1 ? 'Years' : 'Year'}`);
     }
     if (months > 0) {
-      parts.push(`${months} ${months === 1 ? 'Month' : 'Months'}`);
+      parts.push(`${months} ${months > 1 ? 'Months' : 'Month'}`);
     }
     if (days > 0 && years === 0 && months === 0) {
       parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
     }
 
-    return parts.length > 0 ? parts.join(' ') : '0 Days';
+    return parts.length > 0 ? parts.join(' ') : '';
   }
 
   // Calculate age from date of birth
@@ -205,7 +205,7 @@ export class ViewFarmerPension5YearsPlusComponent {
     years = Math.max(years, 0);
     months = Math.max(months, 0);
 
-    return `${years} Years, ${months} ${months === 1 ? 'Month' : 'Months'}`;
+    return `${years} ${years > 0 ? 'Years' : 'Year'}, ${months} ${months > 0 ? 'Months' : 'Month'}`;
   }
 
   // Calculate if a year is a leap year

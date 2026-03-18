@@ -125,15 +125,8 @@ export class ProgressComponent implements OnChanges {
     
     const diffDays = Math.floor((schedule.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 0) {
-      return 'Today 8-12 AM';
-    } else if (diffDays === 1) {
-      return 'Tomorrow 8-12 AM';
-    } else if (diffDays === 2) {
-      return 'Day after tomorrow 4-8 PM';
-    } else {
       return this.datePipe.transform(dateString, 'mediumDate') || '';
-    }
+
   }
 
   getCombinedStatus(item: any): string {

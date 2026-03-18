@@ -249,460 +249,484 @@ export class ViewCollectiveOfficerProfileComponent {
       });
     }
 
-    let y = margin;
     const hasImage = !!this.officerObj.image;
 
-    // Header Section with Image
     if (hasImage) {
-      try {
+      const appendCacheBuster = (url: string) => {
+        if (!url) return '';
+        const separator = url.includes('?') ? '&' : '?';
+        return `${url}${separator}t=${new Date().getTime()}`;
+      };
 
-        const appendCacheBuster = (url: string) => {
-          if (!url) return '';
-          const separator = url.includes('?') ? '&' : '?';
-          return `${url}${separator}t=${new Date().getTime()}`;
-        };
-    
-        const img = new Image();
-        const modifiedFarmerUrl = appendCacheBuster(this.officerObj.image);
-        img.src = await loadImageAsBase64(modifiedFarmerUrl);
+      const img = new Image();
+      const modifiedFarmerUrl = appendCacheBuster(this.officerObj.image);
+      img.src = await loadImageAsBase64(modifiedFarmerUrl);
 
-        // Simple image loading approach
-        // const imgData = this.officerObj.image;
-
-        const imgDiameter = 35;
-        const imgRadius = imgDiameter / 2;
-        const imgX = margin;
-        const imgY = y;
-
-        // Draw circular border
-        doc.setDrawColor(colors.border);
-        doc.setFillColor(colors.background);
-        doc.circle(imgX + imgRadius, imgY + imgRadius, imgRadius, 'FD');
-        doc.saveGraphicsState();
-        doc.circle(imgX + imgRadius, imgY + imgRadius, imgRadius, 'S');
-        doc.clip();
-
-        // Add image directly - jsPDF handles various formats
-        doc.addImage(img, 'JPEG', imgX, imgY, imgDiameter, imgDiameter);
-        doc.restoreGraphicsState();
-      } catch (error) {
-        console.error('Error adding image to PDF:', error);
-        // Continue without image if there's an error
-      }
+      doc.saveGraphicsState();
+      doc.addImage(img, 'JPEG', 14, 10, 40, 40);
+      doc.restoreGraphicsState();
     }
 
-    const detailsX = hasImage ? margin + 50 : margin;
+    // Adjust starting positions based on image presence
+    const startX = hasImage ? 60 : 14;
+    const startY = hasImage ? 60 : 50;
 
-    // Header Text
-    doc.setFontSize(12);
-    doc.setTextColor(colors.textPrimary);
+    // Fix for the top section border (image and basic info)
+    const imageboxX = 10;
+    const imageboxY = 8; // Start from top margin
+    const imageboxWidth = 190;
+    const imageboxHeight = hasImage ? 44 : 30; // Adjust height based on image presence
+    
+    // Draw rounded border for top section
+    doc.setDrawColor(241, 247, 250);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(imageboxX, imageboxY, imageboxWidth, imageboxHeight, 3, 3, "S");
+
+    // Title - Personal Information
+    doc.setFontSize(16);
     doc.setFont("Inter", "bold");
-    doc.text(
-      `${getValueOrNA(this.officerObj.firstNameEnglish)} ${getValueOrNA(this.officerObj.lastNameEnglish)}`,
-      detailsX,
-      y + 10
-    );
-    y += 7;
+    
+    // Fix for Personal Information section border
+    const personalboxX = 10;
+    const personalboxY = startY - 6;
+    const personalboxWidth = 190;
+    const personalboxHeight = 57; // Fixed height for personal info section
+    
+    // Draw rounded border for personal info section
+    doc.setDrawColor(241, 247, 250);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(personalboxX, personalboxY, personalboxWidth, personalboxHeight, 3, 3, "S");
+
+    doc.text("Personal Information", 14, startY);
+
+    // Name and position info - position adjusted based on image presence
+    doc.setFontSize(12);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.firstNameEnglish) + ' ' + getValueOrNA(this.officerObj.lastNameEnglish), startX, 15);
 
     let empType = '';
-    const normalizedRole = this.officerObj.jobRole?.replace('Center', 'Centre') || '';
-    switch (normalizedRole) {
+    let empCode = '';
+
+    switch (this.officerObj.jobRole) {
       case 'Customer Officer':
         empType = 'Customer Officer';
+        empCode = 'CUO';
         break;
       case 'Collection Centre Manager':
         empType = 'Collection Centre Manager';
+        empCode = 'CCM';
         break;
       case 'Collection Centre Head':
         empType = 'Collection Centre Head';
+        empCode = 'CCH';
         break;
       case 'Collection Officer':
         empType = 'Collection Officer';
-        break;
-      case 'Distribution Centre Manager':
-        empType = 'Distribution Centre Manager';
-        break;
-      case 'Distribution Officer':
-        empType = 'Distribution Officer';
+        empCode = 'COO';
         break;
       case 'Driver':
         empType = 'Driver';
+        empCode = 'DVR'; 
         break;
-      default:
-        empType = getValueOrNA(this.officerObj.jobRole);
+      case 'Distribution Centre Head':
+        empType = 'Distribution Centre Head';
+        empCode = 'DCH';
+        break;
+      case 'Distribution Centre Manager':
+        empType = 'Distribution Centre Manager';
+        empCode = 'DCM';
+        break;
+      case 'Distribution Officer':
+        empType = 'Distribution Officer';
+        empCode = 'DIO';
+        break;
     }
 
+    // Ensure empCode and empId exist
     let empId = this.officerObj.empId || '';
-    let empCodeText = this.empHeader ? `${this.empHeader}${empId}` : empId;
+    let empCodeText = empCode ? `${empCode}${empId}` : empId;
 
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(empCodeText), detailsX, y + 10);
-    y += 7;
-
-    // Center Name (if exists)
-    if (this.officerObj.centerRegCode) {
-      doc.setFont("Inter", "normal");
-      doc.setTextColor(colors.textSecondary);
-      doc.text(getValueOrNA(this.officerObj.centerRegCode), detailsX, y + 10);
-      y += 7;
-    }
-
-    if (this.officerObj.distributedCenterRegCode) {
-      doc.setFont("Inter", "normal");
-      doc.setTextColor(colors.textSecondary);
-      doc.text(getValueOrNA(this.officerObj.distributedCenterRegCode), detailsX, y + 10);
-      y += 7;
-    }
-
-    // Only show company name, remove the city line
+    // Set font and print empTypeText
     doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text(getValueOrNA(this.officerObj.companyNameEnglish), detailsX, y + 10);
+    let empTypeText = `${getValueOrNA(empType)} - `;
+    doc.text(empTypeText, startX, 22);
 
-    // Add extra space between profile section and Personal Information section
-    y += 25; // Increased from 20 to 25 for more spacing
+    // Measure the width of empTypeText for proper alignment
+    let textWidth = doc.getTextWidth(empTypeText);
 
-    // Improved page break check function
-    const checkNewPage = (requiredHeight: number) => {
-      if (y + requiredHeight > pageHeight - margin - 10) { // Added buffer of 10mm
-        doc.addPage();
-        y = margin;
-        // Set background for new page
-        doc.setFillColor(colors.background);
-        doc.rect(0, 0, pageWidth, pageHeight, 'F');
-        return true; // Return true if new page was added
+    // Apply bold font for empCode + empId and print it right after empTypeText
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(empCodeText), startX + textWidth, 22);
+
+    // Generate center text
+    let centerText = 'Officer has been disclaimed - No Assigned Centre';
+
+    const ccRoles = [
+      'Collection Centre Manager',
+      'Collection Centre Head',
+      'Collection Officer',
+      'Customer Officer'
+    ];
+
+    const dcRoles = [
+      'Distribution Centre Manager',
+      'Distribution Centre Head',
+      'Distribution Officer',
+      'Driver'
+    ];
+
+    if (ccRoles.includes(this.officerObj.jobRole)) {
+      if (this.officerObj.centerRegCode) {
+        centerText = `${this.officerObj.centerRegCode} Centre`;
       }
-      return false; // Return false if no new page was needed
-    };
+    } else if (dcRoles.includes(this.officerObj.jobRole)) {
+      if (this.officerObj.distributedCenterRegCode) {
+        centerText = `${this.officerObj.distributedCenterRegCode} Centre`;
+      }
+    }
 
-    // Personal Information Section
-    const personalInfoHeight = 70;
-    checkNewPage(personalInfoHeight);
+    // Apply text in PDF
+    doc.text(centerText, startX, 29);
+    doc.setFont("Inter", "normal");
 
-    doc.setFontSize(16);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text('Personal Information', margin + 2, y);
-    y += 10;
+    doc.text(getValueOrNA(this.officerObj.companyNameEnglish), startX, 36);
 
-    doc.setFontSize(10);
-    const leftColumnX = margin + 2;
-    const rightColumnX = margin + 90;
+    doc.text(getValueOrNA(this.officerObj.companyNameEnglish), startX, 36);
+  
+    doc.setFontSize(12);
+    doc.setFont("Inter", "normal");
 
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('First Name', leftColumnX, y);
+    // First Name
+    doc.text("First Name", 14, startY + 10);
     doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.firstNameEnglish), leftColumnX, y + 7);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('NIC Number', leftColumnX, y + 21);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.nic), leftColumnX, y + 28);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Mobile Number - 1', leftColumnX, y + 42);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(
-      this.officerObj.phoneNumber01
-        ? `${getValueOrNA(this.officerObj.phoneCode01)} ${getValueOrNA(this.officerObj.phoneNumber01)}`
-        : 'N/A',
-      leftColumnX,
-      y + 49
-    );
+    doc.text(getValueOrNA(this.officerObj.firstNameEnglish), 14, startY + 16);
 
+    // Last Name
     doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Last Name', rightColumnX, y);
+    doc.text("Last Name", 100, startY + 10);
     doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.lastNameEnglish), rightColumnX, y + 7);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Email', rightColumnX, y + 21);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.email), rightColumnX, y + 28);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Mobile Number - 2', rightColumnX, y + 42);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(
-      this.officerObj.phoneNumber02
-        ? `${getValueOrNA(this.officerObj.phoneCode02)} ${getValueOrNA(this.officerObj.phoneNumber02)}`
-        : '-',
-      rightColumnX,
-      y + 49
-    );
+    doc.text(getValueOrNA(this.officerObj.lastNameEnglish), 100, startY + 16);
 
-    y += 70;
+    // NIC Number
+    doc.setFont("Inter", "normal");
+    doc.text("NIC Number", 14, startY + 26);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.nic), 14, startY + 32);
+
+    // Email
+    doc.setFont("Inter", "normal");
+    doc.text("Email", 100, startY + 26);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.email), 100, startY + 32);
+
+    // Phone Number 1
+    doc.setFont("Inter", "normal");
+    doc.text("Mobile Number - 1", 14, startY + 42);
+
+    if (this.officerObj.phoneNumber01 == null || this.officerObj.phoneNumber01 === "") {
+      doc.setFont("Inter", "bold");
+      doc.text("N/A", 14, startY + 48); // Display N/A if phoneNumber01 is null or undefined
+    } else {
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNA(this.officerObj.phoneCode01), 14, startY + 48);
+      doc.text(getValueOrNA(this.officerObj.phoneNumber01), 22, startY + 48);
+    }
+
+    // Phone Number 2
+    doc.setFont("Inter", "normal");
+    doc.text("Mobile Number - 2", 100, startY + 42);
+
+    // Check if phoneNumber02 is undefined or null
+    if (this.officerObj.phoneNumber02 == null || this.officerObj.phoneNumber02 === "") {
+      doc.setFont("Inter", "bold");
+      doc.text("-", 100, startY + 48); // Display - if phoneNumber02 is null or undefined
+    } else {
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNA(this.officerObj.phoneCode02), 100, startY + 48);
+      doc.text(getValueOrNA(this.officerObj.phoneNumber02), 108, startY + 48);
+    }
 
     // Address Details Section
-    const addressDetailsHeight = 70;
-    checkNewPage(addressDetailsHeight);
-
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text('Address Details', margin + 2, y);
-    y += 10;
 
-    doc.setFontSize(10);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('House / Plot Number', leftColumnX, y);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.houseNumber), leftColumnX, y + 7);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('City', leftColumnX, y + 21);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.city), leftColumnX, y + 28);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Province', leftColumnX, y + 42);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.province), leftColumnX, y + 49);
+    // Box start above the heading
+    const boxX = 10;
+    const boxY = startY + 54;
+    const boxWidth = 190;
 
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Street Name', rightColumnX, y);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.streetName), rightColumnX, y + 7);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Country', rightColumnX, y + 21);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.country), rightColumnX, y + 28);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('District', rightColumnX, y + 42);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.district), rightColumnX, y + 49);
+    // The last Y position after district field
+    const lastY = startY + 108;
+    const boxHeight = (lastY + 4) - boxY;
 
-    y += 70;
+    // Draw rounded border first (so it's in background)
+    doc.setDrawColor(241, 247, 250); // border color #F1F7FA
+    doc.setLineWidth(0.5);
+    doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, "S");
+
+    doc.text("Address Details", 14, startY + 60);
+
+    doc.setFontSize(12);
+    doc.setFont("Inter", "normal");
+
+    // House / Plot Number
+    doc.text("House / Plot Number", 14, startY + 70);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.houseNumber), 14, startY + 76);
+
+    // Street Name
+    doc.setFont("Inter", "normal");
+    doc.text("Street Name", 100, startY + 70);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.streetName), 100, startY + 76);
+
+    // City
+    doc.setFont("Inter", "normal");
+    doc.text("City", 14, startY + 86);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.city), 14, startY + 92);
+
+    // Country
+    doc.setFont("Inter", "normal");
+    doc.text("Country", 100, startY + 86);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.country), 100, startY + 92);
+
+    // Province
+    doc.setFont("Inter", "normal");
+    doc.text("Province", 14, startY + 102);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.province), 14, startY + 108);
+
+    // District
+    doc.setFont("Inter", "normal");
+    doc.text("District", 100, startY + 102);
+    doc.setFont("Inter", "bold");
+    doc.text(getValueOrNA(this.officerObj.district), 100, startY + 108);
 
     // Bank Details Section
-    const bankDetailsHeight = 50;
-    checkNewPage(bankDetailsHeight);
-
     doc.setFontSize(16);
     doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text('Bank Details', margin + 2, y);
-    y += 10;
 
-    doc.setFontSize(10);
+    const bankBoxX = 10;
+    const bankBoxY = startY + 114;
+    const bankBoxWidth = 190;
+
+    // Last Y position after Branch Name value
+    const bankLastY = startY + 152;
+    const bankBoxHeight = (bankLastY + 4) - bankBoxY;
+
+    doc.setDrawColor(241, 247, 250); // border color #F1F7FA
+    doc.setLineWidth(0.5);
+    doc.roundedRect(bankBoxX, bankBoxY, bankBoxWidth, bankBoxHeight, 3, 3, "S");
+
+    doc.text("Bank Details", 14, startY + 120);
+
+    doc.setFontSize(12);
     doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Account Holder's Name", leftColumnX, y);
+
+    // Account Holder Name
+    doc.text("Account Holder's Name", 14, startY + 130);
     doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.accHolderName), leftColumnX, y + 7);
+    doc.text(getValueOrNA(this.officerObj.accHolderName), 14, startY + 136);
+
+    // Account Number
     doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Bank Name', leftColumnX, y + 21);
+    doc.text("Account Number", 100, startY + 130);
     doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.bankName), leftColumnX, y + 28);
+    doc.text(getValueOrNA(this.officerObj.accNumber), 100, startY + 136);
 
+    // Bank Name
     doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Account Number', rightColumnX, y);
+    doc.text("Bank Name", 14, startY + 146);
     doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.accNumber), rightColumnX, y + 7);
+    doc.text(getValueOrNA(this.officerObj.bankName), 14, startY + 152);
+
+    // Branch Name
     doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Branch Name', rightColumnX, y + 21);
+    doc.text("Branch Name", 100, startY + 146);
     doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(this.officerObj.branchName), rightColumnX, y + 28);
+    doc.text(getValueOrNA(this.officerObj.branchName), 100, startY + 152);
 
-    y += 50;
+    // Only include driver-related sections if the job role is "Driver"
+    if (this.officerObj.jobRole === 'Driver') {
+      
+      // Add new page for Driver Details
+      doc.addPage();
+      
+      // Set background for new page
+      doc.setFillColor(colors.background);
+      doc.rect(0, 0, pageWidth, pageHeight, 'F');
+      
+      // Reset Y position for new page
+      const driverStartY = 10;
+      
+      // Driving Details Section
+      const DdetailsX = 10;
+      const DdetailsY = driverStartY;
+      const DdetailsboxWidth = 190;
+      const DdetailslastY = driverStartY + 40;
+      const DdetailsboxHeight = (DdetailslastY + 4) - DdetailsY;
 
-    // Driving Details Section
-    const driverDetailsHeight = 50;
-    checkNewPage(driverDetailsHeight);
+      doc.setDrawColor(241, 247, 250);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(DdetailsX, DdetailsY, DdetailsboxWidth, DdetailsboxHeight, 3, 3, "S");
 
-    doc.setFontSize(16);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text('Driving Details', margin + 2, y);
-    y += 10;
+      doc.setFontSize(16);
+      doc.setFont("Inter", "bold");
+      doc.setTextColor(colors.textPrimary);
+      doc.text("Driver Details", 14, driverStartY + 6);
 
-    doc.setFontSize(10);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Driving License ID", leftColumnX, y);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(String(this.officerObj.licNo)), leftColumnX, y + 7);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("License's Front Image", leftColumnX, y + 21);
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Driving License ID", 14, driverStartY + 16);
 
-    doc.addImage(iconBase64, 'PNG', leftColumnX, y + 24, 9, 9);
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNAforInsOrLiscNo(this.officerObj.licNo), 14, driverStartY + 22);
 
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("License's Front Image", 14, driverStartY + 32);
+      doc.addImage(iconBase64, 'PNG', 14, driverStartY + 34, 9, 9);
 
-    if (this.officerObj.licFrontImg) {
-      doc.link(leftColumnX, y + 24, 9, 9, { url: this.officerObj.licFrontImg });
+      if (this.officerObj.licFrontImg) {
+        doc.link(14, driverStartY + 34, 9, 9, { url: this.officerObj.licFrontImg });
+      }
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("License's Back Image", 100, driverStartY + 32);
+      doc.addImage(iconBase64, 'PNG', 100, driverStartY + 34, 9, 9);
+
+      if (this.officerObj.licBackImg) {
+        doc.link(100, driverStartY + 34, 9, 9, { url: this.officerObj.licBackImg });
+      }
+
+      // Vehicle Insurance Details Section
+      const VidetailsX = 10;
+      const VidetailsY = driverStartY + 46;
+      const VidetailsboxWidth = 190;
+      const VidetailslastY = driverStartY + 90;
+      const VidetailsboxHeight = (VidetailslastY + 4) - VidetailsY;
+
+      doc.setDrawColor(241, 247, 250);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(VidetailsX, VidetailsY, VidetailsboxWidth, VidetailsboxHeight, 3, 3, "S");
+
+      doc.setFontSize(16);
+      doc.setFont("Inter", "bold");
+      doc.text("Vehicle Insurance Details", 14, driverStartY + 54);
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle Insurance Number", 14, driverStartY + 64);
+
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNAforInsOrLiscNo(this.officerObj.insNo), 14, driverStartY + 70);
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle Expire Date", 100, driverStartY + 64);
+
+      doc.setFont("Inter", "bold");
+      doc.text(this.officerObj.insExpDate ? this.officerObj.insExpDate.split("T")[0] : 'N/A', 100, driverStartY + 70);
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Insurance's Front Image", 14, driverStartY + 80);
+      doc.addImage(iconBase64, 'PNG', 14, driverStartY + 82, 9, 9);
+
+      if (this.officerObj.insFrontImg) {
+        doc.link(14, driverStartY + 82, 9, 9, { url: this.officerObj.insFrontImg });
+      }
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Insurance's Back Image", 100, driverStartY + 80);
+      doc.addImage(iconBase64, 'PNG', 100, driverStartY + 82, 9, 9);
+
+      if (this.officerObj.insBackImg) {
+        doc.link(100, driverStartY + 82, 9, 9, { url: this.officerObj.insBackImg });
+      }
+
+      // Vehicle Details Section
+      const VdetailsX = 10;
+      const VdetailsY = driverStartY + 96;
+      const VdetailsboxWidth = 190;
+      const VdetailslastY = driverStartY + 172;
+      const VdetailsboxHeight = (VdetailslastY + 4) - VdetailsY;
+
+      doc.setDrawColor(241, 247, 250);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(VdetailsX, VdetailsY, VdetailsboxWidth, VdetailsboxHeight, 3, 3, "S");
+
+      doc.setFontSize(16);
+      doc.setFont("Inter", "bold");
+      doc.text("Vehicle Details", 14, driverStartY + 102);
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle Registration Number", 14, driverStartY + 112);
+
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNA(this.officerObj.vRegNo), 14, driverStartY + 118);
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle Type", 14, driverStartY + 128);
+
+      doc.setFont("Inter", "bold");
+      doc.text(getValueOrNA(this.officerObj.vType), 14, driverStartY + 134);
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle Capacity", 100, driverStartY + 128);
+
+      doc.setFont("Inter", "bold");
+      let value = getValueOrNA(String(this.officerObj.vCapacity));
+      doc.text(value === "N/A" ? value : value + " Kg", 100, driverStartY + 134);
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle's Front Image", 14, driverStartY + 144);
+      doc.addImage(iconBase64, 'PNG', 14, driverStartY + 146, 9, 9);
+
+      if (this.officerObj.vehFrontImg) {
+        doc.link(14, driverStartY + 146, 9, 9, { url: this.officerObj.vehFrontImg });
+      }
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle's Back Image", 100, driverStartY + 144);
+      doc.addImage(iconBase64, 'PNG', 100, driverStartY + 146, 9, 9);
+
+      if (this.officerObj.vehBackImg) {
+        doc.link(100, driverStartY + 146, 9, 9, { url: this.officerObj.vehBackImg });
+      }
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle's Side Image - 1", 14, driverStartY + 162);
+      doc.addImage(iconBase64, 'PNG', 14, driverStartY + 164, 9, 9);
+
+      if (this.officerObj.vehSideImgA) {
+        doc.link(14, driverStartY + 164, 9, 9, { url: this.officerObj.vehSideImgA });
+      }
+
+      doc.setFontSize(12);
+      doc.setFont("Inter", "normal");
+      doc.text("Vehicle's Side Image - 2", 100, driverStartY + 162);
+      doc.addImage(iconBase64, 'PNG', 100, driverStartY + 164, 9, 9);
+
+      if (this.officerObj.vehSideImgB) {
+        doc.link(100, driverStartY + 164, 9, 9, {
+          url: this.officerObj.vehSideImgB,
+          newWindow: true
+        });
+      }
     }
 
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("License's Back Image", rightColumnX, y + 21);
-    doc.addImage(iconBase64, 'PNG', rightColumnX, y + 24, 9, 9);
-
-    if (this.officerObj.licBackImg) {
-      doc.link(rightColumnX, y + 24, 9, 9, { url: this.officerObj.licBackImg });
-    }
-
-    y += 50;
-
-    // Vehicle Insurance Details Section
-    const insuranceDetailsHeight = 50;
-    checkNewPage(insuranceDetailsHeight);
-
-    doc.setFontSize(16);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text('Vehicle Insurance Details', margin + 2, y);
-    y += 10;
-
-    doc.setFontSize(10);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Vehicle Insurance Number", leftColumnX, y);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(String(this.officerObj.insNo)), leftColumnX, y + 7);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Insurance's Front Image", leftColumnX, y + 21);
-
-    doc.addImage(iconBase64, 'SVG', leftColumnX, y + 24, 9, 9);
-
-
-    if (this.officerObj.insFrontImg) {
-      doc.link(leftColumnX, y + 24, 9, 9, { url: this.officerObj.insFrontImg });
-    }
-
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Insurance Expire Date', rightColumnX, y);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(String(this.officerObj.insExpDate?.split("T")[0])), rightColumnX, y + 7);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Insurance's Back Image", rightColumnX, y + 21);
-    doc.addImage(iconBase64, 'PNG', rightColumnX, y + 24, 9, 9);
-
-    if (this.officerObj.insBackImg) {
-      doc.link(rightColumnX, y + 24, 9, 9, { url: this.officerObj.insBackImg });
-    }
-
-    y += 50;
-
-    // Vehicle Details Section
-    const vehicleDetailsHeight = 100;
-    checkNewPage(vehicleDetailsHeight);
-
-    doc.setFontSize(16);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text('Vehicle Details', margin + 2, y);
-    y += 10;
-
-    doc.setFontSize(10);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Vehicle Registration Number", leftColumnX, y);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(String(this.officerObj.vRegNo)), leftColumnX, y + 7);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Vehicle Type", leftColumnX, y + 21);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(String(this.officerObj.vType)), leftColumnX, y + 28);
-
-    doc.setFontSize(10);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Vehicle's Front Image", leftColumnX, y + 44);
-
-    doc.addImage(iconBase64, 'PNG', leftColumnX, y + 48, 9, 9);
-
-    if (this.officerObj.vehFrontImg) {
-      doc.link(leftColumnX, y + 48, 9, 9, { url: this.officerObj.vehFrontImg });
-    }
-
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Vehicle's Side Image - 1", leftColumnX, y + 70);
-
-    doc.addImage(iconBase64, 'PNG', leftColumnX, y + 74, 9, 9);
-
-    if (this.officerObj.vehSideImgA) {
-      doc.link(leftColumnX, y + 74, 9, 9, { url: this.officerObj.vehSideImgA });
-    }
-
-    doc.setFontSize(10);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Vehicle's Back Image", rightColumnX, y + 44);
-
-    doc.addImage(iconBase64, 'PNG', rightColumnX, y + 48, 9, 9);
-
-    if (this.officerObj.vehBackImg) {
-      doc.link(rightColumnX, y + 48, 9, 9, { url: this.officerObj.vehBackImg });
-    }
-
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text("Vehicle's Side Image - 2", rightColumnX, y + 70);
-
-    doc.addImage(iconBase64, 'PNG', rightColumnX, y + 74, 9, 9);
-
-    if (this.officerObj.vehSideImgB) {
-      doc.link(rightColumnX, y + 74, 9, 9, { url: this.officerObj.vehSideImgB });
-    }
-
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.textSecondary);
-    doc.text('Vehicle Capacity', rightColumnX, y + 21);
-    doc.setFont("Inter", "bold");
-    doc.setTextColor(colors.textPrimary);
-    doc.text(getValueOrNA(String(this.officerObj.vCapacity)) + ' Kg', rightColumnX, y + 28);
-
-    y += 100;
-
-    // Footer - ALWAYS on first page, no page break check
-    // Simply place it at the bottom of the first page
-    doc.setFontSize(10);
-    doc.setFont("Inter", "normal");
-    doc.setTextColor(colors.footerText);
-    doc.text(
-      `This report is generated on ${new Date().toLocaleDateString()}, at ${new Date().toLocaleTimeString()}.`,
-      margin,
-      pageHeight - margin
-    );
-
-    // Save PDF
+    // Save PDF with footer on last page only at the bottom
     const fileName = `${getValueOrNA(empCodeText)} - ${getValueOrNA(this.officerObj.firstNameEnglish)} ${getValueOrNA(this.officerObj.lastNameEnglish)}.pdf`;
     doc.save(fileName);
     this.isGeneratingPDF = false;

@@ -10,6 +10,7 @@ import { TokenService } from '../../../services/token/services/token.service';
 import Swal from 'sweetalert2';
 
 import { ViewDocumentImageComponent } from '../../../components/finance-component/view-document-image/view-document-image.component';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-pension-requests-view-documents',
@@ -34,8 +35,9 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private farmerPensionService: FarmerPensionService,
-    private tokenService: TokenService,
-  ) {}
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.getCurrentUserInfo();

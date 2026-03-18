@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FarmerPensionService } from '../../../services/finance/farmer-pension.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-farmer-pension-5-years-plus',
@@ -28,7 +30,11 @@ export class ViewFarmerPension5YearsPlusComponent {
   itemsPerPage: number = 10;
   totalItems: number = 0;
 
-  constructor(private farmerPensionService: FarmerPensionService) {}
+  constructor(
+    private farmerPensionService: FarmerPensionService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.loadFarmers();

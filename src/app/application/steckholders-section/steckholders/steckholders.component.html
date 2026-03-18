@@ -245,7 +245,7 @@
       </button>
     </div>
 
-    <div 
+    <div *ngIf=" permissionService.hasPermission('Stakeholder GoViCapital Users') || tokenService.getUserDetails().role === '1'"
       class="flex justify-center">
       <button
         (click)="navigateToViewGoviCapital()"

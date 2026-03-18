@@ -170,10 +170,11 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
       confirmButtonColor: '#3980C0',
       cancelButtonColor: '#6B7280',
       customClass: {
-        popup:
-          'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-lg',
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-xl',
         title: 'font-semibold text-lg',
-        actions: 'flex-row-reverse justify-start', // Add this line
+        actions: 'flex-row-reverse justify-start',
+        confirmButton: 'rounded-lg', // Add rounded corners to confirm button
+        cancelButton: 'rounded-lg',   // Add rounded corners to cancel button
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -191,10 +192,11 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
       confirmButtonColor: '#C40D0D',
       cancelButtonColor: '#6B7280',
       customClass: {
-        popup:
-          'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-lg',
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-xl',
         title: 'font-semibold text-lg',
-        actions: 'flex-row-reverse justify-start', // Add this line
+        actions: 'flex-row-reverse justify-start',
+        confirmButton: 'rounded-lg', // Add rounded corners to confirm button
+        cancelButton: 'rounded-lg',   // Add rounded corners to cancel button
       },
     }).then((result) => {
       if (result.isConfirmed) {

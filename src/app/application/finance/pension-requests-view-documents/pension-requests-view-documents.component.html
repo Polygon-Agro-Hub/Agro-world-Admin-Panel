@@ -50,6 +50,11 @@
             [frontTitle]="'Successor\'s NIC Front Photo'" [backTitle]="'Successor\'s NIC Back Photo'"
             [frontImageUrl]="successorNicFrontImage" [backImageUrl]="successorNicBackImage"
             class="block"></app-view-document-image>
+
+          <app-view-document-image *ngIf="successor_birthCrtFront && successor_birthCrtBack"
+            [frontTitle]="'Successor’s ID Front Photo (Under 16)'" [backTitle]="'Successor’s ID Back Photo (Under 16)'"
+            [frontImageUrl]="successor_birthCrtFront" [backImageUrl]="successor_birthCrtBack"
+            class="block"></app-view-document-image>
         </div>
       </div>
 

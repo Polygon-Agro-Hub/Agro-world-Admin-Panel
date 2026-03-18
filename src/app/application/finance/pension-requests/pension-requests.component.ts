@@ -282,12 +282,9 @@ export class PensionRequestsComponent implements OnInit {
 
   // Format NIC for display (add spaces for readability)
   formatNIC(nic: string): string {
-    if (!nic) return '';
-    if (nic.length === 10) {
-      return nic.slice(0, 9) + ' ' + nic.slice(9);
-    }
-    return nic;
-  }
+  if (!nic) return '';
+  return nic; // Return the NIC as-is without any formatting
+}
 
   // Format date for display
   formatDate(dateString: string): string {

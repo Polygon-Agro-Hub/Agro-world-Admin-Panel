@@ -112,9 +112,17 @@
   right: 0.5rem !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
-  margin-top: 0 !important;
+  margin-top: 2 !important;
   z-index: 1 !important;
   cursor: pointer !important;
+}
+
+::ng-deep .p-calendar .p-calendar-clear-icon {
+  right: 1.2rem !important;
+  /* Position clear button to the left of calendar icon */
+  top: 8.2px !important;
+  /* Move clear button slightly down */
+  order: 1;
 }
 
 /* Dark mode clear icon color */

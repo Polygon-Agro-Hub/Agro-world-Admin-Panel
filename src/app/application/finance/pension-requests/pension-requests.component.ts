@@ -93,7 +93,7 @@ export class PensionRequestsComponent implements OnInit {
       .getAllPensionRequests(undefined, this.search)
       .subscribe({
         next: (response) => {
-          this.pensionRequests = response.data || [];
+          this.pensionRequests = this.sortByStatus(response.data || []);
           this.totalItems = response.count || 0;
           this.isLoading = false;
         },
@@ -280,6 +280,20 @@ export class PensionRequestsComponent implements OnInit {
     }
   }
 
+  // Sort pension requests by status: To Review first, then Rejected
+  sortByStatus(requests: PensionRequest[]): PensionRequest[] {
+    const statusOrder: { [key: string]: number } = {
+      'To Review': 1,
+      'Rejected': 2,
+    };
+
+    return requests.sort((a, b) => {
+      const orderA = statusOrder[a.reqStatus] || 999;
+      const orderB = statusOrder[b.reqStatus] || 999;
+      return orderA - orderB;
+    });
+  }
+
   // Format NIC for display (add spaces for readability)
   formatNIC(nic: string): string {
   if (!nic) return '';
@@ -331,9 +345,10 @@ formatDate(dateString: string): string {
     }
   }
 
-  // Return with singular/plural for months
+  // Return with singular/plural for both years and months
+  const yearText = years === 0 || years === 1 ? 'Year' : 'Years';
   const monthText = months === 1 ? 'Month' : 'Months';
-  return `${years} Years, ${months} ${monthText}`;
+  return `${years} ${yearText}, ${months} ${monthText}`;
 }
 
   openReviewRequest(request: PensionRequest): void {

@@ -172,14 +172,14 @@ export class TransportReasonsToHoldComponent implements OnInit {
 
         // Check for data too long errors
         if (errorMessage.includes(`Data too long for column 'rsnEnglish' at row 1`)) {
-          userErrorMessage = 'The Reason (in English) is too long. Please limit it to a maximum of 250 words.';
+          userErrorMessage = 'The Reason (in English) is too long. Please limit it to a maximum of 250 characters.';
         } else if (errorMessage.includes(`Data too long for column 'rsnSinhala' at row 1`)) {
-          userErrorMessage = 'The Reason (in Sinhala) is too long. Please limit it to a maximum of 250 words.';
+          userErrorMessage = 'The Reason (in Sinhala) is too long. Please limit it to a maximum of 250 characters.';
         } else if (errorMessage.includes(`Data too long for column 'rsnTamil' at row 1`)) {
-          userErrorMessage = 'The Reason (in Tamil) is too long. Please limit it to a maximum of 250 words.';
+          userErrorMessage = 'The Reason (in Tamil) is too long. Please limit it to a maximum of 250 characters.';
         } else if (errorMessage.includes('Data too long for column')) {
           // Generic data too long error
-          userErrorMessage = 'The message is too long. Please limit it to a maximum of 250 words.';
+          userErrorMessage = 'The message is too long. Please limit it to a maximum of 250 characters.';
         }
 
         Swal.fire({

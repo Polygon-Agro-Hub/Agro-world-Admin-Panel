@@ -71,12 +71,12 @@ export class ViewFarmerPension5YearsPlusComponent {
               parseFloat(item.defaultPension),
             ),
             duration: this.calculateDuration(item.approveTime),
-            approvedBy: item.approveBy || 'N/A',
+            approvedBy: item.approveBy || '--',
             approvedDate: this.formatApproveDate(item.approveTime),
-            successor: item.sucType || 'N/A',
-            successorNic: item.sucNic || 'N/A',
+            successor: item.sucType || '--',
+            successorNic: item.sucNic || '--',
             successorDob: item.sucdob || null,
-            successorAge: item.sucdob ? this.calculateAge(item.sucdob) : 'N/A',
+            successorAge: item.sucdob ? this.calculateAge(item.sucdob) : '--',
             rawData: item,
           }));
           this.isLoading = false;
@@ -126,13 +126,13 @@ export class ViewFarmerPension5YearsPlusComponent {
 
   // Calculate duration from approval date to current date
   private calculateDuration(approveTimeStr: string | null): string {
-    if (!approveTimeStr) return 'N/A';
+    if (!approveTimeStr) return '--';
 
     const approveDate = new Date(approveTimeStr);
     const currentDate = new Date();
 
     if (currentDate < approveDate) {
-      return 'N/A';
+      return '--';
     }
 
     let years = currentDate.getFullYear() - approveDate.getFullYear();
@@ -164,7 +164,7 @@ export class ViewFarmerPension5YearsPlusComponent {
     if (months > 0) {
       parts.push(`${months} ${months > 1 ? 'Months' : 'Month'}`);
     }
-    if (days > 0 && years === 0 && months === 0) {
+    if (days > 0 ) {
       parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
     }
 
@@ -173,7 +173,7 @@ export class ViewFarmerPension5YearsPlusComponent {
 
   // Calculate age from date of birth
   private calculateAge(dobStr: string | null): string {
-    if (!dobStr) return 'N/A';
+    if (!dobStr) return '--';
 
     const dob = new Date(dobStr);
     const today = new Date();
@@ -204,8 +204,16 @@ export class ViewFarmerPension5YearsPlusComponent {
     // Ensure non-negative values
     years = Math.max(years, 0);
     months = Math.max(months, 0);
+    let ageString = '';
 
-    return `${years} ${years > 0 ? 'Years' : 'Year'}, ${months} ${months > 0 ? 'Months' : 'Month'}`;
+    if (years > 0) {
+      ageString += `${years} ${years > 1 ? 'Years' : 'Year'}`;
+    }
+    if (months > 0) {
+      ageString += `${ageString ? ', ' : ''}${months} ${months > 1 ? 'Months' : 'Month'}`;
+    }
+
+    return ageString || '--';
   }
 
   // Calculate if a year is a leap year
@@ -309,7 +317,7 @@ export class ViewFarmerPension5YearsPlusComponent {
   // Format approve date
   private formatApproveDate(approveTime: string | null): string {
     if (!approveTime) {
-      return 'N/A';
+      return '--';
     }
     const date = new Date(approveTime);
     const hours = date.getHours();

@@ -71,12 +71,12 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
               parseFloat(item.defaultPension),
             ),
             daysMore: this.calculateRemainingTime(item.approveTime),
-            approvedBy: item.approveBy || 'N/A',
+            approvedBy: item.approveBy || '--',
             approvedDate: this.formatApproveDate(item.approveTime),
-            successor: item.sucType || 'N/A',
-            successorNic: item.sucNic || 'N/A',
+            successor: item.sucType || '--',
+            successorNic: item.sucNic || '--',
             successorDob: item.sucdob || null,
-            successorAge: item.sucdob ? this.calculateAge(item.sucdob) : 'N/A',
+            successorAge: item.sucdob ? this.calculateAge(item.sucdob) : '--',
             rawData: item,
           }));
           this.isLoading = false;
@@ -126,7 +126,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
 
   // Calculate age from date of birth
   private calculateAge(dobStr: string | null): string {
-    if (!dobStr) return 'N/A';
+    if (!dobStr) return '--';
 
     const dob = new Date(dobStr);
     const today = new Date();
@@ -158,7 +158,16 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     years = Math.max(years, 0);
     months = Math.max(months, 0);
 
-    return `${years} ${years > 0 ? 'Years' : 'Year'}, ${months} ${months > 0 ? 'Months' : 'Month'}`;
+    let ageString = '';
+
+    if (years > 0) {
+      ageString += `${years} ${years > 1 ? 'Years' : 'Year'}`;
+    }
+    if (months > 0) {
+      ageString += `${ageString ? ', ' : ''}${months} ${months > 1 ? 'Months' : 'Month'}`;
+    }
+
+    return ageString || '--';
   }
 
   // Calculate if a year is a leap year
@@ -264,7 +273,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
       parts.push(`${months} ${months === 1 ? 'Month' : 'Months'}`);
     }
     // Always show days
-    if(days > 0) {
+    if (days > 0) {
       parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
     }
 
@@ -274,7 +283,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
   // Format approve date
   private formatApproveDate(approveTime: string | null): string {
     if (!approveTime) {
-      return 'N/A';
+      return '--';
     }
     const date = new Date(approveTime);
     const hours = date.getHours();

@@ -65,7 +65,7 @@ export class AllPikupOdersComponent implements OnChanges {
 
   timeSlotOptions = [
     { label: '8AM-2PM', value: '8AM-2PM' },
-    { label: '2PM-8PM', value: '2PM-8PM' }
+    { label: '2PM-8PM', value: '2PM-8PM' },
   ];
 
   isLoading = false;
@@ -85,29 +85,22 @@ export class AllPikupOdersComponent implements OnChanges {
     private datePipe: DatePipe,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-
-  ) { }
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('ngOnChanges triggered:', changes);
-
     if (changes['orders']) {
-      console.log('Orders changed, transforming data...');
       this.transformData();
     }
 
     if (changes['searchText']) {
-      console.log('Search text changed from parent:', changes['searchText'].currentValue);
       this.searchText = changes['searchText'].currentValue || '';
     }
 
     if (changes['selectedDate']) {
-      console.log('Date changed from parent:', changes['selectedDate'].currentValue);
       this.selectedDate = changes['selectedDate'].currentValue;
     }
 
     if (changes['selectedTimeSlot']) {
-      console.log('Time slot changed from parent:', changes['selectedTimeSlot'].currentValue);
       const backendTimeSlot = changes['selectedTimeSlot'].currentValue || '';
       this.selectedTimeSlot = this.convertTimeSlotToUIFormat(backendTimeSlot);
     } else if (this.selectedTimeSlot === undefined) {
@@ -137,9 +130,9 @@ export class AllPikupOdersComponent implements OnChanges {
   }
 
   onTimeSlotSelect(): void {
-    console.log('UI Time slot selected:', this.selectedTimeSlot);
-    const backendTimeSlot = this.convertTimeSlotToBackendFormat(this.selectedTimeSlot);
-    console.log('Converted to backend format:', backendTimeSlot);
+    const backendTimeSlot = this.convertTimeSlotToBackendFormat(
+      this.selectedTimeSlot,
+    );
     this.timeSlotChange.emit(backendTimeSlot);
   }
 
@@ -152,7 +145,6 @@ export class AllPikupOdersComponent implements OnChanges {
     this.clearSearch.emit();
   }
 
-  // SORTING REMOVED - orders displayed as received from API
   private transformApiData(apiData: any[]): Order[] {
     return apiData.map((item, index) => ({
       no: index + 1,
@@ -163,18 +155,18 @@ export class AllPikupOdersComponent implements OnChanges {
       status: this.getOrderStatus(item.status || item.orderStatus),
       customerPhone: this.formatPhoneNumber(
         item.customerPhoneCode,
-        item.customerPhoneNumber
+        item.customerPhoneNumber,
       ),
       receiverPhone: this.formatPhoneNumber(
         item.receiverPhoneCode1,
-        item.receiverPhone1
+        item.receiverPhone1,
       ),
       receiversInfo: this.getReceiverInfo(item),
       scheduledTimeSlot: this.formatScheduledTimeSlot(item),
       payment: this.getPaymentStatus(item.isPaid),
       scheduleDate: item.scheduleDate || item.sheduleDate,
       timeSlot: item.timeSlot || item.sheduleTime,
-      originalData: item
+      originalData: item,
     }));
   }
 
@@ -201,7 +193,7 @@ export class AllPikupOdersComponent implements OnChanges {
       '8AM - 2PM': '8AM - 2PM',
       '2PM - 8PM': '2PM - 8PM',
       '8AM-2PM': '8AM - 2PM',
-      '2PM-8PM': '2PM - 8PM'
+      '2PM-8PM': '2PM - 8PM',
     };
 
     return displayFormatMap[cleanTimeSlot] || cleanTimeSlot;
@@ -284,51 +276,55 @@ export class AllPikupOdersComponent implements OnChanges {
   }
 
   viewReceiverInfo(order: Order): void {
-    console.log('View receiver info for:', order);
-
     if (order.originalData) {
       const data = order.originalData;
-      const title = data.customerTitle || data.receiverTitle || data.title || '';
-      const fullName = data.fullName ||
+      const title =
+        data.customerTitle || data.receiverTitle || data.title || '';
+      const fullName =
+        data.fullName ||
         data.receiverFullName ||
         `${data.fillName || ''} ${data.lastName || ''}`.trim() ||
         data.receiverName ||
         '';
 
-      const receiverNameWithTitle = title && fullName
-        ? `${title} ${fullName}`.trim()
-        : fullName || title || '--';
+      const receiverNameWithTitle =
+        title && fullName
+          ? `${title} ${fullName}`.trim()
+          : fullName || title || '--';
 
       this.selectedReceiverInfo = {
         orderId: order.orderId,
         receiverName: receiverNameWithTitle,
         receiverPhone1: this.formatPhoneNumber(
           data.receiverPhoneCode1,
-          data.receiverPhone1
+          data.receiverPhone1,
         ),
-        receiverPhone2: (data.receiverPhone2 || data.receiverPhoneCode2)
-          ? this.formatPhoneNumber(data.receiverPhoneCode2, data.receiverPhone2)
-          : "--",
-        customerName: `${data.title || ''} ${data.firstName || ''} ${data.lastName || ''}`.trim(),
+        receiverPhone2:
+          data.receiverPhone2 || data.receiverPhoneCode2
+            ? this.formatPhoneNumber(
+                data.receiverPhoneCode2,
+                data.receiverPhone2,
+              )
+            : '--',
+        customerName:
+          `${data.title || ''} ${data.firstName || ''} ${data.lastName || ''}`.trim(),
         customerPhone: this.formatPhoneNumber(
           data.customerPhoneCode,
-          data.customerPhoneNumber
+          data.customerPhoneNumber,
         ),
         platform: data.orderApp || 'Salesdash',
         orderPlaced: this.formatOrderDate(data.orderCreatedAt),
         scheduledTime: this.formatScheduledTime(data),
-        title: title
+        title: title,
       };
       this.showReceiverPopup = true;
-
-      console.log('Receiver Info Data:', this.selectedReceiverInfo);
     }
   }
 
   private formatOrderDate(dateString: string): string {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return this.datePipe.transform(date, 'h:mm a \'on\' MMMM dd, yyyy') || 'N/A';
+    return this.datePipe.transform(date, "h:mm a 'on' MMMM dd, yyyy") || 'N/A';
   }
 
   private formatScheduledTime(item: any): string {
@@ -350,14 +346,9 @@ export class AllPikupOdersComponent implements OnChanges {
   }
 
   openOrderDetails(order: Order): void {
-    console.log('View order details for:', order);
-
     this.selectedOrderDisplayId = order.orderId;
 
     if (order.originalData) {
-      console.log('Original data fields:', Object.keys(order.originalData));
-      console.log('Full original data:', order.originalData);
-
       const processOrderId =
         order.originalData.processOrderId ||
         order.originalData.id ||
@@ -367,10 +358,6 @@ export class AllPikupOdersComponent implements OnChanges {
         this.selectedOrderId = processOrderId;
         this.selectedOrderData = order.originalData;
         this.showDetailsPopup = true;
-
-        console.log('Popup opened with:');
-        console.log('- Display ID (invoice):', this.selectedOrderDisplayId);
-        console.log('- API ID (processOrderId):', this.selectedOrderId);
       } else {
         console.warn('No processOrderId found in:', order.originalData);
         const possibleId = order.originalData.id || order.originalData.orderId;
@@ -422,7 +409,7 @@ export class AllPikupOdersComponent implements OnChanges {
       '8AM-2PM': 'Within 8AM - 2PM',
       '2PM-8PM': 'Within 2PM - 8PM',
       '8AM - 2PM': 'Within 8AM - 2PM',
-      '2PM - 8PM': 'Within 2PM - 8PM'
+      '2PM - 8PM': 'Within 2PM - 8PM',
     };
 
     return conversionMap[timeSlot] || timeSlot;
@@ -437,7 +424,7 @@ export class AllPikupOdersComponent implements OnChanges {
       '8AM - 2PM': '8AM-2PM',
       '2PM - 8PM': '2PM-8PM',
       '8AM-2PM': '8AM-2PM',
-      '2PM-8PM': '2PM-8PM'
+      '2PM-8PM': '2PM-8PM',
     };
 
     return uiFormatMap[cleanTimeSlot] || cleanTimeSlot;

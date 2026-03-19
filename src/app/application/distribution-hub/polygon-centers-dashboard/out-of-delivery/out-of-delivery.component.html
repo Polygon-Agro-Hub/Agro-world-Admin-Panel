@@ -3,13 +3,13 @@
   <div>
     <div class="pt-5 pb-2 w-full bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        <h2 class="text-lg font-normal text-textLight dark:text-textDark">
           {{centerObj.centerRegCode}} {{centerObj.centerName}}
         </h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          <h2 class="text-lg font-normal text-textLight dark:text-textDark">
             All ({{orderCount | number :'2.0'}})
           </h2>
         </div>
@@ -21,13 +21,12 @@
                 d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z" />
             </svg>
           </i>
-          <p class="text-gray-500 dark:text-textDark text-lg mr-5">Filter By</p>
+          <p class="text-[#4A4A4A] dark:text-textDark mr-5">Filter By</p>
           
           <!-- Status Dropdown -->
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [checkmark]="true" 
               [options]="statusOptions" 
               [(ngModel)]="selectStatus" 
               (onChange)="onStatusChange()"
@@ -114,10 +113,10 @@
       <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th class="px-8 py-3 font-normal text-textLight dark:text-textDark text-left">
               No
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Order ID
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -129,17 +128,17 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Out Time
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Status
             </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
           <tr *ngFor="let item of filteredOrders; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-700">
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-8 py-3 text-left text-textLight dark:text-textDark">
               {{i + 1 | number :'2.0'}}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{item.invNo}}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -153,7 +152,7 @@
               <p>{{getDisplayDate(item.outDlvrDate) }}</p>
               <p>{{item.outDlvrDate | date:'h:mm a'}}</p>
             </td>
-            <td class="px-4 py-3 text-center">
+            <td class="px-4 py-3 text-left">
               <span *ngIf="item.outDlvrStatus ==='Late'" class="text-[#FF0000] font-medium"> Late </span>
               <span *ngIf="item.outDlvrStatus ==='On Time'" class="text-[#415CFF] font-medium"> On Time </span>
             </td>

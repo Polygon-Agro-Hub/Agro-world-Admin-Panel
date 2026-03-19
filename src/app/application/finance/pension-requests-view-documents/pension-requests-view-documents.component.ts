@@ -119,6 +119,15 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
     return this.selectedRequest?.Successor_NIC_Back_Image || '';
   }
 
+  get successor_birthCrtFront(): string {
+    return this.selectedRequest?.Successor_birthCrtFront || '';
+  }
+
+  get successor_birthCrtBack(): string {
+    return this.selectedRequest?.Successor_birthCrtBack || '';
+  }
+  
+
   navigatePath(path: string) {
     this.router.navigate([path]);
   }

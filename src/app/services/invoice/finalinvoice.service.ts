@@ -480,19 +480,64 @@ export class FinalinvoiceService {
         doc.line(15, yPosition, 195, yPosition);
         yPosition += 5;
 
+        // const packDetailsBody = [
+        //   [
+        //     {
+        //       content: 'Index',
+        //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+        //     },
+        //     {
+        //       content: 'Item Description',
+        //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+        //     },
+        //     {
+        //       content: 'QTY',
+        //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+        //     },
+        //   ],
+        //   ...(pack.packageDetails?.map((detail: any, i: number) => [
+        //     `${i + 1}.`,
+        //     detail.typeName || 'N/A',
+        //     detail.qty || '0',
+        //   ]) || []),
+        // ];
+
+        // (doc as any).autoTable({
+        //   startY: yPosition,
+        //   head: [packDetailsBody[0]],
+        //   body: packDetailsBody.slice(1),
+        //   margin: { left: 15, right: 15 },
+        //   styles: {
+        //     fontSize: 9,
+        //     cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+        //   },
+        //   headStyles: {
+        //     fillColor: [248, 248, 248],
+        //     textColor: 0,
+        //     fontStyle: 'bold',
+        //   },
+        //   alternateRowStyles: {
+        //     fillColor: [255, 255, 255],
+        //   },
+        //   tableLineColor: [209, 213, 219],
+        //   tableLineWidth: 0.5,
+        //   showHorizontalLines: false,
+        //   showVerticalLines: false,
+        // });
+
         const packDetailsBody = [
           [
             {
               content: 'Index',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
             },
             {
               content: 'Item Description',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
             },
             {
               content: 'QTY',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
             },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => [
@@ -509,15 +554,20 @@ export class FinalinvoiceService {
           margin: { left: 15, right: 15 },
           styles: {
             fontSize: 9,
-            cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
+            cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+            textColor: [0, 0, 0], // Set default text color to black for all cells
           },
           headStyles: {
             fillColor: [248, 248, 248],
-            textColor: 0,
+            textColor: [0, 0, 0], // Explicitly set header text color to black
             fontStyle: 'bold',
+          },
+          bodyStyles: {
+            textColor: [0, 0, 0], // Ensure body text is black
           },
           alternateRowStyles: {
             fillColor: [255, 255, 255],
+            textColor: [0, 0, 0], // Ensure alternate rows text is black
           },
           tableLineColor: [209, 213, 219],
           tableLineWidth: 0.5,
@@ -589,23 +639,23 @@ export class FinalinvoiceService {
         [
           {
             content: 'Index',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
           {
             content: 'Item Description',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
           {
             content: 'Unit Price (Rs.)',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
           {
             content: 'QTY',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
           {
             content: 'Amount (Rs.)',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
@@ -634,15 +684,20 @@ export class FinalinvoiceService {
         margin: { left: 15, right: 15 },
         styles: {
           fontSize: 9,
-          cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
+          cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+          textColor: [0, 0, 0], // Set default text color to black for all cells
         },
         headStyles: {
           fillColor: [243, 244, 246],
-          textColor: 0,
+          textColor: [0, 0, 0], // Explicitly set header text color to black
           fontStyle: 'bold',
+        },
+        bodyStyles: {
+          textColor: [0, 0, 0], // Ensure body text is black
         },
         alternateRowStyles: {
           fillColor: [255, 255, 255],
+          textColor: [0, 0, 0], // Ensure alternate rows text is black
         },
         tableLineColor: [209, 213, 219],
         tableLineWidth: 0.5,
@@ -794,10 +849,10 @@ export class FinalinvoiceService {
 
     // Add final total
     grandTotalBody.push([
-      { content: 'Grand Total', styles: { fontStyle: 'bold' ,  textColor: [0, 0, 0] } },
+      { content: 'Grand Total', styles: { fontStyle: 'bold', textColor: [0, 0, 0] } },
       {
         content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
-        styles: { fontStyle: 'bold',  textColor: [0, 0, 0]  },
+        styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
       },
     ]);
 

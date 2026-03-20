@@ -14,47 +14,54 @@
         CUSTOMER INFO
       </h3>
 
-      <div class="mb-5 flex text-textLight dark:text-textDark">
-        <div class="mr-5">
+      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+        <div class="mr-5 w-5 text-center flex-shrink-0">
           <i class="fa-solid fa-user"></i>
         </div>
-        <span>Name: {{ selectedCustomer?.title }}.
+        <span class="w-28 flex-shrink-0 font-medium">Name:</span>
+        <span>{{ selectedCustomer?.title }}.
           {{ selectedCustomer?.firstName }}
           {{ selectedCustomer?.lastName }}</span>
       </div>
-      <div class="mb-5 flex text-textLight dark:text-textDark">
-        <div class="mr-5">
+
+      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+        <div class="mr-5 w-5 text-center flex-shrink-0">
           <i class="fa-solid fa-phone"></i>
         </div>
-        <span>Phone: {{ selectedCustomer?.phoneNumber }}</span>
+        <span class="w-28 flex-shrink-0 font-medium">Phone:</span>
+        <span>{{ selectedCustomer?.phoneNumber }}</span>
         <div class="ml-3 text-[#367bfa] hover:cursor-pointer relative"
           (click)="copyToClipboard(selectedCustomer?.phoneNumber, 'phone')">
           <i class="fa-regular fa-clone" [class.hidden]="copiedField === 'phone'"></i>
           <i class="fa-solid fa-check" [class.hidden]="copiedField !== 'phone'"></i>
         </div>
       </div>
-      <div class="mb-5 flex text-textLight dark:text-textDark">
-        <div class="mr-5">
+
+      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+        <div class="mr-5 w-5 text-center flex-shrink-0">
           <i class="fa-solid fa-envelope"></i>
         </div>
-        <span>Email: {{ selectedCustomer?.email }}</span>
+        <span class="w-28 flex-shrink-0 font-medium">Email:</span>
+        <span>{{ selectedCustomer?.email }}</span>
         <div class="ml-3 text-[#367bfa] hover:cursor-pointer relative"
           (click)="copyToClipboard(selectedCustomer?.email, 'email')">
           <i class="fa-regular fa-clone" [class.hidden]="copiedField === 'email'"></i>
           <i class="fa-solid fa-check" [class.hidden]="copiedField !== 'email'"></i>
         </div>
       </div>
-      <div class="mb-5 flex text-textLight dark:text-textDark">
-        <div class="mr-5">
+
+      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+        <div class="mr-5 w-5 text-center flex-shrink-0">
           <i class="fa-solid fa-location-dot"></i>
         </div>
+        <span class="w-28 flex-shrink-0 font-medium">Address:</span>
         <span *ngIf="selectedCustomer?.buildingType === 'House'">
-          Address: {{ selectedCustomer?.houseHouseNo }},
+          {{ selectedCustomer?.houseHouseNo }},
           {{ selectedCustomer?.houseStreetName }},
           {{ selectedCustomer?.houseCity }}
         </span>
         <span *ngIf="selectedCustomer?.buildingType === 'Apartment'">
-          Address: {{ selectedCustomer?.apartmentBuildingNo }} -
+          {{ selectedCustomer?.apartmentBuildingNo }} -
           {{ selectedCustomer?.apartmentBuildingName }}, Unit
           {{ selectedCustomer?.apartmentUnitNo }}, Floor
           {{ selectedCustomer?.apartmentFloorNo }},
@@ -63,44 +70,56 @@
           {{ selectedCustomer?.apartmentCity }}
         </span>
       </div>
-      <div class="mb-5 flex text-textLight dark:text-textDark">
-        <div class="mr-5">
+
+      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+        <div class="mr-5 w-5 text-center flex-shrink-0">
           <i class="fa-solid fa-list"></i>
         </div>
-        <span>No of Orders: {{ selectedCustomer?.totOrders }}</span>
+        <span class="w-28 flex-shrink-0 font-medium">No of Orders:</span>
+        <span>{{ selectedCustomer?.totOrders }}</span>
       </div>
     </div>
+
     <hr />
+
     <div class="p-10">
       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-10">
         AGENT INFO
       </h3>
-      <div class="mb-5 flex text-textLight dark:text-textDark">
-        <div class="mr-5">
+
+      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+        <div class="mr-5 w-5 text-center flex-shrink-0">
           <i class="fa-solid fa-id-card-clip"></i>
         </div>
-        <span>EMP ID: {{ selectedCustomer?.empId }}</span>
+        <span class="w-28 flex-shrink-0 font-medium">EMP ID:</span>
+        <span>{{ selectedCustomer?.empId }}</span>
       </div>
-      <div class="mb-5 flex text-textLight dark:text-textDark">
-        <div class="mr-5">
+
+      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+        <div class="mr-5 w-5 text-center flex-shrink-0">
           <i class="fa-solid fa-user"></i>
         </div>
-        <span>Name: {{ selectedCustomer?.salesAgentFirstName }}
+        <span class="w-28 flex-shrink-0 font-medium">Name:</span>
+        <span>{{ selectedCustomer?.salesAgentFirstName }}
           {{ selectedCustomer?.salesAgentLastName }}</span>
       </div>
     </div>
+
     <hr />
+
     <div class="p-10">
-      <div class="mb-2 flex text-textLight dark:text-textDark">
-        <div class="mr-5">
+      <div class="mb-2 flex items-start text-textLight dark:text-textDark">
+        <div class="mr-5 w-5 text-center flex-shrink-0">
           <i class="fa-solid fa-calendar-days"></i>
         </div>
-        <span>Created At :
-          {{ selectedCustomer?.created_at | date : "yyyy/MM/dd h.mm a" }}</span>
+        <span class="w-28 flex-shrink-0 font-medium">Created At:</span>
+        <span>{{ selectedCustomer?.created_at | date : "yyyy/MM/dd h.mm a" }}</span>
       </div>
     </div>
+
     <div class="pb-10 flex items-center justify-center">
-      <button (click)="isPopupOpen = false" class="mt-4 bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded">
+      <button (click)="isPopupOpen = false"
+        class="mt-4 bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded">
         Close
       </button>
     </div>
@@ -166,7 +185,7 @@
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Customer ID
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Customer Name
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -206,7 +225,7 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ customer.cusId }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ customer.firstName }} {{ customer.lastName }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">

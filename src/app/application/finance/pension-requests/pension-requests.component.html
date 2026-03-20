@@ -37,7 +37,7 @@
       <div *ngIf="pensionRequests.length > 0">
         <table class="w-full">
           <thead>
-            <tr class="border-b font-normal text[#000000]] border-gray-200 dark:border-gray-700">
+            <tr class="border-b font-normal text-[#5C5C5C] border-gray-200 dark:border-gray-700">
               <th class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal">
                 No
               </th>
@@ -49,8 +49,11 @@
                 class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal">
                 Details
               </th>
+              <th class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal">
+                Status
+              </th>
               <th
-                *ngIf="permissionService.hasPermission('View pension cultivation history') || tokenService.getUserDetails().role === '1'"
+                *ngIf="permissionService.hasPermission('View pension requests cultivation history') || tokenService.getUserDetails().role === '1'"
                 class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal">
                 Cultivation History
               </th>
@@ -86,6 +89,16 @@
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
+              </td>
+              <td class="px-4 py-4 text-center">
+                <span *ngIf="request.reqStatus === 'To Review'" 
+                      class="flex text-center justify-center px-4 py-2 rounded-lg text-sm font-medium w-[124px] h-[38px] mx-auto bg-[#F8FFA6] text-[#A8A100]">
+                  To Review
+                </span>
+                <span *ngIf="request.reqStatus === 'Rejected'" 
+                      class="flex text-center justify-center px-4 py-2 rounded-lg text-sm font-medium w-[124px] h-[38px] mx-auto bg-[#FFB9B7] text-[#D16D6A]">
+                  Rejected
+                </span>
               </td>
               <td
                 *ngIf="permissionService.hasPermission('View pension requests cultivation history') || tokenService.getUserDetails().role === '1'"

@@ -918,7 +918,7 @@ export class PostinvoiceService {
   );
 
   // Save the PDF
-  doc.save(`invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
+  doc.save(`Post_Invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
 }
 
   private async getLogoUrl(): Promise<string | null> {

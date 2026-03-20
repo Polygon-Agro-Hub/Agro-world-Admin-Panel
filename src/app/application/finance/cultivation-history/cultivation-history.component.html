@@ -61,17 +61,17 @@
             *ngFor="let cultivation of cultivationArray; let i = index"
             class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition"
           >
-            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+            <td class="py-4 px-4 text-sm text-[#000000] dark:text-textDark">
               {{ i + 1 | number: "3.0-0" }}
             </td>
-            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+            <td class="py-4 px-4 text-sm text-[#000000] dark:text-textDark">
               {{ cultivation.cropNameEnglish }}
             </td>
-            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+            <td class="py-4 px-4 text-sm text-[#000000] dark:text-textDark">
               {{ cultivation.varietyNameEnglish }}
             </td>
             <td
-              class="py-4 px-4 text-sm text-center text-textLight dark:text-textDark"
+              class="py-4 px-4 text-sm text-center text-[#000000] dark:text-textDark"
             >
               {{ cultivation.extentac | number: "1.4-4" }}
             </td>
@@ -112,7 +112,7 @@
                   ></div>
                 </div>
                 <span
-                  class="text-sm text-textLight dark:text-textDark min-w-[40px]"
+                  class="text-sm text-[#000000] dark:text-textDark min-w-[40px]"
                 >
                   {{
                     calPrograss(
@@ -123,7 +123,7 @@
                 </span>
               </div>
             </td>
-            <td class="py-4 px-4 text-sm text-textLight dark:text-textDark">
+            <td class="py-4 px-4 text-sm text-[#000000] dark:text-textDark">
               {{ cultivation.createdAt | date: "MMMM d, y" }}
             </td>
           </tr>

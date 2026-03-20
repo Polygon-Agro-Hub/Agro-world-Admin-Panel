@@ -445,14 +445,14 @@ export class FinalinvoiceService {
     );
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Ordered Date:', 140, rightYStart + 30);
+    doc.text('Ordered Date:', 140, rightYStart + 50);
     doc.setFont('helvetica', 'normal');
-    doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 35);
+    doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 55);
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Scheduled Date:', 140, rightYStart + 45);
+    doc.text('Scheduled Date:', 140, rightYStart + 65); //+10
     doc.setFont('helvetica', 'normal');
-    doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 50);
+    doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 70); //+10
 
     // Family Pack Items
     yPosition = Math.max(yPosition, rightYStart + 60);
@@ -558,17 +558,17 @@ export class FinalinvoiceService {
       let addTitle;
       if (invoice.orderApp === 'Marketplace') {
         addTitle = hasFamilyPacks
-        ? ` Additional Items(${invoice.additionalItems.length} Items)`
-          : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
+        ? ` Additional Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
           
       } else if (invoice.orderApp === 'Dash') {
         addTitle = hasFamilyPacks
-          ? ` Custom Items(${invoice.additionalItems.length} Items)`
-          : ` Custom Items(${invoice.additionalItems.length} Items)`;
+          ? ` Custom Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Custom Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
       } else {
         addTitle = hasFamilyPacks
-          ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
-          : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
+          ? ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
       }
 
       doc.setFontSize(9);

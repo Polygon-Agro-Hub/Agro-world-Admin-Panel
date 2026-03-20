@@ -23,6 +23,7 @@ interface Order {
   fullTotal: number;
   status: string;
   isPackage: number;
+  createdAt:string;
 }
 
 interface ApiResponse {

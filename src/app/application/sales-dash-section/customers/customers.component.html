@@ -56,11 +56,13 @@
         </div>
         <span class="w-28 flex-shrink-0 font-medium text-[#727272]">Address:</span>
         <span *ngIf="selectedCustomer?.buildingType === 'House'">
+          {{ selectedCustomer?.buildingType }} :
           {{ selectedCustomer?.houseHouseNo }},
           {{ selectedCustomer?.houseStreetName }},
           {{ selectedCustomer?.houseCity }}
         </span>
         <span *ngIf="selectedCustomer?.buildingType === 'Apartment'">
+          {{ selectedCustomer?.buildingType }} :
           {{ selectedCustomer?.apartmentBuildingNo }} -
           {{ selectedCustomer?.apartmentBuildingName }}, Unit
           {{ selectedCustomer?.apartmentUnitNo }}, Floor

@@ -56,7 +56,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
     private collectionOfficerSrv: CollectionOfficerReportService,
     private router: Router,
     private themeService: ThemeService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.districts = [
@@ -132,7 +132,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
         this.hasData = this.reportDetails.length > 0;
         this.updateChart();
       },
-      (error) => {},
+      (error) => { },
     );
   }
 
@@ -143,83 +143,83 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
   }
 
   updateChart() {
-  if (this.districtChart) {
-    this.districtChart.destroy();
+    if (this.districtChart) {
+      this.districtChart.destroy();
+    }
+
+    // ✅ Set false FIRST so Angular renders the canvas
+    this.isLoading = false;
+
+    // ✅ Wait for Angular to render the canvas in the DOM
+    setTimeout(() => {
+      const { textColor, gridColor, titleColor } = this.getChartThemeColors();
+
+      const labels = this.reportDetails.map(crop => crop.cropName);
+      const gradeAData = this.reportDetails.map(crop => crop.qtyA || 0);
+      const gradeBData = this.reportDetails.map(crop => crop.qtyB || 0);
+      const gradeCData = this.reportDetails.map(crop => crop.qtyC || 0);
+
+      this.districtChart = new Chart('districtBarChart', {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Grade A', data: gradeAData, backgroundColor: '#FF9263' },
+            { label: 'Grade B', data: gradeBData, backgroundColor: '#5F75E9' },
+            { label: 'Grade C', data: gradeCData, backgroundColor: '#3DE188' },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          plugins: {
+            title: {
+              display: true,
+              text: `${this.selectedDistrict.name} - Crop Weights`,
+              color: titleColor,
+              padding: { top: 10, bottom: 30 },
+              font: { size: 18, weight: 600 },
+            },
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 30,
+                color: textColor,
+                font: { size: 14, weight: 400 },
+              },
+            },
+          },
+          scales: {
+            x: {
+              stacked: true,
+              ticks: { color: textColor },
+              grid: { color: gridColor },
+              title: {
+                display: true,
+                text: 'Total Weight (Kg)',
+                color: textColor,
+                font: { size: 12 },
+                padding: 20,
+              },
+            },
+            y: {
+              stacked: true,
+              ticks: { color: textColor },
+              grid: { color: gridColor },
+              title: {
+                display: true,
+                text: 'Crop Variety',
+                color: textColor,
+                font: { size: 12, weight: 500 },
+                padding: 20,
+              },
+            },
+          },
+        },
+      });
+    }, 0);
   }
-
-  // ✅ Set false FIRST so Angular renders the canvas
-  this.isLoading = false;
-
-  // ✅ Wait for Angular to render the canvas in the DOM
-  setTimeout(() => {
-    const { textColor, gridColor, titleColor } = this.getChartThemeColors();
-
-    const labels = this.reportDetails.map(crop => crop.cropName);
-    const gradeAData = this.reportDetails.map(crop => crop.qtyA || 0);
-    const gradeBData = this.reportDetails.map(crop => crop.qtyB || 0);
-    const gradeCData = this.reportDetails.map(crop => crop.qtyC || 0);
-
-    this.districtChart = new Chart('districtBarChart', {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          { label: 'Grade A', data: gradeAData, backgroundColor: '#FF9263' },
-          { label: 'Grade B', data: gradeBData, backgroundColor: '#5F75E9' },
-          { label: 'Grade C', data: gradeCData, backgroundColor: '#3DE188' },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'y',
-        plugins: {
-          title: {
-            display: true,
-            text: `${this.selectedDistrict.name} - Crop Weights`,
-            color: titleColor,
-            padding: { top: 10, bottom: 30 },
-            font: { size: 18, weight: 600 },
-          },
-          legend: {
-            position: 'bottom',
-            labels: {
-              padding: 30,
-              color: textColor,
-              font: { size: 14, weight: 400 },
-            },
-          },
-        },
-        scales: {
-          x: {
-            stacked: true,
-            ticks: { color: textColor },
-            grid: { color: gridColor },
-            title: {
-              display: true,
-              text: 'Total Weight (Kg)',
-              color: textColor,
-              font: { size: 12 },
-              padding: 20,
-            },
-          },
-          y: {
-            stacked: true,
-            ticks: { color: textColor },
-            grid: { color: gridColor },
-            title: {
-              display: true,
-              text: 'Crop Variety',
-              color: textColor,
-              font: { size: 12, weight: 500 },
-              padding: 20,
-            },
-          },
-        },
-      },
-    });
-  }, 0);
-}
 
   async exportToPDF(): Promise<void> {
     this.isDownloading = true;
@@ -274,11 +274,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       doc.setLineWidth(0.5);
       doc.line(yAxisX, barAreaStartY - 5, yAxisX, barAreaEndY + 5);
 
-      // Draw y-axis title
+      // Draw y-axis title at the TOP
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
       const textX = yAxisX - 15;
-      const textY = (barAreaStartY + barAreaEndY) / 3 + 12;
+      const textY = barAreaStartY - 8; // Position above the first tick mark
       doc.text('Crop Variety', textX, textY, { angle: 360, align: 'center' });
 
       // Draw y-axis tick marks and crop name labels

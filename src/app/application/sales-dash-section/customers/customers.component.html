@@ -14,21 +14,21 @@
         CUSTOMER INFO
       </h3>
 
-      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+      <div class="mb-5 flex items-start dark:text-textDark">
         <div class="mr-5 w-5 text-center flex-shrink-0">
-          <i class="fa-solid fa-user"></i>
+          <i class="fa-solid fa-user text-[#727272]"></i>
         </div>
-        <span class="w-28 flex-shrink-0 font-medium">Name:</span>
+        <span class="w-28 flex-shrink-0 font-medium text-[#727272]">Name:</span>
         <span>{{ selectedCustomer?.title }}.
           {{ selectedCustomer?.firstName }}
           {{ selectedCustomer?.lastName }}</span>
       </div>
 
-      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+      <div class="mb-5 flex items-start dark:text-textDark">
         <div class="mr-5 w-5 text-center flex-shrink-0">
-          <i class="fa-solid fa-phone"></i>
+          <i class="fa-solid fa-phone text-[#727272]"></i>
         </div>
-        <span class="w-28 flex-shrink-0 font-medium">Phone:</span>
+        <span class="w-28 flex-shrink-0 font-medium text-[#727272]">Phone:</span>
         <span>{{ selectedCustomer?.phoneNumber }}</span>
         <div class="ml-3 text-[#367bfa] hover:cursor-pointer relative"
           (click)="copyToClipboard(selectedCustomer?.phoneNumber, 'phone')">
@@ -37,11 +37,11 @@
         </div>
       </div>
 
-      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+      <div class="mb-5 flex items-start dark:text-textDark">
         <div class="mr-5 w-5 text-center flex-shrink-0">
-          <i class="fa-solid fa-envelope"></i>
+          <i class="fa-solid fa-envelope text-[#727272]"></i>
         </div>
-        <span class="w-28 flex-shrink-0 font-medium">Email:</span>
+        <span class="w-28 flex-shrink-0 font-medium text-[#727272]">Email:</span>
         <span>{{ selectedCustomer?.email }}</span>
         <div class="ml-3 text-[#367bfa] hover:cursor-pointer relative"
           (click)="copyToClipboard(selectedCustomer?.email, 'email')">
@@ -50,11 +50,11 @@
         </div>
       </div>
 
-      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+      <div class="mb-5 flex items-start dark:text-textDark">
         <div class="mr-5 w-5 text-center flex-shrink-0">
-          <i class="fa-solid fa-location-dot"></i>
+          <i class="fa-solid fa-location-dot text-[#727272]"></i>
         </div>
-        <span class="w-28 flex-shrink-0 font-medium">Address:</span>
+        <span class="w-28 flex-shrink-0 font-medium text-[#727272]">Address:</span>
         <span *ngIf="selectedCustomer?.buildingType === 'House'">
           {{ selectedCustomer?.houseHouseNo }},
           {{ selectedCustomer?.houseStreetName }},
@@ -71,11 +71,11 @@
         </span>
       </div>
 
-      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+      <div class="mb-5 flex items-start dark:text-textDark">
         <div class="mr-5 w-5 text-center flex-shrink-0">
-          <i class="fa-solid fa-list"></i>
+          <i class="fa-solid fa-list text-[#727272]"></i>
         </div>
-        <span class="w-28 flex-shrink-0 font-medium">No of Orders:</span>
+        <span class="w-28 flex-shrink-0 font-medium text-[#727272]">No of Orders:</span>
         <span>{{ selectedCustomer?.totOrders }}</span>
       </div>
     </div>
@@ -87,19 +87,19 @@
         AGENT INFO
       </h3>
 
-      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+      <div class="mb-5 flex items-start dark:text-textDark">
         <div class="mr-5 w-5 text-center flex-shrink-0">
-          <i class="fa-solid fa-id-card-clip"></i>
+          <i class="fa-solid fa-id-card-clip text-[#727272]"></i>
         </div>
-        <span class="w-28 flex-shrink-0 font-medium">EMP ID:</span>
+        <span class="w-28 flex-shrink-0 font-medium text-[#727272]">EMP ID:</span>
         <span>{{ selectedCustomer?.empId }}</span>
       </div>
 
-      <div class="mb-5 flex items-start text-textLight dark:text-textDark">
+      <div class="mb-5 flex items-start dark:text-textDark">
         <div class="mr-5 w-5 text-center flex-shrink-0">
-          <i class="fa-solid fa-user"></i>
+          <i class="fa-solid fa-user text-[#727272]"></i>
         </div>
-        <span class="w-28 flex-shrink-0 font-medium">Name:</span>
+        <span class="w-28 flex-shrink-0 font-medium text-[#727272]">Name:</span>
         <span>{{ selectedCustomer?.salesAgentFirstName }}
           {{ selectedCustomer?.salesAgentLastName }}</span>
       </div>
@@ -108,11 +108,11 @@
     <hr />
 
     <div class="p-10">
-      <div class="mb-2 flex items-start text-textLight dark:text-textDark">
+      <div class="mb-2 flex items-start dark:text-textDark">
         <div class="mr-5 w-5 text-center flex-shrink-0">
-          <i class="fa-solid fa-calendar-days"></i>
+          <i class="fa-solid fa-calendar-days text-[#727272]"></i>
         </div>
-        <span class="w-28 flex-shrink-0 font-medium">Created At:</span>
+        <span class="w-28 flex-shrink-0 font-medium text-[#727272]">Created At:</span>
         <span>{{ selectedCustomer?.created_at | date : "yyyy/MM/dd h.mm a" }}</span>
       </div>
     </div>

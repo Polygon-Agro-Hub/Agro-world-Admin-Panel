@@ -94,45 +94,45 @@
             <th class="ml-10 font-normal text-textLight dark:text-textDark text-left">
               Invoice No
             </th>
-            <th class="font-normal text-textLight dark:text-textDark text-center pl-5">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Customer ID
             </th>
-            <th class="pl-5 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Customer Name
             </th>
-            <th class="font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Agent ID
             </th>
-            <th class="font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Order Time
             </th>
-            <th class="font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Schedule
             </th>
 
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Schedule Date
             </th>
 
-            <th class="font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Schedule
             </th>
 
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Payment
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Payment Status
             </th>
-            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               Amount
             </th>
-            <th class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               Order Status
             </th>
             <th
               *ngIf="permissionService.hasPermission('Dash view orders download invoice') || tokenService.getUserDetails().role === '1'"
-              class="px-4 py-1 font-normal text-textLight dark:text-textDark text-center">
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
               PRE-INVOICE
             </th>
             <th class="whitespace-nowrap px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center"
@@ -156,39 +156,39 @@
             <td class="text-textLight dark:text-textDark text-left">
               {{ item.invNo }}
             </td>
-            <td class="text-center text-textLight dark:text-textDark pl-5">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.cusId }}
             </td>
-            <td class="pl-5  text-textLight dark:text-textDark text-left">
+            <td class="px-4 py-3 text-textLight dark:text-textDark text-left">
               {{ item.firstName + " " + item.lastName }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.empId }}
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.formattedCreatedDate }}
             </td>
 
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{ item.sheduleType }}
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.scheduleDate | date : "d MMM, y" }}
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.sheduleTime.replace('Within ', '') }}
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               <span *ngIf="item.paymentMethod === 'Card'">Debit/Credit</span>
               <span *ngIf="item.paymentMethod === 'Cash'">Cash on Delivery</span>
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span [ngClass]="{
                     'font-bold px-3 py-1 text-sm bg-green-100 text-green-500 rounded-3xl':
@@ -205,11 +205,11 @@
               </div>
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.fullTotal | number : "1.2-2" }}
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <div>
                 <span [ngClass]="{
                     'bg-[#ACFBFF] text-[#00818A]': item.orderStatus === 'Ready to Pickup',
@@ -227,7 +227,7 @@
               </div>
             </td>
 
-            <td class="px-3 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button
                 *ngIf="permissionService.hasPermission('Dash view orders download invoice') || tokenService.getUserDetails().role === '1'"
                 (click)="downloadInvoice(item.id, item.invNo)">

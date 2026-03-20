@@ -187,12 +187,12 @@
                         <!-- PRE-INVOICE Column -->
                         <th *ngIf="permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1'"
                             class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
-                            PRE-INVOICE
+                            Pre-Invoice
                         </th>
                         <!-- POST-INVOICE Column -->
                         <th *ngIf="permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1'"
                             class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
-                            POST-INVOICE
+                            Post-Invoice
                         </th>
                     </tr>
                 </thead>

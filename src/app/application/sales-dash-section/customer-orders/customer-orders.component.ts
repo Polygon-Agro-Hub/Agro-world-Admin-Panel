@@ -198,6 +198,10 @@ export class CustomerOrdersComponent implements OnInit {
     // Define the statuses that allow post-invoice download
     const enabledStatuses = [
       'Out For Delivery',
+      'Collected',
+      'Hold',
+      'Return',
+      'Return Received',
       'Delivered',
       'Picked Up',
       'On the way',

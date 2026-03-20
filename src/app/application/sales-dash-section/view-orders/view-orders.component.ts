@@ -302,6 +302,10 @@ export class ViewOrdersComponent implements OnInit {
       'Picked Up',
       'On the way',
       'Failed',
+      'Collected',
+      'Hold',
+      'Return',
+      'Return Received',
     ];
 
     return enabledStatuses.includes(status);

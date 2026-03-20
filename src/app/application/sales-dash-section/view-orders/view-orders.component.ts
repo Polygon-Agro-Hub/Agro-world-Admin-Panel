@@ -50,8 +50,9 @@ export class ViewOrdersComponent implements OnInit {
   ];
 
   paymentStatusArr = [
-    { paymentStatus: 'Paid', value: '1' },
-    { paymentStatus: 'Pending', value: '0' },
+    { paymentStatus: 'Paid', value: 'Paid' },
+    { paymentStatus: 'Pending', value: 'Pending' },
+    { paymentStatus: 'Received', value: 'Received' },
   ];
 
   orderStatusArr = [

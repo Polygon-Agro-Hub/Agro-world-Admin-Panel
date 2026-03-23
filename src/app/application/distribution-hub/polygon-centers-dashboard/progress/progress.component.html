@@ -169,7 +169,7 @@
             <td class="px-4 py-3 text-left">
               <!-- Updated Delivery Time Slot with color function -->
               <span [style.color]="getDateColor(item)">
-                {{ getDisplayDate(item.sheduleDate) }}
+                {{ getDisplayDate(item.sheduleDate) }} {{ getDisplayTime(item.sheduleTime)}}
               </span>
             </td>
             <td class="px-4 py-3 text-center">

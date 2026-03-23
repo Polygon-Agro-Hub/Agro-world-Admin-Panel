@@ -313,43 +313,60 @@ formatDate(dateString: string): string {
 
   // Add this function to your component class (you can place it near formatNIC and formatDate methods)
   calculateAge(dob: string | null | undefined): string {
-  if (!dob) return '--';
+    if (!dob) return '--';
 
-  const birthDate = new Date(dob);
-  const today = new Date();
+    const birthDate = new Date(dob);
+    const today = new Date();
 
-  // Check if date is valid
-  if (isNaN(birthDate.getTime())) return '--';
+    // Check if date is valid
+    if (isNaN(birthDate.getTime())) return '--';
 
-  let years = today.getFullYear() - birthDate.getFullYear();
-  let months = today.getMonth() - birthDate.getMonth();
-  let days = today.getDate() - birthDate.getDate();
+    // Use UTC dates to avoid timezone issues
+    const dobYear = birthDate.getUTCFullYear();
+    const dobMonth = birthDate.getUTCMonth();
+    const dobDay = birthDate.getUTCDate();
 
-  // Adjust for negative months
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth();
+    const todayDay = today.getDate();
 
-  // Adjust for negative days (use a simple approach)
-  if (days < 0) {
-    months--;
-    // Add days from previous month
-    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-    days += prevMonth.getDate();
+    let years = todayYear - dobYear;
+    let months = todayMonth - dobMonth;
 
-    // If months become negative after adjusting for days
-    if (months < 0) {
+    // Adjust if birthday hasn't occurred yet this year
+    if (months < 0 || (months === 0 && todayDay < dobDay)) {
       years--;
-      months += 12;
+      months = months < 0 ? months + 12 : 11;
     }
-  }
 
-  // Return with singular/plural for both years and months
-  const yearText = years === 0 || years === 1 ? 'Year' : 'Years';
-  const monthText = months === 1 ? 'Month' : 'Months';
-  return `${years} ${yearText}, ${months} ${monthText}`;
-}
+    // Adjust if day hasn't occurred yet this month
+    if (todayDay < dobDay && months > 0) {
+      months--;
+    }
+
+    // Ensure non-negative values
+    years = Math.max(years, 0);
+    months = Math.max(months, 0);
+
+    // Build age string
+    let ageString = '';
+
+    if (years > 0) {
+      ageString += `${years} ${years === 1 ? 'Year' : 'Years'}`;
+    }
+
+    // Only show months if months > 0
+    if (months > 0) {
+      ageString += `${ageString ? ', ' : ''}${months} ${months === 1 ? 'Month' : 'Months'}`;
+    }
+
+    // If both are 0, show 0 Year
+    if (!ageString) {
+      ageString = '0 Year';
+    }
+
+    return ageString;
+  }
 
   openReviewRequest(request: PensionRequest): void {
     // Get the NIC from the current request

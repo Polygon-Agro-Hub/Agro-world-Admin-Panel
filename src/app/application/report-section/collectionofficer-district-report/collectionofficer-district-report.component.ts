@@ -231,7 +231,7 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
 
       const margin = 20;
       const chartStartX = 50;
-      const chartStartY = 70;
+      const chartStartY = 60; // Reduced from 70 to decrease gap after title
       const barHeight = 8;
       const gap = 2;
       const chartHeight = 100;
@@ -260,6 +260,44 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
         this.isDownloading = false;
         return;
       }
+
+      // Legend - Center aligned, positioned above chart
+      const legendY = 40; // Position below title
+      const legendSquareSize = 6;
+      const legendItemWidth = 35; // Width between legend items for compact spacing
+      const totalLegendWidth = legendItemWidth * 3; // Total width for all 3 items
+      const legendStartX = (pageWidth - totalLegendWidth) / 2; // Center the entire legend
+
+      // Grade A
+      doc.setFillColor(255, 146, 99);
+      doc.rect(legendStartX, legendY, legendSquareSize, legendSquareSize, 'F');
+      doc.setFontSize(9);
+      doc.setTextColor(102, 102, 102);
+      doc.text(
+        'Grade A',
+        legendStartX + legendSquareSize + 3,
+        legendY + legendSquareSize / 2 + 1,
+      );
+
+      // Grade B
+      const legendBX = legendStartX + legendItemWidth;
+      doc.setFillColor(95, 117, 233);
+      doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
+      doc.text(
+        'Grade B',
+        legendBX + legendSquareSize + 3,
+        legendY + legendSquareSize / 2 + 1,
+      );
+
+      // Grade C
+      const legendCX = legendBX + legendItemWidth;
+      doc.setFillColor(61, 225, 136);
+      doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
+      doc.text(
+        'Grade C',
+        legendCX + legendSquareSize + 3,
+        legendY + legendSquareSize / 2 + 1,
+      );
 
       const cropNames = this.reportDetails.map((crop) => crop.cropName);
       const cropNameAreaWidth = 35;
@@ -394,41 +432,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
         align: 'right',
       });
 
-      // Legend
-      const legendY = chartStartY - 15;
-      const legendSquareSize = 6;
-      const legendSpacing = 25;
-
-      doc.setFillColor(255, 146, 99);
-      doc.rect(chartStartX, legendY, legendSquareSize, legendSquareSize, 'F');
-      doc.setFontSize(9);
-      doc.setTextColor(102, 102, 102);
-      doc.text(
-        'Grade A',
-        chartStartX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1,
-      );
-
-      const legendBX = chartStartX + legendSpacing;
-      doc.setFillColor(95, 117, 233);
-      doc.rect(legendBX, legendY, legendSquareSize, legendSquareSize, 'F');
-      doc.text(
-        'Grade B',
-        legendBX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1,
-      );
-
-      const legendCX = legendBX + legendSpacing;
-      doc.setFillColor(61, 225, 136);
-      doc.rect(legendCX, legendY, legendSquareSize, legendSquareSize, 'F');
-      doc.text(
-        'Grade C',
-        legendCX + legendSquareSize + 3,
-        legendY + legendSquareSize / 2 + 1,
-      );
-
       // Summary Table
-      const tableStartY = xAxisY + 30;
+      const tableStartY = xAxisY + 15; // Reduced from 30 to decrease gap between chart and table
       const cellHeight = 8;
       const tableColWidths = [40, 30, 30, 30, 30];
       const tableStartX = (pageWidth - 160) / 2;

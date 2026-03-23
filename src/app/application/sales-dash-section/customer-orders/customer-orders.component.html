@@ -178,7 +178,7 @@
                         <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
                             Payment Status
                         </th>
-                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-left">
                             Amount
                         </th>
                         <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
@@ -214,7 +214,7 @@
                                     {{ getPaymentStatusText(order.paymentMethod, order.isPaid) }}
                                 </span>
                             </td>
-                            <td class="px-3 py-3 text-center dark:text-textDark">
+                            <td class="px-3 py-3 text-left dark:text-textDark">
                                 {{ order.fullTotal | number : "1.2-2" }}
                             </td>
                             <td class="px-3 py-3 text-center">

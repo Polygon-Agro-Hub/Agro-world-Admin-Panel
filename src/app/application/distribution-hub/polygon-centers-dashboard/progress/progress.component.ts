@@ -129,6 +129,17 @@ export class ProgressComponent implements OnChanges {
 
   }
 
+  getDisplayTime(time: string): string {
+    
+    if (time === 'Within 2PM - 8PM') {
+        return '2PM - 8PM'
+    } else if (time === 'Within 8AM - 2PM') {
+        return '8AM - 2PM'
+    } else {
+      return ''
+    } 
+  }
+
   getCombinedStatus(item: any): string {
     if ((item.packageStatus === 'Pending' && item.additionalItemsStatus === 'Unknown') ||
         (item.packageStatus === 'Unknown' && item.additionalItemsStatus === 'Pending') ||
@@ -172,4 +183,5 @@ class Target {
   isComplete!: number;
   packageStatus!: string;
   additionalItemsStatus!: string;
+  sheduleTime!: string;
 }

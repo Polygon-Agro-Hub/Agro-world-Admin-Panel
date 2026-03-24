@@ -81,7 +81,30 @@ export class TransportReasonsToHoldComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    if (this.reasonForm.dirty) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the entered data after canceling!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel',
+        cancelButtonText: 'No, Keep Editing',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.reasonForm.reset();
+          this.updateFormIndexNo();
+          this.location.back();
+        }
+      });
+    } else {
+      this.reasonForm.reset();
+      this.updateFormIndexNo();
+      this.location.back();
+    }
   }
 
   preventLeadingSpace(event: KeyboardEvent): void {

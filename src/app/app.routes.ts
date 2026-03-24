@@ -279,6 +279,7 @@ import { GoviShopViewActionComponent } from './application/finance/govi-shop-vie
 import { GoviShopViewDocumentComponent } from './application/finance/govi-shop-view-document/govi-shop-view-document.component';
 import { GoviShopViewSuppliersComponent } from './application/finance/govi-shop-view-suppliers/govi-shop-view-suppliers.component';
 import { GoviShopFinanceComponent } from './application/finance/govi-shop-finance/govi-shop-finance.component';
+import { CreateGoviShopSupplierComponent } from './application/steckholders-section/steckholders/create-govi-shop-supplier/create-govi-shop-supplier.component';
 
 export const routes: Routes = [
   {
@@ -1099,6 +1100,10 @@ export const routes: Routes = [
                   {
                     path: 'view-all-suppliers/:id',
                     component: GoviShopViewSuppliersComponent,
+                  },
+                  {
+                    path: 'create-govi-shop-supplier',
+                    component: CreateGoviShopSupplierComponent,
                   },
                 ],
               },

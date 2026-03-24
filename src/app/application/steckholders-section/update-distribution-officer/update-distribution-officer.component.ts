@@ -1750,13 +1750,16 @@ export class UpdateDistributionOfficerComponent {
   }
 
   onSubmit() {
-    this.licNoModel.control.markAsTouched();
-    this.confirmLicNoModel.control.markAsTouched();
-    this.insurenceNoModel.control.markAsTouched();
-    this.confirmInsurenceNoModel.control.markAsTouched();
-    this.vRegNoModel.control.markAsTouched();
-    this.confirmVRegNoModel.control.markAsTouched();
-
+    console.log('called')
+    if (this.personalData.jobRole === 'Driver') {
+      this.licNoModel.control.markAsTouched();
+      this.confirmLicNoModel.control.markAsTouched();
+      this.insurenceNoModel.control.markAsTouched();
+      this.confirmInsurenceNoModel.control.markAsTouched();
+      this.vRegNoModel.control.markAsTouched();
+      this.confirmVRegNoModel.control.markAsTouched();
+    }
+    
     const missingFields: string[] = [];
 
     if (!this.personalData.email) {

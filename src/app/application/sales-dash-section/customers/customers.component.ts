@@ -155,31 +155,34 @@ export class CustomersComponent implements OnInit {
   }
 
   onSearchClick() {
-    const trimmedSearch = this.searchText.trimStart();
-    this.fetchAllCustomers();
-  }
+  this.searchText = this.searchText.trimStart();
+  this.page = 1; // ← reset to page 1 on new search
+  this.fetchAllCustomers();
+}
 
 
   private searchInCustomer(customer: Customers, searchText: string): boolean {
-    const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+  const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+  const lowerSearch = searchText.toLowerCase(); // ← ensure this is lowercase
 
-    const fieldsToSearch = [
-      customer.cusId,
-      fullName,
-      customer.phoneNumber,
-      customer.empId
-    ];
+  const fieldsToSearch = [
+    customer.cusId?.toLowerCase(),   // ← lowercase these
+    fullName,
+    customer.phoneNumber?.toLowerCase(),
+    customer.empId?.toLowerCase()    // ← lowercase these
+  ];
 
-    return fieldsToSearch.some((field) =>
-      field?.toLowerCase().includes(searchText)
-    );
-  }
+  return fieldsToSearch.some((field) =>
+    field?.includes(lowerSearch)
+  );
+}
 
 
-  offSearch() {
-    this.searchText = '';
-    this.fetchAllCustomers();
-  }
+ offSearch() {
+  this.searchText = '';
+  this.page = 1; // ← reset page
+  this.fetchAllCustomers();
+}
 
   onPageChange(event: number) {
     this.page = event;

@@ -431,14 +431,14 @@ export class PostinvoiceService {
   );
 
   doc.setFont('helvetica', 'bold');
-  doc.text('Ordered Date:', 140, rightYStart + 30);
+  doc.text('Ordered Date:', 140, rightYStart + 50);
   doc.setFont('helvetica', 'normal');
-  doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 35);
+  doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 55);
 
   doc.setFont('helvetica', 'bold');
-  doc.text('Scheduled Date:', 140, rightYStart + 45);
+  doc.text('Scheduled Date:', 140, rightYStart + 65);
   doc.setFont('helvetica', 'normal');
-  doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 50);
+  doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 70);
 
   // Family Pack Items - UPDATED SECTION with units in QTY
   yPosition = Math.max(yPosition, rightYStart + 60);
@@ -520,15 +520,20 @@ export class PostinvoiceService {
         margin: { left: 15, right: 15 },
         styles: {
           fontSize: 9,
-          cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
+          cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+          textColor: [0, 0, 0], 
         },
         headStyles: {
           fillColor: [248, 248, 248],
-          textColor: 0,
+          textColor: [0, 0, 0], 
           fontStyle: 'bold',
+        },
+        bodyStyles: {
+            textColor: [0, 0, 0], 
         },
         alternateRowStyles: {
           fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
         },
         tableLineColor: [209, 213, 219],
         tableLineWidth: 0.5,
@@ -578,11 +583,13 @@ export class PostinvoiceService {
         ? ` Additional Items(${invoice.additionalItems.length} Items)`
         : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
         
-    } else if (invoice.orderApp === 'Dash') {
-      addTitle = hasFamilyPacks
-        ? ` Custom Items(${invoice.additionalItems.length} Items)`
-        : ` Custom Items(${invoice.additionalItems.length} Items)`;
-    } else {
+      } else if (invoice.orderApp === 'Dash') {
+        const itemCount = invoice.additionalItems.length;
+      
+        addTitle = hasFamilyPacks
+          ? ` Additional Items (${itemCount} ${itemCount === 1 ? 'Item' : 'Items'})`
+          : ` Additional Items (${itemCount} ${itemCount === 1 ? 'Item' : 'Items'})`;
+      } else {
       addTitle = hasFamilyPacks
         ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
         : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
@@ -658,13 +665,18 @@ export class PostinvoiceService {
       margin: { left: 15, right: 15 },
       styles: {
         fontSize: 9,
-        cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
+        cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+        textColor: [0, 0, 0], 
       },
       headStyles: {
         fillColor: [243, 244, 246],
-        textColor: 0,
+        textColor: [0, 0, 0], 
         fontStyle: 'bold',
       },
+
+      bodyStyles: {
+        textColor: [0, 0, 0], 
+      }, 
       alternateRowStyles: {
         fillColor: [255, 255, 255],
       },
@@ -815,10 +827,13 @@ export class PostinvoiceService {
 
   // Add final total
   grandTotalBody.push([
-    { content: 'Grand Total', styles: { fontStyle: 'bold' } },
+    { 
+      content: 'Grand Total', 
+      styles: { fontStyle: 'bold', textColor: [0, 0, 0] } 
+    },
     {
       content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
-      styles: { fontStyle: 'bold' },
+      styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
     },
   ]);
 
@@ -833,12 +848,16 @@ export class PostinvoiceService {
     },
     styles: {
       fontSize: 9,
-      cellPadding: { top: 4, right: 0, bottom: 4, left: 0 },
-      lineColor: [255, 255, 255],
+      cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
+      // lineColor: [255, 255, 255],
       lineWidth: 0,
     },
     bodyStyles: {
       lineWidth: 0,
+    },
+    
+    alternateRowStyles: {
+      fillColor: [255, 255, 255], 
     },
     didDrawCell: (data: any) => {
       // Add border between Grand Total and Discount (second last row)

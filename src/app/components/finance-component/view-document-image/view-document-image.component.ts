@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -21,6 +21,8 @@ export class ViewDocumentImageComponent {
   modalImageUrl: string = '';
   modalTitle: string = '';
   modalZoomLevel: number = 1;
+
+  constructor(private elementRef: ElementRef) {}
 
   onImageError(event: Event, type: string): void {
     console.error(
@@ -54,6 +56,19 @@ export class ViewDocumentImageComponent {
     this.modalTitle = title;
     this.isModalOpen = true;
     this.modalZoomLevel = 1;
+
+    // Scroll to the component so the modal is visible
+    setTimeout(() => {
+      const element = this.elementRef.nativeElement;
+
+      const yOffset = 50; 
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth',
+      });
+    }, 100);
   }
 
   // Close modal
@@ -62,6 +77,9 @@ export class ViewDocumentImageComponent {
     this.modalImageUrl = '';
     this.modalTitle = '';
     this.modalZoomLevel = 1;
+
+    // Scroll to the top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Modal zoom functions

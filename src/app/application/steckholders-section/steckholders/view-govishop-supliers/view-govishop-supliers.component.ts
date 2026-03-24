@@ -299,4 +299,8 @@ export class ViewGovishopSupliersComponent implements OnInit {
       });
     }
   }
+
+  addNew() {
+    this.router.navigate(['//steckholders/action/govi-shop-suppliers/create-govi-shop-supplier']);
+  }
 }

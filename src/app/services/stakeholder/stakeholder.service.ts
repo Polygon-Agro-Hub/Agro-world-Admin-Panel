@@ -232,8 +232,7 @@ export class StakeholderService {
 
   getAllGoviShopUsers(
   search?: string, 
-  currentPlan?: string, 
-  planStatus?: string,
+  currentPlan: string = '', 
   page: number = 1,
   limit: number = 10
 ): Observable<any> {
@@ -241,6 +240,8 @@ export class StakeholderService {
     Authorization: `Bearer ${this.token}`,
     'Content-Type': 'application/json',
   });
+
+  console.log('currentPlan', currentPlan)
 
   let params = new HttpParams();
 
@@ -257,30 +258,14 @@ export class StakeholderService {
     params = params.set('currentPlan', currentPlan);
   }
 
-  if (planStatus) {
-    params = params.set('planStatus', planStatus);
-  }
-
   return this.http
     .get(`${this.apiUrl}shop/view-govi-shop-users`, {
       headers,
       params,
     })
-    .pipe(
-      map((response: any) => {
-        if (response.success) {
-          return {
-            shopUsers: response.data.shopUsers,
-            pagination: response.data.pagination,
-            stats: response.data.stats,
-          };
-        }
-        throw new Error(response.message || 'Failed to fetch shop users');
-      }),
-    );
 }
 
-  deleteGoviShopUser(id: number): Observable<any> {
+  deleteGoviShopUser(id: number, reason: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -288,6 +273,7 @@ export class StakeholderService {
 
     return this.http.delete(`${this.apiUrl}shop/delete-govi-shop-user/${id}`, {
       headers,
+      body: { reason }
     });
   }
 

@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import Swal from 'sweetalert2';
 
 export interface Supplier {
   id: number;
@@ -174,7 +175,20 @@ export class ViewGovishopSupliersComponent implements OnInit {
     if (this.supplierToDelete && this.text !== '' && this.mobileNumber && this.mobileNumber === this.supplierToDelete.shopPhone)  {
       this.isLoading = true;
       this.goviShopService.deleteGoviShopUser(this.supplierToDelete.id, this.text).subscribe({
-        next: () => {
+        next: (response) => {
+          if (response.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Supplier deleted Successfully',
+            html: 'Supplier deleted Successfully',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+        }
           this.showDeleteModal = false;
           this.isLoading = false;
           
@@ -184,6 +198,17 @@ export class ViewGovishopSupliersComponent implements OnInit {
           console.error('Error deleting supplier:', error);
           this.isLoading = false;
           this.showDeleteModal = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error deleting supplier',
+            html: 'Error deleting supplier',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
         }
       });
     }

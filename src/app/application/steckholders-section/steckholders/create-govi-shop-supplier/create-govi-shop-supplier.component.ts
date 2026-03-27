@@ -64,10 +64,10 @@ export class CreateGoviShopSupplierComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.loadCertificates();
   }
 
   onUpload(form: NgForm) {
+    this.isLoading = true;
     form.form.markAllAsTouched();
     this.fileInputTouched = true;
 
@@ -142,8 +142,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
   }
 
   checkPhoneNumber() {
-
     this.isVerification = true;
+    this.isLoading= true;
     this.goviShopService.checkPhone(
       this.mobileNumber
       )
@@ -151,11 +151,6 @@ export class CreateGoviShopSupplierComponent implements OnInit {
         (res) => {
           console.log('res', res)
           if (res?.status) {
-            Swal.fire(
-              'Success',
-              'mobile number exists',
-              'success'
-            );
             this.isVerification = true;
             this.sendOtp();
           }
@@ -165,7 +160,7 @@ export class CreateGoviShopSupplierComponent implements OnInit {
           Swal.fire({
             icon: 'error',
             title: 'Server Error',
-            text: 'Failed to update the collection centre. Please try again later.',
+            text: 'Could not find mobile number.',
           });
         }
       );
@@ -183,14 +178,21 @@ export class CreateGoviShopSupplierComponent implements OnInit {
           console.log('res', res)
           this.referenceId = res.referenceId;
           console.log('referenceId', this.referenceId)
-          if (res.status) {
-            Swal.fire(
-              'Success',
-              'otp recieved',
-              'success'
-            );
-            this.createGoviShopUser();
+          this.isLoading= false;
+          if (res.messageResult.status === '1001') {
+            Swal.fire({
+              icon: 'success',
+              title: 'OTP code recieved',
+              html: 'OTP code has been sent to the mobile number',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-white rounded-lg dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+              },
+            });
           } else {
+            this.isLoading= false;
             Swal.fire({
               icon: 'error',
               title: 'Server Error',
@@ -199,11 +201,12 @@ export class CreateGoviShopSupplierComponent implements OnInit {
           }
         },
         (error) => {
+          this.isLoading= false;
           console.error('Error:', error);
           Swal.fire({
             icon: 'error',
             title: 'Server Error',
-            text: 'Failed to update the collection centre. Please try again later.',
+            text: 'Failed to send the otp. Please try again later.',
           });
         }
       );
@@ -325,10 +328,10 @@ blockInvalidKeypressForPhone(event: KeyboardEvent) {
   }
 
   // If first digit and not 7 → force 7
-  if (input.value.length === 0 && event.key !== '7') {
+  if (input.value.length === 0 && event.key !== '0') {
     event.preventDefault();
 
-    input.value = '7';                 // visually set
+    input.value = '0';                 // visually set
     input.dispatchEvent(new Event('input')); // update ngModel
   }
 }
@@ -341,29 +344,6 @@ blockInvalidPasteForPhone(event: ClipboardEvent) {
   if (!/^7[0-9]{0,8}$/.test(pastedData)) {
     event.preventDefault();
   }
-}
-
-onPhoneInput(event: Event) {
-  const input = event.target as HTMLInputElement;
-
-  // Remove non-digits (extra safety)
-  let value = input.value.replace(/\D/g, '');
-
-  // If empty → do nothing
-  if (value.length === 0) {
-    input.value = '';
-    return;
-  }
-
-  // If first digit is not 7 → force it
-  if (value[0] !== '7') {
-    value = '7' + value.substring(1);
-  }
-
-  input.value = value;
-
-  // Trigger ngModel update
-  input.dispatchEvent(new Event('input'));
 }
 
 onTrimInput(event: any): void {
@@ -475,17 +455,19 @@ verifyOtp(): void {
   //   });
   //   return;
   // }
-
+  this.isLoading = true;
   this.goviShopService.verifyOtp(this.referenceId, otp)
     .subscribe(
       (res) => {
         console.log('verify res', res);
+        this.isLoading= false;
         if (res.statusCode === '1000') {
           Swal.fire('Success', 'OTP verification successfull!', 'success');
           this.isVerification = false;
           this.createGoviShopUser();
           // proceed with your next step here
         } else {
+          this.isLoading= false;
           Swal.fire({
             icon: 'error',
             title: 'Invalid OTP',
@@ -494,6 +476,7 @@ verifyOtp(): void {
         }
       },
       (error) => {
+        this.isLoading= false;
         console.error('Error:', error);
         Swal.fire({
           icon: 'error',
@@ -505,7 +488,7 @@ verifyOtp(): void {
 }
 
 createGoviShopUser() {
-
+  this.isLoading = true;
   this.isVerification = true;
   this.goviShopService.createGoviShopUser(
     this.fullName,
@@ -517,34 +500,29 @@ createGoviShopUser() {
     )
     .subscribe(
       (res) => {
+        this.isLoading= false;
         if (res?.status) {
           Swal.fire(
             'Success',
-            'Collection Centre updated Successfully',
+            'GoViShop Supplier Created Successfully',
             'success'
           );
         } else {
-          if (res?.message === 'This RegCode already exists!') {
-            Swal.fire({
-              icon: 'error',
-              title: 'Failed',
-              text: 'This RegCode already exists!',
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'This RegCode already exists!',
-            });
-          }
+          this.isLoading= false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'GoViShop Supplier creation failed',
+          });
         }
       },
       (error) => {
+        this.isLoading= false;
         console.error('Error:', error);
         Swal.fire({
           icon: 'error',
           title: 'Server Error',
-          text: 'Failed to update the collection centre. Please try again later.',
+          text: 'Failed to create GoViShop Supplier. Please try again later.',
         });
       }
     );

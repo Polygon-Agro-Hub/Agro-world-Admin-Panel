@@ -63,7 +63,9 @@
               class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
               placeholder="e.g. 07XXXXXXXX"
               required
-              pattern="^[0-9]{9}$"
+              pattern="^[0-9]{10}$"
+              (keypress)="blockInvalidKeypressForPhone($event)"
+              (paste)="blockInvalidPasteForPhone($event)"
               minlength="10" maxlength="10"
             />
             <div *ngIf="mobileNumberInput.touched && !mobileNumber"
@@ -72,7 +74,7 @@
             </div>
             <div *ngIf="mobileNumber && mobileNumberInput.errors?.['pattern']"
                 class="text-red-500 text-sm mt-1">
-                Mobile Number must be exactly 9 digits.
+                Please enter a valid mobile number.
             </div>
           </div>
         </div>
@@ -249,8 +251,8 @@
               type="submit"
               class="px-6 py-2 rounded-lg text-white transition-colors w-32"
               [ngClass]="{
-                'bg-gray-500 cursor-not-allowed hover:bg-gray-500': form.invalid || !selectedFile,
-                'bg-[#3980C0] hover:bg-[#2d6ca3]': !form.invalid && selectedFile
+                'bg-gray-500 cursor-not-allowed hover:bg-gray-500': (form.invalid && selectedSubscription === 'Standard') || (form.invalid && selectedSubscription === 'Premium' && !selectedFile),
+                'bg-[#3980C0] hover:bg-[#2d6ca3]': !form.invalid && (selectedSubscription === 'Standard' || selectedSubscription === 'Premium' && selectedFile)
               }"
             >
           
@@ -263,33 +265,58 @@
 </div>
 
 <!-- Verification Modal -->
-<div *ngIf="isVerification">
-  <div class="verification-card">
-    <h2 class="card-title">Add GoViShop Supplier &nbsp;·&nbsp; <span>Verification</span></h2>
+<div *ngIf="isVerification" class="flex justify-start items-center">
+  <div class="bg-white dark:bg-[#1f1f1f] rounded-xl p-8 min-w-[30%] shadow-lg">
 
-    <p class="subtitle">
-      Verification code sent to : &nbsp;<strong>{{ mobileNumber }}</strong>
-    </p>
+    <!-- Title -->
+    <h2 class="text-[20px] font-[500] text-[#292929] dark:text-white mb-4">
+      Add GoViShop Supplier - Verification
+    </h2>
 
-    <div class="otp-inputs">
-
-      <input
-              type="text"
-              id="digits"
-              [(ngModel)]="otpDigits"
-              name="digits" #otpInput="ngModel"
-              class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
-            />
+    <!-- Subtitle -->
+    <div class="ml-4 mt-2 mb-2 mr-4">
+      <p class="text-[18px] text-[#4B5563] font-[400] dark:text-gray-300 mb-6">
+        Verification code sent to :
+        <strong class="text-[#444444] font-[600] dark:text-white">{{ mobileNumber }}</strong>
+      </p>
+  
+      <!-- OTP Input -->
+      <div class="flex gap-3 mb-4">
+        <input
+          type="text"
+          [(ngModel)]="otpDigits"
+          name="digits"
+          class="w-full h-12 px-3 border border-gray-300 dark:border-gray-600 rounded-md 
+                 bg-gray-100 dark:bg-[#2b2b2b] text-[#222] dark:text-white
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+  
+      <!-- Resend -->
+      <div class="text-[#0023F6] underline text-sm mb-6 mt-1 cursor-pointer">
+        Resend In
+      </div>
     </div>
 
-    <div class="text-[#0023F6] underline">Resend In</div>
+    <!-- Actions -->
+    <div class="flex justify-end gap-3 mt-4 mr-4">
+      <button
+        (click)="cancelVerification()"
+        class="px-6 py-2 rounded-lg bg-[#74788D] text-[#D3D3D3] min-w-32
+               hover:bg-gray-600 transition"
+      >
+        Cancel
+      </button>
 
-    <div class="action-row">
-      <button class="btn-cancel" (click)="cancelVerification()">Cancel</button>
-      <button class="btn-submit" (click)="verifyOtp()">Verify</button>
-
-    
+      <button
+        (click)="verifyOtp()"
+        class="px-6 py-2 rounded-lg bg-[#3980C0] text-[#FFFFFF] min-w-32
+               hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+      >
+        Submit
+      </button>
     </div>
+
   </div>
 </div>
 

@@ -292,6 +292,8 @@ export class StakeholderService {
 
   sendOtp(mobileNumber: string): Observable<any> {
     const apiUrl = "https://api.getshoutout.com/otpservice/send";
+
+    const formattedNumber = `+94${mobileNumber.replace(/^0/, '')}`;
   
     const headers = new HttpHeaders({
       Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
@@ -302,9 +304,9 @@ export class StakeholderService {
       source: "PolygonAgro",
       transport: "sms",
       content: {
-        sms: 'Your OTP for verification is: {{code}}',  // single quotes, no interpolation
+        sms: 'Your OTP for verification is: {{code}}',  
       },
-      destination: '+94729880539',  // also fixed — you had this hardcoded
+      destination: formattedNumber, 
     });
   
     return this.http.post(apiUrl, body, { headers });

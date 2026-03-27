@@ -277,6 +277,93 @@ export class StakeholderService {
     });
   }
 
+  checkPhone(mobileNumber: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    return this.http.post(
+      `${this.apiUrl}shop/check-phone`,
+      { mobileNumber },  
+      { headers }        
+    );
+  }
+
+  sendOtp(mobileNumber: string): Observable<any> {
+    const apiUrl = "https://api.getshoutout.com/otpservice/send";
+  
+    const headers = new HttpHeaders({
+      Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const body = JSON.stringify({
+      source: "PolygonAgro",
+      transport: "sms",
+      content: {
+        sms: 'Your OTP for verification is: {{code}}',  // single quotes, no interpolation
+      },
+      destination: '+94729880539',  // also fixed — you had this hardcoded
+    });
+  
+    return this.http.post(apiUrl, body, { headers });
+  }
+
+  verifyOtp(referenceId: string, otp: string): Observable<any> {
+    console.log('referenceId', referenceId, 'otp', otp)
+    const apiUrl = "https://api.getshoutout.com/otpservice/verify";
+  
+    const headers = new HttpHeaders({
+      Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const body = JSON.stringify({
+      referenceId: referenceId,
+      code: otp,
+    });
+
+    console.log('body', body)
+  
+    return this.http.post(apiUrl, body, { headers });
+  }
+
+  // checkPhone(mobileNumber: string): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${this.token}`,
+  //     'Content-Type': 'application/json',
+  //   });
+
+  //   return this.http.post(`${this.apiUrl}shop/check-phone`, 
+  //    {
+  //     headers,
+  //     body: { mobileNumber }
+  //    });
+  // }
+
+  createGoviShopUser(fullName: string, mobileNumber: string, email: string, selectedSubscription: string, nic: string, selectedFile: File | null): Observable<any> {
+
+    const supplierData = {fullName, mobileNumber, email, selectedSubscription, nic }
+    const formData = new FormData();
+
+    console.log('supplierData', supplierData)
+    formData.append("supplierData", JSON.stringify(supplierData)); 
+    if (selectedFile) {
+      formData.append('file', selectedFile);
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`
+    });
+
+    return this.http.post(`${this.apiUrl}shop/create-govi-shop-user`,
+    formData,
+     {
+      headers
+     });
+  }
+
   viewGoviShopSupplierById(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,

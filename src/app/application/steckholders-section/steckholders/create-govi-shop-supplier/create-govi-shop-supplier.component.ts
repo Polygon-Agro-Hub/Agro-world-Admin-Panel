@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
+import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 
 interface Subscription {
   name: string;
@@ -29,6 +30,7 @@ interface Subscription {
 export class CreateGoviShopSupplierComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
 
   selectedFile: File | null = null;
   errorMessage: string = '';
@@ -46,6 +48,10 @@ export class CreateGoviShopSupplierComponent implements OnInit {
 
   fileInputTouched: boolean = false;
 
+  isVerification: boolean = false;
+  otpDigits: string = ''
+  referenceId: string = ''
+
   subscriptions: Subscription[] = [
     { name: 'Standard', value: 'Standard' },
     { name: 'Premium', value: 'Premium' },
@@ -54,6 +60,7 @@ export class CreateGoviShopSupplierComponent implements OnInit {
   constructor(
     private router: Router,
     private location: Location,
+    private goviShopService: StakeholderService
   ) { }
 
   ngOnInit(): void {
@@ -125,7 +132,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.processUpload();
+        // this.createGoviShopUser();
+        this.checkPhoneNumber();
       } else {
         // User cancelled
         this.isLoading = false;
@@ -133,9 +141,74 @@ export class CreateGoviShopSupplierComponent implements OnInit {
     });
   }
 
-  processUpload() {
+  checkPhoneNumber() {
 
+    this.isVerification = true;
+    this.goviShopService.checkPhone(
+      this.mobileNumber
+      )
+      .subscribe(
+        (res) => {
+          console.log('res', res)
+          if (res?.status) {
+            Swal.fire(
+              'Success',
+              'mobile number exists',
+              'success'
+            );
+            this.isVerification = true;
+            this.sendOtp();
+          }
+        },
+        (error) => {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'Failed to update the collection centre. Please try again later.',
+          });
+        }
+      );
   }
+
+  sendOtp() {
+
+    this.isVerification = true;
+    console.log('otp called')
+    this.goviShopService.sendOtp(
+      this.mobileNumber
+      )
+      .subscribe(
+        (res) => {
+          console.log('res', res)
+          this.referenceId = res.referenceId;
+          console.log('referenceId', this.referenceId)
+          if (res.status) {
+            Swal.fire(
+              'Success',
+              'otp recieved',
+              'success'
+            );
+            this.createGoviShopUser();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Server Error',
+              text: `${res.messageResult.description}`,
+            });
+          }
+        },
+        (error) => {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'Failed to update the collection centre. Please try again later.',
+          });
+        }
+      );
+  }
+
 
   onBack(): void {
     Swal.fire({
@@ -342,6 +415,144 @@ onFormatInput2(event: any): void {  //trim spaces only from start
     // Update input box value
     inputElement.value = value;
   }
+}
+
+// onKeyDown(event: KeyboardEvent, index: number): void {
+//   const input = event.target as HTMLInputElement;
+//   const inputs = this.otpInputs.toArray();
+
+//   if (event.key === 'Backspace') {
+//     event.preventDefault();
+//     input.value = '';
+//     this.otpDigits[index] = '';
+//     if (index > 0) inputs[index - 1].nativeElement.focus();
+//     return;
+//   }
+
+//   // Allow only digits
+//   if (!/^[0-9]$/.test(event.key)) {
+//     event.preventDefault();
+//     return;
+//   }
+
+//   event.preventDefault();
+//   input.value = event.key;
+//   this.otpDigits[index] = event.key;
+
+//   if (index < inputs.length - 1) {
+//     inputs[index + 1].nativeElement.focus();
+//   }
+// }
+
+// onPaste(event: ClipboardEvent): void {
+//   event.preventDefault();
+//   const pasted = event.clipboardData?.getData('text') ?? '';
+//   const digits = pasted.replace(/[^0-9]/g, '').slice(0, this.otpDigits.length);
+//   const inputs = this.otpInputs.toArray();
+
+//   digits.split('').forEach((char, i) => {
+//     this.otpDigits[i] = char;
+//     inputs[i].nativeElement.value = char;
+//   });
+
+//   const focusIndex = Math.min(digits.length, this.otpDigits.length - 1);
+//   inputs[focusIndex].nativeElement.focus();
+// }
+
+// isOtpComplete(): boolean {
+//   return this.otpDigits.every(d => d !== '');
+// }
+
+verifyOtp(): void {
+  const otp = this.otpDigits;
+  console.log('otp', otp)
+
+  // if (!this.isOtpComplete()) {
+  //   Swal.fire({
+  //     icon: 'warning',
+  //     title: 'Incomplete OTP',
+  //     text: 'Please enter all 6 digits.',
+  //   });
+  //   return;
+  // }
+
+  this.goviShopService.verifyOtp(this.referenceId, otp)
+    .subscribe(
+      (res) => {
+        console.log('verify res', res);
+        if (res.statusCode === '1000') {
+          Swal.fire('Success', 'OTP verification successfull!', 'success');
+          this.isVerification = false;
+          this.createGoviShopUser();
+          // proceed with your next step here
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid OTP',
+            text: 'The code you entered is incorrect. Please try again.',
+          });
+        }
+      },
+      (error) => {
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Server Error',
+          text: 'OTP verification failed. Please try again later.',
+        });
+      }
+    );
+}
+
+createGoviShopUser() {
+
+  this.isVerification = true;
+  this.goviShopService.createGoviShopUser(
+    this.fullName,
+    this.mobileNumber,
+    this.email,
+    this.selectedSubscription,
+    this.nic,
+    this.selectedFile
+    )
+    .subscribe(
+      (res) => {
+        if (res?.status) {
+          Swal.fire(
+            'Success',
+            'Collection Centre updated Successfully',
+            'success'
+          );
+        } else {
+          if (res?.message === 'This RegCode already exists!') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Failed',
+              text: 'This RegCode already exists!',
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'This RegCode already exists!',
+            });
+          }
+        }
+      },
+      (error) => {
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Server Error',
+          text: 'Failed to update the collection centre. Please try again later.',
+        });
+      }
+    );
+}
+
+cancelVerification(): void {
+  this.isVerification = false;
+  this.otpDigits = '';
 }
 
 }

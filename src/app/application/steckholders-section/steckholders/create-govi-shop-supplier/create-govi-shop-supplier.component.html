@@ -8,7 +8,7 @@
   Back
 </button>
 
-<div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+<div *ngIf="!isVerification" class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
   <h2 class="text-xl font-normal text-[#292929] dark:text-textDark mb-2">
     Add GoViShop Supplier - Basic Info
   </h2>
@@ -64,11 +64,7 @@
               placeholder="e.g. 07XXXXXXXX"
               required
               pattern="^[0-9]{9}$"
-              (keypress)="blockInvalidKeypressForPhone($event)"
-              (input)="onPhoneInput($event)"
-              (paste)="blockInvalidPasteForPhone($event)"
-              minlength="9" maxlength="9"
-              (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
+              minlength="10" maxlength="10"
             />
             <div *ngIf="mobileNumberInput.touched && !mobileNumber"
                 class="text-red-500 text-sm mt-1">
@@ -265,3 +261,74 @@
       </form>
   </div>
 </div>
+
+<!-- Verification Modal -->
+<div *ngIf="isVerification">
+  <div class="verification-card">
+    <h2 class="card-title">Add GoViShop Supplier &nbsp;·&nbsp; <span>Verification</span></h2>
+
+    <p class="subtitle">
+      Verification code sent to : &nbsp;<strong>{{ mobileNumber }}</strong>
+    </p>
+
+    <div class="otp-inputs">
+
+      <input
+              type="text"
+              id="digits"
+              [(ngModel)]="otpDigits"
+              name="digits" #otpInput="ngModel"
+              class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            />
+    </div>
+
+    <div class="text-[#0023F6] underline">Resend In</div>
+
+    <div class="action-row">
+      <button class="btn-cancel" (click)="cancelVerification()">Cancel</button>
+      <button class="btn-submit" (click)="verifyOtp()">Verify</button>
+
+    
+    </div>
+  </div>
+</div>
+
+
+<!-- <div *ngIf="isVerification">
+  <div class="verification-card">
+    <h2 class="card-title">Add GoViShop Supplier &nbsp;·&nbsp; <span>Verification</span></h2>
+
+    <p class="subtitle">
+      Verification code sent to : &nbsp;<strong>{{ mobileNumber }}</strong>
+    </p>
+
+<div class="otp-inputs">
+      <input
+        *ngFor="let digit of otpDigits; let i = index"
+        #otpInput
+        type="text"
+        inputmode="numeric"
+        maxlength="1"
+        class="otp-box"
+        [(ngModel)]=""
+      />
+    </div>
+
+    <div class="resend-row">
+      <button class="resend-btn">
+        Resend in
+      </button>
+
+<button class="resend-btn" [disabled]="resendSeconds > 0" (click)="resendOtp()">
+        Resend in <span>{{ resendTimer }}</span>
+      </button>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-cancel">fhjg</button>
+      <button class="btn-submit">gjhh</button>
+
+<button class="btn-cancel" (click)="cancelVerification()">Cancel</button>
+      <button class="btn-submit" (click)="submitOtp()" [disabled]="!isOtpComplete">Submit</button>
+  </div>
+</div> -->

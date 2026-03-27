@@ -1,0 +1,66 @@
+  
+  .verification-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 32px 36px;
+    width: 420px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  
+    .card-title {
+      font-size: 16px; font-weight: 600;
+      color: #222; margin-bottom: 16px;
+      span { color: #555; font-weight: 400; }
+    }
+  
+    .subtitle {
+      font-size: 14px; color: #444;
+      margin-bottom: 24px;
+      strong { color: #222; }
+    }
+  
+    .otp-inputs {
+      display: flex; gap: 12px; margin-bottom: 16px;
+  
+      .otp-box {
+        width: 56px; height: 56px;
+        border: none; border-radius: 8px;
+        background: #f0f0f0;
+        text-align: center; font-size: 20px; font-weight: 600;
+        color: #222; outline: none;
+        transition: box-shadow 0.2s;
+  
+        &:focus { box-shadow: 0 0 0 2px #3b82f6; background: #e8f0fe; }
+      }
+    }
+  
+    .resend-row {
+      margin-bottom: 28px;
+      .resend-btn {
+        background: none; border: none;
+        color: #3b82f6; font-size: 13px;
+        cursor: pointer; padding: 0;
+        text-decoration: underline;
+        &:disabled { color: #888; cursor: default; }
+        span { font-weight: 600; }
+      }
+    }
+  
+    .action-row {
+      display: flex; justify-content: flex-end; gap: 12px;
+  
+      .btn-cancel {
+        padding: 10px 24px; border-radius: 8px;
+        background: #6b7280; color: #fff;
+        border: none; cursor: pointer; font-size: 14px;
+        &:hover { background: #4b5563; }
+      }
+  
+      .btn-submit {
+        padding: 10px 24px; border-radius: 8px;
+        background: #3b82f6; color: #fff;
+        border: none; cursor: pointer; font-size: 14px;
+        &:disabled { opacity: 0.5; cursor: not-allowed; }
+        &:hover:not(:disabled) { background: #2563eb; }
+      }
+    }
+  }

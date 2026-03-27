@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
+import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 
 interface Subscription {
   name: string;
@@ -29,6 +30,7 @@ interface Subscription {
 export class CreateGoviShopSupplierComponent implements OnInit {
 
   @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
 
   selectedFile: File | null = null;
   errorMessage: string = '';
@@ -46,6 +48,10 @@ export class CreateGoviShopSupplierComponent implements OnInit {
 
   fileInputTouched: boolean = false;
 
+  isVerification: boolean = false;
+  otpDigits: string = ''
+  referenceId: string = ''
+
   subscriptions: Subscription[] = [
     { name: 'Standard', value: 'Standard' },
     { name: 'Premium', value: 'Premium' },
@@ -54,13 +60,14 @@ export class CreateGoviShopSupplierComponent implements OnInit {
   constructor(
     private router: Router,
     private location: Location,
+    private goviShopService: StakeholderService
   ) { }
 
   ngOnInit(): void {
-    // this.loadCertificates();
   }
 
   onUpload(form: NgForm) {
+    this.isLoading = true;
     form.form.markAllAsTouched();
     this.fileInputTouched = true;
 
@@ -125,7 +132,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.processUpload();
+        // this.createGoviShopUser();
+        this.checkPhoneNumber();
       } else {
         // User cancelled
         this.isLoading = false;
@@ -133,9 +141,77 @@ export class CreateGoviShopSupplierComponent implements OnInit {
     });
   }
 
-  processUpload() {
-
+  checkPhoneNumber() {
+    this.isVerification = true;
+    this.isLoading= true;
+    this.goviShopService.checkPhone(
+      this.mobileNumber
+      )
+      .subscribe(
+        (res) => {
+          console.log('res', res)
+          if (res?.status) {
+            this.isVerification = true;
+            this.sendOtp();
+          }
+        },
+        (error) => {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'Could not find mobile number.',
+          });
+        }
+      );
   }
+
+  sendOtp() {
+
+    this.isVerification = true;
+    console.log('otp called')
+    this.goviShopService.sendOtp(
+      this.mobileNumber
+      )
+      .subscribe(
+        (res) => {
+          console.log('res', res)
+          this.referenceId = res.referenceId;
+          console.log('referenceId', this.referenceId)
+          this.isLoading= false;
+          if (res.messageResult.status === '1001') {
+            Swal.fire({
+              icon: 'success',
+              title: 'OTP code recieved',
+              html: 'OTP code has been sent to the mobile number',
+              confirmButtonText: 'OK',
+              customClass: {
+                popup: 'bg-white rounded-lg dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+              },
+            });
+          } else {
+            this.isLoading= false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Server Error',
+              text: `${res.messageResult.description}`,
+            });
+          }
+        },
+        (error) => {
+          this.isLoading= false;
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'Failed to send the otp. Please try again later.',
+          });
+        }
+      );
+  }
+
 
   onBack(): void {
     Swal.fire({
@@ -252,10 +328,10 @@ blockInvalidKeypressForPhone(event: KeyboardEvent) {
   }
 
   // If first digit and not 7 → force 7
-  if (input.value.length === 0 && event.key !== '7') {
+  if (input.value.length === 0 && event.key !== '0') {
     event.preventDefault();
 
-    input.value = '7';                 // visually set
+    input.value = '0';                 // visually set
     input.dispatchEvent(new Event('input')); // update ngModel
   }
 }
@@ -268,29 +344,6 @@ blockInvalidPasteForPhone(event: ClipboardEvent) {
   if (!/^7[0-9]{0,8}$/.test(pastedData)) {
     event.preventDefault();
   }
-}
-
-onPhoneInput(event: Event) {
-  const input = event.target as HTMLInputElement;
-
-  // Remove non-digits (extra safety)
-  let value = input.value.replace(/\D/g, '');
-
-  // If empty → do nothing
-  if (value.length === 0) {
-    input.value = '';
-    return;
-  }
-
-  // If first digit is not 7 → force it
-  if (value[0] !== '7') {
-    value = '7' + value.substring(1);
-  }
-
-  input.value = value;
-
-  // Trigger ngModel update
-  input.dispatchEvent(new Event('input'));
 }
 
 onTrimInput(event: any): void {
@@ -342,6 +395,142 @@ onFormatInput2(event: any): void {  //trim spaces only from start
     // Update input box value
     inputElement.value = value;
   }
+}
+
+// onKeyDown(event: KeyboardEvent, index: number): void {
+//   const input = event.target as HTMLInputElement;
+//   const inputs = this.otpInputs.toArray();
+
+//   if (event.key === 'Backspace') {
+//     event.preventDefault();
+//     input.value = '';
+//     this.otpDigits[index] = '';
+//     if (index > 0) inputs[index - 1].nativeElement.focus();
+//     return;
+//   }
+
+//   // Allow only digits
+//   if (!/^[0-9]$/.test(event.key)) {
+//     event.preventDefault();
+//     return;
+//   }
+
+//   event.preventDefault();
+//   input.value = event.key;
+//   this.otpDigits[index] = event.key;
+
+//   if (index < inputs.length - 1) {
+//     inputs[index + 1].nativeElement.focus();
+//   }
+// }
+
+// onPaste(event: ClipboardEvent): void {
+//   event.preventDefault();
+//   const pasted = event.clipboardData?.getData('text') ?? '';
+//   const digits = pasted.replace(/[^0-9]/g, '').slice(0, this.otpDigits.length);
+//   const inputs = this.otpInputs.toArray();
+
+//   digits.split('').forEach((char, i) => {
+//     this.otpDigits[i] = char;
+//     inputs[i].nativeElement.value = char;
+//   });
+
+//   const focusIndex = Math.min(digits.length, this.otpDigits.length - 1);
+//   inputs[focusIndex].nativeElement.focus();
+// }
+
+// isOtpComplete(): boolean {
+//   return this.otpDigits.every(d => d !== '');
+// }
+
+verifyOtp(): void {
+  const otp = this.otpDigits;
+  console.log('otp', otp)
+
+  // if (!this.isOtpComplete()) {
+  //   Swal.fire({
+  //     icon: 'warning',
+  //     title: 'Incomplete OTP',
+  //     text: 'Please enter all 6 digits.',
+  //   });
+  //   return;
+  // }
+  this.isLoading = true;
+  this.goviShopService.verifyOtp(this.referenceId, otp)
+    .subscribe(
+      (res) => {
+        console.log('verify res', res);
+        this.isLoading= false;
+        if (res.statusCode === '1000') {
+          Swal.fire('Success', 'OTP verification successfull!', 'success');
+          this.isVerification = false;
+          this.createGoviShopUser();
+          // proceed with your next step here
+        } else {
+          this.isLoading= false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid OTP',
+            text: 'The code you entered is incorrect. Please try again.',
+          });
+        }
+      },
+      (error) => {
+        this.isLoading= false;
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Server Error',
+          text: 'OTP verification failed. Please try again later.',
+        });
+      }
+    );
+}
+
+createGoviShopUser() {
+  this.isLoading = true;
+  this.isVerification = true;
+  this.goviShopService.createGoviShopUser(
+    this.fullName,
+    this.mobileNumber,
+    this.email,
+    this.selectedSubscription,
+    this.nic,
+    this.selectedFile
+    )
+    .subscribe(
+      (res) => {
+        this.isLoading= false;
+        if (res?.status) {
+          Swal.fire(
+            'Success',
+            'GoViShop Supplier Created Successfully',
+            'success'
+          );
+        } else {
+          this.isLoading= false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'GoViShop Supplier creation failed',
+          });
+        }
+      },
+      (error) => {
+        this.isLoading= false;
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Server Error',
+          text: 'Failed to create GoViShop Supplier. Please try again later.',
+        });
+      }
+    );
+}
+
+cancelVerification(): void {
+  this.isVerification = false;
+  this.otpDigits = '';
 }
 
 }

@@ -1,29 +1,26 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import Swal from 'sweetalert2';
 
 export interface Supplier {
   id: number;
-  shopName: string;
-  ownerName: string;
+  ownername: string;
   nic: string;
-  phone: string;
-  pricePlan: 'Free' | 'Premium' | 'Expired';
-  joinedOn: string;
-  email?: string;
-  address?: string;
-  isAvailable?: number;
-  userStatus?: string;
-  planPrice?: number;
-  currentPlanExpireDate?: string;
-  planStatus?: string;
-  daysRemaining?: number;
-  currentPlan?: string;
+  shopPhone: string;
+  pricePlan: string;
+  email: string;
+  paymentStatus: string;
+  expireStatus: string;
+  activatedAt: Date;
+  onbordStatus: string;
+  createdAt: Date;
+
 }
 
 @Component({
@@ -38,10 +35,13 @@ export class ViewGovishopSupliersComponent implements OnInit {
   
   isLoading = false;
   searchTerm = '';
-  selectedPlan: string | null = null;
-  totalSuppliers = 0;
+  selectedPlan: string = '';
+  totalSuppliers!: number;
   expiredCount = 0;
   activeCount = 0;
+
+  text: string = ''
+  mobileNumber: string = ''
 
   // Pagination properties
   page: number = 1;
@@ -51,17 +51,15 @@ export class ViewGovishopSupliersComponent implements OnInit {
   showDeleteModal = false;
   supplierToDelete: Supplier | null = null;
 
+  hasData: boolean = false;
+  textAreaTouched: boolean = false;
+
   planOptions = [
-    { label: 'Free', value: 'Free' },
+    { label: 'Standard', value: 'Standard' },
     { label: 'Premium', value: 'Premium' },
-    { label: 'Expired', value: 'Expired' },
   ];
 
   suppliers: Supplier[] = [];
-
-  get filteredSuppliers(): Supplier[] {
-    return this.suppliers;
-  }
 
   constructor(
     private router: Router,
@@ -78,141 +76,37 @@ export class ViewGovishopSupliersComponent implements OnInit {
     
     // Separate currentPlan and planStatus based on selected filter
     let currentPlan: string | undefined;
-    let planStatus: string | undefined;
-    
-    if (this.selectedPlan === 'Expired') {
-      planStatus = 'expired';
-      currentPlan = undefined;
-    } else if (this.selectedPlan) {
-      currentPlan = this.selectedPlan;
-      planStatus = undefined;
-    }
     
     console.log('Fetching suppliers with params:', {
       search: this.searchTerm || undefined,
-      currentPlan: currentPlan,
-      planStatus: planStatus,
+      currentPlan: this.selectedPlan,
       page: this.page,
       limit: this.itemsPerPage
     });
     
     this.goviShopService.getAllGoviShopUsers(
       this.searchTerm || undefined,
-      currentPlan,
-      planStatus,
+      this.selectedPlan,
       this.page,
       this.itemsPerPage
     ).subscribe({
       next: (response) => {
+
         console.log('Raw API Response:', response);
-        
-        // Handle the response structure
-        let shopUsers = [];
-        let total = 0;
-        let expired = 0;
-        let active = 0;
-        
-        if (response.data && Array.isArray(response.data.shopUsers)) {
-          console.log('Using new response structure with data wrapper');
-          shopUsers = response.data.shopUsers;
-          total = response.data.pagination?.total || response.data.total || 0;
-          expired = response.data.stats?.expiredCount || 0;
-          active = response.data.stats?.activeCount || 0;
-        } else if (response.shopUsers && Array.isArray(response.shopUsers)) {
-          console.log('Using old response structure');
-          shopUsers = response.shopUsers;
-          total = response.total || 0;
-        } else if (Array.isArray(response)) {
-          console.log('Response is direct array');
-          shopUsers = response;
-          total = response.length;
-        } else {
-          console.error('Unexpected response structure:', response);
-        }
-        
-        // Map the raw data to supplier objects
-        let mappedSuppliers = shopUsers.map((user: any) => {
-          console.log('Mapping user:', user);
-          return {
-            id: user.id,
-            shopName: user.shopName || '',
-            ownerName: user.ownername || user.ownerName || '',
-            nic: user.nic || '',
-            phone: user.shopPhone || user.phone || '',
-            pricePlan: this.determinePricePlan(user.currentPlan, user.planStatus),
-            joinedOn: this.formatDate(user.createdAt),
-            email: user.email || '',
-            address: user.adress || user.address || '',
-            isAvailable: user.isAvailable,
-            userStatus: user.userStatus,
-            planPrice: user.planPrice,
-            currentPlanExpireDate: user.currentPlanExpireDate ? this.formatDate(user.currentPlanExpireDate) : undefined,
-            planStatus: user.planStatus,
-            daysRemaining: user.daysRemaining,
-            currentPlan: user.currentPlan
-          };
-        });
-        
-        // Apply client-side filtering to ensure correct results
-        if (this.selectedPlan === 'Expired') {
-          mappedSuppliers = mappedSuppliers.filter((s: Supplier) => s.planStatus === 'expired');
-        } else if (this.selectedPlan === 'Premium') {
-          mappedSuppliers = mappedSuppliers.filter((s: Supplier) => 
-            s.pricePlan === 'Premium' && s.planStatus !== 'expired'
-          );
-        } else if (this.selectedPlan === 'Free') {
-          mappedSuppliers = mappedSuppliers.filter((s: Supplier) => 
-            s.pricePlan === 'Free' && s.planStatus !== 'expired'
-          );
-        }
-        
-        this.suppliers = mappedSuppliers;
-        this.totalItems = total;
-        this.totalSuppliers = mappedSuppliers.length;
-        this.expiredCount = expired;
-        this.activeCount = active;
-        
-        console.log('Filtered suppliers:', this.suppliers);
-        console.log('Total suppliers:', this.totalSuppliers);
+        this.suppliers = response.data.shopUsers;
+        this.totalSuppliers = this.suppliers.length || 0;
+
+        console.log('totalSuppliers', this.totalSuppliers)
+        this.hasData = this.suppliers.length > 0;
+        console.log('suppliers', this.suppliers);
         
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading suppliers:', error);
         this.isLoading = false;
-        // You might want to show an error message to the user
-        alert('Error loading suppliers: ' + error.message);
       }
     });
-  }
-
-  determinePricePlan(currentPlan: string, planStatus: string): 'Free' | 'Premium' | 'Expired' {
-    console.log('Determining price plan for:', { currentPlan, planStatus });
-    
-    // If plan status is expired, show Expired
-    if (planStatus === 'expired') {
-      return 'Expired';
-    }
-    // Otherwise show the actual plan (Premium or Free)
-    if (currentPlan === 'Premium' || currentPlan === 'premium') {
-      return 'Premium';
-    }
-    return 'Free';
-  }
-
-  formatDate(dateString: string): string {
-    if (!dateString) return 'Not available';
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      });
-    } catch (e) {
-      console.error('Error formatting date:', e);
-      return 'Invalid date';
-    }
   }
 
   // Search when clicking search icon or pressing Enter
@@ -238,7 +132,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
   // Clear plan filter and reload data
   clearPlanFilter(): void {
-    this.selectedPlan = null;
+    this.selectedPlan = '';
     this.page = 1; // Reset to first page
     this.loadSuppliers();
   }
@@ -254,8 +148,8 @@ export class ViewGovishopSupliersComponent implements OnInit {
   }
 
   // Pass ID as parameter instead of the whole object
-  viewSupplierDetails(supplierId: number): void {
-    this.router.navigate(['view-govi-shop-suppliers', supplierId], {
+  viewShops() {
+    this.router.navigate(['', ], {
       relativeTo: this.route
     });
   }
@@ -270,31 +164,51 @@ export class ViewGovishopSupliersComponent implements OnInit {
     this.supplierToDelete = null;
   }
 
-  confirmDelete(): void {
-    if (this.supplierToDelete) {
+  onTextareaClick() {
+    this.textAreaTouched = true;
+  }
+
+  confirmDelete(form: NgForm): void {
+
+    form.form.markAllAsTouched();
+    this.textAreaTouched = true;
+    if (this.supplierToDelete && this.text !== '' && this.mobileNumber && this.mobileNumber === this.supplierToDelete.shopPhone)  {
       this.isLoading = true;
-      this.goviShopService.deleteGoviShopUser(this.supplierToDelete.id).subscribe({
-        next: () => {
-          this.suppliers = this.suppliers.filter(s => s.id !== this.supplierToDelete?.id);
-          this.totalSuppliers--;
-          this.totalItems--; // Update total items
+      this.goviShopService.deleteGoviShopUser(this.supplierToDelete.id, this.text).subscribe({
+        next: (response) => {
+          if (response.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Supplier deleted Successfully',
+            html: 'Supplier deleted Successfully',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
+        }
           this.showDeleteModal = false;
-          this.supplierToDelete = null;
           this.isLoading = false;
           
-          // If current page becomes empty after delete, go to previous page
-          if (this.suppliers.length === 0 && this.page > 1) {
-            this.page--;
-            this.loadSuppliers();
-          }
+          this.loadSuppliers();
         },
         error: (error) => {
           console.error('Error deleting supplier:', error);
           this.isLoading = false;
           this.showDeleteModal = false;
-          this.supplierToDelete = null;
-          // Show error message to user
-          alert('Error deleting supplier: ' + error.message);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error deleting supplier',
+            html: 'Error deleting supplier',
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+            },
+          });
         }
       });
     }
@@ -303,4 +217,39 @@ export class ViewGovishopSupliersComponent implements OnInit {
   addNew() {
     this.router.navigate(['//steckholders/action/govi-shop-suppliers/create-govi-shop-supplier']);
   }
+
+  blockInvalidKeypressForPhone(event: KeyboardEvent) {
+
+    const input = event.target as HTMLInputElement;
+  
+    // Allow control keys
+    if (['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(event.key)) {
+      return;
+    }
+  
+    // Only allow digits
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
+  
+    // If first digit and not 7 → force 7
+    if (input.value.length === 0 && event.key !== '7') {
+      event.preventDefault();
+  
+      input.value = '7';                 // visually set
+      input.dispatchEvent(new Event('input')); // update ngModel
+    }
+  }
+  
+  blockInvalidPasteForPhone(event: ClipboardEvent) {
+  
+    const pastedData = event.clipboardData?.getData('text') || '';
+  
+    // Must match 7XXXXXXXX
+    if (!/^7[0-9]{0,8}$/.test(pastedData)) {
+      event.preventDefault();
+    }
+  }
+  
 }

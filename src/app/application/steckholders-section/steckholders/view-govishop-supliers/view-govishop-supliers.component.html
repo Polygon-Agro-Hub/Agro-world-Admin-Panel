@@ -288,7 +288,7 @@
               <button
                 class="text-blue-500 hover:text-blue-600"
                 title="View Details"
-                (click)=" viewShops()"
+                (click)=" viewShops(supplier.id)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -312,7 +312,6 @@
               <button
                 class="text-blue-500 hover:text-blue-600"
                 title="View Details"
-                (click)=" viewShops()"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -336,7 +335,6 @@
               <button
                 class="text-blue-500 hover:text-blue-600"
                 title="View Details"
-                (click)=" viewShops()"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -356,7 +354,7 @@
               </button>
             </td>
             <td class="py-3 px-3 text-textLight dark:text-textDark whitespace-nowrap">
-              {{ supplier.activatedAt | date: "h:mm a, MMMM d, yyyy" }}
+              {{ supplier.createdAt | date: "h:mm a, MMMM d, yyyy" }}
             </td>
             <td class="py-3 px-3">
               <button
@@ -516,7 +514,7 @@
             *ngIf="mobileNumberInput.touched && mobileNumber && mobileNumber !== supplierToDelete?.shopPhone"
             class="text-red-500 text-sm mt-1"
           >
-          The mobile number does not match the provided details.
+          <i class="fa-solid fa-circle-info text-xs text-red"></i> The mobile number does not match the provided details.
           </div>
         </div>
 
@@ -533,10 +531,10 @@
           <button
             type="submit"
           
-            class="px-8 py-2 min-w-36 rounded-lg  text-white transition-colors font-medium "
+            class="px-8 py-2 min-w-36 rounded-lg bg-[#D16D6A] text-white transition-colors font-medium "
             [ngClass]="{
-              'bg-[#D16D6A] hover:bg-[#a8463b] opacity-50 cursor-not-allowed': form.invalid || text === '' || mobileNumber !== supplierToDelete?.shopPhone,
-              'bg-[#D16D6A] hover:bg-[#a8463b] cursor-pointer': !form.invalid && text !== '' && mobileNumber === supplierToDelete?.shopPhone
+              'bg-[#74788D] text-[#FFFFFF] cursor-not-allowed': form.invalid || text === '' || ( mobileNumber !== supplierToDelete?.shopPhone),
+              'bg-[#D16D6A] text-[#FFFFFF] cursor-pointer': !form.invalid && text !== '' && mobileNumber === supplierToDelete?.shopPhone
             }"
           >
             Yes, Delete

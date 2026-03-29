@@ -14,7 +14,7 @@ export class StakeholderService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-  ) {}
+  ) { }
 
   getAdminUserData(): Observable<any> {
     const headers = new HttpHeaders({
@@ -231,41 +231,41 @@ export class StakeholderService {
   }
 
   getAllGoviShopUsers(
-  search?: string, 
-  currentPlan: string = '', 
-  page: number = 1,
-  limit: number = 10
-): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-    'Content-Type': 'application/json',
-  });
+    search?: string,
+    currentPlan: string = '',
+    page: number = 1,
+    limit: number = 10
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
 
-  console.log('currentPlan', currentPlan)
+    console.log('currentPlan', currentPlan)
 
-  let params = new HttpParams();
+    let params = new HttpParams();
 
-  // Add pagination parameters
-  params = params.set('page', page.toString());
-  params = params.set('limit', limit.toString());
+    // Add pagination parameters
+    params = params.set('page', page.toString());
+    params = params.set('limit', limit.toString());
 
-  // Add filter parameters if provided
-  if (search) {
-    params = params.set('search', search);
+    // Add filter parameters if provided
+    if (search) {
+      params = params.set('search', search);
+    }
+
+    if (currentPlan) {
+      params = params.set('currentPlan', currentPlan);
+    }
+
+    return this.http
+      .get(`${this.apiUrl}shop/view-govi-shop-users`, {
+        headers,
+        params,
+      })
   }
 
-  if (currentPlan) {
-    params = params.set('currentPlan', currentPlan);
-  }
-
-  return this.http
-    .get(`${this.apiUrl}shop/view-govi-shop-users`, {
-      headers,
-      params,
-    })
-}
-
-  deleteGoviShopUser(id: number, reason: string): Observable<any> {
+  deleteGoviShopUser(id: number, reason: string | null): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -282,11 +282,11 @@ export class StakeholderService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-  
+
     return this.http.post(
       `${this.apiUrl}shop/check-phone`,
-      { mobileNumber },  
-      { headers }        
+      { mobileNumber },
+      { headers }
     );
   }
 
@@ -294,40 +294,40 @@ export class StakeholderService {
     const apiUrl = "https://api.getshoutout.com/otpservice/send";
 
     const formattedNumber = `+94${mobileNumber.replace(/^0/, '')}`;
-  
+
     const headers = new HttpHeaders({
       Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
       'Content-Type': 'application/json',
     });
-  
+
     const body = JSON.stringify({
       source: "PolygonAgro",
       transport: "sms",
       content: {
-        sms: 'Your OTP for verification is: {{code}}',  
+        sms: 'Your OTP for verification is: {{code}}',
       },
-      destination: formattedNumber, 
+      destination: formattedNumber,
     });
-  
+
     return this.http.post(apiUrl, body, { headers });
   }
 
   verifyOtp(referenceId: string, otp: string): Observable<any> {
     console.log('referenceId', referenceId, 'otp', otp)
     const apiUrl = "https://api.getshoutout.com/otpservice/verify";
-  
+
     const headers = new HttpHeaders({
       Authorization: `Apikey ${environment.SHOUTOUT_API_KEY}`,
       'Content-Type': 'application/json',
     });
-  
+
     const body = JSON.stringify({
       referenceId: referenceId,
       code: otp,
     });
 
     console.log('body', body)
-  
+
     return this.http.post(apiUrl, body, { headers });
   }
 
@@ -346,11 +346,11 @@ export class StakeholderService {
 
   createGoviShopUser(fullName: string, mobileNumber: string, email: string, selectedSubscription: string, nic: string, selectedFile: File | null): Observable<any> {
 
-    const supplierData = {fullName, mobileNumber, email, selectedSubscription, nic }
+    const supplierData = { fullName, mobileNumber, email, selectedSubscription, nic }
     const formData = new FormData();
 
     console.log('supplierData', supplierData)
-    formData.append("supplierData", JSON.stringify(supplierData)); 
+    formData.append("supplierData", JSON.stringify(supplierData));
     if (selectedFile) {
       formData.append('file', selectedFile);
     }
@@ -360,10 +360,10 @@ export class StakeholderService {
     });
 
     return this.http.post(`${this.apiUrl}shop/create-govi-shop-user`,
-    formData,
-     {
-      headers
-     });
+      formData,
+      {
+        headers
+      });
   }
 
   viewGoviShopSupplierById(id: number): Observable<any> {
@@ -375,4 +375,47 @@ export class StakeholderService {
     const url = `${this.apiUrl}shop/view-govi-shop-supplier/${id}`;
     return this.http.get<any>(url, { headers });
   }
+
+  getAllShopsbyOwnerId(
+    id: number,
+    page: number,
+    limit: number,
+    accessStatus: string,
+    approval: string,
+    bussinessType: string,
+    searchItem: string,
+    
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    id = 25;
+
+    let url = `${this.apiUrl}shop/get-all-shops-by-owner?id=${id}&page=${page}&limit=${limit}`;
+
+    if (accessStatus) {
+      url += `&accessStatus=${accessStatus}`;
+    }
+
+    if (approval) {
+      url += `&approval=${approval}`;
+    }
+
+    if (bussinessType) {
+      url += `&bussinessType=${bussinessType}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
 }

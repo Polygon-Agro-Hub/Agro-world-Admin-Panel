@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, ViewChild, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
@@ -29,8 +29,11 @@ interface Subscription {
 })
 export class CreateGoviShopSupplierComponent implements OnInit {
 
+  @ViewChildren('otpInput') inputs!: QueryList<ElementRef>;
+
+  otpValues: string[] = ['', '', '', '', ''];
+
   @ViewChild('fileInput') fileInput!: ElementRef;
-  @ViewChildren('otpInput') otpInputs!: QueryList<ElementRef>;
 
   selectedFile: File | null = null;
   errorMessage: string = '';
@@ -52,6 +55,11 @@ export class CreateGoviShopSupplierComponent implements OnInit {
   otpDigits: string = ''
   referenceId: string = ''
 
+  timer: any;
+  timeLeft = 600; 
+  displayTime = '10:00';
+  canResend = false;
+
   subscriptions: Subscription[] = [
     { name: 'Standard', value: 'Standard' },
     { name: 'Premium', value: 'Premium' },
@@ -64,6 +72,7 @@ export class CreateGoviShopSupplierComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.startTimer();
   }
 
   onUpload(form: NgForm) {
@@ -76,16 +85,28 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       missingFields.push('Full Name is required');
     }
 
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
+
     if (!this.email) {
       missingFields.push('Email Address is required');
+    } else if (!emailPattern.test(this.email)) {
+      missingFields.push('Email Address must be a valid address');
     }
+
+    const nicPattern = /^(\d{9}[V]|\d{12})$/;
 
     if (!this.nic) {
       missingFields.push('Nic Number is required');
+    } else if (!nicPattern.test(this.nic)) {
+      missingFields.push('NIC number must be a valid number');
     }
+
+    const mobilePattern = /^[0-9]{10}$/;
 
     if (!this.mobileNumber) {
       missingFields.push('Mobile Number is required');
+    } else if (!mobilePattern.test(this.mobileNumber)) {
+      missingFields.push('Mobile Number must be a valid number');
     }
 
     if (!this.selectedSubscription) {
@@ -103,6 +124,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
         errorMessage += `<li>${field}</li>`;
       });
       errorMessage += '</ul></div>';
+
+      this.isLoading = false;
 
       Swal.fire({
         icon: 'error',
@@ -132,8 +155,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.createGoviShopUser();
-        this.checkPhoneNumber();
+        this.createGoviShopUser();
+        // this.checkPhoneNumber();
       } else {
         // User cancelled
         this.isLoading = false;
@@ -397,77 +420,55 @@ onFormatInput2(event: any): void {  //trim spaces only from start
   }
 }
 
-// onKeyDown(event: KeyboardEvent, index: number): void {
-//   const input = event.target as HTMLInputElement;
-//   const inputs = this.otpInputs.toArray();
+onInput(event: Event, index: number) {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/[^0-9]/g, ''); // only numbers
 
-//   if (event.key === 'Backspace') {
-//     event.preventDefault();
-//     input.value = '';
-//     this.otpDigits[index] = '';
-//     if (index > 0) inputs[index - 1].nativeElement.focus();
-//     return;
-//   }
+  input.value = value;
+  this.otpValues[index] = value;
 
-//   // Allow only digits
-//   if (!/^[0-9]$/.test(event.key)) {
-//     event.preventDefault();
-//     return;
-//   }
+  // 👉 move to next input
+  if (value && index < this.inputs.length - 1) {
+    this.inputs.toArray()[index + 1].nativeElement.focus();
+  }
+}
 
-//   event.preventDefault();
-//   input.value = event.key;
-//   this.otpDigits[index] = event.key;
+onKeyDown(event: KeyboardEvent, index: number) {
+  const input = event.target as HTMLInputElement;
 
-//   if (index < inputs.length - 1) {
-//     inputs[index + 1].nativeElement.focus();
-//   }
-// }
-
-// onPaste(event: ClipboardEvent): void {
-//   event.preventDefault();
-//   const pasted = event.clipboardData?.getData('text') ?? '';
-//   const digits = pasted.replace(/[^0-9]/g, '').slice(0, this.otpDigits.length);
-//   const inputs = this.otpInputs.toArray();
-
-//   digits.split('').forEach((char, i) => {
-//     this.otpDigits[i] = char;
-//     inputs[i].nativeElement.value = char;
-//   });
-
-//   const focusIndex = Math.min(digits.length, this.otpDigits.length - 1);
-//   inputs[focusIndex].nativeElement.focus();
-// }
-
-// isOtpComplete(): boolean {
-//   return this.otpDigits.every(d => d !== '');
-// }
+  // 👉 go back on backspace if empty
+  if (event.key === 'Backspace' && !input.value && index > 0) {
+    this.inputs.toArray()[index - 1].nativeElement.focus();
+  }
+}
 
 verifyOtp(): void {
-  const otp = this.otpDigits;
-  console.log('otp', otp)
+  const otp = this.otpValues.join('');
+  console.log('otp', otp);
 
-  // if (!this.isOtpComplete()) {
-  //   Swal.fire({
-  //     icon: 'warning',
-  //     title: 'Incomplete OTP',
-  //     text: 'Please enter all 6 digits.',
-  //   });
-  //   return;
-  // }
   this.isLoading = true;
+
   this.goviShopService.verifyOtp(this.referenceId, otp)
     .subscribe(
       (res) => {
         console.log('verify res', res);
-        this.isLoading= false;
+        this.isLoading = false;
+
         if (res.statusCode === '1000') {
-          Swal.fire('Success', 'OTP verification successfull!', 'success');
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'OTP verification successful!\nCreating GoViShop owner',
+            timer: 1000,      
+          });
+
           this.isVerification = false;
-          this.createGoviShopUser();
-          // proceed with your next step here
+
+          setTimeout(() => {
+            this.createGoviShopUser();
+          }, 1500); 
+          
         } else {
-          this.isLoading= false;
           Swal.fire({
             icon: 'error',
             title: 'Invalid OTP',
@@ -476,8 +477,9 @@ verifyOtp(): void {
         }
       },
       (error) => {
-        this.isLoading= false;
+        this.isLoading = false;
         console.error('Error:', error);
+
         Swal.fire({
           icon: 'error',
           title: 'Server Error',
@@ -489,7 +491,7 @@ verifyOtp(): void {
 
 createGoviShopUser() {
   this.isLoading = true;
-  this.isVerification = true;
+  this.isVerification = false;
   this.goviShopService.createGoviShopUser(
     this.fullName,
     this.mobileNumber,
@@ -507,6 +509,7 @@ createGoviShopUser() {
             'GoViShop Supplier Created Successfully',
             'success'
           );
+          this.router.navigate(['steckholders/action/govi-shop-suppliers']);
         } else {
           this.isLoading= false;
           Swal.fire({
@@ -516,21 +519,117 @@ createGoviShopUser() {
           });
         }
       },
-      (error) => {
-        this.isLoading= false;
-        console.error('Error:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Server Error',
-          text: 'Failed to create GoViShop Supplier. Please try again later.',
-        });
+      (error: any) => {
+        this.isLoading = false;
+        let errorMessage = 'An unexpected error occurred';
+        let messages: string[] = [];
+
+        if (error.error && Array.isArray(error.error.errors)) {
+          messages = error.error.errors.map((err: string) => {
+            switch (err) {
+              case 'NIC':
+                return 'The NIC number is already registered.';
+              case 'Email':
+                return 'Email already exists.';
+              case 'phone':
+                return 'Mobile Number is already exists.';
+              default:
+                return 'Validation error: ' + err;
+            }
+          });
+        }
+
+        if (messages.length > 0) {
+          errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+          messages.forEach(m => {
+            errorMessage += `<li>${m}</li>`;
+          });
+          errorMessage += '</ul></div>';
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Duplicate Information',
+            html: errorMessage,
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
+            },
+          });
+          return;
+        }
       }
     );
 }
 
 cancelVerification(): void {
-  this.isVerification = false;
-  this.otpDigits = '';
+  Swal.fire({
+    icon: 'warning',
+    title: 'Are you sure?',
+    text: 'Do you want to cancel OTP verification!',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel',
+    cancelButtonText: 'No, Keep Editing',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+    },
+    buttonsStyling: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.otpDigits = '';
+      this.isVerification = false;
+    }
+  });
 }
+
+isOtpComplete(): boolean {
+  return this.otpValues.every(val => val !== '');
+}
+
+verifyOtp1() {
+  console.log('otp', this.otpValues)
+}
+
+startTimer() {
+  this.canResend = false;
+  this.timeLeft = 600;
+
+  this.updateDisplay();
+
+  this.timer = setInterval(() => {
+    this.timeLeft--;
+
+    this.updateDisplay();
+
+    if (this.timeLeft <= 0) {
+      clearInterval(this.timer);
+      this.canResend = true;
+    }
+  }, 1000);
+}
+
+updateDisplay() {
+  const minutes = Math.floor(this.timeLeft / 60);
+  const seconds = this.timeLeft % 60;
+
+  this.displayTime =
+    `${this.pad(minutes)}:${this.pad(seconds)}`;
+}
+
+pad(num: number): string {
+  return num < 10 ? '0' + num : num.toString();
+}
+
+handleResend() {
+  if (!this.canResend) return;
+
+  console.log('Resend triggered');
+  this.sendOtp();
+  this.startTimer(); // restart countdown
+}
+
 
 }

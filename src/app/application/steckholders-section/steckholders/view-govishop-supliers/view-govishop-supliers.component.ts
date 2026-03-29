@@ -148,9 +148,9 @@ export class ViewGovishopSupliersComponent implements OnInit {
   }
 
   // Pass ID as parameter instead of the whole object
-  viewShops() {
-    this.router.navigate(['', ], {
-      relativeTo: this.route
+  viewShops(id: number) {
+    this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-view-shops', ], {
+      queryParams: { id },
     });
   }
 
@@ -162,6 +162,8 @@ export class ViewGovishopSupliersComponent implements OnInit {
   cancelDelete(): void {
     this.showDeleteModal = false;
     this.supplierToDelete = null;
+    this.text = '';
+    this.mobileNumber = '';
   }
 
   onTextareaClick() {
@@ -172,6 +174,8 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
     form.form.markAllAsTouched();
     this.textAreaTouched = true;
+
+    console.log('truth', form.invalid || this.text === '' || ( this.mobileNumber !== this.supplierToDelete?.shopPhone))
     if (this.supplierToDelete && this.text !== '' && this.mobileNumber && this.mobileNumber === this.supplierToDelete.shopPhone)  {
       this.isLoading = true;
       this.goviShopService.deleteGoviShopUser(this.supplierToDelete.id, this.text).subscribe({

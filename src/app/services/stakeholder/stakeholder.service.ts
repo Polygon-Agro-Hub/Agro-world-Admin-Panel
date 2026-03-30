@@ -418,4 +418,29 @@ export class StakeholderService {
     return this.http.get<any>(url, { headers });
   }
 
+  getSupplierById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}shop/get-supplier-by-id/${id}`, {
+      headers,
+    });
+  }
+
+  updateGoviShopUser(supplierData: any): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}shop/update-govi-shop-user`,
+    supplierData,
+      {
+        headers
+      });
+  }
+  
+
 }
+

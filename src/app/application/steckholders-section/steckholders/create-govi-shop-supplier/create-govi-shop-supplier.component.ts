@@ -155,8 +155,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.createGoviShopUser();
-        // this.checkPhoneNumber();
+        // this.createGoviShopUser();
+        this.checkPhoneNumber();
       } else {
         // User cancelled
         this.isLoading = false;
@@ -629,6 +629,28 @@ handleResend() {
   console.log('Resend triggered');
   this.sendOtp();
   this.startTimer(); // restart countdown
+}
+
+onPhoneInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+
+  // Remove non-digits (extra safety)
+  let value = input.value.replace(/\D/g, '');
+
+  // If empty → do nothing
+  if (value.length === 0) {
+    input.value = '';
+    return;
+  }
+
+  if (value[0] !== '0') {
+    value = '0' + value.substring(1);
+  }
+
+  input.value = value;
+
+  // Trigger ngModel update
+  input.dispatchEvent(new Event('input'));
 }
 
 

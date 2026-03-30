@@ -219,7 +219,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
   }
 
   addNew() {
-    this.router.navigate(['//steckholders/action/govi-shop-suppliers/create-govi-shop-supplier']);
+    this.router.navigate(['/steckholders/action/govi-shop-suppliers/create-govi-shop-supplier']);
   }
 
   blockInvalidKeypressForPhone(event: KeyboardEvent) {
@@ -254,6 +254,12 @@ export class ViewGovishopSupliersComponent implements OnInit {
     if (!/^7[0-9]{0,8}$/.test(pastedData)) {
       event.preventDefault();
     }
+  }
+
+  editSupplier(id: number): void {
+    this.router.navigate(['steckholders/action/govi-shop-suppliers/edit-govi-shop-supplier', ], {
+      queryParams: { id },
+    });
   }
   
 }

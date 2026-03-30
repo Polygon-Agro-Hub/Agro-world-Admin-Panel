@@ -300,8 +300,9 @@ export interface GoviCareRequest {
   publishStatus: string;
   Request_Date_Time: string;
   approvedDetails: ApprovedDetails | null;
-  Approved_By:string;
+  Approved_By: string;
   Farmer_ID: any;
+  officerStatus: string;
 }
 
 export interface GoviCareRequestsResponse {
@@ -981,14 +982,14 @@ export class FinanceService {
     );
   }
 
-   getSalesAgentForFilters(): Observable<any> {
+  getSalesAgentForFilters(): Observable<any> {
     const url = `${this.apiUrl}finance/get-sales-agent-for-filter`;
     return this.http.get<any>(url, {
       headers: this.getHeaders(),
     });
   }
 
-  getAgentCommisons(data:any): Observable<any> {
+  getAgentCommisons(data: any): Observable<any> {
     const url = `${this.apiUrl}finance/get-agent-commissions`;
     return this.http.post<any>(url, data, {
       headers: this.getHeaders(),
@@ -996,36 +997,36 @@ export class FinanceService {
   }
 
   getGocicareAllInvestmentUsers(
-  page: number,
-  limit: number,
-  search?: string,
-  id?: number,
-  status?: string
-): Observable<any> {
-  console.log('Fetching investment users - Page:', page, 'Limit:', limit, 'Search:', search, 'ID:', id, 'Status:', status);
+    page: number,
+    limit: number,
+    search?: string,
+    id?: number,
+    status?: string
+  ): Observable<any> {
+    console.log('Fetching investment users - Page:', page, 'Limit:', limit, 'Search:', search, 'ID:', id, 'Status:', status);
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
 
-  // Build URL with pagination parameters
-  let url = `${this.apiUrl}finance/govicare-investment-users?page=${page}&limit=${limit}`;
+    // Build URL with pagination parameters
+    let url = `${this.apiUrl}finance/govicare-investment-users?page=${page}&limit=${limit}`;
 
-  // Add optional parameters if they exist
-  if (search && search.trim()) {
-    url += `&search=${encodeURIComponent(search.trim())}`;
+    // Add optional parameters if they exist
+    if (search && search.trim()) {
+      url += `&search=${encodeURIComponent(search.trim())}`;
+    }
+
+    if (id) {
+      url += `&id=${id}`;
+    }
+
+    if (status) {
+      url += `&status=${encodeURIComponent(status)}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
   }
-
-  if (id) {
-    url += `&id=${id}`;
-  }
-
-  if (status) {
-    url += `&status=${encodeURIComponent(status)}`;
-  }
-
-  return this.http.get<any>(url, { headers: headers });
-}
 
   getAllShopViewAction(
     page: number,
@@ -1033,12 +1034,12 @@ export class FinanceService {
     status: string = '',
     searchText: string = '',
     allSuppliers: boolean
-   
+
   ): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    
+
     let url = `${this.apiUrl}shop/get-all-shop-view-action?allSuppliers=${allSuppliers}&page=${page}&limit=${limit}`;
 
     if (status) {

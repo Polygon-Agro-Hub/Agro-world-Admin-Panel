@@ -91,7 +91,7 @@
 
             <div *ngIf="financeInfo.assetsFarmTool" class="dark:text-textDark">
                 <span class="font-semibold w-32 inline-block dark:text-textDark">Special Farm Tools</span> :
-                {{ financeInfo.assetsFarmTool }}
+                 {{ formatFarmTools(financeInfo.assetsFarmTool) }}
             </div>
 
             <div *ngIf="(!financeInfo.assetsLand || financeInfo.assetsLand.length === 0) && 

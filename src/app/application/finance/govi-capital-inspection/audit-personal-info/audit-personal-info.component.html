@@ -11,7 +11,7 @@
       </div>
       <div class="flex flex-col">
         <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Farmer Phone :</span
-        ><span class="dark:text-[#FFFFFF]">{{ sharesData.farmerPhone }}</span>
+        ><span class="dark:text-[#FFFFFF]">{{ addSpaceAfterFirstThree(sharesData.farmerPhone) }}</span>
       </div>
       <div class="flex flex-col">
         <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Audited By :</span
@@ -38,9 +38,11 @@
           <button
             *ngIf="
               permissionService.hasPermission('Approve govicare request') ||
-              tokenService.getUserDetails().role === '1'
+              tokenService.getUserDetails().role === '1';
+
             "
-            class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
+            [style]="'box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.25)'"
+            class="px-5 py-2 bg-[#3980C0] text-white font-medium rounded-lg hover:bg-[#306797] transition-colors duration-200 shadow-lg"
             (click)="openApprovePopUp()"
           >
             Approve
@@ -51,7 +53,8 @@
               permissionService.hasPermission('Reject govicare request') ||
               tokenService.getUserDetails().role === '1'
             "
-            class="px-8 py-2 bg-[#C40D0D] text-white font-medium rounded-md hover:bg-[#980808] transition-colors duration-200 shadow-sm"
+            [style]="'box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.25)'"
+            class="px-7 py-2 bg-[#C40D0D] text-white font-medium rounded-lg hover:bg-[#980808] transition-colors duration-200 shadow-lg"
             (click)="openRejectPopUp()"
           >
             Reject
@@ -121,7 +124,7 @@
     ></div>
 
     <div
-      class="flex whitespace-nowrap space-x-4 pb-4 pr-20 pl-6 border-b border-gray-200 overflow-x-auto scroll-smooth custom-scrollbar"
+      class="flex whitespace-nowrap space-x-4 pb-4 pr-6 pl-6 border-b border-gray-200 overflow-x-auto scroll-smooth custom-scrollbar"
     >
       <button
         (click)="selectTab('Personal')"

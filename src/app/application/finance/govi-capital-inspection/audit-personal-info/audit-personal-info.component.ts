@@ -140,7 +140,7 @@ export class AuditPersonalInfoComponent implements OnInit {
           this.numShares = this.sharesData.devideData.defineShares;
           this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
         }
-        
+
         this.fetchPublishStatus();
 
         this.isLoading = false;
@@ -185,8 +185,8 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   ApproveRequest() {
     this.financeService.approveRequest(this.reqId).subscribe(
-      (res)=>{
-        if(res.status){
+      (res) => {
+        if (res.status) {
           Swal.fire({
             title: 'Success',
             text: `Request Approved Successfully`,
@@ -197,7 +197,7 @@ export class AuditPersonalInfoComponent implements OnInit {
             },
           });
           this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests']);
-        }else if(!res.status){ 
+        } else if (!res.status) {
           Swal.fire({
             title: 'error',
             text: `Failed to Approve the Request`,
@@ -275,10 +275,10 @@ export class AuditPersonalInfoComponent implements OnInit {
     }
 
     if (
-        this.numShares <= 0 || 
-        (this.numShares < this.minimumShare) ||
-        (this.numShares < this.maximumShare)
-      ) return;
+      this.numShares <= 0 ||
+      (this.numShares < this.minimumShare) ||
+      (this.numShares < this.maximumShare)
+    ) return;
 
     // Validate Maximum Investment Shares >= Minimum Investment Shares
     if (this.maximumShare < this.minimumShare) {
@@ -374,7 +374,7 @@ export class AuditPersonalInfoComponent implements OnInit {
   devideSharesPopUp(devideType: 'Create' | 'Edit') {
     this.openDevideSharesPopUp = true;
     this.devideRequestObj.devideType = devideType;
-    
+
     // If creating a new division (not editing), reset fields to empty
     if (devideType === 'Create') {
       this.numShares = 0;
@@ -387,6 +387,13 @@ export class AuditPersonalInfoComponent implements OnInit {
   editSharesPopUp() {
 
   }
+
+  addSpaceAfterFirstThree(str: string | undefined): string {
+    if (!str || typeof str !== 'string') return '';
+    if (str.length <= 3) return str;
+    return str.slice(0, 3) + ' ' + str.slice(3);
+  }
+
 
 }
 

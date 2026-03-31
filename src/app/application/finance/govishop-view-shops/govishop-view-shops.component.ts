@@ -26,12 +26,6 @@ interface Shop {
   ownerPhone: string;
 }
 
-interface Company {
-  id: number;
-  companyNameEnglish: string;
-}
-
-
 @Component({
   selector: 'app-govishop-view-shops',
   standalone: true,
@@ -48,7 +42,6 @@ interface Company {
 })
 export class GovishopViewShopsComponent implements OnInit {
   shops: Shop[] = [];
-  selectedDistrict: string | null = null;
   searchItem: string = '';
   page: number = 1;
   itemsPerPage: number = 10;
@@ -231,8 +224,6 @@ deleteCollectionCenter(id: number) {
   });
 }
 
-
-
   onPageChange(event: number) {
     this.page = event;
     this.selectMethodToFilter();
@@ -253,37 +244,8 @@ deleteCollectionCenter(id: number) {
     this.router.navigate([`/govi-shop/action/update-govi-shop/${id}`]);
   }
 
-  add(): void {
-    this.router.navigate(['/collection-hub/add-collection-center']);
-  }
-
-  navigateDashboard(id: number) {
-    this.router.navigate([`/collection-hub/collection-center-dashboard/${id}`]);
-  }
-
-  assignTarget(items: any, centerId: number) {
-
-    let comId;
-    items?.some((company: Company) =>
-      company.companyNameEnglish === 'agroworld (Pvt) Ltd'
-        ? (comId = company.id)
-        : 0
-    );
-    this.router.navigate([
-      `/collection-hub/collection-center-dashboard/${centerId}/${comId}`,
-    ]);
-  }
-
-  isAgroworldPresent(item: any): boolean {
-    return (
-      item.companies?.some(
-        (company: any) => company.companyNameEnglish === 'agroworld (Pvt) Ltd'
-      ) ?? false
-    );
-  }
-
-  viewCollectionCenter(id: number) {
-    this.router.navigate([`/collection-hub/preview-collection-center/${id}`]);
+  previewGoViShop(id: number) {
+    this.router.navigate([`/govi-shop/action/preview-govi-shop/${id}`]);
   }
 
   back(): void {

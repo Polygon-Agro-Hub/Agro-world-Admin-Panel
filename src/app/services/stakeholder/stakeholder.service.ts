@@ -411,10 +411,6 @@ export class StakeholderService {
       url += `&searchItem=${searchItem}`;
     }
 
-    if (searchItem) {
-      url += `&searchItem=${searchItem}`;
-    }
-
     return this.http.get<any>(url, { headers });
   }
 
@@ -441,6 +437,48 @@ export class StakeholderService {
       });
   }
   
+  getAllShopsRequests(
+    page: number,
+    limit: number,
+    approval: string,
+    bussinessType: string,
+    searchItem: string,
+    
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}shop/get-all-shop-requests?page=${page}&limit=${limit}`;
+
+    if (approval) {
+      url += `&approval=${approval}`;
+    }
+
+    if (bussinessType) {
+      url += `&bussinessType=${bussinessType}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    if (searchItem) {
+      url += `&searchItem=${searchItem}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  getGoViShopById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}shop/get-supplier-by-id/${id}`, {
+      headers,
+    });
+  }
 
 }
 

@@ -8,10 +8,10 @@
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex justify-between items-center mb-8 mt-4">
       <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          Collection Centres ({{ this.totalItems }})
+        <h2 class="text-xl font-normal text-textLight dark:text-textDark">
+          {{ urlSegment === 'all-govi-shops' ? 'Shop Requests' : name }} ({{ totalItems < 10 ? ('0'+totalItems) : totalItems}})
         </h2>
       </div>
       <div class="flex items-center">
@@ -25,25 +25,36 @@
 
         <p class="md:text-2xl lg:text-lg dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5">Filter By</p>
 
-        <!-- <div class="mr-5">
+        <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="provinceOptions" optionLabel="label" optionValue="value"
-            [showClear]="!!selectProvince" placeholder="Province" [(ngModel)]="selectProvince"
-            (onChange)="applyProvinceFilters()"></p-dropdown>
+            [options]="activeStatusOptions" optionLabel="label" optionValue="value"
+            [showClear]="!!selectedActiveStatus" placeholder="Active Status" [(ngModel)]="selectedActiveStatus"
+            (onChange)="activeStatusFilter()"></p-dropdown>
         </div>
 
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districtOptions" optionLabel="label" optionValue="value"
-            [showClear]="!!selectDistrict" placeholder="District" [(ngModel)]="selectDistrict"
-            (onChange)="applyDistrictFilters()"></p-dropdown>
-        </div> -->
+            [options]="approvalStatusOptions" optionLabel="label" optionValue="value"
+            [showClear]="!!selectedApprvalStatus" placeholder="Approval" [(ngModel)]="selectedApprvalStatus"
+            (onChange)="approvalStatusFilter()"></p-dropdown>
+        </div>
+
+        <div class="mr-5">
+          <p-dropdown
+            styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
+            [options]="bussinessTypeOptions" optionLabel="label" optionValue="value"
+            [showClear]="!!selectedBussinessType" placeholder="Bussiness Type" [(ngModel)]="selectedBussinessType"
+            (onChange)="bussinessTypeFilter()"></p-dropdown>
+        </div>
 
         <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-          <input type="text" placeholder="Search by Reg Code, Centre Name, City.."
+          <input type="text" 
+          placeholder="{{ urlSegment === 'all-govi-shops' 
+          ? 'Search Shop Name, Contact..' 
+          : 'Search Shop Name, Phone..' }}"
             class="bg-transparent outline-none w-full text-textLight dark:text-textDark" [(ngModel)]="searchItem"
             (keydown.enter)="searchPlantCareUsers()" />
           <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -67,39 +78,53 @@
       <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="hasData">
         <thead>
           <tr>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
               No
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
                 Logo
             </th>
             <!-- <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left whitespace-nowrap">
               <span class="block">Collection Centre</span>
               <span class="block">Reg Code</span>
             </th> -->
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
                 Shop Name
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th *ngIf="urlSegment === 'all-govi-shops'" class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap;">
+              Action
+            </th>
+            <th *ngIf="urlSegment === 'all-govi-shops'" class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
+              Owner Name
+            </th>
+            <th *ngIf="urlSegment === 'all-govi-shops'" class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
+              Owner's Contact
+            </th>
+            <th *ngIf="urlSegment !== 'all-govi-shops'" class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap;">
                 Active Status
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap;">
                 Approval
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
                 Business Type
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th *ngIf="urlSegment !== 'all-govi-shops'" class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
                 Phone Number
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th *ngIf="urlSegment !== 'all-govi-shops'" class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
                 Email Address
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
                 Last Updated At
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left" style="white-space: nowrap;">
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center" style="white-space: nowrap;">
                 Details
+            </th>
+
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
+            </th>
+            <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left" style="white-space: nowrap;">
             </th>
             
           </tr>
@@ -115,36 +140,83 @@
                     };
               let i = index
             ">
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap">
-              {{ item.logo }}
+            <td class="px-4 py-3 text-left whitespace-nowrap">
+              <img 
+                [src]="item.logo" 
+                alt="logo"
+                class="w-10 h-10 object-cover rounded"
+              />
             </td>
-            <td class="px-4 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
               {{ item.shopName }}
             </td>
-            <td class="px-4 py-3 text-left whitespace-nowrap text-textLight dark:text-textDark">
-                {{ item.isActive }}
-              </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark ">
-              {{ item.approvedStatus }}
+
+            <td *ngIf="urlSegment === 'all-govi-shops'" class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+              create
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+
+            <td *ngIf="urlSegment === 'all-govi-shops'" class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+              {{ item.ownerName }}
+            </td>
+
+            <td *ngIf="urlSegment === 'all-govi-shops'" class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+              {{ item.ownerPhone }}
+            </td>
+
+            <td *ngIf="urlSegment !== 'all-govi-shops'" class="px-4 py-3 text-center">
+              <label class="relative inline-flex items-center cursor-pointer">
+                
+                <input 
+                  type="checkbox" 
+                  class="sr-only peer"
+                  [checked]="item.isActive"
+                  (change)="toggleStatus(item)"
+                />
+            
+                <!-- Track -->
+                <div class="w-11 h-6 bg-gray-300 rounded-full peer 
+                            peer-checked:bg-blue-500 
+                            transition-colors duration-300">
+                </div>
+            
+                <!-- Circle -->
+                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow 
+                            transition-transform duration-300
+                            peer-checked:translate-x-5">
+                </div>
+            
+              </label>
+            </td>
+            <td class="px-3 py-3 text-center">
+              <span
+                class="inline-block w-32 py-1 px-3 rounded-lg font-inter font-[400] text-center"
+                [ngClass]="{
+                  'bg-[#BBFFC6] text-[#308233]': item.approvedStatus === 'Approved',
+                  'bg-[#F8FFA6] text-[#A8A100]': item.approvedStatus === 'Not Approved',
+                  'bg-[#FFB9B7] text-[#D16D6A]': item.approvedStatus === 'Rejected',
+                }"
+              >
+                {{ item.approvedStatus }}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.shopType }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td *ngIf="urlSegment !== 'all-govi-shops'" class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
               {{ item.phone }}
             </td>
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td *ngIf="urlSegment !== 'all-govi-shops'" class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
                 {{ item.email }}
             </td>
 
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-                {{ item.updatedAt }}
+            <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                {{ (item.updatedAt | date: 'hh:mm a, MMMM dd, YYYY') || '----' }}
             </td>
 
-            <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
               <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" 
               (click)="viewCollectionCenter(item.id)">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -166,7 +238,7 @@
                 </svg>
               </button>
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td *ngIf="urlSegment !== 'all-govi-shops'" class="px-4 py-3 text-center text-textLight dark:text-textDark">
               <button class="text-red-500 hover:text-red-700" (click)="deleteCollectionCenter(item.id)">
                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                   viewBox="0 0 24 24">

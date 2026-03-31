@@ -22,4 +22,8 @@ export class GovishopActionComponent {
   navPath(path: string) {
     this.router.navigate([path]);
   }
+
+  navigateToShops() {
+    this.router.navigate(['/govi-shop/action/all-govi-shops']).then(() => {});
+  }
 }

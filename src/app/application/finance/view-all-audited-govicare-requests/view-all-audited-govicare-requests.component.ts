@@ -49,7 +49,7 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadGovicareRequests();
@@ -290,6 +290,17 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
 
   formatTotalItems(count: number): string {
     return count.toString().padStart(2, '0');
+  }
+
+  formatYieldValue(value: any): string {
+    if (!value && value !== 0) return '';
+
+    // Convert to number and remove trailing zeros
+    const numValue = parseFloat(value);
+    if (isNaN(numValue)) return value;
+
+    // Format to remove trailing zeros
+    return numValue.toString();
   }
 }
 

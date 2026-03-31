@@ -148,9 +148,9 @@ export class ViewGovishopSupliersComponent implements OnInit {
   }
 
   // Pass ID as parameter instead of the whole object
-  viewShops(id: number) {
+  viewShops(id: number, name: string) {
     this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-view-shops', ], {
-      queryParams: { id },
+      queryParams: { id, name },
     });
   }
 

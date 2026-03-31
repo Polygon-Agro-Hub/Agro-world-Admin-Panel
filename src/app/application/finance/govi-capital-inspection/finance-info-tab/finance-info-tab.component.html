@@ -91,7 +91,7 @@
 
             <div *ngIf="financeInfo.assetsFarmTool" class="dark:text-textDark">
                 <span class="font-semibold w-32 inline-block dark:text-textDark">Special Farm Tools</span> :
-                {{ financeInfo.assetsFarmTool }}
+                 {{ formatFarmTools(financeInfo.assetsFarmTool) }}
             </div>
 
             <div *ngIf="(!financeInfo.assetsLand || financeInfo.assetsLand.length === 0) && 
@@ -113,7 +113,7 @@
     <button
         (click)="onPreviousPage()"
         [disabled]="currentPage === 1"
-        class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        class="w-10 h-10 flex items-center justify-center rounded-md bg-[#3980C0] hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
         <i class="fa-solid fa-chevron-left"></i>
     </button>
@@ -125,7 +125,7 @@
     <button
         (click)="onNextPage()"
         [disabled]="currentPage === totalPages"
-        class="w-10 h-10 flex items-center justify-center rounded-md bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        class="w-10 h-10 flex items-center justify-center rounded-md bg-[#3980C0] hover:bg-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
         <i class="fa-solid fa-chevron-right"></i>
     </button>

@@ -22,6 +22,8 @@ interface Shop {
   approvedStatus: string;
   isActive: number;
   updatedAt: Date;
+  ownerName: string;
+  ownerPhone: string;
 }
 
 interface Company {
@@ -55,15 +57,35 @@ export class GovishopViewShopsComponent implements OnInit {
   hasData: boolean = true;
   centerId!: number;
 
+  selectedActiveStatus: string = ''
+  selectedApprvalStatus: string = ''
+  selectedBussinessType: string = ''
+
+  urlSegment: string = '';
+
   id!: number;
+  name!: string;
 
   selectAccessStatus: string = ''
   selectApproval: string = ''
   selectBussinessType: string = ''
 
-  options = [
-    { label: 'Standard', value: 'Standard' },
-    { label: 'Premium', value: 'Premium' },
+  activeStatusOptions = [
+    { label: 'Active', value: 'Active' },
+    { label: 'Inactive', value: 'Inactive' }
+  ]
+
+  approvalStatusOptions = [
+    { label: 'Approved', value: 'Approved' },
+    { label: 'Not Approved', value: 'Not Approved' },
+    { label: 'Rejected', value: 'Rejected' }
+  ]
+
+  bussinessTypeOptions = [
+    { label: 'Limited Liability Company', value: 'Limited Liability Company' },
+    { label: 'Partnership Business', value: 'Partnership Business' },
+    { label: 'Sole propprietorship', value: 'Sole propprietorship' },
+    { label: 'Cooperative Society', value: 'Cooperative Society' }
   ]
 
 
@@ -78,24 +100,37 @@ export class GovishopViewShopsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe((params) => {
-      const id = params.get('id');
-      console.log('Query parameter ID:', id);
-      
-      this.id = Number(id);
+    const segments = this.router.url
+    .split('/')
+    .filter(segment => segment.length > 0);
 
-      this.fetchGoviShops();
-      });
-    
+    this.urlSegment = segments[segments.length - 1];
+    console.log('First segment:', this.urlSegment);
+
+    if (this.urlSegment === 'all-govi-shops') {
+      this.fetchAllGoViShopRequests();
+    } else {
+      this.route.queryParamMap.subscribe((params) => {
+        const id = params.get('id');
+        const name = params.get('name');
+        console.log('Query parameter ID:', id);
+        
+        this.id = Number(id);
+        this.name = String(name);
+  
+        this.fetchGoviShopsForSeletectedUser();
+        });
+    }
+
   }
 
-  fetchGoviShops(
+  fetchGoviShopsForSeletectedUser(
     id: number = this.id,
     page: number = this.page,
     limit: number = this.itemsPerPage,
-    accessStatus: string = this.selectAccessStatus,
-    approval: string = this.selectApproval,
-    bussinessType: string = this.selectBussinessType,
+    accessStatus: string = this.selectedActiveStatus,
+    approval: string = this.selectedApprvalStatus,
+    bussinessType: string = this.selectedBussinessType,
     searchItem: string = this.searchItem
   ) {
     this.isLoading = true;
@@ -113,6 +148,38 @@ export class GovishopViewShopsComponent implements OnInit {
           }
         }
       );
+  }
+
+  fetchAllGoViShopRequests(
+    page: number = this.page,
+    limit: number = this.itemsPerPage,
+    approval: string = this.selectedActiveStatus,
+    bussinessType: string = this.selectedBussinessType,
+    searchItem: string = this.searchItem
+  ) {
+    this.isLoading = true;
+    this.goviShopService.getAllShopsRequests(page, limit, approval, bussinessType, searchItem)
+      .subscribe(
+        (response) => {
+
+          this.isLoading = false;
+          this.shops = response.results;
+          this.hasData = this.shops.length > 0;
+          this.totalItems = response.total;
+        },
+        (error) => {
+          if (error.status === 401) {
+          }
+        }
+      );
+  }
+
+  selectMethodToFilter() {
+    if (this.urlSegment === 'all-govi-shops') {
+      this.fetchAllGoViShopRequests()
+    } else {
+      this.fetchGoviShopsForSeletectedUser();
+    }
   }
 
 deleteCollectionCenter(id: number) {
@@ -144,7 +211,7 @@ deleteCollectionCenter(id: number) {
               },
               confirmButtonColor: '#2563eb',
             });
-            this.fetchGoviShops();
+            this.fetchGoviShopsForSeletectedUser();
           }
         },
         (error) => {
@@ -168,25 +235,22 @@ deleteCollectionCenter(id: number) {
 
   onPageChange(event: number) {
     this.page = event;
-    this.fetchGoviShops(this.page, this.itemsPerPage);
+    this.selectMethodToFilter();
   }
 
   searchPlantCareUsers() {
     this.searchItem = this.searchItem?.trim() || ''
     this.page = 1;
-    this.fetchGoviShops(
-      this.page,
-      this.itemsPerPage,
-    );
+    this.selectMethodToFilter();
   }
 
   clearSearch(): void {
     this.searchItem = '';
-    this.fetchGoviShops(this.page, this.itemsPerPage);
+    this.selectMethodToFilter();
   }
 
   navigateEdit(id: number) {
-    this.router.navigate([`/collection-hub/update-collection-center/${id}`]);
+    this.router.navigate([`/govi-shop/action/update-govi-shop/${id}`]);
   }
 
   add(): void {
@@ -224,6 +288,23 @@ deleteCollectionCenter(id: number) {
 
   back(): void {
     this.location.back();
+  }
+
+  toggleStatus(item: any) {
+    item.isActive = !item.isActive;
+  
+  }
+
+  activeStatusFilter() {
+    this.selectMethodToFilter();
+  }
+
+  approvalStatusFilter() {
+    this.selectMethodToFilter();
+  }
+
+  bussinessTypeFilter() {
+    this.selectMethodToFilter();
   }
 }
 

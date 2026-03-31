@@ -22,6 +22,12 @@ export class FinanceInfoTabComponent {
   onPreviousPage(): void {
     this.previousPage.emit();
   }
+
+  // In your component
+  formatFarmTools(value: string): string {
+    if (!value) return '--';
+    return value.replace(/\n/g, ', ');
+  }
 }
 
 export interface IFinance {

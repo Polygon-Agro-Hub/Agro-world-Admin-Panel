@@ -57,6 +57,8 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   currentAssignedOfficer: any = null;
 
   totArea!: number;
+  isWarningPopup: boolean = false;
+  warningMsg: string = '';
 
   // Officer Role Options
   officerRoleOptions = [
@@ -69,7 +71,7 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadGovicareRequests();
@@ -172,9 +174,17 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   }
 
   // Officer Assignment Methods
-  onAssignStatusClick(request: GoviCareRequest): void {
+  onAssignStatusClick(request: GoviCareRequest) {
     // Open assign popup for both Assigned and Not Assigned status
-    this.openAssignPopup(request);
+    if (request.officerStatus === 'Ongoing') {
+      this.warningMsg = 'You can’t assign an officer because the task has already started.'
+      this.isWarningPopup = true;
+    } else if (request.officerStatus === 'Completed') {
+      this.warningMsg = 'You can’t assign an officer to the task because the task has already been completed.'
+      this.isWarningPopup = true;
+    } else {
+      this.openAssignPopup(request);
+    }
   }
 
   // Open assign popup
@@ -271,9 +281,8 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
           this.availableOfficers = response.data.map(
             (officer: InvestmentOfficer) => ({
               ...officer,
-              displayName: `${
-                officer.empId
-              } - ${officer.firstName} ${officer.lastName}`,
+              displayName: `${officer.empId
+                } - ${officer.firstName} ${officer.lastName}`,
             }),
           );
 

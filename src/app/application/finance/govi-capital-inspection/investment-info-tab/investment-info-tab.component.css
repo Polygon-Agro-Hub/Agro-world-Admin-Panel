@@ -1,4 +1,13 @@
 input[readonly] {
   cursor: default !important;
   user-select: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #e5e7eb !important;
+}
+
+input[readonly]:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px #3b82f6 !important;
+  border-color: transparent !important;
 }

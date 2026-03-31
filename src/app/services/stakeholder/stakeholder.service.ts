@@ -473,7 +473,7 @@ export class StakeholderService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
     });
-    return this.http.get<any>(`${this.apiUrl}shop/get-supplier-by-id/${id}`, {
+    return this.http.get<any>(`${this.apiUrl}shop/get-govi-shop-by-id/${id}`, {
       headers,
     });
   }

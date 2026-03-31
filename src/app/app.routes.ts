@@ -2108,7 +2108,7 @@ export const routes: Routes = [
               },
 
               {
-                path: 'update-govi-shops/:id',
+                path: 'update-govi-shop/:id',
                 component: UpdateGoviShopComponent,
               },
               

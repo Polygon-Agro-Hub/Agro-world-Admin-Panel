@@ -391,8 +391,6 @@ export class StakeholderService {
       'Content-Type': 'application/json',
     });
 
-    id = 25;
-
     let url = `${this.apiUrl}shop/get-all-shops-by-owner?id=${id}&page=${page}&limit=${limit}`;
 
     if (accessStatus) {

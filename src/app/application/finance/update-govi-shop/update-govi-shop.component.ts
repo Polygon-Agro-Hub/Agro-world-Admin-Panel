@@ -97,7 +97,6 @@ export class UpdateGoviShopComponent implements OnInit {
       missingFields.push('Email Address must be a valid address');
     }
 
-    const nicPattern = /^(\d{9}[V]|\d{12})$/;
 
     if (!this.goviShopObj.address) {
       missingFields.push('Shop address is required');
@@ -138,7 +137,7 @@ export class UpdateGoviShopComponent implements OnInit {
     Swal.fire({
       icon: 'info',
       title: 'Are you sure?',
-      text: 'Do you really want to update this GoViShop Supplier?',
+      text: 'Do you really want to update this GoVi Shop?',
       showCancelButton: true,
       confirmButtonText: 'Yes, Update',
       cancelButtonText: 'No, Cancel',
@@ -149,7 +148,7 @@ export class UpdateGoviShopComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.updateGoviShopUser();
+        this.updateGoviShop();
       } else {
         this.isLoading = false;
       }
@@ -157,23 +156,7 @@ export class UpdateGoviShopComponent implements OnInit {
   }
 
   onBack(): void {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Keep Editing',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-      buttonsStyling: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.location.back();
-      }
-    });
+    this.location.back();
   }
 
 onCancel(): void {
@@ -292,10 +275,10 @@ onPhoneInput(event: Event) {
   input.dispatchEvent(new Event('input'));
 }
 
-updateGoviShopUser() {
+updateGoviShop() {
   this.isLoading = true;
   this.isVerification = false;
-  this.goviShopService.updateGoviShopUser(
+  this.goviShopService.updateGoviShop(
     this.goviShopObj,
     )
     .subscribe(
@@ -304,7 +287,7 @@ updateGoviShopUser() {
         if (res?.status) {
           Swal.fire(
             'Success',
-            'GoViShop Supplier Updated Successfully',
+            'GoVi Shop Updated Successfully',
             'success'
           );
           this.router.navigate(['steckholders/action/govi-shop-suppliers']);
@@ -313,7 +296,7 @@ updateGoviShopUser() {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'GoViShop Supplier Update failed',
+            text: 'GoVi Shop Update failed',
           });
         }
       },
@@ -325,8 +308,7 @@ updateGoviShopUser() {
         if (error.error && Array.isArray(error.error.errors)) {
           messages = error.error.errors.map((err: string) => {
             switch (err) {
-              case 'NIC':
-                return 'The NIC number is already registered.';
+              
               case 'Email':
                 return 'Email already exists.';
               case 'phone':

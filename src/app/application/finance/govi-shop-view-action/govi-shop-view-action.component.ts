@@ -64,14 +64,11 @@ export class GoviShopViewActionComponent implements OnInit {
   deliveryTypeFilter: string = '';
 
   constructor(
-    private route: ActivatedRoute,
-    private http: HttpClient,
     private router: Router,
     private FinanceService: FinanceService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private postInvoiceService: PostinvoiceService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchAllOrders();
@@ -155,11 +152,12 @@ export class GoviShopViewActionComponent implements OnInit {
 
 class Orders {
   id!: number;
-  shopName!: string;
   ownername!: string;
-  shopPhone!: string;
   nic!: string;
-  userStatus!: string;
-  acticatedAt!: Date;
-  userName!: string;
+  shopPhone!: string;
+  isActivated!: string;
+  currentPlan!: string;
+  activatedAt!: string;
+  updatedAt!: string;
+  accessStatus!: string;
 }

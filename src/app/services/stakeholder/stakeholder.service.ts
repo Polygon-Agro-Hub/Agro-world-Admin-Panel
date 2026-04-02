@@ -478,5 +478,28 @@ export class StakeholderService {
     });
   }
 
+  updateGoviShop(shopData: any): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}shop/update-govi-shop`,
+    shopData,
+      {
+        headers
+      });
+  }
+
+  getShopById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}shop/get-shop-by-id/${id}`, {
+      headers,
+    });
+  }
+
 }
 

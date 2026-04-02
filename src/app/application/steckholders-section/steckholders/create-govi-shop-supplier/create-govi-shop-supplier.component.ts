@@ -155,8 +155,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.createGoviShopUser();
-        this.checkPhoneNumber();
+        this.createGoviShopUser();
+        // this.checkPhoneNumber();
       } else {
         // User cancelled
         this.isLoading = false;

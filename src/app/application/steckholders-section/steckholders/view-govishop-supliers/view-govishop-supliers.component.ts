@@ -93,7 +93,8 @@ export class ViewGovishopSupliersComponent implements OnInit {
       next: (response) => {
 
         console.log('Raw API Response:', response);
-        this.suppliers = response.data.shopUsers;
+        this.suppliers = response.data.shopUsers; 
+        this.totalItems = response.data.pagination.total
         this.totalSuppliers = this.suppliers.length || 0;
 
         console.log('totalSuppliers', this.totalSuppliers)

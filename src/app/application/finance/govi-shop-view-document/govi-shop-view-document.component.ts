@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,10 +19,6 @@ export class GoviShopViewDocumentComponent implements OnInit {
 
   shopDocument!: ShopDocument;
 
-  // Document status
-  isRenewed = false;
-  isRejected = false;
-
   // Image Modal Properties
   isModalOpen = false;
   modalImage = '';
@@ -35,9 +31,11 @@ export class GoviShopViewDocumentComponent implements OnInit {
   startX = 0;
   startY = 0;
 
-
+  isRejectPopUp: boolean = false;
   // Sample Images
   paymentSlipUrl = '';
+  text: string = ''
+  textAreaTouched: boolean = false;
 
   // File type detection
   isPDF = false;
@@ -169,7 +167,7 @@ export class GoviShopViewDocumentComponent implements OnInit {
       title: 'Please Confirm!',
       text: 'Are you sure you want to Activate the membership?',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Active',
+      confirmButtonText: 'Yes, Activate',
       cancelButtonText: 'No, Go Back',
       confirmButtonColor: '#3980C0',
       cancelButtonColor: '#6B7280',
@@ -183,50 +181,47 @@ export class GoviShopViewDocumentComponent implements OnInit {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.renewMembership();
+        this.renewMembership();
       }
     });
   }
 
-  // renewMembership(): void {
-  //   this.isLoading = true;
-  //   this.financeService
-  //     .updateGoviShopUserStatus(this.shopId, 'Activate')
-  //     .subscribe({
-  //       next: (response) => {
-  //         this.isLoading = false;
-  //         if (response.success) {
-  //           this.isRenewed = true;
-  //           this.isRejected = false;
-  //           this.shopDocument.userStatus = 'Activate';
-  //           Swal.fire({
-  //             title: 'Success!',
-  //             text: response.message || 'Membership renewed successfully',
-  //             icon: 'success',
-  //             timer: 2000,
-  //             showConfirmButton: false,
-  //             customClass: {
-  //               popup: 'bg-white dark:bg-tileBlack text-black dark:text-white',
-  //             },
-  //           }).then(() => {
-  //             this.router.navigate([
-  //               '/finance/action/finance-govishop/view-action',
-  //             ]);
-  //           });
-  //         }
-  //       },
-  //       error: (error) => {
-  //         this.isLoading = false;
-  //         console.error('Error renewing membership:', error);
-  //         Swal.fire({
-  //           title: 'Error!',
-  //           text: 'Failed to renew membership',
-  //           icon: 'error',
-  //           confirmButtonColor: '#C40D0D',
-  //         });
-  //       },
-  //     });
-  // }
+  renewMembership(): void {
+    this.isLoading = true;
+    this.financeService
+      .renewGoviShopUser(this.shopId, 'Activate')
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            Swal.fire({
+              title: 'Success!',
+              text: response.message || 'Membership renewed successfully',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false,
+              customClass: {
+                popup: 'bg-white dark:bg-tileBlack text-black dark:text-white',
+              },
+            }).then(() => {
+              this.router.navigate([
+                '/finance/action/finance-govishop/view-action',
+              ]);
+            });
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error renewing membership:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to renew membership',
+            icon: 'error',
+            confirmButtonColor: '#C40D0D',
+          });
+        },
+      });
+  }
 
   // Reject Action
   openRejectPopup(): void {
@@ -246,52 +241,62 @@ export class GoviShopViewDocumentComponent implements OnInit {
         cancelButton: 'px-6 py-2 rounded-md',
       },
       reverseButtons: true,
+      
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isRejectPopUp = true;
         // this.rejectMembership();
       }
     });
   }
 
-  // rejectMembership(): void {
-  //   this.isLoading = true;
-  //   this.financeService
-  //     .updateGoviShopUserStatus(this.shopId, 'Rejected')
-  //     .subscribe({
-  //       next: (response) => {
-  //         this.isLoading = false;
-  //         if (response.success) {
-  //           this.isRejected = true;
-  //           this.isRenewed = false;
-  //           this.shopDocument.userStatus = 'Rejected';
-  //           Swal.fire({
-  //             title: 'Rejected!',
-  //             text: response.message || 'Membership rejected successfully',
-  //             icon: 'success',
-  //             timer: 2000,
-  //             showConfirmButton: false,
-  //             customClass: {
-  //               popup: 'bg-white dark:bg-tileBlack text-black dark:text-white',
-  //             },
-  //           }).then(() => {
-  //             this.router.navigate([
-  //               '/finance/action/finance-govishop/view-action',
-  //             ]);
-  //           });
-  //         }
-  //       },
-  //       error: (error) => {
-  //         this.isLoading = false;
-  //         console.error('Error rejecting membership:', error);
-  //         Swal.fire({
-  //           title: 'Error!',
-  //           text: 'Failed to reject membership',
-  //           icon: 'error',
-  //           confirmButtonColor: '#C40D0D',
-  //         });
-  //       },
-  //     });
-  // }
+  rejectMembership(): void {
+    this.isLoading = true;
+    this.financeService
+      .rejectGoviShopUser(this.shopId, 'Rejected')
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            Swal.fire({
+              title: 'Rejected!',
+              text: response.message || 'Membership rejected successfully',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false,
+              customClass: {
+                popup: 'bg-white dark:bg-tileBlack text-black dark:text-white',
+              },
+            }).then(() => {
+              this.router.navigate([
+                '/finance/action/finance-govishop/view-action',
+              ]);
+            });
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error rejecting membership:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to reject membership',
+            icon: 'error',
+            confirmButtonColor: '#C40D0D',
+          });
+        },
+      });
+  }
+
+  onTextareaClick() {
+    this.textAreaTouched = true;
+  }
+
+  cancelDelete(): void {
+    this.isRejectPopUp = false;
+    this.text = '';
+    this.textAreaTouched = false;
+  }
+
 }
 
 interface ShopDocument {

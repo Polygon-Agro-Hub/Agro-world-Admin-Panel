@@ -1082,4 +1082,25 @@ export class FinanceService {
     let url = `${this.apiUrl}shop/delete-govishop-supplier/${id}`;
     return this.http.delete<any>(url, { headers });
   }
+
+  renewGoviShopUser(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}shop/reneve-govi-shop-user/${id}`;
+    return this.http.put<any>(url, { status }, { headers });
+  }
+
+  rejectGoviShopUser(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/reject-govi-shop-user/${id}`;
+    return this.http.put<any>(url, { status }, { headers });
+  }
 }
+

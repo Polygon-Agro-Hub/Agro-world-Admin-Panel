@@ -262,5 +262,25 @@ export class ViewGovishopSupliersComponent implements OnInit {
       queryParams: { id },
     });
   }
+
+  viewManagerUsers(id: number, name: string) {
+  this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-users'], {
+    queryParams: { 
+      shopId: id, 
+      shopName: name,
+      role: 'Manager' 
+    },
+  });
+}
+
+viewPOSUsers(id: number, name: string) {
+  this.router.navigate(['steckholders/action/govi-shop-suppliers/govishop-users'], {
+    queryParams: { 
+      shopId: id, 
+      shopName: name,
+      role: 'POS' 
+    },
+  });
+}
   
 }

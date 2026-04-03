@@ -501,5 +501,32 @@ export class StakeholderService {
     });
   }
 
+  getUsers(
+  search?: string,
+  role?: string
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let params = new HttpParams();
+
+  // Add filter parameters if provided
+  if (search) {
+    params = params.set('search', search);
+  }
+
+  if (role) {
+    params = params.set('role', role);
+  }
+
+  return this.http
+    .get(`${this.apiUrl}shop/users`, {
+      headers,
+      params,
+    });
+}
+
 }
 

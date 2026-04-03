@@ -501,5 +501,57 @@ export class StakeholderService {
     });
   }
 
+  getPosUserById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}shop/get-pos-user-by-id/${id}`, {
+      headers,
+    });
+  }
+
+  updatePOSUser(userData: any): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}shop/update-pos-user`,
+    userData,
+      {
+        headers
+      });
+  }
+
+  resetPassword(userData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post(`${this.apiUrl}shop/reset-govi-shop-user-password`,
+    userData,
+      {
+        headers
+      });
+
+  }
+
+  getBranchesList(shopId: number): Observable<any> {
+    console.log('shopId', shopId);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log('This is shop Id', shopId);
+    return this.http.get(
+      `${this.apiUrl}shop/get-govi-shop-branches/${shopId}`,
+      {
+        headers,
+      }
+    );
+  }
+
 }
 

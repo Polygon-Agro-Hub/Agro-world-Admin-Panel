@@ -115,7 +115,7 @@ export class CreateGoviShopSupplierComponent implements OnInit {
 
 
     if (!this.selectedFile && this.selectedSubscription === 'Premium') {
-      missingFields.push('Selected File is required');
+      missingFields.push('File is required');
     }
 
     if (missingFields.length > 0) {
@@ -133,9 +133,10 @@ export class CreateGoviShopSupplierComponent implements OnInit {
         html: errorMessage,
         confirmButtonText: 'OK',
         customClass: {
-          popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -151,6 +152,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
       buttonsStyling: true,
     }).then((result) => {
@@ -182,8 +185,14 @@ export class CreateGoviShopSupplierComponent implements OnInit {
           console.error('Error:', error);
           Swal.fire({
             icon: 'error',
-            title: 'Server Error',
+            title: 'Server Error!',
             text: 'Could not find mobile number.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           });
         }
       );
@@ -205,21 +214,28 @@ export class CreateGoviShopSupplierComponent implements OnInit {
           if (res.messageResult.status === '1001') {
             Swal.fire({
               icon: 'success',
-              title: 'OTP code recieved',
+              title: 'Success!',
               html: 'OTP code has been sent to the mobile number',
               confirmButtonText: 'OK',
               customClass: {
-                popup: 'bg-white rounded-lg dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
                 htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
               },
             });
           } else {
             this.isLoading= false;
             Swal.fire({
               icon: 'error',
-              title: 'Server Error',
+              title: 'Error!',
               text: `${res.messageResult.description}`,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
             });
           }
         },
@@ -228,8 +244,14 @@ export class CreateGoviShopSupplierComponent implements OnInit {
           console.error('Error:', error);
           Swal.fire({
             icon: 'error',
-            title: 'Server Error',
+            title: 'Server Error!',
             text: 'Failed to send the otp. Please try again later.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           });
         }
       );
@@ -247,6 +269,8 @@ export class CreateGoviShopSupplierComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
       buttonsStyling: true,
     }).then((result) => {
@@ -303,13 +327,15 @@ export class CreateGoviShopSupplierComponent implements OnInit {
   
       Swal.fire({
         icon: 'error',
-        title: 'Error!',
+        title: 'Server Error!',
         text: this.errorMessage,
         timer: 2000,
         showConfirmButton: false,
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
+          htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
     }
@@ -326,6 +352,8 @@ onCancel(): void {
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
     },
     buttonsStyling: true,
   }).then((result) => {
@@ -457,9 +485,15 @@ verifyOtp(): void {
         if (res.statusCode === '1000') {
           Swal.fire({
             icon: 'success',
-            title: 'Success',
+            title: 'Success!',
             text: 'OTP verification successful!\nCreating GoViShop owner',
-            timer: 1000,      
+            timer: 1000,     
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           });
 
           this.isVerification = false;
@@ -471,9 +505,16 @@ verifyOtp(): void {
         } else {
           Swal.fire({
             icon: 'error',
-            title: 'Invalid OTP',
+            title: 'Invalid OTP!',
             text: 'The code you entered is incorrect. Please try again.',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },   
           });
+          this.otpValues = ['', '', '', '', ''];
         }
       },
       (error) => {
@@ -482,9 +523,16 @@ verifyOtp(): void {
 
         Swal.fire({
           icon: 'error',
-          title: 'Server Error',
+          title: 'Server Error!',
           text: 'OTP verification failed. Please try again later.',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+            htmlContainer: 'text-left',
+            confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          },
         });
+        this.isVerification = false;
       }
     );
 }
@@ -505,7 +553,7 @@ createGoviShopUser() {
         this.isLoading= false;
         if (res?.status) {
           Swal.fire(
-            'Success',
+            'Success!',
             'GoViShop Supplier Created Successfully',
             'success'
           );
@@ -514,8 +562,14 @@ createGoviShopUser() {
           this.isLoading= false;
           Swal.fire({
             icon: 'error',
-            title: 'Error',
+            title: 'Error!',
             text: 'GoViShop Supplier creation failed',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           });
         }
       },
@@ -552,10 +606,10 @@ createGoviShopUser() {
             html: errorMessage,
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
               htmlContainer: 'text-left',
-              confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
             },
           });
           return;
@@ -575,11 +629,13 @@ cancelVerification(): void {
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
     },
     buttonsStyling: true,
   }).then((result) => {
     if (result.isConfirmed) {
-      this.otpDigits = '';
+      this.otpValues = ['', '', '', '', ''];
       this.isVerification = false;
     }
   });

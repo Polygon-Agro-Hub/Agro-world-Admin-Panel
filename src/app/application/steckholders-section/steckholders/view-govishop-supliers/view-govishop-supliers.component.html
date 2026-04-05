@@ -21,7 +21,7 @@
     <!-- Header Row -->
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
           GoViShop Suppliers ({{ totalSuppliers < 10 ? '0'+ totalSuppliers : totalSuppliers  }})
         </h2>
       </div>
@@ -34,7 +34,7 @@
             />
           </svg>
         </i>
-        <p class="text-textLight dark:text-textDark">Filter By</p>
+        <p class="text-[#4A4A4A] dark:text-textDark">Filter By</p>
 
         <div class="relative">
           <p-dropdown
@@ -54,11 +54,6 @@
         <div
           class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80 relative group"
         >
-          <div
-            class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-          >
-            Search by Shop Name, NIC, Phone...
-          </div>
           <input
             #searchInput
             type="text"
@@ -143,72 +138,72 @@
         <thead>
           <tr class="border-b border-gray-200 dark:border-gray-600">
             <th
-              class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 w-12"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 w-12"
             >
               No
             </th>
-            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap">
               Owner Full Name
             </th>
-            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400">
+            <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400">
               NIC Number
             </th>
-            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap">
               Phone Number
             </th>
 
-            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400">
+            <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400">
               Email Address
             </th>
             <th
-              class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 text-center"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
             >
               Price Plan
             </th>
 
             <th
-              class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 text-center"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
             >
-              Expire Status
+              Expire status
             </th>
 
             <th
-              class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 text-center"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
             >
               Payment status
             </th>
 
             <th
-              class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 text-center"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
             >
               Onboard Status
             </th>
             <th
-              class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 text-center whitespace-nowrap"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
             >
               Shops
             </th>
 
             <th
-              class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 text-center whitespace-nowrap"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
             >
               Managers
             </th>
 
             <th
-              class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 text-center whitespace-nowrap"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
             >
               POS Users
             </th>
-            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">
+            <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap">
               Joined At
             </th>
             <th
-              class="py-3 px-3 text-sm font-normal text-gray-500 dark:text-gray-400"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400"
             ></th>
 
             <th
-              class="py-3 px-3 text-sm font-normal text-gray-500 dark:text-gray-400"
+              class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400"
             ></th>
           </tr>
         </thead>
@@ -217,20 +212,20 @@
             *ngFor="let supplier of suppliers | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"
             class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
-            <td class="py-3 px-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-3 text-[#000000] dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 | number: "2.0" }}
             </td> 
-            <td class="py-3 px-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-3 text-[#000000] dark:text-textDark">
               {{ supplier.ownername }}
             </td>
-            <td class="py-3 px-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-3 text-[#000000] dark:text-textDark">
               {{ supplier.nic }}
             </td>
-            <td class="py-3 px-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-3 text-[#000000] dark:text-textDark">
               {{ supplier.shopPhone }}
             </td>
 
-            <td class="py-3 px-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-3 text-[#000000] dark:text-textDark">
               {{ supplier.email }}
             </td>
 
@@ -451,7 +446,7 @@
         <div>
             <!-- Textarea -->
             <textarea
-              class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:border-gray-600 dark:text-white border border-gray-300 rounded-xl outline-none"
+            class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:border-gray-600 dark:text-white border border-gray-300 rounded-xl outline-none resize-none h-[120px]"
               rows="4"
               placeholder="Mention Reason..."
               name="reply"

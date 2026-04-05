@@ -175,17 +175,40 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
     form.form.markAllAsTouched();
     this.textAreaTouched = true;
+    if(this.supplierToDelete && this.text !== '' && this.mobileNumber && this.mobileNumber === this.supplierToDelete.shopPhone) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Are you sure?',
+        text: 'Do you really want to Delete this GoViShop Supplier?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Delete',
+        cancelButtonText: 'No, Cancel',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+        buttonsStyling: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.confirmDeleteSupplier();
+        } else {
+          // User cancelled
+          this.isLoading = false;
+        }
+      });
+    }
+    
+  }
 
-    console.log('truth', form.invalid || this.text === '' || ( this.mobileNumber !== this.supplierToDelete?.shopPhone))
-    if (this.supplierToDelete && this.text !== '' && this.mobileNumber && this.mobileNumber === this.supplierToDelete.shopPhone)  {
+  confirmDeleteSupplier() {
       this.isLoading = true;
-      this.goviShopService.deleteGoviShopUser(this.supplierToDelete.id, this.text).subscribe({
+      this.goviShopService.deleteGoviShopUser(this.supplierToDelete!.id, this.text).subscribe({
         next: (response) => {
           if (response.status) {
           Swal.fire({
             icon: 'success',
-            title: 'Supplier deleted Successfully',
-            html: 'Supplier deleted Successfully',
+            title: 'Success',
+            html: 'GoViShop Supplier deleted Successfully',
             confirmButtonText: 'OK',
             customClass: {
               popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
@@ -196,17 +219,20 @@ export class ViewGovishopSupliersComponent implements OnInit {
         }
           this.showDeleteModal = false;
           this.isLoading = false;
+          this.supplierToDelete = null;
+          this.text = '';
+          this.mobileNumber = '';
           
           this.loadSuppliers();
         },
         error: (error) => {
-          console.error('Error deleting supplier:', error);
+          console.error('Error deleting GoViShop Supplier:', error);
           this.isLoading = false;
           this.showDeleteModal = false;
           Swal.fire({
             icon: 'error',
-            title: 'Error deleting supplier',
-            html: 'Error deleting supplier',
+            title: 'Error',
+            html: 'Error deleting GoViShop Supplier',
             confirmButtonText: 'OK',
             customClass: {
               popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
@@ -216,7 +242,6 @@ export class ViewGovishopSupliersComponent implements OnInit {
           });
         }
       });
-    }
   }
 
   addNew() {

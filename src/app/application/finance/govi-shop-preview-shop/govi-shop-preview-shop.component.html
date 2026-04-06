@@ -34,7 +34,7 @@
         </div>
       
         <!-- Right Section -->
-        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Pending'">
+        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Pending' && urlSegment === 'action' ">
           
           <!-- Active Status -->
           <div class="cursor-pointer">
@@ -48,15 +48,40 @@
               Reject
             </button>   
           </div>
-      
-      
+
         </div>
 
-        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Rejected'">
+        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Pending' && urlSegment === 'govi-shop-suppliers' ">
+          
+          <div >
+            <button class="text-lg font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
+              Approve
+            </button>   
+          </div>
+
+          <div class="cursor-pointer">
+            <button class="text-lg font-medium px-3 py-1 text-center w-32 bg-[#C40D0D] text-[#FFFFFF] rounded-xl shadow-lg">
+              Reject
+            </button>   
+          </div>
+
+        </div>
+
+        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Rejected' && urlSegment === 'action'">
           
           <!-- Active Status -->
           <div class="cursor-pointer">
-            <button (click)="goBack()" class="cursor-pointer text-lg font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
+            <button (click)="openApproveView()" class="cursor-pointer text-lg font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
+              Approve
+            </button>   
+          </div>
+        
+        </div>
+
+        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Rejected' && urlSegment === 'govi-shop-suppliers' ">
+          
+          <div >
+            <button  class="text-lg font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
               Approve
             </button>   
           </div>
@@ -264,7 +289,7 @@
 
   <div *ngIf="rejectView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-xl w-1/3 py-8 px-4">
-      <div>
+      <div class="px-8">
   
         <div class="mb-4 text-center">
           <p class="text-lg mb-2 dark:text-textDark">
@@ -275,7 +300,8 @@
         <div>
           <!-- Textarea -->
           <textarea
-            class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:border-gray-600 dark:text-white border border-gray-300 rounded-xl outline-none"
+            class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:text-white border rounded-xl outline-none transition-colors"
+            [ngClass]="textAreaTouched && !text ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'"
             rows="4"
             placeholder="Mention Reason..."
             name="reply"

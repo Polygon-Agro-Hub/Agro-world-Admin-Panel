@@ -243,10 +243,23 @@ deleteGoViShop(id: number) {
 
   navigateEdit(id: number) {
     this.router.navigate([`/govi-shop/action/update-govi-shop/${id}`]);
+
+    if (this.urlSegment === 'all-govi-shops') {
+      this.router.navigate([`/govi-shop/action/update-govi-shop/${id}`]);
+    } else {
+      this.router.navigate([`/steckholders/action/govi-shop-suppliers/update-govi-shop/${id}`]);
+    }
   }
 
   previewGoViShop(id: number) {
-    this.router.navigate([`/govi-shop/action/preview-govi-shop/${id}`]);
+
+    if (this.urlSegment === 'all-govi-shops') {
+      this.router.navigate([`/govi-shop/action/preview-govi-shop/${id}`]);
+    } else {
+      this.router.navigate([`/steckholders/action/govi-shop-suppliers/preview-govi-shop/${id}`]);
+    }
+
+    
   }
 
   back(): void {

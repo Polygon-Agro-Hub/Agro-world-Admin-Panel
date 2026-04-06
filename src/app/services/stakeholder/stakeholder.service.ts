@@ -603,17 +603,17 @@ export class StakeholderService {
       'Content-Type': 'application/json',
     });
   
-    const url = `${this.apiUrl}shop/reneve-govi-shop-user/${id}`;
-    return this.http.put<any>(url, { status }, { headers });
+    const url = `${this.apiUrl}shop/approve-govi-shop/${id}`;
+    return this.http.put<any>(url, {}, { headers });
   }
 
-  rejectGoviShopUser(id: number, text: string): Observable<any> {
+  rejectGoviShop(id: number, text: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}shop/reject-govi-shop-user-status/${id}`;
+    const url = `${this.apiUrl}shop/reject-govi-shop/${id}`;
     return this.http.post<any>(url, {text}, { headers });
   }
 

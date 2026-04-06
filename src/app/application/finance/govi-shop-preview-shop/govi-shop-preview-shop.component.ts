@@ -66,7 +66,13 @@ export class GoviShopPreviewShopComponent {
   ngOnInit(): void {
     this.scrollToTop();
     this.shopId = this.route.snapshot.params['id'];
+    const segments = this.router.url
+    .split('/')
+    .filter(segment => segment.length > 0);
+
+    this.urlSegment = segments[segments.length - 3];
     this.fetchShopById(this.shopId);
+    console.log('urlSegment', this.urlSegment)
   }
 
   scrollToTop(): void {
@@ -273,10 +279,13 @@ export class GoviShopPreviewShopComponent {
 
   closeRejectView() {
     this.rejectView = false;
+    this.textAreaTouched = false;
+    this.text='';
   }
 
   confirmApprove(): void {
     this.isLoading = true;
+    this.approveView = false;
     this.goviShopService
       .approveGoviShop(this.shopId)
       .subscribe({
@@ -285,7 +294,7 @@ export class GoviShopPreviewShopComponent {
           if (response.success) {
             Swal.fire({
               title: 'Success!',
-              text: 'GoViShop Membership renewed successfully',
+              text: 'GoViShop Approved successfully',
               icon: 'success',
               timer: 2000,
               showConfirmButton: false,
@@ -296,18 +305,16 @@ export class GoviShopPreviewShopComponent {
                 cancelButton: 'px-6 py-2 rounded-md',
               },
             }).then(() => {
-              this.router.navigate([
-                '/finance/action/finance-govishop/view-action',
-              ]);
+              this.fetchShopById(this.shopId);
             });
           }
         },
         error: (error) => {
           this.isLoading = false;
-          console.error('Error renewing GoViShop membership:', error);
+          console.error('Error Approving GoViShop:', error);
           Swal.fire({
             title: 'Error!',
-            text: 'Failed to renew GoViShop membership',
+            text: 'Failed to Approve GoViShop',
             icon: 'error',
             confirmButtonColor: '#C40D0D',
             customClass: {
@@ -321,8 +328,56 @@ export class GoviShopPreviewShopComponent {
       });
   }
 
-  confirmReject() {
-    
+  confirmReject(): void {
+    this.textAreaTouched = true;
+
+    if (!this.text) {
+      return;
+    }
+    this.rejectView = false;
+    this.isLoading = true;
+    this.goviShopService
+      .rejectGoviShop(this.shopId, this.text)
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.status) {
+            Swal.fire({
+              title: 'Success!',
+              text: 'GoViShop rejected successfully',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false,
+              customClass: {
+                popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+                title: 'font-semibold text-lg',
+                confirmButton: 'px-6 py-2 rounded-md',
+                cancelButton: 'px-6 py-2 rounded-md',
+              }, 
+            }).then(() => {
+              this.fetchShopById(this.shopId);
+            });
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error rejecting GoViShop:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to reject GoViShop',
+            icon: 'error',
+            confirmButtonColor: '#C40D0D',
+            customClass: {
+              popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+              title: 'font-semibold text-lg',
+              confirmButton: 'px-6 py-2 rounded-md',
+              cancelButton: 'px-6 py-2 rounded-md',
+            },
+          });
+
+          this.rejectView = false;
+        },
+      });
   }
 
   onTextareaClick() {

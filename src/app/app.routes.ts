@@ -1130,7 +1130,16 @@ export const routes: Routes = [
                   {
                     path: 'edit-govi-shop-pos-user',
                     component: GoviShopPosUserEditComponent,
-                  }
+                  },
+                  {
+                    path: 'preview-govi-shop/:id',
+                    component: GoviShopPreviewShopComponent,
+                  },
+
+                  {
+                    path: 'update-govi-shop/:id',
+                    component: UpdateGoviShopComponent,
+                  },
 
                 ],
               },

@@ -261,6 +261,13 @@ export class GoviShopViewDocumentComponent implements OnInit {
   }
 
   rejectMembership(): void {
+
+    this.textAreaTouched = true;
+
+    if (!this.text) {
+      return;
+    }
+    
     this.isRejectPopUp = false;
     this.isLoading = true;
     this.financeService
@@ -270,8 +277,8 @@ export class GoviShopViewDocumentComponent implements OnInit {
           this.isLoading = false;
           if (response.status) {
             Swal.fire({
-              title: 'Rejected!',
-              text: response.message || 'GoViShop Membership rejected successfully',
+              title: 'Success!',
+              text: 'GoViShop Membership rejected successfully',
               icon: 'success',
               timer: 2000,
               showConfirmButton: false,

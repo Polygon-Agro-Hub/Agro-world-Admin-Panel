@@ -120,6 +120,7 @@
             <!-- Textarea -->
             <textarea
               class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:border-gray-600 dark:text-white border border-gray-300 rounded-xl outline-none"
+              [ngClass]="textAreaTouched && !text ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'"
               rows="4"
               placeholder="Mention Reason..."
               name="reply"
@@ -148,7 +149,6 @@
           <button
             type="button"
             (click)="rejectMembership()"
-            [disabled]="!text"
             class="px-8 py-2 min-w-36 rounded-lg text-white transition-colors font-medium"
             [ngClass]="{
               'bg-[#74788D] cursor-not-allowed': !text,

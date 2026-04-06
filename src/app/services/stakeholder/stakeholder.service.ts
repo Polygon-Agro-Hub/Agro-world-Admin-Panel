@@ -462,10 +462,6 @@ export class StakeholderService {
       url += `&searchItem=${searchItem}`;
     }
 
-    if (searchItem) {
-      url += `&searchItem=${searchItem}`;
-    }
-
     return this.http.get<any>(url, { headers });
   }
 
@@ -474,6 +470,15 @@ export class StakeholderService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<any>(`${this.apiUrl}shop/get-govi-shop-by-id/${id}`, {
+      headers,
+    });
+  }
+
+  getGoViShopForUpdate(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}shop/get-govi-shop-for-update/${id}`, {
       headers,
     });
   }
@@ -574,6 +579,18 @@ export class StakeholderService {
     console.log('This is shop Id', shopId);
     return this.http.get(
       `${this.apiUrl}shop/get-govi-shop-branches/${shopId}`,
+      {
+        headers,
+      }
+    );
+  }
+
+  deleteGoViShop(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.delete(
+      `${this.apiUrl}auth/delete-govi-shop/${id}`,
       {
         headers,
       }

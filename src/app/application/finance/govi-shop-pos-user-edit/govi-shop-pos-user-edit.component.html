@@ -6,16 +6,16 @@
 </button>
 
 <div *ngIf="!isVerification" class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
-  <h2 class="text-xl font-normal text-[#292929] dark:text-textDark mb-2">
+  <h2 class="text-xl font-normal text-[#292929] dark:text-textDark mb-2 ml-4">
     Edit POS User
   </h2>
 
   <button (click)="resetPassword()"
-        class="bg-[#FF0000] text-white font-semibold px-4 py-2 my-3 rounded-lg shadow-md">
+        class="bg-[#FF0000] text-white font-semibold px-4 py-2 my-3 rounded-lg shadow-md ml-4">
         Reset Password
   </button>
 
-  <div class="px-12 pb-6">
+  <div class="pr-12 pb-6 ml-4">
     <form (ngSubmit)="onUpload(form)" #form="ngForm">
       <!-- First Row: Cluster Name and District -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-10">
@@ -23,7 +23,7 @@
         <div>
             <label
               for="centerId"
-              class="block text-sm font-medium text-gray-700 dark:text-textDark"
+              class="block font-[500] text-gray-700 dark:text-textDark"
             >
               Branch Name *
             </label>
@@ -37,7 +37,7 @@
               filterBy="label"
               [showClear]="false"
               placeholder="Select a Branch"
-              styleClass="w-full mt-1"
+              styleClass="w-full h-8 mt-2"
               panelStyleClass="custom-dropdown-panel"
               class="mt-1 block w-full p-dropdown-custom"
               id="branch"
@@ -47,7 +47,7 @@
   
             <div
               *ngIf="branchNameInput.touched && !userObj.branchId"
-              class="text-red-500 text-sm mt-1"
+              class="text-red-500 mt-1"
             >
               <div>Branch Name is required</div>
             </div>
@@ -55,18 +55,18 @@
 
         <!-- Cluster Name Input -->
         <div>
-          <label for="clusterName" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+          <label for="clusterName" class="block font-[500] text-[#534E4E] dark:text-textDark mb-2">
             User Name *
           </label>
           <input type="text" id="fullName" [(ngModel)]="userObj.fullName" name="fullName" #fullNameInput="ngModel"
             (input)="onFormatInput2($event)"
             class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
             required />
-          <div *ngIf="fullNameInput.touched && !userObj.fullName" class="text-red-500 text-sm mt-1">
+          <div *ngIf="fullNameInput.touched && !userObj.fullName" class="text-red-500 mt-1">
             <div>User Name is required</div>
           </div>
 
-          <div *ngIf="userObj.fullName && hasLeadingOrTrailingSpaces && formSubmitted" class="text-red-500 text-sm mt-1">
+          <div *ngIf="userObj.fullName && hasLeadingOrTrailingSpaces && formSubmitted" class="text-red-500 mt-1">
             Cluster name should not have leading or trailing spaces
           </div>
         </div>
@@ -77,25 +77,25 @@
       <!-- Second Row: Certificate Dropdown -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div class="mb-6">
-          <label for="email" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+          <label for="email" class="block font-[500] text-[#534E4E] dark:text-textDark mb-2">
             Email Address *
           </label>
           <input type="text" id="email" [(ngModel)]="userObj.email" #emailInput="ngModel"
             pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$" (input)="onTrimInput($event)" name="email"
             class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
             required />
-          <div *ngIf="emailInput.touched && !userObj.email" class="text-red-500 text-sm mt-1">
+          <div *ngIf="emailInput.touched && !userObj.email" class="text-red-500 mt-1">
             Email is required
           </div>
 
-          <div *ngIf="emailInput.touched && emailInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+          <div *ngIf="emailInput.touched && emailInput.errors?.['pattern']" class="text-red-500 mt-1">
             <!-- <p>Invalid email format (e.g., example&#64;mail.com)</p> -->
             <p>Please enter a valid email in the format: example&#64;domain.com</p>
           </div>
         </div>
 
         <div>
-            <label for="clusterName" class="block text-sm font-medium text-[#534E4E] dark:text-textDark mb-2">
+            <label for="clusterName" class="block font-medium text-[#534E4E] dark:text-textDark mb-2">
               Phone Number *
             </label>
             <input type="text" id="mobileNumber" [(ngModel)]="userObj.mobileNumber" name="mobileNumber"
@@ -108,10 +108,10 @@
               maxlength="10"
               (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
                />
-            <div *ngIf="mobileNumberInput.touched && !userObj.mobileNumber" class="text-red-500 text-sm mt-1">
+            <div *ngIf="mobileNumberInput.touched && !userObj.mobileNumber" class="text-red-500 mt-1">
               <div> Phone Number is required</div>
             </div>
-            <div *ngIf="userObj.mobileNumber && mobileNumberInput.errors?.['pattern']" class="text-red-500 text-sm mt-1">
+            <div *ngIf="userObj.mobileNumber && mobileNumberInput.errors?.['pattern']" class="text-red-500 mt-1">
               Please enter a valid phone number.
             </div>
           </div>

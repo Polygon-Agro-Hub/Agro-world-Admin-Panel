@@ -455,7 +455,6 @@ onInput(event: Event, index: number) {
   input.value = value;
   this.otpValues[index] = value;
 
-  // 👉 move to next input
   if (value && index < this.inputs.length - 1) {
     this.inputs.toArray()[index + 1].nativeElement.focus();
   }
@@ -464,7 +463,6 @@ onInput(event: Event, index: number) {
 onKeyDown(event: KeyboardEvent, index: number) {
   const input = event.target as HTMLInputElement;
 
-  // 👉 go back on backspace if empty
   if (event.key === 'Backspace' && !input.value && index > 0) {
     this.inputs.toArray()[index - 1].nativeElement.focus();
   }
@@ -525,6 +523,7 @@ verifyOtp(): void {
           icon: 'error',
           title: 'Server Error!',
           text: 'OTP verification failed. Please try again later.',
+          timer: 1000,
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',
@@ -552,10 +551,19 @@ createGoviShopUser() {
       (res) => {
         this.isLoading= false;
         if (res?.status) {
-          Swal.fire(
-            'Success!',
-            'GoViShop Supplier Created Successfully',
-            'success'
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'GoViShop Supplier Created Successfully',
+            timer: 1000,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
+          }
+            
           );
           this.router.navigate(['steckholders/action/govi-shop-suppliers']);
         } else {
@@ -564,6 +572,7 @@ createGoviShopUser() {
             icon: 'error',
             title: 'Error!',
             text: 'GoViShop Supplier creation failed',
+            timer: 1000,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
@@ -605,6 +614,7 @@ createGoviShopUser() {
             title: 'Duplicate Information',
             html: errorMessage,
             confirmButtonText: 'OK',
+            
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',

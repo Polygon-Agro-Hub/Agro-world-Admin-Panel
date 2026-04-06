@@ -130,9 +130,10 @@ export class UpdateGoviShopUserComponent implements OnInit {
         html: errorMessage,
         confirmButtonText: 'OK',
         customClass: {
-          popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -148,6 +149,8 @@ export class UpdateGoviShopUserComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
       buttonsStyling: true,
     }).then((result) => {
@@ -170,6 +173,8 @@ export class UpdateGoviShopUserComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
       buttonsStyling: true,
     }).then((result) => {
@@ -190,6 +195,8 @@ onCancel(): void {
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
     },
     buttonsStyling: true,
   }).then((result) => {
@@ -316,10 +323,17 @@ updateGoviShopUser() {
       (res) => {
         this.isLoading= false;
         if (res?.status) {
-          Swal.fire(
-            'Success',
-            'GoViShop Supplier Updated Successfully',
-            'success'
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'GoViShop Supplier Updated Successfully',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
+          }
           );
           this.router.navigate(['steckholders/action/govi-shop-suppliers']);
         } else {
@@ -328,6 +342,12 @@ updateGoviShopUser() {
             icon: 'error',
             title: 'Error',
             text: 'GoViShop Supplier Update failed',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           });
         }
       },
@@ -364,10 +384,10 @@ updateGoviShopUser() {
             html: errorMessage,
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
               htmlContainer: 'text-left',
-              confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
             },
           });
           return;

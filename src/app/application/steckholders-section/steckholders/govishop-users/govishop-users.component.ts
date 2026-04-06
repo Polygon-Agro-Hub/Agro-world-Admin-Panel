@@ -142,8 +142,8 @@ export class GovishopUsersComponent implements OnInit {
   }
 
   editUser(id: string): void {
-    this.router.navigate(['steckholders/action/govi-shop-suppliers/edit-user'], {
-      queryParams: { id, shopId: this.shopId, role: this.role }
+    this.router.navigate(['steckholders/action/govi-shop-suppliers/edit-govi-shop-pos-user'], {
+      queryParams: { id }
     });
   }
 }

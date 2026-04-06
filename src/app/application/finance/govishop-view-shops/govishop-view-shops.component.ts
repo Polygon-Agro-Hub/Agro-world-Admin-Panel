@@ -70,7 +70,7 @@ export class GovishopViewShopsComponent implements OnInit {
 
   approvalStatusOptions = [
     { label: 'Approved', value: 'Approved' },
-    { label: 'Not Approved', value: 'Not Approved' },
+    { label: 'Not Approved', value: 'Pending' },
     { label: 'Rejected', value: 'Rejected' }
   ]
 
@@ -78,7 +78,8 @@ export class GovishopViewShopsComponent implements OnInit {
     { label: 'Limited Liability Company', value: 'Limited Liability Company' },
     { label: 'Partnership Business', value: 'Partnership Business' },
     { label: 'Sole propprietorship', value: 'Sole propprietorship' },
-    { label: 'Cooperative Society', value: 'Cooperative Society' }
+    { label: 'Cooperative Society', value: 'Cooperative Society' },
+    { label: 'No Formal Registration (Request NIC)', value: 'No Formal Registration (Request NIC)'}
   ]
 
 
@@ -146,7 +147,7 @@ export class GovishopViewShopsComponent implements OnInit {
   fetchAllGoViShopRequests(
     page: number = this.page,
     limit: number = this.itemsPerPage,
-    approval: string = this.selectedActiveStatus,
+    approval: string = this.selectedApprvalStatus,
     bussinessType: string = this.selectedBussinessType,
     searchItem: string = this.searchItem
   ) {
@@ -175,10 +176,10 @@ export class GovishopViewShopsComponent implements OnInit {
     }
   }
 
-deleteCollectionCenter(id: number) {
+deleteGoViShop(id: number) {
   Swal.fire({
     title: 'Are you sure?',
-    text: 'Do you really want to delete this Collection Centre? This action cannot be undone.',
+    text: 'Do you really want to delete this GoViShop? This action cannot be undone.',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes, delete it!',
@@ -191,12 +192,12 @@ deleteCollectionCenter(id: number) {
     cancelButtonColor: '#dc2626',
   }).then((result) => {
     if (result.isConfirmed) {
-      this.collectionService.deleteCollectionCenter(id).subscribe(
+      this.goviShopService.deleteGoViShop(id).subscribe(
         (res) => {
           if (res) {
             Swal.fire({
               title: 'Deleted!',
-              text: 'The Collection Centre has been deleted.',
+              text: 'The GoViShop has been deleted.',
               icon: 'success',
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -204,13 +205,13 @@ deleteCollectionCenter(id: number) {
               },
               confirmButtonColor: '#2563eb',
             });
-            this.fetchGoviShopsForSeletectedUser();
+            this.selectMethodToFilter();
           }
         },
         (error) => {
           Swal.fire({
             title: 'Error!',
-            text: 'There was an error deleting the Collection Centre',
+            text: 'Pasan Aiya did not include the required column to delete a shop.',
             icon: 'error',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

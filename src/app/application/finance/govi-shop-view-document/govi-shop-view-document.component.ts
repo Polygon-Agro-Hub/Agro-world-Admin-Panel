@@ -5,11 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FinanceService } from '../../../services/finance/finance.service';
 import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-govi-shop-view-document',
   standalone: true,
-  imports: [CommonModule, LoadingSpinnerComponent],
+  imports: [CommonModule, LoadingSpinnerComponent, FormsModule],
   templateUrl: './govi-shop-view-document.component.html',
   styleUrl: './govi-shop-view-document.component.css',
 })
@@ -196,7 +197,7 @@ export class GoviShopViewDocumentComponent implements OnInit {
           if (response.success) {
             Swal.fire({
               title: 'Success!',
-              text: response.message || 'Membership renewed successfully',
+              text: response.message || 'GoViShop GoViShop Membership renewed successfully',
               icon: 'success',
               timer: 2000,
               showConfirmButton: false,
@@ -212,10 +213,10 @@ export class GoviShopViewDocumentComponent implements OnInit {
         },
         error: (error) => {
           this.isLoading = false;
-          console.error('Error renewing membership:', error);
+          console.error('Error renewing GoViShop membership:', error);
           Swal.fire({
             title: 'Error!',
-            text: 'Failed to renew membership',
+            text: 'Failed to renew GoViShop membership',
             icon: 'error',
             confirmButtonColor: '#C40D0D',
           });
@@ -225,42 +226,43 @@ export class GoviShopViewDocumentComponent implements OnInit {
 
   // Reject Action
   openRejectPopup(): void {
-    Swal.fire({
-      title: 'Please Confirm!',
-      text: 'Are you sure you want to Reject the membership?',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Reject',
-      cancelButtonText: 'No, Go Back',
-      confirmButtonColor: '#C40D0D',
-      cancelButtonColor: '#6B7280',
-      customClass: {
-        popup:
-          'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
-        title: 'font-semibold text-lg',
-        confirmButton: 'px-6 py-2 rounded-md',
-        cancelButton: 'px-6 py-2 rounded-md',
-      },
-      reverseButtons: true,
+    this.isRejectPopUp = true;
+    // Swal.fire({
+    //   title: 'Please Confirm!',
+    //   text: 'Are you sure you want to Reject the membership?',
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Yes, Reject',
+    //   cancelButtonText: 'No, Go Back',
+    //   confirmButtonColor: '#C40D0D',
+    //   cancelButtonColor: '#6B7280',
+    //   customClass: {
+    //     popup:
+    //       'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+    //     title: 'font-semibold text-lg',
+    //     confirmButton: 'px-6 py-2 rounded-md',
+    //     cancelButton: 'px-6 py-2 rounded-md',
+    //   },
+    //   reverseButtons: true,
       
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.isRejectPopUp = true;
-        // this.rejectMembership();
-      }
-    });
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     this.isRejectPopUp = true;
+    //     // this.rejectMembership();
+    //   }
+    // });
   }
 
   rejectMembership(): void {
     this.isLoading = true;
     this.financeService
-      .rejectGoviShopUser(this.shopId, 'Rejected')
+      .rejectGoviShopUser(this.shopId, this.text)
       .subscribe({
         next: (response) => {
           this.isLoading = false;
           if (response.success) {
             Swal.fire({
               title: 'Rejected!',
-              text: response.message || 'Membership rejected successfully',
+              text: response.message || 'GoViShop Membership rejected successfully',
               icon: 'success',
               timer: 2000,
               showConfirmButton: false,
@@ -276,10 +278,10 @@ export class GoviShopViewDocumentComponent implements OnInit {
         },
         error: (error) => {
           this.isLoading = false;
-          console.error('Error rejecting membership:', error);
+          console.error('Error rejecting GoViShop membership:', error);
           Swal.fire({
             title: 'Error!',
-            text: 'Failed to reject membership',
+            text: 'Failed to reject GoViShop membership',
             icon: 'error',
             confirmButtonColor: '#C40D0D',
           });

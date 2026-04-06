@@ -45,7 +45,10 @@ export class GoviShopPreviewShopComponent {
   translateX = 0;
   translateY = 0;
 
-  watermarkTiles = Array(40).fill(null);
+  watermarkTiles = Array(20).fill(null);
+
+  approveView: boolean = false;
+  rejectView: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -250,6 +253,30 @@ export class GoviShopPreviewShopComponent {
 
   getImageTransform(): string {
     return `scale(${this.scale}) translate(${this.translateX / this.scale}px, ${this.translateY / this.scale}px)`;
+  }
+
+  openApproveView() {
+    this.approveView = true;
+  }
+
+  openRejectView() {
+    this.rejectView = true;
+  }
+
+  closeApproveView() {
+    this.approveView = false;
+  }
+
+  closeRejectView() {
+    this.rejectView = false;
+  }
+
+  confirmApprove() {
+
+  }
+
+  confirmReject() {
+    
   }
 
   // confirmDisclaim(id: number) {

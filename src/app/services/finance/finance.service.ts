@@ -1093,14 +1093,14 @@ export class FinanceService {
     return this.http.put<any>(url, { status }, { headers });
   }
 
-  rejectGoviShopUser(id: number, status: string): Observable<any> {
+  rejectGoviShopUser(id: number, text: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
     const url = `${this.apiUrl}shop/reject-govi-shop-user/${id}`;
-    return this.http.put<any>(url, { status }, { headers });
+    return this.http.put<any>(url, text, { headers });
   }
 }
 

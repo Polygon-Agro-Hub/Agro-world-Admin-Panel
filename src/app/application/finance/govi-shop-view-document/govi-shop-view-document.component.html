@@ -103,32 +103,29 @@
 
       <!-- Title -->
       <h3
-        class="text-lg font-[500] text-gray-800 dark:text-textDark mb-4 text-center"
+        class="text-lg font-[600] text-[#000000] dark:text-textDark mb-4 text-center"
       >
-        Are you sure you want to delete this supplier?
+        Please Confirm?
       </h3>
 
       <!-- Content -->
-      <div class="w-full text-left space-y-4">
+      <div class="w-full text-center space-y-4">
 
-        <p class="text-[#292929] font-[400] dark:text-gray-400">
-          Removing this supplier will erase all the products they made and the purchase history from buyers.
+        <p class="text-[#000000] font-[400] text-center dark:text-gray-400">
+          Are you sure you want to Reject the membership
         </p>
 
-        <p class="text-[#292929] font-[500] dark:text-gray-400">
-          Please provide the reason for deleting the account, which will be shown to the customer in the email.
-        </p>
 
         <div>
             <!-- Textarea -->
-            <!-- <textarea
+            <textarea
               class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:border-gray-600 dark:text-white border border-gray-300 rounded-xl outline-none"
               rows="4"
               placeholder="Mention Reason..."
               name="reply"
               [(ngModel)]="text"
               (click)="onTextareaClick()"
-            ></textarea> -->
+            ></textarea>
 
             <div
                 *ngIf="textAreaTouched && !text"
@@ -139,11 +136,11 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex gap-4 w-full justify-between pt-2">
+        <div class="flex gap-x-4 gap-y-4 w-full justify-between px-10 pt-2">
           <button
             type="button"
             (click)="cancelDelete()"
-            class="px-8 py-2 min-w-36 rounded-lg bg-[#ECECEC] dark:bg-gray-700 text-[#939393] dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+            class="px-8 py-2 min-w-36 rounded-lg bg-[#74788D] dark:bg-[#74788D] text-[#FFFFFF] dark:text-gray-300 "
           >
             No, Go Back
           </button>
@@ -151,10 +148,11 @@
           <button
             type="button"
             (click)="rejectMembership()"
-            class="px-8 py-2 min-w-36 rounded-lg bg-[#D16D6A] text-white transition-colors font-medium "
+            [disabled]="!text"
+            class="px-8 py-2 min-w-36 rounded-lg text-white transition-colors font-medium"
             [ngClass]="{
-              'bg-[#74788D] text-[#FFFFFF] cursor-not-allowed': !text,
-              'bg-[#D16D6A] text-[#FFFFFF] cursor-pointer': !text
+              'bg-[#74788D] cursor-not-allowed': !text,
+              'bg-[#C40D0D] cursor-pointer': text
             }"
           >
             Yes, Reject

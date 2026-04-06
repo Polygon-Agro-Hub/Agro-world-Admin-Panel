@@ -133,9 +133,10 @@ export class GoviShopPosUserEditComponent implements OnInit {
         html: errorMessage,
         confirmButtonText: 'OK',
         customClass: {
-          popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -151,6 +152,8 @@ export class GoviShopPosUserEditComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
       buttonsStyling: true,
     }).then((result) => {
@@ -174,6 +177,8 @@ export class GoviShopPosUserEditComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
       buttonsStyling: true,
     }).then((result) => {
@@ -194,6 +199,8 @@ onCancel(): void {
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
     },
     buttonsStyling: true,
   }).then((result) => {
@@ -296,10 +303,18 @@ updatePOSUser() {
       (res) => {
         this.isLoading= false;
         if (res?.status) {
-          Swal.fire(
-            'Success',
-            'GoViShop POS User Updated Successfully',
-            'success'
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'GoViShop POS User Updated Successfully',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            }
+          },
+           
           );
           this.router.navigate(['steckholders/action/govi-shop-suppliers']);
         } else {
@@ -308,6 +323,12 @@ updatePOSUser() {
             icon: 'error',
             title: 'Error',
             text: 'GoViShop POS User Update failed',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           });
         }
       },
@@ -344,10 +365,10 @@ updatePOSUser() {
             html: errorMessage,
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
               htmlContainer: 'text-left',
-              confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
             },
           });
           return;
@@ -369,9 +390,9 @@ resetPassword() {
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold text-lg',
-      confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
-      cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
-    }
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+    },
   }).then((result) => {
     if (result.isConfirmed) {
       this.isLoading = true;
@@ -389,6 +410,8 @@ resetPassword() {
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
               },
             });
             this.fetchPosUserById();
@@ -402,6 +425,8 @@ resetPassword() {
               customClass: {
                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
               },
             });
           }
@@ -417,6 +442,8 @@ resetPassword() {
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
             },
           });
         }

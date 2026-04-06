@@ -50,6 +50,10 @@ export class GoviShopPreviewShopComponent {
   approveView: boolean = false;
   rejectView: boolean = false;
 
+  isRejectPopUp: boolean = false;
+  text: string = ''
+  textAreaTouched: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private goviShopService: StakeholderService,
@@ -271,12 +275,58 @@ export class GoviShopPreviewShopComponent {
     this.rejectView = false;
   }
 
-  confirmApprove() {
-
+  confirmApprove(): void {
+    this.isLoading = true;
+    this.goviShopService
+      .approveGoviShop(this.shopId)
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            Swal.fire({
+              title: 'Success!',
+              text: 'GoViShop Membership renewed successfully',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false,
+              customClass: {
+                popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+                title: 'font-semibold text-lg',
+                confirmButton: 'px-6 py-2 rounded-md',
+                cancelButton: 'px-6 py-2 rounded-md',
+              },
+            }).then(() => {
+              this.router.navigate([
+                '/finance/action/finance-govishop/view-action',
+              ]);
+            });
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error renewing GoViShop membership:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to renew GoViShop membership',
+            icon: 'error',
+            confirmButtonColor: '#C40D0D',
+            customClass: {
+              popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+              title: 'font-semibold text-lg',
+              confirmButton: 'px-6 py-2 rounded-md',
+              cancelButton: 'px-6 py-2 rounded-md',
+            },
+          });
+        },
+      });
   }
 
   confirmReject() {
     
+  }
+
+  onTextareaClick() {
+    this.textAreaTouched = true;
   }
 
   // confirmDisclaim(id: number) {

@@ -588,11 +588,11 @@ export class PostinvoiceService {
       
         addTitle = hasFamilyPacks
           ? ` Additional Items (${itemCount} ${itemCount === 1 ? 'Item' : 'Items'})`
-          : ` Additional Items (${itemCount} ${itemCount === 1 ? 'Item' : 'Items'})`;
+          : ` Custom Items (${itemCount} ${itemCount === 1 ? 'Item' : 'Items'})`;
       } else {
       addTitle = hasFamilyPacks
-        ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
-        : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
+        ? ` Custom Items(${invoice.additionalItems.length} Items)`
+        : ` Custom Items(${invoice.additionalItems.length} Items)`;
     }
 
     doc.setFontSize(9);
@@ -749,9 +749,9 @@ export class PostinvoiceService {
     if (invoice.orderApp === 'Marketplace') {
       label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
     } else if (invoice.orderApp === 'Dash') {
-      label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
+      label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
     } else {
-      label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
+      label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
     }
 
     grandTotalBody.push([

@@ -173,8 +173,7 @@ export class GoviShopViewDocumentComponent implements OnInit {
       confirmButtonColor: '#3980C0',
       cancelButtonColor: '#6B7280',
       customClass: {
-        popup:
-          'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+        popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
         title: 'font-semibold text-lg',
         confirmButton: 'px-6 py-2 rounded-md',
         cancelButton: 'px-6 py-2 rounded-md',
@@ -197,12 +196,15 @@ export class GoviShopViewDocumentComponent implements OnInit {
           if (response.success) {
             Swal.fire({
               title: 'Success!',
-              text: response.message || 'GoViShop GoViShop Membership renewed successfully',
+              text: 'GoViShop Membership renewed successfully',
               icon: 'success',
               timer: 2000,
               showConfirmButton: false,
               customClass: {
-                popup: 'bg-white dark:bg-tileBlack text-black dark:text-white',
+                popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+                title: 'font-semibold text-lg',
+                confirmButton: 'px-6 py-2 rounded-md',
+                cancelButton: 'px-6 py-2 rounded-md',
               },
             }).then(() => {
               this.router.navigate([
@@ -219,6 +221,12 @@ export class GoviShopViewDocumentComponent implements OnInit {
             text: 'Failed to renew GoViShop membership',
             icon: 'error',
             confirmButtonColor: '#C40D0D',
+            customClass: {
+              popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+              title: 'font-semibold text-lg',
+              confirmButton: 'px-6 py-2 rounded-md',
+              cancelButton: 'px-6 py-2 rounded-md',
+            },
           });
         },
       });
@@ -253,13 +261,14 @@ export class GoviShopViewDocumentComponent implements OnInit {
   }
 
   rejectMembership(): void {
+    this.isRejectPopUp = false;
     this.isLoading = true;
     this.financeService
       .rejectGoviShopUser(this.shopId, this.text)
       .subscribe({
         next: (response) => {
           this.isLoading = false;
-          if (response.success) {
+          if (response.status) {
             Swal.fire({
               title: 'Rejected!',
               text: response.message || 'GoViShop Membership rejected successfully',
@@ -267,8 +276,12 @@ export class GoviShopViewDocumentComponent implements OnInit {
               timer: 2000,
               showConfirmButton: false,
               customClass: {
-                popup: 'bg-white dark:bg-tileBlack text-black dark:text-white',
+                popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+                title: 'font-semibold text-lg',
+                confirmButton: 'px-6 py-2 rounded-md',
+                cancelButton: 'px-6 py-2 rounded-md',
               },
+              
             }).then(() => {
               this.router.navigate([
                 '/finance/action/finance-govishop/view-action',
@@ -284,7 +297,14 @@ export class GoviShopViewDocumentComponent implements OnInit {
             text: 'Failed to reject GoViShop membership',
             icon: 'error',
             confirmButtonColor: '#C40D0D',
+            customClass: {
+              popup: 'bg-white dark:bg-tileBlack text-black dark:text-white rounded-lg pt-2',
+              title: 'font-semibold text-lg',
+              confirmButton: 'px-6 py-2 rounded-md',
+              cancelButton: 'px-6 py-2 rounded-md',
+            },
           });
+          this.isRejectPopUp = false;
         },
       });
   }

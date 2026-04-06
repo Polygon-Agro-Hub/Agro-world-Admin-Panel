@@ -597,5 +597,25 @@ export class StakeholderService {
     );
   }
 
+  approveGoviShop(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}shop/reneve-govi-shop-user/${id}`;
+    return this.http.put<any>(url, { status }, { headers });
+  }
+
+  rejectGoviShopUser(id: number, text: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/reject-govi-shop-user-status/${id}`;
+    return this.http.post<any>(url, {text}, { headers });
+  }
+
 }
 

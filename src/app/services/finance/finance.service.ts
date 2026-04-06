@@ -1099,8 +1099,8 @@ export class FinanceService {
       'Content-Type': 'application/json',
     });
 
-    const url = `${this.apiUrl}shop/reject-govi-shop-user/${id}`;
-    return this.http.put<any>(url, text, { headers });
+    const url = `${this.apiUrl}shop/reject-govi-shop-user-status/${id}`;
+    return this.http.post<any>(url, {text}, { headers });
   }
 }
 

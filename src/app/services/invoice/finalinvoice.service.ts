@@ -788,11 +788,11 @@ export class FinalinvoiceService {
     }
 
     // Add service fee between Discount and Coupon Discount
-    if (invoice.orderApp !== 'Marketplace' &&
-      invoice.additionalItems &&
-      invoice.additionalItems.length > 0 &&
-      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
-      grandTotalBody.push; (['Service Fee', 'Rs. 180.00'])
+    if (invoice.orderApp !== 'Marketplace' && 
+    invoice.additionalItems && 
+    invoice.additionalItems.length > 0 && 
+    (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
     grandTotalBody.push([

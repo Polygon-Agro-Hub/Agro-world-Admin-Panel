@@ -208,7 +208,13 @@ export class GoviShopPreviewShopComponent {
     this.scale = 1;
     this.isModalOpen = true;
 
-    this.modalTitle = 'BR Image';
+    if (this.officerObj.shopType === 'No Formal Registration (Request NIC)') {
+      this.modalTitle = 'NIC Front & Back Images';
+    } else {
+      this.modalTitle = 'BR Image';
+    }
+
+    
     this.modalImage = logo
     this.isLoading = false;
   }

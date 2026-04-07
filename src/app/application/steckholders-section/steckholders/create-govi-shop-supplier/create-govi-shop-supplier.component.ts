@@ -306,18 +306,12 @@ export class CreateGoviShopSupplierComponent implements OnInit {
 
   validateFile(file: File): void {
     const allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf'];
-    const allowedMimeTypes = [
-      'image/jpeg',
-      'image/png',
-      'application/pdf'
-    ];
   
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
   
     const isValidExtension = fileExtension && allowedExtensions.includes(fileExtension);
-    const isValidMimeType = allowedMimeTypes.includes(file.type);
   
-    if (isValidExtension && isValidMimeType) {
+    if (isValidExtension) {
       this.selectedFile = file;
       this.errorMessage = '';
     } else {
@@ -485,7 +479,7 @@ verifyOtp(): void {
             icon: 'success',
             title: 'Success!',
             text: 'OTP verification successful!\nCreating GoViShop owner',
-            timer: 1000,     
+            timer: 2000,     
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
@@ -555,7 +549,6 @@ createGoviShopUser() {
             icon: 'success',
             title: 'Success!',
             text: 'GoViShop Supplier Created Successfully',
-            timer: 1000,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
@@ -572,7 +565,6 @@ createGoviShopUser() {
             icon: 'error',
             title: 'Error!',
             text: 'GoViShop Supplier creation failed',
-            timer: 1000,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
@@ -647,6 +639,7 @@ cancelVerification(): void {
     if (result.isConfirmed) {
       this.otpValues = ['', '', '', '', ''];
       this.isVerification = false;
+      this.startTimer();
     }
   });
 }

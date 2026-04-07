@@ -7,7 +7,7 @@
 
 <div *ngIf="!isVerification" class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
   <h2 class="text-xl font-normal text-[#292929] dark:text-textDark mb-2 ml-4">
-    Edit POS User
+    Edit <span *ngIf="userObj.role === 'POS'">POS User</span><span *ngIf="userObj.role === 'Manager'">Manager</span>
   </h2>
 
   <button (click)="resetPassword()"

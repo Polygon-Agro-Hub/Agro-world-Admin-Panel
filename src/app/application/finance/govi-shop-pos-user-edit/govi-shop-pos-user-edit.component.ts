@@ -142,10 +142,17 @@ export class GoviShopPosUserEditComponent implements OnInit {
       return;
     }
 
+    const roleText =
+    this.userObj.role === 'POS'
+      ? 'POS User'
+      : this.userObj.role === 'Manager'
+      ? 'Manager'
+      : 'User';
+
     Swal.fire({
       icon: 'info',
       title: 'Are you sure?',
-      text: 'Do you really want to update this GoViShop POS User?',
+      text: `Do you really want to update this GoViShop ${roleText}?`,
       showCancelButton: true,
       confirmButtonText: 'Yes, Update',
       cancelButtonText: 'No, Cancel',
@@ -293,6 +300,13 @@ onPhoneInput(event: Event) {
 }
 
 updatePOSUser() {
+  const roleText =
+    this.userObj.role === 'POS'
+      ? 'POS User'
+      : this.userObj.role === 'Manager'
+      ? 'Manager'
+      : 'User';
+
   this.isLoading = true;
   this.isVerification = false;
   console.log('userObg', this.userObj)
@@ -306,7 +320,7 @@ updatePOSUser() {
           Swal.fire({
             icon: 'success',
             title: 'Success!',
-            text: 'GoViShop POS User Updated Successfully',
+            text: `GoViShop ${roleText} Updated Successfully`,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
@@ -316,13 +330,13 @@ updatePOSUser() {
           },
            
           );
-          this.router.navigate(['steckholders/action/govi-shop-suppliers']);
+          this.location.back();
         } else {
           this.isLoading= false;
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'GoViShop POS User Update failed',
+            text: `GoViShop ${roleText} Update failed`,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
@@ -340,8 +354,6 @@ updatePOSUser() {
         if (error.error && Array.isArray(error.error.errors)) {
           messages = error.error.errors.map((err: string) => {
             switch (err) {
-              case 'NIC':
-                return 'The NIC number is already registered.';
               case 'Email':
                 return 'Email already exists.';
               case 'phone':
@@ -378,9 +390,15 @@ updatePOSUser() {
 }
 
 resetPassword() {
+  const roleText =
+    this.userObj.role === 'POS'
+      ? 'POS User'
+      : this.userObj.role === 'Manager'
+      ? 'Manager'
+      : 'User';
   Swal.fire({
     title: 'Are you sure?',
-    text: 'You are about to reset the POS user password. This action cannot be undone.',
+    text: `You are about to reset the ${roleText} password. This action cannot be undone.`,
     icon: 'info',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -404,7 +422,7 @@ resetPassword() {
             Swal.fire({
               icon: 'success',
               title: 'Success!',
-              text: 'The POS user password reseted successfully.',
+              text: `The ${roleText} password reseted successfully.`,
               showConfirmButton: false,
               timer: 3000,
               customClass: {
@@ -462,6 +480,8 @@ class User {
   branchId!: number;
   shopName!: string;
   shopId!: number;
+  role!: string;
+  branchName!: string;
 }
 
 class Branch {

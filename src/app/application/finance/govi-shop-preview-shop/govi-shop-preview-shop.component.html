@@ -54,13 +54,13 @@
         <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Pending' && urlSegment === 'govi-shop-suppliers' ">
           
           <div >
-            <button class="text-lg font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
               Approve
             </button>   
           </div>
 
           <div class="cursor-pointer">
-            <button class="text-lg font-medium px-3 py-1 text-center w-32 bg-[#C40D0D] text-[#FFFFFF] rounded-xl shadow-lg">
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#C40D0D] text-[#FFFFFF] rounded-xl shadow-lg">
               Reject
             </button>   
           </div>
@@ -81,7 +81,7 @@
         <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Rejected' && urlSegment === 'govi-shop-suppliers' ">
           
           <div >
-            <button  class="text-lg font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
               Approve
             </button>   
           </div>
@@ -125,14 +125,14 @@
         <div *ngIf="officerObj.shopType !== 'No Formal Registration (Request NIC)'">
           <p class="text-[#627189]">BR Image</p>
           <a (click)="openModal(officerObj.shopTypeImg)">
-            <i class="fa-solid fa-image text-3xl text-blue-600 cursor-pointer"></i>
+            <i class="fa-solid fa-image text-2xl text-blue-600 cursor-pointer"></i>
           </a>
         </div>
 
         <div *ngIf="officerObj.shopType === 'No Formal Registration (Request NIC)'">
             <p class="text-[#627189]">NIC Scanned PDF (Both Front & Back)</p>
             <a (click)="openModal(officerObj.shopTypeImg)">
-              <i class="fa-regular fa-file text-3xl text-blue-600 cursor-pointer"></i>
+              <i class="fa-solid fa-file text-2xl text-blue-600 cursor-pointer"></i>
             </a>
           </div>
 
@@ -210,12 +210,19 @@
     <div class="bg-white rounded-xl shadow-2xl w-[750px] max-w-[95vw] p-4 relative">
       
       <!-- Header -->
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-base font-semibold text-gray-700">{{ modalTitle }}</h2>
+      <div class="flex items-center justify-end mb-3 relative">
+  
+        <!-- Centered Title -->
+        <h2 class="absolute left-1/2 -translate-x-1/2 text-base font-semibold text-gray-700">
+          {{ modalTitle }}
+        </h2>
+      
+        <!-- Close Button -->
         <button (click)="closeModal()" 
                 class="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 transition">
           <i class="fa-solid fa-xmark text-sm"></i>
         </button>
+      
       </div>
   
       <!-- Image + Watermark Wrapper -->
@@ -237,8 +244,8 @@
         <div class="absolute inset-0 pointer-events-none overflow-hidden flex flex-wrap content-start"
              [style.transform]="getImageTransform()">
           <span *ngFor="let i of watermarkTiles"
-                class="block text-white/50 text-[11px] font-semibold whitespace-nowrap select-none m-[14px]"
-                style="transform: rotate(-35deg); text-shadow: 0 1px 2px rgba(0,0,0,0.35); width: 170px;">
+                class="block text-white/50 text-[11px] font-semibold whitespace-nowrap select-none m-[28px]"
+                style="transform: rotate(-35deg); text-shadow: 0 1px 2px rgba(0,0,0,0.35); width: 180px;">
             GovShop Internal Use Only
           </span>
         </div>
@@ -313,7 +320,7 @@
               *ngIf="textAreaTouched && !text"
               class="text-red-500 text-sm mt-1"
             >
-              Reason is required
+            <i class="fa-solid fa-circle-info text-xs text-red"></i> Reason is required
           </div>
       </div>
   

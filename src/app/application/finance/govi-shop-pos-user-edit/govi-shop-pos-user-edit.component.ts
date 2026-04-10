@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -7,10 +7,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as XLSX from 'xlsx';
-import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
+import { StakeholderService } from '../../../services/stakeholder/stakeholder.service';
 
 @Component({
-  selector: 'app-update-govi-shop-user',
+  selector: 'app-govi-shop-pos-user-edit',
   standalone: true,
   imports: [
     CommonModule,
@@ -19,12 +19,12 @@ import { StakeholderService } from '../../../../services/stakeholder/stakeholder
     FormsModule,
     DropdownModule,
   ],
-  templateUrl: './update-govi-shop-user.component.html',
-  styleUrl: './update-govi-shop-user.component.css'
+  templateUrl: './govi-shop-pos-user-edit.component.html',
+  styleUrl: './govi-shop-pos-user-edit.component.css'
 })
-export class UpdateGoviShopUserComponent implements OnInit {
+export class GoviShopPosUserEditComponent implements OnInit {
 
-  goviShopSupplierObj: GoViShopSupplier = new GoViShopSupplier();
+  userObj: User = new User();
 
   errorMessage: string = '';
   isLoading = false;
@@ -32,15 +32,10 @@ export class UpdateGoviShopUserComponent implements OnInit {
   hasLeadingOrTrailingSpaces: boolean = false;
 
   isVerification: boolean = false;
-  otpDigits: string = ''
-  referenceId: string = ''
-
-  timer: any;
-  timeLeft = 600; 
-  displayTime = '10:00';
-  canResend = false;
-
+  
   id!: number;
+  branchData: Branch[] = [];
+  branchOptions: any[] = [];
 
   constructor(
     private router: Router,
@@ -56,22 +51,34 @@ export class UpdateGoviShopUserComponent implements OnInit {
       console.log('Query parameter ID:', id);
       
       this.id = Number(id);
-      this.fetchSupplierById()
+      console.log('id', this.id)
+      this.fetchPosUserById();
       });
   }
 
-  fetchSupplierById(
+  fetchPosUserById(
     id: number = this.id,
   ) {
     this.isLoading = true;
-    this.goviShopService.getSupplierById(id)
+    this.goviShopService.getPosUserById(id)
       .subscribe(
         (response) => {
           console.log('response', response)
 
           this.isLoading = false;
-          this.goviShopSupplierObj = response.data
-          console.log('response', this.goviShopSupplierObj)
+
+          this.branchData = response.data.branches;
+
+          // Set branchOptions FIRST
+          this.branchOptions = this.branchData.map((branch) => ({
+            label: branch.branchName,
+            value: branch.id,
+          }));
+        
+          // Then assign userObj so the dropdown can match branchId against populated options
+          this.userObj = response.data.posUser
+
+          console.log('branchOptions', this.branchOptions)
       
         },
         (error) => {
@@ -86,32 +93,28 @@ export class UpdateGoviShopUserComponent implements OnInit {
     form.form.markAllAsTouched();
 
     const missingFields: string[] = [];
-    if (!this.goviShopSupplierObj.fullName) {
-      missingFields.push('Full Name is required');
+    if (!this.userObj.fullName) {
+      missingFields.push('User Name is required');
     }
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
 
-    if (!this.goviShopSupplierObj.email) {
+    if (!this.userObj.email) {
       missingFields.push('Email Address is required');
-    } else if (!emailPattern.test(this.goviShopSupplierObj.email)) {
+    } else if (!emailPattern.test(this.userObj.email)) {
       missingFields.push('Email Address must be a valid address');
     }
 
-    const nicPattern = /^(\d{9}[V]|\d{12})$/;
-
-    if (!this.goviShopSupplierObj.nic) {
-      missingFields.push('Nic Number is required');
-    } else if (!nicPattern.test(this.goviShopSupplierObj.nic)) {
-      missingFields.push('NIC number must be a valid number');
+    if (!this.userObj.branchId) {
+      missingFields.push('Branch Name is required');
     }
 
     const mobilePattern = /^[0-9]{10}$/;
 
-    if (!this.goviShopSupplierObj.mobileNumber) {
-      missingFields.push('Mobile Number is required');
-    } else if (!mobilePattern.test(this.goviShopSupplierObj.mobileNumber)) {
-      missingFields.push('Mobile Number must be a valid number');
+    if (!this.userObj.mobileNumber) {
+      missingFields.push('Phone Number is required');
+    } else if (!mobilePattern.test(this.userObj.mobileNumber)) {
+      missingFields.push('Phone Number must be a valid number');
     }
 
 
@@ -139,10 +142,17 @@ export class UpdateGoviShopUserComponent implements OnInit {
       return;
     }
 
+    const roleText =
+    this.userObj.role === 'POS'
+      ? 'POS User'
+      : this.userObj.role === 'Manager'
+      ? 'Manager'
+      : 'User';
+
     Swal.fire({
       icon: 'info',
       title: 'Are you sure?',
-      text: 'Do you really want to update this GoViShop Supplier?',
+      text: `Do you really want to update this GoViShop ${roleText}?`,
       showCancelButton: true,
       confirmButtonText: 'Yes, Update',
       cancelButtonText: 'No, Cancel',
@@ -155,7 +165,8 @@ export class UpdateGoviShopUserComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.updateGoviShopUser();
+        console.log('object', this.userObj)
+        this.updatePOSUser();
       } else {
         this.isLoading = false;
       }
@@ -243,35 +254,10 @@ blockInvalidPasteForPhone(event: ClipboardEvent) {
 onTrimInput(event: any): void {
   const inputElement = event.target as HTMLInputElement;
   const trimmedValue = inputElement.value.trimStart();
-  this.goviShopSupplierObj.email = trimmedValue;
+  this.userObj.email = trimmedValue;
   inputElement.value = trimmedValue;
 }
 
-onNicInput(event: any) {
-  // Get value and trim leading/trailing spaces
-  let value: string = event.target.value.trimStart().toUpperCase();
-
-  // Remove all invalid characters except digits and V
-  value = value.replace(/[^0-9V]/g, '');
-
-  // Prevent entering V anywhere except last character of 10-char NIC
-  if (value.includes('V') && value.length !== 10) {
-    value = value.replace(/V/g, '');
-  }
-
-  // Handle 10-char NIC ending with V
-  if (value.length === 10 && value.endsWith('V')) {
-    value = value.slice(0, 10);
-  }
-
-  // Limit 12-digit NIC
-  if (value.length > 12) {
-    value = value.slice(0, 12);
-  }
-
-  // Update the model
-  this.goviShopSupplierObj.nic = value;
-}
 
 onFormatInput2(event: any): void {  //trim spaces only from start
   const inputElement = event.target as HTMLInputElement;
@@ -284,7 +270,7 @@ onFormatInput2(event: any): void {  //trim spaces only from start
     value = value.charAt(0).toUpperCase() + value.slice(1);
 
     // Update model
-    this.goviShopSupplierObj.fullName = value;
+    this.userObj.fullName = value;
 
     // Update input box value
     inputElement.value = value;
@@ -313,11 +299,19 @@ onPhoneInput(event: Event) {
   input.dispatchEvent(new Event('input'));
 }
 
-updateGoviShopUser() {
+updatePOSUser() {
+  const roleText =
+    this.userObj.role === 'POS'
+      ? 'POS User'
+      : this.userObj.role === 'Manager'
+      ? 'Manager'
+      : 'User';
+
   this.isLoading = true;
   this.isVerification = false;
-  this.goviShopService.updateGoviShopUser(
-    this.goviShopSupplierObj,
+  console.log('userObg', this.userObj)
+  this.goviShopService.updatePOSUser(
+    this.userObj,
     )
     .subscribe(
       (res) => {
@@ -326,22 +320,23 @@ updateGoviShopUser() {
           Swal.fire({
             icon: 'success',
             title: 'Success!',
-            text: 'GoViShop Supplier Updated Successfully',
+            text: `GoViShop ${roleText} Updated Successfully`,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
               htmlContainer: 'text-left',
               confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-            },
-          }
+            }
+          },
+           
           );
-          this.router.navigate(['steckholders/action/govi-shop-suppliers']);
+          this.location.back();
         } else {
           this.isLoading= false;
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'GoViShop Supplier Update failed',
+            text: `GoViShop ${roleText} Update failed`,
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
@@ -359,8 +354,6 @@ updateGoviShopUser() {
         if (error.error && Array.isArray(error.error.errors)) {
           messages = error.error.errors.map((err: string) => {
             switch (err) {
-              case 'NIC':
-                return 'The NIC number is already registered.';
               case 'Email':
                 return 'Email already exists.';
               case 'phone':
@@ -396,14 +389,102 @@ updateGoviShopUser() {
     );
 }
 
+resetPassword() {
+  const roleText =
+    this.userObj.role === 'POS'
+      ? 'POS User'
+      : this.userObj.role === 'Manager'
+      ? 'Manager'
+      : 'User';
+  Swal.fire({
+    title: 'Are you sure?',
+    text: `You are about to reset the ${roleText} password. This action cannot be undone.`,
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, reset password!',
+    cancelButtonText: 'Cancel',
+    customClass: {
+      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+      title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.isLoading = true;
+
+      this.goviShopService.resetPassword(this.userObj).subscribe(
+        (res) => {
+          this.isLoading = false;
+          if (res.status) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: `The ${roleText} password reseted successfully.`,
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            });
+            this.fetchPosUserById();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error!',
+              text: 'Something went wrong. Please try again.',
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                title: 'font-semibold text-lg',
+                htmlContainer: 'text-left',
+                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              },
+            });
+          }
+        },
+        () => {
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'An error occurred while resetting password. Please try again.',
+            showConfirmButton: false,
+            timer: 3000,
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
+          });
+        }
+      );
+    }
+  });
+}
 
 }
 
-class GoViShopSupplier {
+class User {
   id!: number;
   fullName!: string;
-  nic!: string;
   email!: string;
   mobileNumber!: string;
+  branchId!: number;
+  shopName!: string;
+  shopId!: number;
+  role!: string;
+  branchName!: string;
 }
 
+class Branch {
+  id!: number;
+  branchName!: string;
+}

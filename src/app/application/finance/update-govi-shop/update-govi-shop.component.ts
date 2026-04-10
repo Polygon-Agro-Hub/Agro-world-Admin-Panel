@@ -63,7 +63,7 @@ export class UpdateGoviShopComponent implements OnInit {
     id: number = this.shopId,
   ) {
     this.isLoading = true;
-    this.goviShopService.getGoViShopById(id)
+    this.goviShopService.getGoViShopForUpdate(id)
       .subscribe(
         (response) => {
           console.log('response', response)
@@ -126,9 +126,10 @@ export class UpdateGoviShopComponent implements OnInit {
         html: errorMessage,
         confirmButtonText: 'OK',
         customClass: {
-          popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
+          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       return;
@@ -144,6 +145,8 @@ export class UpdateGoviShopComponent implements OnInit {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
+        htmlContainer: 'text-left',
+        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
       },
       buttonsStyling: true,
     }).then((result) => {
@@ -170,6 +173,8 @@ onCancel(): void {
     customClass: {
       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
       title: 'font-semibold text-lg',
+      htmlContainer: 'text-left',
+      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
     },
     buttonsStyling: true,
   }).then((result) => {
@@ -285,18 +290,33 @@ updateGoviShop() {
       (res) => {
         this.isLoading= false;
         if (res?.status) {
-          Swal.fire(
-            'Success',
-            'GoVi Shop Updated Successfully',
-            'success'
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'GoVi Shop Updated Successfully',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
+          }
+            
           );
           this.router.navigate(['steckholders/action/govi-shop-suppliers']);
+          this.location.back();
         } else {
           this.isLoading= false;
           Swal.fire({
             icon: 'error',
-            title: 'Error',
+            title: 'Error!',
             text: 'GoVi Shop Update failed',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
           });
         }
       },

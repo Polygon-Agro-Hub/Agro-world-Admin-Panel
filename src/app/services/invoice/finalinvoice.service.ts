@@ -612,11 +612,11 @@ export class FinalinvoiceService {
       } else if (invoice.orderApp === 'Dash') {
         addTitle = hasFamilyPacks
           ? ` Additional Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-          : ` Additional Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+          : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
       } else {
         addTitle = hasFamilyPacks
-          ? ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
-          : ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+          ? ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
       }
 
       doc.setFontSize(9);
@@ -768,9 +768,9 @@ export class FinalinvoiceService {
       if (invoice.orderApp === 'Marketplace') {
         label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
       } else if (invoice.orderApp === 'Dash') {
-        label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
+        label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
       } else {
-        label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
+        label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
       }
 
       grandTotalBody.push([
@@ -788,11 +788,11 @@ export class FinalinvoiceService {
     }
 
     // Add service fee between Discount and Coupon Discount
-    if (invoice.orderApp !== 'Marketplace' &&
-      invoice.additionalItems &&
-      invoice.additionalItems.length > 0 &&
-      (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
-      grandTotalBody.push; (['Service Fee', 'Rs. 180.00'])
+    if (invoice.orderApp !== 'Marketplace' && 
+    invoice.additionalItems && 
+    invoice.additionalItems.length > 0 && 
+    (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
+      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
     }
 
     grandTotalBody.push([

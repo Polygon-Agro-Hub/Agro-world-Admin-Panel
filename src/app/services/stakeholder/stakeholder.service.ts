@@ -462,10 +462,6 @@ export class StakeholderService {
       url += `&searchItem=${searchItem}`;
     }
 
-    if (searchItem) {
-      url += `&searchItem=${searchItem}`;
-    }
-
     return this.http.get<any>(url, { headers });
   }
 
@@ -474,6 +470,15 @@ export class StakeholderService {
       Authorization: `Bearer ${this.token}`,
     });
     return this.http.get<any>(`${this.apiUrl}shop/get-govi-shop-by-id/${id}`, {
+      headers,
+    });
+  }
+
+  getGoViShopForUpdate(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}shop/get-govi-shop-for-update/${id}`, {
       headers,
     });
   }
@@ -499,6 +504,117 @@ export class StakeholderService {
     return this.http.get<any>(`${this.apiUrl}shop/get-shop-by-id/${id}`, {
       headers,
     });
+  }
+
+  getUsers(
+  search?: string,
+  role?: string
+): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  let params = new HttpParams();
+
+  // Add filter parameters if provided
+  if (search) {
+    params = params.set('search', search);
+  }
+
+  if (role) {
+    params = params.set('role', role);
+  }
+
+  return this.http
+    .get(`${this.apiUrl}shop/users`, {
+      headers,
+      params,
+    });
+}
+
+  getPosUserById(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}shop/get-pos-user-by-id/${id}`, {
+      headers,
+    });
+  }
+
+  updatePOSUser(userData: any): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}shop/update-pos-user`,
+    userData,
+      {
+        headers
+      });
+  }
+
+  resetPassword(userData: any): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.post(`${this.apiUrl}shop/reset-govi-shop-user-password`,
+    userData,
+      {
+        headers
+      });
+
+  }
+
+  getBranchesList(shopId: number): Observable<any> {
+    console.log('shopId', shopId);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+    console.log('This is shop Id', shopId);
+    return this.http.get(
+      `${this.apiUrl}shop/get-govi-shop-branches/${shopId}`,
+      {
+        headers,
+      }
+    );
+  }
+
+  deleteGoViShop(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.delete(
+      `${this.apiUrl}auth/delete-govi-shop/${id}`,
+      {
+        headers,
+      }
+    );
+  }
+
+  approveGoviShop(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}shop/approve-govi-shop/${id}`;
+    return this.http.put<any>(url, {}, { headers });
+  }
+
+  rejectGoviShop(id: number, text: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/reject-govi-shop/${id}`;
+    return this.http.post<any>(url, {text}, { headers });
   }
 
 }

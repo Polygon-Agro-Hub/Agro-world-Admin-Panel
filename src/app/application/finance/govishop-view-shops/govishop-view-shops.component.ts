@@ -211,7 +211,7 @@ deleteGoViShop(id: number) {
         (error) => {
           Swal.fire({
             title: 'Error!',
-            text: 'Pasan Aiya did not include the required column to delete a shop.',
+            text: 'Error occured while deleting the GoViShop.',
             icon: 'error',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',

@@ -51,17 +51,35 @@
 
         </div>
 
-        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Pending' && urlSegment === 'govi-shop-suppliers' ">
+        <div class="flex flex-row gap-4 items-start" *ngIf="urlSegment === 'govi-shop-suppliers' ">
           
-          <div >
-            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
-              Approve
+          <div *ngIf="officerObj.isActive === 1" >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#BBFFC6] text-[#308233] rounded-xl shadow-lg">
+              Active
             </button>   
           </div>
 
-          <div class="cursor-pointer">
-            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#C40D0D] text-[#FFFFFF] rounded-xl shadow-lg">
-              Reject
+          <div *ngIf="officerObj.isActive === 0">
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#FFB9B7] text-[#D16D6A] rounded-xl shadow-lg">
+              Deactive
+            </button>   
+          </div>
+
+          <div *ngIf="officerObj.approvedStatus === 'Approved'" >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#BBFFC6] text-[#308233] rounded-xl shadow-lg">
+              Approved
+            </button>   
+          </div>
+
+          <div *ngIf="officerObj.approvedStatus === 'Pending'" >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-36 bg-[#F8FFA6] text-[#A8A100] rounded-xl shadow-lg">
+              Not Approved
+            </button>   
+          </div>
+          
+          <div *ngIf="officerObj.approvedStatus === 'Rejected'" >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#FFB9B7] text-[#D16D6A] rounded-xl shadow-lg">
+              Rejected
             </button>   
           </div>
 
@@ -78,7 +96,7 @@
         
         </div>
 
-        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Rejected' && urlSegment === 'govi-shop-suppliers' ">
+        <!-- <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Rejected' && urlSegment === 'govi-shop-suppliers' ">
           
           <div >
             <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
@@ -86,7 +104,7 @@
             </button>   
           </div>
         
-        </div>
+        </div> -->
       
       </div>
 

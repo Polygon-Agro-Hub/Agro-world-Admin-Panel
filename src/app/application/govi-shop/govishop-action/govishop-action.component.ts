@@ -23,11 +23,16 @@ export class GovishopActionComponent {
     this.router.navigate([path]);
   }
 
-  navigateToShops() {
+  navigateToShopRequests() {
+    this.router.navigate(['/govi-shop/action/all-shop-requests']).then(() => {});
+  }
+
+    navigateToShops() {
     this.router.navigate(['/govi-shop/action/all-govi-shops']).then(() => {});
   }
 
   navigateToDeletedSuppliers() {
     this.router.navigate(['/govi-shop/action/deleted-suppliers']).then(() => {}); 
   }
+  
 }

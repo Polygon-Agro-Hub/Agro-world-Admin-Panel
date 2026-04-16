@@ -26,4 +26,8 @@ export class GovishopActionComponent {
   navigateToShops() {
     this.router.navigate(['/govi-shop/action/all-govi-shops']).then(() => {});
   }
+
+  navigateToDeletedSuppliers() {
+    this.router.navigate(['/govi-shop/action/deleted-suppliers']).then(() => {}); 
+  }
 }

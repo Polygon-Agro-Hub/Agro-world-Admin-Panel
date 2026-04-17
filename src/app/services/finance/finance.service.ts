@@ -360,30 +360,6 @@ export interface UpdatePublishStatusResponse {
   message: string;
 }
 
-export interface DeletedSupplierDeletedInfo {
-  reason: string;
-  ownerId: number;
-  deletedAt: string; 
-}
-
-export type DeletedSupplierOnboardStatus = 'Self' | 'Admin' | 'GoViLink' | string;
-
-export interface DeletedSupplier {
-  id: number;
-  ownername: string;
-  nic: string;
-  shopPhone: string;
-  email: string;
-  onbordStatus: DeletedSupplierOnboardStatus;
-  deletedInfo: DeletedSupplierDeletedInfo;
-  deletedBy?: string;
-}
-
-export interface GetAllDeletedSuppliersResponse {
-  results: DeletedSupplier[];
-  total: number;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -1123,25 +1099,5 @@ export class FinanceService {
     const url = `${this.apiUrl}shop/reject-govi-shop-user-status/${id}`;
     return this.http.post<any>(url, {text}, { headers });
   }
-
-  getAllDeletedSuppliers(
-    page: number,
-    limit: number,
-    searchItem: string,
-  ): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
-    });
-
-    let url = `${this.apiUrl}shop/get-all-deleted-suppliers?page=${page}&limit=${limit}`;
-
-    if (searchItem) {
-      url += `&searchItem=${searchItem}`;
-    }
-
-    return this.http.get<any>(url, { headers });
-  }
-
 }
 

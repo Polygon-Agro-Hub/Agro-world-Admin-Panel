@@ -116,7 +116,7 @@
                             </button>
                         </td>
                         <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
-                            {{ item.deletedBy || 'Sathya' }}
+                            {{ item.deletedInfo.deletedBy }}
                         </td>
                         <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
                             {{ item.deletedInfo.deletedAt | date: 'hh:mm a, MMMM d, yyyy' }}

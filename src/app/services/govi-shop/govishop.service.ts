@@ -25,27 +25,27 @@ export class GovishopService {
   }
 
   getAllShops(
-    page: number = 1,
-    limit: number = 10,
-    accessStatus?: string,
-    approval?: string,
-    bussinessType?: string,
-    searchItem?: string,
-  ): Observable<{ results: any[]; total: number }> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
+      page: number = 1,
+      limit: number = 10,
+      accessStatus?: string,
+      approval?: string,
+      bussinessType?: string,
+      searchItem?: string,
+    ): Observable<{ results: any[]; total: number }> {
+      let params = new HttpParams()
+        .set('page', page.toString())
+        .set('limit', limit.toString());
 
     if (accessStatus) params = params.set('accessStatus', accessStatus);
     if (approval) params = params.set('approval', approval);
     if (bussinessType) params = params.set('bussinessType', bussinessType);
     if (searchItem) params = params.set('searchItem', searchItem);
 
-    return this.http.get<{ results: any[]; total: number }>(
-      `${this.apiUrl}get-all-shops`,
-      { headers: this.getHeaders(), params },
-    );
-  }
+      return this.http.get<{ results: any[]; total: number }>(
+        `${this.apiUrl}get-all-shops`,
+        { headers: this.getHeaders(), params },
+      );
+    }
 
   toggleShopActiveStatus(shopId: number, isActive: number): Observable<any> {
     return this.http.put<any>(
@@ -102,13 +102,15 @@ export class GovishopService {
   }
 
   getAllShopRequests(
+    
     filters: {
-      page?: number;
-      limit?: number;
-      approval?: string;
-      bussinessType?: string;
-      searchItem?: string;
-    } = {},
+        page?: number;
+        limit?: number;
+        approval?: string;
+        bussinessType?: string;
+        searchItem?: string;
+      } = {},
+  
   ): Observable<{ results: any[]; total: number }> {
     let params = new HttpParams();
     if (filters.page) params = params.set('page', filters.page.toString());
@@ -122,6 +124,36 @@ export class GovishopService {
     return this.http.get<{ results: any[]; total: number }>(
       `${this.apiUrl}get-all-shop-requests`,
       { headers: this.getHeaders(), params },
+    );
+  }
+
+  getBranchesByShopId(
+    shopId: number,
+    page: number = 1,
+    limit: number = 10,
+    province?: string,
+    district?: string,
+    searchItem?: string
+  ): Observable<{ results: any[]; total: number }> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    if (province) params = params.set('province', province);
+    if (district) params = params.set('district', district);
+    if (searchItem) params = params.set('searchItem', searchItem);
+
+    return this.http.get<{ results: any[]; total: number }>(
+      `${this.apiUrl}get-branches/${shopId}`,
+      { headers: this.getHeaders(), params }
+    );
+  }
+
+  toggleBranchActiveStatus(branchId: number, isActive: number): Observable<any> {
+    return this.http.put<any>(
+      `${this.apiUrl}toggle-branch-status/${branchId}`,
+      { isActive },
+      { headers: this.getHeaders() }
     );
   }
 

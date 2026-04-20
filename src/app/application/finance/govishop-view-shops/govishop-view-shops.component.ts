@@ -62,6 +62,9 @@ export class GovishopViewShopsComponent implements OnInit {
   selectAccessStatus: string = ''
   selectApproval: string = ''
   selectBussinessType: string = ''
+  pendingToggleShop: Shop | null = null;
+  pendingToggleStatus: number = 0;
+  showToggleModal = false;
 
   activeStatusOptions = [
     { label: 'Active', value: 'Active' },
@@ -266,9 +269,33 @@ deleteGoViShop(id: number) {
     this.location.back();
   }
 
-  toggleStatus(item: any) {
-    item.isActive = !item.isActive;
+  toggleStatus(shop: Shop): void {
+    this.pendingToggleShop = shop;
+    this.pendingToggleStatus = shop.isActive === 1 ? 0 : 1;
+    this.showToggleModal = true;
   
+  }
+
+  confirmToggle(): void {
+    if (!this.pendingToggleShop) return;
+    const shop = this.pendingToggleShop;
+    const newStatus = this.pendingToggleStatus;
+
+    this.goviShopService.toggleShopActiveStatus(shop.id, newStatus).subscribe({
+      next: () => {
+        shop.isActive = newStatus;
+        this.closeToggleModal();
+      },
+      error: (err) => {
+        console.error('Toggle error:', err);
+        this.closeToggleModal();
+      },
+    });
+  }
+
+  closeToggleModal(): void {
+    this.showToggleModal = false;
+    this.pendingToggleShop = null;
   }
 
   activeStatusFilter() {

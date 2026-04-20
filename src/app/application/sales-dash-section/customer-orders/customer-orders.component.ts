@@ -51,7 +51,6 @@ export class CustomerOrdersComponent implements OnInit {
   orders: Order[] = [];
   totalItems: number = 0;
 
-  // Status mapping for UI buttons to API values
   private statusMap: { [key: string]: string } = {
     assigned: 'Assigned',
     processing: 'Processing',
@@ -195,7 +194,6 @@ export class CustomerOrdersComponent implements OnInit {
   }
 
   isPostInvoiceEnabled(status: string): boolean {
-    // Define the statuses that allow post-invoice download
     const enabledStatuses = [
       'Out For Delivery',
       'Collected',

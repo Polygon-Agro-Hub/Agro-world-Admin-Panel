@@ -260,7 +260,6 @@ export class ViewOrdersComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  // In your component
   async downloadInvoice(orderId: number, invoiceNumber: string): Promise<void> {
     this.isLoading = true;
     try {
@@ -295,7 +294,6 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   isPostInvoiceEnabled(status: string): boolean {
-    // Define the statuses that allow post-invoice download
     const enabledStatuses = [
       'Out For Delivery',
       'Delivered',

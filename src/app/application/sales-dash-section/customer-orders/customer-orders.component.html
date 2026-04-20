@@ -145,7 +145,6 @@
 
         <div class="h-5"></div>
 
-        <!-- Loading indicator -->
         <div *ngIf="isLoading" class="flex justify-center p-8">
             <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#415CFF]"></div>
         </div>
@@ -184,12 +183,10 @@
                         <th class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
                             Order Status
                         </th>
-                        <!-- PRE-INVOICE Column -->
                         <th *ngIf="permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1'"
                             class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
                             Pre-Invoice
                         </th>
-                        <!-- POST-INVOICE Column -->
                         <th *ngIf="permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1'"
                             class="px-3 py-3 font-normal text-textLight dark:text-textDark text-center">
                             Post-Invoice
@@ -268,7 +265,6 @@
                                 </span>
                             </td>
 
-                            <!-- PRE-INVOICE Column Data Cell -->
                             <td *ngIf="permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1'"
                                 class="px-3 py-3 text-center">
                                 <button
@@ -278,7 +274,6 @@
                                 </button>
                             </td>
 
-                            <!-- POST-INVOICE Column Data Cell -->
                             <td *ngIf="permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1'"
                                 class="px-3 py-3 text-center">
                                 <div class="relative inline-block">
@@ -296,7 +291,6 @@
                     </ng-container>
 
                     <ng-template #noData>
-                        <!-- Update colspan to account for both invoice columns -->
                         <tr>
                             <td [attr.colspan]="(permissionService.hasPermission('Dash customers order download invoice') || tokenService.getUserDetails().role === '1') ? 10 : 8"
                                 class="px-3 py-16 text-center">

@@ -3,11 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
-import {
-  DeletedSupplier,
-  GetAllDeletedSuppliersResponse,
-} from '../../../services/finance/finance.service';
-import { FinanceService } from '../../../services/finance/finance.service';
+import { GovishopService } from '../../../services/govi-shop/govishop.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
@@ -34,7 +30,7 @@ export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
   isReasonModalOpen = false;
   selectedReason = '';
 
-  constructor(private financeService: FinanceService, private location: Location) {}
+  constructor(private govishopService: GovishopService, private location: Location) {}
 
   ngOnInit(): void {
     this.fetchDeletedSuppliers();
@@ -52,7 +48,7 @@ export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
   fetchDeletedSuppliers(): void {
     this.isLoading = true;
 
-    this.financeService
+    this.govishopService
       .getAllDeletedSuppliers(this.page, this.itemsPerPage, this.searchItem)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -60,7 +56,7 @@ export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
           this.suppliers = (res?.results || [])
             .map((s) => ({
               ...s,
-              deletedBy: s.deletedBy || 'Sathya',
+              deletedBy: s.deletedInfo?.deletedBy || '—',
             }))
             .sort((a, b) => {
               const aTime = new Date(a.deletedInfo?.deletedAt || 0).getTime();
@@ -132,4 +128,28 @@ export class AllDeletedSuppliersComponent implements OnInit, OnDestroy {
         return 'bg-[#EDEDED] text-[#494949] dark:bg-[#1E2638] dark:text-textDark';
     }
   }
+}
+
+export interface DeletedSupplierDeletedInfo {
+  reason: string;
+  ownerId: number;
+  deletedAt: string; 
+  deletedBy: string;
+}
+
+export type DeletedSupplierOnboardStatus = 'Self' | 'Admin' | 'GoViLink' | string;
+
+export interface DeletedSupplier {
+  id: number;
+  ownername: string;
+  nic: string;
+  shopPhone: string;
+  email: string;
+  onbordStatus: DeletedSupplierOnboardStatus;
+  deletedInfo: DeletedSupplierDeletedInfo;
+}
+
+export interface GetAllDeletedSuppliersResponse {
+  results: DeletedSupplier[];
+  total: number;
 }

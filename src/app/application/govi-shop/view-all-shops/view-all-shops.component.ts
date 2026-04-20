@@ -73,7 +73,7 @@ export class ViewAllShopsComponent implements OnInit {
   constructor(
     private router: Router,
     private govishopService: GovishopService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadShops();
@@ -167,15 +167,15 @@ export class ViewAllShopsComponent implements OnInit {
     );
   }
 
-  viewBranches(shopId: number): void {
+  viewBranches(shop: Shop): void {
     this.router.navigate(
-      ['steckholders/action/govi-shop-suppliers/govishop-view-shops/branches'],
-      { queryParams: { shopId } }
+      ['govi-shop/action/all-branches-pershop'],
+      { queryParams: { shopId: shop.id, shopName: shop.shopName } }
     );
   }
 
   back(): void {
-    this.router.navigate(['steckholders/action/govi-shop-suppliers']);
+    this.router.navigate(['govi-shop/action']);
   }
 
   getApprovalClass(status: string): string {

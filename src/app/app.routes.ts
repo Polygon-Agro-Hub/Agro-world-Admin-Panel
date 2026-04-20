@@ -290,6 +290,8 @@ import { GovishopUsersComponent } from './application/steckholders-section/steck
 import { GoviShopPosUserEditComponent } from './application/finance/govi-shop-pos-user-edit/govi-shop-pos-user-edit.component';
 import { AllDeletedSuppliersComponent } from './application/govi-shop/all-deleted-suppliers/all-deleted-suppliers.component';
 import { ViewAllShopsComponent } from './application/govi-shop/view-all-shops/view-all-shops.component';
+import { ViewBranchDetailsComponent } from './application/govi-shop/view-branch-details/view-branch-details.component';
+import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branches-per-shop/view-branches-per-shop.component';
 
 export const routes: Routes = [
   {
@@ -2128,9 +2130,13 @@ export const routes: Routes = [
                 path: 'all-govi-shops',
                 component: ViewAllShopsComponent,
               },
-                            {
+              {
                 path: 'all-shop-requests',
                 component: GovishopViewShopsComponent,
+              },
+              {
+                path: 'all-branches-pershop',
+                component: ViewBranchesPerShopComponent,
               },
 
               {
@@ -2146,6 +2152,10 @@ export const routes: Routes = [
                 path: 'deleted-suppliers',
                 component: AllDeletedSuppliersComponent,
               },
+              {
+                path: 'view-branch-details/:id',
+                component: ViewBranchDetailsComponent
+              }
             ],
           }
         ]

@@ -190,10 +190,7 @@ export class ViewBranchesPerShopComponent implements OnInit {
   }
 
   viewBranchDetails(branchId: number): void {
-    this.router.navigate(
-      ['steckholders/action/govi-shop-suppliers/govishop-view-shops/branches/branch-details'],
-      { queryParams: { branchId, shopId: this.shopId, shopName: this.shopName } }
-    );
+    this.router.navigate(['govi-shop/action/view-branch-details', branchId]);
   }
 
   viewBranchProducts(branchId: number): void {

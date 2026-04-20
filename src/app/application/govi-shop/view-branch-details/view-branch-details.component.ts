@@ -61,8 +61,18 @@ export class ViewBranchDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.branchId = 13;
-    this.fetchBranchDetails(this.branchId);
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      const parsed = Number(id);
+
+      if (!parsed) {
+        this.branchData = null;
+        return;
+      }
+
+      this.branchId = parsed;
+      this.fetchBranchDetails(this.branchId);
+    });
   }
 
   private fetchBranchDetails(id: number): void {

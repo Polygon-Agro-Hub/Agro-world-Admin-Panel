@@ -142,6 +142,11 @@
               <th
                 class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
+                Status
+              </th>
+              <th
+                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+              >
                 View Shares
               </th>
               <th
@@ -243,7 +248,9 @@
                   Divided
                 </p>
               </td>
-
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.publishStatus }}
+              </td>
               <td class="px-4 py-4 text-sm text-center">
                 <button
                   class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block"

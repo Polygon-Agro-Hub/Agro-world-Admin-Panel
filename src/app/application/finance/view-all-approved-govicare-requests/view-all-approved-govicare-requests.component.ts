@@ -362,6 +362,19 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       return;
     }
 
+    if (this.editMinShares > this.editNumShares) {
+    Swal.fire({
+      title: 'Validation Error',
+      text: 'The Minimum Investment Shares cannot be larger than the defined number of shares.',
+      icon: 'error',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold text-lg',
+      },
+    });
+    return;
+  }
+
     if (this.editMaxShares < this.editMinShares) {
       Swal.fire({
         title: 'Validation Error',

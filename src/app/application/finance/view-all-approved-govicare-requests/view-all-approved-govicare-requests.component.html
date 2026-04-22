@@ -811,11 +811,14 @@
               *ngIf="
                 minimumShareInput.touched &&
                 !minimumShareInput.errors?.['required'] &&
-                editMinShares <= 0
+                editMinShares > 0 &&
+                editNumShares > 0 &&
+                editMinShares > editNumShares
               "
               class="text-red-600 text-sm block mt-1"
             >
-              Minimum Investment Shares cannot be 0 or less than 0.
+              The Minimum Investment Shares cannot be larger than the defined
+              number of shares.
             </span>
           </div>
 

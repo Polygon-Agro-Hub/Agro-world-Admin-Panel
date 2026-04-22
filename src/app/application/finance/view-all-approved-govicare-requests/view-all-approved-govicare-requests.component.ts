@@ -345,8 +345,9 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       this.editNumShares > 0 &&
       this.selectedShares.approvedDetails?.totValue
     ) {
-      this.editShareValue =
-        this.selectedShares.approvedDetails.totValue / this.editNumShares;
+      this.editShareValue = Math.round(
+        this.selectedShares.approvedDetails.totValue / this.editNumShares,
+      );
     } else {
       this.editShareValue = 0;
     }
@@ -359,6 +360,33 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       this.editMinShares <= 0 ||
       this.editMaxShares <= 0
     ) {
+      return;
+    }
+
+    if (this.editMinShares > this.editNumShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'The Minimum Investment Shares cannot be larger than the defined number of shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    // Add this validation
+    if (this.editMaxShares > this.editNumShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'The Maximum Investment Shares cannot be larger than the defined number of shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
       return;
     }
 
@@ -375,6 +403,19 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       return;
     }
 
+    if (this.editMaxShares === this.editMinShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum Investment Shares cannot be equal to Minimum Investment Shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+    // Rest of your code remains the same...
     this.isSavingShares = true;
 
     const updateData = {
@@ -435,29 +476,38 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
 
   // Helper methods for input validation
   allowIntegerOnly(event: KeyboardEvent) {
-    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const key = event.key;
-
-    // Block everything except numbers
-    if (!allowedKeys.includes(key)) {
+    const allowedKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+    if (!allowedKeys.includes(event.key)) {
       event.preventDefault();
-      return;
     }
   }
 
   allowDecimalOnly(event: KeyboardEvent) {
     const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
-    const key = event.key;
-
-    // Block everything except numbers and dot
-    if (!allowedKeys.includes(key)) {
+    if (!allowedKeys.includes(event.key)) {
       event.preventDefault();
       return;
     }
-
-    // Prevent multiple dots
-    if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+    if (
+      event.key === '.' &&
+      (event.target as HTMLInputElement).value.includes('.')
+    ) {
       event.preventDefault();
+    }
+  }
+
+  preventNegative(
+    field: 'numShares' | 'minimumShare' | 'maximumShare',
+    event: Event,
+  ) {
+    const input = event.target as HTMLInputElement;
+    const value = parseFloat(input.value);
+
+    if (value < 0) {
+      input.value = '';
+      if (field === 'numShares') this.editNumShares = null!;
+      else if (field === 'minimumShare') this.editMinShares = null!;
+      else if (field === 'maximumShare') this.editMaxShares = null!;
     }
   }
 }

@@ -51,10 +51,10 @@ export class AuditPersonalInfoComponent implements OnInit {
   rejectReason: string = '';
   openDevideSharesPopUp: boolean = false;
 
-  numShares: number = 0;
+  numShares: number | null = null;
   shareValue: number = 0.0;
-  minimumShare: number = 0;
-  maximumShare: number = 0;
+  minimumShare: number | null = null;
+  maximumShare: number | null = null;
 
   sharesData: Partial<Shares> = {};
   devideRequestObj: Partial<DevideRequest> = {};
@@ -65,11 +65,10 @@ export class AuditPersonalInfoComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
-
     const requestId = this.route.snapshot.paramMap.get('requestId');
     this.reqId = Number(requestId);
 
@@ -99,7 +98,7 @@ export class AuditPersonalInfoComponent implements OnInit {
     'ProfitRisk',
     'Economical',
     'Labour',
-    'HarvestStorage'
+    'HarvestStorage',
   ];
 
   getCurrentTabIndex(): number {
@@ -138,7 +137,9 @@ export class AuditPersonalInfoComponent implements OnInit {
           this.minimumShare = this.sharesData.devideData.minShare;
           this.maximumShare = this.sharesData.devideData.maxShare;
           this.numShares = this.sharesData.devideData.defineShares;
-          this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
+          this.shareValue = Math.ceil(
+            Number(this.sharesData.totalValue) / this.numShares,
+          );
         }
 
         this.fetchPublishStatus();
@@ -148,20 +149,24 @@ export class AuditPersonalInfoComponent implements OnInit {
   }
 
   fetchPublishStatus() {
-    this.financeService.getAllApprovedGoviCareRequests().subscribe((res: any) => {
-      if (res.data && Array.isArray(res.data)) {
-        const request = res.data.find((req: any) => req.No === this.reqId);
-        if (request) {
-          this.sharesData.publishStatus = request.publishStatus;
+    this.financeService
+      .getAllApprovedGoviCareRequests()
+      .subscribe((res: any) => {
+        if (res.data && Array.isArray(res.data)) {
+          const request = res.data.find((req: any) => req.No === this.reqId);
+          if (request) {
+            this.sharesData.publishStatus = request.publishStatus;
+          }
         }
-      }
-    });
+      });
   }
 
-  onNumSharesChange(value: number) {
-    this.numShares = value; // optional, ngModel already does this
+  onNumSharesChange(value: number | null) {
+    this.numShares = value;
     if (this.numShares !== null && this.numShares > 0) {
-      this.shareValue = Math.ceil(Number(this.sharesData.totalValue) / this.numShares);
+      this.shareValue = Math.ceil(
+        Number(this.sharesData.totalValue) / this.numShares,
+      );
     } else {
       this.shareValue = 0;
     }
@@ -184,32 +189,32 @@ export class AuditPersonalInfoComponent implements OnInit {
   }
 
   ApproveRequest() {
-    this.financeService.approveRequest(this.reqId).subscribe(
-      (res) => {
-        if (res.status) {
-          Swal.fire({
-            title: 'Success',
-            text: `Request Approved Successfully`,
-            icon: 'success',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-          this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests']);
-        } else if (!res.status) {
-          Swal.fire({
-            title: 'error',
-            text: `Failed to Approve the Request`,
-            icon: 'error',
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-            },
-          });
-        }
+    this.financeService.approveRequest(this.reqId).subscribe((res) => {
+      if (res.status) {
+        Swal.fire({
+          title: 'Success',
+          text: `Request Approved Successfully`,
+          icon: 'success',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
+        this.router.navigate([
+          '/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests',
+        ]);
+      } else if (!res.status) {
+        Swal.fire({
+          title: 'error',
+          text: `Failed to Approve the Request`,
+          icon: 'error',
+          customClass: {
+            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+            title: 'font-semibold text-lg',
+          },
+        });
       }
-    )
+    });
     // this.openDevideSharesPopUp = true;
   }
 
@@ -237,7 +242,9 @@ export class AuditPersonalInfoComponent implements OnInit {
               window.close();
             } else {
               if (this.lastSegment === 'viewAll-Govicare-AuditedRequests') {
-                this.router.navigate(['/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests']);
+                this.router.navigate([
+                  '/finance/action/finance-govicapital/viewAll-Govicare-AuditedRequests',
+                ]);
               } else {
                 window.history.back();
               }
@@ -261,30 +268,59 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   cancelDevidePopUp() {
     this.openDevideSharesPopUp = false;
-    this.numShares = 0;
+    this.numShares = null; // was 0
     this.shareValue = 0.0;
-    this.minimumShare = 0;
-    this.maximumShare = 0;
+    this.minimumShare = null; // was 0
+    this.maximumShare = null; // was 0
   }
 
   DevideRequest(form: any) {
-
     if (form.invalid) {
       form.form.markAllAsTouched();
       return;
     }
 
-    if (
-      this.numShares <= 0 ||
-      (this.numShares < this.minimumShare) ||
-      (this.numShares < this.maximumShare)
-    ) return;
+    if (!this.numShares || this.numShares <= 0) return;
 
-    // Validate Maximum Investment Shares >= Minimum Investment Shares
-    if (this.maximumShare < this.minimumShare) {
+    if (this.minimumShare !== null && this.numShares < this.minimumShare)
+      return;
+
+    // NEW: block if maximumShare exceeds numShares
+    if (this.maximumShare !== null && this.maximumShare > this.numShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'The Maximum Investment Shares cannot be larger than the defined number of shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    if ((this.maximumShare ?? 0) < (this.minimumShare ?? 0)) {
       Swal.fire({
         title: 'Validation Error',
         text: 'Maximum Investment Shares cannot be less than Minimum Investment Shares',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    // Add this block after the maximumShare < minimumShare check
+    if (
+      this.maximumShare !== null &&
+      this.minimumShare !== null &&
+      this.maximumShare === this.minimumShare
+    ) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum Investment Shares cannot be equal to Minimum Investment Shares.',
         icon: 'error',
         customClass: {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
@@ -298,49 +334,53 @@ export class AuditPersonalInfoComponent implements OnInit {
 
     this.isLoading = true;
 
-
     this.devideRequestObj.totalValue = this.sharesData.totalValue;
     this.devideRequestObj.numShares = this.numShares;
-    this.devideRequestObj.shareValue = Number(this.shareValue.toFixed(2));
-    this.devideRequestObj.minimumShare = this.minimumShare;
-    this.devideRequestObj.maximumShare = this.maximumShare;
+    this.devideRequestObj.shareValue = Math.ceil(this.shareValue);
+    this.devideRequestObj.minimumShare = this.minimumShare!;
+    this.devideRequestObj.maximumShare = this.maximumShare!;
     this.devideRequestObj.id = this.sharesData.id;
     this.devideRequestObj.jobId = this.sharesData.jobId;
     this.devideRequestObj.reqCahangeTime = this.sharesData.reqCahangeTime;
     this.devideRequestObj.empId = this.sharesData.empId;
 
-    this.financeService.devideSharesRequest(this.devideRequestObj).subscribe((res: any) => {
-
-      if (res.status) {
-        Swal.fire({
-          title: 'Success',
-          text: `Shares Saved Successfully`,
-          icon: 'success',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        }).then(() => {
-          if (window.opener) {
-            window.opener.location.reload();
-            window.close();
-          } else {
-            this.router.navigate(['/finance/action/finance-govicapital/view-Govicare-approved-requests']);
-          }
-        });
-      } else if (!res.status) {
-        Swal.fire({
-          title: 'error',
-          text: `Failed to Approve the Request`,
-          icon: 'error',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold text-lg',
-          },
-        });
-      }
-      this.isLoading = false;
-    })
+    this.financeService
+      .devideSharesRequest(this.devideRequestObj)
+      .subscribe((res: any) => {
+        if (res.status) {
+          Swal.fire({
+            title: 'Success',
+            text: `Shares Saved Successfully`,
+            icon: 'success',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          }).then(() => {
+            if (window.opener) {
+              window.opener.location.reload();
+              window.close();
+            } else {
+              this.router.navigate([
+                '/finance/action/finance-govicapital/view-Govicare-approved-requests',
+              ]);
+            }
+          });
+        } else if (!res.status) {
+          Swal.fire({
+            title: 'error',
+            text: `Failed to Approve the Request`,
+            icon: 'error',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        }
+        this.isLoading = false;
+      });
   }
 
   allowDecimalOnly(event: KeyboardEvent) {
@@ -361,13 +401,17 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   // Method to block decimal values (only allow integers)
   allowIntegerOnly(event: KeyboardEvent) {
-    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const key = event.key;
-
-    // Block everything except numbers
-    if (!allowedKeys.includes(key)) {
+    // 'e' and 'E' are valid in number inputs by default (scientific notation)
+    // '-' allows negative values — both must be blocked
+    const blockedKeys = ['-', '+', 'e', 'E', '.'];
+    if (blockedKeys.includes(event.key)) {
       event.preventDefault();
       return;
+    }
+
+    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    if (!allowedKeys.includes(event.key)) {
+      event.preventDefault();
     }
   }
 
@@ -375,26 +419,21 @@ export class AuditPersonalInfoComponent implements OnInit {
     this.openDevideSharesPopUp = true;
     this.devideRequestObj.devideType = devideType;
 
-    // If creating a new division (not editing), reset fields to empty
     if (devideType === 'Create') {
-      this.numShares = 0;
+      this.numShares = null; // was 0
       this.shareValue = 0.0;
-      this.minimumShare = 0;
-      this.maximumShare = 0;
+      this.minimumShare = null; // was 0
+      this.maximumShare = null; // was 0
     }
   }
 
-  editSharesPopUp() {
-
-  }
+  editSharesPopUp() {}
 
   addSpaceAfterFirstThree(str: string | undefined): string {
     if (!str || typeof str !== 'string') return '';
     if (str.length <= 3) return str;
     return str.slice(0, 3) + ' ' + str.slice(3);
   }
-
-
 }
 
 interface Inspection {
@@ -431,10 +470,10 @@ class Shares {
 }
 
 class DevideData {
-  totValue!: number
-  defineShares!: number
-  maxShare!: number
-  minShare!: number
+  totValue!: number;
+  defineShares!: number;
+  maxShare!: number;
+  minShare!: number;
 }
 
 class DevideRequest {
@@ -487,7 +526,6 @@ interface IInvestment {
   createdAt: string;
 }
 
-
 interface IIdInfo {
   pType: string;
   pNumber: string;
@@ -518,50 +556,50 @@ interface ICropping {
 }
 
 interface IProfitRisk {
-  id: number
-  reqId: string
-  profit: number
-  isProfitable: number
-  isRisk: number
-  risk: string
-  solution: string
-  manageRisk: string
-  worthToTakeRisk: string
-  createdAt: Date
+  id: number;
+  reqId: string;
+  profit: number;
+  isProfitable: number;
+  isRisk: number;
+  risk: string;
+  solution: string;
+  manageRisk: string;
+  worthToTakeRisk: string;
+  createdAt: Date;
 }
 
 interface IEconomical {
-  id: number
-  reqId: string
-  isSuitaleSize: number
-  isFinanceResource: number
-  isAltRoutes: number
-  createdAt: Date
+  id: number;
+  reqId: string;
+  isSuitaleSize: number;
+  isFinanceResource: number;
+  isAltRoutes: number;
+  createdAt: Date;
 }
 
 interface IHarvest {
-  id: number
-  reqId: string
-  hasOwnStorage: number
-  hasPrimaryProcessingAccess: number
-  ifNotHasFacilityAccess: number
-  knowsValueAdditionTech: number
-  hasValueAddedMarketLinkage: number
-  awareOfQualityStandards: number
-  createdAt: Date
+  id: number;
+  reqId: string;
+  hasOwnStorage: number;
+  hasPrimaryProcessingAccess: number;
+  ifNotHasFacilityAccess: number;
+  knowsValueAdditionTech: number;
+  hasValueAddedMarketLinkage: number;
+  awareOfQualityStandards: number;
+  createdAt: Date;
 }
 
 interface ILabor {
-  id: number
-  reqId: string
-  isManageFamilyLabour: number
-  isFamilyHiredLabourEquipped: number
-  hasAdequateAlternativeLabour: number
-  areThereMechanizationOptions: number
-  isMachineryAvailable: number
-  isMachineryAffordable: number
-  isMachineryCostEffective: number
-  createdAt: Date
+  id: number;
+  reqId: string;
+  isManageFamilyLabour: number;
+  isFamilyHiredLabourEquipped: number;
+  hasAdequateAlternativeLabour: number;
+  areThereMechanizationOptions: number;
+  isMachineryAvailable: number;
+  isMachineryAffordable: number;
+  isMachineryCostEffective: number;
+  createdAt: Date;
 }
 
 export interface ICultivation {

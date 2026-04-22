@@ -34,7 +34,7 @@ interface Customers {
   apartmentStreetName: string;
   apartmentCity: string;
   apartmentFloorNo: string;
-  title?: string; // Optional to handle title in popup
+  title?: string;
 }
 
 @Component({
@@ -96,7 +96,6 @@ export class CustomersComponent implements OnInit {
   copyToClipboard(value: string | undefined, field: string) {
     if (!value) return;
 
-    // Clear any existing timeout
     if (this.copyTimeout) {
       clearTimeout(this.copyTimeout);
     }
@@ -106,14 +105,12 @@ export class CustomersComponent implements OnInit {
       .then(() => {
         this.copiedField = field;
 
-        // Reset the copied field after 2 seconds
         this.copyTimeout = setTimeout(() => {
           this.copiedField = null;
         }, 2000);
       })
       .catch((err) => {
         console.error('Failed to copy:', err);
-        // Optional: You can still show an error if you want
         Swal.fire({
           icon: 'error',
           title: 'Oops!',
@@ -146,8 +143,6 @@ export class CustomersComponent implements OnInit {
   }
   onSearchChange(searchText: string) {
     if (searchText.startsWith(' ')) {
-      console.log('Input starts with a space');
-      // Optionally clean it
       searchText = searchText.trimStart();
     }
 
@@ -156,20 +151,20 @@ export class CustomersComponent implements OnInit {
 
   onSearchClick() {
   this.searchText = this.searchText.trimStart();
-  this.page = 1; // ← reset to page 1 on new search
+  this.page = 1;
   this.fetchAllCustomers();
 }
 
 
   private searchInCustomer(customer: Customers, searchText: string): boolean {
   const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
-  const lowerSearch = searchText.toLowerCase(); // ← ensure this is lowercase
+  const lowerSearch = searchText.toLowerCase();
 
   const fieldsToSearch = [
-    customer.cusId?.toLowerCase(),   // ← lowercase these
+    customer.cusId?.toLowerCase(),
     fullName,
     customer.phoneNumber?.toLowerCase(),
-    customer.empId?.toLowerCase()    // ← lowercase these
+    customer.empId?.toLowerCase()
   ];
 
   return fieldsToSearch.some((field) =>
@@ -180,7 +175,7 @@ export class CustomersComponent implements OnInit {
 
  offSearch() {
   this.searchText = '';
-  this.page = 1; // ← reset page
+  this.page = 1;
   this.fetchAllCustomers();
 }
 

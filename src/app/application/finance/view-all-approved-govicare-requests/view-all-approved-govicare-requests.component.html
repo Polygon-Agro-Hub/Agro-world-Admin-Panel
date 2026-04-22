@@ -142,6 +142,11 @@
               <th
                 class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
               >
+                Status
+              </th>
+              <th
+                class="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap"
+              >
                 View Shares
               </th>
               <th
@@ -243,7 +248,9 @@
                   Divided
                 </p>
               </td>
-
+              <td class="px-4 py-4 text-sm text-textLight dark:text-textDark">
+                {{ request.publishStatus }}
+              </td>
               <td class="px-4 py-4 text-sm text-center">
                 <button
                   class="text-blue-500 hover:text-blue-600 transition w-6 h-6 inline-block"
@@ -633,7 +640,7 @@
       <div class="flex items-start">
         <span
           class="text-sm text-[#6B7280] dark:text-gray-400 w-44 flex-shrink-0"
-          >No. of Sharese</span
+          >No. of Shares</span
         >
         <span class="text-sm text-[#6B7280] dark:text-gray-400 mx-2">:</span>
         <span class="text-sm text-[#111827] dark:text-white font-medium flex-1">
@@ -733,21 +740,29 @@
               id="numShares"
               required
               type="number"
+              min="1"
               [(ngModel)]="editNumShares"
               #numSharesInput="ngModel"
               name="numShares"
               placeholder="--Enter Here--"
               (ngModelChange)="onEditSharesChange()"
               (keypress)="allowIntegerOnly($event)"
+              (input)="preventNegative('numShares', $event)"
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
             <span
-              *ngIf="numSharesInput.touched && !editNumShares"
+              *ngIf="
+                numSharesInput.touched && numSharesInput.errors?.['required']
+              "
               class="text-red-600 text-sm block mt-1"
               >This field is required.</span
             >
             <span
-              *ngIf="numSharesInput.touched && editNumShares <= 0"
+              *ngIf="
+                numSharesInput.touched &&
+                !numSharesInput.errors?.['required'] &&
+                editNumShares <= 0
+              "
               class="text-red-600 text-sm block mt-1"
               >Number of shares cannot be 0 or less than 0.</span
             >
@@ -759,7 +774,11 @@
             </label>
             <input
               id="shareValue"
-              [value]="editShareValue === 0 ? '--Auto-fill--' : editShareValue"
+              [value]="
+                editShareValue === 0
+                  ? '--Auto-fill--'
+                  : (editShareValue | number: '1.0-0')
+              "
               name="shareValue"
               readonly
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -774,11 +793,13 @@
               id="minimumShare"
               required
               type="number"
+              min="1"
               [(ngModel)]="editMinShares"
               #minimumShareInput="ngModel"
               name="minimumShare"
               placeholder="--Enter Here--"
               (keypress)="allowDecimalOnly($event)"
+              (input)="preventNegative('minimumShare', $event)"
               pattern="^[1-9]\d*(\.\d+)?$"
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
@@ -794,11 +815,14 @@
               *ngIf="
                 minimumShareInput.touched &&
                 !minimumShareInput.errors?.['required'] &&
-                editMinShares <= 0
+                editMinShares > 0 &&
+                editNumShares > 0 &&
+                editMinShares > editNumShares
               "
               class="text-red-600 text-sm block mt-1"
             >
-              Minimum Investment Shares cannot be 0 or less than 0.
+              The Minimum Investment Shares cannot be larger than the defined
+              number of shares.
             </span>
           </div>
 
@@ -810,11 +834,13 @@
               id="maximumShare"
               required
               type="number"
+              min="1"
               [(ngModel)]="editMaxShares"
               #maximumShareInput="ngModel"
               name="maximumShare"
               placeholder="--Enter Here--"
               (keypress)="allowDecimalOnly($event)"
+              (input)="preventNegative('maximumShare', $event)"
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
             <span
@@ -835,6 +861,33 @@
               class="text-red-600 text-sm block mt-1"
             >
               Maximum Investment Shares cannot be 0 or less than 0.
+            </span>
+
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                minimumShareInput.touched &&
+                editMaxShares > 0 &&
+                editMinShares > 0 &&
+                editMaxShares === editMinShares
+              "
+              class="text-red-600 text-sm block mt-1"
+            >
+              Maximum Investment Shares cannot be equal to Minimum Investment
+              Shares.
+            </span>
+
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                editMaxShares > 0 &&
+                editNumShares > 0 &&
+                editMaxShares > editNumShares
+              "
+              class="text-red-600 text-sm block mt-1"
+            >
+              The Maximum Investment Shares cannot be larger than the defined
+              number of shares.
             </span>
 
             <span

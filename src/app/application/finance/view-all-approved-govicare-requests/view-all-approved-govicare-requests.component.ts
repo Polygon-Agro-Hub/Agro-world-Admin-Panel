@@ -345,8 +345,9 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       this.editNumShares > 0 &&
       this.selectedShares.approvedDetails?.totValue
     ) {
-      this.editShareValue =
-        this.selectedShares.approvedDetails.totValue / this.editNumShares;
+      this.editShareValue = Math.round(
+        this.selectedShares.approvedDetails.totValue / this.editNumShares,
+      );
     } else {
       this.editShareValue = 0;
     }

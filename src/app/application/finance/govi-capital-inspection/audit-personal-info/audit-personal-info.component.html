@@ -492,12 +492,14 @@
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
             <span
-              *ngIf="numSharesInput.touched && !numShares"
+              *ngIf="numSharesInput.touched && numShares === null"
               class="text-red-600 text-sm block mt-1"
               >This field is required.</span
             >
             <span
-              *ngIf="numSharesInput.touched && numShares <= 0"
+              *ngIf="
+                numSharesInput.touched && numShares !== null && numShares <= 0
+              "
               class="text-red-600 text-sm block mt-1"
               >Number of shares cannot be 0 or less than 0.</span
             >
@@ -535,7 +537,8 @@
             <span
               *ngIf="
                 minimumShareInput.touched &&
-                minimumShareInput.errors?.['required']
+                minimumShareInput.errors?.['required'] &&
+                minimumShare === null
               "
               class="text-red-600 text-sm block mt-1"
               >This field is required.</span
@@ -543,7 +546,7 @@
             <span
               *ngIf="
                 minimumShareInput.touched &&
-                !minimumShareInput.errors?.['required'] &&
+                minimumShare !== null &&
                 minimumShare <= 0
               "
               class="text-red-600 text-sm block mt-1"
@@ -577,16 +580,17 @@
             <span
               *ngIf="
                 maximumShareInput.touched &&
-                maximumShareInput.errors?.['required']
+                maximumShareInput.errors?.['required'] &&
+                maximumShare === null
               "
               class="text-red-600 text-sm block mt-1"
               >This field is required.</span
             >
-
             <span
               *ngIf="
                 maximumShareInput.touched &&
                 !maximumShareInput.errors?.['required'] &&
+                maximumShare !== null &&
                 maximumShare <= 0
               "
               class="text-red-600 text-sm block mt-1"

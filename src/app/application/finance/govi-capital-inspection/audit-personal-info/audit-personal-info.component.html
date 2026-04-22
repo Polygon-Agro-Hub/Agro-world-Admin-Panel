@@ -607,6 +607,19 @@
             >
               Maximum Investment Shares cannot be 0 or less than 0.
             </span>
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                minimumShareInput.touched &&
+                (maximumShare || 0) > 0 &&
+                (minimumShare || 0) > 0 &&
+                maximumShare === minimumShare
+              "
+              class="text-red-600 text-sm block mt-1"
+            >
+              Maximum Investment Shares cannot be equal to Minimum Investment
+              Shares.
+            </span>
 
             <span
               *ngIf="

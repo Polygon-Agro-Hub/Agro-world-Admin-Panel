@@ -312,6 +312,24 @@ export class AuditPersonalInfoComponent implements OnInit {
       return;
     }
 
+    // Add this block after the maximumShare < minimumShare check
+    if (
+      this.maximumShare !== null &&
+      this.minimumShare !== null &&
+      this.maximumShare === this.minimumShare
+    ) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum Investment Shares cannot be equal to Minimum Investment Shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
     this.openDevideSharesPopUp = false;
 
     this.isLoading = true;

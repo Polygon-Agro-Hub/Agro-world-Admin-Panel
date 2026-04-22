@@ -617,5 +617,15 @@ export class StakeholderService {
     return this.http.post<any>(url, {text}, { headers });
   }
 
+  toggleShopActiveStatus(shopId: number, isActive: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.token}`,
+    'Content-Type': 'application/json',
+  });
+
+  const url = `${this.apiUrl}shop/toggle-shop-status/${shopId}`;
+  return this.http.put<any>(url, { isActive }, { headers });
+}
+
 }
 

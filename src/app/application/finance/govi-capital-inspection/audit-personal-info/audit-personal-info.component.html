@@ -11,7 +11,9 @@
       </div>
       <div class="flex flex-col">
         <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Farmer Phone :</span
-        ><span class="dark:text-[#FFFFFF]">{{ addSpaceAfterFirstThree(sharesData.farmerPhone) }}</span>
+        ><span class="dark:text-[#FFFFFF]">{{
+          addSpaceAfterFirstThree(sharesData.farmerPhone)
+        }}</span>
       </div>
       <div class="flex flex-col">
         <span class="text-[#7E7E7E] dark:text-[#C8C8C8]">Audited By :</span
@@ -38,8 +40,7 @@
           <button
             *ngIf="
               permissionService.hasPermission('Approve govicare request') ||
-              tokenService.getUserDetails().role === '1';
-
+              tokenService.getUserDetails().role === '1'
             "
             [style]="'box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.25)'"
             class="px-5 py-2 bg-[#3980C0] text-white font-medium rounded-lg hover:bg-[#306797] transition-colors duration-200 shadow-lg"
@@ -74,7 +75,7 @@
           class="flex gap-4"
         >
           <button
-            class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-sm"
+            class="px-6 py-2 bg-[#3980C0] text-white font-medium rounded-md hover:bg-[#306797] transition-colors duration-200 shadow-md hover:shadow-lg"
             (click)="devideSharesPopUp('Create')"
           >
             Divide Shares
@@ -482,6 +483,7 @@
               id="numShares"
               required
               type="number"
+              min="1"
               [(ngModel)]="numShares"
               #numSharesInput="ngModel"
               name="numShares"
@@ -491,12 +493,14 @@
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
             <span
-              *ngIf="numSharesInput.touched && !numShares"
+              *ngIf="numSharesInput.touched && numShares === null"
               class="text-red-600 text-sm block mt-1"
               >This field is required.</span
             >
             <span
-              *ngIf="numSharesInput.touched && numShares <= 0"
+              *ngIf="
+                numSharesInput.touched && numShares !== null && numShares <= 0
+              "
               class="text-red-600 text-sm block mt-1"
               >Number of shares cannot be 0 or less than 0.</span
             >
@@ -508,7 +512,11 @@
             </label>
             <input
               id="shareValue"
-              [value]="shareValue === 0 ? '--Auto-fill--' : shareValue"
+              [value]="
+                shareValue === 0
+                  ? '--Auto-fill--'
+                  : (shareValue | number: '1.0-0')
+              "
               name="shareValue"
               readonly
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -523,18 +531,20 @@
               id="minimumShare"
               required
               type="number"
+              min="1"
               [(ngModel)]="minimumShare"
               #minimumShareInput="ngModel"
               name="minimumShare"
               placeholder="--Enter Here--"
-              (keypress)="allowDecimalOnly($event)"
-              pattern="^[1-9]\d*(\.\d+)?$"
+              (keypress)="allowIntegerOnly($event)"
+              pattern="^[1-9]\d*$"
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
             <span
               *ngIf="
                 minimumShareInput.touched &&
-                minimumShareInput.errors?.['required']
+                minimumShareInput.errors?.['required'] &&
+                minimumShare === null
               "
               class="text-red-600 text-sm block mt-1"
               >This field is required.</span
@@ -542,7 +552,7 @@
             <span
               *ngIf="
                 minimumShareInput.touched &&
-                !minimumShareInput.errors?.['required'] &&
+                minimumShare !== null &&
                 minimumShare <= 0
               "
               class="text-red-600 text-sm block mt-1"
@@ -550,7 +560,10 @@
               Minimum Investment Shares cannot be 0 or less than 0.
             </span>
             <span
-              *ngIf="minimumShareInput.touched && numShares < minimumShare"
+              *ngIf="
+                minimumShareInput.touched &&
+                (numShares || 0) < (minimumShare || 0)
+              "
               class="text-red-600 text-sm block mt-1"
             >
               The Minimum Investment Shares cannot be larger than the defined
@@ -566,40 +579,55 @@
               id="maximumShare"
               required
               type="number"
+              min="1"
               [(ngModel)]="maximumShare"
               #maximumShareInput="ngModel"
               name="maximumShare"
               placeholder="--Enter Here--"
-              (keypress)="allowDecimalOnly($event)"
+              (keypress)="allowIntegerOnly($event)"
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
             <span
               *ngIf="
                 maximumShareInput.touched &&
-                maximumShareInput.errors?.['required']
+                maximumShareInput.errors?.['required'] &&
+                maximumShare === null
               "
               class="text-red-600 text-sm block mt-1"
               >This field is required.</span
             >
-
             <span
               *ngIf="
                 maximumShareInput.touched &&
                 !maximumShareInput.errors?.['required'] &&
+                maximumShare !== null &&
                 maximumShare <= 0
               "
               class="text-red-600 text-sm block mt-1"
             >
               Maximum Investment Shares cannot be 0 or less than 0.
             </span>
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                minimumShareInput.touched &&
+                (maximumShare || 0) > 0 &&
+                (minimumShare || 0) > 0 &&
+                maximumShare === minimumShare
+              "
+              class="text-red-600 text-sm block mt-1"
+            >
+              Maximum Investment Shares cannot be equal to Minimum Investment
+              Shares.
+            </span>
 
             <span
               *ngIf="
                 maximumShareInput.touched &&
                 minimumShareInput.touched &&
-                maximumShare > 0 &&
-                minimumShare > 0 &&
-                maximumShare < minimumShare
+                (maximumShare || 0) > 0 &&
+                (minimumShare || 0) > 0 &&
+                (maximumShare || 0) < (minimumShare || 0)
               "
               class="text-red-600 text-sm block mt-1"
             >
@@ -611,11 +639,11 @@
               *ngIf="
                 maximumShareInput.touched &&
                 minimumShareInput.touched &&
-                numShares < maximumShare
+                (numShares || 0) < (maximumShare || 0)
               "
               class="text-red-600 text-sm block mt-1"
             >
-              Maximum Investment Shares cannot be greater than the defined
+              The Maximum Investment Shares cannot be larger than the defined
               number of shares.
             </span>
           </div>

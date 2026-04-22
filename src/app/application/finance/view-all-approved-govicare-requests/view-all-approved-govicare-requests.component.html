@@ -774,7 +774,11 @@
             </label>
             <input
               id="shareValue"
-              [value]="editShareValue === 0 ? '--Auto-fill--' : (editShareValue | number:'1.0-0')"
+              [value]="
+                editShareValue === 0
+                  ? '--Auto-fill--'
+                  : (editShareValue | number: '1.0-0')
+              "
               name="shareValue"
               readonly
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
@@ -857,6 +861,20 @@
               class="text-red-600 text-sm block mt-1"
             >
               Maximum Investment Shares cannot be 0 or less than 0.
+            </span>
+
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                minimumShareInput.touched &&
+                editMaxShares > 0 &&
+                editMinShares > 0 &&
+                editMaxShares === editMinShares
+              "
+              class="text-red-600 text-sm block mt-1"
+            >
+              Maximum Investment Shares cannot be equal to Minimum Investment
+              Shares.
             </span>
 
             <span

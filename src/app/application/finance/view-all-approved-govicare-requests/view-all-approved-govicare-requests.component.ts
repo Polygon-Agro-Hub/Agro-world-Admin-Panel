@@ -403,6 +403,18 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       return;
     }
 
+    if (this.editMaxShares === this.editMinShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum Investment Shares cannot be equal to Minimum Investment Shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
     // Rest of your code remains the same...
     this.isSavingShares = true;
 

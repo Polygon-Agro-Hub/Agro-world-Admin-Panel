@@ -3,13 +3,13 @@
   <div>
     <div class="pt-5 pb-5 w-full bg-tileLight dark:bg-tileBlack">
       <div class="mb-2">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        <h2 class="text-lg font-normal text-textLight dark:text-textDark">
           {{ centerObj.centerRegCode }} {{ centerObj.centerName }}
         </h2>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          <h2 class="text-lg font-normal text-textLight dark:text-textDark">
             All ({{ targetCount | number : "2.0" }})
           </h2>
         </div>
@@ -24,12 +24,11 @@
               />
             </svg>
           </i>
-          <p class="text-gray-500 dark:text-textDark text-lg mr-5">Filter By</p>
+          <p class="text-[#4A4A4A] dark:text-textDark mr-5">Filter By</p>
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
               [options]="statusOptions"
-              [checkmark]="true"
               [showClear]="!!selectedStatus"
               optionLabel="label"
               optionValue="value"
@@ -127,12 +126,12 @@
         <thead>
           <tr>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+              class="px-8 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               No
             </th>
             <th
-              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
               Order ID
             </th>
@@ -158,10 +157,10 @@
             class="hover:bg-gray-50 dark:hover:bg-gray-700"
             *ngFor="let item of targetArr; let i = index"
           >
-            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+            <td class="px-8 py-3 text-left text-textLight dark:text-textDark">
               {{ i + 1 | number : "2.0" }}
             </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.invNo }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -170,7 +169,7 @@
             <td class="px-4 py-3 text-left">
               <!-- Updated Delivery Time Slot with color function -->
               <span [style.color]="getDateColor(item)">
-                {{ getDisplayDate(item.sheduleDate) }}
+                {{ getDisplayDate(item.sheduleDate) }} {{ getDisplayTime(item.sheduleTime)}}
               </span>
             </td>
             <td class="px-4 py-3 text-center">

@@ -216,7 +216,7 @@ export class MonthlyReportComponent implements OnInit {
         pdf.internal.pageSize.getHeight() - margin
       );
 
-      // Generate file name in the format: Report_[EMP ID]_04th August to 06th August
+      // Generate file name in the format: Monthly Report_CCM00001_2026-02-01 to 2026-03-04
       const fileName = this.generateFileName();
       
       // Save the PDF with the new file name
@@ -229,19 +229,19 @@ export class MonthlyReportComponent implements OnInit {
   }, 0);
 }
 
-// Add this new method to generate the file name
+// Update this method to generate the file name in the new format
 generateFileName(): string {
   if (!this.fromDate || !this.toDate || !this.officerData?.empId) {
-    return 'Collection_Officer_Report.pdf';
+    return 'Monthly_Report.pdf';
   }
 
   const fromDateStr = this.formatDateForFileName(this.fromDate);
   const toDateStr = this.formatDateForFileName(this.toDate);
   
-  return `Report_${this.officerData.empId}_${fromDateStr} to ${toDateStr}.pdf`;
+  return `Monthly Report_${this.officerData.empId}_${fromDateStr} to ${toDateStr}.pdf`;
 }
 
-// Add this helper method to format dates for file name
+// Update this helper method to format dates as YYYY-MM-DD for file name
 formatDateForFileName(date: any): string {
   if (!date) return '';
 
@@ -256,21 +256,11 @@ formatDateForFileName(date: any): string {
     return '';
   }
 
-  const day = dateObj.getDate();
-  const month = dateObj.toLocaleString('en-US', { month: 'long' });
-  
-  // Add the appropriate ordinal suffix to the day
-  const getOrdinalSuffix = (day: number): string => {
-    if (day > 3 && day < 21) return 'th';
-    switch (day % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
-    }
-  };
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getDate()).padStart(2, '0');
 
-  return `${day}${getOrdinalSuffix(day)} ${month}`;
+  return `${year}-${month}-${day}`;
 }
 
   getOfficerDetails(id: number) {

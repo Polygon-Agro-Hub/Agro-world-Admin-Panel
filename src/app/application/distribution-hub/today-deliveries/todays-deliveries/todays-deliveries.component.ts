@@ -13,24 +13,26 @@ import { DistributionHubService } from '../../../../services/distribution-hub/di
 import { CollectedComponent } from '../collected/collected.component';
 import { CollectionService } from '../../../../services/collection.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TokenService } from '../../../../services/token/services/token.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
 
 interface Delivery {
-  id:number
-  invNo:string 
-  regCode:string 
-  centerName:string
-  sheduleTime:string 
-  sheduleDate:string 
-  createdAt:string 
-  status:string 
-  outDlvrTime:string 
-  collectTime:string 
-  driverEmpId:string 
-  driverStartTime:string 
-  returnTime:string 
-  deliveryTime:string;
-  driverPhone:string
-  holdTime:string
+  id: number
+  invNo: string
+  regCode: string
+  centerName: string
+  sheduleTime: string
+  sheduleDate: string
+  createdAt: string
+  status: string
+  outDlvrTime: string
+  collectTime: string
+  driverEmpId: string
+  driverStartTime: string
+  returnTime: string
+  deliveryTime: string;
+  driverPhone: string
+  holdTime: string
 }
 
 interface CenterOption {
@@ -59,7 +61,7 @@ interface CenterOption {
 })
 export class TodaysDeliveriesComponent implements OnInit {
   isLoading: boolean = false;
-  activeTab: string = 'all';
+  activeTab: string = '';
 
   // Search parameters
   invNo: string = '';
@@ -84,16 +86,16 @@ export class TodaysDeliveriesComponent implements OnInit {
 
   constructor(
     private distributionService: DistributionHubService,
-    private collectionService: CollectionService,
-    private router: Router, private route: ActivatedRoute
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) { }
 
   ngOnInit(): void {
-
     this.fetchCentreOptions();
-    this.fetchDeliveries();
-    this.selectTab('all');
-    
+    // this.fetchDeliveries();
+    this.initTabSelection()
+    this.selectTab(this.activeTab);
+
   }
 
   back(): void {
@@ -157,5 +159,13 @@ export class TodaysDeliveriesComponent implements OnInit {
     this.fetchDeliveries();
   }
 
-
+  initTabSelection(){
+    if(this.permissionService.hasPermission('Today deliveries all tab') || this.tokenService.getUserDetails().role === '1') this.activeTab = 'all';
+    else if(this.permissionService.hasPermission('Today deliveries out for deliveries tab')) this.activeTab = 'out-for-delivery';
+    else if(this.permissionService.hasPermission('Today deliveries collected tab')) this.activeTab = 'collected';
+    else if(this.permissionService.hasPermission('Today deliveries on the way tab')) this.activeTab = 'on-the-way';
+    else if(this.permissionService.hasPermission('Today deliveries hold tab')) this.activeTab = 'hold';
+    else if(this.permissionService.hasPermission('Today deliveries return tab')) this.activeTab = 'return';
+    else if(this.permissionService.hasPermission('Today deliveries delivered tab')) this.activeTab = 'delivered';
+  }
 }

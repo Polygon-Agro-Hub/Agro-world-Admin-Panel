@@ -183,17 +183,49 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.router.navigate([path]);
   }
 
+  // capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
+  //   let value = this.personalData[field] || '';
+
+  //   if (field === 'houseNumber') {
+  //     value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
+  //   } else {
+  //     value = value.replace(/[^A-Za-z ]/g, '');
+  //   }
+
+  //   value = value.replace(/^\s+/, '');
+
+  //   if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
+  //     value = value.charAt(0).toUpperCase() + value.slice(1);
+  //   }
+
+  //   this.personalData[field] = value;
+  // }
+
   capitalizeWhileTyping(field: 'firstNameEnglish' | 'lastNameEnglish' | 'accHolderName' | 'houseNumber' | 'streetName' | 'city'): void {
     let value = this.personalData[field] || '';
 
     if (field === 'houseNumber') {
+      // For house numbers: allow alphanumeric, slash, hyphen, hash, and space
       value = value.replace(/[^A-Za-z0-9\/\-\# ]/g, '');
-    } else {
+    }
+    else if (field === 'streetName') {
+      // For street names: allow letters, numbers, spaces, hyphens, periods, commas, etc.
+      // Adjust this regex based on what characters you want to allow
+      value = value.replace(/[^A-Za-z0-9\s\-\.\,\(\)]/g, '');
+    }
+    else if (field === 'city') {
+      // For city names: allow letters, spaces, and maybe hyphens
+      value = value.replace(/[^A-Za-z\s\-]/g, '');
+    }
+    else {
+      // For other text fields: only letters and spaces
       value = value.replace(/[^A-Za-z ]/g, '');
     }
 
+    // Remove leading spaces
     value = value.replace(/^\s+/, '');
 
+    // Capitalize first letter if it's a letter field (excluding houseNumber)
     if (field !== 'houseNumber' && value.length > 0 && /[A-Za-z]/.test(value.charAt(0))) {
       value = value.charAt(0).toUpperCase() + value.slice(1);
     }
@@ -419,22 +451,22 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   isValidNIC(nic: string): boolean {
-  if (!nic) return false;
-  
-  const cleanNIC = nic.trim();
-  
-  // Check for new format (12 digits)
-  if (/^\d{12}$/.test(cleanNIC)) {
-    return true;
+    if (!nic) return false;
+
+    const cleanNIC = nic.trim();
+
+    // Check for new format (12 digits)
+    if (/^\d{12}$/.test(cleanNIC)) {
+      return true;
+    }
+
+    // Check for old format (9 digits followed by V/v)
+    if (/^\d{9}[Vv]$/.test(cleanNIC)) {
+      return true;
+    }
+
+    return false;
   }
-  
-  // Check for old format (9 digits followed by V/v)
-  if (/^\d{9}[Vv]$/.test(cleanNIC)) {
-    return true;
-  }
-  
-  return false;
-}
 
   isValidEmail(email: string): boolean {
     return this.emailValidationService.isEmailValid(email);
@@ -475,13 +507,13 @@ export class AddDistributionOfficerComponent implements OnInit {
     this.selectedPage = page;
 
     setTimeout(() => {
-    this.scrollToTop();
-  }, 0);
+      this.scrollToTop();
+    }, 0);
   }
 
   scrollToTop(): void {
-  window.scrollTo(0, 0);
-}
+    window.scrollTo(0, 0);
+  }
 
   // Enhanced validation for pageOne
   validatePageOne(): { isValid: boolean; errors: string[] } {
@@ -699,104 +731,104 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   blockNicInput(event: KeyboardEvent) {
-  const value = this.personalData.nic || '';
-  const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
-  
-  // Allow control keys
-  if (allowedKeys.includes(event.key)) return;
+    const value = this.personalData.nic || '';
+    const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Home', 'End'];
 
-  const currentPosition = (event.target as HTMLInputElement).selectionStart || 0;
-  
-  // Check if we're at position 9 (where 'V' can appear for old format)
-  const isAtVPosition = currentPosition === 9;
-  
-  if (isAtVPosition) {
-    // At position 9 (10th character), allow 'V' or 'v'
-    if (event.key.toLowerCase() === 'v') {
-      return; // Allow 'V' or 'v'
-    }
-    
-    // Also allow digits (for new format)
-    if (event.key >= '0' && event.key <= '9') {
+    // Allow control keys
+    if (allowedKeys.includes(event.key)) return;
+
+    const currentPosition = (event.target as HTMLInputElement).selectionStart || 0;
+
+    // Check if we're at position 9 (where 'V' can appear for old format)
+    const isAtVPosition = currentPosition === 9;
+
+    if (isAtVPosition) {
+      // At position 9 (10th character), allow 'V' or 'v'
+      if (event.key.toLowerCase() === 'v') {
+        return; // Allow 'V' or 'v'
+      }
+
+      // Also allow digits (for new format)
+      if (event.key >= '0' && event.key <= '9') {
+        return;
+      }
+
+      event.preventDefault();
       return;
     }
-    
-    event.preventDefault();
-    return;
+
+    // For other positions, only allow digits
+    if (event.key < '0' || event.key > '9') {
+      event.preventDefault();
+      return;
+    }
+
+    // Determine max length based on current content
+    const hasV = value.toLowerCase().includes('v');
+    const maxLength = hasV ? 10 : 12;
+
+    if (value.length >= maxLength) {
+      event.preventDefault();
+    }
   }
-  
-  // For other positions, only allow digits
-  if (event.key < '0' || event.key > '9') {
-    event.preventDefault();
-    return;
-  }
-  
-  // Determine max length based on current content
-  const hasV = value.toLowerCase().includes('v');
-  const maxLength = hasV ? 10 : 12;
-  
-  if (value.length >= maxLength) {
-    event.preventDefault();
-  }
-}
 
   enforceNicLength(event: any) {
-  let value = event.target.value || '';
-  
-  // Remove any characters that aren't digits or 'V'/'v'
-  value = value.replace(/[^0-9Vv]/g, '');
-  
-  // Check if value contains 'v' or 'V'
-  const vIndex = value.toLowerCase().indexOf('v');
-  
-  if (vIndex !== -1) {
-    // 'V' can only be at position 9 (10th character)
-    if (vIndex !== 9) {
-      // Remove 'v' if it's not at position 9
-      value = value.replace(/v/gi, '');
-    } else {
-      // If 'V' is at position 9, truncate to 10 characters max
-      if (value.length > 10) {
-        value = value.slice(0, 10);
+    let value = event.target.value || '';
+
+    // Remove any characters that aren't digits or 'V'/'v'
+    value = value.replace(/[^0-9Vv]/g, '');
+
+    // Check if value contains 'v' or 'V'
+    const vIndex = value.toLowerCase().indexOf('v');
+
+    if (vIndex !== -1) {
+      // 'V' can only be at position 9 (10th character)
+      if (vIndex !== 9) {
+        // Remove 'v' if it's not at position 9
+        value = value.replace(/v/gi, '');
+      } else {
+        // If 'V' is at position 9, truncate to 10 characters max
+        if (value.length > 10) {
+          value = value.slice(0, 10);
+        }
       }
     }
+
+    // If no 'V' present, limit to 12 digits
+    if (!value.toLowerCase().includes('v') && value.length > 12) {
+      value = value.slice(0, 12);
+    }
+
+    // Ensure only one 'V' or 'v'
+    const vCount = (value.match(/v/gi) || []).length;
+    if (vCount > 1) {
+      // Keep only the first 'v'
+      const firstIndex = value.toLowerCase().indexOf('v');
+      value = value.slice(0, firstIndex + 1) + value.slice(firstIndex + 1).replace(/v/gi, '');
+    }
+
+    this.personalData.nic = value;
+    event.target.value = value; // Update the input value
   }
-  
-  // If no 'V' present, limit to 12 digits
-  if (!value.toLowerCase().includes('v') && value.length > 12) {
-    value = value.slice(0, 12);
-  }
-  
-  // Ensure only one 'V' or 'v'
-  const vCount = (value.match(/v/gi) || []).length;
-  if (vCount > 1) {
-    // Keep only the first 'v'
-    const firstIndex = value.toLowerCase().indexOf('v');
-    value = value.slice(0, firstIndex + 1) + value.slice(firstIndex + 1).replace(/v/gi, '');
-  }
-  
-  this.personalData.nic = value;
-  event.target.value = value; // Update the input value
-}
 
   capitalizeV(): void {
-  if (this.personalData.nic) {
-    let nic = this.personalData.nic;
-    
-    // Convert 'v' to 'V' if present
-    if (nic.toLowerCase().includes('v')) {
-      const digits = nic.replace(/[^0-9]/g, '');
-      
-      // For old format (9 digits + V)
-      if (digits.length === 9 && nic.length === 10) {
-        this.personalData.nic = digits + 'V';
-      } else {
-        // Replace all 'v' with 'V'
-        this.personalData.nic = nic.replace(/v/gi, 'V');
+    if (this.personalData.nic) {
+      let nic = this.personalData.nic;
+
+      // Convert 'v' to 'V' if present
+      if (nic.toLowerCase().includes('v')) {
+        const digits = nic.replace(/[^0-9]/g, '');
+
+        // For old format (9 digits + V)
+        if (digits.length === 9 && nic.length === 10) {
+          this.personalData.nic = digits + 'V';
+        } else {
+          // Replace all 'v' with 'V'
+          this.personalData.nic = nic.replace(/v/gi, 'V');
+        }
       }
     }
   }
-}
 
   onBranchChange() {
     if (this.selectedBranchId) {
@@ -1003,18 +1035,18 @@ export class AddDistributionOfficerComponent implements OnInit {
   }
 
   trimLeadingSpace(event: Event) {
-  const input = event.target as HTMLInputElement;
-  
-  // Remove leading spaces
-  if (input.value.startsWith(' ')) {
-    const cursorPos = input.selectionStart || 0;
-    input.value = input.value.trimStart();
-    input.setSelectionRange(Math.max(0, cursorPos - 1), Math.max(0, cursorPos - 1));
+    const input = event.target as HTMLInputElement;
+
+    // Remove leading spaces
+    if (input.value.startsWith(' ')) {
+      const cursorPos = input.selectionStart || 0;
+      input.value = input.value.trimStart();
+      input.setSelectionRange(Math.max(0, cursorPos - 1), Math.max(0, cursorPos - 1));
+    }
+
+    // Also enforce NIC length after trimming
+    this.enforceNicLength(event);
   }
-  
-  // Also enforce NIC length after trimming
-  this.enforceNicLength(event);
-}
 
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.charCode;
@@ -1079,6 +1111,30 @@ export class AddDistributionOfficerComponent implements OnInit {
 
     return null;
   }
+
+  // Add this method to your component
+  validateNameInput(event: any): void {
+    const input = event.target;
+    let value = input.value;
+
+    // Remove any numbers or special characters immediately
+    // This regex allows only letters (A-Z a-z) and spaces
+    const filteredValue = value.replace(/[^A-Za-z\s]/g, '');
+
+    // Prevent multiple consecutive spaces
+    const singleSpaces = filteredValue.replace(/\s+/g, ' ');
+
+    // Update the model value if it changed
+    if (value !== singleSpaces) {
+      input.value = singleSpaces;
+      this.personalData.accHolderName = singleSpaces;
+
+      // Trigger Angular's validation
+      event.stopPropagation();
+    }
+  }
+
+
 
 }
 

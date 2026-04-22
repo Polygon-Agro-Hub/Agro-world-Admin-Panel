@@ -31,7 +31,7 @@ export class SalesdashCustomePackageComponent implements OnInit {
   pagesl: number = 1;
   statussl = ['Pending', 'Completed', 'Opened'];
   selectedStatussl: string = '';
-  dateFilter: Date | null = new Date(); 
+  dateFilter: Date | null = new Date();
   searchsl: string = '';
   hasDataCustom = false;
   selectdPackage: SelectdPackage[] = [];
@@ -43,34 +43,34 @@ export class SalesdashCustomePackageComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getSelectedPackages();
   }
-back(): void {
-  Swal.fire({
-    icon: 'warning',
-    title: 'Are you sure?',
-    text: 'You may lose the added data after going back!',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Go Back',
-    cancelButtonText: 'No, Stay Here',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    buttonsStyling: true,
-  }).then((result) => {
-    if (result.isConfirmed) {
-     this.router.navigate(["/dispatch/salesdash-orders"]);
-    }
-  });
-}
+  back(): void {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after going back!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Go Back',
+      cancelButtonText: 'No, Stay Here',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(["/dispatch/salesdash-orders"]);
+      }
+    });
+  }
   getSelectedPackages(pagesl: number = 1, limitsl: number = this.itemsPerPagesl) {
     this.isLoading = true;
     const formattedDate = this.formatDateForAPI(this.dateFilter);
-   
+
 
     this.dispatchService
       .getSelectedPackages(
@@ -82,7 +82,7 @@ back(): void {
       )
       .subscribe({
         next: (response) => {
-          
+
 
           if (response && response.items) {
             this.selectdPackage = response.items.map((item: any) => ({
@@ -90,7 +90,7 @@ back(): void {
               orderId: item.orderId,
               processOrderId: item.processOrderId,
               invNo: item.invNo,
-              sheduleDate: item.sheduleDate, 
+              sheduleDate: item.sheduleDate,
               orderAdditionalCount: item.orderAdditionalCount,
               additionalPrice: item.additionalPrice,
               totalAdditionalItems: item.totalAdditionalItems,
@@ -98,7 +98,7 @@ back(): void {
               additionalItemsStatus: item.additionalItemsStatus,
               scheduleDateFormattedSL: this.formatDate(item.sheduleDate),
               userName: item.userName,
-              packOfficer:item.packOfficer
+              packOfficer: item.packOfficer
             }));
             this.totalItemssl = response.total || response.totalCount || 0;
             this.hasDataCustom = response.total > 0;
@@ -123,7 +123,7 @@ back(): void {
             this.hasDataCustom = this.totalItemssl > 0;
           }
 
-          
+
           this.isLoading = false;
         },
         error: (error) => {
@@ -138,14 +138,14 @@ back(): void {
 
   private formatDateForAPI(date: Date | null): string {
     if (!date || isNaN(date.getTime())) {
-      
-      return ''; 
+
+      return '';
     }
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const formatted = `${year}-${month}-${day}`;
-    
+
     return formatted;
   }
 
@@ -156,26 +156,26 @@ back(): void {
   }
 
   onDateFilterClear(): void {
-    
+
     this.dateFilter = null;
     this.pagesl = 1;
     this.getSelectedPackages();
   }
 
   onFilterChange(): void {
-    
+
     this.pagesl = 1;
     this.getSelectedPackages();
   }
 
   applyStatussl(): void {
-    
+
     this.pagesl = 1;
     this.getSelectedPackages();
   }
 
   applySearchsl(): void {
-    
+
     this.pagesl = 1;
     this.getSelectedPackages();
   }
@@ -192,9 +192,9 @@ back(): void {
   }
 
   navigateToCustomAdditionalItemView(id: number): void {
-    
+
     this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
-      queryParams: { status: true}
+      queryParams: { status: true, isCustom: 1 }
     });
   }
 }
@@ -204,13 +204,13 @@ interface SelectdPackage {
   orderId: number;
   processOrderId: number;
   invNo: string;
-  sheduleDate: string; 
+  sheduleDate: string;
   orderAdditionalCount: number;
   additionalPrice: number;
   totalAdditionalItems: number;
   packedAdditionalItems: number;
   additionalItemsStatus: string;
-  scheduleDateFormattedSL?: string; 
-  userName:string;
-  packOfficer:string;
+  scheduleDateFormattedSL?: string;
+  userName: string;
+  packOfficer: string;
 }

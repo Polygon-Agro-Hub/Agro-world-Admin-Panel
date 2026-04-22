@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { FinanceService, GoviCareRequest, GoviCareRequestDetail } from '../../../services/finance/finance.service';
+import {
+  FinanceService,
+  GoviCareRequest,
+  GoviCareRequestDetail,
+} from '../../../services/finance/finance.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
 
@@ -12,7 +16,7 @@ import { TokenService } from '../../../services/token/services/token.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './view-all-audited-govicare-requests.component.html',
-  styleUrl: './view-all-audited-govicare-requests.component.css'
+  styleUrl: './view-all-audited-govicare-requests.component.css',
 })
 export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
   isLoading: boolean = false;
@@ -44,7 +48,7 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
     private financeService: FinanceService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) { }
 
   ngOnInit(): void {
@@ -67,7 +71,7 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
         error: (error) => {
           console.error('Error loading approved govicare requests:', error);
           this.isLoading = false;
-        }
+        },
       });
   }
 
@@ -114,23 +118,26 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
     this.financeService.getGoviCareRequestById(requestId).subscribe({
       next: (response) => {
         this.selectedRequest = response.data;
-        this.totArea = (this.selectedRequest.ExtentH*2.47105) + this.selectedRequest.Extent + (this.selectedRequest.ExtentP / 160);
+        this.totArea =
+          this.selectedRequest.ExtentH * 2.47105 +
+          this.selectedRequest.Extent +
+          this.selectedRequest.ExtentP / 160;
         this.showDetailsModal = true;
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading request details:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
   auditResults(requestId: number) {
     const tree = this.router.createUrlTree([
       'finance/action/finance-govicapital/view-Govicare-approved-requests/approve-audit-personal-infor',
-      requestId
+      requestId,
     ]);
-    
+
     const url = this.router.serializeUrl(tree);
     window.open(window.location.origin + '/admin' + url, '_blank');
   }
@@ -169,9 +176,9 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
       confirmButtonColor: '#6B7280',
       customClass: {
         popup: 'bg-white dark:bg-tileBlack rounded-lg shadow-2xl',
-        confirmButton: 'px-8 py-2 rounded-lg font-medium'
+        confirmButton: 'px-8 py-2 rounded-lg font-medium',
       },
-      width: '500px'
+      width: '500px',
     });
   }
 
@@ -201,10 +208,13 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
 
             Swal.fire({
               title: 'Success',
-              text: response.message || 'Project published successfully to GoViCapital',
+              text:
+                response.message ||
+                'Project published successfully to GoViCapital',
               icon: 'success',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
@@ -214,7 +224,8 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
               text: response.message || 'Failed to publish project',
               icon: 'error',
               customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                popup:
+                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                 title: 'font-semibold text-lg',
               },
             });
@@ -228,26 +239,34 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
             text: 'An error occurred while publishing the project',
             icon: 'error',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });
-        }
+        },
       });
   }
 
   openImage(imageUrl: string): void {
     if (imageUrl) {
-      window.open(imageUrl, '_blank', 'width=800,height=600,resizable=yes,scrollbars=yes');
+      window.open(
+        imageUrl,
+        '_blank',
+        'width=800,height=600,resizable=yes,scrollbars=yes',
+      );
     }
   }
 
   formatCurrency(amount: number | string): string {
     const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-    return 'Rs. ' + numAmount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+    return (
+      'Rs. ' +
+      numAmount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    );
   }
 
   @HostListener('document:click', ['$event'])
@@ -272,8 +291,18 @@ export class ViewAllAuditedGovicareRequestsComponent implements OnInit {
   formatTotalItems(count: number): string {
     return count.toString().padStart(2, '0');
   }
-}
 
+  formatYieldValue(value: any): string {
+    if (!value && value !== 0) return '';
+
+    // Convert to number and remove trailing zeros
+    const numValue = parseFloat(value);
+    if (isNaN(numValue)) return value;
+
+    // Format to remove trailing zeros
+    return numValue.toString();
+  }
+}
 
 class AuditedRequest {
   No!: number;

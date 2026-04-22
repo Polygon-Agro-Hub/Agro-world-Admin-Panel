@@ -1,0 +1,280 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button (click)="onBack()" class="text-textLight dark:text-textDark mb-6 flex items-center gap-2">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div *ngIf="!isVerification" class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <h2 class="text-xl font-normal text-[#292929] dark:text-textDark mb-2">
+    Add GoViShop Supplier - Basic Info
+  </h2>
+
+  <div class="px-12 pb-6">
+    <form (ngSubmit)="onUpload(form)" #form="ngForm">
+      <!-- First Row: Cluster Name and District -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-10">
+        <!-- Cluster Name Input -->
+        <div>
+          <label for="clusterName" class="block font-[500] text-[#534E4E] dark:text-textDark mb-2">
+            Full Name *
+          </label>
+          <input type="text" id="fullName" [(ngModel)]="fullName" name="fullName" #fullNameInput="ngModel"
+            (input)="onFormatInput2($event)"
+            class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            required />
+          <div *ngIf="fullNameInput.touched && !fullName" class="text-red-500 mt-1">
+            <div>Full Name is required</div>
+          </div>
+
+          <div *ngIf="fullName && hasLeadingOrTrailingSpaces && formSubmitted" class="text-red-500 mt-1">
+            Cluster name should not have leading or trailing spaces
+          </div>
+        </div>
+
+        <!-- District Dropdown -->
+        <div>
+          <label for="clusterName" class="block font-[500] text-[#534E4E] dark:text-textDark mb-2">
+            Mobile Number *
+          </label>
+          <input type="text" id="mobileNumber" [(ngModel)]="mobileNumber" name="mobileNumber"
+            #mobileNumberInput="ngModel"
+            class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            placeholder="e.g. 07XXXXXXXX" required pattern="^[0-9]{10}$"
+            (keypress)="blockInvalidKeypressForPhone($event)" (paste)="blockInvalidPasteForPhone($event)" 
+            (input)="onPhoneInput($event)"
+             minlength="10"
+            maxlength="10" 
+            (keypress)="($event.charCode >= 48 && $event.charCode <= 57) ? true : $event.preventDefault()"
+            />
+          <div *ngIf="mobileNumberInput.touched && !mobileNumber" class="text-red-500 mt-1">
+            <div> Mobile Number is required</div>
+          </div>
+          <div *ngIf="mobileNumber && mobileNumberInput.errors?.['pattern']" class="text-red-500 mt-1">
+            Please enter a valid mobile number.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Second Row: Certificate Dropdown -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="mb-6">
+          <label for="email" class="block font-[500] text-[#534E4E] dark:text-textDark mb-2">
+            Email Address *
+          </label>
+          <input type="text" id="email" [(ngModel)]="email" #emailInput="ngModel"
+            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$" (input)="onTrimInput($event)" name="email"
+            class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            required />
+          <div *ngIf="emailInput.touched && !email" class="text-red-500 mt-1">
+            Email is required
+          </div>
+
+          <div *ngIf="emailInput.touched && emailInput.errors?.['pattern']" class="text-red-500 mt-1">
+            <!-- <p>Invalid email format (e.g., example&#64;mail.com)</p> -->
+            <p>Please enter a valid email in the format: example&#64;domain.com</p>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label for="nic" class="block font-[500] text-[#534E4E] dark:text-textDark mb-2">
+            NIC Number *
+          </label>
+          <input type="text" id="nic" [(ngModel)]="nic" #nicInput="ngModel" required maxlength="12"
+            pattern="^(\d{9}[V]|\d{12})$" (input)="onNicInput($event)" name="nic"
+            class="w-full px-3 py-2 h-12 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark"
+            required />
+          <div *ngIf="nicInput.touched && !nic" class="text-red-500 mt-1">
+            <div> NIC is required</div>
+          </div>
+
+          <div *ngIf="nicInput.touched && nicInput.errors?.['pattern'] && nic" class="text-red-500 mt-1">
+            <div>"Please enter a valid NIC number (12 digits or 10 digits followed by 'V').</div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="mt-6 mb-10 border-t border-[#D9D9D9] dark:border-[#D9D9D9]" />
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 ">
+        <div class="mb-6">
+          <label for="Subscription" class="block font-[500] text-textLight dark:text-textDark mb-2">
+            Subscription
+          </label>
+          <p-dropdown id="Subscription" [(ngModel)]="selectedSubscription" [options]="subscriptions" optionLabel="name"
+            optionValue="value" [showClear]="!!selectedSubscription"
+            styleClass="custom-dropdown w-full border items-center bg-tileLight dark:bg-tileBlack text-textLight dark:text-textDark h-12"
+            class="w-full" name="Subscription" #dropdownInput="ngModel" required>
+          </p-dropdown>
+          <div *ngIf="!selectedSubscription && dropdownInput.touched" class="text-red-500 mt-1">
+            Subscription is required
+          </div>
+        </div>
+
+      </div>
+
+      <!-- File Upload Section -->
+      <div class="mb-6" *ngIf="selectedSubscription === 'Premium'">
+
+        <div
+          class="bg-[#EBF5FF] flex flex-col justify-center items-center py-10 px-8 border-[2px] border-[#0090FF] rounded-lg border-dashed cursor-pointer dark:bg-tileBlack"
+          (click)="fileInput.click()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)">
+          <input type="file" (change)="onFileSelected($event)" accept=".jpg, .jpeg, .png, .pdf" class="hidden"
+            #fileInput />
+
+          <div *ngIf="!selectedFile" class="flex flex-col justify-center items-center text-center">
+            <i class="fa-solid fa-cloud-arrow-up text-[60px] text-gray-400 mb-4"></i>
+            <p class="text-xl text-[#0090FF] font-semibold mb-2">
+              Select the file to upload (*.jpg, *.jpeg, *.png, *.pdf)
+            </p>
+            <p class="text-md text-[#0090FF]">or drag and drop it here</p>
+          </div>
+
+          <div *ngIf="selectedFile" class="flex flex-col justify-center items-center text-center">
+            <i class="fa-solid fa-file-excel text-[60px] text-blue-500 mb-4"></i>
+            <p class="text-lg text-gray-700 dark:text-gray-300 font-medium">
+              {{ selectedFile.name }}
+            </p>
+            <p class=" text-gray-500 dark:text-gray-400 mt-2">
+              File selected successfully
+            </p>
+          </div>
+
+          <div *ngIf="isLoading" class="mt-4">
+            <app-loading-spinner></app-loading-spinner>
+          </div>
+        </div>
+
+        <div *ngIf="!selectedFile && fileInputTouched" class="text-red-500 mt-1">
+          Please select a file to upload
+        </div>
+
+        <!-- Simple file name display -->
+        <div *ngIf="selectedFile" class="mt-2 text-left">
+          <p class=" text-black dark:text-gray-400">
+            Uploaded :
+            <span class="font-medium text-blue-500">{{ selectedFile.name }}</span>
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-3 pt-4">
+        <button type="button"
+          class="px-6 py-2 bg-[#74788D] text-[#D3D3D3] rounded-lg hover:bg-[#74788D] transition-colors w-32"
+          (click)="onCancel()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="px-6 py-2 rounded-lg text-white transition-colors w-32"
+          [ngClass]="{
+            'bg-gray-500 cursor-not-allowed hover:bg-gray-500':
+              form.invalid ||
+              (selectedSubscription === 'Premium' && !selectedFile),
+
+            'bg-[#3980C0] hover:bg-[#2d6ca3]':
+              form.valid &&
+              (selectedSubscription === 'Standard' ||
+              (selectedSubscription === 'Premium' && selectedFile))
+          }"
+        >
+          <span *ngIf="!isLoading">Next</span>
+          <span *ngIf="isLoading">Processing...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Verification Modal -->
+<div *ngIf="isVerification" class="flex justify-start items-center">
+  <div class="bg-white dark:bg-tileBlack rounded-xl p-8 min-w-[680px] min-h-[480px] shadow-lg">
+
+    <!-- Title -->
+    <h2 class="text-[20px] mt-4 font-[500] text-[#292929] dark:text-white mb-4">
+      Add GoViShop Supplier - Verification
+    </h2>
+
+    <!-- Subtitle -->
+    <div class="mx-8 mt-6 ">
+      <p class="text-[18px] text-[#4B5563] font-[400] dark:text-gray-300 mb-10">
+        Verification code sent to :
+        <strong class="text-[#444444] font-[600] dark:text-white">{{ mobileNumber }}</strong>
+      </p>
+
+      <!-- OTP Input -->
+      <div class="flex mt-4 gap-y-2 gap-x-8 mb-4 justify-start">
+        <input #otpInput type="text" maxlength="1"
+          (input)="onInput($event, 0)"
+          placeholder="X"
+          (keydown)="onKeyDown($event, 0)"
+          class="otp-box" />
+      
+        <input #otpInput type="text" maxlength="1"
+          (input)="onInput($event, 1)"
+          (keydown)="onKeyDown($event, 1)"
+          placeholder="X"
+          class="otp-box" />
+      
+        <input #otpInput type="text" maxlength="1"
+          (input)="onInput($event, 2)"
+          (keydown)="onKeyDown($event, 2)"
+          placeholder="X"
+          class="otp-box" />
+      
+        <input #otpInput type="text" maxlength="1"
+          (input)="onInput($event, 3)"
+          (keydown)="onKeyDown($event, 3)"
+          placeholder="X"
+          class="otp-box" />
+      
+        <input #otpInput type="text" maxlength="1"
+          (input)="onInput($event, 4)"
+          (keydown)="onKeyDown($event, 4)"
+          placeholder="X"
+          class="otp-box" />
+      </div>
+
+      <!-- Resend -->
+      <!-- <div class="text-[#0023F6] text-[18px] font-[600] mb-16 mt-6 cursor-pointer">
+        Resend in <span class="underline">10:00</span>
+      </div> -->
+
+      <div 
+        class="text-[#0023F6] text-[18px] mb-16 mt-8 "
+        (click)="handleResend()"
+      >
+        <ng-container *ngIf="!canResend" class="cursor-not-allowed">
+          Resend in <span class="underline cursor-not-allowed">{{ displayTime }}</span>
+        </ng-container>
+      
+        <ng-container *ngIf="canResend">
+          <span class="underline cursor-pointer">Resend Again</span>
+        </ng-container>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-4 mr-4">
+        <button (click)="cancelVerification()" class="px-6 py-2 rounded-lg bg-[#74788D] text-[#D3D3D3] min-w-28
+                 hover:bg-[#74788D] transition">
+          Cancel
+        </button>
+      
+        <button 
+          (click)="verifyOtp()" 
+          [disabled]="!isOtpComplete()"
+          class="px-6 py-2 rounded-lg min-w-28 text-white transition
+                 bg-[#3980C0] hover:bg-[#3980C0]
+                 disabled:bg-[#A8B0C5] disabled:cursor-not-allowed">
+          Submit
+        </button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    
+
+  </div>
+</div>

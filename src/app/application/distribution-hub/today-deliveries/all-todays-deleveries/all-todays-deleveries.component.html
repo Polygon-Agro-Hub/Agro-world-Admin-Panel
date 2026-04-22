@@ -19,7 +19,7 @@
         <p-dropdown #topfilters
           styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#D1D1D1] dark:border-[#AFAFAF]"
           [options]="statusOptions" [(ngModel)]="selectedStatus" (onChange)="onStatusChange()" [showClear]="!!selectedStatus"
-          [checkmark]="true" optionLabel="label" optionValue="value" placeholder="Status">
+          optionLabel="label" optionValue="value" placeholder="Status">
         </p-dropdown>
       </div>
 

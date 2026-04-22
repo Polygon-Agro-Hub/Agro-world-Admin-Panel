@@ -1,4 +1,12 @@
-import { Component, AfterViewInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
@@ -8,12 +16,14 @@ Chart.register(...registerables);
   standalone: true,
   imports: [],
   templateUrl: './govicare-certification-area-chart.component.html',
-  styleUrl: './govicare-certification-area-chart.component.css'
+  styleUrl: './govicare-certification-area-chart.component.css',
 })
-export class GovicareCertificationAreaChartComponent implements AfterViewInit, OnChanges {
+export class GovicareCertificationAreaChartComponent
+  implements AfterViewInit, OnChanges
+{
   @Input() monthlyStats: any[] = [];
   @ViewChild('myChart') myChart!: ElementRef<HTMLCanvasElement>;
-  
+
   chart!: Chart;
 
   ngAfterViewInit(): void {
@@ -88,8 +98,8 @@ export class GovicareCertificationAreaChartComponent implements AfterViewInit, O
               color: '#334155',
             },
             border: {
-              display: false
-            }
+              display: false,
+            },
           },
           x: {
             ticks: {
@@ -102,13 +112,13 @@ export class GovicareCertificationAreaChartComponent implements AfterViewInit, O
               color: '#334155',
             },
             border: {
-              display: false
-            }
+              display: false,
+            },
           },
         },
         plugins: {
-          legend: { 
-            display: false 
+          legend: {
+            display: false,
           },
           tooltip: {
             backgroundColor: '#1c425c',
@@ -119,11 +129,11 @@ export class GovicareCertificationAreaChartComponent implements AfterViewInit, O
             cornerRadius: 6,
             displayColors: false,
             callbacks: {
-              label: function(context) {
+              label: function (context) {
                 return `Income: Rs ${context.parsed.y.toLocaleString()}`;
-              }
-            }
-          }
+              },
+            },
+          },
         },
         interaction: {
           intersect: false,
@@ -140,18 +150,34 @@ export class GovicareCertificationAreaChartComponent implements AfterViewInit, O
     return gradient;
   }
 
-  private prepareChartData(): { labels: string[], values: number[] } {
+  private prepareChartData(): { labels: string[]; values: number[] } {
     // Use provided monthlyStats or fallback to default data
     if (this.monthlyStats && this.monthlyStats.length > 0) {
-      const labels = this.monthlyStats.map(stat => stat.monthName);
-      const values = this.monthlyStats.map(stat => Number(stat.revenue) || 0);
+      const labels = this.monthlyStats.map((stat) => stat.monthName);
+      const values = this.monthlyStats.map((stat) => Number(stat.revenue) || 0);
       return { labels, values };
     }
 
     // Fallback to sample data that matches the image
     return {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      values: [45000, 68000, 82000, 58000, 45000, 12000, 45000, 14000, 16000, 35000, 68000, 15000]
+      labels: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ],
+      values: [
+        45000, 68000, 82000, 58000, 45000, 12000, 45000, 14000, 16000, 35000,
+        68000, 15000,
+      ],
     };
   }
 
@@ -159,7 +185,7 @@ export class GovicareCertificationAreaChartComponent implements AfterViewInit, O
     if (!this.chart) return;
 
     const data = this.prepareChartData();
-    
+
     this.chart.data.labels = data.labels;
     this.chart.data.datasets[0].data = data.values;
     this.chart.update();

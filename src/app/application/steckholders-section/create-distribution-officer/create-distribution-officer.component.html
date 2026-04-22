@@ -257,9 +257,15 @@
           (touchedFields.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01) ? 'border-red-500' : 'border-gray-300')" />
     </div>
     <div class="mt-1">
+      <!-- Required message -->
       <span *ngIf="touchedFields.phoneNumber01 && !personalData.phoneNumber01"
         class="text-red-600 text-sm block">
         Mobile Number - 01 is required
+      </span>
+      <!-- Format validation message -->
+      <span *ngIf="touchedFields.phoneNumber01 && personalData.phoneNumber01 && !isValidPhoneNumber(personalData.phoneNumber01)"
+        class="text-red-600 text-sm block">
+        Mobile Number - 01 - Please enter a valid mobile number (format: 7XXXXXXXX)
       </span>
     </div>
   </div>
@@ -300,8 +306,13 @@
           (personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02) ? 'border-red-500' : 'border-gray-300')" />
     </div>
     <div class="mt-1">
-      <!-- MOVED HERE: Duplicate validation message now appears under Mobile Number - 02 -->
-      <span *ngIf="areDuplicatePhoneNumbers()" class="text-red-600 text-sm block">
+      <!-- Format validation message for phone 02 -->
+      <span *ngIf="personalData.phoneNumber02 && !isValidPhoneNumber(personalData.phoneNumber02)"
+        class="text-red-600 text-sm block">
+        Mobile Number - 02 - Please enter a valid mobile number (format: 7XXXXXXXX)
+      </span>
+      <!-- Duplicate validation message - only shown when both numbers are valid -->
+      <span *ngIf="shouldShowDuplicateError()" class="text-red-600 text-sm block">
         Mobile Number - 01 and Mobile Number - 02 cannot be the same
       </span>
     </div>
@@ -509,7 +520,7 @@
           Next
         </button>
 
-        <button *ngIf="personalData.jobRole !== 'Driver'" type="submit"
+        <button *ngIf="personalData.jobRole !== 'Driver'" type="button"
           class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
           Send to Approve
         </button>
@@ -570,7 +581,7 @@
         <input id="licenseFrontImageUpload" type="file" accept="image/*" (change)="onLicenseFrontImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload License Front Image</p>
         </div>
@@ -592,7 +603,7 @@
         <input id="licenseBackImageUpload" type="file" accept="image/*" (change)="onLicenseBackImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'licenseBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload License Back Image</p>
         </div>
@@ -653,7 +664,7 @@
         <input id="insurenceFrontImageUpload" type="file" accept="image/*"
           (change)="onInsurenceFrontImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'insurenceFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Insurance Front Image</p>
         </div>
@@ -675,7 +686,7 @@
         <input id="insuranceBackImageUpload" type="file" accept="image/*"
           (change)="onInsurenceBackImageSelected($event)" class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'insuranceBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2  border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Insurance Back Image</p>
         </div>
@@ -694,7 +705,7 @@
           Insurance Expire Date *
         </label>
         <p-calendar id="insExpDate" [(ngModel)]="driverObj.insExpDate" [readonlyInput]="true" [showIcon]="true" [showClear]="true"
-          [showButtonBar]="false" iconDisplay="input" [minDate]="curDate" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
+          [showButtonBar]="false" iconDisplay="input" [minDate]="tomorrowDate" dateFormat="yy-mm-dd" placeholder="Select Expiry Date"
           [style]="{ width: '100%' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
                        [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
@@ -783,7 +794,7 @@
         <input id="vehicleFrontImageUpload" type="file" accept="image/*" (change)="onVehicleFrontImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleFrontImageUpload')"
-          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Front Image</p>
         </div>
@@ -804,7 +815,7 @@
         <input id="vehicleBackImageUpload" type="file" accept="image/*" (change)="onVehicleBackImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleBackImageUpload')"
-          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-6 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Vehicle Back Image</p>
         </div>
@@ -825,7 +836,7 @@
         <input id="vehicleSideAImageUpload" type="file" accept="image/*" (change)="onVehicleSideAImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideAImageUpload')"
-          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-14 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 1</p>
         </div>
@@ -846,7 +857,7 @@
         <input id="vehicleSideBImageUpload" type="file" accept="image/*" (change)="onVehicleSideBImageSelected($event)"
           class="hidden" />
         <div (click)="triggerFileInputForDriver($event, 'vehicleSideBImageUpload')"
-          class="flex flex-row items-center justify-center bg-[#D2DADD] dark:bg-gray-700 rounded-lg shadow-md gap-x-14 py-2 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
+          class="flex flex-row items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md gap-x-3 p-3 border border-gray-300 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600">
           <i class="fa-solid fa-upload text-gray-600 dark:text-gray-300 text-lg"></i>
           <p class="text-gray-700 dark:text-textDark">Upload Side Image - 2</p>
         </div>
@@ -867,7 +878,7 @@
         class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2">
         Back
       </button>
-      <button type="submit" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
+      <button type="button" class="px-4 py-2 bg-[#3980C0] text-white rounded-md" (click)="onSubmit()">
         Send to Approve
       </button>
     </div>

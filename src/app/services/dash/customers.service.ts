@@ -34,13 +34,10 @@ export class CustomersService {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${this.token}`,
       });
-      console.log('userId:', userId);
-  
       const url = `${this.apiUrl}dash/get-dash-user-orders/${userId}?status=${statusFilter}`;
   
       return this.http.get<any>(url, { headers }).pipe(
         catchError((error) => {
-          // You can handle specific error cases here if needed
           console.error('Error fetching user orders:', error);
           return throwError(error);
         })

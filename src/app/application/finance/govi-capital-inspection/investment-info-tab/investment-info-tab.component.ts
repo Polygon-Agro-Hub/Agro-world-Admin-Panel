@@ -37,7 +37,7 @@ export class InvestmentInfoTabComponent {
     const formattedValue = parts.join('.');
     
     // Add Rs prefix
-    return `Rs ${formattedValue}`;
+    return `Rs. ${formattedValue}`;
   }
 }
 

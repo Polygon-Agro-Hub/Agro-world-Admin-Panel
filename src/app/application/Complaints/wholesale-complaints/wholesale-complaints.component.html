@@ -19,13 +19,11 @@
               </svg>
     
             </i>
-            <!-- Category -->
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
               [options]="comCategories" [(ngModel)]="filterComCategory" optionLabel="label" optionValue="value"
               [showClear]="true" placeholder="Category" (onChange)="applyFilters()"></p-dropdown>
 
-            <!-- Status -->
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF]"
               [options]="status" [(ngModel)]="filterStatus" optionLabel="label" optionValue="value" [showClear]="true"
@@ -36,7 +34,6 @@
               [options]="replyStatus" [(ngModel)]="rpst" optionLabel="label" optionValue="value" [showClear]="true"
               placeholder="Reply" (onChange)="regStatusFil()"></p-dropdown>
 
-            <!-- Search -->
             <div class="group flex items-center rounded-full px-2 py-1 w-96 bg-gray-100 dark:bg-gray-800 relative">
               <div
             class="absolute top-[50px] left-0 bg-gray-700 text-white text-xs rounded-md py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -48,7 +45,6 @@
                 class="bg-transparent outline-none w-full text-gray-900 dark:text-gray-100" />
               <button type="button" (click)="searchComplain()" aria-label="Search"
                 class="text-gray-500 hover:text-gray-700 focus:outline-none mr-1">
-                <!-- magnifying-glass SVG -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,7 +53,6 @@
               </button>
               <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="clearSearch()"
                 aria-label="Clear search">
-                <!-- X-icon SVG -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -134,13 +129,11 @@
             </td>
             <td class="px-4 py-3 text-[14px] md:text-[16px] font-normal text-left whitespace-nowrap">
               <span class="group inline-block max-w-[300px]">
-                <!-- Truncated -->
                 <span class="block group-hover:hidden whitespace-nowrap">
                   {{ item.complainCategory | slice:0:25 }}
                   {{ item.complainCategory.length > 25 ? '...' : '' }}
                 </span>
             
-                <!-- Full text -->
                 <span class="hidden group-hover:block whitespace-nowrap break-words">
                   {{ item.complainCategory }}
                 </span>
@@ -262,56 +255,3 @@
   </div>
 </div>
 
-<!-- <p-dialog
-
-
-  [(visible)]="display"
-  [modal]="true"
-  [closable]="false"
-  [style]="{ width: '600px' }"
-  [contentStyle]="{ padding: '0' }"
-  styleClass="bg-white dark:bg-gray-800"
->
-<div class="dialog-header text-center bg-white dark:bg-gray-800 p-4">
-    <i class="fa-regular fa-envelope text-gray-600 dark:text-gray-400" style="font-size: 1.5rem;"></i>
-   <h3 class="text-[16px] md:text-[18px] font-semibold mt-3 text-[#000000] dark:text-gray-100">Reply as Polygon</h3>
-  </div>
- <div
-  class="dialog-content text-[16px] md:text-[18px] border-t rounded-[20px]
- border-r border-b border-l border-gray-300 dark:border-gray-600 text-[#000000] dark:text-gray-100 mt-5 ml-8 mr-8 mb-5 bg-white dark:bg-gray-800"
->
- <div class="p-5 bg-white dark:bg-gray-800">
-    <div class="reply-header">
-      <span class="text-gray-900 dark:text-gray-100">Dear {{ selectedComplaint.firstName }} {{ selectedComplaint.lastName }},</span>
-      <p class="mt-3 text-gray-900 dark:text-gray-100">We are pleased to inform you that your complaint has been resolved.</p>
-    </div>
-    <p *ngIf="selectedComplaint.reply" class="pre-filled-reply text-wrap text-gray-900 dark:text-gray-100">
-      {{ selectedComplaint.reply }}
-    </p>
-   
-   
-    <p class="text-gray-900 dark:text-gray-100">
-      If you have any further concerns or questions, feel free to reach out. <br>
-      Thank you for your patience and understanding.
-    </p>
-
-    <p class="mt-5 text-gray-900 dark:text-gray-100">
-      Sincerely,<br />
-      Polygon Customer Support Team
-    </p>
-  </div>
-
-  </div>
-  <ng-template pTemplate="footer">
-    <div class="bg-white dark:bg-gray-800 p-4 border-t border-gray-200 dark:border-gray-600">
-      <button
-        pButton
-        type="button"
-        label="Cancel"
-        class="p-button-secondary bg-[#74788D] dark:bg-gray-600 text-[#D3D3D3] dark:text-gray-200 hover:bg-gray-600 dark:hover:bg-gray-700 border-none"
-        style="margin-right: 8px; width: 120px; height: 40px;"
-        (click)="hideDialog()"
-      ></button>
-    </div>
-  </ng-template>
-</p-dialog> -->

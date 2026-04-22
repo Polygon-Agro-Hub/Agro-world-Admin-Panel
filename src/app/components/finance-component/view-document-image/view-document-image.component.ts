@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './view-document-image.component.html',
-  styleUrl: './view-document-image.component.css'
+  styleUrl: './view-document-image.component.css',
 })
 export class ViewDocumentImageComponent {
   @Input() frontTitle: string = '';
@@ -22,8 +22,13 @@ export class ViewDocumentImageComponent {
   modalTitle: string = '';
   modalZoomLevel: number = 1;
 
+  constructor(private elementRef: ElementRef) {}
+
   onImageError(event: Event, type: string): void {
-    console.error(`Failed to load ${type} image:`, type === 'front' ? this.frontImageUrl : this.backImageUrl);
+    console.error(
+      `Failed to load ${type} image:`,
+      type === 'front' ? this.frontImageUrl : this.backImageUrl,
+    );
     const target = event.target as HTMLImageElement;
     target.src = 'assets/placeholder-image.png';
   }
@@ -51,6 +56,19 @@ export class ViewDocumentImageComponent {
     this.modalTitle = title;
     this.isModalOpen = true;
     this.modalZoomLevel = 1;
+
+    // Scroll to the component so the modal is visible
+    setTimeout(() => {
+      const element = this.elementRef.nativeElement;
+
+      const yOffset = 50; 
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth',
+      });
+    }, 100);
   }
 
   // Close modal
@@ -59,6 +77,9 @@ export class ViewDocumentImageComponent {
     this.modalImageUrl = '';
     this.modalTitle = '';
     this.modalZoomLevel = 1;
+
+    // Scroll to the top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Modal zoom functions

@@ -135,6 +135,7 @@ firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
   selectVehicletype: any = { name: '', capacity: '' };
 
   curDate:Date = new Date();
+  tomorrowDate: Date = new Date();   // tomorrow's date
 
   VehicleTypes = [
     { name: 'Mahindra Bollero', capacity: 272 },
@@ -200,7 +201,9 @@ firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
     private distributionOfficerServ: DistributionHubService,
     private http: HttpClient,
     private router: Router
-  ) { }
+  ) { 
+     this.tomorrowDate.setDate(this.tomorrowDate.getDate() + 1);
+  }
 
   selectedLanguages: string[] = [];
 
@@ -268,12 +271,15 @@ firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
   onSubmit() {
     const missingFields: string[] = [];
 
-    this.licNoModel.control.markAsTouched();
-    this.confirmLicNoModel.control.markAsTouched();
-    this.insurenceNoModel.control.markAsTouched();
-    this.confirmInsurenceNoModel.control.markAsTouched();
-    this.vRegNoModel.control.markAsTouched();
-    this.confirmVRegNoModel.control.markAsTouched();
+    // Only mark driver fields as touched if they exist (driver role)
+    if (this.personalData.jobRole === 'Driver') {
+      this.licNoModel?.control.markAsTouched();
+      this.confirmLicNoModel?.control.markAsTouched();
+      this.insurenceNoModel?.control.markAsTouched();
+      this.confirmInsurenceNoModel?.control.markAsTouched();
+      this.vRegNoModel?.control.markAsTouched();
+      this.confirmVRegNoModel?.control.markAsTouched();
+    }
 
     // Check required fields for pageOne
     if (!this.personalData.empType) {
@@ -327,16 +333,16 @@ firstDigitErrorField: 'phoneNumber01' | 'phoneNumber02' | null = null;
     if (!this.personalData.phoneNumber01) {
   missingFields.push('Mobile Number - 01 is Required');
 } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: 7XXXXXXXX)');
 }
 
 if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: 7XXXXXXXX)');
 }
 
-    if (this.areDuplicatePhoneNumbers()) {
-      missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
-    }
+if (this.shouldShowDuplicateError()) {
+  missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+}
 
     if (!this.personalData.nic) {
       missingFields.push('NIC Number is Required');
@@ -460,6 +466,43 @@ if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalDat
     }
 
     if (missingFields.length > 0) {
+      // Mark all fields as touched to show validation errors
+      this.touchedFields.empType = true;
+      this.touchedFields.companyId = true;
+      this.touchedFields.centerId = true;
+      this.touchedFields.jobRole = true;
+      this.touchedFields.irmId = true;
+      this.touchedFields.firstNameEnglish = true;
+      this.touchedFields.lastNameEnglish = true;
+      this.touchedFields.firstNameSinhala = true;
+      this.touchedFields.lastNameSinhala = true;
+      this.touchedFields.firstNameTamil = true;
+      this.touchedFields.lastNameTamil = true;
+      this.touchedFields.phoneNumber01 = true;
+      this.touchedFields.phoneNumber02 = true;
+      this.touchedFields.nic = true;
+      this.touchedFields.email = true;
+      this.touchedFields.houseNumber = true;
+      this.touchedFields.streetName = true;
+      this.touchedFields.city = true;
+      this.touchedFields.district = true;
+      this.touchedFields.province = true;
+      this.touchedFields.accHolderName = true;
+      this.touchedFields.accNumber = true;
+      this.touchedFields.confirmAccNumber = true;
+      this.invalidFields.add('bankName');
+      this.invalidFields.add('branchName');
+      
+      // Mark driver-specific fields as touched if driver role
+      if (this.personalData.jobRole === 'Driver') {
+        this.licNoModel?.control.markAsTouched();
+        this.confirmLicNoModel?.control.markAsTouched();
+        this.insurenceNoModel?.control.markAsTouched();
+        this.confirmInsurenceNoModel?.control.markAsTouched();
+        this.vRegNoModel?.control.markAsTouched();
+        this.confirmVRegNoModel?.control.markAsTouched();
+      }
+      
       let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
       missingFields.forEach((field) => {
         errorMessage += `<li>${field}</li>`;
@@ -798,16 +841,16 @@ if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalDat
       if (!this.personalData.phoneNumber01) {
   missingFields.push('Mobile Number - 01 is Required');
 } else if (!this.isValidPhoneNumber(this.personalData.phoneNumber01)) {
-  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+  missingFields.push('Mobile Number - 01 - Please enter a valid mobile number (format: 7XXXXXXXX)');
 }
 
 if (this.personalData.phoneNumber02 && !this.isValidPhoneNumber(this.personalData.phoneNumber02)) {
-  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: +947XXXXXXXX)');
+  missingFields.push('Mobile Number - 02 - Please enter a valid mobile number (format: 7XXXXXXXX)');
 }
 
-      if (this.personalData.phoneNumber01 && this.personalData.phoneNumber02 && this.personalData.phoneNumber01 === this.personalData.phoneNumber02) {
-        missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
-      }
+if (this.shouldShowDuplicateError()) {
+  missingFields.push('Mobile Number - 02 - Cannot be the same as Mobile Number - 01');
+}
 
       if (!this.personalData.nic) {
         missingFields.push('NIC Number is Required');
@@ -2424,6 +2467,17 @@ preventInvalidPhonePaste(event: ClipboardEvent, fieldName: 'phoneNumber01' | 'ph
   }
   
   this.personalData[fieldName] = finalValue;
+}
+
+shouldShowDuplicateError(): boolean {
+  const phone1 = this.personalData.phoneNumber01;
+  const phone2 = this.personalData.phoneNumber02;
+  
+  if (!phone1 || !phone2) return false;
+  
+  if (!this.isValidPhoneNumber(phone1) || !this.isValidPhoneNumber(phone2)) return false;
+  
+  return phone1 === phone2;
 }
 
 

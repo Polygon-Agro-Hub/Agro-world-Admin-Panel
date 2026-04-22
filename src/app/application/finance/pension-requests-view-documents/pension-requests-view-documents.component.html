@@ -1,31 +1,25 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-<button
-  class="mb-1 text-gray-700 dark:text-gray-300 flex items-center gap-2 hover:text-gray-900 dark:hover:text-white"
-  onclick="history.back()"
->
+
+<div class="bg-gray-100 dark:bg-gray-900">
+  <div class="w-full px-6 py-4">
+    <button class="mb-5 text-gray-700 dark:text-gray-300 flex items-center gap-2 hover:text-gray-900 dark:hover:text-white"
+  onclick="history.back()">
   <i class="fa-solid fa-arrow-left"></i>
   <span class="font-medium">Back</span>
 </button>
-<div class="bg-gray-100 dark:bg-gray-900">
-  <div class="w-full px-6 py-8">
     <div *ngIf="!isLoading">
       <div *ngIf="hasRequestData; else noData">
-        <!-- Farmer Information Header -->
         <div class="mb-6 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
           <div class="flex items-center justify-between">
             <div class="flex gap-8">
               <div class="flex flex-col">
-                <span class="text-gray-600 dark:text-gray-400 text-sm"
-                  >Farmer's Name :</span
-                >
+                <span class="text-gray-600 dark:text-gray-400 text-sm">Farmer's Name :</span>
                 <span class="text-gray-900 dark:text-white font-medium">
                   {{ farmerName }}
                 </span>
               </div>
               <div class="flex flex-col">
-                <span class="text-gray-600 dark:text-gray-400 text-sm"
-                  >Farmer's NIC :</span
-                >
+                <span class="text-gray-600 dark:text-gray-400 text-sm">Farmer's NIC :</span>
                 <span class="text-gray-900 dark:text-white font-medium">
                   {{ farmerNIC }}
                 </span>
@@ -33,51 +27,40 @@
             </div>
             <div class="flex gap-3">
               <button
-                (click)="onApproveClick()"
-                [disabled]="isProcessingAction"
-                class="px-6 py-2 bg-[#3980C0] hover:bg-blue-600 text-white rounded-md font-medium transition-colors shadow-sm w-28 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {{ isProcessingAction ? 'Processing...' : 'Approve' }}
+                *ngIf="permissionService.hasPermission('Pension requests approve') || tokenService.getUserDetails().role === '1'"
+                (click)="onApproveClick()" [disabled]="isProcessingAction"
+                class="px-6 py-2 bg-[#3980C0] hover:bg-blue-600 text-white rounded-md font-medium transition-colors shadow-sm w-28 disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ isProcessingAction ? "Processing..." : "Approve" }}
               </button>
               <button
-                (click)="onRejectClick()"
-                [disabled]="isProcessingAction"
-                class="px-6 py-2 bg-[#C40D0D] hover:bg-red-600 text-white rounded-md font-medium transition-colors shadow-sm w-28 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {{ isProcessingAction ? 'Processing...' : 'Reject' }}
+                *ngIf="permissionService.hasPermission('Pension requests reject') || tokenService.getUserDetails().role === '1'"
+                (click)="onRejectClick()" [disabled]="isProcessingAction"
+                class="px-6 py-2 bg-[#C40D0D] hover:bg-red-600 text-white rounded-md font-medium transition-colors shadow-sm w-28 disabled:opacity-50 disabled:cursor-not-allowed">
+                {{ isProcessingAction ? "Processing..." : "Reject" }}
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Document Images Section -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
-          <!-- Applier's NIC Photos -->
-          <app-view-document-image
-            *ngIf="nicFrontImage && nicBackImage"
-            [frontTitle]="'Applier\'s NIC Front Photo'"
-            [backTitle]="'Applier\'s NIC Back Photo'"
-            [frontImageUrl]="nicFrontImage"
-            [backImageUrl]="nicBackImage"
-            class="mb-12 block"
-          ></app-view-document-image>
+        <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
+          <app-view-document-image *ngIf="nicFrontImage && nicBackImage" [frontTitle]="'Applier\'s NIC Front Photo'"
+            [backTitle]="'Applier\'s NIC Back Photo'" [frontImageUrl]="nicFrontImage" [backImageUrl]="nicBackImage"
+            class="mb-12 block"></app-view-document-image>
 
-          <!-- Successor's NIC Photos -->
-          <app-view-document-image
-            *ngIf="successorNicFrontImage && successorNicBackImage"
-            [frontTitle]="'Successor\'s NIC Front Photo'"
-            [backTitle]="'Successor\'s NIC Back Photo'"
-            [frontImageUrl]="successorNicFrontImage"
-            [backImageUrl]="successorNicBackImage"
-            class="block"
-          ></app-view-document-image>
+          <app-view-document-image *ngIf="successorNicFrontImage && successorNicBackImage"
+            [frontTitle]="'Successor\'s NIC Front Photo'" [backTitle]="'Successor\'s NIC Back Photo'"
+            [frontImageUrl]="successorNicFrontImage" [backImageUrl]="successorNicBackImage"
+            class="block"></app-view-document-image>
+
+          <app-view-document-image *ngIf="successor_birthCrtFront && successor_birthCrtBack"
+            [frontTitle]="'Successor’s ID Front Photo (Under 16)'" [backTitle]="'Successor’s ID Back Photo (Under 16)'"
+            [frontImageUrl]="successor_birthCrtFront" [backImageUrl]="successor_birthCrtBack"
+            class="block"></app-view-document-image>
         </div>
       </div>
 
       <ng-template #noData>
-        <div
-          class="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm text-center"
-        >
+        <div class="p-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm text-center">
           <p class="text-gray-500 dark:text-gray-400">
             No pension request data available.
           </p>

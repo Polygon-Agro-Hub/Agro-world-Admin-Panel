@@ -1,0 +1,224 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<!-- Main Container -->
+<div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    <div class="flex flex-col gap-7 px-2 py-2">
+
+        <!-- Header Section with Logo and Details -->
+        <div
+            class="flex flex-row justify-between items-center border-[#F1F7FA] border-[2px] rounded-lg p-6">
+            <div class="flex flex-row items-center">            <!-- Logo -->
+            <div class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden">
+                <ng-container *ngIf="shopData; else defaultIcon">
+                    <img [src]="defaultImage" alt="Shop Logo" class="w-full h-full object-cover"
+                            (error)="onImageError($event)" />
+                </ng-container>
+                <ng-template #defaultIcon>
+                    <img [src]="defaultImage" alt="Default Logo" class="w-full h-full object-cover" />
+                </ng-template>
+            </div>
+
+                <!-- Shop Name, Email, and Status -->
+                <div class="ml-6">
+                    <p class="text-[18px] font-[500] text-[#030308] dark:text-textDark">
+                        {{ shopData?.shopName || 'Agri Shop' }}
+                    </p>
+                    <p class="text-[#030308] dark:text-[#a6aebb] text-[18px]">
+                        {{ shopData?.email || 'agri@gmail.com' }}
+                    </p>
+                    <p class="text-[#627189] dark:text-[#a6aebb] text-[16px]">
+                        Joined on : {{ shopData?.createdAt | date: 'MMMM d, yyyy' }}
+                    </p>
+                </div>
+            </div>
+            <div
+                class="px-8 py-2 rounded-lg font-inter font-[400]"
+                [ngClass]="{
+                  'bg-[#D7EEFF] text-[#002AFF]': (shopData?.planStatus === 'ACTIVE' || shopData?.planStatus === 'NO_PLAN') && shopData?.currentPlan === 'Free',
+                  'bg-[#FFFF9F] text-[#D8B800]': shopData?.planStatus === 'ACTIVE' && shopData?.currentPlan === 'Premium',
+                  'bg-[#FFD5D5] text-[#FF0000]': shopData?.planStatus === 'EXPIRED'
+                }">
+                {{ shopData?.planStatus === 'EXPIRED' ? 'Expired' : (shopData?.currentPlan || 'Free') }}
+            </div>
+        </div>
+
+        <!-- Shop Information Section -->
+        <div class="border-[#F1F7FA] border-[2px] rounded-lg p-6">
+            <p class="text-[#030308] dark:text-[#ffffff] text-[16px] font-[500] mb-4">Shop Information</p>
+
+            <div class="grid grid-cols-2 gap-4 my-4">
+                <!-- Phone Number -->
+                <div>
+                    <p class="text-[#627189] text-[14px]">Phone Number</p>
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.shopPhone || '0113333800' }}</p>
+                </div>
+
+                <!-- BR Image -->
+                <div>
+                    <p class="text-[#627189] text-[14px]">BR Image</p>
+                    <button (click)="openImageModal(shopData?.brImg || '', 'BR Image')"
+                        class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
+                        <i class="fa-solid fa-images text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Address -->
+                <div>
+                    <p class="text-[#627189] text-[14px]">Address</p>
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.adress || '1/A, Galle Road, Dehiwala' }}
+                    </p>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <p class="text-[#627189] text-[14px]">Location</p>
+                    <button (click)="openMapModal()"
+                        class="text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors">
+                        <i class="fa-solid fa-location-dot text-3xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Owner Information Section -->
+        <div class="border-[#F1F7FA] border-[2px] rounded-lg p-6">
+            <p class="text-[#030308] dark:text-[#ffffff] text-[16px] font-[500] mb-4">Owner Information</p>
+
+            <div class="grid grid-cols-2 gap-4 my-4">
+                <!-- Owner Name -->
+                <div>
+                    <p class="text-[#627189] text-[14px]">Owner Name</p>
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.ownername || 'Gayani Perera' }}</p>
+                </div>
+
+                <!-- Owner NIC -->
+                <div>
+                    <p class="text-[#627189] text-[14px]">Owner NIC</p>
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.nic || '918700050V' }}</p>
+                </div>
+
+                <!-- Owner Phone Number -->
+                <div>
+                    <p class="text-[#627189] text-[14px]">Owner Phone Number</p>
+                    <p class="text-[#000000] dark:text-[#ffffff] text-[16px]">{{ shopData?.shopPhone || '0771122888' }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- BR Image Modal -->
+<div *ngIf="isModalOpen" class="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
+    <!-- Modal Container -->
+    <div
+        class="bg-white dark:bg-gray-800 rounded-[20px] w-[700px] h-[700px] p-6 relative flex items-center justify-center">
+        <!-- Title -->
+        <div class="absolute top-4 left-0 w-full text-center">
+            <h2 class="text-lg font-semibold dark:text-textDark">
+                {{ modalTitle }}
+            </h2>
+        </div>
+
+        <!-- Image Frame with pan functionality -->
+        <div class="bg-white dark:bg-gray-700 border border-[#D9D9D9] dark:border-gray-600 
+             rounded-[10px] w-[604px] h-[604px] flex items-center justify-center overflow-hidden relative"
+            [style.cursor]="isPanning ? 'grabbing' : (scale > 1 ? 'grab' : 'default')" (mousedown)="onMouseDown($event)"
+            (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp()" (mouseleave)="onMouseLeave()">
+            <img [src]="modalImage" [style.transform]="getImageTransform()"
+                class="w-[545px] h-[545px] object-contain transition-transform select-none"
+                style="pointer-events: none;" alt="ID Image" draggable="false" />
+
+            <!-- Zoom Buttons -->
+            <div class="absolute right-4 bottom-6 flex flex-col gap-3">
+                <button (click)="zoomOut()" class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
+                 border dark:border-gray-500 shadow text-xl dark:text-textDark
+                 hover:bg-gray-100 dark:hover:bg-gray-500">
+                    −
+                </button>
+                <button (click)="zoomIn()" class="w-[52px] h-[55px] rounded-[5px] bg-white dark:bg-gray-600 
+                 border dark:border-gray-500 shadow text-xl dark:text-textDark
+                 hover:bg-gray-100 dark:hover:bg-gray-500">
+                    +
+                </button>
+            </div>
+        </div>
+
+        <!-- Close Button -->
+        <button (click)="closeModal()" class="absolute top-4 right-4 text-gray-400 dark:text-gray-300 
+             hover:text-gray-700 dark:hover:text-white text-xl">
+            ✕
+        </button>
+    </div>
+</div>
+
+<!-- Map Location Popup Modal -->
+<div *ngIf="showMapPopup"
+    class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/70 flex items-center justify-center z-50 p-4 h-full"
+    (click)="closePopup()">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl overflow-hidden flex flex-col"
+        (click)="$event.stopPropagation()" style="max-height: 90vh;">
+        <!-- Header -->
+        <div
+            class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+            <div class="flex-1 text-center">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-textDark">
+                    Attached Location
+                </h3>
+            </div>
+            <button (click)="closePopup()"
+                class="text-gray-500 hover:text-gray-700 dark:text-textDark dark:hover:text-white p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ml-4"
+                aria-label="Close">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Map Container -->
+        <div class="flex-1 p-4 min-h-[500px]">
+            <div class="h-full rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden relative"
+                style="min-height: 500px;">
+
+                <!-- Loading Spinner -->
+                <div *ngIf="!mapIframeLoaded && hasCoordinates"
+                    class="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 z-10">
+                    <div class="text-center">
+                        <div
+                            class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4">
+                        </div>
+                        <p class="text-gray-600 dark:text-textDark">Loading map...</p>
+                    </div>
+                </div>
+
+                <!-- No Coordinates Message -->
+                <div *ngIf="!hasCoordinates"
+                    class="h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+                    <div class="text-center p-6">
+                        <svg class="w-20 h-20 text-gray-400 dark:text-textDark mx-auto mb-4" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        <h4 class="text-lg font-semibold text-gray-600 dark:text-textDark mb-2">
+                            No Coordinates Available
+                        </h4>
+                        <p class="text-gray-500 dark:text-textDark">
+                            Latitude and longitude coordinates are not provided for this location.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- OpenStreetMap Iframe -->
+                <iframe *ngIf="hasCoordinates" [src]="mapUrl" width="100%" height="500" frameborder="0" scrolling="no"
+                    marginheight="0" marginwidth="0" (load)="mapIframeLoaded = true" class="border-0"
+                    title="Location Map"></iframe>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,10 +13,10 @@ interface RejectedInvestmentRequest {
   officerId: number;
   jobId: string;
   extentha: number;
-  extentac: string; 
+  extentac: string;
   extentp: number;
-  investment: string; 
-  expectedYield: string; 
+  investment: string;
+  expectedYield: string;
   startDate: string;
   nicFront: string;
   nicBack: string;
@@ -64,8 +64,8 @@ export class GovicapitalFinanceComponent implements OnInit {
     private financeService: FinanceService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.loadRejectedRequests();
@@ -120,7 +120,7 @@ export class GovicapitalFinanceComponent implements OnInit {
 
     try {
       const date = new Date(dateString);
-      
+
       // Check if date is valid
       if (isNaN(date.getTime())) {
         return 'Invalid Date';
@@ -130,14 +130,14 @@ export class GovicapitalFinanceComponent implements OnInit {
       const time = date.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
-        hour12: true
+        hour12: true,
       });
 
       // Format date part
       const formattedDate = date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
-        day: '2-digit'
+        day: '2-digit',
       });
 
       return `${time} on ${formattedDate}`;
@@ -150,13 +150,14 @@ export class GovicapitalFinanceComponent implements OnInit {
   formatCurrency(amount: string | number): string {
     try {
       // Convert string to number if needed
-      const amountNum = typeof amount === 'string' ? parseFloat(amount) : amount;
-      
+      const amountNum =
+        typeof amount === 'string' ? parseFloat(amount) : amount;
+
       // Check if conversion was successful
       if (isNaN(amountNum)) {
         return 'LKR 0.00';
       }
-      
+
       return new Intl.NumberFormat('en-LK', {
         style: 'currency',
         currency: 'LKR',
@@ -196,9 +197,9 @@ export class GovicapitalFinanceComponent implements OnInit {
   auditResults(requestId: string) {
     const tree = this.router.createUrlTree([
       'finance/action/finance-govicapital/reject-requests/audit-personal-infor',
-      requestId
+      requestId,
     ]);
-    
+
     const url = this.router.serializeUrl(tree);
     window.open(window.location.origin + '/admin' + url, '_blank');
   }

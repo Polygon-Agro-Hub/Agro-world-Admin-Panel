@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ProcumentsService } from '../../../services/procuments/procuments.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -99,12 +99,15 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   selectCategoryId: number | string = '';
   newItem: OrderItem = new OrderItem();
 
+  tab: string = 'todo';
+
   constructor(
     private procurementService: ProcumentsService,
     private route: ActivatedRoute,
     private router: Router,
     public permissionService: PermissionService,
-    public tokenService: TokenService
+    public tokenService: TokenService,
+    public location: Location
   ) { }
 
   goBack(): void {
@@ -123,18 +126,19 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         // Only go back if user confirms
-        window.history.back();
-      }
+        const tab = this.tab
+        this.router.navigate(['/procurement/define-packages'], {
+          queryParams: { tab },
+        });
+        }
       // If user clicks "No" or dismisses, the modal will automatically close
     });
   }
 
   ngOnInit() {
     this.recalculatePackageTotal();
-    console.log('Component initialized');
     this.route.queryParamMap.subscribe((params) => {
       const id = params.get('id');
-      console.log('Query parameter ID:', id);
       if (!id) {
         this.error = 'No order ID provided in URL';
         this.loading = false;
@@ -155,7 +159,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     return product.isExcluded;
   }
   onSelectionChange() {
-    console.log('Selected option:', this.selectedOption);
     // Add any additional logic here
   }
 
@@ -172,7 +175,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     this.loading = true;
     this.procurementService.getAllMarketplaceItems(this.orderId).subscribe({
       next: (data: any) => {
-        console.log('data', data);
         this.marketplaceItems = data.items.map((item: any) => ({
           id: item.id,
           displayName: item.displayName,
@@ -181,7 +183,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           isExcluded: item.isExcluded,
 
         }));
-        console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
       },
 
@@ -195,25 +196,18 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   fetchOrderDetails(id: string) {
-    console.log('Fetching order details for ID:', id);
     this.loading = true;
     this.error = '';
     this.isLoading = true;
 
     this.procurementService.getOrderDetailsById(id).subscribe(
       (response) => {
-        console.log('response', response);
-
         this.orderdetailsArr = response.data;
         this.additionalItems = response.additionalItems;
         this.excludeItemsArr = response.excludeList;
         this.excludedItemsCount = response.excludeList.length;
         this.categories = response.category;
         this.additionalItemsCount = response.additionalItems.length || 0;
-
-
-        console.log('orderdetailsArr', this.orderdetailsArr);
-        console.log('sdfasd', this.excludeItemsArr);
 
         // ✅ Reset totals
         this.totalDefinePkgPrice = 0.00;
@@ -242,9 +236,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
           this.totalDefinePkgPrice += packageTotal;
         });
 
-        console.log('Total Define Package Price (discounted):', this.totalDefinePkgPrice);
-        console.log('Total Package Price (original from OrderDetails):', this.totalPackagePrice);
-
         this.loading = false;
         this.isLoading = false;
 
@@ -257,13 +248,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
 
   calculatePrice(item: OrderItem): void {
-    console.log('id', item.productId);
-    console.log('maitems', this.marketplaceItems);
-
     const selectedProduct = this.marketplaceItems.find(
       product => +product.id === +item.productId
     );
-    console.log('selectedProduct', selectedProduct);
 
     if (selectedProduct) {
       const price = selectedProduct.discountedPrice ?? 0;
@@ -271,19 +258,14 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
       item.price = price * qty;
 
-
       item.isExcluded = selectedProduct.isExcluded;
     } else {
       item.price = 0;
       item.isExcluded = false; // fallback
     }
 
-    console.log('price', item.price);
-
     this.recalculatePackageTotal();
   }
-
-
 
   recalculatePackageTotal(): void {
     this.totalDefinePkgPrice = 0.00;
@@ -301,14 +283,9 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       this.totalPackagePrice += +pkg.productPrice || 0;
     });
 
-    console.log('Total Define Package Price:', this.totalDefinePkgPrice);
-    console.log('Total Package Price (Original):', this.totalPackagePrice);
-
     // Compare against 1.08 * totalPackagePrice
     const limit = 1.08 * this.totalPackagePrice;
     this.isWithinLimit = this.totalDefinePkgPrice <= limit;
-
-    console.log('Is Within Limit:', this.isWithinLimit);
   }
 
 
@@ -329,11 +306,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
       // Validate if current total is within the allowed limit
       this.isWithinLimit = currentTotal <= allowedLimit;
-
-      console.log('Calculated total price:', this.totalPrice);
-      console.log('Allowed limit:', allowedLimit);
-      console.log('Current total:', currentTotal);
-      console.log('Is within limit:', this.isWithinLimit);
     } else {
       this.totalPrice = 0;
       this.isWithinLimit = true;
@@ -391,7 +363,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
   }
 
   onComplete() {
-    console.log('orderdetailsArr', this.orderdetailsArr);
     this.loading = true;
 
     const hasInvalidProduct = this.orderdetailsArr.some((pkg, pkgIndex) => {
@@ -426,7 +397,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
 
     if (hasInvalidProduct) {
       this.loading = false;
-      // Swal.fire('Missing Product', 'Please select products for all inputs before submitting.', 'warning');
       Swal.fire({
         title: 'Missing or Invalid Information',
         text: 'Product & Quantity are missing.',
@@ -463,7 +433,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       return;
     } else if (hasExcludeProduct) {
       this.loading = false;
-      // Swal.fire('Invalid Product', 'Please Do not Select Excluded products.', 'warning');
       Swal.fire({
         title: 'Invalid Product',
         text: 'Please, do not select excluded products.',
@@ -479,8 +448,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     this.procurementService.updateDefinePackageItemData(this.orderdetailsArr, this.orderId).subscribe(
       (res) => {
         this.loading = false;
-        console.log('Updated successfully:', res);
-
         // Show success message and redirect to sent tab
         Swal.fire({
           title: 'Success!',
@@ -503,7 +470,6 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
       (err) => {
         this.loading = false;
         console.error('Update failed:', err);
-        // Swal.fire('Error', 'Product Update Unsuccessful', 'error');
         Swal.fire({
           title: 'Error',
           text: 'Product Update Unsuccessful',
@@ -719,6 +685,8 @@ export class TodoDefinePremadePackagesComponent implements OnInit {
     // Implement your clear logic here
     // For now, just calling ngOnInit as in your original code
     this.ngOnInit();
+    this.isWithinLimit = true;
+
   }
 
   onCancelClick() {

@@ -54,8 +54,6 @@ export class ProcumentsService {
       'Content-Type': 'application/json',
     });
 
-    console.log('filter', filterType, 'date', date, 'search', search);
-
     let url = `${this.apiUrl}procument/get-received-orders?page=${page}&limit=${limit}`;
 
     if (filterType) {
@@ -281,9 +279,6 @@ export class ProcumentsService {
       products: products,
     };
 
-    // Log the data being sent
-    console.log('Sending package items:', requestData);
-
     return this.http
       .post(`${this.apiUrl}procument/add-order-package-item`, requestData, {
         headers,
@@ -306,8 +301,6 @@ export class ProcumentsService {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
-
-    console.log('dateFilter', dateFilter, 'searchTerm', searchTerm)
 
     let url = `${this.apiUrl}procument/orders-process-info-completed?page=${page}&limit=${limit}`;
 
@@ -348,7 +341,6 @@ export class ProcumentsService {
   }
 
   getOrderPackagesByOrderId(orderId: number): Observable<any> {
-    console.log('sending oid', orderId)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -358,7 +350,6 @@ export class ProcumentsService {
 
     return this.http.get<any>(url, { headers }).pipe(
       map((response) => {
-        console.log('response', response)
         if (response.success) {
           return {
             invNo: response.data.invNo,
@@ -397,9 +388,6 @@ export class ProcumentsService {
       products: products,
     };
 
-    // Log the data being sent
-    console.log('Updating package items:', requestData);
-
     return this.http
       .put(`${this.apiUrl}procument/update-order-package-items`, requestData, {
         headers,
@@ -423,8 +411,6 @@ export class ProcumentsService {
       'Content-Type': 'application/json',
     });
 
-    console.log('datefilte', dateFilter, 'searchTerm', searchTerm)
-
     let url = `${this.apiUrl}procument/orders-process-info-dispatched?page=${page}&limit=${limit}`;
 
     if (dateFilter) {
@@ -439,7 +425,6 @@ export class ProcumentsService {
   }
 
   updateDefinePackageItemData(array: any, id:number): Observable<any> {
-    console.log('array', array)
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
@@ -474,8 +459,6 @@ export class ProcumentsService {
     Authorization: `Bearer ${this.token}`,
     'Content-Type': 'application/json',
   });
-
-  console.log('centerId', centerId, 'deliveryDate', deliveryDate, 'search', search);
 
   let url = `${this.apiUrl}procument/get-distribution-orders?page=${page}&limit=${limit}`;
 

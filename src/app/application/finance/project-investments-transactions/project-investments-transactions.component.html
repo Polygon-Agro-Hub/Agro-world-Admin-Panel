@@ -14,7 +14,10 @@
       <div class="flex justify-between items-center mb-4">
         <div class="flex items-center">
           <h2 class="text-[20px] font-bold text-textLight dark:text-textDark">
-            Project : {{ projectId || 'Loading...' }} <span class="mx-4">|</span> 1 Share : Rs.{{ (sharePrice | number:'1.2-2') || '0.00' }}
+            Project : {{ projectId || "Loading..." }}
+            <span class="mx-4">|</span> 1 Share : Rs.{{
+              (sharePrice | number: "1.2-2") || "0.00"
+            }}
           </h2>
         </div>
 
@@ -22,28 +25,68 @@
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [options]="statusArr" [checkmark]="false" optionLabel="status" optionValue="value"
-              [showClear]="statusFilter === '' ? false : true" placeholder="Status" [(ngModel)]="statusFilter"
-              (onChange)="applystatusFilters()" 
-              panelStyleClass="dark:bg-[#272F45] dark:text-textDark" />
+              [options]="statusArr"
+              [checkmark]="false"
+              optionLabel="status"
+              optionValue="value"
+              [showClear]="statusFilter === '' ? false : true"
+              placeholder="Status"
+              [(ngModel)]="statusFilter"
+              (onChange)="applystatusFilters()"
+              panelStyleClass="dark:bg-[#272F45] dark:text-textDark"
+            />
           </div>
 
-          <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
-            <input type="text" placeholder="Search By Transaction ID, Investor ID, Phone.." [(ngModel)]="searchText"
-              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keyup.enter)="onSearch()"
-              (keyup.esc)="offSearch()" />
-            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+          <div
+            class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+          >
+            <input
+              type="text"
+              placeholder="Search By Transaction ID, Investor ID, Phone.."
+              [(ngModel)]="searchText"
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+              (keyup.enter)="onSearch()"
+              (keyup.esc)="offSearch()"
+            />
+            <button
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="onSearch()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+                />
               </svg>
             </button>
-            <button *ngIf="searchText && searchText.trim() !== ''" type="button"
-              class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="offSearch()">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <button
+              *ngIf="searchText && searchText.trim() !== ''"
+              type="button"
+              class="text-gray-500 hover:text-gray-700 focus:outline-none"
+              (click)="offSearch()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -53,22 +96,35 @@
 
     <div class="flex items-center mb-8">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-         All Transactions ({{ investmentsArr.length < 10 ? ('0' + investmentsArr.length) : investmentsArr.length }})
+        All Transactions ({{
+          investmentsArr.length < 10
+            ? "0" + investmentsArr.length
+            : investmentsArr.length
+        }})
       </h2>
     </div>
 
     <div>
-      
       <!-- No Data Message -->
-      <div *ngIf="!hasData && !isLoading" class="flex flex-col justify-center items-center py-20">
+      <div
+        *ngIf="!hasData && !isLoading"
+        class="flex flex-col justify-center items-center py-20"
+      >
         <p class="text-[#494949] dark:text-textDark mb-4">
           -- No Data Available --
         </p>
-        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20 mb-4" />
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 mb-4"
+        />
       </div>
 
       <!-- Data Table -->
-      <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200 table-auto">
+      <table
+        *ngIf="hasData"
+        class="min-w-full divide-y divide-gray-200 table-auto"
+      >
         <thead>
           <tr>
             <th
@@ -108,19 +164,28 @@
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-              *ngIf=" permissionService.hasPermission('View investor NIC') || tokenService.getUserDetails().role === '1'"
+              *ngIf="
+                permissionService.hasPermission('View investor NIC') ||
+                tokenService.getUserDetails().role === '1'
+              "
             >
               NIC Front Image
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-              *ngIf=" permissionService.hasPermission('View investor NIC') || tokenService.getUserDetails().role === '1'"
+              *ngIf="
+                permissionService.hasPermission('View investor NIC') ||
+                tokenService.getUserDetails().role === '1'
+              "
             >
               NIC Back Image
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
-              *ngIf=" permissionService.hasPermission('View investor bank slip') || tokenService.getUserDetails().role === '1'"
+              *ngIf="
+                permissionService.hasPermission('View investor bank slip') ||
+                tokenService.getUserDetails().role === '1'
+              "
             >
               Bank Slip
             </th>
@@ -132,51 +197,75 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr 
-            *ngFor="let item of investmentsArr let i = index"
+          <tr
+            *ngFor="let item of investmentsArr; let i = index"
             class="hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ i < 10 ? '0' + ( i+1 ) : ( i+1 ) }}
+              {{ i < 10 ? "0" + (i + 1) : i + 1 }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{item.regCode}}
+              {{ item.regCode }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{item.refCode}}
+              {{ item.refCode }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{item.phoneCode}}{{item.phoneNumber}}
+              {{ item.phoneCode }}{{ item.phoneNumber }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{item.shares}}
+              {{ item.shares }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{formatCurrency(item.totInvt)}}
+              {{ formatCurrency(item.totInvt) }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{item.createdAt | date: "hh:mma 'on' MMMM dd, yyyy"}}
+              {{ item.createdAt | date: "hh:mma 'on' MMMM dd, yyyy" }}
             </td>
-            <td 
+            <td
               class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              *ngIf=" permissionService.hasPermission('View investor NIC') || tokenService.getUserDetails().role === '1'">
-              <button (click)="viewNicFront(item.nicFront)" *ngIf="item.nicFront" class="text-blue-600 hover:text-blue-800 underline">
+              *ngIf="
+                permissionService.hasPermission('View investor NIC') ||
+                tokenService.getUserDetails().role === '1'
+              "
+            >
+              <button
+                (click)="viewNicFront(item.nicFront)"
+                *ngIf="item.nicFront"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
                 <i class="fa-solid fa-image"></i>
               </button>
               <span *ngIf="!item.nicFront">-</span>
             </td>
-            <td 
+            <td
               class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              *ngIf=" permissionService.hasPermission('View investor NIC') || tokenService.getUserDetails().role === '1'">
-              <button (click)="viewNicBack(item.nicBack)" *ngIf="item.nicBack" class="text-blue-600 hover:text-blue-800 underline">
+              *ngIf="
+                permissionService.hasPermission('View investor NIC') ||
+                tokenService.getUserDetails().role === '1'
+              "
+            >
+              <button
+                (click)="viewNicBack(item.nicBack)"
+                *ngIf="item.nicBack"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
                 <i class="fa-solid fa-image"></i>
               </button>
               <span *ngIf="!item.nicBack">-</span>
             </td>
-            <td 
+            <td
               class="px-4 py-3 text-center text-textLight dark:text-textDark"
-              *ngIf=" permissionService.hasPermission('View investor bank slip') || tokenService.getUserDetails().role === '1'">
-              <button (click)="viewBankSlip(item.bankSlip)" *ngIf="item.bankSlip" class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]">
+              *ngIf="
+                permissionService.hasPermission('View investor bank slip') ||
+                tokenService.getUserDetails().role === '1'
+              "
+            >
+              <button
+                (click)="viewBankSlip(item.bankSlip)"
+                *ngIf="item.bankSlip"
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+              >
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -193,14 +282,14 @@
               </button>
               <span *ngIf="!item.bankSlip">-</span>
             </td>
-            <td  class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button 
+            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
+              <button
                 (click)="openPopUp(item.id)"
-                [disabled]="(!permissionService.hasPermission('Approve or Reject invester request') && tokenService.getUserDetails().role !== '1') || item.invtStatus !== 'To Review'"
-                class="px-3 py-2 rounded-lg font-medium cursor-pointer {{getStatusClass(item.invtStatus)}}"
+                [disabled]="(!permissionService.hasPermission('Approve or Reject investor request') && tokenService.getUserDetails().role !== '1') || item.invtStatus !== 'To Review'"
+                class="px-3 py-2 rounded-lg font-inter font-[400] cursor-pointer {{getStatusClass(item.invtStatus)}}"
               >
-                {{item.invtStatus}}
-            </button>
+                {{ item.invtStatus }}
+              </button>
             </td>
           </tr>
         </tbody>
@@ -210,11 +299,15 @@
 </div>
 
 <!-- overlay -->
-<div *ngIf="isPopUpOpen" (click)="closePopUp()" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  
+<div
+  *ngIf="isPopUpOpen"
+  (click)="closePopUp()"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
   <!-- modal box -->
-  <div class="bg-white dark:bg-tileBlack rounded-xl shadow-xl w-[400px] p-6 relative">
-
+  <div
+    class="bg-white dark:bg-tileBlack rounded-xl shadow-xl w-[400px] p-6 relative"
+  >
     <!-- Title -->
     <h2 class="text-center dark:text-white text-lg font-semibold mb-2">
       Please Confirm Action!
@@ -227,18 +320,19 @@
 
     <!-- Buttons -->
     <div class="flex justify-center gap-2">
-      <button 
+      <button
         class="bg-[#DE0004] text-white px-6 py-2 rounded-lg shadow hover:bg-red-700 transition"
-        (click)="onReject()">
+        (click)="onReject()"
+      >
         Reject
       </button>
 
-      <button 
+      <button
         class="bg-[#5ACE5E] text-white px-6 py-2 rounded-lg shadow hover:bg-green-700 transition"
-        (click)="onApprove()">
+        (click)="onApprove()"
+      >
         Approve
       </button>
     </div>
   </div>
 </div>
-

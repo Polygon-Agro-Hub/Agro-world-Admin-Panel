@@ -88,10 +88,11 @@ export class CollectionCenterDashboardComponent {
 
 
   navigateToMarketPrice() {
-    this.router.navigate([
-      `collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerName}`,
-    ]);
-  }
+  this.router.navigate(
+    [`collection-hub/agro-world-center-price/${this.centerId}/${this.companyId}/${this.centerName}`],
+    { queryParams: { Cname: this.Cname } } // This is correct - passing as query param
+  );
+}
 
   navigateToTarget() {
     this.router.navigate([`collection-hub/view-current-centre-target/${this.centerId}`]); // Replace with your actual route

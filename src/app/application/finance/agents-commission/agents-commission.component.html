@@ -5,46 +5,72 @@
   Back
 </button>
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full  my-5">
-  <div class=" min-w-max bg-tileLight dark:bg-tileBlack rounded-lg py-5 px-12">
-    <h2 class="text-xl text-[#292929] dark:text-textDark my-5">Agents’ Commission</h2>
-    <!-- Add form wrapper -->
-    <form #commissionForm="ngForm" (ngSubmit)="genarateData()" class="flex flex-col gap-y-8 px-10">
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full my-5"
+>
+  <div class="min-w-max bg-tileLight dark:bg-tileBlack rounded-lg py-5 px-12">
+    <h2 class="text-xl text-[#292929] dark:text-textDark my-5">
+      Agents’ Commission
+    </h2>
+    <form
+      #commissionForm="ngForm"
+      (ngSubmit)="genarateData()"
+      class="flex flex-col gap-y-8 px-10"
+    >
       <div class="grid grid-cols-3 gap-x-5">
         <div class="flex flex-col sm:flex-row sm:items-start gap-2">
-          <label class="text-black dark:text-textDark font-medium whitespace-nowrap pt-2 sm:pt-0">
+          <label
+            class="text-black dark:text-textDark font-medium whitespace-nowrap pt-2 sm:pt-0"
+          >
             EMP ID :
           </label>
 
           <div class="flex-1">
-            <!-- AutoComplete for EMP ID search and selection -->
-            <p-autoComplete #empIdField="ngModel" [(ngModel)]="selectedAgent" [suggestions]="filteredAgents"
-              (completeMethod)="filterAgents($event)" (onSelect)="onAgentSelect($event)" field="empId" name="empId"
-              required placeholder="e.g. : SA0123" [dropdown]="false"
+            <p-autoComplete
+              #empIdField="ngModel"
+              [(ngModel)]="selectedAgent"
+              [suggestions]="filteredAgents"
+              (completeMethod)="filterAgents($event)"
+              (onSelect)="onAgentSelect($event)"
+              field="empId"
+              name="empId"
+              required
+              placeholder="e.g. : SA0123"
+              [dropdown]="false"
               inputStyleClass="px-3 py-2 border rounded-lg h-8 w-full ml-8 dark:bg-[#272F45] dark:text-white dark:border-gray-600 dark:placeholder:text-gray-400"
-              [ngClass]="{'border-red-500': (empIdField.invalid && empIdField.touched) || (empIdField.invalid && formSubmitted)}"
+              [ngClass]="{
+                'border-red-500':
+                  (empIdField.invalid && empIdField.touched) ||
+                  (empIdField.invalid && formSubmitted),
+              }"
               panelStyleClass="dark:bg-[#272F45] dark:text-white dark:border dark:border-gray-600"
-               [style]="{ 'background-color': 'transparent', 'width': '290px' }"
-              dropdownStyleClass="dark:text-white dark:hover:text-gray-300">
-
+              [style]="{ 'background-color': 'transparent', width: '290px' }"
+              dropdownStyleClass="dark:text-white dark:hover:text-gray-300"
+            >
               <ng-template let-agent pTemplate="selectedItem">
-                <div class="dark:text-white dark:hover:text-black" *ngIf="agent">
+                <div
+                  class="dark:text-white dark:hover:text-black"
+                  *ngIf="agent"
+                >
                   {{ agent.empId }}
                 </div>
               </ng-template>
 
               <ng-template let-agent pTemplate="item">
                 <div
-                  class="flex items-center p-2 cursor-pointer dark:text-white dark:hover:text-black">
+                  class="flex items-center p-2 cursor-pointer dark:text-white dark:hover:text-black"
+                >
                   <span class="font-medium">{{ agent.empId }}</span>
                 </div>
               </ng-template>
-
             </p-autoComplete>
 
-            <!-- Updated validation condition -->
-            <div *ngIf="(empIdField.invalid && empIdField.touched) || (empIdField.invalid && formSubmitted)"
-              class="text-red-500 text-sm mt-1 ml-8">
+            <div
+              *ngIf="
+                (empIdField.invalid && empIdField.touched) ||
+                (empIdField.invalid && formSubmitted)
+              "
+              class="text-red-500 text-sm mt-1 ml-8"
+            >
               <div *ngIf="empIdField.errors?.['required']">
                 EMP ID is required
               </div>
@@ -52,21 +78,41 @@
           </div>
         </div>
 
-        <div class="flex flex-col md:flex-row items-start md:items-center gap-2">
-          <label class="text-black dark:text-textDark font-medium whitespace-nowrap pt-1 md:pt-0">Payment :</label>
+        <div
+          class="flex flex-col md:flex-row items-start md:items-center gap-2"
+        >
+          <label
+            class="text-black dark:text-textDark font-medium whitespace-nowrap pt-1 md:pt-0"
+            >Payment :</label
+          >
           <div class="flex flex-col w-full">
             <div class="flex items-center w-full ml-5">
-              <p-dropdown #filterDropdown="ngModel" [options]="filterOptions" [(ngModel)]="selectedFilter"
-                name="paymentFilter" required
+              <p-dropdown
+                #filterDropdown="ngModel"
+                [options]="filterOptions"
+                [(ngModel)]="selectedFilter"
+                name="paymentFilter"
+                required
                 styleClass="border border-2 rounded-lg h-8 w-full items-center dark:bg-[#272F45] text-black dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                optionLabel="label" optionValue="value" placeholder="--Select--"
-                [style]="{'width':'250px'}"
-                [ngClass]="{'border-red-500': (filterDropdown.invalid && filterDropdown.touched) || (filterDropdown.invalid && formSubmitted)}">
+                optionLabel="label"
+                optionValue="value"
+                placeholder="--Select--"
+                [style]="{ width: '250px' }"
+                [ngClass]="{
+                  'border-red-500':
+                    (filterDropdown.invalid && filterDropdown.touched) ||
+                    (filterDropdown.invalid && formSubmitted),
+                }"
+              >
               </p-dropdown>
             </div>
-            <!-- Updated validation condition -->
-            <div *ngIf="(filterDropdown.invalid && filterDropdown.touched) || (filterDropdown.invalid && formSubmitted)"
-              class="text-red-500 text-sm text-left mt-1 ml-5">
+            <div
+              *ngIf="
+                (filterDropdown.invalid && filterDropdown.touched) ||
+                (filterDropdown.invalid && formSubmitted)
+              "
+              class="text-red-500 text-sm text-left mt-1 ml-5"
+            >
               Payment selection is required
             </div>
           </div>
@@ -76,16 +122,33 @@
       <div class="grid grid-cols-3 gap-x-5">
         <div class="flex flex-col sm:flex-row sm:items-start gap-2">
           <span class="flex flex-col pt-2 sm:pt-0">
-            <label class="text-black dark:text-textDark font-medium whitespace-nowrap">From :</label>
-            <label class="text-[#6D82A0] font-medium whitespace-nowrap text-sm">(Ordered Date)</label>
+            <label
+              class="text-black dark:text-textDark font-medium whitespace-nowrap"
+              >From :</label
+            >
+            <label class="text-[#6D82A0] font-medium whitespace-nowrap text-sm"
+              >(Ordered Date)</label
+            >
           </span>
 
           <div class="flex-1">
             <div class="flex items-center">
-              <p-calendar #fromDateField="ngModel" placeholder="--Select--" [showIcon]="true" [showClear]="true"
-                [showButtonBar]="false" [(ngModel)]="fromDate" name="fromDate" required dateFormat="yy-mm-dd"
-                [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" iconDisplay="input"
-                [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-lg dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+              <p-calendar
+                #fromDateField="ngModel"
+                placeholder="--Select--"
+                [showIcon]="true"
+                [showClear]="true"
+                [showButtonBar]="false"
+                [(ngModel)]="fromDate"
+                name="fromDate"
+                required
+                dateFormat="yy-mm-dd"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1900:2030"
+                iconDisplay="input"
+                [style]="{ width: '16rem', height: '2rem' }"
+                panelStyleClass="calendar-popup-small rounded-lg dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -94,13 +157,22 @@
              [&_.p-button:hover]:dark:bg-[#6b7280]"
                 inputStyleClass="p-2 border cursor-pointer rounded-lg dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
                 [appendTo]="'body'"
-                [ngClass]="{'border-red-500': (fromDateField.invalid && fromDateField.touched) || (fromDateField.invalid && formSubmitted)}">
+                [ngClass]="{
+                  'border-red-500':
+                    (fromDateField.invalid && fromDateField.touched) ||
+                    (fromDateField.invalid && formSubmitted),
+                }"
+              >
               </p-calendar>
             </div>
 
-            <!-- Updated validation condition -->
-            <div *ngIf="(fromDateField.invalid && fromDateField.touched) || (fromDateField.invalid && formSubmitted)"
-              class="text-red-500 text-sm mt-1">
+            <div
+              *ngIf="
+                (fromDateField.invalid && fromDateField.touched) ||
+                (fromDateField.invalid && formSubmitted)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
               <div *ngIf="fromDateField.errors?.['required']">
                 From date is required
               </div>
@@ -110,16 +182,33 @@
 
         <div class="flex flex-col sm:flex-row sm:items-start gap-2">
           <span class="flex flex-col pt-2 sm:pt-0">
-            <label class="text-black dark:text-textDark font-medium whitespace-nowrap">To :</label>
-            <label class="text-[#6D82A0] font-medium whitespace-nowrap text-sm">(Ordered Date)</label>
+            <label
+              class="text-black dark:text-textDark font-medium whitespace-nowrap"
+              >To :</label
+            >
+            <label class="text-[#6D82A0] font-medium whitespace-nowrap text-sm"
+              >(Ordered Date)</label
+            >
           </span>
 
           <div class="flex-1">
             <div class="flex items-center">
-              <p-calendar #toDateField="ngModel" placeholder="--Select--" [showIcon]="true" [showClear]="true"
-                [showButtonBar]="false" [(ngModel)]="toDate" name="toDate" required dateFormat="yy-mm-dd"
-                [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" iconDisplay="input"
-                [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-lg dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+              <p-calendar
+                #toDateField="ngModel"
+                placeholder="--Select--"
+                [showIcon]="true"
+                [showClear]="true"
+                [showButtonBar]="false"
+                [(ngModel)]="toDate"
+                name="toDate"
+                required
+                dateFormat="yy-mm-dd"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1900:2030"
+                iconDisplay="input"
+                [style]="{ width: '16rem', height: '2rem' }"
+                panelStyleClass="calendar-popup-small rounded-lg dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -128,13 +217,22 @@
              [&_.p-button:hover]:dark:bg-[#6b7280]"
                 inputStyleClass="p-2 border cursor-pointer rounded-lg dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
                 [appendTo]="'body'"
-                [ngClass]="{'border-red-500': (toDateField.invalid && toDateField.touched) || (toDateField.invalid && formSubmitted)}">
+                [ngClass]="{
+                  'border-red-500':
+                    (toDateField.invalid && toDateField.touched) ||
+                    (toDateField.invalid && formSubmitted),
+                }"
+              >
               </p-calendar>
             </div>
 
-            <!-- Updated validation condition -->
-            <div *ngIf="(toDateField.invalid && toDateField.touched) || (toDateField.invalid && formSubmitted)"
-              class="text-red-500 text-sm mt-1">
+            <div
+              *ngIf="
+                (toDateField.invalid && toDateField.touched) ||
+                (toDateField.invalid && formSubmitted)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
               <div *ngIf="toDateField.errors?.['required']">
                 To date is required
               </div>
@@ -144,16 +242,33 @@
 
         <div class="flex flex-col sm:flex-row sm:items-start gap-2">
           <span class="flex flex-col pt-2 sm:pt-0">
-            <label class="text-black dark:text-textDark font-medium whitespace-nowrap">Before :</label>
-            <label class="text-[#6D82A0] font-medium whitespace-nowrap text-sm">(Delivered Date)</label>
+            <label
+              class="text-black dark:text-textDark font-medium whitespace-nowrap"
+              >Before :</label
+            >
+            <label class="text-[#6D82A0] font-medium whitespace-nowrap text-sm"
+              >(Delivered Date)</label
+            >
           </span>
 
           <div class="flex-1">
             <div class="flex items-center">
-              <p-calendar #deliveredDateField="ngModel" placeholder="--Select--" [showIcon]="true" [showClear]="true"
-                [showButtonBar]="false" [(ngModel)]="deliveredDate" name="deliveredDate" required dateFormat="yy-mm-dd"
-                [monthNavigator]="true" [yearNavigator]="true" yearRange="1900:2030" iconDisplay="input"
-                [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-lg dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
+              <p-calendar
+                #deliveredDateField="ngModel"
+                placeholder="--Select--"
+                [showIcon]="true"
+                [showClear]="true"
+                [showButtonBar]="false"
+                [(ngModel)]="deliveredDate"
+                name="deliveredDate"
+                required
+                dateFormat="yy-mm-dd"
+                [monthNavigator]="true"
+                [yearNavigator]="true"
+                yearRange="1900:2030"
+                iconDisplay="input"
+                [style]="{ width: '16rem', height: '2rem' }"
+                panelStyleClass="calendar-popup-small rounded-lg dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600
              [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
              [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
              [&_.p-datepicker-header]:dark:bg-[#2d354d] 
@@ -162,14 +277,23 @@
              [&_.p-button:hover]:dark:bg-[#6b7280]"
                 inputStyleClass="p-2 border cursor-pointer rounded-lg dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
                 [appendTo]="'body'"
-                [ngClass]="{'border-red-500': (deliveredDateField.invalid && deliveredDateField.touched) || (deliveredDateField.invalid && formSubmitted)}">
+                [ngClass]="{
+                  'border-red-500':
+                    (deliveredDateField.invalid &&
+                      deliveredDateField.touched) ||
+                    (deliveredDateField.invalid && formSubmitted),
+                }"
+              >
               </p-calendar>
             </div>
 
-            <!-- Updated validation condition -->
             <div
-              *ngIf="(deliveredDateField.invalid && deliveredDateField.touched) || (deliveredDateField.invalid && formSubmitted)"
-              class="text-red-500 text-sm mt-1">
+              *ngIf="
+                (deliveredDateField.invalid && deliveredDateField.touched) ||
+                (deliveredDateField.invalid && formSubmitted)
+              "
+              class="text-red-500 text-sm mt-1"
+            >
               <div *ngIf="deliveredDateField.errors?.['required']">
                 Delivered date is required
               </div>
@@ -178,31 +302,42 @@
         </div>
       </div>
 
-      <!-- Global form error message (optional) -->
-      <div *ngIf="formSubmitted && commissionForm.invalid" class="text-red-500 text-center mt-2">
+      <div
+        *ngIf="formSubmitted && commissionForm.invalid"
+        class="text-red-500 text-center mt-2"
+      >
         Please fill all required fields before generating data.
       </div>
 
       <div class="flex justify-center items-center mt-6">
-        <!-- Change button type to submit -->
-        <button type="submit" class="bg-[#3980C0] text-white text-lg px-8 py-1 rounded-lg">
+        <button
+          type="submit"
+          class="bg-[#3980C0] text-white text-lg px-8 py-1 rounded-lg"
+        >
           Generate
         </button>
       </div>
     </form>
-
-
   </div>
 </div>
 
-<div *ngIf="isinit"
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-  <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+<div
+  *ngIf="isinit"
+  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
+  <div
+    class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
     <h2 class="text-xl text-[#292929] dark:text-textDark my-3">
-      All Orders ({{hasData ? (salesCommisionsArr.length | number:'2.0'): 0}})
+      All Orders ({{
+        hasData ? (salesCommisionsArr.length | number: "2.0") : 0
+      }})
     </h2>
-    <button *ngIf="hasData" class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded flex mb-5 items-center"
-      (click)="downloadData()">
+    <button
+      *ngIf="hasData && (permissionService.hasPermission('Finance Agent commissions download') || tokenService.getUserDetails().role === '1')"
+      class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded flex mb-5 items-center"
+      (click)="downloadData()"
+    >
       <i class="fa-solid fa-download mr-3"></i>
       Download
     </button>
@@ -210,47 +345,67 @@
       <table class="min-w-min divide-y divide-gray-200 table-auto">
         <thead>
           <tr>
-            <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
+            <th
+              class="px-4 py-3 font-normal text-black dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
               No
             </th>
-            <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
+            <th
+              class="px-4 py-3 font-normal text-black dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
               Order ID
             </th>
-            <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
+            <th
+              class="px-4 py-3 font-normal text-black dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
               Ordered Date
             </th>
-            <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
+            <th
+              class="px-4 py-3 font-normal text-black dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
               Delivered Date
             </th>
-            <th class="px-4 py-3 font-normal text-black dark:text-textDark text-left" style="white-space: nowrap">
+            <th
+              class="px-4 py-3 font-normal text-black dark:text-textDark text-left"
+              style="white-space: nowrap"
+            >
               Payment
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let data of salesCommisionsArr; let i = index" class="hover:bg-gray-50 dark:hover:bg-gray-700">
-
+          <tr
+            *ngFor="let data of salesCommisionsArr; let i = index"
+            class="hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
             <td class="px-4 py-3 text-left text-black dark:text-textDark">
-              {{ i + 1 | number:'3.0-0' }}
+              {{ i + 1 | number: "3.0-0" }}
             </td>
             <td class="px-4 py-3 text-left text-black dark:text-textDark">
-              {{data.invNo}}
+              {{ data.invNo }}
             </td>
             <td class="px-4 py-3 text-left text-black dark:text-textDark">
-              {{data.sheduleDate | date:'MMMM d, y'}}
+              {{ data.sheduleDate | date: "MMMM d, y" }}
             </td>
             <td class="px-4 py-3 text-left text-black dark:text-textDark">
-              {{data.deliveredTime | date:'MMMM d, y'}}
+              {{ data.deliveredTime | date: "MMMM d, y" }}
             </td>
             <td class="px-4 py-3 text-left text-black dark:text-textDark">
-              {{data.isPaid ? 'Completed' : 'Pending'}}
+              {{ data.isPaid ? "Completed" : "Pending" }}
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full px-10 py-7 mt-6">
+    <div
+      *ngIf="!hasData"
+      class="flex flex-col items-center w-full px-10 py-7 mt-6"
+    >
       <p class="text-[#494949] my-6 dark:text-textDark">
         --No orders to be found in the criteria you selected--
       </p>

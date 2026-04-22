@@ -73,11 +73,7 @@ export class CustomersComponent implements OnInit {
     private router: Router,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-  ) {
-    this.searchSubject.pipe(debounceTime(300)).subscribe((searchText) => {
-      this.filterCustomers(searchText);
-    });
-  }
+  ) { }
 
   ngOnInit() {
     this.fetchAllCustomers();
@@ -93,9 +89,9 @@ export class CustomersComponent implements OnInit {
     this.selectedCustomer = null;
   }
 
-back(): void {
-  this.router.navigate(['/sales-dash']);
-}
+  back(): void {
+    this.router.navigate(['/sales-dash']);
+  }
 
   copyToClipboard(value: string | undefined, field: string) {
     if (!value) return;
@@ -131,11 +127,11 @@ back(): void {
     limit: number = this.itemsPerPage
   ) {
     this.isLoading = true;
-    this.customerService.getCustomers(page, limit, '').subscribe(
+    this.customerService.getCustomers(page, limit, this.searchText).subscribe(
       (response: any) => {
         this.isLoading = false;
         this.customers = response.items || [];
-        this.totalItems = response.totalItems || this.customers.length;
+        this.totalItems = response.total;
         this.filteredCustomers = [...this.customers];
         this.hasData = this.filteredCustomers.length > 0;
       },
@@ -148,59 +144,49 @@ back(): void {
       }
     );
   }
-onSearchChange(searchText: string) {
-  if (searchText.startsWith(' ')) {
-    console.log('Input starts with a space');
-    // Optionally clean it
-    searchText = searchText.trimStart();
-  }
-
-  this.searchSubject.next(searchText);
-}
-
-onSearchClick() {
-  const trimmedSearch = this.searchText.trimStart();
-  this.filterCustomers(trimmedSearch);
-}
-
-
-  filterCustomers(searchText: string) {
-    const loweredSearch = searchText.trim().toLowerCase();
-    if (!loweredSearch) {
-      this.filteredCustomers = [...this.customers];
-    } else {
-      this.filteredCustomers = this.customers.filter((customer) =>
-        this.searchInCustomer(customer, loweredSearch)
-      );
+  onSearchChange(searchText: string) {
+    if (searchText.startsWith(' ')) {
+      console.log('Input starts with a space');
+      // Optionally clean it
+      searchText = searchText.trimStart();
     }
-    this.hasData = this.filteredCustomers.length > 0;
-    this.page = 1;
-    this.totalItems = this.filteredCustomers.length;
+
+    this.searchSubject.next(searchText);
   }
+
+  onSearchClick() {
+  this.searchText = this.searchText.trimStart();
+  this.page = 1; // ← reset to page 1 on new search
+  this.fetchAllCustomers();
+}
+
 
   private searchInCustomer(customer: Customers, searchText: string): boolean {
   const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+  const lowerSearch = searchText.toLowerCase(); // ← ensure this is lowercase
 
   const fieldsToSearch = [
-    customer.cusId,                // Customer ID
-    fullName,                       // Customer Name
-    customer.phoneNumber,           // Contact
-    customer.empId                  // Agent ID
+    customer.cusId?.toLowerCase(),   // ← lowercase these
+    fullName,
+    customer.phoneNumber?.toLowerCase(),
+    customer.empId?.toLowerCase()    // ← lowercase these
   ];
 
   return fieldsToSearch.some((field) =>
-    field?.toLowerCase().includes(searchText)
+    field?.includes(lowerSearch)
   );
 }
 
 
-  offSearch() {
-    this.searchText = '';
-    this.filterCustomers('');
-  }
+ offSearch() {
+  this.searchText = '';
+  this.page = 1; // ← reset page
+  this.fetchAllCustomers();
+}
 
   onPageChange(event: number) {
     this.page = event;
+    this.fetchAllCustomers();
   }
 
   viewOrderDetails(id: number) {

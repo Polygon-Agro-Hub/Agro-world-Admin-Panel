@@ -77,6 +77,9 @@ export class PurchaseReportComponent {
   search: string = '';
   dateFilter: any;
 
+  hasData: boolean = false;
+  hasDate: boolean = false;
+
   constructor(
     private collectionoOfficer: CollectionService,
     private router: Router,
@@ -96,9 +99,9 @@ export class PurchaseReportComponent {
     this.maxDate.setHours(23, 59, 59, 999);
   }
 
-  get hasData(): boolean {
-    return this.purchaseReport && this.purchaseReport.length > 0;
-  }
+  // get hasData(): boolean {
+  //   return this.purchaseReport && this.purchaseReport.length > 0;
+  // }
 
   preventLeadingSpace(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
@@ -116,6 +119,11 @@ export class PurchaseReportComponent {
     const input = event.target as HTMLInputElement;
     // Remove any leading spaces that might have been pasted
     this.search = input.value.replace(/^\s+/, '');
+  }
+
+  submitGo() {
+    this.hasDate = true;
+    this.fetchAllPurchaseReport()
   }
 
   fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
@@ -147,6 +155,8 @@ export class PurchaseReportComponent {
       .subscribe(
         (response) => {
           this.purchaseReport = response.items;
+
+          this.hasData = this.purchaseReport.length > 0
           this.totalItems = response.total;
           this.grandTotal = response.grandTotal;
           this.purchaseReport.forEach((head) => {
@@ -305,7 +315,7 @@ export class PurchaseReportComponent {
   // Helper method to generate the filename
   private generateFileName(): string {
     const now = new Date();
-    const generatedDate = this.datePipe.transform(now, 'MM/dd');
+    const generatedDate = this.datePipe.transform(now, 'yyyy-MM-dd');
     const generatedTime = this.datePipe.transform(now, 'hh.mm a');
     
     let fileName = 'Purchase Report';

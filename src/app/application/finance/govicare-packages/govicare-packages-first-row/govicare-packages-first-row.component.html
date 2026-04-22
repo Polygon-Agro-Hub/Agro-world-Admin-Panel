@@ -12,27 +12,42 @@
         <div class="ml-5 block">
           <h2 class="text-xl dark:text-[#ABB0B8]">Total Income</h2>
           <p class="text-2xl dark:text-[#ABB0B8]">
-            {{ dashboardData ? formatCurrency(dashboardData.statistics.monthlyIncome) : 'Rs.0' }}
+            {{
+              dashboardData
+                ? formatCurrency(dashboardData.statistics.monthlyIncome)
+                : "Rs.0"
+            }}
           </p>
         </div>
       </div>
 
       <div class="flex flex-col items-end">
         <div class="flex items-center justify-end gap-1">
-          <ng-container *ngIf="dashboardData?.statistics?.incomeStatus === 'increased' || dashboardData?.statistics?.incomeStatus === 'stable'">
+          <ng-container
+            *ngIf="
+              dashboardData?.statistics?.incomeStatus === 'increased' ||
+              dashboardData?.statistics?.incomeStatus === 'stable'
+            "
+          >
             <i class="fa-solid fa-arrow-trend-up text-xl text-teal-600"></i>
-            <p class="text-teal-600 text-lg font-semibold">{{ dashboardData?.statistics?.relativeIncomeValue || 0 }}%</p>
+            <p class="text-teal-600 text-lg font-semibold">
+              {{ dashboardData?.statistics?.relativeIncomeValue || 0 }}%
+            </p>
           </ng-container>
-          <ng-container *ngIf="dashboardData?.statistics?.incomeStatus === 'decreased'">
+          <ng-container
+            *ngIf="dashboardData?.statistics?.incomeStatus === 'decreased'"
+          >
             <i class="fa-solid fa-arrow-trend-down text-xl text-red-600"></i>
-            <p class="text-red-600 text-lg font-semibold">{{ dashboardData?.statistics?.relativeIncomeValue || 0 }}%</p>
+            <p class="text-red-600 text-lg font-semibold">
+              {{ dashboardData?.statistics?.relativeIncomeValue || 0 }}%
+            </p>
           </ng-container>
         </div>
 
         <p class="text-gray-400 text-sm mt-3 dark:text-gray-400">This Month</p>
       </div>
     </div>
-    
+
     <div
       class="flex flex-col justify-center items-center py-4 w-48 min-w-[120px] rounded-lg shadow-lg dark:bg-[#061E2C]"
     >
@@ -42,7 +57,7 @@
         {{ dashboardData?.statistics?.freeUsers || 0 }}
       </h2>
     </div>
-    
+
     <div
       class="flex flex-col justify-center items-center py-4 w-48 min-w-[120px] rounded-lg shadow-lg dark:bg-[#061E2C]"
     >

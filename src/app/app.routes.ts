@@ -247,7 +247,6 @@ import { TodaysDeliveriesComponent } from './application/distribution-hub/today-
 import { TransportReasonsToHoldComponent } from './application/distribution-hub/transport-reasons-to-hold/transport-reasons-to-hold.component';
 import { DriverComplainComponent } from './application/Complaints/driver-complain/driver-complain.component';
 import { ViewDriverComplaintsComponent } from './application/Complaints/view-driver-complaints/view-driver-complaints.component';
-import { MarketManageSeoComponent } from './application/marketplace/market-manage-seo/market-manage-seo.component';
 import { DistributionViewCustomerOrdersComponent } from './application/distribution-hub/distribution-view-customer-orders/distribution-view-customer-orders.component';
 import { AuditPersonalInfoComponent } from './application/finance/govi-capital-inspection/audit-personal-info/audit-personal-info.component';
 import { ViewAllAuditedGovicareRequestsComponent } from './application/finance/view-all-audited-govicare-requests/view-all-audited-govicare-requests.component';
@@ -273,6 +272,26 @@ import { CallCenterDashboardComponent } from './application/call-centers/call-ce
 import { CallCenterActionComponent } from './application/call-centers/action/call-center-action/call-center-action.component';
 import { CallCenterComponentComponent } from './application/call-centers/action/call-center-component/call-center-component.component';
 import { AllCallLogsComponent } from './application/call-centers/all-call-logs/all-call-logs.component';
+import { ViewGovicapitalUsersComponent } from './application/steckholders-section/steckholders/view-govicapital-users/view-govicapital-users.component';
+import { ViewGovishopSupliersComponent } from './application/steckholders-section/steckholders/view-govishop-supliers/view-govishop-supliers.component';
+import { ViewGoviShopSuppliersComponent } from './application/steckholders-section/view-govi-shop-suppliers/view-govi-shop-suppliers.component';
+import { GoviShopViewActionComponent } from './application/finance/govi-shop-view-action/govi-shop-view-action.component';
+import { GoviShopViewDocumentComponent } from './application/finance/govi-shop-view-document/govi-shop-view-document.component';
+import { GoviShopViewSuppliersComponent } from './application/finance/govi-shop-view-suppliers/govi-shop-view-suppliers.component';
+import { GoviShopFinanceComponent } from './application/finance/govi-shop-finance/govi-shop-finance.component';
+import { CreateGoviShopSupplierComponent } from './application/steckholders-section/steckholders/create-govi-shop-supplier/create-govi-shop-supplier.component';
+import { GovishopDashbordComponent } from './application/govi-shop/govishop-dashbord/govishop-dashbord.component';
+import { GovishopActionComponent } from './application/govi-shop/govishop-action/govishop-action.component';
+import { GovishopViewShopsComponent } from './application/finance/govishop-view-shops/govishop-view-shops.component';
+import { UpdateGoviShopUserComponent } from './application/steckholders-section/steckholders/update-govi-shop-user/update-govi-shop-user.component';
+import { UpdateGoviShopComponent } from './application/finance/update-govi-shop/update-govi-shop.component';
+import { GoviShopPreviewShopComponent } from './application/finance/govi-shop-preview-shop/govi-shop-preview-shop.component';
+import { GovishopUsersComponent } from './application/steckholders-section/steckholders/govishop-users/govishop-users.component';
+import { GoviShopPosUserEditComponent } from './application/finance/govi-shop-pos-user-edit/govi-shop-pos-user-edit.component';
+import { AllDeletedSuppliersComponent } from './application/govi-shop/all-deleted-suppliers/all-deleted-suppliers.component';
+import { ViewAllShopsComponent } from './application/govi-shop/view-all-shops/view-all-shops.component';
+import { ViewBranchDetailsComponent } from './application/govi-shop/view-branch-details/view-branch-details.component';
+import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branches-per-shop/view-branches-per-shop.component';
 
 export const routes: Routes = [
   {
@@ -773,6 +792,29 @@ export const routes: Routes = [
                 path: 'farmer-pension-5-years-plus',
                 component: ViewFarmerPension5YearsPlusComponent,
               },
+
+              {
+                path: 'finance-govishop',
+                children: [
+                  {
+                    path: '',
+                    component: GoviShopFinanceComponent,
+                  },
+                  {
+                    path: 'view-action',
+                    component: GoviShopViewActionComponent,
+                  },
+                  {
+                    path: 'view-all-suppliers',
+                    component: GoviShopViewSuppliersComponent,
+                  },
+                  {
+                    path: 'view-documents/:id',
+                    component: GoviShopViewDocumentComponent,
+                  },
+                ],
+              },
+
             ],
           },
         ],
@@ -794,7 +836,7 @@ export const routes: Routes = [
             },
           },
           {
-            path: 'collective-officer-report/view/:id/:name',
+            path: 'collective-officer-report/view/:id/:name/:lastName/:empId',
             component: CollectionOfficerReportViewComponent,
             canActivate: [PermissionGuard],
             data: { permission: 'Collection Officer Daily Report' },
@@ -1056,6 +1098,55 @@ export const routes: Routes = [
                   },
                 ],
               },
+              {
+                path: 'govi-shop-suppliers',
+                children: [
+                  {
+                    path: '',
+                    component: ViewGovishopSupliersComponent,
+                  },
+                  {
+                    path: 'view-govi-shop-suppliers/:id',
+                    component: ViewGoviShopSuppliersComponent,
+                  },
+                  {
+                    path: 'view-all-suppliers/:id',
+                    component: GoviShopViewSuppliersComponent,
+                  },
+                  {
+                    path: 'create-govi-shop-supplier',
+                    component: CreateGoviShopSupplierComponent,
+                  },
+
+                  {
+                    path: 'edit-govi-shop-supplier',
+                    component: UpdateGoviShopUserComponent,
+                  },
+
+                  {
+                    path: 'govishop-view-shops',
+                    component: GovishopViewShopsComponent,
+                  },
+                  {
+                    path: 'govishop-users',
+                    component:GovishopUsersComponent,
+                  },
+                  {
+                    path: 'edit-govi-shop-pos-user',
+                    component: GoviShopPosUserEditComponent,
+                  },
+                  {
+                    path: 'preview-govi-shop/:id',
+                    component: GoviShopPreviewShopComponent,
+                  },
+
+                  {
+                    path: 'update-govi-shop/:id',
+                    component: UpdateGoviShopComponent,
+                  },
+
+                ],
+              },
 
               {
                 path: 'drivers',
@@ -1112,6 +1203,10 @@ export const routes: Routes = [
                 component: ViewPolygonCentersComponent,
                 canActivate: [PermissionGuard],
                 data: { permission: 'Stakeholder distribution centres' },
+              },
+              {
+                path: 'view-govicapital-users',
+                component: ViewGovicapitalUsersComponent,
               },
             ],
           },
@@ -1571,12 +1666,6 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View wholesale orders' },
               },
-              {
-                path: 'manage-seo',
-                component: MarketManageSeoComponent,
-                // canActivate: [PermissionGuard],
-                // data: { permission: 'Manage SEO' },
-              },
             ],
           },
         ],
@@ -1828,7 +1917,7 @@ export const routes: Routes = [
                     path: '',
                     component: DistributionhubTransportActionComponent,
                     canActivate: [PermissionGuard],
-                    data: { permission: 'Distribution Hub transpotation' },
+                    data: { permission: 'Distribution Hub transportation' },
                   },
                 ],
               },
@@ -2023,6 +2112,54 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'govi-shop',
+        children: [
+          {
+            path: 'dashboard',
+            component: GovishopDashbordComponent,
+          },
+          {
+            path: 'action',
+            children: [
+              {
+                path: '',
+                component: GovishopActionComponent,
+              },
+              {
+                path: 'all-govi-shops',
+                component: ViewAllShopsComponent,
+              },
+              {
+                path: 'all-shop-requests',
+                component: GovishopViewShopsComponent,
+              },
+              {
+                path: 'all-branches-pershop',
+                component: ViewBranchesPerShopComponent,
+              },
+
+              {
+                path: 'update-govi-shop/:id',
+                component: UpdateGoviShopComponent,
+              },
+
+              {
+                path: 'preview-govi-shop/:id',
+                component: GoviShopPreviewShopComponent,
+              },
+              {
+                path: 'deleted-suppliers',
+                component: AllDeletedSuppliersComponent,
+              },
+              {
+                path: 'view-branch-details/:id',
+                component: ViewBranchDetailsComponent
+              }
+            ],
+          }
+        ]
+      }
     ],
   },
   { path: '**', component: NotFoundComponent },
@@ -2032,4 +2169,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

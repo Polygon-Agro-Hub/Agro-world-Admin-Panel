@@ -4,16 +4,23 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FarmerPensionService } from '../../../services/finance/farmer-pension.service';
+import { TokenService } from '../../../services/token/services/token.service';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
 
 @Component({
   selector: 'app-view-farmer-pension-5-years-plus',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, NgxPaginationModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+    NgxPaginationModule,
+  ],
   templateUrl: './view-farmer-pension-5-years-plus.component.html',
-  styleUrl: './view-farmer-pension-5-years-plus.component.css'
+  styleUrl: './view-farmer-pension-5-years-plus.component.css',
 })
 export class ViewFarmerPension5YearsPlusComponent {
-searchText: string = '';
+  searchText: string = '';
   isLoading = false;
   showDetailsModal = false;
   dataObject: Farmer | null = null;
@@ -23,7 +30,11 @@ searchText: string = '';
   itemsPerPage: number = 10;
   totalItems: number = 0;
 
-  constructor(private farmerPensionService: FarmerPensionService) {}
+  constructor(
+    private farmerPensionService: FarmerPensionService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService
+  ) { }
 
   ngOnInit(): void {
     this.loadFarmers();
@@ -60,12 +71,12 @@ searchText: string = '';
               parseFloat(item.defaultPension),
             ),
             duration: this.calculateDuration(item.approveTime),
-            approvedBy: item.approveBy || 'N/A',
+            approvedBy: item.approveBy || '--',
             approvedDate: this.formatApproveDate(item.approveTime),
-            successor: item.sucType || 'N/A',
-            successorNic: item.sucNic || 'N/A',
+            successor: item.sucType || '--',
+            successorNic: item.sucNic || '--',
             successorDob: item.sucdob || null,
-            successorAge: item.sucdob ? this.calculateAge(item.sucdob) : 'N/A',
+            successorAge: item.sucdob ? this.calculateAge(item.sucdob) : '--',
             rawData: item,
           }));
           this.isLoading = false;
@@ -115,13 +126,13 @@ searchText: string = '';
 
   // Calculate duration from approval date to current date
   private calculateDuration(approveTimeStr: string | null): string {
-    if (!approveTimeStr) return 'N/A';
+    if (!approveTimeStr) return '--';
 
     const approveDate = new Date(approveTimeStr);
     const currentDate = new Date();
 
     if (currentDate < approveDate) {
-      return 'N/A';
+      return '--';
     }
 
     let years = currentDate.getFullYear() - approveDate.getFullYear();
@@ -134,7 +145,7 @@ searchText: string = '';
       const prevMonth = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
-        0
+        0,
       );
       days += prevMonth.getDate();
     }
@@ -148,21 +159,21 @@ searchText: string = '';
     // Build the string
     const parts: string[] = [];
     if (years > 0) {
-      parts.push(`${years} ${years === 1 ? 'Year' : 'Years'}`);
+      parts.push(`${years} ${years > 1 ? 'Years' : 'Year'}`);
     }
     if (months > 0) {
-      parts.push(`${months} ${months === 1 ? 'Month' : 'Months'}`);
+      parts.push(`${months} ${months > 1 ? 'Months' : 'Month'}`);
     }
-    if (days > 0 && years === 0 && months === 0) {
+    if (days > 0 ) {
       parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
     }
 
-    return parts.length > 0 ? parts.join(' ') : '0 Days';
+    return parts.length > 0 ? parts.join(' ') : '';
   }
 
   // Calculate age from date of birth
   private calculateAge(dobStr: string | null): string {
-    if (!dobStr) return 'N/A';
+    if (!dobStr) return '--';
 
     const dob = new Date(dobStr);
     const today = new Date();
@@ -193,8 +204,16 @@ searchText: string = '';
     // Ensure non-negative values
     years = Math.max(years, 0);
     months = Math.max(months, 0);
+    let ageString = '';
 
-    return `${years} Years, ${months} ${months === 1 ? 'Month' : 'Months'}`;
+    if (years > 0) {
+      ageString += `${years} ${years > 1 ? 'Years' : 'Year'}`;
+    }
+    if (months > 0) {
+      ageString += `${ageString ? ', ' : ''}${months} ${months > 1 ? 'Months' : 'Month'}`;
+    }
+
+    return ageString || '--';
   }
 
   // Calculate if a year is a leap year
@@ -298,7 +317,7 @@ searchText: string = '';
   // Format approve date
   private formatApproveDate(approveTime: string | null): string {
     if (!approveTime) {
-      return 'N/A';
+      return '--';
     }
     const date = new Date(approveTime);
     const hours = date.getHours();

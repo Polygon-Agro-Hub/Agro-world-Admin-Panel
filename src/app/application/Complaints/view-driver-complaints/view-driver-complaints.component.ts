@@ -53,7 +53,7 @@ export class ViewDriverComplaintsComponent {
   ];
 
   statusfilterArr = [
-    { label: 'Assigned', value: 'Assigned' },
+    { label: 'Assigned', value: 'Opened' },
     { label: 'Closed', value: 'Closed' },
     { label: 'Pending', value: 'Pending' },
 
@@ -175,7 +175,7 @@ export class ViewDriverComplaintsComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/21`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/Transport`, {
           headers,
         })
         .subscribe(
@@ -198,7 +198,7 @@ export class ViewDriverComplaintsComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/21`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list/${this.tokenService.getUserDetails().role}/Transport`, {
           headers,
         })
         .subscribe(

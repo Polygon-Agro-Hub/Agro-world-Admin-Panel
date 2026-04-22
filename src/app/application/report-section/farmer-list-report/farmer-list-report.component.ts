@@ -105,6 +105,8 @@ export class FarmerListReportComponent {
   try {
     const doc = new jsPDF();
 
+    doc.setFontSize(10);
+
     // Helper function to fetch and convert image to base64
     function loadImageAsBase64(url: string): Promise<string> {
       return new Promise((resolve, reject) => {
@@ -165,12 +167,10 @@ export class FarmerListReportComponent {
     };
 
     // Set Document Title
-    doc.setFontSize(14);
-    doc.text('Farmer Report', 105, 10, { align: 'center' });
     doc.setFontSize(10);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, 20, {
-      align: 'center',
-    });
+    doc.text(`INV NO: ${this.todayDate[0].invNo}`, 10, 14 )
+    doc.setFontSize(10);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 10, 20);
 
     let yPosition = 30;
 
@@ -398,61 +398,56 @@ export class FarmerListReportComponent {
     doc.text(`Full Total (Rs.): ${formatNumber(total)}`, 10, yPosition);
 
     // QR Codes Section
-    yPosition += 20;
-    const pageWidth = doc.internal.pageSize.width;
-    const imageWidth = 50;
-    const imageSpacing = 10;
-    const totalImageWidth = imageWidth * 2 + imageSpacing;
-    const startX = (pageWidth - totalImageWidth) / 2;
+yPosition += 10;
+const pageWidth = doc.internal.pageSize.width;
+const imageWidth = 25;  // Reduced from 50
+const imageHeight = 25; // Slightly taller than wide for a bit of height reduction
+const imageSpacing = 10;
+const totalImageWidth = imageWidth * 2 + imageSpacing;
+const startX = (pageWidth - totalImageWidth) / 2;
 
-    const appendCacheBuster = (url: string) => {
-      if (!url) return '';
-      const separator = url.includes('?') ? '&' : '?';
-      return `${url}${separator}t=${new Date().getTime()}`;
-    };
+const appendCacheBuster = (url: string) => {
+  if (!url) return '';
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}t=${new Date().getTime()}`;
+};
 
-    try {
-      let farmerQrBase64 = '';
-      let officerQrBase64 = '';
+try {
+  let farmerQrBase64 = '';
+  let officerQrBase64 = '';
 
-      if (this.farmerList.farmerQr) {
-        const modifiedFarmerUrl = appendCacheBuster(this.farmerList.farmerQr);
-        farmerQrBase64 = await loadImageAsBase64(modifiedFarmerUrl);
-      }
+  if (this.farmerList.farmerQr) {
+    const modifiedFarmerUrl = appendCacheBuster(this.farmerList.farmerQr);
+    farmerQrBase64 = await loadImageAsBase64(modifiedFarmerUrl);
+  }
 
-      if (this.QRcode) {
-        const modifiedOfficerUrl = appendCacheBuster(this.QRcode);
-        officerQrBase64 = await loadImageAsBase64(modifiedOfficerUrl);
-      }
+  if (this.QRcode) {
+    const modifiedOfficerUrl = appendCacheBuster(this.QRcode);
+    officerQrBase64 = await loadImageAsBase64(modifiedOfficerUrl);
+  }
 
-      // Add Farmer QR Code (if available)
-      if (farmerQrBase64) {
-        doc.text('Farmer QR Code:', startX, yPosition - 5);
-        doc.addImage(
-          farmerQrBase64,
-          'PNG',
-          startX,
-          yPosition,
-          imageWidth,
-          imageWidth
-        );
-      }
+  // Add Farmer QR Code (if available)
+  if (farmerQrBase64) {
+    doc.addImage(farmerQrBase64, 'PNG', startX, yPosition, imageWidth, imageHeight);
 
-      // Add Collection Officer QR Code (if available)
-      if (officerQrBase64) {
-        const secondImageX = startX + imageWidth + imageSpacing;
-        doc.text('Collection Officer QR Code:', secondImageX, yPosition - 5);
-        doc.addImage(
-          officerQrBase64,
-          'PNG',
-          secondImageX,
-          yPosition,
-          imageWidth,
-          imageWidth
-        );
-      }
+    // Centered text below the image
+    const farmerTextX = startX + imageWidth / 2;
+    doc.setFontSize(10);
+    doc.text('Farmer QR Code', farmerTextX, yPosition + imageHeight + 5, { align: 'center' });
+  }
 
-      yPosition += imageWidth + 20;
+  // Add Collection Officer QR Code (if available)
+  if (officerQrBase64) {
+    const secondImageX = startX + imageWidth + imageSpacing;
+    doc.addImage(officerQrBase64, 'PNG', secondImageX, yPosition, imageWidth, imageHeight);
+
+    // Centered text below the image
+    const officerTextX = secondImageX + imageWidth / 2;
+    doc.setFontSize(10);
+    doc.text(`Officer's QR Code`, officerTextX, yPosition + imageHeight + 5, { align: 'center' });
+  }
+
+  yPosition += imageHeight + 20;
     } catch (error) {
       console.error('Error adding QR codes:', error);
       doc.setTextColor(255, 0, 0);
@@ -460,10 +455,10 @@ export class FarmerListReportComponent {
       doc.setTextColor(0, 0, 0);
     }
 
-    console.log('Saving PDF...');
-    doc.save(`${inv}.pdf`);
-    console.log('PDF generation completed successfully');
-    this.isLoadingButton = false;
+console.log('Saving PDF...');
+doc.save(`${inv}.pdf`);
+console.log('PDF generation completed successfully');
+this.isLoadingButton = false;
   } catch (error) {
     console.error('Error generating PDF:', error);
     alert('Error generating PDF. Please check the console for details.');

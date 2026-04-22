@@ -3,92 +3,160 @@
   <div>
     <div class="pt-5 pb-5 w-full bg-tileLight dark:bg-tileBlack">
       <div class="flex flex-row justify-between items-center mb-2">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-          {{centerObj.centerRegCode}} {{centerObj.centerName}}
+        <h2 class="text-xl font-normal text-textLight dark:text-textDark">
+          {{ centerObj.centerRegCode }} {{ centerObj.centerName }}
         </h2>
 
-        <div class="relative flex items-center mr-40">
-            <p-calendar 
-              id="deliveryDate" 
-              placeholder="Schedule Date" 
-              [showIcon]="true" 
-              [monthNavigator]="true" 
-              [yearNavigator]="true"
-              yearRange="1900:2030" 
-              iconDisplay="input" 
-              [(ngModel)]="selectDate" 
-              (onSelect)="fetchData()"
-              [style]="{ width: '145px' }" 
-              [inputStyle]="{ width: '145px', padding: '0.5rem 2.5rem 0.5rem 0.75rem', fontSize: '0.875rem' }"
-              panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
-              inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"/>
+        <div class="relative flex items-center mr-40 gap-4">
+          <div class="flex justify-center items-center gap-4">
+            <i class="fa-solid fa-list text-2xl dark:text-white ml-8"></i>
+
+            <p class="font-normal text-[#4A4A4A] dark:text-white">Filter By</p>
           </div>
+          <p-calendar
+            id="deliveryDate"
+            placeholder="Schedule Date"
+            [showIcon]="true"
+            [monthNavigator]="true"
+            [yearNavigator]="true"
+            yearRange="1900:2030"
+            iconDisplay="input"
+            [(ngModel)]="selectDate"
+            (onSelect)="fetchData()"
+            [style]="{ width: '145px' }"
+            [inputStyle]="{
+              width: '145px',
+              padding: '0.5rem 2.5rem 0.5rem 0.75rem',
+              fontSize: '0.875rem',
+            }"
+            panelStyleClass="dark:bg-gray-800 dark:border dark:border-gray-700 dark:text-white"
+            inputStyleClass="text-[16px] h-10 rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-2 border-[#E5E5E5] dark:border-[#AFAFAF] placeholder:text-[#9CA3AF] dark:placeholder:text-[#9CA3AF] focus:outline-none focus:border-blue-500 dark:focus:border-blue-400"
+          />
+        </div>
       </div>
       <div class="flex justify-between items-center mb-8">
         <div class="flex items-center">
-          <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-            All ({{(orderCount || orderCount === 0) ? (orderCount | number: '2.0') : '0'}})
+          <h2 class="text-xl font-normal text-textLight dark:text-textDark">
+            All ({{
+              orderCount || orderCount === 0
+                ? (orderCount | number: "2.0")
+                : "0"
+            }})
           </h2>
         </div>
       </div>
     </div>
-    <div  class="w-6/7 overflow-x-auto border-2 border-gray-200 rounded-2xl">
+    <div class="w-6/7 overflow-x-auto border-2 border-gray-200 rounded-2xl">
       <table *ngIf="hasData" class="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               No
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               EMP ID
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
               Full Name
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
               All Orders
             </th>
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
               Todo
             </th>
 
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center"
+            >
               Completed
             </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" *ngFor="let item of ordersArr; let i = index">
+          <tr
+            class="hover:bg-gray-50 dark:hover:bg-gray-700"
+            *ngFor="let item of ordersArr; let i = index"
+          >
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{i + 1 | number : '2.0'}}
-            </td>
-            <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{item.empId || ''}}
+              {{ i + 1 | number: "2.0" }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{(item.firstNameEnglish || '') + ' ' + (item.lastNameEnglish || '')}}
+              {{ item.empId || "" }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{
+                (item.firstNameEnglish || "") +
+                  " " +
+                  (item.lastNameEnglish || "")
+              }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{((item.target || item.target === 0) ? item.target : 0) | number: '2.0'}}
+              {{
+                (item.target || item.target === 0 ? item.target : 0)
+                  | number: "2.0"
+              }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{((((item.target || item.target === 0) ? item.target : 0) - ((item.complete || item.complete === 0) ? item.complete : 0)) <= 0 ? 0 : (((item.target || item.target === 0) ? item.target : 0) - ((item.complete || item.complete === 0) ? item.complete : 0))) | number: '2.0'}}
+              {{
+                ((item.target || item.target === 0 ? item.target : 0) -
+                  (item.complete || item.complete === 0 ? item.complete : 0) <=
+                0
+                  ? 0
+                  : (item.target || item.target === 0 ? item.target : 0) -
+                    (item.complete || item.complete === 0 ? item.complete : 0)
+                ) | number: "2.0"
+              }}
             </td>
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              {{((item.complete || item.complete === 0) ? item.complete : 0) | number: '2.0'}}
+              {{
+                (item.complete || item.complete === 0 ? item.complete : 0)
+                  | number: "2.0"
+              }}
             </td>
-            <td *ngIf="(permissionService.hasPermission('Polygon centres dashboard view officer target') || tokenService.getUserDetails().role === '1')" class="px-2 py-3 text-left text-textLight dark:text-textDark">
-              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)=" selectOfficer(item.id)">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <td
+              *ngIf="
+                permissionService.hasPermission(
+                  'Polygon centres dashboard view officer target'
+                ) || tokenService.getUserDetails().role === '1'
+              "
+              class="px-2 py-3 text-left text-textLight dark:text-textDark"
+            >
+              <button
+                class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                (click)="selectOfficer(item.id)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </button>
             </td>
           </tr>
           <tr>
-            <td colspan="8" class="px-4 py-6 text-center text-textLight dark:text-textDark"></td>
+            <td
+              colspan="8"
+              class="px-4 py-6 text-center text-textLight dark:text-textDark"
+            ></td>
           </tr>
         </tbody>
       </table>
@@ -99,9 +167,15 @@
         </pagination-controls>
       </div> -->
 
-    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
-      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
-      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      <div
+        *ngIf="!hasData"
+        class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
+      >
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          --No Data Available--
+        </p>
+        <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+      </div>
     </div>
   </div>
 </div>

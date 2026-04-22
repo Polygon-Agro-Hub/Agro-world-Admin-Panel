@@ -89,7 +89,7 @@ export class EditCertificateDetailsComponent implements OnInit {
   filteredCropOptions: { label: string; value: number }[] = [];
   selectedCrops: { id: number; cropNameEnglish: string }[] = [];
 
-  // New properties for conditional logic
+  // New properties for conditional logica
   showTargetCropsSection = false;
   isForSelectedCrops = false;
 
@@ -101,8 +101,8 @@ export class EditCertificateDetailsComponent implements OnInit {
     private cropCalendarService: CropCalendarService,
     private certificateCompanyService: CertificateCompanyService,
     public permissionService: PermissionService,
-    public tokenService: TokenService
-  ) { }
+    public tokenService: TokenService,
+  ) {}
 
   ngOnInit(): void {
     this.certificateForm = this.fb.group({
@@ -114,11 +114,14 @@ export class EditCertificateDetailsComponent implements OnInit {
       applicable: ['', Validators.required],
       accreditation: ['', Validators.required],
       serviceAreas: [[], Validators.required],
-      price: ['', [
-        Validators.required, 
-        Validators.min(0),
-        Validators.pattern(/^\d*\.?\d*$/)
-      ]],
+      price: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern(/^\d*\.?\d*$/),
+        ],
+      ],
       timeLine: ['', [Validators.required, Validators.min(1)]],
       commission: [
         '',
@@ -223,14 +226,14 @@ export class EditCertificateDetailsComponent implements OnInit {
     // Handle various formats gracefully
     if (Array.isArray(certificate.serviceAreas)) {
       serviceAreasArray = certificate.serviceAreas.filter(
-        (s: any) => typeof s === 'string' && s.trim() !== ''
+        (s: any) => typeof s === 'string' && s.trim() !== '',
       );
     } else if (typeof certificate.serviceAreas === 'string') {
       try {
         const parsed = JSON.parse(certificate.serviceAreas);
         if (Array.isArray(parsed)) {
           serviceAreasArray = parsed.filter(
-            (s: any) => typeof s === 'string' && s.trim() !== ''
+            (s: any) => typeof s === 'string' && s.trim() !== '',
           );
         } else if (parsed) {
           serviceAreasArray = [parsed.toString()];
@@ -424,7 +427,7 @@ export class EditCertificateDetailsComponent implements OnInit {
 
   addCrop(): void {
     const selected = this.cropDropdownOptions.find(
-      (c) => c.value === this.selectedCrop
+      (c) => c.value === this.selectedCrop,
     );
     if (selected && !this.selectedCrops.some((c) => c.id === selected.value)) {
       this.selectedCrops.push({
@@ -462,7 +465,7 @@ export class EditCertificateDetailsComponent implements OnInit {
     const searchTerm = event.target.value.toLowerCase();
     if (searchTerm) {
       this.filteredCropOptions = this.cropDropdownOptions.filter((option) =>
-        option.label.toLowerCase().includes(searchTerm)
+        option.label.toLowerCase().includes(searchTerm),
       );
     } else {
       this.filteredCropOptions = [...this.cropDropdownOptions];
@@ -473,8 +476,20 @@ export class EditCertificateDetailsComponent implements OnInit {
   private getMissingFields(): string[] {
     const missingFields: string[] = [];
 
+    if (this.logoPreview === null || this.logoPreview === undefined) {
+      missingFields.push('Logo');
+    }
+
     if (this.certificateForm.get('srtName')?.errors?.['required']) {
       missingFields.push('Certificate Name (English)');
+    }
+
+    if (this.certificateForm.get('srtNameSinhala')?.errors?.['required']) {
+      missingFields.push('Certificate Name (Sinhala)');
+    }
+
+    if (this.certificateForm.get('srtNameTamil')?.errors?.['required']) {
+      missingFields.push('Certificate Name (Tamil)');
     }
 
     if (this.certificateForm.get('srtNumber')?.errors?.['required']) {
@@ -521,6 +536,10 @@ export class EditCertificateDetailsComponent implements OnInit {
       missingFields.push('Commission (must be a valid number)');
     }
 
+    if (this.certificateForm.get('tearmsFile')?.errors?.['required']) {
+      missingFields.push('Payment Terms File');
+    }
+
     if (this.certificateForm.get('scope')?.errors?.['required']) {
       missingFields.push('Scope');
     }
@@ -545,7 +564,7 @@ export class EditCertificateDetailsComponent implements OnInit {
       this.selectedCrops.length === 0
     ) {
       errors.push(
-        'Please select at least one target crop for "For Selected Crops" option.'
+        'Please select at least one target crop for "For Selected Crops" option.',
       );
     }
 
@@ -680,7 +699,6 @@ export class EditCertificateDetailsComponent implements OnInit {
               ]);
             });
           } else {
-
             Swal.fire({
               icon: 'error',
               title: 'Validation Error',
@@ -699,8 +717,8 @@ export class EditCertificateDetailsComponent implements OnInit {
           this.isLoading = false;
           console.error('Error updating certificate:', err);
 
-
-          const errorMessage = err.error?.message ||
+          const errorMessage =
+            err.error?.message ||
             err.message ||
             'Failed to update certificate details. Please try again.';
 
@@ -709,7 +727,8 @@ export class EditCertificateDetailsComponent implements OnInit {
             title: 'Error',
             text: errorMessage,
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
             },
           });

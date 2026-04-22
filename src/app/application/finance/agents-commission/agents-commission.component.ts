@@ -56,8 +56,8 @@ export class AgentsCommissionComponent {
     private location: Location,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.fetchSalesAgent();
@@ -65,26 +65,24 @@ export class AgentsCommissionComponent {
 
   fetchSalesAgent() {
     this.isLoading = true;
-    this.financeService.getSalesAgentForFilters().subscribe(
-      (res) => {
-        this.agentArr = res.data;
-        this.filteredAgents = [...this.agentArr];
-        this.isLoading = false;
-      }
-    )
+    this.financeService.getSalesAgentForFilters().subscribe((res) => {
+      this.agentArr = res.data;
+      this.filteredAgents = [...this.agentArr];
+      this.isLoading = false;
+    });
   }
 
   filterAgents(event: any) {
     const query = event.query.toLowerCase().trim();
-    this.filteredAgents = this.agentArr.filter(agent =>
-      agent.empId.toLowerCase().includes(query) ||
-      agent.id.toString().includes(query)
+    this.filteredAgents = this.agentArr.filter(
+      (agent) =>
+        agent.empId.toLowerCase().includes(query) ||
+        agent.id.toString().includes(query),
     );
   }
 
   onAgentSelect(event: any) {
     this.selectedAgent = event.value;
-    console.log('Selected Agent:', this.selectedAgent);
   }
 
   clearAgent() {
@@ -102,7 +100,6 @@ export class AgentsCommissionComponent {
 
     // Check if form is valid
     if (!this.isFormValid()) {
-      console.log('Form is invalid. Please fill all required fields.');
       return;
     }
     this.isLoading = true;
@@ -115,11 +112,8 @@ export class AgentsCommissionComponent {
       deliveredDate: this.formatDateForAPI(this.deliveredDate),
     };
 
-    console.log('Filter Object:', this.filterObj);
-
     this.financeService.getAgentCommisons(this.filterObj).subscribe(
       (res) => {
-        console.log('API Response:', res);
         this.salesCommisionsArr = res.data;
         this.hasData = this.salesCommisionsArr.length > 0;
         this.isinit = true;
@@ -129,13 +123,13 @@ export class AgentsCommissionComponent {
         console.error('API Error:', error);
         this.isinit = true;
         this.isLoading = false;
-      }
-    )
+      },
+    );
   }
 
   // Helper method to mark all controls as touched
   private markFormGroupTouched(formGroup: NgForm) {
-    Object.values(formGroup.controls).forEach(control => {
+    Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
 
       // If it's a FormGroup, recursively mark its controls
@@ -160,14 +154,13 @@ export class AgentsCommissionComponent {
     this.router.navigate(['finance/action']);
   }
 
-
-   generateFileName(): string {
+  generateFileName(): string {
     const empId = this.selectedAgent?.empId || 'Unknown';
     const fromDate = this.formatDateForDisplay(this.fromDate);
     const toDate = this.formatDateForDisplay(this.toDate);
     const deliveredDate = this.formatDateForDisplay(this.deliveredDate);
     const paymentStatus = this.selectedFilter;
-    
+
     return `${empId} Orders From ${fromDate} To ${toDate} delivered before ${deliveredDate} payment ${paymentStatus}.xlsx`;
   }
 
@@ -183,52 +176,53 @@ export class AgentsCommissionComponent {
     try {
       // Prepare data for Excel
       const excelData = this.salesCommisionsArr.map((item, index) => ({
-        'No': (index + 1).toString().padStart(3, '0'),
+        No: (index + 1).toString().padStart(3, '0'),
         'Order ID': item.invNo || 'N/A',
-        'Ordered Date': item.sheduleDate ? 
-          new Date(item.sheduleDate).toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          }) : 'N/A',
-        'Delivered Date': item.deliveredTime ? 
-          new Date(item.deliveredTime).toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          }) : 'N/A',
-        'Payment Status': item.isPaid ? 'Completed' : 'Pending'
-       
+        'Ordered Date': item.sheduleDate
+          ? new Date(item.sheduleDate).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          : 'N/A',
+        'Delivered Date': item.deliveredTime
+          ? new Date(item.deliveredTime).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })
+          : 'N/A',
+        'Payment Status': item.isPaid ? 'Completed' : 'Pending',
       }));
 
       // Create worksheet
       const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
-      
+
       // Set column widths
       const wscols = [
-        { wch: 8 },  // No
+        { wch: 8 }, // No
         { wch: 15 }, // Order ID
         { wch: 20 }, // Ordered Date
         { wch: 20 }, // Delivered Date
-        { wch: 15 } // Payment Status
+        { wch: 15 }, // Payment Status
       ];
       worksheet['!cols'] = wscols;
 
       // Create workbook
       const workbook: XLSX.WorkBook = {
         Sheets: { 'Orders Data': worksheet },
-        SheetNames: ['Orders Data']
+        SheetNames: ['Orders Data'],
       };
 
       // Generate Excel file
-      const excelBuffer: any = XLSX.write(workbook, { 
-        bookType: 'xlsx', 
-        type: 'array' 
+      const excelBuffer: any = XLSX.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
       });
 
       // Save file
       this.saveAsExcelFile(excelBuffer, this.generateFileName());
-      
+
       this.isLoading = false;
     } catch (error) {
       console.error('Error generating Excel file:', error);
@@ -240,14 +234,14 @@ export class AgentsCommissionComponent {
   // Save Excel file
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
     });
-    
+
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(data);
     link.download = fileName;
     link.click();
-    
+
     // Clean up
     setTimeout(() => {
       window.URL.revokeObjectURL(link.href);
@@ -259,7 +253,7 @@ export class AgentsCommissionComponent {
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 
@@ -270,7 +264,6 @@ export class AgentsCommissionComponent {
     const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
-
 }
 
 interface SalesAgents {

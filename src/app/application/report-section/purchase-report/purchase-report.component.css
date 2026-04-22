@@ -138,3 +138,32 @@
 ::ng-deep .calendar-popup-small .p-datepicker .p-datepicker-header {
   padding: 0.5rem !important;
 }
+
+/* Adjust the calendar table layout */
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 2px !important;
+}
+
+/* Add space between month and year in calendar header */
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important; /* Adds space between month and year */
+}
+
+/* Alternative approach if the above doesn't work */
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title select {
+  margin: 0 0.25rem !important; /* Adds margin to select elements if they're used */
+}
+
+/* If using text/title approach */
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+  margin-right: 0.1rem !important; /* Space after month */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-year {
+  margin-left: 0.1rem !important; /* Space before year */
+}

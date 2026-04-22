@@ -4,7 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
-import { FinanceService, GoviCareRequest, GoviCareRequestDetail, InvestmentOfficer } from '../../../services/finance/finance.service';
+import {
+  FinanceService,
+  GoviCareRequest,
+  GoviCareRequestDetail,
+  InvestmentOfficer,
+} from '../../../services/finance/finance.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 
@@ -13,7 +18,7 @@ import { PermissionService } from '../../../services/roles-permission/permission
   standalone: true,
   imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './view-all-govicare-requests.component.html',
-  styleUrl: './view-all-govicare-requests.component.css'
+  styleUrl: './view-all-govicare-requests.component.css',
 })
 export class ViewAllGovicareRequestsComponent implements OnInit {
   isLoading: boolean = false;
@@ -52,6 +57,8 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   currentAssignedOfficer: any = null;
 
   totArea!: number;
+  isWarningPopup: boolean = false;
+  warningMsg: string = '';
 
   // Officer Role Options
   officerRoleOptions = [
@@ -63,7 +70,7 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     private FinanceService: FinanceService,
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) { }
 
   ngOnInit(): void {
@@ -75,23 +82,25 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
     const status = this.selectStatus || undefined;
 
-    this.FinanceService
-      .getAllGoviCareRequests(status, this.search)
-      .subscribe({
-        next: (response) => {
-          this.govicareRequests = (response.data || []).sort((a: GoviCareRequest, b: GoviCareRequest) => {
-            if (a.Status === 'Not Assigned' && b.Status !== 'Not Assigned') return -1;
-            if (a.Status !== 'Not Assigned' && b.Status === 'Not Assigned') return 1;
+    this.FinanceService.getAllGoviCareRequests(status, this.search).subscribe({
+      next: (response) => {
+        this.govicareRequests = (response.data || []).sort(
+          (a: GoviCareRequest, b: GoviCareRequest) => {
+            if (a.Status === 'Not Assigned' && b.Status !== 'Not Assigned')
+              return -1;
+            if (a.Status !== 'Not Assigned' && b.Status === 'Not Assigned')
+              return 1;
             return 0;
-          });
-          this.totalItems = response.count || 0;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error loading govicare requests:', error);
-          this.isLoading = false;
-        }
-      });
+          },
+        );
+        this.totalItems = response.count || 0;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading govicare requests:', error);
+        this.isLoading = false;
+      },
+    });
   }
 
   // Status Filter Methods
@@ -136,28 +145,28 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
   // Details Modal Methods
   viewDetails(requestId: string): void {
-  this.isLoading = true;
-  this.FinanceService.getGoviCareRequestById(requestId).subscribe({
-    next: (response) => {
-      this.selectedRequest = response.data;
-      console.log('selectedRequest', this.selectedRequest);
-      
-      // Calculate total area and round to 4 decimal places
-      const totalArea = (this.selectedRequest.ExtentH * 2.47105) + 
-                       this.selectedRequest.Extent + 
-                       (this.selectedRequest.ExtentP / 160);
-      
-      this.totArea = Number(totalArea.toFixed(4));
-      
-      this.showDetailsModal = true;
-      this.isLoading = false;
-    },
-    error: (error) => {
-      console.error('Error loading request details:', error);
-      this.isLoading = false;
-    }
-  });
-}
+    this.isLoading = true;
+    this.FinanceService.getGoviCareRequestById(requestId).subscribe({
+      next: (response) => {
+        this.selectedRequest = response.data;
+
+        // Calculate total area and round to 4 decimal places
+        const totalArea =
+          this.selectedRequest.ExtentH * 2.47105 +
+          this.selectedRequest.Extent +
+          this.selectedRequest.ExtentP / 160;
+
+        this.totArea = Number(totalArea.toFixed(4));
+
+        this.showDetailsModal = true;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading request details:', error);
+        this.isLoading = false;
+      },
+    });
+  }
 
   closeDetailsModal(): void {
     this.showDetailsModal = false;
@@ -165,9 +174,17 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
   }
 
   // Officer Assignment Methods
-  onAssignStatusClick(request: GoviCareRequest): void {
+  onAssignStatusClick(request: GoviCareRequest) {
     // Open assign popup for both Assigned and Not Assigned status
-    this.openAssignPopup(request);
+    if (request.officerStatus === 'Ongoing') {
+      this.warningMsg = 'You can’t assign an officer because the task has already started.'
+      this.isWarningPopup = true;
+    } else if (request.officerStatus === 'Completed') {
+      this.warningMsg = 'You can’t assign an officer to the task because the task has already been completed.'
+      this.isWarningPopup = true;
+    } else {
+      this.openAssignPopup(request);
+    }
   }
 
   // Open assign popup
@@ -181,7 +198,11 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     this.assignError = '';
 
     // If already assigned, pre-populate the officer role and load officers
-    if (request.Status === 'Assigned' && request.empId && request.empId !== '--') {
+    if (
+      request.Status === 'Assigned' &&
+      request.empId &&
+      request.empId !== '--'
+    ) {
       // Determine officer role from empId prefix
       if (request.empId.startsWith('FIO')) {
         this.selectedOfficerRole = 'Field Officer';
@@ -192,7 +213,12 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       // Load officers for the district and role
       if (this.selectedOfficerRole) {
         const district = request.district;
-        this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, request.Farmer_ID, request.empId);
+        this.loadOfficersByDistrictAndRole(
+          district,
+          this.selectedOfficerRole,
+          request.Farmer_ID,
+          request.empId,
+        );
       }
     }
 
@@ -221,66 +247,79 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
       // Get district from the selected request
       const district = this.selectedGovicareRequest.district;
       // Get currently assigned empId if exists
-      const currentEmpId = this.selectedGovicareRequest.Status === 'Assigned'
-        ? this.selectedGovicareRequest.empId
-        : undefined;
-      this.loadOfficersByDistrictAndRole(district, this.selectedOfficerRole, this.selectedGovicareRequest.Farmer_ID, currentEmpId);
+      const currentEmpId =
+        this.selectedGovicareRequest.Status === 'Assigned'
+          ? this.selectedGovicareRequest.empId
+          : undefined;
+      this.loadOfficersByDistrictAndRole(
+        district,
+        this.selectedOfficerRole,
+        this.selectedGovicareRequest.Farmer_ID,
+        currentEmpId,
+      );
     }
   }
 
   // Load officers by district and role
-  loadOfficersByDistrictAndRole(district: string, role: string, Farmer_ID: any, currentEmpId?: string): void {
+  loadOfficersByDistrictAndRole(
+    district: string,
+    role: string,
+    Farmer_ID: any,
+    currentEmpId?: string,
+  ): void {
     this.isLoadingOfficers = true;
     this.assignError = '';
 
-    this.FinanceService
-      .getOfficersByDistrictAndRoleForInvestment(district, role, Farmer_ID)
-      .subscribe({
-        next: (response) => {
-          this.isLoadingOfficers = false;
-          if (response.status && response.data) {
-            this.availableOfficers = response.data.map(
-              (officer: InvestmentOfficer) => ({
-                ...officer,
-                displayName: `${officer.empId
-                  } - ${officer.firstName} ${officer.lastName}`,
-              })
+    this.FinanceService.getOfficersByDistrictAndRoleForInvestment(
+      district,
+      role,
+      Farmer_ID,
+    ).subscribe({
+      next: (response) => {
+        this.isLoadingOfficers = false;
+        if (response.status && response.data) {
+          this.availableOfficers = response.data.map(
+            (officer: InvestmentOfficer) => ({
+              ...officer,
+              displayName: `${officer.empId
+                } - ${officer.firstName} ${officer.lastName}`,
+            }),
+          );
+
+          // If there's a currently assigned officer, select them
+          if (currentEmpId) {
+            const currentOfficer = this.availableOfficers.find(
+              (officer) => officer.empId === currentEmpId,
             );
-
-            // If there's a currently assigned officer, select them
-            if (currentEmpId) {
-              const currentOfficer = this.availableOfficers.find(
-                (officer) => officer.empId === currentEmpId
-              );
-              if (currentOfficer) {
-                this.selectedOfficerId = currentOfficer.empId;
-                this.selectedOfficerInfo = currentOfficer;
-                this.currentAssignedOfficer = currentOfficer;
-              }
+            if (currentOfficer) {
+              this.selectedOfficerId = currentOfficer.empId;
+              this.selectedOfficerInfo = currentOfficer;
+              this.currentAssignedOfficer = currentOfficer;
             }
-
-            if (this.availableOfficers.length === 0) {
-              this.assignError = `No ${role}s available in ${district} district`;
-            }
-          } else {
-            this.availableOfficers = [];
-            this.assignError = response.message || 'No officers found';
           }
-        },
-        error: (error) => {
-          this.isLoadingOfficers = false;
-          console.error('Error loading officers:', error);
+
+          if (this.availableOfficers.length === 0) {
+            this.assignError = `No ${role}s available in ${district} district`;
+          }
+        } else {
           this.availableOfficers = [];
-          this.assignError = 'Failed to load officers. Please try again.';
-        },
-      });
+          this.assignError = response.message || 'No officers found';
+        }
+      },
+      error: (error) => {
+        this.isLoadingOfficers = false;
+        console.error('Error loading officers:', error);
+        this.availableOfficers = [];
+        this.assignError = 'Failed to load officers. Please try again.';
+      },
+    });
   }
 
   // When officer is selected
   onOfficerSelected(): void {
     if (this.selectedOfficerId) {
       const officer = this.availableOfficers.find(
-        (officer) => officer.empId === this.selectedOfficerId
+        (officer) => officer.empId === this.selectedOfficerId,
       );
       this.selectedOfficerInfo = officer || null;
       this.currentAssignedOfficer = officer;
@@ -301,8 +340,10 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     }
 
     // Check if trying to assign the same officer
-    if (this.selectedGovicareRequest.Status === 'Assigned' &&
-      this.selectedGovicareRequest.empId === this.selectedOfficerId) {
+    if (
+      this.selectedGovicareRequest.Status === 'Assigned' &&
+      this.selectedGovicareRequest.empId === this.selectedOfficerId
+    ) {
       this.assignError = 'This officer is already assigned to this request';
       return;
     }
@@ -313,39 +354,41 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
     const officerId = this.selectedOfficerInfo.id;
     const requestId = this.selectedGovicareRequest.No;
 
-    this.FinanceService
-      .assignOfficerToInvestmentRequest(requestId, officerId)
-      .subscribe({
-        next: (response) => {
-          this.isAssigning = false;
-          if (response.status) {
-            this.assignPopupClose();
-            this.loadGovicareRequests(); // Refresh the list
+    this.FinanceService.assignOfficerToInvestmentRequest(
+      requestId,
+      officerId,
+    ).subscribe({
+      next: (response) => {
+        this.isAssigning = false;
+        if (response.status) {
+          this.assignPopupClose();
+          this.loadGovicareRequests(); // Refresh the list
 
-            const actionText = this.selectedGovicareRequest?.Status === 'Assigned'
+          const actionText =
+            this.selectedGovicareRequest?.Status === 'Assigned'
               ? 'updated'
               : 'assigned';
 
-            Swal.fire({
-              title: 'Success',
-              text: response.message || `Officer ${actionText} successfully`,
-              icon: 'success',
-              customClass: {
-                popup:
-                  'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              },
-            });
-          } else {
-            this.assignError = response.message || 'Failed to assign officer';
-          }
-        },
-        error: (error) => {
-          this.isAssigning = false;
-          console.error('Error assigning officer:', error);
-          this.assignError = 'An error occurred while assigning officer';
-        },
-      });
+          Swal.fire({
+            title: 'Success',
+            text: response.message || `Officer ${actionText} successfully`,
+            icon: 'success',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+            },
+          });
+        } else {
+          this.assignError = response.message || 'Failed to assign officer';
+        }
+      },
+      error: (error) => {
+        this.isAssigning = false;
+        console.error('Error assigning officer:', error);
+        this.assignError = 'An error occurred while assigning officer';
+      },
+    });
   }
 
   // Officer popup methods
@@ -384,10 +427,13 @@ export class ViewAllGovicareRequestsComponent implements OnInit {
 
   // Format currency
   formatCurrency(amount: number): string {
-    return 'Rs. ' + amount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+    return (
+      'Rs. ' +
+      amount.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    );
   }
 
   // Close dropdown when clicking outside

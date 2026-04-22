@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MarketManageSeoComponent } from './market-manage-seo.component';
+import { UpdateGoviShopComponent } from './update-govi-shop.component';
 
-describe('MarketManageSeoComponent', () => {
-  let component: MarketManageSeoComponent;
-  let fixture: ComponentFixture<MarketManageSeoComponent>;
+describe('UpdateGoviShopComponent', () => {
+  let component: UpdateGoviShopComponent;
+  let fixture: ComponentFixture<UpdateGoviShopComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MarketManageSeoComponent]
+      imports: [UpdateGoviShopComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MarketManageSeoComponent);
+    fixture = TestBed.createComponent(UpdateGoviShopComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

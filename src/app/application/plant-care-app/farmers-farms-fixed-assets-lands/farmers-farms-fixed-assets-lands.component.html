@@ -82,6 +82,7 @@
             </span>
           </div>
 
+
           <!-- Start Date for Lease -->
           <div class="flex items-start space-x-4" *ngIf="ownershipType === 'Lease' && ownershipDetails?.startDate">
             <span class="text-black dark:text-gray-300 min-w-28">Start Date</span>
@@ -114,21 +115,20 @@
           </div>
 
           <!-- Issued Date for Permitted -->
-          <div class="flex items-start space-x-4" *ngIf="ownershipType === 'Permitted' && ownershipDetails?.issuedDate">
-            <span class="text-black dark:text-gray-300 min-w-28">Issued Date</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              {{ ownershipDetails?.issuedDate | date:'MMM dd, yyyy' }}
-            </span>
-          </div>
+          <div class="flex items-start space-x-4" *ngIf="ownershipType === 'Permited' && ownershipDetails?.issuedDate">
+  <span class="text-black dark:text-gray-300 min-w-28">Issued Date</span>
+  <span class="text-gray-500 dark:text-gray-400">:</span>
+  <span class="text-black dark:text-textDark font-medium flex-1">
+    {{ ownershipDetails?.issuedDate | date:' dd MMM, yyyy' }}
+  </span>
+</div>
 
-          <!-- Permit Fee for Permitted -->
-          <div class="flex items-start space-x-4"
-            *ngIf="ownershipType === 'Permitted' && ownershipDetails?.permitFeeAnnually">
-            <span class="text-black dark:text-gray-300 min-w-28">Permit Fee</span>
+<!-- Type -->
+          <div class="flex items-start space-x-4">
+            <span class="text-black dark:text-gray-300 min-w-28">Perennial Crops</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              Rs. {{ ownershipDetails?.permitFeeAnnually | number:'1.0-0' }} 
+            <span class="text-black dark:text-textDark font-medium flex-1" style="text-transform: capitalize;">
+              {{ landDetails?.perennialCrop || 'N/A' }}
             </span>
           </div>
 
@@ -145,14 +145,6 @@
 
         <!-- Right Column -->
         <div class="space-y-6">
-          <!-- Type -->
-          <div class="flex items-start space-x-4">
-            <span class="text-black dark:text-gray-300 min-w-28">Perennial Crops</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1" style="text-transform: capitalize;">
-              {{ landDetails?.perennialCrop || 'N/A' }}
-            </span>
-          </div>
 
           <!-- Extent -->
           <div class="flex items-start space-x-4">
@@ -166,6 +158,16 @@
               {{ landDetails?.extentp !== null && landDetails?.extentp !== undefined ? landDetails?.extentp : 'N/A' }} p
             </span>
           </div>
+
+          <!-- Permit Fee for Permitted -->
+          <div class="flex items-start space-x-4"
+  *ngIf="ownershipType === 'Permited' && ownershipDetails?.permitFeeAnnually">
+  <span class="text-black dark:text-gray-300 min-w-28">Annual Fee</span>
+  <span class="text-gray-500 dark:text-gray-400">:</span>
+  <span class="text-black dark:text-textDark font-medium flex-1">
+    Rs. {{ ownershipDetails?.permitFeeAnnually | number:'1.0-0' }} 
+  </span>
+</div>
 
           <!-- General Condition -->
           <div class="flex items-start space-x-4">

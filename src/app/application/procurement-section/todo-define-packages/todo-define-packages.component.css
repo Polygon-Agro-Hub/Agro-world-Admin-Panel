@@ -1,38 +1,3 @@
-/* Hides clear icon when dropdown has no selected value */
-::ng-deep .p-dropdown .p-dropdown-clear {
-  display: none;
-}
-
-/* Show the clear button only when a value is selected */
-::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
-  display: inline-flex !important;
-}
-
-::ng-deep .dark .p-dropdown-panel {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
-  border-radius: 6px !important;
-  /* <-- add this for rounded corners */
-  overflow: hidden;
-  /* ensures child items don't spill over rounded corners */
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
-  background-color: #3a4160 !important;
-  color: #fff !important;
-}
-
-::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
-}
-
-
 /* Dark mode styles for PrimeNG Calendar */
 .dark .custom-calendar .p-datepicker {
   background: #272F45;
@@ -74,7 +39,7 @@
 }
 
 .dark .custom-calendar .p-datepicker .p-datepicker-calendar td.p-datepicker-today span {
-  background: #3182ce;
+  background: #c2c3c5;
   color: white;
 }
 
@@ -117,7 +82,6 @@
   order: 1;
 }
 
-
 ::ng-deep .p-calendar .p-datepicker-trigger {
   right: 0.5rem !important;
   /* Position calendar icon on the far right */
@@ -137,7 +101,6 @@
 }
 
 /* making pop up small*/
-
 ::ng-deep .calendar-popup-small {
   width: 300px !important;
   /* Adjust as needed */
@@ -158,4 +121,206 @@
   width: 1.0rem !important;
   height: 1.0rem !important;
   line-height: 1.0rem !important;
+}
+
+/* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
+}
+
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
+}
+
+/* ========== FIXED DARK MODE DROPDOWN STYLES ========== */
+/* Dropdown panel background */
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+  border: 1px solid #4a5568 !important;
+}
+
+/* Dropdown items container */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items {
+  background-color: #2d354d !important;
+  padding: 0.5rem 0 !important;
+}
+
+/* Regular dropdown items */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  padding: 0.75rem 1rem !important;
+  transition: background-color 0.2s ease !important;
+  border: none !important;
+}
+
+/* Hover state for dropdown items */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #ffffff !important;
+}
+
+/* SELECTED ITEM HIGHLIGHTING - FIXED */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #3182ce !important; /* Your design color - blue */
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Selected item hover state - maintain highlight color */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight:hover {
+  background-color: #3182ce !important;
+  color: #ffffff !important;
+  opacity: 0.9 !important;
+}
+
+/* Dropdown trigger and label styles */
+::ng-deep .dark .p-dropdown .p-dropdown-label {
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown .p-dropdown-trigger {
+  color: #B1B1B1 !important;
+}
+
+/* Focus state for dropdown */
+::ng-deep .dark .p-dropdown:not(.p-disabled).p-focus {
+  border-color: #3182ce !important;
+  box-shadow: 0 0 0 1px #3182ce !important;
+}
+
+/* Empty message in dropdown */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-empty-message {
+  color: #B1B1B1 !important;
+  background-color: #2d354d !important;
+  padding: 0.75rem 1rem !important;
+}
+
+/* Group header if you use grouping */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-header {
+  background-color: #1a202c !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid #4a5568 !important;
+}
+
+/* Filter input if you add search to dropdown */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-container .p-dropdown-filter {
+  background-color: #1a202c !important;
+  color: #ffffff !important;
+  border: 1px solid #4a5568 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-container .p-dropdown-filter::placeholder {
+  color: #8B8B8B !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-filter-container .p-dropdown-filter-icon {
+  color: #B1B1B1 !important;
+}
+
+/* ============================================== */
+
+/* Resize the selected date circle */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span.p-highlight {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  line-height: 1.8rem !important;
+  font-size: 0.85rem !important;
+  background-color: #3182ce !important;
+  color: white !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+}
+
+/* Dark mode selected date circle */
+:host-context(.dark) ::ng-deep .calendar-popup-small .p-datepicker-calendar td span.p-highlight {
+  background-color: #3182ce !important;
+  color: white !important;
+}
+
+/* Ensure the cell itself has proper alignment */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td {
+  padding: 0.15rem !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* Make all date circles uniform in shape */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
+  width: 1.8rem !important;
+  height: 1.8rem !important;
+  line-height: 1.8rem !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Today's date styling */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span.p-datepicker-today {
+  background-color: #e2e8f0 !important;
+  font-weight: bold !important;
+}
+
+/* Today's date when selected */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span.p-datepicker-today.p-highlight {
+  background-color: #3182ce !important;
+  color: white !important;
+}
+
+/* Hover effect for all dates */
+::ng-deep .calendar-popup-small .p-datepicker-calendar td span:hover {
+  background-color: #4a5568 !important;
+  color: white !important;
+  transform: scale(1.05) !important;
+}
+
+/* Dark mode hover */
+:host-context(.dark) ::ng-deep .calendar-popup-small .p-datepicker-calendar td span:hover {
+  background-color: #4a5568 !important;
+  color: white !important;
+}
+
+/* Adjust the calendar popup size if needed */
+::ng-deep .calendar-popup-small {
+  width: 320px !important;
+  min-width: 280px !important;
+  padding: 0.5rem !important;
+}
+
+/* Adjust the calendar table layout */
+::ng-deep .calendar-popup-small .p-datepicker-calendar {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 2px !important;
+}
+
+/* Add space between month and year in calendar header */
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important; /* Adds space between month and year */
+}
+
+/* Alternative approach if the above doesn't work */
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title select {
+  margin: 0 0.25rem !important; /* Adds margin to select elements if they're used */
+}
+
+/* If using text/title approach */
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+  margin-right: 0.1rem !important; /* Space after month */
+}
+
+::ng-deep .calendar-popup-small .p-datepicker-header .p-datepicker-title .p-datepicker-year {
+  margin-left: 0.1rem !important; /* Space before year */
 }

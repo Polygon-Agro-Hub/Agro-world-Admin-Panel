@@ -9,9 +9,7 @@
 
 <div class="min-h-screen py-6">
   <div class="mx-auto space-y-6">
-    <!-- Top Summary Cards -->
     <div *ngIf="!isLoading" class="flex gap-8">
-      <!-- Total Income Card -->
       <div
         class="bg-white rounded-xl shadow-md p-6 flex items-center justify-between w-96 dark:bg-[#061E2C]"
       >
@@ -54,7 +52,6 @@
         </div>
       </div>
 
-      <!-- Service Requests This Month -->
       <div
         class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center justify-center w-60 dark:bg-[#061E2C]"
       >
@@ -67,7 +64,6 @@
         </p>
       </div>
 
-      <!-- Service Requests Today -->
       <div
         class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center justify-center w-60 dark:bg-[#061E2C]"
       >
@@ -81,7 +77,6 @@
       </div>
     </div>
 
-    <!-- Statistics Section -->
     <div
       *ngIf="!isLoading"
       class="bg-[#061E2C] p-5 rounded-lg text-center text-[#888888] w-full"
@@ -92,16 +87,15 @@
       <canvas id="MyChart" class="w-full" style="height: 400px"></canvas>
     </div>
 
-    <!-- Recent Service Payments -->
     <div *ngIf="!isLoading" class="flex items-center justify-between mb-4 mt-6">
       <h2 class="text-gray-800 font-semibold text-lg dark:text-white">
         Recent Service Payments
       </h2>
       <button
-      *ngIf="
-        permissionService.hasPermission('Service Payments View') ||
-        tokenService.getUserDetails().role === '1'
-      "
+        *ngIf="
+          permissionService.hasPermission('Service Payments View') ||
+          tokenService.getUserDetails().role === '1'
+        "
         (click)="ViewAll()"
         class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
       >
@@ -112,7 +106,6 @@
       </button>
     </div>
 
-    <!-- Recent Payments Table -->
     <div
       *ngIf="!isLoading"
       class="relative overflow-x-auto shadow-md sm:rounded-lg"
@@ -163,7 +156,6 @@
         </tbody>
       </table>
 
-      <!-- Empty State -->
       <div
         *ngIf="recentPayments.length === 0"
         class="flex flex-col items-center justify-center text-center py-8 text-gray-500 dark:text-gray-400 dark:bg-[#061E2C] dark:border-gray-700"

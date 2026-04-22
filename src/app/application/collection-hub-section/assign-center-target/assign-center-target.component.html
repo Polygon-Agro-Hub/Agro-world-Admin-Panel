@@ -2,7 +2,7 @@
 
 <div class="h-auto py-8 px-8">
   <div class="flex flex-row justify-between items-center">
-    <p class="text-xl font-bold dark:text-white text-[#030308]">
+    <p class="text-lg font-bold dark:text-white text-[#030308]">
       {{ centerDetails.regCode }} {{ centerDetails.centerName }}
     </p>
 
@@ -10,7 +10,7 @@
     <div class="flex flex-row items-center gap-5">
       <i class="fa-solid fa-list text-2xl dark:text-white ml-8"></i>
 
-      <p class="font-normal dark:text-white">Filter By</p>
+      <p class="font-normal text-[#4A4A4A] dark:text-white">Filter By</p>
 
       <!-- <div class="relative w-46">
         <div
@@ -55,7 +55,7 @@
 
 
       <div
-        class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+        class="flex mr-5 items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
       >
         <input
           [(ngModel)]="searchText"
@@ -109,8 +109,8 @@
     </div>
   </div>
 
-  <p *ngIf="officerName !== null" class="text-xl text-[#898989] dark:text-[#898989]">
-      Centre Target Last Modified By : <span class="text-xl font-bold dark:text-white text-[#030308]"> {{officerName}}</span>
+  <p *ngIf="officerName !== null" class="text-lg text-[#898989] dark:text-[#898989]">
+      Centre Target Last Modified By : <span class="text-lg font-bold dark:text-white text-[#000000]"> {{officerName}}</span>
     </p>
 
   <div *ngIf="!hasData " class="flex flex-col justify-start items-center pt-32 h-screen">
@@ -129,7 +129,7 @@
 
   <div
     *ngIf="hasData"
-    class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack rounded-lg my-8"
+    class="w-full py-7 bg-tileLight dark:bg-tileBlack rounded-lg my-8"
   >
     <div
       class="overflow-x-auto mt-8 mr-5 border-gray-100 border-[2px] rounded-lg"

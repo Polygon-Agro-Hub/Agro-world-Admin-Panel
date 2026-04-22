@@ -4,11 +4,12 @@
       Recent Package Payments
     </p>
     <button
-    *ngIf="
-          permissionService.hasPermission('Package Payments View') ||
-          tokenService.getUserDetails().role === '1'
-        "
-      (click)="ViewAll()"  class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
+      *ngIf="
+        permissionService.hasPermission('Package Payments View') ||
+        tokenService.getUserDetails().role === '1'
+      "
+      (click)="ViewAll()"
+      class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
     >
       View All
       <i class="fa-solid fa-arrow-up-right-from-square text-[#415cff]"></i>
@@ -17,7 +18,7 @@
   <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
     <table class="w-full rtl:text-right text-gray-500 dark:text-gray-400">
       <thead
-        class=" bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2"
+        class="bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2"
       >
         <tr>
           <th scope="col" class="px-6 py-3 text-left dark:text-white">
@@ -48,15 +49,24 @@
           >
             {{ payment.transactionId }}
           </th>
-          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">{{ payment.farmerName }}</td>
-          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">{{ payment.packagePeriod }}</td>
-          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">{{ payment.amount }}</td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            {{ payment.farmerName }}
+          </td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            {{ payment.packagePeriod }}
+          </td>
+          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+            {{ payment.amount }}
+          </td>
           <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
             {{ payment.dateTime }}
           </td>
         </tr>
         <tr *ngIf="recentPayments.length === 0">
-          <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+          <td
+            colspan="5"
+            class="px-6 py-8 text-center text-gray-500 dark:text-gray-400"
+          >
             No recent payments found
           </td>
         </tr>

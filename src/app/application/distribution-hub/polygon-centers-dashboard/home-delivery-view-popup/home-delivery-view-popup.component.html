@@ -78,19 +78,24 @@
             
                                 <!-- HOLD -->
                                 <ng-container *ngIf="step.type === 'hold'">
-                                    Driver marked this order's status as <span class="font-bold">Hold</span> at {{ formatTime(step.payload.holdTime) }} on
-                                    {{ formatDate(step.payload.holdTime) }}.
+                                    Driver marked this order's status as <span class="font-bold">Hold</span> at {{ step.payload.holdTime | date: 'h.mm a'}} on
+                                    {{ step.payload.holdTime | date: 'MMMM d, y'}}.
                                     <div class="mt-1 dark:text-gray-400">
                                         Reason:
                                         <span class="font-bold">"{{ step.payload.holdReason }}"</span>
                                     </div>
                                 </ng-container>
+
+                                <!-- <td class="px-6 py-4 text-gray-900 text-left dark:text-gray-300">
+                            {{ item.date | date: 'yyyy/MM/dd' }}<br>
+                            {{ item.date | date: 'h.mm a' }}
+                        </td> -->
             
                                 <!-- RESTART -->
                                 <ng-container *ngIf="step.type === 'restart'">
                                     Driver restarted the journey at
-                                    {{ formatTime(step.payload.restartedTime) }}
-                                    on {{ formatDate(step.payload.restartedTime) }}.
+                                    {{ step.payload.restartedTime | date: 'h.mm a'}}
+                                    on {{ step.payload.restartedTime | date: 'MMMM d, y'}}.
                                 </ng-container>
             
                                 <!-- RETURN -->

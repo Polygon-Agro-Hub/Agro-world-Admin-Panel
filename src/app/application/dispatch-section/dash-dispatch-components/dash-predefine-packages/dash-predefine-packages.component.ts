@@ -103,8 +103,6 @@ export class DashPredefinePackagesComponent implements OnInit {
     this.getPreMadePackages();
   }
 
-
-
   applySearch(): void {
     this.page = 1;
     this.getPreMadePackages();

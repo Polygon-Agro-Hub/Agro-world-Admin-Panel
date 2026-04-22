@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ReactiveFormsModule } from '@angular/forms'; // ✅ Import this
 import { HttpClientModule } from '@angular/common/http';
@@ -37,7 +37,7 @@ export class SalesTargetComponent implements OnInit {
   resetFilters() {
     throw new Error('Method not implemented.');
   }
-  // targetForm: FormGroup;
+
   currentDailyTarget!: number;
   newTargetValue: any = '';
 
@@ -58,7 +58,6 @@ export class SalesTargetComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    private fb: FormBuilder,
     private salesDashSrv: SalesDashService,
     private router: Router,
     public tokenService: TokenService,
@@ -100,9 +99,6 @@ export class SalesTargetComponent implements OnInit {
  const inputEl = event.target as HTMLInputElement;
   const cursorPos = inputEl.selectionStart || 0;
 
-  // Prevent space if:
-  // 1. Input is empty (no leading space)
-  // 2. Previous character is space (no consecutive spaces)
   if (
     event.key === ' ' &&
     (cursorPos === 0 || inputEl.value.charAt(cursorPos - 1) === ' ')
@@ -115,17 +111,15 @@ export class SalesTargetComponent implements OnInit {
   futureDateValidator(control: any) {
     const selectedDate = new Date(control.value);
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Ignore time
+    today.setHours(0, 0, 0, 0); 
 
     return selectedDate >= today ? null : { pastDate: true };
   }
 
   saveTarget() {
   this.isLoading = true;
-  // First validate the input
   this.validateTargetInput();
 
-  // Check for invalid values (0, empty, or NaN)
   if (
     !this.newTargetValue ||
     this.newTargetValue <= 0 ||
@@ -142,10 +136,9 @@ export class SalesTargetComponent implements OnInit {
       },
     });
     this.isLoading = false;
-    return; // Exit the function early
+    return;
   }
 
-  // Only proceed with save if value is valid
   Swal.fire({
     title: 'Are you sure?',
     text: `Do you want to save the target of ${this.newTargetValue}?`,
@@ -173,7 +166,6 @@ export class SalesTargetComponent implements OnInit {
                 title: 'font-semibold',
               },
             });
-            // Only reset the value on successful save
             this.newTargetValue = 0;
             this.fetchAllSalesAgents();
             this.isLoading = false;
@@ -199,8 +191,6 @@ export class SalesTargetComponent implements OnInit {
         }
       );
     } else {
-      // REMOVED: this.newTargetValue = 0;
-      // Just set isLoading to false without clearing the input
       this.isLoading = false;
     }
   });
@@ -222,8 +212,6 @@ export class SalesTargetComponent implements OnInit {
       .getAllSalesAgents(page, limit, search, status, this.formatDateForBackend(date))
       .subscribe({
         next: (res) => {
-          console.log(res);
-
           this.totalTarget = res.totalTarget
             ? Math.round(res.totalTarget.targetValue)
             : 0;
@@ -287,9 +275,8 @@ export class SalesTargetComponent implements OnInit {
 
   filterStatus() {
     if (!this.selectStatus) {
-      this.selectStatus = ''; // Ensure it's always an empty string
+      this.selectStatus = ''; 
     }
-    console.log('Selected Status:', this.selectStatus);
     this.fetchAllSalesAgents(
       this.page,
       this.itemsPerPage,
@@ -301,7 +288,6 @@ export class SalesTargetComponent implements OnInit {
 
   onDateChange(date: Date | null) {
     this.selectDate = date;
-    console.log('selectDate:', this.selectDate);
     this.fetchAllSalesAgents(
       this.page,
       this.itemsPerPage,
@@ -316,40 +302,31 @@ export class SalesTargetComponent implements OnInit {
   preventDecimalInput(event: KeyboardEvent) {
   const input = event.target as HTMLInputElement;
   const forbiddenKeys = ['.', ',', 'e', 'E', '+', '-'];
-  
-  // Prevent decimal and other forbidden characters
   if (forbiddenKeys.includes(event.key)) {
     event.preventDefault();
     return;
   }
   
-  // Prevent zero as first character
   if (event.key === '0' && input.value.length === 0) {
     event.preventDefault();
   }
 }
 
   validateTargetInput() {
-  // If value is not a number, set to empty
   if (isNaN(this.newTargetValue)) {
     this.newTargetValue = '';
     return;
   }
 
-  // Remove leading zeros
   if (this.newTargetValue.toString().startsWith('0')) {
     this.newTargetValue = this.newTargetValue.toString().replace(/^0+/, '');
   }
 
-  // If empty after removing zeros, set to empty
   if (this.newTargetValue === '') {
     return;
   }
 
-  // Round to nearest integer
   this.newTargetValue = Math.round(this.newTargetValue);
-
-  // Ensure minimum value of 1
   if (this.newTargetValue < 1) {
     this.newTargetValue = '';
   }
@@ -360,9 +337,6 @@ hasTargetPermission(): boolean {
          this.tokenService.getUserDetails().role === '1';
 }
 
-  // get formControls(): { [key: string]: any } {
-  //   return this.targetForm.controls;
-  // }
 }
 
 class Agents {

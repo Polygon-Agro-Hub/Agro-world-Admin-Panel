@@ -61,7 +61,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('user role', this.tokenService.getUserDetails().role);
 
     this.status = [
       { id: 1, type: 'Assigned' },
@@ -93,23 +92,12 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
     else if (this.tokenService.getUserDetails().role === '5') {
       this.filterCategory.type = 'Procurement';
     }
-
-    console.log(this.filterCategory);
     this.fetchAllComplain(this.page, this.itemsPerPage);
     this.getAllComplainCategories();
   }
 
   fetchAllComplain(page: number = 1, limit: number = this.itemsPerPage) {
     this.isLoading = true;
-    console.log(
-      'sending to backend',
-      this.filterStatus,
-      this.filterCategory,
-      this.filterComCategory,
-      this.searchText,
-      page,
-      limit
-    );
 
     this.complainSrv
       .getAllSalesComplain(
@@ -123,20 +111,13 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       )
       .subscribe(
         (res) => {
-          console.log(res.results);
 
-          // Map response data to ensure createdAt is in a readable date format
           this.complainsData = res.results
-          // .map((item: any) => ({
-          //   ...item,
-          //   createdAt: this.datePipe.transform(item.createdAt, 'yyyy-MM-dd'), // Convert date format
-          // }));
           this.totalItems = res.total;
           this.hasData = res.total === 0 ? false : true;
           this.isLoading = false;
         },
         (error) => {
-          console.log('Error: ', error);
           this.isLoading = false;
         }
       );
@@ -150,7 +131,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   applyFilters() {
     this.fetchAllComplain(this.page, this.itemsPerPage);
     if (this.dropdown) {
-      this.dropdown.hide(); // Close the dropdown after selection
+      this.dropdown.hide();
     }
   }
 
@@ -190,7 +171,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
         .subscribe(
           (response) => {
             this.comCategories = response;
-            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -218,7 +198,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
         .subscribe(
           (response) => {
             this.comCategories = response;
-            console.log('Complain Categories:', this.comCategories);
           },
           (error) => {
             console.error('Error fetching news:', error);
@@ -228,14 +207,12 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   }
 
   navigateSelectComplain(id: string, firstName: string) {
-    console.log('opening');
     this.router.navigate([
       `/complaints/view-selected-sales-dash-complain/${id}/${firstName}`,
     ]);
   }
 
   fetchComplain(id: any, firstName: string) {
-    console.log('haa', id, firstName);
     this.isLoading = true;
     this.complainSrv.getComplainById(id).subscribe((res) => {
       let formattedDate = this.datePipe.transform(
@@ -243,7 +220,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
         'yyyy-MM-dd hh:mm a'
       );
       if (formattedDate) {
-        // Replace colon with dot and remove space before AM/PM
         res.createdAt = formattedDate
           .replace(':', '.')
           .replace(' ', '')
@@ -251,9 +227,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
           .replace('PM', 'PM');
       }
       this.complain = res;
-      console.log(res);
       this.isLoading = false;
-      // this.showReplyDialog(id, firstName);
       this.isPopUpVisible = true;
 
     });
@@ -281,7 +255,7 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       </div>
     `,
       showCancelButton: true,
-      showConfirmButton: false, // Hide the Send button
+      showConfirmButton: false,
       cancelButtonText: 'Close',
       cancelButtonColor: '#74788D',
       width: '600px',
@@ -289,7 +263,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
         setTimeout(() => {
           const actionsElement = document.querySelector('.swal2-actions');
           if (actionsElement) {
-            // Align the Close button to the right
             actionsElement.setAttribute(
               'style',
               'display: flex; justify-content: flex-end !important; width: 100%; padding: 0.5em;'
@@ -311,9 +284,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       Authorization: `Bearer ${token}`,
     });
 
-    console.log(id);
-    console.log(this.messageContent);
-
     const body = { reply: this.messageContent };
 
     this.http
@@ -322,7 +292,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
       })
       .subscribe(
         (res: any) => {
-          console.log('Sales Dash updated successfully', res);
 
           Swal.fire({
             icon: 'success',
@@ -345,7 +314,6 @@ export class ViewSalesDashComplaintsComponent implements OnInit {
   }
 
   regStatusFil(): void {
-    console.log('replyStatus', this.rpst)
     this.applyFilters();
   }
 

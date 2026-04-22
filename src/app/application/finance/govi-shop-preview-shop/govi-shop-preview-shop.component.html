@@ -1,0 +1,358 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<button (click)="goBack()" class="mb-5 text-textLight dark:text-textDark">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+<div class="w-full px-10 py-7 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+  <div class="flex flex-col gap-7 px-2 py-2" id="reportcontainer">
+    <div class="flex flex-row justify-between items-start border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+  
+        <!-- Left Section -->
+        <div class="flex flex-row items-center">
+          <div class="w-28 h-28 rounded-full border flex justify-center items-center overflow-hidden">
+            <ng-container *ngIf="officerObj.logo; else defaultIcon">
+              <img [src]="officerObj.logo" alt="Officer Image" class="w-full h-full object-cover" />
+            </ng-container>
+            <ng-template #defaultIcon>
+              <i class="fa-regular fa-user text-5xl dark:text-textDark"></i>
+            </ng-template>
+          </div>
+      
+          <div class="ml-6">
+            <p class="text-lg font-[500] text-[#030308] dark:text-textDark">
+              {{ officerObj.shopName }}
+            </p>
+            <p>
+              <span class="text-lg text-[#030308] dark:text-[#a6aebb]">
+                {{ officerObj.email }}
+              </span>
+            </p>
+            <p class="font-[400] text-[#627189] dark:text-textDark">
+              Joined on : {{ (officerObj.updatedAt | date : 'MMMM dd, YYYY') || '----' }}
+            </p>
+          </div>
+        </div>
+      
+        <!-- Right Section -->
+        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Pending' && urlSegment === 'action' ">
+          
+          <!-- Active Status -->
+          <div class="cursor-pointer">
+            <button (click)="openApproveView()" class="cursor-pointer text-lg font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
+              Approve
+            </button>   
+          </div>
+
+          <div class="cursor-pointer">
+            <button (click)="openRejectView()" class="cursor-pointer text-lg font-medium px-3 py-1 text-center w-32 bg-[#C40D0D] text-[#FFFFFF] rounded-xl shadow-lg">
+              Reject
+            </button>   
+          </div>
+
+        </div>
+
+        <div class="flex flex-row gap-4 items-start" *ngIf="urlSegment === 'govi-shop-suppliers' ">
+          
+          <div *ngIf="officerObj.isActive === 1" >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#BBFFC6] text-[#308233] rounded-xl shadow-lg">
+              Active
+            </button>   
+          </div>
+
+          <div *ngIf="officerObj.isActive === 0">
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#FFB9B7] text-[#D16D6A] rounded-xl shadow-lg">
+              Deactive
+            </button>   
+          </div>
+
+          <div *ngIf="officerObj.approvedStatus === 'Approved'" >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#BBFFC6] text-[#308233] rounded-xl shadow-lg">
+              Approved
+            </button>   
+          </div>
+
+          <div *ngIf="officerObj.approvedStatus === 'Pending'" >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-36 bg-[#F8FFA6] text-[#A8A100] rounded-xl shadow-lg">
+              Not Approved
+            </button>   
+          </div>
+          
+          <div *ngIf="officerObj.approvedStatus === 'Rejected'" >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#FFB9B7] text-[#D16D6A] rounded-xl shadow-lg">
+              Rejected
+            </button>   
+          </div>
+
+        </div>
+
+        <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Rejected' && urlSegment === 'action'">
+          
+          <!-- Active Status -->
+          <div class="cursor-pointer">
+            <button (click)="openApproveView()" class="cursor-pointer text-lg font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
+              Approve
+            </button>   
+          </div>
+        
+        </div>
+
+        <!-- <div class="flex flex-row gap-4 items-start" *ngIf="officerObj.approvedStatus === 'Rejected' && urlSegment === 'govi-shop-suppliers' ">
+          
+          <div >
+            <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#3980C0] text-[#FFFFFF] rounded-xl shadow-lg">
+              Approve
+            </button>   
+          </div>
+        
+        </div> -->
+      
+      </div>
+
+
+    <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <div class="flex flex-row justify-between">
+        <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Shop Information</p>
+        <!-- <button 
+          class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md" (click)="generatePDF()"
+          [disabled]="isGeneratingPDF">
+          <i class="fa-solid fa-download" [ngClass]="{ hidden: isGeneratingPDF }"></i>
+          <i class="fa-solid fa-spinner fa-spin" [ngClass]="{ hidden: !isGeneratingPDF }"></i>
+        </button> -->
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+        <div>
+          <p class="text-[#627189]">Phone Name</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ officerObj.mobileNumber }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Shop Address</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ officerObj.address }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Business Type</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">{{ officerObj.shopType }}</p>
+        </div>
+
+        <div *ngIf="officerObj.shopType !== 'No Formal Registration (Request NIC)'">
+          <p class="text-[#627189]">BR Image</p>
+          <a (click)="openModal(officerObj.shopTypeImg)">
+            <i class="fa-solid fa-image text-2xl text-blue-600 cursor-pointer"></i>
+          </a>
+        </div>
+
+        <div *ngIf="officerObj.shopType === 'No Formal Registration (Request NIC)'">
+            <p class="text-[#627189]">NIC Scanned PDF (Both Front & Back)</p>
+            <a (click)="openModal(officerObj.shopTypeImg)">
+              <i class="fa-solid fa-file text-2xl text-blue-600 cursor-pointer"></i>
+            </a>
+          </div>
+
+
+      </div>
+    </div>
+
+    <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Owner Information</p>
+
+      <div class="grid grid-cols-2 gap-4 my-4">
+        <div>
+          <p class="text-[#627189]">Owner Name</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ officerObj.ownerName }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Owner NIC</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ officerObj.nic }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Owner Phone Number</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ officerObj.shopPhone }}
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="border-[#F1F7FA] border-[0.25px] rounded-lg shadowmd p-6">
+      <p class="text-[#030308] dark:text-[#ffffff] text-lg font-[500]">Change History</p>
+
+      <div class="grid grid-cols-2 gap-4 text-[#627189] my-4">
+        <div>
+          <p class="text-[#627189]">Last Updated By</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ officerObj.updatedBy || '----' }}
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Last Updated At</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ (officerObj.updatedAt | date : 'MMMM dd, YYYY') || '----' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Approved By</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ officerObj.approvedBy || '----' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[#627189]">Approved At</p>
+          <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
+            {{ (officerObj.approvedAt | date : 'MMMM dd, YYYY') || '----' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  
+    <!-- Modal Box -->
+    <div class="bg-white rounded-xl shadow-2xl w-[750px] max-w-[95vw] p-4 relative">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-end mb-3 relative">
+  
+        <!-- Centered Title -->
+        <h2 class="absolute left-1/2 -translate-x-1/2 text-base font-semibold text-gray-700">
+          {{ modalTitle }}
+        </h2>
+      
+        <!-- Close Button -->
+        <button (click)="closeModal()" 
+                class="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      
+      </div>
+  
+      <!-- Image + Watermark Wrapper -->
+      <div class="relative w-full overflow-hidden rounded-lg bg-gray-100 select-none cursor-grab active:cursor-grabbing"
+           style="height: 560px;"
+           (mousedown)="onMouseDown($event)"
+           (mousemove)="onMouseMove($event)"
+           (mouseup)="onMouseUp()"
+           (mouseleave)="onMouseLeave()">
+  
+        <!-- Image -->
+        <img [src]="modalImage"
+             alt="Modal Image"
+             class="w-full h-full object-cover transition-transform duration-100 ease-linear"
+             [style.transform]="getImageTransform()"
+             draggable="false" />
+  
+        <!-- Watermark Overlay -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden flex flex-wrap content-start"
+             [style.transform]="getImageTransform()">
+          <span *ngFor="let i of watermarkTiles"
+                class="block text-white/50 text-[11px] font-semibold whitespace-nowrap select-none m-[28px]"
+                style="transform: rotate(-35deg); text-shadow: 0 1px 2px rgba(0,0,0,0.35); width: 180px;">
+            GovShop Internal Use Only
+          </span>
+        </div>
+  
+      </div>
+  
+      <!-- Zoom Buttons -->
+      <div class="absolute bottom-8 right-8 flex flex-col gap-2">
+        <button (click)="zoomOut()"
+                class="w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white rounded-lg shadow-md text-gray-700 hover:text-gray-900 transition text-xl font-bold">
+          −
+        </button>
+        <button (click)="zoomIn()"
+                class="w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white rounded-lg shadow-md text-gray-700 hover:text-gray-900 transition text-xl font-bold">
+          +
+        </button>
+      </div>
+  
+    </div>
+  </div>
+
+
+  <div *ngIf="approveView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-xl w-1/3 py-8 px-4">
+      <div>
+  
+        <div class="mb-4 text-center">
+          <p class="text-lg mb-2 dark:text-textDark">
+            Are you sure you want to Approve this request?
+          </p>
+        </div>
+  
+        <!-- Buttons -->
+        <div class="flex justify-center gap-x-4 mt-4">
+          <button class="bg-[#74788D] border-[1px] border-[#74788D] px-8 py-3 rounded-lg shadow-md"
+            (click)="closeApproveView()">
+            <span class="text-[#FFFFFF]">No, Go Back</span>
+          </button>
+          <button class="bg-[#3980C0] border-[1px] border-[#3980C0] px-8 py-3 rounded-lg shadow-md"
+            (click)="confirmApprove()">
+            <span class="text-[#FFFFFF] ">Yes, Approve</span>
+          </button> 
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="rejectView" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-[#272F45] shadow-lg rounded-xl w-1/3 py-8 px-4">
+      <div class="px-8">
+  
+        <div class="mb-4 text-center">
+          <p class="text-lg mb-2 dark:text-textDark">
+            Are you sure you want to Reject this request?
+          </p>
+        </div>
+
+        <div>
+          <!-- Textarea -->
+          <textarea
+            class="w-full py-2 px-3 bg-white dark:bg-[#262f45] dark:text-white border rounded-xl outline-none transition-colors"
+            [ngClass]="textAreaTouched && !text ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'"
+            rows="4"
+            placeholder="Mention Reason..."
+            name="reply"
+            [(ngModel)]="text"
+            (click)="onTextareaClick()"
+          ></textarea>
+
+          <div
+              *ngIf="textAreaTouched && !text"
+              class="text-red-500 text-sm mt-1"
+            >
+            <i class="fa-solid fa-circle-info text-xs text-red"></i> Reason is required
+          </div>
+      </div>
+  
+        <!-- Buttons -->
+        <div class="flex justify-center gap-x-4 mt-4">
+          <button class="bg-[#74788D] border-[1px] border-[#74788D] px-8 py-3 rounded-lg shadow-md"
+            (click)="closeRejectView()">
+            <span class="text-[#FFFFFF]">No, Go Back</span>
+          </button>
+          <button class="bg-[#C40D0D] border-[1px] border-[#C40D0D] px-8 py-3 rounded-lg shadow-md"
+            (click)="confirmReject()">
+            <span class="text-[#FFFFFF] ">Yes, Reject</span>
+          </button> 
+        </div>
+      </div>
+    </div>
+  </div>

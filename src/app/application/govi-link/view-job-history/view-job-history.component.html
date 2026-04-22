@@ -1,6 +1,6 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<button (click)="back()" class="mb-5 text-textLight dark:text-textDark">
+<button (click)="back()" class="mb-3 text-textLight dark:text-textDark">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
@@ -32,8 +32,8 @@
             <p-dropdown
               styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-gray-300 dark:border-[#AFAFAF] h-8 min-w-[150px] w-full sm:w-40"
               [(ngModel)]="selectedDistrict" [options]="districtOptions" optionLabel="label" optionValue="value"
-              [showClear]="!!selectedDistrict" [filter]="true" filterPlaceholder="Search ..."
-              placeholder="District" (onChange)="applyFilters()" />
+              [showClear]="!!selectedDistrict" [filter]="true" filterPlaceholder="Search ..." placeholder="District"
+              (onChange)="applyFilters()" />
           </div>
 
           <!-- Completed Date -->
@@ -56,7 +56,7 @@
           <!-- Search Box -->
           <div class="w-full sm:w-auto sm:flex-1 min-w-[200px] max-w-[300px]">
             <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-full h-8">
-              <input type="text" placeholder="Search.."
+              <input type="text" title="Search By Job ID" placeholder="Search.."
                 class="bg-transparent outline-none w-full text-textLight dark:text-textDark text-sm"
                 [(ngModel)]="searchTerm" (keydown.enter)="onSearch()" />
               <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
@@ -81,7 +81,9 @@
     </div>
 
     <!-- Table Section with INDEPENDENT Horizontal Scroll -->
-    <div class="overflow-x-auto scrollbar-thin overflow-y-hidden scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full" [class.overflow-x-scroll]="hasData">
+    <div
+      class="overflow-x-auto scrollbar-thin overflow-y-hidden scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+      [class.overflow-x-scroll]="hasData">
       <div *ngIf="hasData" class="min-w-max">
         <table class="min-w-full divide-y divide-gray-200">
           <thead>
@@ -95,19 +97,17 @@
               </th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Visit
                 Purpose</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">On
-                Screen Time</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Status
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">Status
               </th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
                 Scheduled Date</th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
                 Completed Date</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Response
+              <th *ngIf="permissionService.hasPermission('GoVi Link view jobs history view response') || tokenService.getUserDetails().role === '1'" class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Response
               </th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">Farmer
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">Farmer
                 NIC</th>
-              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">District
+              <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">District
               </th>
               <th class="px-6 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">Assigned
                 Admin</th>
@@ -143,10 +143,7 @@
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">
                 {{ item.visitPurpose || '--' }}
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
-                {{ item.onScreenTime || '--' }}
-              </td>
-              <td class="px-6 py-3 text-center text-sm font-medium whitespace-nowrap"
+              <td class="px-6 py-3 text-left text-sm font-medium whitespace-nowrap"
                 [ngClass]="getStatusClass(item.status)">
                 {{ item.status}}
               </td>
@@ -156,13 +153,11 @@
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
                 {{ item.completedDate || '--' }}
               </td>
-              <td class="px-3 py-3 text-center whitespace-nowrap">
-                <button class="w-6 h-6 inline-flex items-center justify-center"
-                  [class.text-blue-500]="item.status !== 'Compl'"
-                  [class.hover:text-blue-700]="item.status !== 'pending'"
-                  [class.text-gray-400]="item.status === 'pending'"
-                  [class.cursor-not-allowed]="item.status === 'pending'" title="View Job"
-                  [disabled]="isLoading || item.status === 'pending'"
+              <td *ngIf="permissionService.hasPermission('GoVi Link view jobs history view response') || tokenService.getUserDetails().role === '1'" class="px-3 py-3 text-center whitespace-nowrap">
+                <button class="w-6 h-6 inline-flex items-center justify-center" [ngClass]="{
+                       'text-blue-500 hover:text-blue-700': item.status !== 'Pending' && item.status !== 'Ongoing',
+                       'text-gray-400 cursor-not-allowed': item.status === 'Pending' || item.status === 'Ongoing'
+                   }" title="View Job" [disabled]="isLoading || item.status === 'Pending' || item.status === 'Ongoing'"
                   (click)="viewResponse(item.jobId, item.visitPurpose)">
                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -171,10 +166,10 @@
                   </svg>
                 </button>
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
                 {{ item.farmerNIC || '--' }}
               </td>
-              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
+              <td class="px-6 py-3 text-[#000000] dark:text-textDark text-left whitespace-nowrap">
                 {{ item.district || '--' }}
               </td>
               <td class="px-6 py-3 text-[#000000] dark:text-textDark text-start whitespace-nowrap">

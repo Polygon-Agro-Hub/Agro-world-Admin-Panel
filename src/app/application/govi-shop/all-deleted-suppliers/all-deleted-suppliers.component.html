@@ -1,0 +1,163 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+    <i class="fa-solid fa-arrow-left"></i>
+    Back
+</button>
+
+<div
+    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+        <div class="flex justify-between items-center mb-8 mt-4">
+            <div class="flex items-center">
+                <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
+                    Account Deleted Suppliers ({{ totalItems < 10 ? ('0' + totalItems) : totalItems }}) </h2>
+            </div>
+
+            <div class="flex items-center">
+                <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
+                    <input type="text" placeholder="Search NIC, Phone.."
+                        class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+                        [(ngModel)]="searchItem" (keydown.enter)="onSearch()" />
+                    <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                        (click)="onSearch()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z" />
+                        </svg>
+                    </button>
+                    <button type="button" (click)="clearSearch()"
+                        class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="suppliers.length > 0">
+                <thead>
+                    <tr>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            No</th>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Owner Full Name</th>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            NIC Number</th>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Phone Number</th>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Email Address</th>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">
+                            Onboard Status</th>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-center whitespace-nowrap">
+                            Reason</th>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Account Deleted By</th>
+                        <th
+                            class="px-4 py-3 font-inter font-[400] text-[#5C5C5C] dark:text-textDark text-left whitespace-nowrap">
+                            Account Deleted At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="
+              let item of suppliers
+                | paginate
+                  : {
+                      itemsPerPage: itemsPerPage,
+                      currentPage: page,
+                      totalItems: totalItems
+                    };
+              let i = index
+            ">
+                        <td class="px-4 py-3 text-left text-[#000000] dark:text-textDark">
+                            {{ (page - 1) * itemsPerPage + i + 1 < 10 ? ('0' + ((page - 1) * itemsPerPage + i + 1)) :
+                                ((page - 1) * itemsPerPage + i + 1) }} </td>
+                        <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ item.ownername }}
+                        </td>
+                        <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ item.nic }}
+                        </td>
+                        <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ item.shopPhone }}
+                        </td>
+                        <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ item.email }}
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                            <span class="inline-block w-28 py-1.5 px-1 rounded-lg font-inter font-[400] text-center"
+                                [ngClass]="statusClass(item.onbordStatus)">
+                                {{ item.onbordStatus }}
+                            </span>
+                        </td>
+                        <td class="px-2 py-3 text-center text-[#000000] dark:text-textDark">
+                            <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]"
+                                (click)="openReason(item.deletedInfo.reason)">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </button>
+                        </td>
+                        <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ item.deletedInfo.deletedBy }}
+                        </td>
+                        <td class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark">
+                            {{ item.deletedInfo.deletedAt | date: 'hh:mm a, MMMM d, yyyy' }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div *ngIf="suppliers.length === 0" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
+                <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+                <p class="text-[#494949] my-6 dark:text-textDark">No suppliers have been deleted yet.</p>
+            </div>
+        </div>
+
+        <!-- Pagination (ngx-pagination like govishop-view-shops) -->
+        <div *ngIf="suppliers.length > 0" class="dark:bg-[#262f45]">
+            <pagination-controls (pageChange)="onPageChange($event)" [responsive]="true" [previousLabel]="'Previous'"
+                [nextLabel]="'Next'" [screenReaderPaginationLabel]="'Pagination'" [screenReaderPageLabel]="'page'"
+                [screenReaderCurrentLabel]="'Youre on page'">
+            </pagination-controls>
+        </div>
+    </div>
+</div>
+
+<!-- Reason Modal -->
+<div *ngIf="isReasonModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+    (click)="closeReason()">
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-tileBlack shadow-xl p-6"
+        (click)="$event.stopPropagation()">
+        <h3 class="text-center font-inter font-[600] text-[#000000] dark:text-textDark">Reason for deletion</h3>
+        <hr class="my-4 border-gray-300 dark:border-gray-600">
+
+        <p class="text-center mt-4 text-[#000000] font-inter font-[500] dark:text-textDark leading-7">
+            {{ selectedReason }}
+        </p>
+
+        <div class="mt-6 flex justify-center">
+            <button class="px-10 py-2 rounded-lg bg-[#74788D] text-[#D3D3D3] hover:bg-[#525B67]"
+                (click)="closeReason()">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>

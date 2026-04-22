@@ -12,7 +12,8 @@
     </label>
 
     <p-dropdown [options]="centreOptions" [(ngModel)]="regCode" placeholder="--Select Centre--" optionLabel="label"
-      optionValue="value" appendTo="body" panelStyleClass="centre-dropdown-panel" class="w-[45%]" [showClear]="!!regCode">
+      optionValue="value" appendTo="body" panelStyleClass="centre-dropdown-panel" class="w-[45%]"
+      [showClear]="!!regCode">
     </p-dropdown>
 
     <button (click)="onSearch()"
@@ -23,10 +24,12 @@
 </div>
 
 <div
-  class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+  class="fixed-width-container min-h-screen overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
   <div class="pt-5 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-lg">
     <div class="flex space-x-4 pb-5 pr-12 pl-12 border-b border-gray-300">
-      <button (click)="selectTab('all')" [ngClass]="{
+      <button
+        *ngIf="permissionService.hasPermission('Today deliveries all tab') || tokenService.getUserDetails().role === '1'"
+        (click)="selectTab('all')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'all',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'all'
@@ -34,7 +37,9 @@
         <i *ngIf="activeTab === 'all'" class="fa fa-check"></i>
         All
       </button>
-      <button (click)="selectTab('out-for-delivery')" [ngClass]="{
+      <button
+        *ngIf="permissionService.hasPermission('Today deliveries all tab') || permissionService.hasPermission('Today deliveries out for deliveries tab') || tokenService.getUserDetails().role === '1'"
+        (click)="selectTab('out-for-delivery')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]':
             activeTab === 'out-for-delivery',
           'border border-gray-300 text-textLight dark:text-textDark':
@@ -43,7 +48,9 @@
         <i *ngIf="activeTab === 'out-for-delivery'" class="fa fa-check"></i>
         Out for Delivery
       </button>
-      <button (click)="selectTab('collected')" [ngClass]="{
+      <button
+        *ngIf="permissionService.hasPermission('Today deliveries all tab') || permissionService.hasPermission('Today deliveries collected tab') || tokenService.getUserDetails().role === '1'"
+        (click)="selectTab('collected')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'collected',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'collected'
@@ -51,7 +58,9 @@
         <i *ngIf="activeTab === 'collected'" class="fa fa-check"></i>
         Collected
       </button>
-      <button (click)="selectTab('on-the-way')" [ngClass]="{
+      <button
+        *ngIf="permissionService.hasPermission('Today deliveries all tab') || permissionService.hasPermission('Today deliveries on the way tab') || tokenService.getUserDetails().role === '1'"
+        (click)="selectTab('on-the-way')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'on-the-way',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'on-the-way'
@@ -59,7 +68,9 @@
         <i *ngIf="activeTab === 'on-the-way'" class="fa fa-check"></i>
         On the way
       </button>
-      <button (click)="selectTab('hold')" [ngClass]="{
+      <button
+        *ngIf="permissionService.hasPermission('Today deliveries all tab') || permissionService.hasPermission('Today deliveries hold tab') || tokenService.getUserDetails().role === '1'"
+        (click)="selectTab('hold')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'hold',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'hold'
@@ -67,7 +78,9 @@
         <i *ngIf="activeTab === 'hold'" class="fa fa-check"></i>
         Hold
       </button>
-      <button (click)="selectTab('return')" [ngClass]="{
+      <button
+        *ngIf="permissionService.hasPermission('Today deliveries all tab') || permissionService.hasPermission('Today deliveries return tab') || tokenService.getUserDetails().role === '1'"
+        (click)="selectTab('return')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'return',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'return'
@@ -75,7 +88,9 @@
         <i *ngIf="activeTab === 'return'" class="fa fa-check"></i>
         Return
       </button>
-      <button (click)="selectTab('delivered')" [ngClass]="{
+      <button
+        *ngIf="permissionService.hasPermission('Today deliveries all tab') || permissionService.hasPermission('Today deliveries delivered tab') || tokenService.getUserDetails().role === '1'"
+        (click)="selectTab('delivered')" [ngClass]="{
           'border-2 border-[#415CFF] text-[#415CFF]': activeTab === 'delivered',
           'border border-gray-300 text-textLight dark:text-textDark':
             activeTab !== 'delivered'

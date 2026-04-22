@@ -95,7 +95,7 @@
                         No. of Packages
                     </th>
                     <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
-                        Scheduled Dilevery Date
+                        Scheduled Delivery Date
                     </th>
                     <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
                         Total Price (Rs.)
@@ -167,7 +167,7 @@
                             </span>
                         </ng-container>
                     </td>
-                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark text-center justify-center items-center">
+                    <td class="px-4 py-3 font-normal text-[#000000] dark:text-textDark flex justify-center items-center">
                         <!-- <button
                             (click)="navigateToAdditionalItemView(item.processOrderId, item.invNo, item.orderAdditionalCount, item.displayName, item.additionalPrice)"
                             class="w-6 h-6 mr-3" [disabled]="item.additionalItemsStatus === 'Unknown'" [ngClass]="{
@@ -184,7 +184,7 @@
                         </svg>
                         </button> -->
                         <button (click)="navigateToPackageView(item.processOrderId, item.invNo)"
-                            class="w-6 h-6 mr-3" 
+                            class="w-6 h-6 " 
                             >
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path

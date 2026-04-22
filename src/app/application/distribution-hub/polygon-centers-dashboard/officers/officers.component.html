@@ -25,19 +25,23 @@
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [checkmark]="false" [options]="statusOptions" [(ngModel)]="selectStatus" [showClear]="!!selectStatus" optionLabel="label" optionValue="value" placeholder="Status" (onChange)="changeStatus()"></p-dropdown>
+              [checkmark]="false" [options]="statusOptions" [(ngModel)]="selectStatus" [showClear]="!!selectStatus"
+              optionLabel="label" optionValue="value" placeholder="Status" (onChange)="changeStatus()"></p-dropdown>
           </div>
 
           <div>
             <p-dropdown
               styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-              [checkmark]="false" [(ngModel)]="selectRole" [options]="roleOptions" [showClear]="!!selectRole" optionLabel="label" optionValue="value" placeholder="Role" (onChange)="changeRole()"></p-dropdown>
+              [checkmark]="false" [(ngModel)]="selectRole" [options]="roleOptions" [showClear]="!!selectRole"
+              optionLabel="label" optionValue="value" placeholder="Role" (onChange)="changeRole()"></p-dropdown>
           </div>
 
           <div class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]">
             <input type="text" placeholder="Search by EMP ID, Name" [(ngModel)]="searchText" name="searchText"
-              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keydown.enter)="onSearch()" (input)="onInputChange($event)" (keydown)="onKeyDown($event)"/>
-            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2" (click)="onSearch()">
+              class="bg-transparent outline-none w-full text-textLight dark:text-textDark" (keydown.enter)="onSearch()"
+              (input)="onInputChange($event)" (keydown)="onKeyDown($event)" />
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+              (click)="onSearch()">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -101,17 +105,23 @@
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{item.jobRole}}
             </td>
-            <td class="px-4 py-3 text-center cursor-pointer">
-              <span *ngIf="item.status === 'Rejected'" (click)="openPopup(item)"
-                class="inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-4 py-2 text-xs text-center w-32">
+            <td class="px-4 py-3 text-center" [ngClass]="{
+                'cursor-pointer': permissionService.hasPermission('Polygon centres dashboard approve officers') || tokenService.getUserDetails().role === '1',
+                'cursor-not-allowed': !(permissionService.hasPermission('Polygon centres dashboard approve officers') || tokenService.getUserDetails().role === '1')
+              }">
+              <span *ngIf="item.status === 'Rejected'"
+                (click)="(permissionService.hasPermission('Polygon centres dashboard approve officers') || tokenService.getUserDetails().role === '1') && openPopup(item)"
+                class="inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-lg px-4 py-2 text-xs text-center w-32 shadow-md transition-all duration-200">
                 Rejected
               </span>
-              <span *ngIf="item.status === 'Not Approved'" (click)="openPopup(item)"
-                class="inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-4 py-2 text-xs text-center w-32">
+              <span *ngIf="item.status === 'Not Approved'"
+                (click)="(permissionService.hasPermission('Polygon centres dashboard approve officers') || tokenService.getUserDetails().role === '1') && openPopup(item)"
+                class="inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-lg px-4 py-2 text-xs text-center w-32 shadow-md transition-all duration-200">
                 Not Approved
               </span>
-              <span *ngIf="item.status === 'Approved'" (click)="openPopup(item)"
-                class="inline-block bg-[#C8E0FF] text-[#415CFF] font-medium rounded-md px-4 py-2 text-xs text-center w-32">
+              <span *ngIf="item.status === 'Approved'"
+                (click)="(permissionService.hasPermission('Polygon centres dashboard approve officers') || tokenService.getUserDetails().role === '1') && openPopup(item)"
+                class="inline-block bg-[#C8E0FF] text-[#415CFF] font-medium rounded-lg px-4 py-2 text-xs text-center w-32 shadow-md transition-all duration-200">
                 Approved
               </span>
             </td>
@@ -121,42 +131,41 @@
             <td class="px-4 py-3 text-center text-textLight dark:text-textDark">
               {{item.nic}}
             </td>
-            <td 
-            *ngIf="(permissionService.hasPermission('Polygon centres dashboard view officers') || tokenService.getUserDetails().role === '1')"
-            class="px-4 py-3 text-left text-textLight dark:text-textDark" (click)="navigateProfile(item.id)">
-              <button class="text-[#000] hover:text-[#83aefd] text-[22px]">
-                <i class="fa-regular fa-file dark:text-[#fff]"></i>
-              </button>
-            </td>
+            <td class="px-4 py-3 text-center">
+              <div class="flex items-center justify-center gap-6">
 
-            <td  class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button *ngIf="(permissionService.hasPermission('Polygon centres dashboard edit officers') || tokenService.getUserDetails().role === '1')" class="text-blue-400 hover:text-blue-700">
-                <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                  <title>pen-to-square</title>
-                  <path
-                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                  </path>
-                </svg>
-              </button>
+                <button
+                  *ngIf="(permissionService.hasPermission('Polygon centres dashboard view officers') || tokenService.getUserDetails().role === '1')"
+                  class="text-[#000] hover:text-[#83aefd] text-[22px] flex items-center cursor-pointer"
+                  title="View"
+                  (click)="navigateProfile(item.id)">
+                  <i class="fa-regular fa-file dark:text-[#fff]"></i>
+                </button>
 
-              <button class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd]" (click)="editDistributionOfficer(item.id)">
-                <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                  <title>Edit</title>
-                  <path
-                    d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
-                  </path>
-                </svg>
-              </button>
-            </td>
-            <td *ngIf="(permissionService.hasPermission('Polygon centres dashboard delete officers') || tokenService.getUserDetails().role === '1')" class="px-4 py-3 text-center text-textLight dark:text-textDark">
-              <button class="text-red-500 hover:text-red-700" (click)="deleteDistributionOfficer(item.id)">
-                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                  viewBox="0 0 24 24">
-                  <title>Delete</title>
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
-                </svg>
-              </button>
+                <button
+                  *ngIf="(permissionService.hasPermission('Polygon centres dashboard edit officers') || tokenService.getUserDetails().role === '1')"
+                  class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] flex items-center cursor-pointer"
+                  title="Edit"
+                  (click)="editDistributionOfficer(item.id)">
+                  <svg fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M7.263 19.051l-1.656 5.797c-0.030 0.102-0.048 0.22-0.048 0.342 0 0.691 0.559 1.251 1.25 1.252h0c0.126-0 0.248-0.019 0.363-0.053l-0.009 0.002 5.622-1.656c0.206-0.063 0.383-0.17 0.527-0.311l-0 0 17.568-17.394c0.229-0.227 0.371-0.541 0.371-0.889 0-0.345-0.14-0.657-0.365-0.883l-4.141-4.142c-0.227-0.226-0.539-0.366-0.885-0.366s-0.658 0.14-0.885 0.366v0l-17.394 17.394c-0.146 0.146-0.256 0.329-0.316 0.532l-0.002 0.009zM25.859 3.768l2.369 2.369-2.369 2.346-2.37-2.345zM9.578 20.049l12.144-12.144 2.361 2.336-12.307 12.184-3.141 0.924zM30 12.75c-0.69 0-1.25 0.56-1.25 1.25v14.75h-25.5v-25.5h14.75c0.69 0 1.25-0.56 1.25-1.25s-0.56-1.25-1.25-1.25v0h-16c-0.69 0-1.25 0.56-1.25 1.25v0 28c0 0.69 0.56 1.25 1.25 1.25h28c0.69-0.001 1.249-0.56 1.25-1.25v-16c-0-0.69-0.56-1.25-1.25-1.25h-0z">
+                    </path>
+                  </svg>
+                </button>
+
+                <button
+                  *ngIf="(permissionService.hasPermission('Polygon centres dashboard delete officers') || tokenService.getUserDetails().role === '1')"
+                  class="text-red-500 hover:text-red-700 flex items-center cursor-pointer"
+                  title="Delete"
+                  (click)="deleteDistributionOfficer(item.id)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1 1 1H7a1 1 0 0 1-1-1V7Z" />
+                  </svg>
+                </button>
+
+              </div>
             </td>
           </tr>
           <tr>

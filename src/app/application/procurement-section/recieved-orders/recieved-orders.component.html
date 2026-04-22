@@ -44,13 +44,10 @@
           class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-30 backdrop-blur-sm">
           <div class="px-20 py-6 bg-white dark:bg-[#1e1e2f] rounded-lg shadow-lg w-[30rem] max-w-full">
             <h2 class="flex justify-center text-xl mb-5 dark:text-white">Select Filter</h2>
-            <select [(ngModel)]="selectedFilterType"
-              class="w-full p-3 mb-5 border rounded bg-white dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-600">
-              <option [ngValue]="null">--Filter By--</option>
-              <option *ngFor="let filter of filterTypes" [ngValue]="filter">
-                {{ filter.display }}
-              </option>
-            </select>
+            <p-dropdown [(ngModel)]="selectedFilterType" [options]="filterTypes" optionLabel="display"
+              placeholder="--Filter By--" [showClear]="true" styleClass="w-full mb-5 cursor-pointer dark:bg-[#272F45] border border-gray-300 "
+              panelStyleClass="cursor-pointer ">
+            </p-dropdown>
 
             <p-calendar id="toDate" [(ngModel)]="dateTemp" placeholder="--Select Date--" [showIcon]="true"
               [showClear]="true" [showButtonBar]="true" iconDisplay="input"
@@ -124,8 +121,9 @@
       <h4 class="text-2xl font-normal text-[#292929] dark:text-textDark">
         All ({{totalItems === 0 ? '0' : totalItems < 10 ? '0' + totalItems : totalItems}}) Orders </h4>
 
-          <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" 
-            (click)="downloadTemplate1()" *ngIf="permissionService.hasPermission('Download received orders') || tokenService.getUserDetails().role === '1'">
+          <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
+            (click)="downloadTemplate1()"
+            *ngIf="permissionService.hasPermission('Download received orders') || tokenService.getUserDetails().role === '1'">
             <i class="fa-solid fa-download px-2" *ngIf="!isDownloading"></i>
             <i class="fa-solid fa-spinner fa-spin px-2" *ngIf="isDownloading"></i>
             {{ isDownloading ? " Downloading..." : " Download" }}
@@ -136,28 +134,28 @@
       <table class="min-w-full divide-y divide-gray-200 table-auto" *ngIf="purchaseReport.length > 0">
         <thead>
           <tr>
-            <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left">
+            <th class="py-3 font-normal text-[#4B5563] dark:text-textDark text-left whitespace-nowrap">
               No
             </th>
-            <th class="px-4 py-3 font-normal text[#4B5563] dark:text-textDark text-start">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">
               Crop
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-start whitespace-nowrap">
               Variety
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
               Quantity (kg)
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
               Ordered On
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
               Scheduled Date
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
               To Collection Centre
             </th>
-            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-[#4B5563] dark:text-textDark text-center whitespace-nowrap">
               To Dispatch Centre
             </th>
           </tr>
@@ -185,16 +183,16 @@
             <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center">
               {{ item.quantity }}
             </td>
-            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center">
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
               {{ item.createdAt | date: 'd MMM, y' }}
             </td>
-            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center">
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
               {{ item.sheduleDate | date: 'd MMM, y' }}
             </td>
-            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center">
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
               {{ item.toCollectionCentre | date: 'd MMM, y' }}
             </td>
-            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center">
+            <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center whitespace-nowrap">
               {{ item.toDispatchCenter | date: 'd MMM, y' }}
             </td>
           </tr>

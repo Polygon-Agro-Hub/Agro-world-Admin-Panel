@@ -6,7 +6,7 @@
       " class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
-         (click)="farmerPayments()">
+        (click)="farmerPayments()">
         <div class="flex items-center">
           <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
             <i class="fa-solid fa-coins" style="color: #4a90e2"></i>
@@ -18,9 +18,8 @@
     </div>
 
     <div *ngIf="
-        permissionService.hasPermission(
-          'Employee Salary'
-        ) || tokenService.getUserDetails().role === '1'
+        permissionService.hasPermission('Employee Salary') ||
+        tokenService.getUserDetails().role === '1'
       " (click)="govicarePackages()" class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
@@ -34,8 +33,10 @@
       </div>
     </div>
 
-    <div *ngIf="permissionService.hasPermission('Finance Payment History') ||tokenService.getUserDetails().role === '1'" (click)="PaymentHistoryNavigation()"
-      class="flex justify-center cursor-pointer">
+    <div *ngIf="
+        permissionService.hasPermission('Finance Payment History') ||
+        tokenService.getUserDetails().role === '1'
+      " (click)="PaymentHistoryNavigation()" class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
         <div class="flex items-center">
@@ -61,22 +62,7 @@
       </div>
     </div>
 
-    <!-- <div *ngIf="permissionService.hasPermission('Commission Range') ||tokenService.getUserDetails().role === '1'" (click)="commissionRangeNavigation()"
-      class="flex justify-center cursor-pointer">
-      <div
-        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
-        <div class="flex items-center">
-          <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
-            <i class="fa-solid fa-percent" style="color: #4a90e2"></i>
-          </div>
-          <span class="ml-3">Commission Range</span>
-        </div>
-        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
-      </div>
-    </div> -->
-
-    <div *ngIf="tokenService.getUserDetails().role === '1'"
-    (click)="AgentsCommisionNavigation()"
+    <div *ngIf=" permissionService.hasPermission('Finance Agents Commission') || tokenService.getUserDetails().role === '1'" (click)="AgentsCommisionNavigation()"
       class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
@@ -90,8 +76,7 @@
       </div>
     </div>
 
-    <div *ngIf="tokenService.getUserDetails().role === '1'" 
-      class="flex justify-center cursor-pointer">
+    <div *ngIf="tokenService.getUserDetails().role === '1'" class="flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500">
         <div class="flex items-center">
@@ -104,8 +89,10 @@
       </div>
     </div>
 
-    <div *ngIf=" permissionService.hasPermission('GoViCapital Finance') || tokenService.getUserDetails().role === '1'"
-      class="relative flex justify-center cursor-pointer">
+    <div *ngIf="
+        permissionService.hasPermission('GoViCapital Finance') ||
+        tokenService.getUserDetails().role === '1'
+      " class="relative flex justify-center cursor-pointer">
       <div
         class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
         (click)="togglePopupCropCalender()">
@@ -118,15 +105,14 @@
         <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </div>
       <div
-        class="mt-2 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] absolute top-full mt-2 left-0 dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500 z-50"
+        class="mt-2 rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white w-[310px] absolute top-full left-0 dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500 z-50"
         *ngIf="popupVisibleCropCalender">
         <div *ngIf="
             permissionService.hasPermission('GoViCapital investment request') ||
             tokenService.getUserDetails().role === '1'
           "
           class="flex rounded-t-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-          (click)="invesmentRequest()"
-          >
+          (click)="invesmentRequest()">
           Investment Requests
         </div>
         <hr />
@@ -134,14 +120,15 @@
             permissionService.hasPermission('View crop calendar') ||
             tokenService.getUserDetails().role === '1'
           "
-          class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-          >
+          class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer">
           Loan Requests
         </div>
         <hr />
-        <div *ngIf=" permissionService.hasPermission('Create crop group') || tokenService.getUserDetails().role === '1'"
-          class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-          >
+        <div *ngIf="
+            permissionService.hasPermission('Create crop group') ||
+            tokenService.getUserDetails().role === '1'
+          "
+          class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer">
           Bank Registration
         </div>
 
@@ -150,10 +137,26 @@
             tokenService.getUserDetails().role === '1'
           "
           class="flex rounded-b-lg align-middle items-center dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] dark:bg-iconCoverDark dark:hover:bg-tileHoverDark hover:bg-tileHoverLight px-4 py-2 cursor-pointer"
-          (click)="publishedProjects()"
-          >
+          (click)="publishedProjects()">
           Published Projects
         </div>
+      </div>
+    </div>
+
+    <div *ngIf="
+        permissionService.hasPermission('GoViCapital Finance') ||
+        tokenService.getUserDetails().role === '1'
+      " class="relative flex justify-center cursor-pointer">
+      <div
+        class="transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(147,178,189,0.12)] hover:bg-tileHoverLight inline-flex items-center justify-between w-[310px] h-[70px] px-4 py-2 text-sm font-medium text-[#495057] bg-tileLight dark:bg-tileBlack dark:hover:bg-tileHoverDark dark:text-gray-200 group-hover:drop-shadow-md rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 dark:focus:ring-gray-500"
+        (click)="viewAction()">
+        <div class="flex items-center">
+          <div class="bg-iconCoverLight dark:bg-iconCoverDark rounded-lg p-3">
+            <i class="fa-solid fa-building-wheat" style="color: #4a90e2"></i>
+          </div>
+          <span class="ml-3">GoViShop Suppliers</span>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color: #4a90e2"></i>
       </div>
     </div>
   </div>

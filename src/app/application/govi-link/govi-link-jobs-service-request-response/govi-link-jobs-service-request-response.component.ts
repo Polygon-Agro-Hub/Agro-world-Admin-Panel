@@ -34,10 +34,18 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
   hasData: boolean = false;
   serviceRequestResponse: Partial<Response> = {}
 
+  // Modal properties
   isModalOpen = false;
   modalImage = '';
   modalTitle = '';
+  
+  // Zoom and pan properties
   scale = 1;
+  positionX = 0;
+  positionY = 0;
+  isDragging = false;
+  startX = 0;
+  startY = 0;
 
   questions: Question[] = [];
   problems: Problem[] = [];
@@ -97,25 +105,144 @@ export class GoviLinkJobsServiceRequestResponseComponent implements OnInit {
     history.back();
   }
 
+  // Modal methods with zoom and pan functionality
   openModal(imageUrl: string) {
     this.modalImage = imageUrl;
     this.isModalOpen = true;
-    this.scale = 1;
+    this.resetZoomAndPan();
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.resetZoomAndPan();
+  }
+
+  resetZoomAndPan() {
+    this.scale = 1;
+    this.positionX = 0;
+    this.positionY = 0;
+    this.isDragging = false;
   }
 
   zoomIn() {
-    if (this.scale < 3) this.scale += 0.2;
+    if (this.scale < 3) {
+      this.scale += 0.2;
+      // Reset position if zoomed out to 1 or below
+      if (this.scale <= 1) {
+        this.resetPosition();
+      }
+    }
   }
 
   zoomOut() {
-    if (this.scale > 0.5) this.scale -= 0.2;
+    if (this.scale > 0.5) {
+      this.scale -= 0.2;
+      // Reset position if zoomed out to 1 or below
+      if (this.scale <= 1) {
+        this.resetPosition();
+      }
+    }
   }
 
-  
+  resetPosition() {
+    this.positionX = 0;
+    this.positionY = 0;
+  }
+
+  // Mouse event handlers for panning
+  startDrag(event: MouseEvent) {
+    // Only allow dragging when zoomed in
+    if (this.scale > 1) {
+      this.isDragging = true;
+      this.startX = event.clientX - this.positionX;
+      this.startY = event.clientY - this.positionY;
+      
+      // Prevent default drag behavior
+      event.preventDefault();
+      
+      // Change cursor style
+      const container = event.currentTarget as HTMLElement;
+      if (container) {
+        container.style.cursor = 'grabbing';
+      }
+    }
+  }
+
+  onDrag(event: MouseEvent) {
+    if (this.isDragging && this.scale > 1) {
+      event.preventDefault();
+      
+      // Calculate new position
+      this.positionX = event.clientX - this.startX;
+      this.positionY = event.clientY - this.startY;
+      
+      // Constrain panning within reasonable bounds
+      this.constrainPosition();
+    }
+  }
+
+  stopDrag() {
+    if (this.isDragging) {
+      this.isDragging = false;
+      
+      // Reset cursor style
+      const container = document.querySelector('.image-container') as HTMLElement;
+      if (container) {
+        container.style.cursor = 'grab';
+      }
+    }
+  }
+
+  // Touch event handlers for mobile devices
+  startTouch(event: TouchEvent) {
+    if (this.scale > 1 && event.touches.length === 1) {
+      this.isDragging = true;
+      this.startX = event.touches[0].clientX - this.positionX;
+      this.startY = event.touches[0].clientY - this.positionY;
+      
+      // Prevent default touch behavior (like page scrolling)
+      event.preventDefault();
+    }
+  }
+
+  onTouchMove(event: TouchEvent) {
+    if (this.isDragging && this.scale > 1 && event.touches.length === 1) {
+      event.preventDefault();
+      
+      // Calculate new position
+      this.positionX = event.touches[0].clientX - this.startX;
+      this.positionY = event.touches[0].clientY - this.startY;
+      
+      // Constrain panning within reasonable bounds
+      this.constrainPosition();
+    }
+  }
+
+  // Constrain panning to prevent image from moving too far off-screen
+  constrainPosition() {
+    // Calculate maximum pan distance based on scale
+    // The 272 value is half of the max image width/height (545/2 ≈ 272)
+    // This ensures the image doesn't move completely off-screen
+    const maxPanX = (this.scale - 1) * 272;
+    const maxPanY = (this.scale - 1) * 272;
+    
+    // Apply constraints
+    this.positionX = Math.min(Math.max(this.positionX, -maxPanX), maxPanX);
+    this.positionY = Math.min(Math.max(this.positionY, -maxPanY), maxPanY);
+  }
+
+  // Helper method to get cursor style
+  getCursorStyle(): string {
+    if (this.scale > 1) {
+      return this.isDragging ? 'grabbing' : 'grab';
+    }
+    return 'default';
+  }
+
+  // Helper method to get zoom percentage
+  getZoomPercentage(): number {
+    return Math.round(this.scale * 100);
+  }
 
 }
 

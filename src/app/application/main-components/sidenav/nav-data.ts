@@ -67,6 +67,25 @@ export const navbarData = [
     ],
   },
   {
+    RouterLink: 'govi-shop',
+    icon: 'fa-solid fa-cart-plus',
+    label: 'GoViShop',
+    expanded: false,
+    Permission: 'GoViShop Tab',
+    children: [
+      {
+        RouterLink: '/govi-shop/dashboard',
+        childIcon: 'fa-solid fa-gauge',
+        label: 'Dashboard',
+      },
+      {
+        RouterLink: '/govi-shop/action',
+        childIcon: 'fa-brands fa-creative-commons-nd',
+        label: 'Action',
+      },
+    ],
+  },
+  {
     RouterLink: 'govi-link',
     icon: 'fa-solid fa-magnifying-glass',
     label: 'GoVi Link',

@@ -96,9 +96,32 @@ export class TransportReasonsToReturnComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    if (this.reasonForm.dirty) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the entered data after canceling!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel',
+        cancelButtonText: 'No, Keep Editing',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.reasonForm.reset();
+          this.updateFormIndexNo();
+          this.location.back();
+        }
+      });
+    } else {
+      this.reasonForm.reset();
+      this.updateFormIndexNo();
+      this.location.back();
+    }
   }
-
+  
   preventLeadingSpace(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement | HTMLTextAreaElement;
     if (event.key === ' ' && input.selectionStart === 0) {
@@ -189,7 +212,7 @@ export class TransportReasonsToReturnComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: error.error?.error === `Data too long for column 'rsnEnglish' at row 1` ? 'The message is too long. Please limit it to a maximum of 250 words.' : 'Failed to add reason. Please try again.',
+          text: error.error?.error === `Data too long for column 'rsnEnglish' at row 1` ? 'The message is too long. Please limit it to a maximum of 250 characters.' : 'Failed to add reason. Please try again.',
           customClass: {
             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
             title: 'font-semibold text-lg',

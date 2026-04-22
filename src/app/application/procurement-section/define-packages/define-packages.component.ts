@@ -14,7 +14,6 @@ import { TokenService } from '../../../services/token/services/token.service';
     CommonModule,
     HttpClientModule,
     TodoDefinePackagesComponent,
-    // CompletedDefinePackageComponent,
     ViewSendToDispatchComponent,
   ],
   templateUrl: './define-packages.component.html',
@@ -30,7 +29,7 @@ export class DefinePackagesComponent implements OnInit {
     public permissionService: PermissionService,
     public tokenService: TokenService
   ) { }
-  // In define-packages.component.ts - update the ngOnInit method
+
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       const tab = params['tab'];

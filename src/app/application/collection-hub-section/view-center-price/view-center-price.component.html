@@ -15,18 +15,24 @@
       <div>
         <div class="flex justify-left items-left mb-2">
           <h2
-            class="text-2xl font-normal text-left text-textLight dark:text-textDark"
+            class="text-[19px] font-normal text-left text-[#030308] dark:text-textDark"
           >
-            Centre : {{ this.centerName }}
+            Centre : {{ Cname }}
+            <!-- This will show Cname if available, otherwise fallback to centerName -->
           </h2>
         </div>
         <div class="flex justify-left items-left mb-2">
           <h2
-            class="text-2xl font-normal text-left text-textLight dark:text-textDark"
+            class="text-[19px] font-normal text-left text-[#030308] dark:text-textDark"
           >
-            Current Market Prices on {{ currentDate }}
+            Market Prices on {{ currentDate }}
           </h2>
         </div>
+        <div class="flex justify-left items-left mb-2">
+  <h2 class="text-[14px] font-normal text-left text-[#636D81] dark:text-textDark">
+    Last upload at {{ lastUploadTime }} on {{ lastUploadDate }} By {{ lastUploadBy }}
+  </h2>
+</div>
       </div>
       <!-- <div class="flex justify-center items-center mb-8">
         <h3 class="text-lg font-normal text-center text-textLight dark:text-textDark">{{formatDateTime(market[0].startTime)}} to {{formatDateTime(market[0].endTime)}}</h3>
@@ -54,7 +60,7 @@
             </i>
 
             <p
-              class="md:text-2xl lg:text-lg dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5"
+              class="md:text-2xl lg:text-lg text-[#4A4A4A] dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5"
             >
               Filter By
             </p>
@@ -143,15 +149,20 @@
     <p class="text-textLight dark:text-textDark text-lg">No data to display</p>
   </div> -->
 
-  <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6 ">
-      <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
+    <div
+      *ngIf="!hasData"
+      class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6"
+    >
+      <p class="text-[#494949] my-6 dark:text-textDark">
+        --No Data Available--
+      </p>
       <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
     </div>
 
     <div class="overflow-x-auto">
       <!-- <div *ngIf="hasData" class="overflow-x-auto"> -->
       <table
-      *ngIf="hasData"
+        *ngIf="hasData"
         class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap"
       >
         <thead>
@@ -162,7 +173,7 @@
               No
             </th>
             <th
-              class="py-3 font-normal text-textLight dark:text-textDark text-left text-lg"
+              class="py-3 px-4 font-normal text-textLight dark:text-textDark text-left text-lg"
             >
               Crop Name
             </th>
@@ -196,7 +207,7 @@
             <td class="py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1 + i + 1).toString().padStart(2, "0") }}
             </td>
-            <td class="py-3 text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-textLight dark:text-textDark">
               {{ item.cropName }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">

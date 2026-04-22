@@ -29,7 +29,6 @@ interface BankOption {
   value: string;
 }
 
-// Add Bank interface
 interface Bank {
   ID: number;
   name: string;
@@ -55,33 +54,28 @@ export class FarmerPaymentsComponent implements OnInit {
   farmerPayments: FarmerPayment[] = [];
   filteredPayments: FarmerPayment[] = [];
 
-  // Filter properties
   selectedBank: string = '';
-  selectedDate: Date | null = new Date(); // Set today's date by default
+  selectedDate: Date | null = new Date();
   searchTerm: string = '';
 
-  // Dropdown options
   bankOptions: BankOption[] = [];
-  banks: Bank[] = []; // Add banks array
+  banks: Bank[] = [];
 
   constructor(
     private router: Router,
     private financeService: FinanceService,
-    private http: HttpClient, // Add HttpClient
+    private http: HttpClient,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit(): void {
-    // Set today's date
     this.selectedDate = new Date();
-    
-    this.loadBanks(); // Load banks first
-    // Load data with today's date by default
+
+    this.loadBanks();
     this.loadFarmerPayments();
   }
 
-  // Add this method to load banks from JSON
   loadBanks(): void {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe({
       next: (data) => {
@@ -93,7 +87,6 @@ export class FarmerPaymentsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading banks:', error);
-        // Fallback: populate from existing data if JSON fails
         this.populateBankOptionsFromData();
       },
     });
@@ -116,7 +109,6 @@ export class FarmerPaymentsComponent implements OnInit {
             this.filteredPayments = [...this.farmerPayments];
             this.hasData = this.filteredPayments.length > 0;
 
-            // If banks weren't loaded from JSON, populate from data
             if (this.bankOptions.length === 0) {
               this.populateBankOptionsFromData();
             }
@@ -136,13 +128,12 @@ export class FarmerPaymentsComponent implements OnInit {
       });
   }
 
-  // Rename this method to avoid confusion
   populateBankOptionsFromData(): void {
     const uniqueBanks = [
       ...new Set(
         this.farmerPayments
           .filter((payment) => payment.bankName)
-          .map((payment) => payment.bankName)
+          .map((payment) => payment.bankName),
       ),
     ];
 
@@ -179,70 +170,60 @@ export class FarmerPaymentsComponent implements OnInit {
 
   clearDate(): void {
     this.selectedDate = null;
-    // When date is cleared, reload all data
     this.loadFarmerPayments();
   }
 
   applyFilters(): void {
-  let filtered = [...this.farmerPayments];
+    let filtered = [...this.farmerPayments];
 
-  // Apply bank filter
-  if (this.selectedBank) {
-    filtered = filtered.filter(
-      (payment) => payment.bankName === this.selectedBank
-    );
+    if (this.selectedBank) {
+      filtered = filtered.filter(
+        (payment) => payment.bankName === this.selectedBank,
+      );
+    }
+
+    if (this.selectedDate) {
+      const selectedDateStr = this.formatDateForFilter(this.selectedDate);
+
+      filtered = filtered.filter((payment) => {
+        const paymentDate = new Date(payment.createdAt);
+        const paymentDateStr = this.formatDateForFilter(paymentDate);
+
+        return paymentDateStr === selectedDateStr;
+      });
+    }
+
+    if (this.searchTerm) {
+      const searchLower = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (payment) =>
+          payment.farmerName.toLowerCase().includes(searchLower) ||
+          payment.NICnumber.toLowerCase().includes(searchLower) ||
+          payment.phoneNumber.includes(searchLower),
+      );
+    }
+
+    this.filteredPayments = filtered;
+    this.hasData = filtered.length > 0;
   }
 
-  // Apply date filter - FIXED
-  if (this.selectedDate) {
-    // Format the selected date as YYYY-MM-DD without timezone issues
-    const selectedDateStr = this.formatDateForFilter(this.selectedDate);
-    
-    filtered = filtered.filter((payment) => {
-      // Parse the payment date string to Date object
-      const paymentDate = new Date(payment.createdAt);
-      // Format the payment date as YYYY-MM-DD for comparison
-      const paymentDateStr = this.formatDateForFilter(paymentDate);
-      
-      return paymentDateStr === selectedDateStr;
-    });
+  private formatDateForFilter(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
-
-  // Apply search filter
-  if (this.searchTerm) {
-    const searchLower = this.searchTerm.toLowerCase();
-    filtered = filtered.filter(
-      (payment) =>
-        payment.farmerName.toLowerCase().includes(searchLower) ||
-        payment.NICnumber.toLowerCase().includes(searchLower) ||
-        payment.phoneNumber.includes(searchLower)
-    );
-  }
-
-  this.filteredPayments = filtered;
-  this.hasData = filtered.length > 0;
-}
-
-// Add this new method for consistent date formatting
-private formatDateForFilter(date: Date): string {
-  // Use UTC methods to avoid timezone issues
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
 
   refreshData(): void {
     this.selectedBank = '';
-    this.selectedDate = new Date(); // Reset to today's date
+    this.selectedDate = new Date();
     this.searchTerm = '';
     this.loadFarmerPayments();
   }
 
-  // Helper method to format date for API
- private formatDateForApi(date: Date): string {
-  return this.formatDateForFilter(date);
-}
+  private formatDateForApi(date: Date): string {
+    return this.formatDateForFilter(date);
+  }
 
   downloadData(): void {
     if (this.filteredPayments.length === 0) {
@@ -251,33 +232,27 @@ private formatDateForFilter(date: Date): string {
       return;
     }
 
-    // Set loading state
     this.isDownloading = true;
 
-    // Use setTimeout to ensure UI updates before heavy operation
     setTimeout(() => {
       try {
-        // Prepare data for Excel
         const excelData = this.prepareExcelData();
 
-        // Create worksheet
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
 
-        // Set column widths
         const colWidths = [
-          { wch: 25 }, // Full Name
-          { wch: 15 }, // NIC
-          { wch: 15 }, // Phone number
-          { wch: 15 }, // Amount (Rs.)
-          { wch: 12 }, // Date
-          { wch: 20 }, // Account Number
-          { wch: 20 }, // Bank Name
-          { wch: 20 }, // Branch Name
-          { wch: 25 }, // Payment Reference
+          { wch: 25 },
+          { wch: 15 },
+          { wch: 15 },
+          { wch: 15 },
+          { wch: 12 },
+          { wch: 20 },
+          { wch: 20 },
+          { wch: 20 },
+          { wch: 25 },
         ];
         ws['!cols'] = colWidths;
 
-        // Add header style
         if (ws['!ref']) {
           const range = XLSX.utils.decode_range(ws['!ref']);
           for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -301,56 +276,45 @@ private formatDateForFilter(date: Date): string {
           }
         }
 
-        // Create workbook
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Farmer Payments');
 
-        // Generate dynamic file name based on filters
         const fileName = this.generateFileName();
 
-        // Save the file
         XLSX.writeFile(wb, fileName);
-
-        console.log('Excel file downloaded successfully:', fileName);
       } catch (error) {
         console.error('Error downloading Excel file:', error);
         alert('Error downloading Excel file. Please try again.');
       } finally {
-        // Reset loading state in finally block to ensure it always happens
         this.isDownloading = false;
       }
-    }, 100); // Small delay to ensure UI updates
+    }, 100);
   }
 
-  // Generate dynamic file name based on filters
   private generateFileName(): string {
     let fileName = 'Farmer Payments';
-    
-    // Add bank name if filter is applied
+
     if (this.selectedBank) {
-      // Remove any special characters and spaces from bank name for filename
-      const safeBankName = this.selectedBank.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ');
+      const safeBankName = this.selectedBank
+        .replace(/[^a-zA-Z0-9\s]/g, '')
+        .replace(/\s+/g, ' ');
       fileName += ` - ${safeBankName}`;
     }
-    
-    // Add date
+
     if (this.selectedDate) {
       const dateStr = this.formatDateForDisplay(this.selectedDate);
       fileName += ` - ${dateStr}`;
     } else {
-      // If no date selected, use current date
       const currentDate = new Date();
       const dateStr = this.formatDateForDisplay(currentDate);
       fileName += ` - ${dateStr}`;
     }
-    
-    // Add file extension
+
     fileName += '.xlsx';
-    
+
     return fileName;
   }
 
-  // Format date for display in filename (YYYY-MM-DD)
   private formatDateForDisplay(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -360,7 +324,6 @@ private formatDateForFilter(date: Date): string {
 
   private prepareExcelData(): any[] {
     return this.filteredPayments.map((payment) => ({
-      // Note: No "No" column included - this matches your requirement
       'Full Name': payment.farmerName || 'N/A',
       NIC: payment.NICnumber || 'N/A',
       'Phone number': payment.phoneNumber || 'N/A',
@@ -387,7 +350,6 @@ private formatDateForFilter(date: Date): string {
 
     const date = new Date(dateString);
 
-    // Check if date is valid
     if (isNaN(date.getTime())) {
       return 'N/A';
     }
@@ -408,7 +370,7 @@ private formatDateForFilter(date: Date): string {
   getTotalAmount(): number {
     return this.filteredPayments.reduce(
       (sum, payment) => sum + (payment.totalPayment || 0),
-      0
+      0,
     );
   }
 
@@ -420,19 +382,17 @@ private formatDateForFilter(date: Date): string {
     this.router.navigate(['finance/action/govicare-finance']);
   }
 
-  // Add this method
-trimSearchInput(): void {
-  if (this.searchTerm) {
-    this.searchTerm = this.searchTerm.trim();
-    this.applyFilters();
+  trimSearchInput(): void {
+    if (this.searchTerm) {
+      this.searchTerm = this.searchTerm.trim();
+      this.applyFilters();
+    }
   }
-}
 
-preventLeadingSpace(event: KeyboardEvent): void {
-  const input = event.target as HTMLInputElement;
-  // Prevent space at the beginning of the input
-  if (event.key === ' ' && input.selectionStart === 0) {
-    event.preventDefault();
+  preventLeadingSpace(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    if (event.key === ' ' && input.selectionStart === 0) {
+      event.preventDefault();
+    }
   }
-}
 }

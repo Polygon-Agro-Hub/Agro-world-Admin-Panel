@@ -31,14 +31,15 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   isLastOrder: boolean = false;
   isAllPacked: boolean = false;
   isShouldAllblock:boolean = true;
+  isCompleted: boolean = false;
+  isCustom: string = '';
 
 
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id'];
     this.isLastOrder = this.route.snapshot.queryParams['status'] === 'true' ? true : false;
-
+    this.isCustom = this.route.snapshot.queryParams['isCustom'];
     this.fetchData();
-
   }
 
   constructor(
@@ -58,13 +59,18 @@ export class DispatchAdditionalItemsComponent implements OnInit {
         this.packageArr = res.packageData;
         this.orderDetails = res.orderDetails
         this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
+        this.isCompleted = this.isShouldAllblock;
         this.isLoading = false
       }
     )
   }
 
-
   onCancel() {
+    if (this.isCompleted) {
+      this.location.back();
+      return;
+    }
+
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -153,7 +159,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
     );
   }
 
-
   onCheckboxChange(item: PakageItem, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     item.isPacked = isChecked ? 1 : 0;
@@ -172,7 +177,6 @@ export class DispatchAdditionalItemsComponent implements OnInit {
   }
 
 }
-
 
 interface PakageItem {
   id: number;

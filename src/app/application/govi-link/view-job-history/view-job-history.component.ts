@@ -67,36 +67,37 @@ export class ViewJobHistoryComponent implements OnInit {
   statusOptions: DropdownOption[] = [
     { label: 'All Status', value: '' },
     { label: 'Pending', value: 'Pending' },
-    { label: 'Completed', value: 'Completed' }
+    { label: 'Completed', value: 'Completed' },
+    { label: 'Ongoing', value: 'Ongoing' }
   ];
 
   districtOptions: DropdownOption[] = [
     { label: 'All Districts', value: '' },
+    { label: 'Ampara', value: 'Ampara' },
+    { label: 'Anuradhapura', value: 'Anuradhapura' },
+    { label: 'Badulla', value: 'Badulla' },
+    { label: 'Batticaloa', value: 'Batticaloa' },
     { label: 'Colombo', value: 'Colombo' },
     { label: 'Galle', value: 'Galle' },
-    { label: 'Kandy', value: 'Kandy' },
-    { label: 'Matara', value: 'Matara' },
-    { label: 'Jaffna', value: 'Jaffna' },
     { label: 'Gampaha', value: 'Gampaha' },
+    { label: 'Hambantota', value: 'Hambantota' },
+    { label: 'Jaffna', value: 'Jaffna' },
     { label: 'Kalutara', value: 'Kalutara' },
-    { label: 'Anuradhapura', value: 'Anuradhapura' },
-    { label: 'Polonnaruwa', value: 'Polonnaruwa' },
+    { label: 'Kandy', value: 'Kandy' },
+    { label: 'Kegalle', value: 'Kegalle' },
+    { label: 'Kilinochchi', value: 'Kilinochchi' },
     { label: 'Kurunegala', value: 'Kurunegala' },
+    { label: 'Mannar', value: 'Mannar' },
+    { label: 'Matale', value: 'Matale' },
+    { label: 'Matara', value: 'Matara' },
+    { label: 'Monaragala', value: 'Monaragala' },
+    { label: 'Mullaitivu', value: 'Mullaitivu' },
+    { label: 'Nuwara Eliya', value: 'Nuwara Eliya' },
+    { label: 'Polonnaruwa', value: 'Polonnaruwa' },
     { label: 'Puttalam', value: 'Puttalam' },
     { label: 'Ratnapura', value: 'Ratnapura' },
-    { label: 'Kegalle', value: 'Kegalle' },
-    { label: 'Badulla', value: 'Badulla' },
-    { label: 'Monaragala', value: 'Monaragala' },
-    { label: 'Hambantota', value: 'Hambantota' },
-    { label: 'Ampara', value: 'Ampara' },
-    { label: 'Batticaloa', value: 'Batticaloa' },
     { label: 'Trincomalee', value: 'Trincomalee' },
-    { label: 'Vavuniya', value: 'Vavuniya' },
-    { label: 'Mannar', value: 'Mannar' },
-    { label: 'Mullaitivu', value: 'Mullaitivu' },
-    { label: 'Kilinochchi', value: 'Kilinochchi' },
-    { label: 'Matale', value: 'Matale' },
-    { label: 'Nuwara Eliya', value: 'Nuwara Eliya' }
+    { label: 'Vavuniya', value: 'Vavuniya' }
   ];
 
   constructor(
@@ -110,60 +111,67 @@ export class ViewJobHistoryComponent implements OnInit {
     this.fetchJobHistory();
   }
 
+
   fetchJobHistory() {
-    this.isLoading = true;
+  this.isLoading = true;
 
-    const filters = {
-      status: this.selectedStatus || undefined,
-      district: this.selectedDistrict || undefined,
-      completedDateFrom: this.completedDateFrom ? this.formatDate(this.completedDateFrom) : undefined,
-      searchJobId: this.getSearchParam('jobId'),
-      searchFarmId: this.getSearchParam('farmId'),
-      searchNic: this.getSearchParam('nic')
-    };
+  const filters = {
+    status: this.selectedStatus || undefined,
+    district: this.selectedDistrict || undefined,
+    completedDateFrom: this.completedDateFrom ? this.formatDate(this.completedDateFrom) : undefined,
+    searchJobId: this.getSearchParam('jobId'),
+    searchFarmId: this.getSearchParam('farmId'),
+    searchNic: this.getSearchParam('nic')
+  };
 
-    // Remove undefined values
-    Object.keys(filters).forEach(key => {
-      if (filters[key as keyof typeof filters] === undefined) {
-        delete filters[key as keyof typeof filters];
-      }
-    });
+  // Remove undefined values
+  Object.keys(filters).forEach(key => {
+    if (filters[key as keyof typeof filters] === undefined) {
+      delete filters[key as keyof typeof filters];
+    }
+  });
 
-
-    this.goviLinkService.getFieldAuditHistory(filters).subscribe(
-      (response) => {
-        this.isLoading = false;
-        if (response.success) {
-          this.jobHistory = response.data.map((item: any) => ({
-            jobId: item.jobId,
-            empId: item.empId,
-            farmId: item.farmId,
-            farmCode: item.farmCode,
-            regCode: item.regCode,
-            visitPurpose: this.formatVisitPurpose(item.visitPurpose),
-            farmerNIC: item.farmerNIC,
-            district: item.district,
-            scheduledDate: this.formatDateTime(item.scheduledDate),
-            completedDate: this.formatDateTime(item.completedDate),
-            onScreenTime: item.onScreenTime || '--',
-            status: item.status,
-            assignedOn: this.formatDateTime(item.assignedOn),
-            assignedByName: item.assignedByName || '--',
-            assignedOfficer: item.assignedOfficer || '--'
-          }));
-          this.totalItems = this.jobHistory.length;
-          this.hasData = this.totalItems > 0;
-        } else {
-          this.hasData = false;
-        }
-      },
-      (error) => {
-        this.isLoading = false;
-        console.error('Error fetching job history:', error);
+  this.goviLinkService.getFieldAuditHistory(filters).subscribe(
+    (response) => {
+      this.isLoading = false;
+      if (response.success) {
+        // Map the data first
+        const mappedData = response.data.map((item: any) => ({
+          jobId: item.jobId,
+          empId: item.empId,
+          farmId: item.farmId,
+          farmCode: item.farmCode,
+          regCode: item.regCode,
+          visitPurpose: this.formatVisitPurpose(item.visitPurpose),
+          farmerNIC: item.farmerNIC,
+          district: item.district,
+          scheduledDate: this.formatDateTime(item.scheduledDate),
+          completedDate: this.formatDateTime(item.completedDate),
+          onScreenTime: item.onScreenTime || '--',
+          status: item.status,
+          assignedOn: this.formatDateTime(item.assignedOn),
+          assignedByName: item.assignedByName || '--',
+          assignedOfficer: item.assignedOfficer || '--'
+        }));
+        
+        // Filter out records with null or empty empId
+        this.jobHistory = mappedData.filter((item: FieldAuditHistory) => 
+          item.empId && item.empId !== null && item.empId !== '--' && item.empId.trim() !== ''
+        );
+        
+        this.totalItems = this.jobHistory.length;
+        this.hasData = this.totalItems > 0;
+      } else {
         this.hasData = false;
       }
-    );
-  }
+    },
+    (error) => {
+      this.isLoading = false;
+      console.error('Error fetching job history:', error);
+      this.hasData = false;
+    }
+  );
+}
 
   getSearchParam(type: 'jobId' | 'farmId' | 'nic'): string | undefined {
     if (!this.searchTerm || this.searchTerm.trim() === '') {

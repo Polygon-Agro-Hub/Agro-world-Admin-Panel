@@ -8,19 +8,17 @@
     <div class=" pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-white dark:bg-tileBlack shadow-lg rounded-xl overflow-y-auto">
         <div>
 
-            <div class="flex items-center justify-between mb-6 mx-5">
-                <div class="">
-                    <!-- <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
-            {{orderInv}}</span></h1> -->
-                    <h1 class="font-semibold text-[#627189] dark:text-white">INV No : <span class="text-[#212121]">
-                            {{orderDetails.invNo}}</span></h1>
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <h1 class="flex items-center gap-2 font-semibold leading-none">
+                    <span class="text-[#627189] dark:text-gray-400">INV No :</span>
+                    <span class="text-[#212121] dark:text-white">{{orderDetails ? orderDetails.invNo : 'N/A'}}</span>
+                    <span *ngIf="isCompleted" class="text-[#308233] dark:text-[#308233] ml-1">(Completed)</span>
+                </h1>
                 </div>
 
                 <div class="">
-                    <!-- <h2 class="  text-[#212121] dark:text-white">{{orderName}} : Rs.{{orderPrice}}</h2> -->
-                    <h2 class="  text-[#212121] dark:text-white"> Custom Pack : Rs.{{orderDetails.additionalPrice |
-                        number:
-                        '1.2-2'}}</h2>
+                    <h2 class="  text-[#212121] dark:text-white font-bold">{{isCustom === '1' ?  'Custom Package' : isCustom === '0' ? 'Custom Items' : 'Additional Items'}} : Rs.{{orderDetails ? (orderDetails.additionalPrice | number:'1.2-2') : '0.00'}}</h2>
                 </div>
             </div>
 
@@ -29,21 +27,21 @@
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
                     <thead class="">
                         <tr>
-                            <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            <th class="py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                                 ITEM
                                 ({{packageArr.length === 0 ? '0' : packageArr.length < 10 ? '0' + packageArr.length :
                                     packageArr.length}})</th>
-                            <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            <th class="px-2 py-2 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                                 QUANTITY
                             </th>
-                            <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            <th class="px-2 py-2 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                                 UNIT</th>
-                            <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            <th class="px-2 py-2 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                                 UNIT PRICE
                             </th>
-                            <th class="px-6 py-3 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
+                            <th class="px-2 py-2 text-left font-medium text-[#8492A3] dark:text-gray-300 uppercase">
                                 TOTAL</th>
-                            <th class="px-6 py-3 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase"
+                            <th class="px-2 py-2 text-center font-medium text-[#8492A3] dark:text-gray-300 uppercase"
                                 *ngIf="!isShouldAllblock && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')">
                                 PACKED</th>
                         </tr>
@@ -51,31 +49,31 @@
                     <tbody class="bg-white dark:bg-gray-800 ">
 
                         <tr *ngFor=" let item of packageArr">
-                            <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-white text-left">
+                            <td class="py-2 whitespace-nowrap text-[#212121] dark:text-white text-left">
                                 {{ item.displayName || ' - ' }}
                             </td>
 
-                            <td class="px-6 text-center py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
+                            <td class="px-4 text-center py-2 whitespace-nowrap text-[#212121] dark:text-gray-300 ">
                                 {{ item.qty }}
                             </td>
 
                             <td
-                                class="px-6 text-center py-4 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
+                                class="px-4 text-center py-2 whitespace-nowrap text-sm text-[#808080] dark:text-gray-300">
                                 {{ item.unit }}
                             </td>
 
 
-                            <td class="px-6 text-left py-4 whitespace-nowrap text-[#212121] dark:text-gray-300">
+                            <td class="px-4 text-left py-2 whitespace-nowrap text-[#212121] dark:text-gray-300">
                                 Rs. {{ item.discountedPrice != null ? (item.discountedPrice | number:'1.2-2') : '0.00'
                                 }}
                             </td>
 
 
-                            <td class="px-6 py-4 whitespace-nowrap text-[#212121] dark:text-gray-300 text-left ">
+                            <td class="px-4 py-2 whitespace-nowrap text-[#212121] dark:text-gray-300 text-left ">
                                 Rs. {{ item.price != null ? (item.price | number:'1.2-2') : '0.00' }}
                             </td>
                             <td *ngIf="!isShouldAllblock && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')"
-                                class="px-6 text-center py-4 whitespace-nowrap text-gray-500 dark:text-gray-300 cursor-pointer">
+                                class="px-4 text-center py-2 whitespace-nowrap text-gray-500 dark:text-gray-300 cursor-pointer">
                                 <input type="checkbox" [checked]="item.isPacked === 1"
                                     (change)="onCheckboxChange(item, $event)"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer">
@@ -96,11 +94,11 @@
             </div>
 
             <div class="flex justify-end space-x-4 mx-5">
-                <button (click)="onCancel()"
+                <button (click)="onCancel()" *ngIf="!isCompleted"
                     class="px-4 py-2 border border-gray-300 dark:border-[#74788D] rounded-md text-sm font-medium text-[#D3D3D3] bg-[#74788D] dark:text-white hover:bg-[#74788D] dark:hover:bg-[#74788D]">
                     Cancel
                 </button>
-                <button (click)="saveCheckedItems()" *ngIf="!isShouldAllblock && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')"
+                <button (click)="saveCheckedItems()" *ngIf="!isShouldAllblock && !isCompleted && (permissionService.hasPermission('Dispatch additional packing') || tokenService.getUserDetails().role === '1')"
                     class="px-4 py-2 bg-[#3980C0] border border-transparent rounded-md text-sm font-medium text-[#FFFFFF] hover:bg-[#3980C0]">
                     Save
                 </button>

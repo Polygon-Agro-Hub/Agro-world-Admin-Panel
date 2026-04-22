@@ -55,6 +55,8 @@ export interface PensionRequestDetail {
   Approved_Date_Time: string;
   Phone_Number: string;
   Collection_Officer_EmpID: string;
+  Successor_birthCrtFront: string;
+  Successor_birthCrtBack: string;
 }
 
 export interface PensionRequestResponse {

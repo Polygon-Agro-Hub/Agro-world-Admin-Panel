@@ -8,6 +8,7 @@ import { CollectionCenterService } from '../../../services/collection-center/col
 import Swal from 'sweetalert2';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
 import { TokenService } from '../../../services/token/services/token.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-view-current-center-target',
@@ -16,6 +17,7 @@ import { TokenService } from '../../../services/token/services/token.service';
     CommonModule,
     FormsModule,
     NgxPaginationModule,
+    DropdownModule,
     LoadingSpinnerComponent
   ],
   templateUrl: './view-current-center-target.component.html',
@@ -43,7 +45,12 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   isLoading: boolean = false;
 
   isStatusDropdownOpen = false;
-  statusDropdownOptions = ['Pending', 'Completed', 'Exceeded', 'Extra'];
+  statusDropdownOptions = [
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Completed', value: 'Completed' },
+    { label: 'Exceeded', value: 'Exceeded' },
+    { label: 'Extra', value: 'Extra' },
+  ];
 
   toggleStatusDropdown() {
     this.isStatusDropdownOpen = !this.isStatusDropdownOpen;
@@ -88,6 +95,7 @@ export class ViewCurrentCenterTargetComponent implements OnInit {
   }
 
   fetchAllTarget(centerId: number = this.centerId, page: number = 1, limit: number = this.itemsPerPage, status: string = this.selectStatus, search: string = this.searchText) {
+    console.log('status', status)
     this.isLoading = true;
     this.collectionCenterSrv.getAllCenterDailyTarget(centerId, page, limit, status, search).subscribe(
       (res) => {

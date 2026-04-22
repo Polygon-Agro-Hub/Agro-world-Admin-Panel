@@ -9,7 +9,7 @@
 
     <!-- Header -->
     <div class="mb-2">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        <h2 class="text-xl font-normal text-textLight dark:text-textDark">
             {{regCode}} {{centerName}}
         </h2>
     </div>
@@ -122,29 +122,34 @@
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark font-medium">
                         {{item.capacity ? item.capacity + ' kg' : '-'}}
                     </td>
-                    <td class="px-4 py-3 text-center cursor-pointer">
-                        <span *ngIf="item.status === 'Rejected'" (click)="openPopup(item)"
-                            class="inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-4 py-2 text-xs text-center w-32">
-                            Rejected
-                        </span>
-                        <span *ngIf="item.status === 'Not Approved'" (click)="openPopup(item)"
-                            class="inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-4 py-2 text-xs text-center w-32">
-                            Not Approved
-                        </span>
-                        <span *ngIf="item.status === 'Approved'" (click)="openPopup(item)"
-                            class="inline-block bg-[#C8E0FF] text-[#415CFF] font-medium rounded-md px-4 py-2 text-xs text-center w-32">
-                            Approved
-                        </span>
-                    </td>
+                    <td class="px-4 py-3 text-center cursor-pointer" [ngClass]="{
+  'cursor-pointer': permissionService.hasPermission('Polygon centres dashboard approve driver') || tokenService.getUserDetails().role === '1',
+  'cursor-not-allowed': !(permissionService.hasPermission('Polygon centres dashboard approve driver') || tokenService.getUserDetails().role === '1')
+}">
+  <span *ngIf="item.status === 'Rejected'"
+    (click)="(permissionService.hasPermission('Polygon centres dashboard approve driver') || tokenService.getUserDetails().role === '1') && openPopup(item)"
+    class="inline-block bg-[#FFB9B7] text-[#D16D6A] font-medium rounded-md px-4 py-2 text-xs text-center w-32 shadow-md">
+    Rejected
+  </span>
+  <span *ngIf="item.status === 'Not Approved'"
+    (click)="(permissionService.hasPermission('Polygon centres dashboard approve driver') || tokenService.getUserDetails().role === '1') && openPopup(item)"
+    class="inline-block bg-[#F8FFA6] text-[#A8A100] font-medium rounded-md px-4 py-2 text-xs text-center w-32 shadow-md">
+    Not Approved
+  </span>
+  <span *ngIf="item.status === 'Approved'"
+    (click)="(permissionService.hasPermission('Polygon centres dashboard approve driver') || tokenService.getUserDetails().role === '1') && openPopup(item)"
+    class="inline-block bg-[#C8E0FF] text-[#415CFF] font-medium rounded-md px-4 py-2 text-xs text-center w-32 shadow-md">
+    Approved
+  </span>
+</td>
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark font-medium">
                         {{item.phone || '-'}}
                     </td>
                     <td class="px-4 py-3 text-center text-textLight dark:text-textDark font-medium">
                         {{item.nic || '-'}}
                     </td>
-                    <td
-                    *ngIf="permissionService.hasPermission('Polygon center view drivers details') || tokenService.getUserDetails().role === '1'"
-                     class="px-4 py-3 text-left text-textLight dark:text-textDark font-medium"
+                    <td *ngIf="permissionService.hasPermission('Polygon center view drivers details') || tokenService.getUserDetails().role === '1'"
+                        class="px-4 py-3 text-left text-textLight dark:text-textDark font-medium"
                         (click)="navigateProfile(item.officerId)">
                         <button class="text-[#000] hover:text-[#83aefd] text-[22px]">
                             <i class="fa-regular fa-file dark:text-[#fff]"></i>

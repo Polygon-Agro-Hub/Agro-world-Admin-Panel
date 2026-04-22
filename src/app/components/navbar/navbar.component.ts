@@ -18,8 +18,6 @@ export class NavbarComponent {
   constructor(private elementRef: ElementRef,private router: Router, private themeService: ThemeService, public tokenService: TokenService) {}
 
   
-
-  
   navigateToCreateAdmin() {
     this.router.navigate(['/admin-users/create-admin-user']);
   }

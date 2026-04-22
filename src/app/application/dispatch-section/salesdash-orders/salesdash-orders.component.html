@@ -1,10 +1,7 @@
-<!-- <app-loading-spinner *ngIf="isLoading"></app-loading-spinner> -->
-
 <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i>
   Back
 </button>
-
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full">
@@ -25,9 +22,7 @@
       </button>
     </div>
 
-
     <div class="h-5"></div>
-
 
     <div *ngIf="isPremade">
       <app-dash-predefine-packages (click)="togglePackageType(true)" *ngIf="permissionService.hasPermission('View dash premade') || tokenService.getUserDetails().role === '1'"/>

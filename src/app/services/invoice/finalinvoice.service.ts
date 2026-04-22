@@ -8,7 +8,7 @@ import jsPDF from 'jspdf';
 
 interface InvoiceData {
   invoiceNumber: string;
-  orderApp:string;
+  orderApp: string;
   deliveryMethod: string;
   invoiceDate: string;
   scheduledDate: string;
@@ -60,7 +60,7 @@ export class FinalinvoiceService {
   private apiUrl = `${environment.API_URL}`;
   private token = this.tokenService.getToken();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getInvoiceDetails(processOrderId: number): Observable<any> {
     const headers = new HttpHeaders({
@@ -139,14 +139,14 @@ export class FinalinvoiceService {
         },
         pickupInfo: response.data?.pickupCenter
           ? {
-              centerName: response.data.pickupCenter.centerName || '', // Changed from 'name' to 'centerName'
-              address: {
-                city: response.data.pickupCenter.city || '',
-                district: response.data.pickupCenter.district || '',
-                province: response.data.pickupCenter.province || '',
-                country: response.data.pickupCenter.country || '',
-              },
-            }
+            centerName: response.data.pickupCenter.centerName || '', // Changed from 'name' to 'centerName'
+            address: {
+              city: response.data.pickupCenter.city || '',
+              district: response.data.pickupCenter.district || '',
+              province: response.data.pickupCenter.province || '',
+              country: response.data.pickupCenter.country || '',
+            },
+          }
           : undefined,
         familyPackTotal:
           response.data?.items?.familyPacks
@@ -261,18 +261,16 @@ export class FinalinvoiceService {
     doc.text('Bill To:', 15, 55);
     doc.setFont('helvetica', 'normal');
 
-    const billingName = `${
-      invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''
-    }${invoice.billingInfo?.fullName || ''}`.trim();
+    const billingName = `${invoice.billingInfo?.title ? `${invoice.billingInfo.title}.` : ''
+      }${invoice.billingInfo?.fullName || ''}`.trim();
     doc.text(billingName || 'N/A', 15, 60);
 
     let yPosition = 65;
 
     // Add contact information right after the name
     if (invoice.billingInfo.phonecode1 || invoice.billingInfo.phone1) {
-      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${
-        invoice.billingInfo.phone1 || ''
-      }`.trim();
+      const phoneNumber = `${invoice.billingInfo.phonecode1 || ''} ${invoice.billingInfo.phone1 || ''
+        }`.trim();
       if (phoneNumber) {
         doc.text(`Mobile: ${phoneNumber}`, 15, yPosition);
         yPosition += 5;
@@ -314,16 +312,16 @@ export class FinalinvoiceService {
           const colonIndex = line.indexOf(':');
           const label = line.substring(0, colonIndex + 1);
           const value = line.substring(colonIndex + 1);
-          
+
           // Draw label in gray color
           doc.setTextColor(146, 146, 146); // #929292 in RGB
           doc.text(label, 15, yPosition);
-          
+
           // Draw value in black color
           const labelWidth = doc.getTextWidth(label);
           doc.setTextColor(0, 0, 0);
           doc.text(value, 15 + labelWidth, yPosition);
-          
+
           yPosition += 5;
         });
       } else {
@@ -343,16 +341,16 @@ export class FinalinvoiceService {
           const colonIndex = line.indexOf(':');
           const label = line.substring(0, colonIndex + 1);
           const value = line.substring(colonIndex + 1);
-          
+
           // Draw label in gray color
           doc.setTextColor(146, 146, 146); // #929292 in RGB
           doc.text(label, 15, yPosition);
-          
+
           // Draw value in black color
           const labelWidth = doc.getTextWidth(label);
           doc.setTextColor(0, 0, 0);
           doc.text(value, 15 + labelWidth, yPosition);
-          
+
           yPosition += 5;
         });
       }
@@ -445,14 +443,14 @@ export class FinalinvoiceService {
     );
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Ordered Date:', 140, rightYStart + 30);
+    doc.text('Ordered Date:', 140, rightYStart + 50);
     doc.setFont('helvetica', 'normal');
-    doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 35);
+    doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 55);
 
     doc.setFont('helvetica', 'bold');
-    doc.text('Scheduled Date:', 140, rightYStart + 45);
+    doc.text('Scheduled Date:', 140, rightYStart + 65); //+10
     doc.setFont('helvetica', 'normal');
-    doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 50);
+    doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 70); //+10
 
     // Family Pack Items
     yPosition = Math.max(yPosition, rightYStart + 60);
@@ -482,19 +480,64 @@ export class FinalinvoiceService {
         doc.line(15, yPosition, 195, yPosition);
         yPosition += 5;
 
+        // const packDetailsBody = [
+        //   [
+        //     {
+        //       content: 'Index',
+        //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+        //     },
+        //     {
+        //       content: 'Item Description',
+        //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+        //     },
+        //     {
+        //       content: 'QTY',
+        //       styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+        //     },
+        //   ],
+        //   ...(pack.packageDetails?.map((detail: any, i: number) => [
+        //     `${i + 1}.`,
+        //     detail.typeName || 'N/A',
+        //     detail.qty || '0',
+        //   ]) || []),
+        // ];
+
+        // (doc as any).autoTable({
+        //   startY: yPosition,
+        //   head: [packDetailsBody[0]],
+        //   body: packDetailsBody.slice(1),
+        //   margin: { left: 15, right: 15 },
+        //   styles: {
+        //     fontSize: 9,
+        //     cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+        //   },
+        //   headStyles: {
+        //     fillColor: [248, 248, 248],
+        //     textColor: 0,
+        //     fontStyle: 'bold',
+        //   },
+        //   alternateRowStyles: {
+        //     fillColor: [255, 255, 255],
+        //   },
+        //   tableLineColor: [209, 213, 219],
+        //   tableLineWidth: 0.5,
+        //   showHorizontalLines: false,
+        //   showVerticalLines: false,
+        // });
+
         const packDetailsBody = [
           [
             {
               content: 'Index',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
             },
             {
               content: 'Item Description',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
             },
             {
               content: 'QTY',
-              styles: { fillColor: [248, 248, 248], fontStyle: 'bold' },
+              styles: { fillColor: [248, 248, 248], fontStyle: 'bold', textColor: [0, 0, 0] },
             },
           ],
           ...(pack.packageDetails?.map((detail: any, i: number) => [
@@ -511,15 +554,20 @@ export class FinalinvoiceService {
           margin: { left: 15, right: 15 },
           styles: {
             fontSize: 9,
-            cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
+            cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+            textColor: [0, 0, 0], // Set default text color to black for all cells
           },
           headStyles: {
             fillColor: [248, 248, 248],
-            textColor: 0,
+            textColor: [0, 0, 0], // Explicitly set header text color to black
             fontStyle: 'bold',
+          },
+          bodyStyles: {
+            textColor: [0, 0, 0], // Ensure body text is black
           },
           alternateRowStyles: {
             fillColor: [255, 255, 255],
+            textColor: [0, 0, 0], // Ensure alternate rows text is black
           },
           tableLineColor: [209, 213, 219],
           tableLineWidth: 0.5,
@@ -558,17 +606,17 @@ export class FinalinvoiceService {
       let addTitle;
       if (invoice.orderApp === 'Marketplace') {
         addTitle = hasFamilyPacks
-        ? ` Additional Items(${invoice.additionalItems.length} Items)`
-          : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
-          
+          ? ` Additional Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Your Selected Items(${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
+
       } else if (invoice.orderApp === 'Dash') {
         addTitle = hasFamilyPacks
-          ? ` Custom Items(${invoice.additionalItems.length} Items)`
-          : ` Custom Items(${invoice.additionalItems.length} Items)`;
+          ? ` Additional Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
       } else {
         addTitle = hasFamilyPacks
-          ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
-          : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
+          ? ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`
+          : ` Custom Items (${invoice.additionalItems.length} ${invoice.additionalItems.length > 1 ? 'Items' : 'Item'})`;
       }
 
       doc.setFontSize(9);
@@ -591,23 +639,23 @@ export class FinalinvoiceService {
         [
           {
             content: 'Index',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
           {
             content: 'Item Description',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
           {
             content: 'Unit Price (Rs.)',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
           {
             content: 'QTY',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
           {
             content: 'Amount (Rs.)',
-            styles: { fillColor: [243, 244, 246], fontStyle: 'bold' },
+            styles: { fillColor: [243, 244, 246], fontStyle: 'bold', textColor: [0, 0, 0] },
           },
         ],
         ...invoice.additionalItems.map((it, i) => {
@@ -636,15 +684,20 @@ export class FinalinvoiceService {
         margin: { left: 15, right: 15 },
         styles: {
           fontSize: 9,
-          cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
+          cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+          textColor: [0, 0, 0], // Set default text color to black for all cells
         },
         headStyles: {
           fillColor: [243, 244, 246],
-          textColor: 0,
+          textColor: [0, 0, 0], // Explicitly set header text color to black
           fontStyle: 'bold',
+        },
+        bodyStyles: {
+          textColor: [0, 0, 0], // Ensure body text is black
         },
         alternateRowStyles: {
           fillColor: [255, 255, 255],
+          textColor: [0, 0, 0], // Ensure alternate rows text is black
         },
         tableLineColor: [209, 213, 219],
         tableLineWidth: 0.5,
@@ -712,13 +765,13 @@ export class FinalinvoiceService {
 
       // MODIFIED: Determine label based on orderApp
       let label: string;
-if (invoice.orderApp === 'Marketplace') {
-    label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
-} else if (invoice.orderApp === 'Dash') {
-    label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
-} else {
-    label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
-}
+      if (invoice.orderApp === 'Marketplace') {
+        label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
+      } else if (invoice.orderApp === 'Dash') {
+        label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
+      } else {
+        label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
+      }
 
       grandTotalBody.push([
         label,
@@ -734,18 +787,20 @@ if (invoice.orderApp === 'Marketplace') {
       ]);
     }
 
-    grandTotalBody.push([
-      'Discount',
-      `Rs. ${formatNumberWithCommas(invoice.discount)}`,
-    ]);
-
     // Add service fee between Discount and Coupon Discount
     if (invoice.orderApp !== 'Marketplace' && 
     invoice.additionalItems && 
     invoice.additionalItems.length > 0 && 
     (!invoice.familyPackItems || invoice.familyPackItems.length === 0)) {
-  grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
-}
+      grandTotalBody.push(['Service Fee', 'Rs. 180.00']);
+    }
+
+    grandTotalBody.push([
+      'Discount',
+      `Rs. ${formatNumberWithCommas(invoice.discount)}`,
+    ]);
+
+
 
 
     // Add coupon discount only if it has a value greater than 0
@@ -778,12 +833,12 @@ if (invoice.orderApp === 'Marketplace') {
       parseNum(invoice.discount) + (couponValue > 0 ? couponValue : 0);
 
     const serviceFee =
-  invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
-  invoice.additionalItems &&
-  invoice.additionalItems.length > 0 &&
-  (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
-    ? 180
-    : 0;
+      invoice.orderApp !== 'Marketplace' && // Only add service fee if not Marketplace
+        invoice.additionalItems &&
+        invoice.additionalItems.length > 0 &&
+        (!invoice.familyPackItems || invoice.familyPackItems.length === 0)
+        ? 180
+        : 0;
 
     const finalGrandTotal =
       familyPackTotal +
@@ -794,10 +849,10 @@ if (invoice.orderApp === 'Marketplace') {
 
     // Add final total
     grandTotalBody.push([
-      { content: 'Grand Total', styles: { fontStyle: 'bold' } },
+      { content: 'Grand Total', styles: { fontStyle: 'bold', textColor: [0, 0, 0] } },
       {
         content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
-        styles: { fontStyle: 'bold' },
+        styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
       },
     ]);
 
@@ -812,12 +867,15 @@ if (invoice.orderApp === 'Marketplace') {
       },
       styles: {
         fontSize: 9,
-        cellPadding: { top: 4, right: 0, bottom: 4, left: 0 },
-        lineColor: [255, 255, 255],
+        cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
+        // lineColor: [255, 255, 255],
         lineWidth: 0,
       },
       bodyStyles: {
         lineWidth: 0,
+      },
+      alternateRowStyles: {
+        fillColor: [255, 255, 255], // Same white background for alternate rows
       },
       didDrawCell: (data: any) => {
         // Add border between Grand Total and Discount (second last row)
@@ -897,7 +955,7 @@ if (invoice.orderApp === 'Marketplace') {
     );
 
     // Save the PDF
-    doc.save(`invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
+    doc.save(`Pre_Invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
   }
 
   private async getLogoUrl(): Promise<string | null> {

@@ -33,8 +33,8 @@ export class ViewSelectedSalesDashComplainComponent implements OnInit {
   complain: Complain = new Complain();
   complainId!: string;
   firstName!: string;
-  display: boolean = false; // Controls dialog visibility
-  complaintText: string = ""; // Holds the text entered in the textarea
+  display: boolean = false;
+  complaintText: string = "";
   messageContent: string = "";
   isLoading = false;
   isPopUpVisible: boolean = false;
@@ -49,11 +49,11 @@ export class ViewSelectedSalesDashComplainComponent implements OnInit {
   ) { }
 
   showDialog() {
-    this.display = true; // Opens the dialog
+    this.display = true;
   }
 
   hideDialog() {
-    this.display = false; // Closes the dialog
+    this.display = false;
   }
 
   fetchComplain() {
@@ -63,7 +63,6 @@ export class ViewSelectedSalesDashComplainComponent implements OnInit {
         this.datePipe.transform(res.createdAt, "yyyy-MM-dd hh:mm:ss a") ||
         res.createdAt;
       this.complain = res;
-      console.log('data', this.complain);
       this.isLoading = false;
     });
   }
@@ -74,11 +73,7 @@ export class ViewSelectedSalesDashComplainComponent implements OnInit {
     this.fetchComplain();
   }
 
-  // submitComplaint() {
-  //   console.log('Complaint Submitted:', this.complaintText);
-  //   alert('Complaint Submitted: ' + this.complaintText);
-  //   this.hideDialog(); // Close the dialog after submission
-  // }
+  
 
 submitComplaint() {
   this.isLoading = true;
@@ -93,9 +88,6 @@ submitComplaint() {
   });
 
   this.hideDialog();
-
-  console.log(this.complainId);
-  console.log(this.messageContent);
   if (this.complain.reply === null || this.complain.reply === undefined) {
   Swal.fire({
       icon: 'error',
@@ -120,7 +112,6 @@ submitComplaint() {
     )
     .subscribe(
       (res: any) => {
-        console.log("Sales Dash updated successfully", res);
 
         Swal.fire({
           icon: "success",
@@ -160,60 +151,7 @@ submitComplaint() {
 
 
 
-  // showReplyDialog() {
-  //   Swal.fire({
-  //     title: "Reply as Polygon",
-  //     html: `
-  //         <div class="text-left">
-  //           <p>Dear <strong>${this.firstName}</strong>,</p>
-  //           <p></p>
-  //           <textarea 
-  //             id="messageContent" 
-  //             class="w-full p-2 border rounded mt-3 mb-3" 
-  //             rows="5" 
-  //             placeholder="Add your message here..."
-  //           >${this.complain.reply || ""}</textarea>
-  //           <p>If you have any further concerns or questions, feel free to reach out. Thank you for your patience and understanding.</p>
-  //           <p class="mt-3">
-  //             Sincerely,<br/>
-  //             AgroWorld Customer Support Team
-  //           </p>
-  //         </div>
-  //       `,
-  //     showCancelButton: true,
-  //     confirmButtonText: "Send",
-  //     cancelButtonText: "Cancel",
-  //     confirmButtonColor: "#3980C0", // Green color for Send button
-  //     cancelButtonColor: "#74788D", // Blue-gray for Cancel button
-  //     width: "600px",
-  //     reverseButtons: true, // Swap button positions
-  //     preConfirm: () => {
-  //       const textarea = document.getElementById("messageContent") as HTMLTextAreaElement;
-  //       return textarea.value;
-  //     },
-  //     didOpen: () => {
-  //       // Direct DOM manipulation for button alignment
-  //       setTimeout(() => {
-  //         const actionsElement = document.querySelector('.swal2-actions');
-  //         if (actionsElement) {
-  //           actionsElement.setAttribute('style', 'display: flex; justify-content: flex-end !important; width: 100%;');
 
-  //           // Also swap buttons if needed (in addition to reverseButtons)
-  //           const cancelButton = document.querySelector('.swal2-cancel');
-  //           const confirmButton = document.querySelector('.swal2-confirm');
-  //           if (cancelButton && confirmButton && actionsElement) {
-  //             actionsElement.insertBefore(cancelButton, confirmButton);
-  //           }
-  //         }
-  //       },); // Small delay to ensure DOM is ready
-  //     }
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       this.messageContent = result.value;
-  //       this.submitComplaint();
-  //     }
-  //   });
-  // }
 
   showReplyPopUp() {
     this.isPopUpVisible = true;

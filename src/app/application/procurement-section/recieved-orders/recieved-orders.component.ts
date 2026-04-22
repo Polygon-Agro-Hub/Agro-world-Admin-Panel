@@ -67,8 +67,8 @@ export class RecievedOrdersComponent {
   // Available filter types
   filterTypes: FilterType[] = [
     { display: 'Scheduled Date', value: 'scheduleDate' },
-    { display: 'To Collection Centre', value: 'toCollectionCenter' },
-    { display: 'To Dispatch Centre', value: 'toDispatchCenter' }
+    { display: 'To Collection Centre Date', value: 'toCollectionCenter' },
+    { display: 'To Dispatch Centre Date', value: 'toDispatchCenter' }
   ];
 
   constructor(
@@ -82,13 +82,13 @@ export class RecievedOrdersComponent {
     this.fetchAllPurchaseReport();
   }
 
-  fetchAllPurchaseReport(page: number = 1, limit: number = this.itemsPerPage) {
+  fetchAllPurchaseReport(page: number = this.page, limit: number = this.itemsPerPage) {
     this.isLoading = true;
 
     // Reset to page 1 when searching or filtering
-    if (this.search || this.filterType) {
-      page = 1;
-    }
+    // if (this.search || this.filterType) {
+    //   page = 1;
+    // }
 
     this.procumentService
       .getRecievedOrdersQuantity(page, limit, this.filterType, this.date, this.search)
@@ -199,78 +199,6 @@ export class RecievedOrdersComponent {
     return foundFilter ? foundFilter.display : this.filterType;
   }
 
-  // downloadTemplate1() {
-  //   this.isDownloading = true;
-
-  //   let queryParams = [];
-
-  //   if (this.filterType) {
-  //     queryParams.push(`filterType=${this.filterType}`);
-  //   }
-
-  //   if (this.date) {
-  //     queryParams.push(`date=${this.date}`);
-  //   }
-
-  //   if (this.search) {
-  //     queryParams.push(`search=${encodeURIComponent(this.search)}`);
-  //   }
-
-  //   const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
-
-  //   const apiUrl = `${environment.API_URL}procument/download-order-quantity-report${queryString}`;
-
-  //   fetch(apiUrl, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Authorization': `Bearer ${this.tokenService.getToken()}`
-  //     }
-  //   })
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         return response.blob();
-  //       } else {
-  //         throw new Error('Failed to download the file');
-  //       }
-  //     })
-  //     .then((blob) => {
-  //       const url = window.URL.createObjectURL(blob);
-  //       const a = document.createElement('a');
-  //       a.href = url;
-
-  //       let filename = 'Procument_Items_Report';
-  //       if (this.filterType) {
-  //         filename += `_${this.filterType}`;
-  //       }
-  //       if (this.date) {
-  //         filename += `_${this.date}`;
-  //       }
-  //       if (this.search) {
-  //         filename += `_search_${this.search.substring(0, 10)}`;
-  //       }
-
-  //       filename += '.xlsx';
-
-  //       a.download = filename;
-  //       a.click();
-  //       window.URL.revokeObjectURL(url);
-
-  //       Swal.fire({
-  //         icon: 'success',
-  //         title: 'Downloaded',
-  //         text: 'Please check your downloads folder',
-  //       });
-  //       this.isDownloading = false;
-  //     })
-  //     .catch((error) => {
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: 'Download Failed',
-  //         text: error.message,
-  //       });
-  //       this.isDownloading = false;
-  //     });
-  // }
 
   downloadTemplate1() {
     this.isDownloading = true;
@@ -376,15 +304,30 @@ export class RecievedOrdersComponent {
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
+ 
     let finalFileName = fileName;
     if (this.filterType) {
-      finalFileName += `_${this.filterType}`;
+      switch (this.filterType) {
+        case 'scheduleDate':
+          finalFileName += `_Schedule_Date`;
+          break;
+        case 'toCollectionCenter':
+          finalFileName += `_To_Collection_Center_Date`;
+          break;
+        case 'toDispatchCenter':
+          finalFileName += `_To_Dispatch_Center_Date`;
+          break;
+      
+        // other cases if needed
+      }
     }
     if (this.date) {
       finalFileName += `_${this.date}`;
     }
     if (this.search) {
-      finalFileName += `_search_${this.search.substring(0, 10)}`;
+      const sub = this.search.substring(0, 10);
+      const capitalized = sub.charAt(0).toUpperCase() + sub.slice(1);
+      finalFileName += `_Search_${capitalized}`;
     }
     finalFileName += '.xlsx';
 

@@ -11,7 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
   standalone: true,
   imports: [CommonModule, FormsModule, DropdownModule],
   templateUrl: './payment-history-add-new.component.html',
-  styleUrl: './payment-history-add-new.component.css'
+  styleUrl: './payment-history-add-new.component.css',
 })
 export class PaymentHistoryAddNewComponent {
   receivers: string = 'Farmers';
@@ -25,13 +25,11 @@ export class PaymentHistoryAddNewComponent {
 
   readonly MAX_REFERENCE_LENGTH = 50;
 
-  receiverOptions = [
-    { label: 'Farmers', value: 'Farmers' }
-  ];
+  receiverOptions = [{ label: 'Farmers', value: 'Farmers' }];
 
   constructor(
     private router: Router,
-    private financeService: FinanceService
+    private financeService: FinanceService,
   ) {}
 
   // Check if form is valid for enabling upload button
@@ -97,7 +95,7 @@ export class PaymentHistoryAddNewComponent {
 
   handleFile(file: File): void {
     // Check if file with same name already uploaded
-    if (this.uploadedFileNames.has(file.name)) {
+    if (this.uploadedFileNames.has(file.name) || this.uploadedFileName === file.name) {
       Swal.fire({
         icon: 'error',
         title: 'Duplicate File',
@@ -114,8 +112,10 @@ export class PaymentHistoryAddNewComponent {
 
     // Validate file type (Excel files)
     const validExtensions = ['.xlsx', '.xls', '.csv'];
-    const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
-    
+    const fileExtension = file.name
+      .substring(file.name.lastIndexOf('.'))
+      .toLowerCase();
+
     if (!validExtensions.includes(fileExtension)) {
       Swal.fire({
         icon: 'error',
@@ -167,7 +167,9 @@ export class PaymentHistoryAddNewComponent {
 
   triggerFileInput(): void {
     if (!this.isUploading) {
-      const fileInput = document.getElementById('csvFileInput') as HTMLInputElement;
+      const fileInput = document.getElementById(
+        'csvFileInput',
+      ) as HTMLInputElement;
       fileInput?.click();
     }
   }
@@ -186,7 +188,9 @@ export class PaymentHistoryAddNewComponent {
     if (!this.paymentReference.trim()) {
       missingFields.push('Payment Reference');
     } else if (this.paymentReference.length > this.MAX_REFERENCE_LENGTH) {
-      missingFields.push(`Payment Reference (exceeds ${this.MAX_REFERENCE_LENGTH} characters)`);
+      missingFields.push(
+        `Payment Reference (exceeds ${this.MAX_REFERENCE_LENGTH} characters)`,
+      );
     }
 
     if (!this.uploadedFile) {
@@ -195,16 +199,18 @@ export class PaymentHistoryAddNewComponent {
 
     return {
       isValid: missingFields.length === 0,
-      missingFields
+      missingFields,
     };
   }
 
   onUpload(): void {
     const validation = this.validateForm();
-    
+
     if (!validation.isValid) {
-      const fieldsList = validation.missingFields.map(field => `• ${field}`).join('<br>');
-      
+      const fieldsList = validation.missingFields
+        .map((field) => `• ${field}`)
+        .join('<br>');
+
       Swal.fire({
         icon: 'warning',
         title: 'Missing Required Fields',
@@ -263,180 +269,200 @@ export class PaymentHistoryAddNewComponent {
     // Remove commas from amount before sending
     const cleanAmount = this.amount.replace(/,/g, '');
 
-    this.financeService.createPaymentHistory(
-      this.receivers,
-      cleanAmount,
-      this.paymentReference,
-      this.uploadedFile!
-    ).subscribe({
-      next: (response) => {
-        this.isUploading = false;
-        // Add file name to uploaded set
-        this.uploadedFileNames.add(this.uploadedFileName);
-        
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Payment file uploaded successfully',
-          confirmButtonColor: '#3B82F6',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-            confirmButton: 'bg-blue-500 hover:bg-blue-600',
-          },
-        }).then(() => {
-          this.router.navigate(['/finance/action/viewAll-payments']);
-        });
-      },
-      error: (error) => {
-        this.isUploading = false;
-        console.error('Upload error:', error);
-        
-        let errorMessage = 'Failed to upload payment file. Please try again.';
-        
-        if (error.error && error.error.error) {
-          errorMessage = error.error.error;
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
+    this.financeService
+      .createPaymentHistory(
+        this.receivers,
+        cleanAmount,
+        this.paymentReference,
+        this.uploadedFile!,
+      )
+      .subscribe({
+        next: (response) => {
+          this.isUploading = false;
+          // Add file name to uploaded set
+          this.uploadedFileNames.add(this.uploadedFileName);
 
-        Swal.fire({
-          icon: 'error',
-          title: 'Upload Failed',
-          text: errorMessage,
-          confirmButtonColor: '#3B82F6',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-            confirmButton: 'bg-blue-500 hover:bg-blue-600',
-          },
-        });
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Payment file uploaded successfully',
+            confirmButtonColor: '#3B82F6',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-500 hover:bg-blue-600',
+            },
+          }).then(() => {
+            this.router.navigate(['/finance/action/viewAll-payments']);
+          });
+        },
+        error: (error) => {
+          this.isUploading = false;
+          console.error('Upload error:', error);
+
+          let errorMessage = 'Failed to upload payment file. Please try again.';
+
+          if (error.error && error.error.error) {
+            errorMessage = error.error.error;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Upload Failed',
+            text: errorMessage,
+            confirmButtonColor: '#3B82F6',
+            customClass: {
+              popup:
+                'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold',
+              confirmButton: 'bg-blue-500 hover:bg-blue-600',
+            },
+          });
+        },
+      });
+  }
+
+  onCancel() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'You may lose the added data after canceling!',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No, Keep Editing',
+      customClass: {
+        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+        title: 'font-semibold',
+      },
+      buttonsStyling: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.navigatePath('/finance/action/viewAll-payments');
       }
     });
   }
 
-  onCancel() {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Are you sure?',
-          text: 'You may lose the added data after canceling!',
-          showCancelButton: true,
-          confirmButtonText: 'Yes, Cancel',
-          cancelButtonText: 'No, Keep Editing',
-          customClass: {
-            popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-            title: 'font-semibold',
-          },
-          buttonsStyling: true,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.navigatePath('/finance/action/viewAll-payments');
-          }
-        });
-      }
-  
-       navigatePath(path: string) {
-      this.router.navigate([path]);
-    }
+  navigatePath(path: string) {
+    this.router.navigate([path]);
+  }
 
   formatAmount(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value.replace(/[^\d.]/g, ''); // Remove all non-numeric except decimal point
-  
-  // Handle multiple decimal points
-  const decimalCount = (value.match(/\./g) || []).length;
-  if (decimalCount > 1) {
-    const parts = value.split('.');
-    value = parts[0] + '.' + parts.slice(1).join('');
-  }
-  
-  // Ensure only two decimal places
-  const parts = value.split('.');
-  if (parts[1]) {
-    parts[1] = parts[1].slice(0, 2);
-    value = parts.join('.');
-  }
-  
-  if (value && !isNaN(Number(value))) {
-    // Format with commas for thousands
-    const [integerPart, decimalPart] = value.split('.');
-    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    
-    if (decimalPart !== undefined) {
-      this.amount = formattedInteger + '.' + decimalPart;
-    } else {
-      this.amount = formattedInteger;
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^\d.]/g, ''); // Remove all non-numeric except decimal point
+
+    // Handle multiple decimal points
+    const decimalCount = (value.match(/\./g) || []).length;
+    if (decimalCount > 1) {
+      const parts = value.split('.');
+      value = parts[0] + '.' + parts.slice(1).join('');
     }
-  } else if (value === '') {
-    this.amount = '';
-  }
-}
 
-onAmountInput(event: Event): void {
-  this.formatAmount(event);
-}
+    // Ensure only two decimal places
+    const parts = value.split('.');
+    if (parts[1]) {
+      parts[1] = parts[1].slice(0, 2);
+      value = parts.join('.');
+    }
 
-onAmountKeyPress(event: KeyboardEvent): void {
-  const key = event.key;
-  const input = event.target as HTMLInputElement;
-  const currentValue = input.value.replace(/,/g, '');
-  
-  // Allow: backspace, delete, tab, escape, enter, decimal point
-  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', '.', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
-  
-  // Check if key is allowed
-  if (allowedKeys.includes(key)) {
-    return;
+    if (value && !isNaN(Number(value))) {
+      // Format with commas for thousands
+      const [integerPart, decimalPart] = value.split('.');
+      const formattedInteger = integerPart.replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ',',
+      );
+
+      if (decimalPart !== undefined) {
+        this.amount = formattedInteger + '.' + decimalPart;
+      } else {
+        this.amount = formattedInteger;
+      }
+    } else if (value === '') {
+      this.amount = '';
+    }
   }
-  
-  // Allow only numbers
-  if (!/^\d$/.test(key)) {
-    event.preventDefault();
-    return;
+
+  onAmountInput(event: Event): void {
+    this.formatAmount(event);
   }
-  
-  // Prevent more than 2 decimal places
-  if (currentValue.includes('.')) {
-    const decimalParts = currentValue.split('.');
-    if (decimalParts[1] && decimalParts[1].length >= 2) {
+
+  onAmountKeyPress(event: KeyboardEvent): void {
+    const key = event.key;
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value.replace(/,/g, '');
+
+    // Allow: backspace, delete, tab, escape, enter, decimal point
+    const allowedKeys = [
+      'Backspace',
+      'Delete',
+      'Tab',
+      'Escape',
+      'Enter',
+      '.',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Home',
+      'End',
+    ];
+
+    // Check if key is allowed
+    if (allowedKeys.includes(key)) {
+      return;
+    }
+
+    // Allow only numbers
+    if (!/^\d$/.test(key)) {
       event.preventDefault();
       return;
     }
-  }
-}
 
-onAmountBlur(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  let value = input.value.replace(/,/g, '');
-  
-  // If the field is empty, keep it empty
-  if (value === '') {
-    this.amount = '';
-    return;
+    // Prevent more than 2 decimal places
+    if (currentValue.includes('.')) {
+      const decimalParts = currentValue.split('.');
+      if (decimalParts[1] && decimalParts[1].length >= 2) {
+        event.preventDefault();
+        return;
+      }
+    }
   }
-  
-  // If the value ends with a decimal point, add '00'
-  if (value.endsWith('.')) {
-    value = value + '00';
+
+  onAmountBlur(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/,/g, '');
+
+    // If the field is empty, keep it empty
+    if (value === '') {
+      this.amount = '';
+      return;
+    }
+
+    // If the value ends with a decimal point, add '00'
+    if (value.endsWith('.')) {
+      value = value + '00';
+    }
+
+    // If there's no decimal point, add '.00'
+    if (!value.includes('.')) {
+      value = value + '.00';
+    }
+
+    // Ensure exactly two decimal places
+    const parts = value.split('.');
+    if (parts[1]) {
+      parts[1] = parts[1].padEnd(2, '0').slice(0, 2);
+      value = parts.join('.');
+    }
+
+    // Format with commas
+    const [integerPart, decimalPart] = value.split('.');
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    this.amount = formattedInteger + '.' + decimalPart;
   }
-  
-  // If there's no decimal point, add '.00'
-  if (!value.includes('.')) {
-    value = value + '.00';
-  }
-  
-  // Ensure exactly two decimal places
-  const parts = value.split('.');
-  if (parts[1]) {
-    parts[1] = parts[1].padEnd(2, '0').slice(0, 2);
-    value = parts.join('.');
-  }
-  
-  // Format with commas
-  const [integerPart, decimalPart] = value.split('.');
-  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  this.amount = formattedInteger + '.' + decimalPart;
-}
 
   // Helper method to remove file
   removeFile(): void {
@@ -459,9 +485,11 @@ onAmountBlur(event: Event): void {
       if (result.isConfirmed) {
         this.uploadedFile = null;
         this.uploadedFileName = '';
-        
+
         // Reset file input
-        const fileInput = document.getElementById('csvFileInput') as HTMLInputElement;
+        const fileInput = document.getElementById(
+          'csvFileInput',
+        ) as HTMLInputElement;
         if (fileInput) {
           fileInput.value = '';
         }
@@ -482,77 +510,85 @@ onAmountBlur(event: Event): void {
   }
 
   onPaymentReferenceInput(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const cursorPosition = input.selectionStart;
-  
-  // Get the current value
-  let currentValue = input.value;
-  
-  // Remove leading spaces only (allow spaces in the middle)
-  const trimmedValue = currentValue.replace(/^\s+/, '');
-  
-  // Check character limit
-  if (trimmedValue.length > this.MAX_REFERENCE_LENGTH) {
-    this.paymentReference = trimmedValue.substring(0, this.MAX_REFERENCE_LENGTH);
-    
-    // Show warning
-    this.showCharacterLimitWarning();
-  } else {
-    this.paymentReference = trimmedValue;
-  }
-  
-  // If leading spaces were removed, adjust cursor position
-  if (currentValue !== trimmedValue) {
-    setTimeout(() => {
-      const spacesRemoved = currentValue.length - trimmedValue.length;
-      const newCursorPosition = Math.max(0, (cursorPosition || 0) - spacesRemoved);
-      input.setSelectionRange(newCursorPosition, newCursorPosition);
-    });
-  }
-}
+    const input = event.target as HTMLInputElement;
+    const cursorPosition = input.selectionStart;
 
-// Helper method to count spaces before a specific position
-private countSpacesBeforePosition(text: string, position: number): number {
-  let count = 0;
-  for (let i = 0; i < Math.min(position, text.length); i++) {
-    if (text.charAt(i) === ' ') {
-      count++;
+    // Get the current value
+    let currentValue = input.value;
+
+    // Remove leading spaces only (allow spaces in the middle)
+    const trimmedValue = currentValue.replace(/^\s+/, '');
+
+    // Check character limit
+    if (trimmedValue.length > this.MAX_REFERENCE_LENGTH) {
+      this.paymentReference = trimmedValue.substring(
+        0,
+        this.MAX_REFERENCE_LENGTH,
+      );
+
+      // Show warning
+      this.showCharacterLimitWarning();
+    } else {
+      this.paymentReference = trimmedValue;
+    }
+
+    // If leading spaces were removed, adjust cursor position
+    if (currentValue !== trimmedValue) {
+      setTimeout(() => {
+        const spacesRemoved = currentValue.length - trimmedValue.length;
+        const newCursorPosition = Math.max(
+          0,
+          (cursorPosition || 0) - spacesRemoved,
+        );
+        input.setSelectionRange(newCursorPosition, newCursorPosition);
+      });
     }
   }
-  return count;
-}
 
-onPaymentReferenceKeyPress(event: KeyboardEvent): void {
-  const input = event.target as HTMLInputElement;
-  const currentValue = input.value;
-  const cursorPosition = input.selectionStart || 0;
-  
-  // Prevent space if it's at the beginning
-  if (event.key === ' ' && cursorPosition === 0) {
-    event.preventDefault();
-    return;
+  // Helper method to count spaces before a specific position
+  private countSpacesBeforePosition(text: string, position: number): number {
+    let count = 0;
+    for (let i = 0; i < Math.min(position, text.length); i++) {
+      if (text.charAt(i) === ' ') {
+        count++;
+      }
+    }
+    return count;
   }
-  
-  // Optional: Prevent multiple consecutive spaces
-  if (event.key === ' ') {
-    const beforeCursor = currentValue.substring(0, cursorPosition);
-    if (beforeCursor.endsWith(' ')) {
+
+  onPaymentReferenceKeyPress(event: KeyboardEvent): void {
+    const input = event.target as HTMLInputElement;
+    const currentValue = input.value;
+    const cursorPosition = input.selectionStart || 0;
+
+    // Prevent space if it's at the beginning
+    if (event.key === ' ' && cursorPosition === 0) {
       event.preventDefault();
       return;
     }
+
+    // Optional: Prevent multiple consecutive spaces
+    if (event.key === ' ') {
+      const beforeCursor = currentValue.substring(0, cursorPosition);
+      if (beforeCursor.endsWith(' ')) {
+        event.preventDefault();
+        return;
+      }
+    }
   }
-}
 
   private showCharacterLimitWarning(): void {
     // You can show a small notification or change border color
-    const inputElement = document.querySelector('input[type="text"][(ngModel)]="paymentReference"') as HTMLInputElement;
+    const inputElement = document.querySelector(
+      'input[type="text"][(ngModel)]="paymentReference"',
+    ) as HTMLInputElement;
     if (inputElement) {
       inputElement.classList.add('border-red-500');
       setTimeout(() => {
         inputElement.classList.remove('border-red-500');
       }, 2000);
     }
-    
+
     // Or show a toast notification
     Swal.fire({
       icon: 'warning',

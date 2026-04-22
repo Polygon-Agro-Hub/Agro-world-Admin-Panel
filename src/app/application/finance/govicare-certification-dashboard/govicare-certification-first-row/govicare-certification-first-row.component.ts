@@ -20,7 +20,7 @@ export interface CertificateDashboardData {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './govicare-certification-first-row.component.html',
-  styleUrl: './govicare-certification-first-row.component.css'
+  styleUrl: './govicare-certification-first-row.component.css',
 })
 export class GovicareCertificationFirstRowComponent {
   @Input() dashboardData: CertificateDashboardData | null = null;
@@ -30,7 +30,7 @@ export class GovicareCertificationFirstRowComponent {
       style: 'currency',
       currency: 'LKR',
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
+      maximumFractionDigits: 0,
     }).format(value);
   }
 }

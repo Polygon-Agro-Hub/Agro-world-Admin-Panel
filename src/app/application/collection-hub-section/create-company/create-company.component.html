@@ -229,7 +229,7 @@
 
         <div class="pb-6">
           <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Account Number * <span class="text-[#2E2E2E]">*</span>
+            Account Number *
           </label>
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" (blur)="onBlur('accNumber')"
             (ngModelChange)="validateAccNumber()" (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
@@ -250,7 +250,7 @@
 
         <div class="pb-6">
           <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Confirm Account Number * <span class="text-[#2E2E2E]">*</span>
+            Confirm Account Number *
           </label>
           <input id="confirmAccNumber" name="confirmAccNumber" [(ngModel)]="companyData.confirmAccNumber"
             (blur)="onBlur('confirmAccNumber')" (keydown)="allowOnlyDigitsForAccountNumber($event, 'accNumber')"
@@ -696,8 +696,7 @@
 
 
         <div class="pb-6">
-          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number * <span
-              class="text-[#2E2E2E]">*</span></label>
+          <label for="accNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">Account Number *</label>
           <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             #accNumberInput="ngModel" required pattern="^[0-9]+$"
@@ -713,7 +712,7 @@
 
         <div class="pb-6">
           <label for="confirmAccNumber" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-            Confirm Account Number * <span class="text-[#2E2E2E]">*</span>
+            Confirm Account Number *
           </label>
           <input #confirmAccNumberInput="ngModel" id="confirmAccNumber" name="confirmAccNumber"
             [(ngModel)]="companyData.confirmAccNumber" (ngModelChange)="validateConfirmAccNumber()" pattern="^[0-9]+$"
@@ -766,7 +765,7 @@
         </div>
         <div class="pb-6">
           <label for="foName" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance Officer’s
-            Name * <span style="color: #2E2E2E">*</span></label>
+            Name *</label>
           <input id="foName" name="foName" [(ngModel)]="companyData.foName" (keydown)="allowOnlyEnglishLetterss($event)"
             (keydown)="handleInputWithSpaceTrimming($event, 'foName')" (input)="capitalizeFirstLetter('foName')"
             (blur)="onBlur('foName')"
@@ -922,11 +921,7 @@
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 
-      <div class="pb-6">
-        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance officer</label>
-        <input id="email" name="email" [(ngModel)]="companyData.foName" [disabled]="true" type="email"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
-      </div>
+      
 
       <div class="pb-6">
         <label for="oicConNum1" class="block text-sm font-medium text-gray-700 dark:text-textDark">
@@ -969,6 +964,12 @@
           Account Number
         </label>
         <input id="accNumber" name="accNumber" [(ngModel)]="companyData.accNumber" [disabled]="true"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+      </div>
+
+      <div class="pb-6">
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Finance officer</label>
+        <input id="email" name="email" [(ngModel)]="companyData.foName" [disabled]="true" type="email"
           class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
       </div>
 

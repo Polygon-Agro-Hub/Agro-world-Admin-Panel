@@ -36,7 +36,6 @@
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="replyStatus"
-            [checkmark]="true"
             optionLabel="status"
             optionValue="value"
             [showClear]="!!rpst"
@@ -54,7 +53,6 @@
             appendTo="body"
             [options]="comCategories"
             [(ngModel)]="filterComCategory"
-            [checkmark]="true"
             optionLabel="categoryEnglish"
             [showClear]="!!filterComCategory"
             placeholder="Category"
@@ -71,7 +69,6 @@
             appendTo="body"
             [options]="company"
             [(ngModel)]="filterCompany"
-            [checkmark]="true"
             optionLabel="companyNameEnglish"
             [showClear]="!!filterCompany"
             placeholder="Company"
@@ -88,7 +85,6 @@
             [options]="statusfilterArr"
             [(ngModel)]="filterStatus"
             name="filterStatus"
-            [checkmark]="true"
             optionLabel="label"
             optionValue="value"
             [showClear]="!!filterStatus"
@@ -399,7 +395,6 @@
   </div>
 </div>
 
-<!-- complain popup -->
 <div
   *ngIf="isPopUpVisible"
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -431,7 +426,6 @@
         Dear <strong>{{ selectedOfficerName }}</strong
         >,
       </p>
-      <!-- second part -->
       <p
         class="mt-5"
         *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'"

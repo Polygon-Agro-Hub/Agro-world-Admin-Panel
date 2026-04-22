@@ -43,16 +43,17 @@ export class DispachPackagesComponent implements OnInit {
   isInvalidPriceRange: boolean = false;
 
   isShouldAllblock:boolean = true;
+  isCompleted: boolean = false; 
 
 
   ngOnInit(): void {
     this.packageId = this.route.snapshot.params['id']
     this.orderId = this.route.snapshot.params['orderId']
     this.isLastOrder = this.route.snapshot.queryParams['status'] === 'true' ? true : false;
-    this.price = this.route.snapshot.queryParams['price'];
+    this.price = parseFloat(this.route.snapshot.queryParams['price']) || 0;
     this.invNo = this.route.snapshot.queryParams['invNo'];
     this.packageName = this.route.snapshot.queryParams['packageName'];
-    this.packgeQty = this.route.snapshot.queryParams['packgeQty'];
+    this.packgeQty = parseInt(this.route.snapshot.queryParams['packgeQty']) || 1;
 
 
 
@@ -74,17 +75,22 @@ export class DispachPackagesComponent implements OnInit {
     this.isLoading = true;
     this.dispatchService.getPackageItemsForDispatch(this.packageId, this.orderId).subscribe(
       (res) => {
-        // this.packageObj = res
         this.packageArr = res.packageData;
         this.productArr = res.marketplaceItems
         this.isLoading = false;
         this.isShouldAllblock = res.packageData.every((i:any) => i.isPacked === 1);
+        this.isCompleted = this.isShouldAllblock;
         this.total = this.packageArr.length;
         
       }
     )
   }
   onCancel() {
+    if (this.isCompleted) {
+      this.location.back();
+      return;
+    }
+
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -193,10 +199,22 @@ export class DispachPackagesComponent implements OnInit {
   }
 
   openPopUp(item: PakageItem) {
+    if(item.isPacked === 1) {
+      Swal.fire({
+        icon: 'warning', 
+        title: 'Cannot replace this product',
+        text: 'This product is already packed.',
+        confirmButtonText: 'OK',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
     this.isPopupOpen = true;
     this.selectProduct = item;
-    // this.newProductObj.displayName = item.displayName;
-    // this.newProductObj.id = item.
   }
   onCancelPopup() {
     this.isPopupOpen = false;
@@ -225,7 +243,6 @@ export class DispachPackagesComponent implements OnInit {
               title: 'font-semibold text-lg',
             },
           });
-          // this.router.navigate(['/dispatch/salesdash-orders']);
           this.isPopupOpen = false;
           this.newProductObj = null;
           this.fetchData();
@@ -304,6 +321,7 @@ interface PakageItem {
   price: number;
   discountedPrice: number;
   displayName: string;
+  typeName: string;
 }
 
 interface MarketPlaceItems {
@@ -317,7 +335,6 @@ interface MarketPlaceItems {
   startValue: number
   changeby: number
   isExcluded: boolean
-
   price: number;
   qty: number;
 }

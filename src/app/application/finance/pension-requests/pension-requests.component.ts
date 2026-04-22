@@ -84,12 +84,6 @@ export class PensionRequestsComponent implements OnInit {
         }
       }
     }
-
-    console.log('Current User Info:', {
-      userId: this.currentUserId,
-      userName: this.currentUserName,
-      userDetails: userDetails,
-    });
   }
 
   loadPensionRequests(): void {
@@ -99,7 +93,7 @@ export class PensionRequestsComponent implements OnInit {
       .getAllPensionRequests(undefined, this.search)
       .subscribe({
         next: (response) => {
-          this.pensionRequests = response.data || [];
+          this.pensionRequests = this.sortByStatus(response.data || []);
           this.totalItems = response.count || 0;
           this.isLoading = false;
         },
@@ -180,11 +174,6 @@ export class PensionRequestsComponent implements OnInit {
     this.showApproveRejectModal = true;
 
     // Log which user is trying to approve/reject
-    console.log('Opening approve/reject modal for user:', {
-      userId: this.currentUserId,
-      userName: this.currentUserName,
-      requestId: request.Request_ID,
-    });
   }
 
   closeApproveRejectModal(): void {
@@ -220,13 +209,6 @@ export class PensionRequestsComponent implements OnInit {
     }
 
     this.isProcessingAction = true;
-
-    console.log('Updating request with data:', {
-      requestId: this.selectedRequestForAction.Request_ID,
-      status: status,
-      userId: this.currentUserId,
-      userName: this.currentUserName,
-    });
 
     // Pass userId as parameter
     this.farmerPensionService
@@ -298,25 +280,36 @@ export class PensionRequestsComponent implements OnInit {
     }
   }
 
-  // Format NIC for display (add spaces for readability)
-  formatNIC(nic: string): string {
-    if (!nic) return '';
-    if (nic.length === 10) {
-      return nic.slice(0, 9) + ' ' + nic.slice(9);
-    }
-    return nic;
-  }
+  // Sort pension requests by status: To Review first, then Rejected
+  sortByStatus(requests: PensionRequest[]): PensionRequest[] {
+    const statusOrder: { [key: string]: number } = {
+      'To Review': 1,
+      'Rejected': 2,
+    };
 
-  // Format date for display
-  formatDate(dateString: string): string {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return requests.sort((a, b) => {
+      const orderA = statusOrder[a.reqStatus] || 999;
+      const orderB = statusOrder[b.reqStatus] || 999;
+      return orderA - orderB;
     });
   }
+
+  // Format NIC for display (add spaces for readability)
+  formatNIC(nic: string): string {
+  if (!nic) return '';
+  return nic; // Return the NIC as-is without any formatting
+}
+
+  // Format date for display with full month name
+formatDate(dateString: string): string {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',  // Changed from 'short' to 'long' for full month name
+    day: 'numeric',
+  });
+}
 
   // Add this function to your component class (you can place it near formatNIC and formatDate methods)
   calculateAge(dob: string | null | undefined): string {
@@ -328,31 +321,51 @@ export class PensionRequestsComponent implements OnInit {
     // Check if date is valid
     if (isNaN(birthDate.getTime())) return '--';
 
-    let years = today.getFullYear() - birthDate.getFullYear();
-    let months = today.getMonth() - birthDate.getMonth();
-    let days = today.getDate() - birthDate.getDate();
+    // Use UTC dates to avoid timezone issues
+    const dobYear = birthDate.getUTCFullYear();
+    const dobMonth = birthDate.getUTCMonth();
+    const dobDay = birthDate.getUTCDate();
 
-    // Adjust for negative months
-    if (months < 0) {
+    const todayYear = today.getFullYear();
+    const todayMonth = today.getMonth();
+    const todayDay = today.getDate();
+
+    let years = todayYear - dobYear;
+    let months = todayMonth - dobMonth;
+
+    // Adjust if birthday hasn't occurred yet this year
+    if (months < 0 || (months === 0 && todayDay < dobDay)) {
       years--;
-      months += 12;
+      months = months < 0 ? months + 12 : 11;
     }
 
-    // Adjust for negative days (use a simple approach)
-    if (days < 0) {
+    // Adjust if day hasn't occurred yet this month
+    if (todayDay < dobDay && months > 0) {
       months--;
-      // Add days from previous month
-      const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-      days += prevMonth.getDate();
-
-      // If months become negative after adjusting for days
-      if (months < 0) {
-        years--;
-        months += 12;
-      }
     }
 
-    return `${years} Years, ${months} Months`;
+    // Ensure non-negative values
+    years = Math.max(years, 0);
+    months = Math.max(months, 0);
+
+    // Build age string
+    let ageString = '';
+
+    if (years > 0) {
+      ageString += `${years} ${years === 1 ? 'Year' : 'Years'}`;
+    }
+
+    // Only show months if months > 0
+    if (months > 0) {
+      ageString += `${ageString ? ', ' : ''}${months} ${months === 1 ? 'Month' : 'Months'}`;
+    }
+
+    // If both are 0, show 0 Year
+    if (!ageString) {
+      ageString = '0 Year';
+    }
+
+    return ageString;
   }
 
   openReviewRequest(request: PensionRequest): void {
@@ -396,8 +409,6 @@ export class PensionRequestsComponent implements OnInit {
       console.error('Request_ID not found in request');
       return;
     }
-
-    console.log('Navigating to view documents for Request_ID:', id);
 
     this.router.navigate(
       [`/finance/action/pension-requests-view-documents/${id}`],

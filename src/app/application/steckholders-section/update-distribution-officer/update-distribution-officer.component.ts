@@ -1,6 +1,11 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule, NgModel } from '@angular/forms';
+import {
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  NgModel,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DistributionHubService } from '../../../services/distribution-hub/distribution-hub.service';
 import Swal from 'sweetalert2';
@@ -56,13 +61,12 @@ interface DistributionOfficers {
     FormsModule,
     LoadingSpinnerComponent,
     DropdownModule,
-    CalendarModule
+    CalendarModule,
   ],
   templateUrl: './update-distribution-officer.component.html',
   styleUrl: './update-distribution-officer.component.css',
 })
 export class UpdateDistributionOfficerComponent {
-
   @ViewChild('licNoInput') licNoModel!: NgModel;
   @ViewChild('confirmLicNoInput') confirmLicNoModel!: NgModel;
   @ViewChild('insurenceNoInput') insurenceNoModel!: NgModel;
@@ -125,7 +129,6 @@ export class UpdateDistributionOfficerComponent {
   hasData: boolean = false;
   distributionOfficers: DistributionOfficers[] = [];
 
-  // Driver Images
   licenseFrontImageFileName!: string;
   licenseFrontImagePreview: string | ArrayBuffer | null = null;
   licenseFrontImageFile: File | null = null;
@@ -206,7 +209,7 @@ export class UpdateDistributionOfficerComponent {
 
   setupDropdownOptions() {
     this.districts = this.districts.sort((a, b) =>
-      a.name.localeCompare(b.name)
+      a.name.localeCompare(b.name),
     );
     this.districtOptions = this.districts.map((district) => ({
       label: district.name,
@@ -224,33 +227,35 @@ export class UpdateDistributionOfficerComponent {
   ];
 
   isLanguageRequired = false;
-  minInsuranceDate: Date = new Date(new Date().setDate(new Date().getDate() + 1)); // Tomorrow - blocks current and past dates
+  minInsuranceDate: Date = new Date(
+    new Date().setDate(new Date().getDate() + 1),
+  );
 
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
     private distributionOfficerServ: DistributionHubService,
-    private location: Location
-  ) { }
+    private location: Location,
+  ) {}
 
   ngOnInit() {
     this.scrollToTop();
-    // Set minimum date to tomorrow to block current and past dates
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
-    
+    today.setHours(0, 0, 0, 0);
+
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    
+
     this.minInsuranceDate = tomorrow;
-    
+
     this.loadBanks();
     this.loadBranches();
     this.setupDropdownOptions();
     this.itemId = this.route.snapshot.params['id'];
-    // If you want the last segment of the URL
-    const urlSegments = this.router.url.split('/').filter(segment => segment.length > 0);
+    const urlSegments = this.router.url
+      .split('/')
+      .filter((segment) => segment.length > 0);
     this.urlSegment = urlSegments[urlSegments.length - 2];
     this.chooseJobRole();
     if (this.itemId) {
@@ -265,11 +270,8 @@ export class UpdateDistributionOfficerComponent {
     this.isLoading = true;
     this.distributionOfficerServ.getOfficerById(this.itemId).subscribe({
       next: (response: any) => {
-        console.log('Officer Data Response:', response);
         const officerData = response.officerData[0];
-        console.log('Officer data structure:', response.officerData[0]);
 
-        // Populate personalData
         this.personalData.id = officerData.id || this.itemId;
         this.personalData.empId = officerData.empId || '';
         this.personalData.jobRole = officerData.jobRole || '';
@@ -303,12 +305,17 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.image = officerData.image || '';
         this.personalData.status = officerData.status || '';
 
-        // Populate driver data if jobRole is Driver
-        if (officerData.jobRole === 'Driver' && response.driverData && response.driverData.length > 0) {
+        if (
+          officerData.jobRole === 'Driver' &&
+          response.driverData &&
+          response.driverData.length > 0
+        ) {
           const driverData = response.driverData[0];
           this.driverObj.licNo = driverData.licNo || '';
           this.driverObj.insNo = driverData.insNo || '';
-          this.driverObj.insExpDate = driverData.insExpDate ? new Date(driverData.insExpDate) : '';
+          this.driverObj.insExpDate = driverData.insExpDate
+            ? new Date(driverData.insExpDate)
+            : '';
           this.driverObj.vType = driverData.vType || '';
           this.driverObj.vCapacity = driverData.vCapacity || '';
           this.driverObj.vRegNo = driverData.vRegNo || '';
@@ -316,8 +323,6 @@ export class UpdateDistributionOfficerComponent {
           this.driverObj.confirmLicNo = driverData.licNo || '';
           this.driverObj.confirmInsNo = driverData.insNo || '';
           this.driverObj.confirmVRegNo = driverData.vRegNo || '';
-
-
 
           this.driverObj.licenseFrontImage = driverData.licFrontImg || '';
           this.driverObj.licenseBackImage = driverData.licBackImg || '';
@@ -328,7 +333,6 @@ export class UpdateDistributionOfficerComponent {
           this.driverObj.vehicleSideAImage = driverData.vehSideImgA || '';
           this.driverObj.vehicleSideBImage = driverData.vehSideImgB || '';
 
-          // Set existing image file names
           this.licenseFrontImageFileName = driverData.licFrontName || '';
           this.licenseBackImageFileName = driverData.licBackName || '';
           this.insurenceFrontImageFileName = driverData.insFrontName || '';
@@ -338,17 +342,18 @@ export class UpdateDistributionOfficerComponent {
           this.vehicleSideAImageFileName = driverData.vSideAName || '';
           this.vehicleSideBImageFileName = driverData.vSideBName || '';
 
-          // Set vehicle type
-          const vehicleType = this.VehicleTypes.find(v => v.name === driverData.vType);
+          const vehicleType = this.VehicleTypes.find(
+            (v) => v.name === driverData.vType,
+          );
           if (vehicleType) {
             this.selectVehicletype = vehicleType;
           }
         }
 
-        console.log('this.driverObj', this.driverObj)
-
         this.isApproved = this.personalData.status === 'Approved';
-        this.selectedLanguages = this.personalData.languages ? this.personalData.languages.split(',') : [];
+        this.selectedLanguages = this.personalData.languages
+          ? this.personalData.languages.split(',')
+          : [];
         this.empType = this.personalData.empType;
         this.lastID = this.personalData.empId.slice(-5);
         this.cenId = this.personalData.centerId;
@@ -371,10 +376,9 @@ export class UpdateDistributionOfficerComponent {
   scrollToTop(): void {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth' // Use 'auto' for instant scroll
+      behavior: 'smooth',
     });
   }
-
 
   getFlagUrl(countryCode: string): string {
     return `https://flagcdn.com/24x18/${countryCode.toLowerCase()}.png`;
@@ -401,9 +405,6 @@ export class UpdateDistributionOfficerComponent {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.router.navigate([
-        //   '/steckholders/action/view-distribution-officers',
-        // ]);
         this.location.back();
       }
     });
@@ -413,7 +414,6 @@ export class UpdateDistributionOfficerComponent {
     this.http.get<Bank[]>('assets/json/banks.json').subscribe((data) => {
       this.banks = data.sort((a, b) => a.name.localeCompare(b.name));
 
-      // Convert to dropdown options format
       this.bankOptions = this.banks.map((bank) => ({
         label: bank.name,
         value: bank.name,
@@ -421,24 +421,20 @@ export class UpdateDistributionOfficerComponent {
     });
   }
 
-  // Update the onBankChange method
   onBankChange() {
     const selectedBankName = this.personalData.bankName;
-    console.log('Selected Bank Name:', selectedBankName); // Debug
     if (selectedBankName) {
       const selectedBank = this.banks.find(
-        (bank) => bank.name === selectedBankName
+        (bank) => bank.name === selectedBankName,
       );
-      console.log('Selected Bank:', selectedBank); // Debug
       if (selectedBank) {
         this.selectedBankId = selectedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
-        console.log('Branches for Bank:', this.branches); // Debug
         this.branchOptions = this.branches.map((branch) => ({
           label: branch.name,
           value: branch.name,
         }));
-        this.personalData.branchName = ''; // Reset branch
+        this.personalData.branchName = '';
       }
     } else {
       this.branches = [];
@@ -448,7 +444,6 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
-  // Update loadBranches method to set allBranches directly
   loadBranches() {
     this.http
       .get<BranchesData>('assets/json/branches.json')
@@ -458,9 +453,9 @@ export class UpdateDistributionOfficerComponent {
         });
         this.allBranches = data;
 
-        // If bank is already selected, set branches for the bank
         if (this.selectedBankId) {
-          this.branches = this.allBranches[this.selectedBankId.toString()] || [];
+          this.branches =
+            this.allBranches[this.selectedBankId.toString()] || [];
           this.branchOptions = this.branches.map((branch) => ({
             label: branch.name,
             value: branch.name,
@@ -477,9 +472,8 @@ export class UpdateDistributionOfficerComponent {
       this.personalData.bankName
     ) {
       const matchedBank = this.banks.find(
-        (bank) => bank.name === this.personalData.bankName
+        (bank) => bank.name === this.personalData.bankName,
       );
-      console.log('Matched Bank:', matchedBank); // Debug
       if (matchedBank) {
         this.selectedBankId = matchedBank.ID;
         this.branches = this.allBranches[this.selectedBankId.toString()] || [];
@@ -487,10 +481,9 @@ export class UpdateDistributionOfficerComponent {
           label: branch.name,
           value: branch.name,
         }));
-        console.log('Branch Options:', this.branchOptions); // Debug
         if (this.personalData.branchName) {
           const matchedBranch = this.branches.find(
-            (branch) => branch.name === this.personalData.branchName
+            (branch) => branch.name === this.personalData.branchName,
           );
           if (matchedBranch) {
             this.selectedBranchId = matchedBranch.ID;
@@ -504,7 +497,7 @@ export class UpdateDistributionOfficerComponent {
     const selectedBranchName = event.value;
     if (selectedBranchName) {
       const selectedBranch = this.branches.find(
-        (branch) => branch.name === selectedBranchName
+        (branch) => branch.name === selectedBranchName,
       );
       if (selectedBranch) {
         this.personalData.branchName = selectedBranch.name;
@@ -576,7 +569,9 @@ export class UpdateDistributionOfficerComponent {
     this.licenseFrontImageFileName = '';
     this.licenseFrontImagePreview = null;
     this.licenseFrontImageUpdated = false;
-    const fileInput = document.getElementById('licenseFrontImageUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'licenseFrontImageUpload',
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
@@ -627,7 +622,9 @@ export class UpdateDistributionOfficerComponent {
     this.licenseBackImageFileName = '';
     this.licenseBackImagePreview = null;
     this.licenseBackImageUpdated = false;
-    const fileInput = document.getElementById('licenseBackImageUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'licenseBackImageUpload',
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
@@ -678,7 +675,9 @@ export class UpdateDistributionOfficerComponent {
     this.insurenceFrontImageFileName = '';
     this.insurenceFrontImagePreview = null;
     this.insurenceFrontImageUpdated = false;
-    const fileInput = document.getElementById('insurenceFrontImageUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'insurenceFrontImageUpload',
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
@@ -729,7 +728,9 @@ export class UpdateDistributionOfficerComponent {
     this.insurenceBackImageFileName = '';
     this.insurenceBackImagePreview = null;
     this.insurenceBackImageUpdated = false;
-    const fileInput = document.getElementById('insuranceBackImageUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'insuranceBackImageUpload',
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
@@ -780,7 +781,9 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleFrontImageFileName = '';
     this.vehicleFrontImagePreview = null;
     this.vehicleFrontImageUpdated = false;
-    const fileInput = document.getElementById('vehicleFrontImageUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'vehicleFrontImageUpload',
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
@@ -831,7 +834,9 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleBackImageFileName = '';
     this.vehicleBackImagePreview = null;
     this.vehicleBackImageUpdated = false;
-    const fileInput = document.getElementById('vehicleBackImageUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'vehicleBackImageUpload',
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
@@ -882,7 +887,9 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleSideAImageFileName = '';
     this.vehicleSideAImagePreview = null;
     this.vehicleSideAImageUpdated = false;
-    const fileInput = document.getElementById('vehicleSideAImageUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'vehicleSideAImageUpload',
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
@@ -933,7 +940,9 @@ export class UpdateDistributionOfficerComponent {
     this.vehicleSideBImageFileName = '';
     this.vehicleSideBImagePreview = null;
     this.vehicleSideBImageUpdated = false;
-    const fileInput = document.getElementById('vehicleSideBImageUpload') as HTMLInputElement;
+    const fileInput = document.getElementById(
+      'vehicleSideBImageUpload',
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
@@ -944,8 +953,21 @@ export class UpdateDistributionOfficerComponent {
 
   preventNonNumbers(event: KeyboardEvent) {
     const allowedKeys = [
-      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-      'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
     ];
 
     if (!allowedKeys.includes(event.key)) {
@@ -985,7 +1007,6 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
-  // 6. ADD FIELD VALIDATION METHODS
   isFieldInvalid(fieldName: string): boolean {
     return (
       !!this.touchedFields[fieldName as keyof Personal] &&
@@ -996,50 +1017,63 @@ export class UpdateDistributionOfficerComponent {
   isValidEmail(email: string): boolean {
     if (!email) return false;
 
-    // Trim the email
     email = email.trim();
 
-    // Basic email regex pattern
     const emailRegex =
       /^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$/;
 
-    // Check for specific invalid patterns
     if (email.includes('..')) {
-      return false; // Consecutive dots
+      return false;
     }
     if (email.startsWith('.') || email.endsWith('.')) {
-      return false; // Leading or trailing dots
+      return false;
     }
     const [localPart] = email.split('@');
     if (localPart && (localPart.endsWith('.') || localPart.startsWith('.'))) {
-      return false; // Dot before @ or after local part
+      return false;
     }
     if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
-      return false; // Invalid special characters
+      return false;
     }
 
     return emailRegex.test(email);
   }
 
   getEmailErrorMessage(email: string): string {
-    if (!email) return 'Email is required';
-    if (email.startsWith('.')) return 'Email cannot start with a dot';
-    const [localPart] = email.split('@');
-    if (localPart && localPart.endsWith('.')) return 'Email cannot have a dot before @';
-    if (email.includes('..')) return 'Email cannot contain consecutive dots';
-    return 'Please enter a valid email address';
+    if (!email) {
+      return 'Email is required';
+    }
+
+    if (email.includes('..')) {
+      return 'Email cannot contain consecutive dots';
+    }
+    if (email.startsWith('.')) {
+      return 'Email cannot start with a dot';
+    }
+    if (email.endsWith('.')) {
+      return 'Email cannot end with a dot';
+    }
+    if (/[!#$%^&*()=<>?\/\\]/.test(email)) {
+      return 'Email contains invalid special characters';
+    }
+    if (!/@/.test(email)) {
+      return 'Email must contain an @ symbol';
+    }
+    if (!/\./.test(email.split('@')[1])) {
+      return 'Email domain must contain a dot (.)';
+    }
+
+    return 'Please enter a valid email in the format: example@domain.com';
   }
 
   isValidNIC(nic: string): boolean {
     if (!nic) return false;
-    // Updated regex to exclude simple 'v' and only allow 'V' at the end
     const nicRegex = /^(?:\d{12}|\d{9}[V])$/;
     return nicRegex.test(nic);
   }
 
   isValidPhoneNumber(phone: string): boolean {
     if (!phone) return false;
-    // Must be exactly 9 digits and start with 7
     const phoneRegex = /^7[0-9]{8}$/;
     return phoneRegex.test(phone);
   }
@@ -1047,114 +1081,136 @@ export class UpdateDistributionOfficerComponent {
   getPhoneErrorMessage(phone: string): string {
     if (!phone) return 'Mobile number is required';
     if (!phone.startsWith('7')) return 'Mobile number must start with 7';
-    if (phone.length < 9) return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
+    if (phone.length < 9)
+      return 'Please enter a valid mobile number (format: +947XXXXXXXX)';
     return 'Please enter a valid mobile number (9 digits)';
   }
 
   formatTextInput(fieldName: keyof Personal): void {
     const value = this.personalData[fieldName];
     if (typeof value === 'string') {
-      // Remove leading spaces
       const cleanedValue = value.replace(/^\s+/, '');
       (this.personalData[fieldName] as string) = cleanedValue;
     }
   }
 
-  preventLeadingSpace(event: KeyboardEvent, fieldName: keyof Personal | string): void {
+  preventLeadingSpace(
+    event: KeyboardEvent,
+    fieldName: keyof Personal | string,
+  ): void {
     const input = event.target as HTMLInputElement;
     let fieldValue;
-    
+
     if (typeof fieldName === 'string' && fieldName in this.personalData) {
       fieldValue = this.personalData[fieldName as keyof Personal];
     } else {
       fieldValue = input.value;
     }
-    
-    // Prevent space if it's the first character or if the field is empty
-    if (event.key === ' ' && (input.selectionStart === 0 || !fieldValue)) {
-      event.preventDefault();
+
+    if (fieldName === 'email') {
+      const charCode = event.which ? event.which : event.keyCode;
+
+      if (
+        event.ctrlKey ||
+        event.metaKey ||
+        charCode === 8 ||
+        charCode === 9 ||
+        charCode === 13 ||
+        charCode === 27 ||
+        charCode === 46 ||
+        (charCode >= 35 && charCode <= 40)
+      ) {
+        return;
+      }
+
+      const char = String.fromCharCode(charCode);
+
+      if (charCode === 32) {
+        event.preventDefault();
+        return;
+      }
+
+      if (!/[a-zA-Z0-9@.\-_+]/.test(char)) {
+        event.preventDefault();
+        return;
+      }
+    } else {
+      if (event.key === ' ' && (input.selectionStart === 0 || !fieldValue)) {
+        event.preventDefault();
+      }
     }
   }
 
-  // Update existing formatAccountHolderName method
   formatAccountHolderName(): void {
     let value = this.personalData.accHolderName;
     if (value) {
-      // Remove leading spaces and special characters/numbers, keep only letters and spaces
       value = value.replace(/^\s+/, '').replace(/[^a-zA-Z\s]/g, '');
-      // Capitalize first letter and make rest lowercase
       value = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
       this.personalData.accHolderName = value;
     }
   }
 
-  formatName(fieldName: 'firstNameEnglish' | 'lastNameEnglish' | 'firstNameSinhala' | 'lastNameSinhala' | 'firstNameTamil' | 'lastNameTamil'): void {
+  formatName(
+    fieldName:
+      | 'firstNameEnglish'
+      | 'lastNameEnglish'
+      | 'firstNameSinhala'
+      | 'lastNameSinhala'
+      | 'firstNameTamil'
+      | 'lastNameTamil',
+  ): void {
     let value = this.personalData[fieldName];
     if (value) {
-      // Remove leading spaces
       value = value.replace(/^\s+/, '');
 
-      // For English names, remove numbers and special characters
       if (fieldName === 'firstNameEnglish' || fieldName === 'lastNameEnglish') {
         value = value.replace(/[^a-zA-Z\s]/g, '');
       }
 
-      // Replace multiple consecutive spaces with single space
       value = value.replace(/\s{2,}/g, ' ');
 
       this.personalData[fieldName] = value;
     }
   }
 
-  // Add method to handle NIC input restriction
   onNICInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.toUpperCase();
-    
-    // If it's 9 digits followed by V, block further input
+
     if (/^\d{9}V$/.test(value)) {
       input.maxLength = 10;
-    }
-    // If it's 12 digits, block further input
-    else if (/^\d{12}$/.test(value)) {
+    } else if (/^\d{12}$/.test(value)) {
       input.maxLength = 12;
     } else {
       input.maxLength = 12;
     }
-    
+
     this.personalData.nic = value;
   }
 
-  // Add method to handle phone input - only allow starting with 7
   onPhoneInput(event: Event, fieldName: 'contact1' | 'contact2'): void {
     const input = event.target as HTMLInputElement;
     let value = input.value;
-    
-    // If first digit is not 7, clear the input
+
     if (value.length > 0 && !value.startsWith('7')) {
       this.personalData[fieldName] = '';
       input.value = '';
       return;
     }
-    
-    // Only allow digits
+
     value = value.replace(/\D/g, '');
-    
-    // Limit to 9 digits
+
     if (value.length > 9) {
       value = value.substring(0, 9);
     }
-    
+
     this.personalData[fieldName] = value;
     input.value = value;
   }
 
-
-
   hasInvalidAccountHolderName(): boolean {
     const value = this.personalData.accHolderName;
     if (!value) return false;
-    // Check if contains numbers or special characters
     return /[^a-zA-Z\s]/.test(value);
   }
 
@@ -1173,8 +1229,6 @@ export class UpdateDistributionOfficerComponent {
     return this.selectedLanguages && this.selectedLanguages.length > 0;
   }
 
-  // Add these methods to the component class
-
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
@@ -1184,8 +1238,7 @@ export class UpdateDistributionOfficerComponent {
   }
 
   isValidPassword(password: string): boolean {
-    if (!password) return true; // Optional field
-    // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+    if (!password) return true;
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
@@ -1197,19 +1250,20 @@ export class UpdateDistributionOfficerComponent {
     return this.personalData.password === this.personalData.confirmPassword;
   }
 
-  // Update the checkFormValidity method
   checkFormValidity(): boolean {
-    const isFirstNameValid = this.personalData.jobRole === 'Driver'
-      ? !!this.personalData.firstNameEnglish
-      : !!this.personalData.firstNameEnglish &&
-      !!this.personalData.firstNameSinhala &&
-      !!this.personalData.firstNameTamil;
+    const isFirstNameValid =
+      this.personalData.jobRole === 'Driver'
+        ? !!this.personalData.firstNameEnglish
+        : !!this.personalData.firstNameEnglish &&
+          !!this.personalData.firstNameSinhala &&
+          !!this.personalData.firstNameTamil;
 
-    const isLastNameValid = this.personalData.jobRole === 'Driver'
-      ? !!this.personalData.lastNameEnglish
-      : !!this.personalData.lastNameEnglish &&
-      !!this.personalData.lastNameSinhala &&
-      !!this.personalData.lastNameTamil;
+    const isLastNameValid =
+      this.personalData.jobRole === 'Driver'
+        ? !!this.personalData.lastNameEnglish
+        : !!this.personalData.lastNameEnglish &&
+          !!this.personalData.lastNameSinhala &&
+          !!this.personalData.lastNameTamil;
 
     const isContact1Valid = this.isValidPhoneNumber(this.personalData.contact1);
     const isEmailValid = this.isValidEmail(this.personalData.email);
@@ -1241,11 +1295,9 @@ export class UpdateDistributionOfficerComponent {
     );
   }
 
-
   onInputChange(event: any, type: string): void {
     if (type === 'phone') {
       const value = event.target.value;
-      // Only allow numbers
       event.target.value = value.replace(/[^0-9]/g, '');
     }
   }
@@ -1404,12 +1456,10 @@ export class UpdateDistributionOfficerComponent {
     });
   }
 
-  // Update the nextFormCreate method to handle pageThree
   nextFormCreate(page: 'pageOne' | 'pageTwo' | 'pageThree') {
     if (page === 'pageTwo') {
       const missingFields: string[] = [];
 
-      // Validate pageOne fields
       if (!this.personalData.empType) {
         missingFields.push('Staff Employee Type is Required');
       }
@@ -1431,7 +1481,8 @@ export class UpdateDistributionOfficerComponent {
       }
 
       if (
-        (this.personalData.jobRole === 'Distribution Officer' || this.personalData.jobRole === 'Driver') &&
+        (this.personalData.jobRole === 'Distribution Officer' ||
+          this.personalData.jobRole === 'Driver') &&
         !this.personalData.irmId
       ) {
         missingFields.push('Manager Name is Required');
@@ -1445,7 +1496,6 @@ export class UpdateDistributionOfficerComponent {
         missingFields.push('Last Name (in English) is Required');
       }
 
-      // Only validate Sinhala and Tamil names if not a Driver
       if (this.personalData.jobRole !== 'Driver') {
         if (!this.personalData.firstNameSinhala) {
           missingFields.push('First Name (in Sinhala) is Required');
@@ -1483,7 +1533,7 @@ export class UpdateDistributionOfficerComponent {
         this.personalData.contact1 === this.personalData.contact2
       ) {
         missingFields.push(
-          'Mobile Number - 02 - Cannot be the same as Mobile Number - 01'
+          'Mobile Number - 02 - Cannot be the same as Mobile Number - 01',
         );
       }
 
@@ -1491,7 +1541,7 @@ export class UpdateDistributionOfficerComponent {
         missingFields.push('NIC Number is Required');
       } else if (!this.isValidNIC(this.personalData.nic)) {
         missingFields.push(
-          'NIC Number - Must be 12 digits or 9 digits followed by V'
+          'NIC Number - Must be 12 digits or 9 digits followed by V',
         );
       }
 
@@ -1523,7 +1573,6 @@ export class UpdateDistributionOfficerComponent {
         return;
       }
     } else if (page === 'pageThree') {
-      // Validate pageTwo fields
       const missingFields: string[] = [];
 
       if (!this.personalData.houseNumber) {
@@ -1546,8 +1595,12 @@ export class UpdateDistributionOfficerComponent {
       }
       if (!this.personalData.confirmAccNumber) {
         missingFields.push('Confirm Account Number is Required');
-      } else if (this.personalData.accNumber !== this.personalData.confirmAccNumber) {
-        missingFields.push('Confirm Account Number - Must match Account Number');
+      } else if (
+        this.personalData.accNumber !== this.personalData.confirmAccNumber
+      ) {
+        missingFields.push(
+          'Confirm Account Number - Must match Account Number',
+        );
       }
       if (!this.selectedBankId) {
         missingFields.push('Bank Name is Required');
@@ -1557,7 +1610,8 @@ export class UpdateDistributionOfficerComponent {
       }
 
       if (missingFields.length > 0) {
-        let errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
+        let errorMessage =
+          '<div class="text-left"><p class="mb-2">Please fix the following issues:</p><ul class="list-disc pl-5">';
         missingFields.forEach((field) => {
           errorMessage += `<li>${field}</li>`;
         });
@@ -1583,17 +1637,16 @@ export class UpdateDistributionOfficerComponent {
     setTimeout(() => {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth' // Add smooth scrolling effect
+        behavior: 'smooth',
       });
     }, 100);
   }
 
-
   updateProvince(event: DropdownChangeEvent): void {
-    const selectedDistrict = event.value; // Get selected district name directly
+    const selectedDistrict = event.value;
 
     const selected = this.districts.find(
-      (district) => district.name === selectedDistrict
+      (district) => district.name === selectedDistrict,
     );
 
     if (this.itemId === null) {
@@ -1613,7 +1666,6 @@ export class UpdateDistributionOfficerComponent {
     this.distributionOfficerServ.getAllCompanyList().subscribe((res) => {
       this.CompanyData = res;
 
-      // Convert to dropdown options format
       this.companyOptions = this.CompanyData.map((company) => ({
         label: company.companyNameEnglish,
         value: company.id,
@@ -1621,63 +1673,61 @@ export class UpdateDistributionOfficerComponent {
     });
   }
 
-  // Update getAllCollectionCetnter method
   getAllCollectionCetnter() {
     this.distributionOfficerServ
-      .getDistributionCentreList(
-        this.personalData.companyId,
-      )
+      .getDistributionCentreList(this.personalData.companyId)
       .subscribe((res) => {
         this.collectionCenterData = res;
 
-        // Convert to dropdown options format with regCode
         this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
+          label: center.regCode
+            ? `${center.regCode} - ${center.centerName}`
+            : center.centerName,
           value: center.id,
-          // Store original data if needed
           originalLabel: center.centerName,
-          regCode: center.regCode
+          regCode: center.regCode,
         }));
       });
   }
 
   getAllCollectionCenters() {
-    // Reset center data
-    this.collectionCenterData = []
+    this.collectionCenterData = [];
     this.personalData.centerId = null;
     this.managerOptions = [];
     this.personalData.irmId = null;
 
     this.distributionOfficerServ
-      .getDistributionCentreList(
-        this.personalData.companyId,
-      )
+      .getDistributionCentreList(this.personalData.companyId)
       .subscribe((res) => {
         this.collectionCenterData = res;
 
-        // Convert to dropdown options format with regCode
         this.centerOptions = this.collectionCenterData.map((center) => ({
-          label: center.regCode ? `${center.regCode} - ${center.centerName}` : center.centerName,
+          label: center.regCode
+            ? `${center.regCode} - ${center.centerName}`
+            : center.centerName,
           value: center.id,
           originalLabel: center.centerName,
-          regCode: center.regCode
+          regCode: center.regCode,
         }));
       });
   }
 
-  // Update getAllCollectionManagers method
   getAllCollectionManagers() {
     this.distributionOfficerServ
       .getAllManagerList(
         this.personalData.companyId,
-        this.personalData.centerId
+        this.personalData.centerId,
       )
       .subscribe((res) => {
         this.collectionManagerData = res;
 
-        // Convert to dropdown options format
         this.managerOptions = this.collectionManagerData.map((manager) => ({
-          label: manager.empId + " - " + manager.firstNameEnglish + ' ' + manager.lastNameEnglish,
+          label:
+            manager.empId +
+            ' - ' +
+            manager.firstNameEnglish +
+            ' ' +
+            manager.lastNameEnglish,
           value: manager.id,
         }));
       });
@@ -1691,44 +1741,35 @@ export class UpdateDistributionOfficerComponent {
       }
     } else {
       this.selectedLanguages = this.selectedLanguages.filter(
-        (lang) => lang !== language
+        (lang) => lang !== language,
       );
     }
 
-    // Update personalData.languages string
     this.personalData.languages = this.selectedLanguages.join(',');
     this.isLanguageRequired = this.selectedLanguages.length === 0;
   }
 
   onSubmit() {
-
-    console.log('submitted')
-    // Log personalData to verify phone numbers
-    console.log('personalData before submit:', {
-      contact1: this.personalData.contact1,
-      contact1Code: this.personalData.contact1Code,
-      contact2: this.personalData.contact2,
-      contact2Code: this.personalData.contact2Code,
-    });
-
-    this.licNoModel.control.markAsTouched();
-    this.confirmLicNoModel.control.markAsTouched();
-    this.insurenceNoModel.control.markAsTouched();
-    this.confirmInsurenceNoModel.control.markAsTouched();
-    this.vRegNoModel.control.markAsTouched();
-    this.confirmVRegNoModel.control.markAsTouched();
-
+    console.log('called')
+    if (this.personalData.jobRole === 'Driver') {
+      this.licNoModel.control.markAsTouched();
+      this.confirmLicNoModel.control.markAsTouched();
+      this.insurenceNoModel.control.markAsTouched();
+      this.confirmInsurenceNoModel.control.markAsTouched();
+      this.vRegNoModel.control.markAsTouched();
+      this.confirmVRegNoModel.control.markAsTouched();
+    }
+    
     const missingFields: string[] = [];
 
     if (!this.personalData.email) {
       missingFields.push('Email');
     } else if (!this.isValidEmail(this.personalData.email)) {
       missingFields.push(
-        `Email - ${this.getEmailErrorMessage(this.personalData.email)}`
+        `Email - ${this.getEmailErrorMessage(this.personalData.email)}`,
       );
     }
 
-    // Check required fields for pageOne
     if (!this.personalData.empType) {
       missingFields.push('Staff Employee Type is Required');
     }
@@ -1801,7 +1842,7 @@ export class UpdateDistributionOfficerComponent {
       this.personalData.contact1 === this.personalData.contact2
     ) {
       missingFields.push(
-        'Mobile Number - 02 - Cannot be the same as Mobile Number - 01'
+        'Mobile Number - 02 - Cannot be the same as Mobile Number - 01',
       );
     }
 
@@ -1809,7 +1850,7 @@ export class UpdateDistributionOfficerComponent {
       missingFields.push('NIC Number is Required');
     } else if (!this.isValidNIC(this.personalData.nic)) {
       missingFields.push(
-        'NIC Number - Must be 12 digits or 9 digits followed by V'
+        'NIC Number - Must be 12 digits or 9 digits followed by V',
       );
     }
 
@@ -1819,7 +1860,6 @@ export class UpdateDistributionOfficerComponent {
       missingFields.push('Email - Invalid format (e.g., example@domain.com)');
     }
 
-    // Check required fields for pageTwo
     if (!this.personalData.houseNumber) {
       missingFields.push('House Number is Required');
     }
@@ -1868,32 +1908,40 @@ export class UpdateDistributionOfficerComponent {
       if (!this.driverObj.licNo) {
         missingFields.push('Driving License ID number is Required');
       } else if (!/^([A-Z]\d{7}|\d{10,12})$/.test(this.driverObj.licNo)) {
-        missingFields.push('Please enter a valid License ID number (1 capital letter + 7 digits or 10–12 digits).');
+        missingFields.push(
+          'Please enter a valid License ID number (1 capital letter + 7 digits or 10–12 digits).',
+        );
       }
-  
+
       if (!this.driverObj.confirmLicNo) {
         missingFields.push('Confirm Driving License ID number is Required');
       } else if (this.driverObj.licNo !== this.driverObj.confirmLicNo) {
-        missingFields.push('Confirm Driving License ID number should match the Driving License ID number.');
+        missingFields.push(
+          'Confirm Driving License ID number should match the Driving License ID number.',
+        );
       }
-  
+
       if (!this.driverObj.insNo) {
         missingFields.push('Insurance Number is Required');
       }
       if (!this.driverObj.confirmInsNo) {
         missingFields.push('Confirm Insurance Number is Required');
       } else if (this.driverObj.insNo !== this.driverObj.confirmInsNo) {
-        missingFields.push('Confirm Insurance Number should match the Insurance Number.');
+        missingFields.push(
+          'Confirm Insurance Number should match the Insurance Number.',
+        );
       }
-  
+
       if (!this.driverObj.vRegNo) {
         missingFields.push('Vehicle Registration Number is Required');
       }
-  
+
       if (!this.driverObj.confirmVRegNo) {
         missingFields.push(' Confirm Vehicle Registration Number is Required');
       } else if (this.driverObj.vRegNo !== this.driverObj.confirmVRegNo) {
-        missingFields.push('Confirm Vehicle Registration Number should match the Vehicle Registration Number.');
+        missingFields.push(
+          'Confirm Vehicle Registration Number should match the Vehicle Registration Number.',
+        );
       }
 
       if (!this.licenseFrontImageFileName) {
@@ -1902,7 +1950,7 @@ export class UpdateDistributionOfficerComponent {
       if (!this.licenseBackImageFileName) {
         missingFields.push("License's Back Image is Required");
       }
-     
+
       if (!this.driverObj.insExpDate) {
         missingFields.push('Insurance Expire Date is Required');
       }
@@ -1947,14 +1995,14 @@ export class UpdateDistributionOfficerComponent {
           popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
           title: 'font-semibold text-lg',
           htmlContainer: 'text-left',
-          confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+          confirmButton:
+            'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
         },
       });
       this.isLoading = false;
       return;
     }
 
-    // Determine the role-specific message
     let successMessage = '';
     switch (this.personalData.jobRole) {
       case 'Driver':
@@ -1964,12 +2012,12 @@ export class UpdateDistributionOfficerComponent {
         successMessage = 'Do you want to update the distribution officer?';
         break;
       case 'Distribution Centre Manager':
-        successMessage = 'Do you want to update the Distribution Centre Manager? ';
+        successMessage =
+          'Do you want to update the Distribution Centre Manager? ';
         break;
       default:
         successMessage = 'Do you want to update the Distribution Officer?';
     }
-
 
     Swal.fire({
       title: 'Are you sure?',
@@ -1982,8 +2030,10 @@ export class UpdateDistributionOfficerComponent {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-        cancelButton: 'bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700',
+        confirmButton:
+          'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+        cancelButton:
+          'bg-gray-500 dark:bg-gray-600 hover:bg-gray-600 dark:hover:bg-gray-700',
       },
     }).then((result) => {
       if (result.isConfirmed) {
@@ -2000,7 +2050,6 @@ export class UpdateDistributionOfficerComponent {
             '+94',
         };
 
-        // Prepare driver data if job role is Driver
         let driverDataToSend = null;
         if (this.personalData.jobRole === 'Driver') {
           driverDataToSend = {
@@ -2030,13 +2079,12 @@ export class UpdateDistributionOfficerComponent {
             this.vehicleFrontImagePreview,
             this.vehicleBackImagePreview,
             this.vehicleSideAImagePreview,
-            this.vehicleSideBImagePreview
+            this.vehicleSideBImagePreview,
           )
           .subscribe(
             (res: any) => {
               this.isLoading = false;
 
-              // Determine the role-specific message
               let successMessage = '';
               switch (this.personalData.jobRole) {
                 case 'Driver':
@@ -2046,7 +2094,8 @@ export class UpdateDistributionOfficerComponent {
                   successMessage = 'Distribution Officer Updated Successfully';
                   break;
                 case 'Distribution Centre Manager':
-                  successMessage = 'Distribution Centre Manager Updated Successfully';
+                  successMessage =
+                    'Distribution Centre Manager Updated Successfully';
                   break;
                 default:
                   successMessage = 'Distribution Officer Updated Successfully';
@@ -2058,9 +2107,11 @@ export class UpdateDistributionOfficerComponent {
                 text: successMessage,
                 confirmButtonText: 'OK',
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
-                  confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                  confirmButton:
+                    'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                 },
               });
               this.location.back();
@@ -2072,7 +2123,6 @@ export class UpdateDistributionOfficerComponent {
 
               if (error.error && Array.isArray(error.error.errors)) {
                 messages = error.error.errors.map((err: string) => {
-                  console.log('error',)
                   switch (err) {
                     case 'NIC':
                       return 'The NIC number is already registered.';
@@ -2089,8 +2139,9 @@ export class UpdateDistributionOfficerComponent {
               }
 
               if (messages.length > 0) {
-                errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
-                messages.forEach(m => {
+                errorMessage =
+                  '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+                messages.forEach((m) => {
                   errorMessage += `<li>${m}</li>`;
                 });
                 errorMessage += '</ul></div>';
@@ -2101,15 +2152,17 @@ export class UpdateDistributionOfficerComponent {
                   html: errorMessage,
                   confirmButtonText: 'OK',
                   customClass: {
-                    popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                     title: 'font-semibold text-lg',
                     htmlContainer: 'text-left',
-                    confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+                    confirmButton:
+                      'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
                   },
                 });
                 return;
               }
-            }
+            },
           );
       }
     });
@@ -2121,36 +2174,33 @@ export class UpdateDistributionOfficerComponent {
 
   formatHouseNumber(): void {
     if (this.personalData.houseNumber) {
-      // Remove leading spaces and capitalize first letter
       this.personalData.houseNumber = this.personalData.houseNumber
         .replace(/^\s+/, '')
         .replace(
           /\w\S*/g,
-          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
         );
     }
   }
 
   formatStreetName(): void {
     if (this.personalData.streetName) {
-      // Remove leading spaces and capitalize first letter
       this.personalData.streetName = this.personalData.streetName
         .replace(/^\s+/, '')
         .replace(
           /\w\S*/g,
-          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
         );
     }
   }
 
   formatCity(): void {
     if (this.personalData.city) {
-      // Remove leading spaces and capitalize first letter
       this.personalData.city = this.personalData.city
         .replace(/^\s+/, '')
         .replace(
           /\w\S*/g,
-          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+          (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
         );
     }
   }
@@ -2164,13 +2214,21 @@ export class UpdateDistributionOfficerComponent {
     }
   }
 
-  // New method to prevent special characters AND numbers (only letters and spaces allowed)
   preventSpecialCharactersAndNumbers(event: KeyboardEvent) {
     const allowedPattern = /^[a-zA-Z\s]$/;
     const inputChar = event.key;
 
-    // Allow control keys (Backspace, Delete, Arrow keys, Tab, etc.)
-    const controlKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+    const controlKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+      'Tab',
+      'Home',
+      'End',
+    ];
     if (controlKeys.includes(event.key)) {
       return;
     }
@@ -2190,9 +2248,9 @@ export class UpdateDistributionOfficerComponent {
   }
 
   openPopup(item: any) {
-    const showApproveButton = item.status === 'Rejected' || item.status === 'Not Approved';
+    const showApproveButton =
+      item.status === 'Rejected' || item.status === 'Not Approved';
 
-    // Dynamic message based on status
     let message = '';
     if (item.status === 'Rejected') {
       message = 'Are you sure you want to approve this distribution officer?';
@@ -2229,39 +2287,44 @@ export class UpdateDistributionOfficerComponent {
               Swal.close();
               this.isPopupVisible = false;
               this.isLoading = true;
-              this.distributionOfficerServ.ChangeStatus(item.id, 'Approved').subscribe(
-                (res) => {
-                  this.isLoading = false;
-                  if (res.status) {
-                    Swal.fire({
-                      icon: 'success',
-                      title: 'Success!',
-                      text: 'The Collection Officer was approved successfully.',
-                      showConfirmButton: false,
-                      timer: 3000,
-                    });
-                    this.fetchAllDistributionOfficer(this.page, this.itemsPerPage);
-                  } else {
+              this.distributionOfficerServ
+                .ChangeStatus(item.id, 'Approved')
+                .subscribe(
+                  (res) => {
+                    this.isLoading = false;
+                    if (res.status) {
+                      Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'The Collection Officer was approved successfully.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                      });
+                      this.fetchAllDistributionOfficer(
+                        this.page,
+                        this.itemsPerPage,
+                      );
+                    } else {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Something went wrong. Please try again.',
+                        showConfirmButton: false,
+                        timer: 3000,
+                      });
+                    }
+                  },
+                  () => {
+                    this.isLoading = false;
                     Swal.fire({
                       icon: 'error',
                       title: 'Error!',
-                      text: 'Something went wrong. Please try again.',
+                      text: 'An error occurred while approving. Please try again.',
                       showConfirmButton: false,
                       timer: 3000,
                     });
-                  }
-                },
-                () => {
-                  this.isLoading = false;
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'An error occurred while approving. Please try again.',
-                    showConfirmButton: false,
-                    timer: 3000,
-                  });
-                }
-              );
+                  },
+                );
             });
         }
       },
@@ -2272,7 +2335,7 @@ export class UpdateDistributionOfficerComponent {
     page: number = 1,
     limit: number = this.itemsPerPage,
     centerStatus: string = this.selectCenterStatus,
-    status: string = this.selectStatus
+    status: string = this.selectStatus,
   ) {
     this.isLoading = true;
     this.route.queryParams.subscribe((params) => {
@@ -2294,16 +2357,16 @@ export class UpdateDistributionOfficerComponent {
           (response) => {
             this.isLoading = false;
             if (response.total > 0) {
-              this.hasData = true
+              this.hasData = true;
             } else {
-              this.hasData = false
+              this.hasData = false;
             }
             this.distributionOfficers = response.items;
             this.totalItems = response.total;
           },
           (error) => {
             this.isLoading = false;
-          }
+          },
         );
     } else {
       this.distributionOfficerServ
@@ -2315,7 +2378,7 @@ export class UpdateDistributionOfficerComponent {
           this.searchNIC,
           this.statusFilter?.id,
           this.role?.jobRole,
-          this.centerId ? this.centerId : ''
+          this.centerId ? this.centerId : '',
         )
         .subscribe(
           (response) => {
@@ -2326,7 +2389,7 @@ export class UpdateDistributionOfficerComponent {
           },
           (error) => {
             this.isLoading = false;
-          }
+          },
         );
     }
   }
@@ -2344,83 +2407,90 @@ export class UpdateDistributionOfficerComponent {
       customClass: {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
         title: 'font-semibold text-lg',
-        confirmButton: 'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
-        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg'
-      }
+        confirmButton:
+          'bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg',
+        cancelButton:
+          'bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg',
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         this.isLoading = true;
 
-        this.distributionOfficerServ.ChangeStatus(this.itemId, 'Approved').subscribe(
-          (res) => {
-            this.isLoading = false;
-            if (res.status) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'The Distribution Officer password reset successfully.',
-                showConfirmButton: false,
-                timer: 3000,
-                customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                  title: 'font-semibold text-lg',
-                },
-              });
-              this.fetchData();
-            } else {
+        this.distributionOfficerServ
+          .ChangeStatus(this.itemId, 'Approved')
+          .subscribe(
+            (res) => {
+              this.isLoading = false;
+              if (res.status) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Success!',
+                  text: 'The Distribution Officer password reset successfully.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+                this.fetchData();
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error!',
+                  text: 'Something went wrong. Please try again.',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    popup:
+                      'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                    title: 'font-semibold text-lg',
+                  },
+                });
+              }
+            },
+            () => {
+              this.isLoading = false;
               Swal.fire({
                 icon: 'error',
                 title: 'Error!',
-                text: 'Something went wrong. Please try again.',
+                text: 'An error occurred while resetting password. Please try again.',
                 showConfirmButton: false,
                 timer: 3000,
                 customClass: {
-                  popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+                  popup:
+                    'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
                   title: 'font-semibold text-lg',
                 },
               });
-            }
-          },
-          () => {
-            this.isLoading = false;
-            Swal.fire({
-              icon: 'error',
-              title: 'Error!',
-              text: 'An error occurred while resetting password. Please try again.',
-              showConfirmButton: false,
-              timer: 3000,
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-              },
-            });
-          }
-        );
+            },
+          );
       }
     });
   }
 
   chooseJobRole() {
     if (this.urlSegment === 'edit-driver') {
-      this.jobRoleOptions = [
-        { label: 'Driver', value: 'Driver' }
-      ];
+      this.jobRoleOptions = [{ label: 'Driver', value: 'Driver' }];
     } else {
       this.jobRoleOptions = [
-        { label: 'Distribution Centre Manager', value: 'Distribution Centre Manager' },
+        {
+          label: 'Distribution Centre Manager',
+          value: 'Distribution Centre Manager',
+        },
         { label: 'Distribution Officer', value: 'Distribution Officer' },
-        // { label: 'Driver', value: 'Driver' }
       ];
     }
   }
 
-  // Method to preview/view uploaded images
-  // Method to open image preview in new tab
-  viewImagePreview(imagePreview: string | ArrayBuffer | null, imageName: string): void {
+  viewImagePreview(
+    imagePreview: string | ArrayBuffer | null,
+    imageName: string,
+  ): void {
     if (imagePreview) {
       const imageUrl = typeof imagePreview === 'string' ? imagePreview : '';
-      
-      // Create a new window with the image
+
       const newWindow = window.open('', '_blank');
       if (newWindow) {
         newWindow.document.write(`
@@ -2491,7 +2561,7 @@ class Personal {
   confirmAccNumber!: any;
   bankName!: string;
   branchName!: string;
-  confirmPassword!: string; // Confirm password field
+  confirmPassword!: string;
   status!: string;
 }
 

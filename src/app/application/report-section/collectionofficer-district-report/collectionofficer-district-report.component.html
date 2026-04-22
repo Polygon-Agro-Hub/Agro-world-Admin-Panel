@@ -1,3 +1,5 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
   <i class="fa-solid fa-arrow-left"></i> Back
 </button>
@@ -17,48 +19,45 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            [options]="districts" [checkmark]="true" optionLabel="name"
+            [options]="districts" [checkmark]="false" optionLabel="name"
             [showClear]="selectedDistrict && selectedDistrict.name !== 'Colombo'" placeholder="District"
-            [(ngModel)]="selectedDistrict" (onChange)="applyFilters()"
-            class="mt-1 block w-full p-dropdown-custom">
-            
+            [(ngModel)]="selectedDistrict" (onChange)="applyFilters()" class="mt-1 block w-full p-dropdown-custom">
           </p-dropdown>
 
         </div>
       </div>
     </div>
+    
+    <div *ngIf="!hasData" class="flex flex-col items-center w-full h-screen px-10 py-7 mt-6">
+      <p class="text-[#494949] my-6 dark:text-textDark">
+        --No Data Available--
+      </p>
+      <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+    </div>
 
-    <div class="flex items-center justify-center">
-      <div>
-        <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
-          District Reports
-        </h2>
+    <div *ngIf="hasData">
+      <div class="flex items-center justify-center">
+        <div>
+          <h2 class="text-2xl font-normal text-gray-500 dark:text-textDark">
+            District Report
+          </h2>
+        </div>
       </div>
-    </div>
 
-    <div *ngIf="loadingChart; else chartContent" class="flex justify-center items-center h-48">
-      <app-loading-spinner></app-loading-spinner>
-    </div>
-    <!-- Corrected canvasjs-chart tag -->
-    <div class="bg-gray-100">
-      <ng-template #chartContent>
-      <div class="pt-16">
-        <canvasjs-chart *ngIf="chartOptions" [options]="chartOptions"></canvasjs-chart>
+      <!-- Corrected canvasjs-chart tag -->
+      <div class="mb-10">
+        <!-- Remove the bg-gray-100 div with canvasjs-chart and replace with: -->
+        <div class="pt-16" style="height: 500px;">
+          <canvas id="districtBarChart"></canvas>
+        </div>
       </div>
-    </ng-template>
-    </div>
 
-    <div *ngIf="loadingTable; else tableContent" class="flex justify-center items-center h-48">
-      <app-loading-spinner></app-loading-spinner>
-    </div>
-
-    <ng-template #tableContent>
-      <div class="relative overflow-x-auto shadow-md pt-20">
+      <div class="relative overflow-x-auto shadow-md">
         <table class="w-full text-sm text-center rtl:text-right border-[2px]">
           <thead class="text-xs border-[2px]">
             <tr>
               <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
-                Crop
+                Crop Variety
               </th>
               <th scope="col" class="px-6 py-3 text-textLight dark:text-textDark border-[2px]">
                 Grade A
@@ -95,15 +94,15 @@
           </tbody>
         </table>
       </div>
-    </ng-template>
 
-    <div class="flex justify-center items-center my-10">
-      <button class="bg-[#3980C0] px-6 py-3 rounded-lg text-white text-lg" (click)="exportToPDF()"
-        [disabled]="isDownloading">
-        <i class="fa-solid fa-download px-1" *ngIf="!isDownloading"></i>
-        <i class="fa-solid fa-spinner fa-spin px-1" *ngIf="isDownloading"></i>
-        {{ isDownloading ? " Downloading..." : " Download" }}
-      </button>
+      <div class="flex justify-center items-center my-10">
+        <button class="bg-[#3980C0] px-6 py-3 rounded-lg text-white text-lg" (click)="exportToPDF()"
+          [disabled]="isDownloading">
+          <i class="fa-solid fa-download px-1" *ngIf="!isDownloading"></i>
+          <i class="fa-solid fa-spinner fa-spin px-1" *ngIf="isDownloading"></i>
+          {{ isDownloading ? " Downloading..." : " Download" }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

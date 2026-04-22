@@ -1,17 +1,14 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
 <div *ngIf="!isLoading" class="p-6">
-  <!-- Back Button -->
-  <button
-    class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
-    onclick="history.back()"
-  >
+  <button class="flex items-center gap-2 mb-5 text-textLight dark:text-textDark hover:opacity-80 transition"
+    onclick="history.back()">
     <i class="fa-solid fa-arrow-left"></i>
     <span>Back</span>
   </button>
 
   <div
-    class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
-  >
+    class="overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
     <div class="bg-white dark:bg-tileBlack rounded-lg shadow-lg p-6">
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-semibold text-textLight dark:text-textDark">
@@ -19,32 +16,17 @@
         </h1>
         <div class="flex items-center">
           <div class="relative">
-            <div
-              class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80"
-            >
-              <input
-                type="text"
-                [(ngModel)]="search"
-                (keyup.enter)="applySearch()"
-                placeholder="Search by Farmer's NIC..."
-                title="Search by Farmer's NIC"
-                class="bg-transparent outline-none w-full text-gray-700 dark:text-white placeholder:text-gray-400"
-              />
+            <div class="flex items-center rounded-full bg-[#F1F1F1] dark:bg-[#272F45] px-4 py-2 w-80">
+              <input type="text" [(ngModel)]="search" (keyup.enter)="applySearch()"
+                placeholder="Search by Farmer's NIC..." title="Search by Farmer's NIC"
+                class="bg-transparent outline-none w-full text-gray-700 dark:text-white placeholder:text-gray-400" />
 
-              <!-- Clear Button -->
-              <button
-                *ngIf="search"
-                (click)="clearSearch()"
-                class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300"
-              >
+              <button *ngIf="search" (click)="clearSearch()"
+                class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300">
                 <i class="fa-solid fa-times"></i>
               </button>
 
-              <!-- Search Button -->
-              <button
-                (click)="applySearch()"
-                class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300"
-              >
+              <button (click)="applySearch()" class="text-gray-500 ml-2 hover:text-gray-700 dark:hover:text-gray-300">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </button>
             </div>
@@ -52,124 +34,105 @@
         </div>
       </div>
 
-      <!-- Table Section -->
       <div *ngIf="pensionRequests.length > 0">
         <table class="w-full">
           <thead>
-            <tr
-              class="border-b font-normal text[#000000]] border-gray-200 dark:border-gray-700"
-            >
-              <th
-                class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal"
-              >
+            <tr class="border-b font-normal text-[#5C5C5C] border-gray-200 dark:border-gray-700">
+              <th class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal">
                 No
               </th>
-              <th
-                class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal"
-              >
+              <th class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal">
                 Farmer NIC
               </th>
               <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal"
-              >
+                *ngIf="permissionService.hasPermission('View pension requests details') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal">
                 Details
               </th>
+              <th class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal">
+                Status
+              </th>
               <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal"
-              >
+                *ngIf="permissionService.hasPermission('View pension requests cultivation history') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal">
                 Cultivation History
               </th>
               <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal"
-              >
+                *ngIf="permissionService.hasPermission('View pension requests document') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal">
                 View Documents
               </th>
-              <th
-                class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal"
-              >
+              <th class="px-4 py-3 text-center dark:text-gray-400 whitespace-nowrap font-normal">
                 Date & Time
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr
-              *ngFor="let request of pensionRequests; let i = index"
-              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
-            >
-              <!-- No -->
+            <tr *ngFor="let request of pensionRequests; let i = index"
+              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
               <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left">
                 {{ (i + 1).toString().padStart(3, "0") }}
               </td>
 
-              <!-- Farmer NIC -->
               <td class="px-4 py-3 text-[#000000] dark:text-textDark">
                 {{ formatNIC(request.NIC) }}
               </td>
 
-              <!-- Details -->
-              <td class="px-4 py-3 text-center">
-                <button
-                  (click)="viewDetails(request.Request_ID)"
-                  class="w-6 h-6 text-blue-500 hover:text-blue-700"
-                  title="View Details"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
+              <td
+                *ngIf="permissionService.hasPermission('View pension requests details') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center">
+                <button (click)="viewDetails(request.Request_ID)" class="w-6 h-6 text-blue-500 hover:text-blue-700"
+                  title="View Details">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M3 14C3 9.02944 7.02944 5 12 5C16.9706 5 21 9.02944 21 14M17 14C17 16.7614 14.7614 19 12 19C9.23858 19 7 16.7614 7 14C7 11.2386 9.23858 9 12 9C14.7614 9 17 11.2386 17 14Z"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </button>
               </td>
-              <td class="px-4 py-3 text-center">
-                <button
-                  class="px-4 py-2 text-blue-500 hover:text-blue-700 font-medium"
-                  (click)="openReviewRequest(request)"
-                >
+              <td class="px-4 py-4 text-center">
+                <span *ngIf="request.reqStatus === 'To Review'" 
+                      class="flex text-center justify-center px-4 py-2 rounded-lg text-sm font-medium w-[124px] h-[38px] mx-auto bg-[#F8FFA6] text-[#A8A100]">
+                  To Review
+                </span>
+                <span *ngIf="request.reqStatus === 'Rejected'" 
+                      class="flex text-center justify-center px-4 py-2 rounded-lg text-sm font-medium w-[124px] h-[38px] mx-auto bg-[#FFB9B7] text-[#D16D6A]">
+                  Rejected
+                </span>
+              </td>
+              <td
+                *ngIf="permissionService.hasPermission('View pension requests cultivation history') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center">
+                <button class="px-4 py-2 text-blue-500 hover:text-blue-700 font-medium"
+                  (click)="openReviewRequest(request)">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>
               </td>
-              <td class="px-4 py-3 text-center">
-                <button
-                  class="px-4 py-2 text-red-500 hover:text-red-700 font-medium"
-                  (click)="openViewDocuments(request)"
-                >
+              <td
+                *ngIf="permissionService.hasPermission('View pension requests document') || tokenService.getUserDetails().role === '1'"
+                class="px-4 py-3 text-center">
+                <button class="px-4 py-2 text-red-500 hover:text-red-700 font-medium"
+                  (click)="openViewDocuments(request)">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>
               </td>
 
-              <!-- Date & Time -->
-              <td
-                class="px-4 py-3 text-[#000000] text-center dark:text-textDark"
-              >
+              <td class="px-4 py-3 text-[#000000] text-center dark:text-textDark">
                 <div class="flex flex-col items-center">
                   <span class="text-sm">{{
                     formatTime(request.Request_Date_Time)
-                  }}</span>
+                    }}</span>
                   <span class="text-sm">{{
                     formatDateLikeImage(request.Request_Date_Time)
-                  }}</span>
+                    }}</span>
                 </div>
               </td>
-
-              <!-- To Review -->
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Empty State -->
-      <div
-        *ngIf="pensionRequests.length === 0"
-        class="flex flex-col items-center w-full px-10 py-7 mt-6"
-      >
+      <div *ngIf="pensionRequests.length === 0" class="flex flex-col items-center w-full px-10 py-7 mt-6">
         <p class="text-[#494949] my-6 dark:text-textDark">
           --No Data Available--
         </p>
@@ -179,183 +142,119 @@
   </div>
 </div>
 
-<!-- Details Modal -->
-<div
-  *ngIf="showDetailsModal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-  (click)="closeDetailsModal()"
->
-  <div
-    class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-lg mx-4"
-    (click)="$event.stopPropagation()"
-  >
-    <!-- Modal Header -->
-    <div
-      class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg"
-    >
-      <h2
-        class="text-lg font-semibold text-center text-textLight dark:text-textDark"
-      >
+<div *ngIf="showDetailsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="closeDetailsModal()">
+  <div class="bg-white dark:bg-tileBlack rounded-lg shadow-2xl w-full max-w-lg mx-4" (click)="$event.stopPropagation()">
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 rounded-t-lg">
+      <h2 class="text-lg font-semibold text-center text-textLight dark:text-textDark">
         Pension Request Details
       </h2>
     </div>
 
-    <!-- Modal Body -->
     <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-      <!-- Farmer's Full Name -->
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Farmer's Full Name
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Farmer_Name }}
         </span>
       </div>
 
-      <!-- Farmer's NIC Number -->
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Farmer's NIC Number
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ formatNIC(selectedRequest?.NIC || "") }}
         </span>
       </div>
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Farmer’s Phone Number
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Phone_Number }}
         </span>
       </div>
 
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Farmer's DOB
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ formatDate(selectedRequest?.dob || "") }}
         </span>
       </div>
 
-      <!-- Farmer's DOB -->
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Farmer’s Age
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ calculateAge(selectedRequest?.dob) }}
         </span>
       </div>
 
-      <!-- Successor Type -->
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Successor
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Successor_Type }}
         </span>
       </div>
 
-      <!-- Successor's NIC Number -->
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Successor's NIC Number
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ formatNIC(selectedRequest?.Successor_NIC || "--") }}
         </span>
       </div>
 
-      <!-- Successor's DOB -->
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Successor's DOB
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ formatDate(selectedRequest?.Successor_DOB || "") }}
         </span>
       </div>
 
-      <!-- Request Date & Time -->
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Successor's Age
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ calculateAge(selectedRequest?.Successor_DOB) }}
         </span>
       </div>
 
-      <!-- Applied By - Shows "Farmer" when Collection_Officer_EmpID is null -->
       <div class="flex items-start">
-        <span
-          class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0"
-        >
+        <span class="text-sm text-gray-600 dark:text-gray-400 w-48 flex-shrink-0">
           Applied By
         </span>
         <span class="text-sm text-gray-600 dark:text-gray-400 mx-3">:</span>
-        <span
-          class="text-sm text-textLight dark:text-textDark font-medium flex-1"
-        >
+        <span class="text-sm text-textLight dark:text-textDark font-medium flex-1">
           {{ selectedRequest?.Collection_Officer_EmpID }}
         </span>
       </div>
     </div>
 
-    <!-- Modal Footer -->
     <div class="px-6 py-4 flex justify-center rounded-b-lg">
-      <button
-        (click)="closeDetailsModal()"
-        class="px-12 py-2 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium text-sm"
-      >
+      <button (click)="closeDetailsModal()"
+        class="px-12 py-2 bg-[#6B7280] hover:bg-[#4B5563] text-white rounded-lg transition font-medium text-sm">
         Close
       </button>
     </div>

@@ -79,8 +79,6 @@ export class PostinvoiceService {
   ): Promise<void> {
     try {
       const response = await this.getPostInvoiceDetails(processOrderId).toPromise();
-      console.log('Full API Response:', response);
-
       if (!response.success) {
         throw new Error(response.error || 'Failed to fetch invoice details');
       }
@@ -94,16 +92,7 @@ export class PostinvoiceService {
       const deliveryCharge = response.data?.deliveryCharge || null;
 
       const apiInvoiceNo = invoiceDetails.invoiceNumber;
-      console.log(
-        'API InvoiceNo:',
-        apiInvoiceNo,
-        'Table InvoiceNo:',
-        tableInvoiceNo
-      );
-
       const finalInvoiceNo = tableInvoiceNo || apiInvoiceNo || 'N/A';
-      console.log('Using InvoiceNo:', finalInvoiceNo);
-
       if (!finalInvoiceNo || finalInvoiceNo === 'N/A') {
         console.error('No valid invoice number found');
         Swal.fire({
@@ -176,8 +165,6 @@ export class PostinvoiceService {
         familyPackTotal: familyPackTotal.toFixed(2),
         additionalItemsTotal: additionalItemsTotal.toFixed(2),
       };
-
-      console.log('Final Invoice Data:', invoiceData);
       await this.generatePDF(invoiceData);
     } catch (error) {
       console.error('Error generating invoice:', error);
@@ -297,12 +284,9 @@ export class PostinvoiceService {
     }
   }
 
-  // Only show address if delivery method is not Pickup
   if (invoice.deliveryMethod?.toLowerCase() !== 'pickup') {
-    // Add space before address
     yPosition += 3;
 
-    // Address display - updated to match the image examples
     if (invoice.buildingType === 'Apartment') {
       doc.setFont('helvetica', 'bold');
       doc.text('Apartment Address:', 15, yPosition);
@@ -320,16 +304,13 @@ export class PostinvoiceService {
       ];
 
       aptAddress.forEach((line) => {
-        // Split the line to separate label and value
         const colonIndex = line.indexOf(':');
         const label = line.substring(0, colonIndex + 1);
         const value = line.substring(colonIndex + 1);
         
-        // Draw label in gray color
         doc.setTextColor(146, 146, 146); // #929292 in RGB
         doc.text(label, 15, yPosition);
         
-        // Draw value in black color
         const labelWidth = doc.getTextWidth(label);
         doc.setTextColor(0, 0, 0);
         doc.text(value, 15 + labelWidth, yPosition);
@@ -349,16 +330,13 @@ export class PostinvoiceService {
       ];
 
       houseAddress.forEach((line) => {
-        // Split the line to separate label and value
         const colonIndex = line.indexOf(':');
         const label = line.substring(0, colonIndex + 1);
         const value = line.substring(colonIndex + 1);
         
-        // Draw label in gray color
-        doc.setTextColor(146, 146, 146); // #929292 in RGB
+        doc.setTextColor(146, 146, 146); 
         doc.text(label, 15, yPosition);
         
-        // Draw value in black color
         const labelWidth = doc.getTextWidth(label);
         doc.setTextColor(0, 0, 0);
         doc.text(value, 15 + labelWidth, yPosition);
@@ -367,11 +345,9 @@ export class PostinvoiceService {
       });
     }
 
-    // Add space after address
     yPosition += 5;
   }
 
-  // Add small space above Invoice No
   yPosition += 3;
 
   // Invoice Details
@@ -455,14 +431,14 @@ export class PostinvoiceService {
   );
 
   doc.setFont('helvetica', 'bold');
-  doc.text('Ordered Date:', 140, rightYStart + 30);
+  doc.text('Ordered Date:', 140, rightYStart + 50);
   doc.setFont('helvetica', 'normal');
-  doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 35);
+  doc.text(formatDate(invoice.invoiceDate), 140, rightYStart + 55);
 
   doc.setFont('helvetica', 'bold');
-  doc.text('Scheduled Date:', 140, rightYStart + 45);
+  doc.text('Scheduled Date:', 140, rightYStart + 65);
   doc.setFont('helvetica', 'normal');
-  doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 50);
+  doc.text(formatDate(invoice.scheduledDate), 140, rightYStart + 70);
 
   // Family Pack Items - UPDATED SECTION with units in QTY
   yPosition = Math.max(yPosition, rightYStart + 60);
@@ -544,15 +520,20 @@ export class PostinvoiceService {
         margin: { left: 15, right: 15 },
         styles: {
           fontSize: 9,
-          cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
+          cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+          textColor: [0, 0, 0], 
         },
         headStyles: {
           fillColor: [248, 248, 248],
-          textColor: 0,
+          textColor: [0, 0, 0], 
           fontStyle: 'bold',
+        },
+        bodyStyles: {
+            textColor: [0, 0, 0], 
         },
         alternateRowStyles: {
           fillColor: [255, 255, 255],
+          textColor: [0, 0, 0],
         },
         tableLineColor: [209, 213, 219],
         tableLineWidth: 0.5,
@@ -602,14 +583,16 @@ export class PostinvoiceService {
         ? ` Additional Items(${invoice.additionalItems.length} Items)`
         : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
         
-    } else if (invoice.orderApp === 'Dash') {
+      } else if (invoice.orderApp === 'Dash') {
+        const itemCount = invoice.additionalItems.length;
+      
+        addTitle = hasFamilyPacks
+          ? ` Additional Items (${itemCount} ${itemCount === 1 ? 'Item' : 'Items'})`
+          : ` Custom Items (${itemCount} ${itemCount === 1 ? 'Item' : 'Items'})`;
+      } else {
       addTitle = hasFamilyPacks
         ? ` Custom Items(${invoice.additionalItems.length} Items)`
         : ` Custom Items(${invoice.additionalItems.length} Items)`;
-    } else {
-      addTitle = hasFamilyPacks
-        ? ` Your Selected Items(${invoice.additionalItems.length} Items)`
-        : ` Your Selected Items(${invoice.additionalItems.length} Items)`;
     }
 
     doc.setFontSize(9);
@@ -682,13 +665,18 @@ export class PostinvoiceService {
       margin: { left: 15, right: 15 },
       styles: {
         fontSize: 9,
-        cellPadding: { top: 8, right: 6, bottom: 8, left: 6 },
+        cellPadding: { top: 4, right: 6, bottom: 4, left: 6 },
+        textColor: [0, 0, 0], 
       },
       headStyles: {
         fillColor: [243, 244, 246],
-        textColor: 0,
+        textColor: [0, 0, 0], 
         fontStyle: 'bold',
       },
+
+      bodyStyles: {
+        textColor: [0, 0, 0], 
+      }, 
       alternateRowStyles: {
         fillColor: [255, 255, 255],
       },
@@ -761,9 +749,9 @@ export class PostinvoiceService {
     if (invoice.orderApp === 'Marketplace') {
       label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
     } else if (invoice.orderApp === 'Dash') {
-      label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
+      label = hasFamilyPacks ? 'Additional Items' : 'Custom Items';
     } else {
-      label = hasFamilyPacks ? 'Additional Items' : 'Your Selected Items';
+      label = hasFamilyPacks ? 'Custom Items' : 'Custom Items';
     }
 
     grandTotalBody.push([
@@ -839,10 +827,13 @@ export class PostinvoiceService {
 
   // Add final total
   grandTotalBody.push([
-    { content: 'Grand Total', styles: { fontStyle: 'bold' } },
+    { 
+      content: 'Grand Total', 
+      styles: { fontStyle: 'bold', textColor: [0, 0, 0] } 
+    },
     {
       content: `Rs. ${formatNumberWithCommas(finalGrandTotal.toFixed(2))}`,
-      styles: { fontStyle: 'bold' },
+      styles: { fontStyle: 'bold', textColor: [0, 0, 0] },
     },
   ]);
 
@@ -857,12 +848,16 @@ export class PostinvoiceService {
     },
     styles: {
       fontSize: 9,
-      cellPadding: { top: 4, right: 0, bottom: 4, left: 0 },
-      lineColor: [255, 255, 255],
+      cellPadding: { top: 4, right: 2, bottom: 4, left: 2 },
+      // lineColor: [255, 255, 255],
       lineWidth: 0,
     },
     bodyStyles: {
       lineWidth: 0,
+    },
+    
+    alternateRowStyles: {
+      fillColor: [255, 255, 255], 
     },
     didDrawCell: (data: any) => {
       // Add border between Grand Total and Discount (second last row)
@@ -942,7 +937,7 @@ export class PostinvoiceService {
   );
 
   // Save the PDF
-  doc.save(`invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
+  doc.save(`Post_Invoice_${invoice.invoiceNumber || 'unknown'}.pdf`);
 }
 
   private async getLogoUrl(): Promise<string | null> {

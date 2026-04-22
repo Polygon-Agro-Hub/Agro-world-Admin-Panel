@@ -1,4 +1,3 @@
-// project-investments.component.ts
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
@@ -31,7 +30,6 @@ interface ProjectInvestment {
   styleUrls: ['./project-investments.component.css'],
 })
 export class ProjectInvestmentsComponent implements OnInit {
-  isLoading = false;
   searchTerm = '';
   totalCount = 0;
   defaultImage = 'assets/placeholder-image.png';
@@ -39,12 +37,15 @@ export class ProjectInvestmentsComponent implements OnInit {
   projectInvestments: ProjectInvestment[] = [];
   filteredProjects: ProjectInvestment[] = [];
 
+  hasData: boolean = false;
+  isLoading = false;
+
   constructor(
     private router: Router,
     private financeService: FinanceService,
     public tokenService: TokenService,
-    public permissionService: PermissionService
-  ) { }
+    public permissionService: PermissionService,
+  ) {}
 
   ngOnInit(): void {
     this.loadProjectInvestments();
@@ -52,32 +53,36 @@ export class ProjectInvestmentsComponent implements OnInit {
 
   loadProjectInvestments(search?: string): void {
     this.isLoading = true;
-    this.financeService.getProjectInvestments(search)
+    this.financeService
+      .getProjectInvestments(search)
       .pipe(
-        finalize(() => this.isLoading = false),
-        catchError(error => {
+        finalize(() => (this.isLoading = false)),
+        catchError((error) => {
           console.error('Error loading project investments:', error);
+          this.hasData = false;
           return of({ count: 0, data: [] });
-        })
+        }),
       )
       .subscribe({
         next: (response) => {
           this.projectInvestments = response.data.map((project: any) => ({
             ...project,
-            investedPercentage: project.defineShares && project.fillShares
-              ? Math.round((project.fillShares / project.defineShares) * 100)
-              : 0,
+            investedPercentage:
+              project.defineShares && project.fillShares
+                ? Math.round((project.fillShares / project.defineShares) * 100)
+                : 0,
             imageDataUrl: undefined,
-            imageLoading: true
+            imageLoading: true,
           }));
           this.projectInvestments.sort((a, b) => {
             const cropA = (a.cropNameEnglish || '').toString().toLowerCase();
             const cropB = (b.cropNameEnglish || '').toString().toLowerCase();
             return cropA.localeCompare(cropB);
           });
-          
+
           this.filteredProjects = [...this.projectInvestments];
           this.totalCount = response.count;
+          this.hasData = response.count > 0 ? true : false;
 
           this.loadAllImages();
         },
@@ -86,7 +91,7 @@ export class ProjectInvestmentsComponent implements OnInit {
           this.projectInvestments = [];
           this.filteredProjects = [];
           this.totalCount = 0;
-        }
+        },
       });
   }
 
@@ -99,8 +104,10 @@ export class ProjectInvestmentsComponent implements OnInit {
             project.imageLoading = false;
           },
           (error) => {
-            console.error(`Error processing image for project ${project.id}:`, error);
-            // Fallback to original image if background removal fails
+            console.error(
+              `Error processing image for project ${project.id}:`,
+              error,
+            );
             this.loadImage(project.cropGroupImage).then(
               (originalDataUrl) => {
                 project.imageDataUrl = originalDataUrl;
@@ -109,9 +116,9 @@ export class ProjectInvestmentsComponent implements OnInit {
               () => {
                 project.imageDataUrl = this.defaultImage;
                 project.imageLoading = false;
-              }
+              },
             );
-          }
+          },
         );
       } else {
         project.imageDataUrl = this.defaultImage;
@@ -135,33 +142,20 @@ export class ProjectInvestmentsComponent implements OnInit {
             return;
           }
 
-          // Set canvas dimensions
           canvas.width = img.width;
           canvas.height = img.height;
 
-          // Draw the image
           ctx.drawImage(img, 0, 0);
 
-          // Get image data
           const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           const data = imageData.data;
 
-          // Method 1: Remove white/light background (most common)
           this.removeWhiteBackground(data);
 
-          // Alternative: Method 2 - Remove based on edge detection
-          // this.removeBackgroundByEdges(data, canvas.width, canvas.height);
-
-          // Alternative: Method 3 - Simple transparency based on color similarity
-          // this.makeBackgroundTransparent(data, canvas.width, canvas.height);
-
-          // Put the modified image data back
           ctx.putImageData(imageData, 0, 0);
 
-          // Convert to PNG to preserve transparency
           const dataUrl = canvas.toDataURL('image/png');
           resolve(dataUrl);
-
         } catch (error) {
           reject(error);
         }
@@ -172,37 +166,33 @@ export class ProjectInvestmentsComponent implements OnInit {
         reject(error);
       };
 
-      // Add timestamp to prevent caching
-      img.src = url.includes('?') ? `${url}&t=${Date.now()}` : `${url}?t=${Date.now()}`;
+      img.src = url.includes('?')
+        ? `${url}&t=${Date.now()}`
+        : `${url}?t=${Date.now()}`;
     });
   }
 
-  // Method 1: Remove white/light background
   private removeWhiteBackground(data: Uint8ClampedArray): void {
-    const threshold = 200; // Adjust this value based on your images (0-255)
+    const threshold = 200;
 
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
 
-      // Check if pixel is white/light
       if (r > threshold && g > threshold && b > threshold) {
-        // Make pixel transparent
         data[i + 3] = 0;
       }
     }
   }
 
-  // Method 2: Remove background by detecting edges (more sophisticated)
-  private removeBackgroundByEdges(data: Uint8ClampedArray, width: number, height: number): void {
-    // This is a simplified edge detection algorithm
-    // For production, you might want to use a more sophisticated approach
-
-    // First pass: identify potential background pixels
+  private removeBackgroundByEdges(
+    data: Uint8ClampedArray,
+    width: number,
+    height: number,
+  ): void {
     const isBackground = new Array(data.length / 4).fill(false);
 
-    // Sample edges to determine background color
     const edgeColors = this.getEdgeColors(data, width, height);
     const backgroundThreshold = 30;
 
@@ -213,58 +203,60 @@ export class ProjectInvestmentsComponent implements OnInit {
         const g = data[index + 1];
         const b = data[index + 2];
 
-        // Check if pixel color is similar to edge colors
         let isSimilarToBackground = false;
         for (const edgeColor of edgeColors) {
-          const diff = Math.abs(r - edgeColor.r) +
+          const diff =
+            Math.abs(r - edgeColor.r) +
             Math.abs(g - edgeColor.g) +
             Math.abs(b - edgeColor.b);
-          if (diff < backgroundThreshold * 3) { // *3 because we're comparing RGB
+          if (diff < backgroundThreshold * 3) {
             isSimilarToBackground = true;
             break;
           }
         }
 
         if (isSimilarToBackground) {
-          // Make pixel transparent
           data[index + 3] = 0;
         }
       }
     }
   }
 
-  // Helper method for edge detection
-  private getEdgeColors(data: Uint8ClampedArray, width: number, height: number): Array<{ r: number, g: number, b: number }> {
+  private getEdgeColors(
+    data: Uint8ClampedArray,
+    width: number,
+    height: number,
+  ): Array<{ r: number; g: number; b: number }> {
     const edgeColors = [];
     const samplePoints = 100;
 
-    // Sample from top edge
     for (let i = 0; i < samplePoints && i < width; i++) {
       const index = i * 4;
       edgeColors.push({
         r: data[index],
         g: data[index + 1],
-        b: data[index + 2]
+        b: data[index + 2],
       });
     }
 
-    // Sample from bottom edge
     const bottomStart = (height - 1) * width * 4;
     for (let i = 0; i < samplePoints && i < width; i++) {
       const index = bottomStart + i * 4;
       edgeColors.push({
         r: data[index],
         g: data[index + 1],
-        b: data[index + 2]
+        b: data[index + 2],
       });
     }
 
     return edgeColors;
   }
 
-  // Method 3: Simple transparency based on color similarity
-  private makeBackgroundTransparent(data: Uint8ClampedArray, width: number, height: number): void {
-    // Get the most common color (likely the background)
+  private makeBackgroundTransparent(
+    data: Uint8ClampedArray,
+    width: number,
+    height: number,
+  ): void {
     const colorCounts = new Map<string, number>();
 
     for (let i = 0; i < data.length; i += 4) {
@@ -275,9 +267,8 @@ export class ProjectInvestmentsComponent implements OnInit {
       colorCounts.set(key, (colorCounts.get(key) || 0) + 1);
     }
 
-    // Find the most common color
     let maxCount = 0;
-    let backgroundColor = { r: 255, g: 255, b: 255 }; // Default to white
+    let backgroundColor = { r: 255, g: 255, b: 255 };
     colorCounts.forEach((count, key) => {
       if (count > maxCount) {
         maxCount = count;
@@ -286,24 +277,23 @@ export class ProjectInvestmentsComponent implements OnInit {
       }
     });
 
-    // Make similar colors transparent
     const threshold = 50;
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
 
-      const diff = Math.abs(r - backgroundColor.r) +
+      const diff =
+        Math.abs(r - backgroundColor.r) +
         Math.abs(g - backgroundColor.g) +
         Math.abs(b - backgroundColor.b);
 
       if (diff < threshold) {
-        data[i + 3] = 0; // Make transparent
+        data[i + 3] = 0;
       }
     }
   }
 
-  // Original loadImage method (as fallback)
   private loadImage(url: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -333,16 +323,20 @@ export class ProjectInvestmentsComponent implements OnInit {
         reject(error);
       };
 
-      img.src = url.includes('?') ? `${url}&t=${Date.now()}` : `${url}?t=${Date.now()}`;
+      img.src = url.includes('?')
+        ? `${url}&t=${Date.now()}`
+        : `${url}?t=${Date.now()}`;
     });
   }
 
   filterProjects(): void {
-    if (!this.searchTerm.trim()) {
+    const trimmedSearch = this.searchTerm.trim();
+    if (!trimmedSearch) {
       this.filteredProjects = [...this.projectInvestments];
+      this.loadProjectInvestments();
       return;
     }
-    this.loadProjectInvestments(this.searchTerm.trim());
+    this.loadProjectInvestments(trimmedSearch);
   }
 
   clearSearch(): void {

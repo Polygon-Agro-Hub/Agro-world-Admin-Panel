@@ -113,7 +113,7 @@ export class MarketplaceCustomePackageComponent {
 
   navigateDispatchAdditionalItems(id: number) {
     this.router.navigate([`/dispatch/dispatch-additional-items/${id}`], {
-      queryParams: { status: true }
+      queryParams: { status: true, isCustom: 1 }
     })
   }
 }

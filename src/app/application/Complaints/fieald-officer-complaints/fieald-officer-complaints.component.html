@@ -179,7 +179,6 @@
   (click)="closeReplyPopUp()">
   <div class="bg-white dark:bg-[#262f45] rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4 relative"
     (click)="$event.stopPropagation()">
-    <!-- Close button -->
     <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
       (click)="closeReplyPopUp()">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -205,7 +204,6 @@
       <p *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
         Dear <strong>{{ selectedOfficerName }}</strong>,
       </p>
-      <!-- second part -->
       <p class="mt-5" *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
         We are pleased to inform you that your complaint has been resolved
       </p>

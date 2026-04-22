@@ -127,11 +127,8 @@ export class WholesaleComplaintsComponent implements OnInit {
         this.comCategories = Array.from(
           new Set(this.complaints.map(c => c.complainCategory))
         ).map(cat => ({ label: cat, value: cat }));
-        // this.status = Array.from(
-        //   new Set(this.complaints.map(c => c.status))
-        // ).map(st => ({ label: st, value: st }));
 
-        // console.log('this.status', this.status)
+        
         this.isLoading = false;
         this.hasData = this.complaints.length > 0;
       },

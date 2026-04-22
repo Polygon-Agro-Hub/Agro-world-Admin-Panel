@@ -81,7 +81,30 @@ export class TransportReasonsToHoldComponent implements OnInit {
   }
 
   onBack(): void {
-    this.location.back();
+    if (this.reasonForm.dirty) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Are you sure?',
+        text: 'You may lose the entered data after canceling!',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Cancel',
+        cancelButtonText: 'No, Keep Editing',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold',
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.reasonForm.reset();
+          this.updateFormIndexNo();
+          this.location.back();
+        }
+      });
+    } else {
+      this.reasonForm.reset();
+      this.updateFormIndexNo();
+      this.location.back();
+    }
   }
 
   preventLeadingSpace(event: KeyboardEvent): void {
@@ -172,14 +195,14 @@ export class TransportReasonsToHoldComponent implements OnInit {
 
         // Check for data too long errors
         if (errorMessage.includes(`Data too long for column 'rsnEnglish' at row 1`)) {
-          userErrorMessage = 'The Reason (in English) is too long. Please limit it to a maximum of 250 words.';
+          userErrorMessage = 'The Reason (in English) is too long. Please limit it to a maximum of 250 characters.';
         } else if (errorMessage.includes(`Data too long for column 'rsnSinhala' at row 1`)) {
-          userErrorMessage = 'The Reason (in Sinhala) is too long. Please limit it to a maximum of 250 words.';
+          userErrorMessage = 'The Reason (in Sinhala) is too long. Please limit it to a maximum of 250 characters.';
         } else if (errorMessage.includes(`Data too long for column 'rsnTamil' at row 1`)) {
-          userErrorMessage = 'The Reason (in Tamil) is too long. Please limit it to a maximum of 250 words.';
+          userErrorMessage = 'The Reason (in Tamil) is too long. Please limit it to a maximum of 250 characters.';
         } else if (errorMessage.includes('Data too long for column')) {
           // Generic data too long error
-          userErrorMessage = 'The message is too long. Please limit it to a maximum of 250 words.';
+          userErrorMessage = 'The message is too long. Please limit it to a maximum of 250 characters.';
         }
 
         Swal.fire({

@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FarmerPensionService } from '../../../services/finance/farmer-pension.service';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { PermissionService } from '../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../services/token/services/token.service';
 
 @Component({
   selector: 'app-view-farmer-pension-under-5-years',
@@ -28,7 +30,11 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
   itemsPerPage: number = 10;
   totalItems: number = 0;
 
-  constructor(private farmerPensionService: FarmerPensionService) {}
+  constructor(
+    private farmerPensionService: FarmerPensionService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
     this.loadFarmers();
@@ -65,12 +71,12 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
               parseFloat(item.defaultPension),
             ),
             daysMore: this.calculateRemainingTime(item.approveTime),
-            approvedBy: item.approveBy || 'N/A',
+            approvedBy: item.approveBy || '--',
             approvedDate: this.formatApproveDate(item.approveTime),
-            successor: item.sucType || 'N/A',
-            successorNic: item.sucNic || 'N/A',
+            successor: item.sucType || '--',
+            successorNic: item.sucNic || '--',
             successorDob: item.sucdob || null,
-            successorAge: item.sucdob ? this.calculateAge(item.sucdob) : 'N/A',
+            successorAge: item.sucdob ? this.calculateAge(item.sucdob) : '--',
             rawData: item,
           }));
           this.isLoading = false;
@@ -120,7 +126,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
 
   // Calculate age from date of birth
   private calculateAge(dobStr: string | null): string {
-    if (!dobStr) return 'N/A';
+    if (!dobStr) return '--';
 
     const dob = new Date(dobStr);
     const today = new Date();
@@ -152,7 +158,16 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     years = Math.max(years, 0);
     months = Math.max(months, 0);
 
-    return `${years} Years, ${months} ${months === 1 ? 'Month' : 'Months'}`;
+    let ageString = '';
+
+    if (years > 0) {
+      ageString += `${years} ${years > 1 ? 'Years' : 'Year'}`;
+    }
+    if (months > 0) {
+      ageString += `${ageString ? ', ' : ''}${months} ${months > 1 ? 'Months' : 'Month'}`;
+    }
+
+    return ageString || '--';
   }
 
   // Calculate if a year is a leap year
@@ -240,7 +255,12 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
     }
 
     // If years becomes negative or equals 5 with negative months, they're past 5 years
-    if (years < 0 || (years === 0 && months < 0) || (years === 5 && months > 0) || years > 5) {
+    if (
+      years < 0 ||
+      (years === 0 && months < 0) ||
+      (years === 5 && months > 0) ||
+      years > 5
+    ) {
       return 'Eligible';
     }
 
@@ -253,7 +273,9 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
       parts.push(`${months} ${months === 1 ? 'Month' : 'Months'}`);
     }
     // Always show days
-    parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
+    if (days > 0) {
+      parts.push(`${days} ${days === 1 ? 'Day' : 'Days'}`);
+    }
 
     return parts.join(' ');
   }
@@ -261,7 +283,7 @@ export class ViewFarmerPensionUnder5YearsComponent implements OnInit {
   // Format approve date
   private formatApproveDate(approveTime: string | null): string {
     if (!approveTime) {
-      return 'N/A';
+      return '--';
     }
     const date = new Date(approveTime);
     const hours = date.getHours();

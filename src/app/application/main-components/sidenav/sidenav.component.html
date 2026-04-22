@@ -65,11 +65,13 @@
           <li *ngFor="let child of item.children" class="sidenav-nav-item">
             <a *ngIf="child.RouterLink"
                [routerLink]="child.RouterLink" 
-               class="sidenav-child-link"
+               [class]="isExpanded ? 'sidenav-child-link' : 'sidenav-child-link sidenav-child-link-collapsed'"
                [routerLinkActive]="getActiveChildClass(child)" 
                routerLinkActive="active" 
                [routerLinkActiveOptions]="{exact: false}">
-              <i class="child-link-icon" [class]="child.childIcon"></i>
+        
+              <i [class]="isExpanded ? 'child-link-icon ' + child.childIcon : 'child-link-icon-collapsed ' + child.childIcon"></i>
+        
               <span *ngIf="isExpanded" class="sidenav-link-text">{{ child.label }}</span>
             </a>
           </li>

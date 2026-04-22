@@ -6,8 +6,8 @@
 </button>
 
 <div
-    class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
-    <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1400px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+    class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
+    <div class="pt-5 pr-12 pl-12 pb-5 min-w-max bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
         <div class="flex justify-between items-center mb-8">
             <div class="flex items-center min-w-[200px]">
                 <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -24,7 +24,7 @@
                 <div class="mr-5">
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-                        [options]="replyStatus" [checkmark]="true" optionLabel="status" optionValue="value"
+                        [options]="replyStatus"  optionLabel="status" optionValue="value"
                         [showClear]="!!rpst" placeholder="Reply" [(ngModel)]="rpst" (onChange)="regStatusFil()" />
                 </div>
 
@@ -32,7 +32,7 @@
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="comCategories"
-                        [(ngModel)]="filterComCategory" [checkmark]="true" optionLabel="categoryEnglish"
+                        [(ngModel)]="filterComCategory"  optionLabel="categoryEnglish"
                         [showClear]="!!filterComCategory" placeholder="Category" (onChange)="applyFilters()"
                         appendTo="body"></p-dropdown>
                 </div>
@@ -41,7 +41,7 @@
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="company"
-                        [(ngModel)]="filterCompany" [checkmark]="true" optionLabel="companyNameEnglish"
+                        [(ngModel)]="filterCompany"  optionLabel="companyNameEnglish"
                         [showClear]="!!filterCompany" placeholder="Company" (onChange)="applyFilters()"
                         appendTo="body"></p-dropdown>
                 </div>
@@ -49,7 +49,7 @@
                     <p-dropdown
                         styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
                         [autoZIndex]="true" [baseZIndex]="1000" appendTo="body" [options]="statusfilterArr"
-                        [(ngModel)]="filterStatus" name="filterStatus" [checkmark]="true" optionLabel="label"
+                        [(ngModel)]="filterStatus" name="filterStatus"  optionLabel="label"
                         optionValue="value" [showClear]="!!filterStatus" placeholder="Status"
                         (onChange)="applyFilters()" appendTo="body"></p-dropdown>
                 </div>
@@ -86,43 +86,44 @@
         </div>
 
 
-        <div *ngIf="hasData">
+        <div *ngIf="hasData" class="w-full">
             <table class="w-full divide-y divide-gray-200 dark:divide-[#4B555A] table-auto whitespace-nowrap">
                 <thead>
                     <tr>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-left">
                             Ref No.
                         </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
-                            Category
-                        </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
-                            EMP ID
-                        </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-left">
                             Company Name
                         </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-left">
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-left">
+                            Category
+                        </th>
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-left">
+                            EMP ID
+                        </th>
+                       
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-left">
                             Centre Code
                         </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-center">
                             Received At
                         </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-center">
                             Status
                         </th>
                         <th *ngIf="permissionService.hasPermission('Reply Driver complaint') || tokenService.getUserDetails().role === '1'"
-                            class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                            class="py-4 px-3 font-normal text-textLight dark:text-textDark text-center">
                             View
                         </th>
-                        <th class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-center">
                             Reply
                         </th>
                         <th *ngIf="permissionService.hasPermission('View Driver complaint Reply') || tokenService.getUserDetails().role === '1'"
-                            class="py-3 font-normal text-textLight dark:text-textDark text-center">
+                            class="py-4 px-3 font-normal text-textLight dark:text-textDark text-center">
                             View Reply
                         </th>
-                        <th class="py-3 px-3 font-normal text-textLight dark:text-textDark text-left">
+                        <th class="py-4 px-3 font-normal text-textLight dark:text-textDark text-left">
                             Reply By
                         </th>
                     </tr>
@@ -137,15 +138,17 @@
                     totalItems: totalItems
                   }
           ">
-                        <td class="py-3 dark:text-textDark text-left">{{ item.refNo }}</td>
-                        <td class="py-3 dark:text-textDark text-left">
-                            {{ item.complainCategory }}
-                        </td>
-                        <td class="py-3 dark:text-textDark text-left">{{ item.empId }}</td>
-                        <td class="py-3 dark:text-textDark text-left">
+                        <td class="py-4 px-3 dark:text-textDark text-left">{{ item.refNo }}</td>
+                        <td class="py-4 px-3 dark:text-textDark text-left">
                             {{ item.companyName }}
                         </td>
-                        <td class="py-3 dark:text-textDark text-left">
+
+                        <td class="py-4 px-3 dark:text-textDark text-left">
+                            {{ item.complainCategory }}
+                        </td>
+                        <td class="py-4 px-3 dark:text-textDark text-left">{{ item.empId }}</td>
+                        
+                        <td class="py-4 px-3 dark:text-textDark text-left">
                             <ng-container *ngIf="item.regCode && item.regCode.trim(); else noRegCode">
                                 {{ item.regCode }}
                             </ng-container>
@@ -153,15 +156,14 @@
                                 <span class="text-gray-400 italic">--No--</span>
                             </ng-template>
                         </td>
-                        <td class="py-3 dark:text-textDark text-center">
+                        <td class="py-4 px-3 dark:text-textDark text-center">
                             {{ item.createdAt | date: 'yyyy/MM/dd' : 'Asia/Colombo' }}<br>
                             {{ item.createdAt | date: 'hh.mm a' : 'Asia/Colombo' }}
                         </td>
-                        <td class="py-3 dark:text-textDark text-center">
+                        <td class="py-4 px-3 dark:text-textDark text-center">
                             <div *ngIf="item.status === 'Opened'">
                                 <span
-                                    class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">{{
-                                    item.status }}</span>
+                                    class="w-32 h-8 inline-block bg-green-100 text-green-500 font-medium rounded-md px-3 py-1 text-sm">Assigned</span>
                             </div>
                             <div *ngIf="item.status === 'Pending'">
                                 <span
@@ -181,7 +183,7 @@
                               </div>
                         </td>
                         <td *ngIf="permissionService.hasPermission('Reply Driver complaint') || tokenService.getUserDetails().role === '1'"
-                            class="py-3 dark:text-textDark text-center">
+                            class="py-4 px-3 dark:text-textDark text-center">
                             <button class="w-5 h-5 text-blue-500 hover:text-blue-700"
                                 (click)="navigateSelectComplain(item.id)">
                                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -192,13 +194,13 @@
                                 </svg>
                             </button>
                         </td>
-                        <td class="py-3 dark:text-textDark text-center">
+                        <td class="py-4 px-3 dark:text-textDark text-center">
                             <span *ngIf="item.reply === null"
                                 class="px-4 py-3 text-center text-textLight dark:text-textDark italic opacity-60">No</span>
                             <span *ngIf="item.reply != null"
                                 class="px-4 py-3 text-center text-textLight dark:text-textDark underline">Yes</span>
                         </td>
-                        <td class="py-3 dark:text-textDark text-center"
+                        <td class="py-4 px-3 dark:text-textDark text-center"
                             *ngIf="permissionService.hasPermission('View Driver complaint Reply') || tokenService.getUserDetails().role === '1'">
                             <div *ngIf="item.reply === null">
                                 <button disabled class="w-5 h-5 text-blue-100">
@@ -215,7 +217,7 @@
                                 </button>
                             </div>
                         </td>
-                        <td class="py-3 px-3 dark:text-textDark text-left">
+                        <td class="py-4 px-3 dark:text-textDark text-left">
                             {{ item.replyBy || '--' }}
                         </td>
                     </tr>
@@ -234,7 +236,6 @@
 
 
 
-<!-- complain popup -->
 <div *ngIf="isPopUpVisible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white dark:bg-[#262f45] rounded-lg shadow-xl w-full max-w-2xl p-6 mx-4 relative">
         <div class="flex justify-center items-center">
@@ -256,7 +257,6 @@
             <p *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
                 Dear <strong>{{ selectedOfficerName }}</strong>,
             </p>
-            <!-- second part -->
             <p class="mt-5" *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
                 We are pleased to inform you that your complaint has been resolved
             </p>

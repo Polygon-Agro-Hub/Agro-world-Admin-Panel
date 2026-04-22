@@ -205,7 +205,7 @@ class CompanyDetails {
   code1!: number;
   contact01!: number;
   code2!: number;
-  contact02!: number;
+  contact02!: any;
   logo!: string;
   favicon!: string;
   centerOfficerName!: string;

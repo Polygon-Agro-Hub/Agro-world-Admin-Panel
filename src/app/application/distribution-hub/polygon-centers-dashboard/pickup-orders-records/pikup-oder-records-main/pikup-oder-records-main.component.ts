@@ -25,7 +25,7 @@ import { PermissionService } from '../../../../../services/roles-permission/perm
     AllPikupOdersComponent,
     ReadyToPikupComponent,
     PikupOdersComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
   ],
   templateUrl: './pikup-oder-records-main.component.html',
   styleUrl: './pikup-oder-records-main.component.css',
@@ -52,20 +52,13 @@ export class PikupOderRecordsMainComponent implements OnInit {
     private destributionService: DestributionService,
     public tokenService: TokenService,
     public permissionService: PermissionService,
-
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.centerObj.centerId = params['id'];
 
       this.route.queryParams.subscribe((queryParams) => {
-        // Remove the tab parameter handling
-        // const tab = queryParams['tab'];
-        // if (tab && ['All', 'Ready to Pickup', 'Picked Up'].includes(tab)) {
-        //   this.activeTab = tab;
-        // }
-
         this.centerObj.centerName = queryParams['name'] || '';
         this.centerObj.centerRegCode = queryParams['regCode'] || '';
 
@@ -81,16 +74,14 @@ export class PikupOderRecordsMainComponent implements OnInit {
   }
 
   setActiveTab(tab: string) {
-    // Reset filters when switching tabs
     this.searchText = '';
     this.selectedDate = null;
-    this.selectedTimeSlot = ''; // Reset time slot too
+    this.selectedTimeSlot = '';
 
     this.activeTab = tab;
     this.fetchAllOrders();
   }
 
-  // In pikup-oder-records-main.component.ts - update fetchAllOrders method
   fetchAllOrders(): void {
     this.isLoading = true;
     this.isInitializing = false;
@@ -105,26 +96,16 @@ export class PikupOderRecordsMainComponent implements OnInit {
       formattedDate = `${year}-${month}-${day}`;
     }
 
-    console.log('Fetching orders with params:', {
-      companycenterId: this.centerObj.centerId,
-      sheduleTime: this.selectedTimeSlot,
-      date: formattedDate,
-      searchText: this.searchText,
-      activeTab: this.activeTab
-    });
-
     this.destributionService
       .getDistributedCenterPickupOrders({
         companycenterId: this.centerObj.centerId,
-        sheduleTime: this.selectedTimeSlot, // Make sure this is correct
+        sheduleTime: this.selectedTimeSlot,
         date: formattedDate,
         searchText: this.searchText,
-        activeTab: this.activeTab
+        activeTab: this.activeTab,
       })
       .subscribe({
         next: (res) => {
-          console.log('API Response:', res);
-          console.log('Time slot used:', this.selectedTimeSlot);
           if (res && res.data) {
             this.allOrders = Array.isArray(res.data) ? res.data : [res.data];
           } else {
@@ -229,9 +210,19 @@ export class PikupOderRecordsMainComponent implements OnInit {
   }
 
   initTabSelection() {
-    if (this.permissionService.hasPermission('Pickup orders all tab') || this.tokenService.getUserDetails().role === '1') this.activeTab = 'All';
-    else if (this.permissionService.hasPermission('Pickup orders ready to pickup tab')) this.activeTab = 'Ready to Pickup';
-    else if (this.permissionService.hasPermission('Pickup orders picked up tab')) this.activeTab = 'Picked Up';
+    if (
+      this.permissionService.hasPermission('Pickup orders all tab') ||
+      this.tokenService.getUserDetails().role === '1'
+    )
+      this.activeTab = 'All';
+    else if (
+      this.permissionService.hasPermission('Pickup orders ready to pickup tab')
+    )
+      this.activeTab = 'Ready to Pickup';
+    else if (
+      this.permissionService.hasPermission('Pickup orders picked up tab')
+    )
+      this.activeTab = 'Picked Up';
   }
 }
 

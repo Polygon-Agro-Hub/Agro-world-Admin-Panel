@@ -9,7 +9,7 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1500px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-5 min-w-[1600px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center whitespace-nowrap">
@@ -59,7 +59,6 @@
             [readonlyInput]="true"
             [showClear]="true"
           >
-            <!-- Custom clear icon -->
             <ng-template pTemplate="clearicon">
               <i class="pi pi-times"></i>
             </ng-template>
@@ -133,11 +132,9 @@
         filteredPayments.length === 0 || isDownloading
       "
     >
-      <!-- Show spinner or download icon -->
       <i *ngIf="!isDownloading" class="fa-solid fa-download mr-3"></i>
       <i *ngIf="isDownloading" class="fa-solid fa-spinner fa-spin mr-3"></i>
 
-      <!-- Dynamic text based on state -->
       <span *ngIf="!isDownloading">Download</span>
       <span *ngIf="isDownloading">Downloading...</span>
     </button>
@@ -213,7 +210,7 @@
         <tbody>
           <tr *ngFor="let payment of filteredPayments; let i = index">
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
-              {{ i + 1 | number : "3.0" }}
+              {{ i + 1 | number: "3.0" }}
             </td>
             <td
               class="px-4 py-3 text-left text-textLight dark:text-textDark whitespace-nowrap"

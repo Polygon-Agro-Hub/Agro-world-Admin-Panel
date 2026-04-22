@@ -66,53 +66,51 @@ export class CenterCollectionExpenceComponent implements OnInit {
   }
 
   fetchFilteredPayments(page: number = 1, limit: number = this.itemsPerPage) {
-    this.isLoading = true;
+  this.isLoading = true;
+  const fromDateStr = this.formatDateForAPI(this.fromDate);
+  const toDateStr = this.formatDateForAPI(this.toDate);
 
-    const fromDateStr = this.formatDateForAPI(this.fromDate);
-    const toDateStr = this.formatDateForAPI(this.toDate);
+  // Step 1: fetch the current page for the table
+  this.TargetSrv.getAllCenterPayments(page, limit, fromDateStr, toDateStr, this.centerId, this.searchText)
+    .subscribe((res) => {
+      this.farmerPaymentsArr = res.items;
+      this.totalItems = res.total;
+      this.hasData = res.items.length > 0;
+      this.isLoading = false;
 
-    this.TargetSrv.getAllCenterPayments(
-      page,
-      limit,
-      fromDateStr,
-      toDateStr,
-      this.centerId,
-      this.searchText
-    ).subscribe(
-      (res) => {
-        this.farmerPaymentsArr = res.items;
-        this.totalItems = res.total;
-        this.hasData = res.items.length > 0;
-        this.isLoading = false;
-        this.calculateTotalPayments();
-      },
-      (error) => {
-        this.isLoading = false;
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to fetch payments data',
-          customClass: {
-            popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
-            title: 'dark:text-white',
-          }
-        });
+      // Step 2: now that we know totalItems, fetch ALL records for the total amount
+      // Skip the second call if there are no records at all
+      if (this.totalItems === 0) {
+        this.totalPaymentsAmount = 0;
+        return;
       }
-    );
-  }
+
+      this.TargetSrv.getAllCenterPayments(1, this.totalItems, fromDateStr, toDateStr, this.centerId, this.searchText)
+        .subscribe((allRes) => {
+          this.totalPaymentsAmount = this.formatNumberToTwoDecimals(
+            allRes.items.reduce((sum: number, p: FarmerPayments) => {
+              return sum + (isNaN(Number(p.totalAmount)) ? 0 : Number(p.totalAmount));
+            }, 0)
+          );
+        });
+    },
+    (error) => {
+      this.isLoading = false;
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to fetch payments data',
+        customClass: {
+          popup: 'bg-white dark:bg-[#363636] text-gray-800 dark:text-white',
+          title: 'dark:text-white',
+        }
+      });
+    });
+}
 
   private formatNumberToTwoDecimals(value: any): number {
     const num = typeof value === 'string' ? parseFloat(value) : Number(value);
     return parseFloat(num.toFixed(2));
-  }
-
-  calculateTotalPayments(): void {
-    this.totalPaymentsAmount = this.farmerPaymentsArr.reduce((sum, payment) => {
-      const amount = this.formatNumberToTwoDecimals(payment.totalAmount);
-      return sum + (isNaN(amount) ? 0 : amount);
-    }, 0);
-
-    this.totalPaymentsAmount = this.formatNumberToTwoDecimals(this.totalPaymentsAmount);
   }
 
   onSearch() {

@@ -100,6 +100,7 @@ export class HomeDeliveryViewPopupComponent implements OnInit, OnChanges
       .subscribe({
         next: (response) => {
           this.trackingDetails = response;
+          console.log('tracking details', this.trackingDetails)
           this.steps = this.buildSteps();
           console.log('steps', this.steps)
           this.loading = false;

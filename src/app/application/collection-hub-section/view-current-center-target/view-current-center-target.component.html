@@ -6,9 +6,12 @@
 </button>
 
 <div
-    class="w-full overflow-x-auto px-10 py-7 bg-tileLight shadow-lg rounded-lg dark:text-[#FFFFFF] dark:bg-[#363636]">
+class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
+>
 
-    <div class="flex justify-between items-center mb-5 mt-3"
+    <div class="pt-5 pr-12 pl-12 pb-5 min-w-[1200px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg" >
+
+        <div class="flex justify-between items-center mb-5 mt-3"
     *ngIf="
       permissionService.hasPermission('Download Current Centre Target') ||
       tokenService.getUserDetails().role === '1'
@@ -24,65 +27,23 @@
         </button>
     </div>
 
-    <div>
-
         <div class="flex flex-row items-center justify-between mt-5">
             <div class="flex flex-col justify-between" >
-                <p class="font-medium text-lg mb-1" *ngIf="hasData">{{targetArr[0].regCode}} Centre Target on {{today}} </p>
+                <p class="font-medium text-lg mb-1 text-[#030308] dark:text-white"> Centre Target on {{today}} </p>
             </div>
             <div class="flex flex-row items-center gap-8 ">
                 <i class="fa-solid fa-list text-2xl ml-8"></i>
 
-                <p class="text-lg">Filter By</p>
+                <p class="font-normal text-[#4A4A4A] dark:text-white">Filter By</p>
 
-                <div class="relative w-40 custom-status-dropdown-container">
-                    <!-- Hidden native select -->
-                    <select [(ngModel)]="selectStatus" class="hidden" (change)="filterStatus()">
-                        <option value="" selected disabled>Status</option>
-                            <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                                value="Pending">Pending</option>
-                            <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                                value="Completed">Completed</option>
-                            <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                                value="Exceeded">Exceeded</option>
-                            <option class=" dark:bg-[#292929] text-textLight dark:text-textDark hover:bg-gray-300"
-                                value="Extra">Extra</option>
-                    </select>
-        
-                    <!-- Custom dropdown trigger -->
-                    <div class="border-[1.8px] border-[#828282] rounded-xl dark:bg-[#292929] text-textLight dark:text-textDark"
-                        (click)="toggleStatusDropdown()">
-                        <div class="flex flex-row justify-between items-center px-3 py-2 cursor-pointer">
-                            <span>{{ selectStatus || 'Status' }}</span>
-                            <div class="flex items-center">
-                                <!-- X icon (shown ONLY when option is selected) -->
-                                <i *ngIf="selectStatus" (click)="cancelStatus($event)"
-                                    class="fa-solid fa-xmark text-lg text-[#828282] mr-2 hover:text-[#555] dark:hover:text-[#aaa] cursor-pointer"></i>
-        
-                                <!-- Arrow icon (shown when EITHER: dropdown is open OR no selection exists) -->
-                                <i *ngIf="isStatusDropdownOpen || !selectStatus"
-                                    class="fa-solid text-lg text-[#828282] transition-transform duration-200"
-                                    [class.fa-angle-down]="!isStatusDropdownOpen"
-                                    [class.fa-angle-up]="isStatusDropdownOpen"></i>
-                            </div>
-                        </div>
-                    </div>
-        
-                    <!-- Custom dropdown options -->
-                    <div *ngIf="isStatusDropdownOpen"
-                        class="absolute z-10 w-full mt-1 bg-white dark:bg-[#292929] rounded-xl shadow-lg border border-[#828282]">
-                        <div class="py-1">
-                            <div *ngFor="let option of statusDropdownOptions" (click)="selectStatusOption(option)"
-                                class="px-3 py-2 hover:bg-gray-300 dark:text-textDark dark:hover:bg-gray-600 cursor-pointer flex items-center">
-                                <span class="flex-grow">{{ option }}</span>
-                                <i
-                                    class="fa-solid fa-hand-pointer ml-2 text-[#828282] opacity-0 group-hover:opacity-100"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="">
+                    <p-dropdown
+                      styleClass="border border-2 rounded-xl items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] h-8 w-44"
+                      [options]="statusDropdownOptions" [checkmark]="false" [(ngModel)]="selectStatus" optionLabel="label" optionValue="value" [showClear]="!!selectStatus"
+                      placeholder="Status" (onChange)="filterStatus()" panelStyleClass="custom-top-dropdown" />
+                  </div>
 
-                <div class="flex items-center rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#292929]">
+                <div class="flex items-center dark:bg-[#272F45] mr-5 rounded-full  px-4 py-2 w-96 bg-[#F1F1F1] ">
                     <input (keyup.enter)="onSearch()" (keyup.esc)="offSearch()" type="text"
                         placeholder="Search by Variety Name" [(ngModel)]="searchText"
                         class="bg-transparent outline-none w-full text-textLight dark:text-textDark" />
@@ -111,9 +72,9 @@
             <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
         </div>
 
-        <div *ngIf="hasData" class="min-w-max mt-8 mr-5 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
-            <table class="w-full min-w-max divide-y-2">
-                <thead class=" text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021]">
+        <div *ngIf="hasData" class="overflow-x-auto mt-6">
+            <table class="min-w-full divide-y divide-gray-200 table-auto">
+                <thead >
                     <tr>
                         <th class="px-6 py-3 text-left text-[#4B5563] dark:text-textDark font-medium">No</th>
                         <th class="px-6 py-3 text-left text-[#4B5563] dark:text-textDark font-medium">Crop Name</th>
@@ -126,7 +87,7 @@
                         <!-- <th class="px-6 py-3 text-left text-[#4B5563] dark:text-textDark font-medium">Ends At</th> -->
                     </tr>
                 </thead>
-                <tbody class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
+                <tbody >
                     <!-- <tr *ngFor="let item of targetArr | paginate : { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"> -->
                     <tr *ngFor="let item of targetArr; let i = index">
                         <!--  -->

@@ -143,4 +143,11 @@ export class SteckholdersComponent implements OnInit, OnDestroy {
     this.router.navigate(['/steckholders/action/drivers']);
   }
 
+  navigateToViewGoviCapital() {
+    this.router.navigate(['/steckholders/action/view-govicapital-users']);
+  }
+
+  navigateToViewGoviShopSupliers() {
+    this.router.navigate(['/steckholders/action/govi-shop-suppliers/']);
+  }
 }

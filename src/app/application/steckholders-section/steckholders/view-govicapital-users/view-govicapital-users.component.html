@@ -1,0 +1,208 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button class="mb-5 text-textLight dark:text-textDark" (click)="back()">
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div>
+  <div
+    class="pt-5 px-12 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+  >
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center">
+        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+          GoViCapital Users ({{ totalItems }})
+        </h2>
+      </div>
+      <div class="flex items-center mr-5">
+        <div
+          class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
+        >
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (keypress)="onSearchKeyPress($event)"
+            placeholder="Search by Phone Number or NIC..."
+            class="bg-transparent outline-none w-full text-textLight dark:text-textDark"
+            [disabled]="isLoading"
+          />
+          <!-- Search Icon - Always visible, triggers search on click -->
+          <button
+            type="button"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+            (click)="onSearchClick()"
+            [disabled]="isLoading"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"
+              />
+            </svg>
+          </button>
+          <!-- Clear Icon - Only visible when there's text -->
+          <button
+            type="button"
+            *ngIf="searchQuery !== ''"
+            class="text-gray-500 hover:text-gray-700 focus:outline-none"
+            (click)="clearSearch()"
+            [disabled]="isLoading"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Optional: Items per page dropdown -->
+        <!-- <select 
+          class="ml-4 px-3 py-2 rounded-lg bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark"
+          [(ngModel)]="itemsPerPage"
+          (change)="onItemsPerPageChange(itemsPerPage)"
+        >
+          <option [value]="5">5 per page</option>
+          <option [value]="10">10 per page</option>
+          <option [value]="20">20 per page</option>
+          <option [value]="50">50 per page</option>
+        </select> -->
+      </div>
+    </div>
+
+    <div
+      class="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full"
+    >
+      <!-- No Data Message -->
+      <div
+        *ngIf="!isLoading && !hasData"
+        class="flex flex-col items-center w-full px-10 py-7 bg-tileLight dark:bg-[#363636] dark:text-textDark mt-6"
+      >
+        <p class="text-[#494949] my-6 dark:text-textDark">
+          --No Data Available--
+        </p>
+        <img
+          src="assets/images/NoData.png"
+          alt="No Data"
+          class="w-20 h-20 dark:text-textDark"
+        />
+      </div>
+
+      <!-- Table - Show only when has data and not loading -->
+      <table
+        class="w-full divide-y divide-gray-200 table-auto whitespace-nowrap"
+        *ngIf="!isLoading && hasData"
+      >
+        <thead>
+          <tr class="whitespace-nowrap">
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              No
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Investor ID
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Name with Initials
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Phone Number
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              NIC Number
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Email Address
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Address
+            </th>
+            <th
+              class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
+            >
+              Joined On
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users | paginate: { 
+              itemsPerPage: itemsPerPage, 
+              currentPage: page, 
+              totalItems: totalItems 
+            }; let i = index">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ ((page - 1) * itemsPerPage) + i + 1 }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ user.investorId }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ user.name }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ user.phone }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ user.nic }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ user.email }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ user.address }}
+            </td>
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
+              {{ user.joinedOn }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div *ngIf="hasData" class="mt-6 dark:bg-[#262f45]">
+      <pagination-controls 
+        (pageChange)="onPageChange($event)" 
+        [responsive]="true" 
+        [previousLabel]="'Previous'"
+        [nextLabel]="'Next'" 
+        [screenReaderPaginationLabel]="'Pagination'" 
+        [screenReaderPageLabel]="'page'"
+        [screenReaderCurrentLabel]="'You\'re on page'"
+        [autoHide]="true"
+      >
+      </pagination-controls>
+    </div>
+  </div>
+</div>

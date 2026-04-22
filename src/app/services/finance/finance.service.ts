@@ -300,7 +300,9 @@ export interface GoviCareRequest {
   publishStatus: string;
   Request_Date_Time: string;
   approvedDetails: ApprovedDetails | null;
+  Approved_By: string;
   Farmer_ID: any;
+  officerStatus: string;
 }
 
 export interface GoviCareRequestsResponse {
@@ -320,7 +322,7 @@ export interface GoviCareRequestDetail {
   ExtentH: number;
   ExtentP: number;
   Expected_Investment: number;
-  Expected_Yield: string;
+  Expected_Yield: number;
   Expected_Start_Date: string;
   Request_Date_Time: string;
   approvedDetails: ApprovedDetails | null;
@@ -357,9 +359,6 @@ export interface UpdatePublishStatusResponse {
   status: boolean;
   message: string;
 }
-
-
-
 
 @Injectable({
   providedIn: 'root',
@@ -980,20 +979,125 @@ export class FinanceService {
     );
   }
 
-   getSalesAgentForFilters(): Observable<any> {
+  getSalesAgentForFilters(): Observable<any> {
     const url = `${this.apiUrl}finance/get-sales-agent-for-filter`;
     return this.http.get<any>(url, {
       headers: this.getHeaders(),
     });
   }
 
-  getAgentCommisons(data:any): Observable<any> {
+  getAgentCommisons(data: any): Observable<any> {
     const url = `${this.apiUrl}finance/get-agent-commissions`;
     return this.http.post<any>(url, data, {
       headers: this.getHeaders(),
     });
   }
 
-}
+  getGocicareAllInvestmentUsers(
+    page: number,
+    limit: number,
+    search?: string,
+    id?: number,
+    status?: string
+  ): Observable<any> {
+    console.log('Fetching investment users - Page:', page, 'Limit:', limit, 'Search:', search, 'ID:', id, 'Status:', status);
 
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    // Build URL with pagination parameters
+    let url = `${this.apiUrl}finance/govicare-investment-users?page=${page}&limit=${limit}`;
+
+    // Add optional parameters if they exist
+    if (search && search.trim()) {
+      url += `&search=${encodeURIComponent(search.trim())}`;
+    }
+
+    if (id) {
+      url += `&id=${id}`;
+    }
+
+    if (status) {
+      url += `&status=${encodeURIComponent(status)}`;
+    }
+
+    return this.http.get<any>(url, { headers: headers });
+  }
+
+  getAllShopViewAction(
+    page: number,
+    limit: number,
+    status: string = '',
+    searchText: string = '',
+    allSuppliers: boolean
+
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    let url = `${this.apiUrl}shop/get-all-shop-view-action?allSuppliers=${allSuppliers}&page=${page}&limit=${limit}`;
+
+    if (status) {
+      url += `&status=${status}`;
+    }
+
+    if (searchText) {
+      url += `&searchText=${searchText}`;
+    }
+
+    return this.http.get<any>(url, { headers });
+  }
+
+  goviShopViewDocument(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/govi-shop-view-document/${id}`;
+    return this.http.get<any>(url, { headers });
+  }
+
+  updateGoviShopUserStatus(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/update-govi-shop-user-status/${id}`;
+    return this.http.put<any>(url, { status }, { headers });
+  }
+
+  deleteGoviShopSupplier(id: number): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    let url = `${this.apiUrl}shop/delete-govishop-supplier/${id}`;
+    return this.http.delete<any>(url, { headers });
+  }
+
+  renewGoviShopUser(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}shop/reneve-govi-shop-user/${id}`;
+    return this.http.put<any>(url, { status }, { headers });
+  }
+
+  rejectGoviShopUser(id: number, text: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    const url = `${this.apiUrl}shop/reject-govi-shop-user-status/${id}`;
+    return this.http.post<any>(url, {text}, { headers });
+  }
+}
 

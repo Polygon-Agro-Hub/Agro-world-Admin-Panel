@@ -64,10 +64,8 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('Component initialized');
     this.route.queryParamMap.subscribe((params) => {
       const id = params.get('id');
-      console.log('Query parameter ID:', id);
       if (!id) {
         this.error = 'No order ID provided in URL';
         this.loading = false;
@@ -91,11 +89,7 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
       .getExcludedItems(orderId)
       .subscribe(
         (response) => {
-          console.log('response', response);
-
           this.excludedItemsArr = response;
-          console.log('excludeItemsArr', this.excludedItemsArr)
-
           this.loading = false;
         },
         (error) => {
@@ -110,7 +104,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
       .subscribe({
         next: (items) => {
           this.packageItems = Array.isArray(items) ? items : [items];
-          console.log('Fetched package items:', this.packageItems);
           this.updateProductSelections();
         },
         error: (err) => {
@@ -132,7 +125,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         );
 
         if (matchingItem) {
-          console.log('matching items, ', matchingItem)
           productType.productId = matchingItem.productId;
           productType.quantity = matchingItem.qty;
           productType.selectedProductPrice = matchingItem.price;
@@ -160,7 +152,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
           discountedPrice: item.discountedPrice,
           isExcluded: item.isExcluded,
         }));
-        console.log('Fetched marketplace items:', this.marketplaceItems);
         if (callback) callback();
       },
       error: (err) => {
@@ -172,14 +163,11 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   }
 
   fetchOrderDetails(id: string) {
-    console.log('Fetching order details for ID:', id);
     this.loading = true;
     this.error = '';
 
     this.procurementService.getOrderPackagesByOrderId(Number(id)).subscribe({
       next: (response) => {
-        console.log('order details response:', response); // Log the full response to check structure
-
         if (!response || !response.packages) {
           throw new Error('Invalid response structure from API');
         }
@@ -197,7 +185,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
           };
 
           if (pkg.productTypes && Array.isArray(pkg.productTypes)) {
-            console.log('packagede', pkg.productTypes)
             packageDetail.productTypes = pkg.productTypes.map((pt: any) => {
 
               const productType: ProductTypes = {
@@ -243,7 +230,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         this.calculateTotalPrice();
         this.loading = false;
         this.fetchPackageItems(id);
-        console.log('orderDetails', this.orderDetails)
         this.modifyOrderDetails();
       },
       error: (err) => {
@@ -267,7 +253,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         }
       });
     });
-    console.log('orderDetails here we go again ', this.orderDetails)
   }
 
 
@@ -286,11 +271,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
 
       // Validate if current total is within the allowed limit
       this.isWithinLimit = currentTotal <= allowedLimit;
-
-      console.log('Calculated total price:', this.totalPrice);
-      console.log('Allowed limit:', allowedLimit);
-      console.log('Current total:', currentTotal);
-      console.log('Is within limit:', this.isWithinLimit);
     } else {
       this.totalPrice = 0;
       this.isWithinLimit = true;
@@ -421,7 +401,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
   }
 
   async onUpdate() {
-    console.log('od', this.orderDetails)
     const productsToUpdate = this.orderDetails.flatMap((pkg) =>
       pkg.productTypes.map((pt) => ({
         id: pt.id, // orderpackageitems.id (if needed for updates)
@@ -431,8 +410,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
         displayName: pt.displayName,
       }))
     );
-
-    console.log('Products to Update:', productsToUpdate); // Verify before sending
 
     // Filter out invalid entries - now only checking for productId
     const validProducts = productsToUpdate.filter(
@@ -531,7 +508,6 @@ export class EditCompleatedDefinePremadePackagesComponent implements OnInit {
       });
 
       // Execute updates for all packages
-      console.log('orderdetails', this.orderDetails);
       const results = await Promise.all(
         this.orderDetails.map(async (pkg) => {
           if (!pkg.packageId) {

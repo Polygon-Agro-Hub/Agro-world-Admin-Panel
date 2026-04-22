@@ -74,7 +74,6 @@
     </div>
 
     <div class="text-center">
-      <!-- <button pButton type="button" label="Open Popup" icon="pi pi-envelope" (click)="showDialog()"></button> -->
       <button
         (click)="showReplyPopUp(complain.firstName, complain.lastName, complain.language)"
         class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
@@ -106,7 +105,6 @@
       <p *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
         Dear <strong>{{ selectedFarmerName }}</strong>,
       </p>
-      <!-- second part -->
       <p class="mt-5" *ngIf="selectedLanguage !== 'Sinhala' && selectedLanguage !== 'Tamil'">
         We are pleased to inform you that your complaint has been resolved
       </p>

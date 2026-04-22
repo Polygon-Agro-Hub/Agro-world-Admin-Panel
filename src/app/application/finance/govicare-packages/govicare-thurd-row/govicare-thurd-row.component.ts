@@ -17,7 +17,7 @@ export class GovicareThurdRowComponent {
   constructor(
     private router: Router,
     public tokenService: TokenService,
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) {}
 
   formatDate(dateTime: string): string {

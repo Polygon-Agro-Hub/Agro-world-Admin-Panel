@@ -23,6 +23,7 @@ interface Order {
   fullTotal: number;
   status: string;
   isPackage: number;
+  createdAt:string;
 }
 
 interface ApiResponse {
@@ -112,7 +113,6 @@ export class CustomerOrdersComponent implements OnInit {
     this.hasData = false;
 
     const apiStatus = this.statusMap[this.activeButton] || 'Ordered';
-    console.log(this.activeButton, apiStatus);
 
     this.dasService
       .fetchUserOrders(this.userId, apiStatus)
@@ -198,6 +198,10 @@ export class CustomerOrdersComponent implements OnInit {
     // Define the statuses that allow post-invoice download
     const enabledStatuses = [
       'Out For Delivery',
+      'Collected',
+      'Hold',
+      'Return',
+      'Return Received',
       'Delivered',
       'Picked Up',
       'On the way',
@@ -213,7 +217,6 @@ export class CustomerOrdersComponent implements OnInit {
     this.postInvoiceService
       .generateAndDownloadInvoice(id, tableInvoiceNo)
       .then(() => {
-        // Success case - no action needed unless you want to show a success message
       })
       .catch((error) => {
         console.error('Error generating invoice:', error);

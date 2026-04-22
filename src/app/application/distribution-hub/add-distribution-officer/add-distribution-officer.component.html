@@ -40,8 +40,7 @@
             Company Name
           </label>
           <div class="relative">
-            <input id="centerId" name="centerId" readonly [value]="companyName"
-              (keydown)="blockLeadingSpace($event, 'nic')" (input)="trimLeadingSpace($event)"
+            <input id="centerId" name="centerId" readonly [value]="companyName" (input)="trimLeadingSpace($event)"
               class="form-control mt-1 block w-full p-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-800 appearance-none focus:ring-indigo-500 focus:border-indigo-500 pr-10" />
           </div>
         </div>
@@ -75,8 +74,8 @@
               </label>
             </div>
             <div class="flex items-center space-x-2 cursor-pointer">
-              <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary" id="Temporary" [(ngModel)]="empType"
-                #empTypeCtrl="ngModel" (ngModelChange)="updateEmployeeType($event)" />
+              <input class="w-5 h-5 cursor-pointer" type="radio" name="enpType" value="Temporary" id="Temporary"
+                [(ngModel)]="empType" #empTypeCtrl="ngModel" (ngModelChange)="updateEmployeeType($event)" />
               <label class="block text-sm font-medium text-gray-700 dark:text-textDark cursor-pointer" for="Temporary">
                 Temporary
               </label>
@@ -269,29 +268,29 @@
 
 
         <div>
-  <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
-    NIC Number *
-  </label>
-  <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
-    (input)="capitalizeV(); enforceNicLength($event)" (input)="trimLeadingSpace($event)"
-    (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
-    class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" 
-    maxlength="12" />
-  
-  <!-- Validation messages -->
-  <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
-    class="text-red-600 text-sm block mt-1">
-    Please enter a valid NIC number (12 digits or 9 digits followed by 'V')
-  </span>
-  <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm block mt-1">
-    NIC is a required field.
-  </span>
-</div>
+          <label for="nic" class="block text-sm font-medium text-gray-700 dark:text-textDark">
+            NIC Number *
+          </label>
+          <input id="nic" name="nic" [(ngModel)]="personalData.nic" (blur)="onBlur('nic')"
+            (input)="capitalizeV(); enforceNicLength($event); trimLeadingSpace($event)"
+            (keydown)="blockLeadingSpace($event, 'nic'); blockNicInput($event)"
+            class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+            maxlength="12" />
+
+          <!-- Validation messages -->
+          <span *ngIf="touchedFields.nic && personalData.nic && !isValidNIC(personalData.nic)"
+            class="text-red-600 text-sm block mt-1">
+            Please enter a valid NIC number (12 digits or 9 digits followed by 'V')
+          </span>
+          <span *ngIf="isFieldInvalid('nic') && !personalData.nic" class="text-red-600 text-sm block mt-1">
+            NIC is a required field.
+          </span>
+        </div>
 
 
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-textDark">Email *</label>
-          <input type="email" id="email" name="nic" [(ngModel)]="personalData.email" (blur)="onBlur('email')"
+          <input type="email" id="email" name="email" [(ngModel)]="personalData.email" (blur)="onBlur('email')"
             (input)="onTrimInput($event, personalData, 'email')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
@@ -330,16 +329,16 @@
             Number *</label>
           <input (blur)="onBlur('houseNumber')" id="houseNumber" name="houseNumber"
             [(ngModel)]="personalData.houseNumber" (keydown)="blockLeadingSpace($event, 'houseNumber')"
-            (input)="capitalizeWhileTyping('houseNumber')" (input)="trimLeadingSpace($event)"
+            (input)="capitalizeWhileTyping('houseNumber')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('houseNumber')" class="text-red-600 text-sm">House Number is required.</span>
         </div>
 
         <div class="pb-6">
           <label for="street" class="block text-sm font-medium text-gray-700 dark:text-textDark">Street Name *</label>
-          <input (blur)="onBlur('streetName')" id="streetName" name="streetName" [(ngModel)]="personalData.streetName"
-            (keydown)="blockLeadingSpace($event, 'streetName')
-          " (input)="capitalizeWhileTyping('streetName')" (input)="trimLeadingSpace($event)"
+          <input type="text" (blur)="onBlur('streetName')" id="streetName" name="streetName"
+            [(ngModel)]="personalData.streetName" (keydown)="blockLeadingSpace($event, 'streetName')
+          " (input)="capitalizeWhileTyping('streetName')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <span *ngIf="isFieldInvalid('streetName')" class="text-red-600 text-sm">Street Name is required.</span>
         </div>
@@ -348,7 +347,6 @@
           <label for="city" class="block text-sm font-medium text-gray-700 dark:text-textDark">City *</label>
           <input (blur)="onBlur('city')" id="city" name="city" [(ngModel)]="personalData.city"
             (keydown)="blockLeadingSpace($event, 'city')" (input)="capitalizeWhileTyping('city')"
-            (input)="trimLeadingSpace($event)"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
 
           <span *ngIf="isFieldInvalid('city')" class="text-red-600 text-sm">City is required.</span>
@@ -378,7 +376,7 @@
             Province *
           </label>
           <input id="province" name="province" [(ngModel)]="personalData.province"
-            (keydown)="blockLeadingSpace($event, 'nic')"
+            (keydown)="blockLeadingSpace($event, 'province')"
             class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
             readonly />
         </div>
@@ -404,15 +402,18 @@
           Account Holder’s Name *
         </label>
         <input maxlength="50" id="accHolderName" name="accHolderName" [(ngModel)]="personalData.accHolderName"
-          (input)="onTrimInput($event, personalData, 'accHolderName')" #accHolderNameRef="ngModel" required
-          pattern="^([A-Z][a-z]*)( [A-Z][a-z]*)*$" (blur)="onBlur('accHolderName')"
-          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
+          (input)="onTrimInput($event, personalData, 'accHolderName'); validateNameInput($event)"
+          #accHolderNameRef="ngModel" required pattern="^[A-Za-z\s]+$" (blur)="onBlur('accHolderName')"
+          class="mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"
+          [class.border-red-500]="accHolderNameRef.invalid && (accHolderNameRef.dirty || accHolderNameRef.touched)" />
         <span *ngIf="accHolderNameRef.invalid && (accHolderNameRef.dirty || accHolderNameRef.touched)"
           class="text-red-600 text-sm">
           <ng-container *ngIf="accHolderNameRef.errors?.['required']">
-            Account Holder’s Name is required.
+            Account Holder's Name is required.
           </ng-container>
-
+          <ng-container *ngIf="accHolderNameRef.errors?.['pattern']">
+            Account Holder's Name can only contain letters and spaces. Numbers and special characters are not allowed.
+          </ng-container>
         </span>
       </div>
 

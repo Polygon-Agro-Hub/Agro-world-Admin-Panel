@@ -28,6 +28,7 @@
           <p-dropdown [options]="centerNames" optionLabel="fullCenterName" optionValue="id" placeholder="Select Collection Centre"
             [(ngModel)]="selectedCenterId" #selectedCenterIdInput="ngModel" (onChange)="onCenterChange()"
             name="selectedCenterId" required
+            [filter]="true" filterBy="regCode,centerName" filterPlaceholder="Search managers..."
             [styleClass]="'border min-w-max ml-2 border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white custom-center-dropdown'"
             [style]="{'width': '400px'}"
             >
@@ -155,24 +156,24 @@
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
-            [options]="statusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="statusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="selectStatus != null && selectStatus !== ''" placeholder="Status" [(ngModel)]="selectStatus"
             (onChange)="applyStatusFilters()" panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
 
-        <div class="mr-5">
+        <!-- <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
-            [options]="centerStatusOptions" [checkmark]="true" optionLabel="label" optionValue="value"
+            [options]="centerStatusOptions" [checkmark]="false" optionLabel="label" optionValue="value"
             [showClear]="selectCenterStatus != null && selectCenterStatus !== ''" placeholder="Centre Status"
             [(ngModel)]="selectCenterStatus" (onChange)="applyCenterStatusFilters()"
             panelStyleClass="custom-top-dropdown"></p-dropdown>
-        </div>
+        </div> -->
 
         <div class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF] custom-top-dropdown"
-            [options]="jobRole" [checkmark]="true" optionLabel="jobRole" [showClear]="role != null && role !== ''"
+            [options]="jobRole" [checkmark]="false" optionLabel="jobRole" [showClear]="role != null && role !== ''"
             placeholder="Role" [(ngModel)]="role" (onChange)="applyFilters()"
             panelStyleClass="custom-top-dropdown"></p-dropdown>
         </div>
@@ -228,7 +229,7 @@
               No
             </th>
             <!-- <th class="py-3 font-normal text-gray-500 text-left"></th> -->
-            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-center">
+            <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
               EMP ID
             </th>
             <th class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left">
@@ -303,7 +304,7 @@
             <td class="px-2 py-3 text-left text-textLight dark:text-textDark">
               {{ (page - 1) * itemsPerPage + i + 1 }}
             </td>
-            <td class="px-2 py-3 text-center text-textLight dark:text-textDark">
+            <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
               {{ item.empId }}
             </td>
             <td class="px-4 py-3 text-left text-textLight dark:text-textDark">
@@ -350,13 +351,13 @@
             class="px-4 py-3 text-center">
               <div>
                 <span [ngClass]="{
-                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-[#F8FFA6] text-[#A8A100] rounded-xl':
                       item.status === 'Not Approved',
-                    'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-green-100 text-[#308233] rounded-xl':
                       item.status === 'Approved',
-                    'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-lg':
+                    'font-bold px-3 py-1 text-sm bg-red-100 text-[#D16D6A] rounded-xl':
                       item.status === 'Rejected'
-                  }" class="inline-block font-medium rounded-md px-4 py-2 text-xs text-center w-32"
+                  }" class="inline-block font-bold rounded-lg px-4 py-2 text-xs text-center w-32 shadow-md transition-all duration-200"
                   [class.cursor-pointer]="
                     ((urlSegment === 'steckholders' && permissionService.hasPermission('Approve collection officer')) ||
 (urlSegment === 'collection-hub' && permissionService.hasPermission('Approve Polygon Centre officer')) ||

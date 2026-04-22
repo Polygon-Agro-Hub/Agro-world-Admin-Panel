@@ -644,21 +644,19 @@ export class AddDestributionCenterComponent implements OnInit {
     this.updateRegCode();
   }
 
-  // Add method to capitalize first letter and trim spaces
-  private formatCentreName(value: string): string {
-    if (!value) return value;
-    const trimmed = value.trim();
-    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
-  }
+private formatCentreName(value: string): string {
+  if (!value) return value;
+  const trimmed = value.trim();
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+}
 
-  // Add onBlur method for centre name formatting
-  onCentreNameBlur() {
-    const nameControl = this.distributionForm.get('name');
-    if (nameControl?.value) {
-      const formatted = this.formatCentreName(nameControl.value);
-      nameControl.setValue(formatted);
-    }
+onCentreNameBlur() {
+  const nameControl = this.distributionForm.get('name');
+  if (nameControl?.value) {
+    const formatted = this.formatCentreName(nameControl.value);
+    nameControl.setValue(formatted);
   }
+}
 
   private getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {

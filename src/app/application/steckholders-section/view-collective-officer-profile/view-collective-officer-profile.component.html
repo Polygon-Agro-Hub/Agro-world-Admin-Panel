@@ -42,7 +42,10 @@
       <div class="flex flex-col gap-y-6">
         <div class="flex flex-row gap-4 justify-between" *ngIf="officerObj.jobRole === 'Driver'">
           <div class="flex flex-row justify-center min-w-24"
-            *ngIf=" permissionService.hasPermission('Stakeholder delete driver') || tokenService.getUserDetails().role === '1'">
+            *ngIf="
+            ( urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder delete driver') || tokenService.getUserDetails().role === '1') ||
+            ( urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon center delete driver') || tokenService.getUserDetails().role === '1') 
+            ">
             <button
               class="flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#6c2d3180] bg-[#FFDBDC80] dark:text-[#db4848] text-[#FF0000] border-2 dark:border-[#FF0000] border-[#FF0000] text-lg rounded-xl shadow-md"
               (click)="deleteOfficer(officerObj.jobRole)">
@@ -52,7 +55,11 @@
           </div>
 
           <div class="flex flex-row justify-center "
-            *ngIf="permissionService.hasPermission('Stakeholder edit driver') || tokenService.getUserDetails().role === '1'">
+            *ngIf="
+              (urlSegment === 'steckholders' && permissionService.hasPermission('Stakeholder edit driver') ) ||
+              (urlSegment === 'distribution-hub' && permissionService.hasPermission('Polygon center edit driver')) ||
+              tokenService.getUserDetails().role === '1'
+              ">
             <button
               class="min-w-24 flex items-center px-3 py-1.5 justify-center gap-2 dark:bg-[#38608480] bg-[#DBEEFF80] dark:text-[#3980C0] text-[#3980C0] border-2 border-[#3980C0] dark:border-[#3980C0] text-lg rounded-xl shadow-md"
               (click)="editOfficer(officerObj.id, officerObj.jobRole)">
@@ -99,6 +106,7 @@
           (urlSegment === 'distribution-hub' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Distribution hub officer download pdf')) ||
           (urlSegment === 'steckholders' && (officerObj.jobRole === 'Distribution Officer' || officerObj.jobRole === 'Distribution Centre Manager' || officerObj.jobRole === 'Distribution Centre Head') && permissionService.hasPermission('Stakeholder distribution officer download pdf')) ||
           (urlSegment === 'steckholders' && officerObj.jobRole === 'Driver' && permissionService.hasPermission('Driver download pdf')) ||
+          (urlSegment === 'distribution-hub' && officerObj.jobRole === 'Driver' && permissionService.hasPermission('Polygon center drivers details download')) ||
           tokenService.getUserDetails().role === '1')"
           class="bg-[#415CFF] text-white px-6 py-1 text-xl rounded-lg shadow-md" (click)="generatePDF()"
           [disabled]="isGeneratingPDF">

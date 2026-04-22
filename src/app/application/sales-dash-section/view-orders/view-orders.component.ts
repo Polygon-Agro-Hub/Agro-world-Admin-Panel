@@ -9,9 +9,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
 import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loading-spinner.component';
 import { FormsModule } from '@angular/forms';
-import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
 import { SalesDashService } from '../../../services/sales-dash/sales-dash.service';
-import { finalize } from 'rxjs';
 import { FinalinvoiceService } from '../../../services/invoice/finalinvoice.service';
 import { TokenService } from '../../../services/token/services/token.service';
 import { PermissionService } from '../../../services/roles-permission/permission.service';
@@ -52,8 +50,9 @@ export class ViewOrdersComponent implements OnInit {
   ];
 
   paymentStatusArr = [
-    { paymentStatus: 'Paid', value: '1' },
-    { paymentStatus: 'Pending', value: '0' },
+    { paymentStatus: 'Paid', value: 'Paid' },
+    { paymentStatus: 'Pending', value: 'Pending' },
+    { paymentStatus: 'Received', value: 'Received' },
   ];
 
   orderStatusArr = [
@@ -82,8 +81,6 @@ export class ViewOrdersComponent implements OnInit {
   deliveryTypeFilter: string = '';
 
   constructor(
-    private route: ActivatedRoute,
-    private http: HttpClient,
     private router: Router,
     private datePipe: DatePipe,
     private finalInvoiceService: FinalinvoiceService,
@@ -107,7 +104,6 @@ export class ViewOrdersComponent implements OnInit {
     search: string = this.searchText
   ) {
     this.isLoading = true;
-    console.log('date', this.date);
     this.salesDashService
       .getAllOrders(
         page,
@@ -121,7 +117,6 @@ export class ViewOrdersComponent implements OnInit {
       )
       .subscribe(
         (data) => {
-          console.log(data);
           this.isLoading = false;
           this.ordersArr = data.items.map((order: Orders) => {
             return {
@@ -136,7 +131,6 @@ export class ViewOrdersComponent implements OnInit {
 
           this.hasData = this.ordersArr.length > 0;
           this.totalItems = data.total;
-          console.log(this.ordersArr);
         },
         (error) => {
           console.error('Error fetch news:', error);
@@ -163,7 +157,6 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   applyOrderStatusFilters() {
-    console.log(this.orderStatusFilter);
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -176,7 +169,6 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   applyPaymentMethodFilters() {
-    console.log(this.paymentMethodFilter);
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -201,7 +193,6 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   applydeliveryTypeFilters() {
-    console.log('deliveryTypeFilter', this.deliveryTypeFilter);
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -214,7 +205,6 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   dateFilter() {
-    console.log('date', this.date);
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -293,7 +283,6 @@ export class ViewOrdersComponent implements OnInit {
   }
 
   onDateClear() {
-    console.log('date', this.date);
     this.fetchAllOrders(
       this.page,
       this.itemsPerPage,
@@ -313,6 +302,10 @@ export class ViewOrdersComponent implements OnInit {
       'Picked Up',
       'On the way',
       'Failed',
+      'Collected',
+      'Hold',
+      'Return',
+      'Return Received',
     ];
 
     return enabledStatuses.includes(status);
@@ -324,7 +317,6 @@ export class ViewOrdersComponent implements OnInit {
     this.postInvoiceService
       .generateAndDownloadInvoice(id, tableInvoiceNo)
       .then(() => {
-        // Success case - no action needed unless you want to show a success message
       })
       .catch((error) => {
         console.error('Error generating invoice:', error);

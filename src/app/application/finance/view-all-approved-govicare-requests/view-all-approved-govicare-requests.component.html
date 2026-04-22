@@ -823,67 +823,69 @@
           </div>
 
           <div>
-  <label class="block mb-1 dark:text-textDark">
-    Maximum Investment Shares
-  </label>
-  <input
-    id="maximumShare"
-    required
-    type="number"
-    min="1"
-    [(ngModel)]="editMaxShares"
-    #maximumShareInput="ngModel"
-    name="maximumShare"
-    placeholder="--Enter Here--"
-    (keypress)="allowDecimalOnly($event)"
-    (input)="preventNegative('maximumShare', $event)"
-    class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
-  />
-  <span
-    *ngIf="
-      maximumShareInput.touched &&
-      maximumShareInput.errors?.['required']
-    "
-    class="text-red-600 text-sm block mt-1"
-    >This field is required.</span
-  >
+            <label class="block mb-1 dark:text-textDark">
+              Maximum Investment Shares
+            </label>
+            <input
+              id="maximumShare"
+              required
+              type="number"
+              min="1"
+              [(ngModel)]="editMaxShares"
+              #maximumShareInput="ngModel"
+              name="maximumShare"
+              placeholder="--Enter Here--"
+              (keypress)="allowDecimalOnly($event)"
+              (input)="preventNegative('maximumShare', $event)"
+              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
+            />
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                maximumShareInput.errors?.['required']
+              "
+              class="text-red-600 text-sm block mt-1"
+              >This field is required.</span
+            >
 
-  <span
-    *ngIf="
-      maximumShareInput.touched &&
-      !maximumShareInput.errors?.['required'] &&
-      editMaxShares <= 0
-    "
-    class="text-red-600 text-sm block mt-1"
-  >
-    Maximum Investment Shares cannot be 0 or less than 0.
-  </span>
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                !maximumShareInput.errors?.['required'] &&
+                editMaxShares <= 0
+              "
+              class="text-red-600 text-sm block mt-1"
+            >
+              Maximum Investment Shares cannot be 0 or less than 0.
+            </span>
 
-  <span
-    *ngIf="
-      maximumShareInput.touched &&
-      editMaxShares > 0 &&
-      editNumShares > 0 &&
-      editMaxShares > editNumShares
-    "
-    class="text-red-600 text-sm block mt-1"
-  >
-    The Maximum Investment Shares cannot be larger than the defined number of shares.
-  </span>
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                editMaxShares > 0 &&
+                editNumShares > 0 &&
+                editMaxShares > editNumShares
+              "
+              class="text-red-600 text-sm block mt-1"
+            >
+              The Maximum Investment Shares cannot be larger than the defined
+              number of shares.
+            </span>
 
-  <span
-    *ngIf="
-      maximumShareInput.touched &&
-      minimumShareInput.touched &&
-      editMaxShares > 0 &&
-      editMinShares > 0 &&
-      editMaxShares < editMinShares
-    "
-    class="text-red-600 text-sm block mt-1"
-  >
-    Maximum Investment Shares cannot be less than Minimum Investment Shares.
-  </span>
-</div>
+            <span
+              *ngIf="
+                maximumShareInput.touched &&
+                minimumShareInput.touched &&
+                editMaxShares > 0 &&
+                editMinShares > 0 &&
+                editMaxShares < editMinShares
+              "
+              class="text-red-600 text-sm block mt-1"
+            >
+              Maximum Investment Shares cannot be less than Minimum Investment
+              Shares.
+            </span>
+          </div>
         </div>
 
         <div class="flex flex-row justify-between items-center">

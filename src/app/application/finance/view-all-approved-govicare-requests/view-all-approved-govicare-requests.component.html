@@ -737,17 +737,19 @@
               Define Number of Shares
             </label>
             <input
-              id="numShares"
-              required
-              type="number"
-              [(ngModel)]="editNumShares"
-              #numSharesInput="ngModel"
-              name="numShares"
-              placeholder="--Enter Here--"
-              (ngModelChange)="onEditSharesChange()"
-              (keypress)="allowIntegerOnly($event)"
-              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
-            />
+  id="numShares"
+  required
+  type="number"
+  min="1"
+  [(ngModel)]="editNumShares"
+  #numSharesInput="ngModel"
+  name="numShares"
+  placeholder="--Enter Here--"
+  (ngModelChange)="onEditSharesChange()"
+  (keypress)="allowIntegerOnly($event)"
+  (input)="preventNegative('numShares', $event)"
+  class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
+/>
             <span
               *ngIf="
                 numSharesInput.touched && numSharesInput.errors?.['required']
@@ -784,17 +786,19 @@
               Minimum Investment Shares
             </label>
             <input
-              id="minimumShare"
-              required
-              type="number"
-              [(ngModel)]="editMinShares"
-              #minimumShareInput="ngModel"
-              name="minimumShare"
-              placeholder="--Enter Here--"
-              (keypress)="allowDecimalOnly($event)"
-              pattern="^[1-9]\d*(\.\d+)?$"
-              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
-            />
+  id="minimumShare"
+  required
+  type="number"
+  min="1"
+  [(ngModel)]="editMinShares"
+  #minimumShareInput="ngModel"
+  name="minimumShare"
+  placeholder="--Enter Here--"
+  (keypress)="allowDecimalOnly($event)"
+  (input)="preventNegative('minimumShare', $event)"
+  pattern="^[1-9]\d*(\.\d+)?$"
+  class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
+/>
             <span
               *ngIf="
                 minimumShareInput.touched &&
@@ -820,16 +824,18 @@
               Maximum Investment Shares
             </label>
             <input
-              id="maximumShare"
-              required
-              type="number"
-              [(ngModel)]="editMaxShares"
-              #maximumShareInput="ngModel"
-              name="maximumShare"
-              placeholder="--Enter Here--"
-              (keypress)="allowDecimalOnly($event)"
-              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
-            />
+  id="maximumShare"
+  required
+  type="number"
+  min="1"
+  [(ngModel)]="editMaxShares"
+  #maximumShareInput="ngModel"
+  name="maximumShare"
+  placeholder="--Enter Here--"
+  (keypress)="allowDecimalOnly($event)"
+  (input)="preventNegative('maximumShare', $event)"
+  class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
+/>
             <span
               *ngIf="
                 maximumShareInput.touched &&

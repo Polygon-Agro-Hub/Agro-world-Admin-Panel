@@ -435,29 +435,38 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
 
   // Helper methods for input validation
   allowIntegerOnly(event: KeyboardEvent) {
-    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const key = event.key;
-
-    // Block everything except numbers
-    if (!allowedKeys.includes(key)) {
+    const allowedKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+    if (!allowedKeys.includes(event.key)) {
       event.preventDefault();
-      return;
     }
   }
 
   allowDecimalOnly(event: KeyboardEvent) {
     const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
-    const key = event.key;
-
-    // Block everything except numbers and dot
-    if (!allowedKeys.includes(key)) {
+    if (!allowedKeys.includes(event.key)) {
       event.preventDefault();
       return;
     }
-
-    // Prevent multiple dots
-    if (key === '.' && (event.target as HTMLInputElement).value.includes('.')) {
+    if (
+      event.key === '.' &&
+      (event.target as HTMLInputElement).value.includes('.')
+    ) {
       event.preventDefault();
+    }
+  }
+
+  preventNegative(
+    field: 'numShares' | 'minimumShare' | 'maximumShare',
+    event: Event,
+  ) {
+    const input = event.target as HTMLInputElement;
+    const value = parseFloat(input.value);
+
+    if (value < 0) {
+      input.value = '';
+      if (field === 'numShares') this.editNumShares = null!;
+      else if (field === 'minimumShare') this.editMinShares = null!;
+      else if (field === 'maximumShare') this.editMaxShares = null!;
     }
   }
 }

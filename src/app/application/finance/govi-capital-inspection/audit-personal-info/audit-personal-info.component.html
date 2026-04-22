@@ -556,7 +556,10 @@
               Minimum Investment Shares cannot be 0 or less than 0.
             </span>
             <span
-              *ngIf="minimumShareInput.touched && numShares < minimumShare"
+              *ngIf="
+                minimumShareInput.touched &&
+                (numShares || 0) < (minimumShare || 0)
+              "
               class="text-red-600 text-sm block mt-1"
             >
               The Minimum Investment Shares cannot be larger than the defined
@@ -605,9 +608,9 @@
               *ngIf="
                 maximumShareInput.touched &&
                 minimumShareInput.touched &&
-                maximumShare > 0 &&
-                minimumShare > 0 &&
-                maximumShare < minimumShare
+                (maximumShare || 0) > 0 &&
+                (minimumShare || 0) > 0 &&
+                (maximumShare || 0) < (minimumShare || 0)
               "
               class="text-red-600 text-sm block mt-1"
             >
@@ -619,7 +622,7 @@
               *ngIf="
                 maximumShareInput.touched &&
                 minimumShareInput.touched &&
-                numShares < maximumShare
+                (numShares || 0) < (maximumShare || 0)
               "
               class="text-red-600 text-sm block mt-1"
             >

@@ -528,8 +528,8 @@
               #minimumShareInput="ngModel"
               name="minimumShare"
               placeholder="--Enter Here--"
-              (keypress)="allowDecimalOnly($event)"
-              pattern="^[1-9]\d*(\.\d+)?$"
+              (keypress)="allowIntegerOnly($event)"
+              pattern="^[1-9]\d*$"
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
             <span
@@ -571,7 +571,7 @@
               #maximumShareInput="ngModel"
               name="maximumShare"
               placeholder="--Enter Here--"
-              (keypress)="allowDecimalOnly($event)"
+              (keypress)="allowIntegerOnly($event)"
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
             />
             <span

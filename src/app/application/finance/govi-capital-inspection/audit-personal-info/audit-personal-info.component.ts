@@ -361,15 +361,19 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   // Method to block decimal values (only allow integers)
   allowIntegerOnly(event: KeyboardEvent) {
-    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const key = event.key;
-
-    // Block everything except numbers
-    if (!allowedKeys.includes(key)) {
-      event.preventDefault();
-      return;
-    }
+  // 'e' and 'E' are valid in number inputs by default (scientific notation)
+  // '-' allows negative values — both must be blocked
+  const blockedKeys = ['-', '+', 'e', 'E', '.'];
+  if (blockedKeys.includes(event.key)) {
+    event.preventDefault();
+    return;
   }
+
+  const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  if (!allowedKeys.includes(event.key)) {
+    event.preventDefault();
+  }
+}
 
   devideSharesPopUp(devideType: 'Create' | 'Edit') {
     this.openDevideSharesPopUp = true;

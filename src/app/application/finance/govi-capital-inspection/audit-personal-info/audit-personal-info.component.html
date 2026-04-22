@@ -480,17 +480,18 @@
               Define Number of Shares
             </label>
             <input
-              id="numShares"
-              required
-              type="number"
-              [(ngModel)]="numShares"
-              #numSharesInput="ngModel"
-              name="numShares"
-              placeholder="--Enter Here--"
-              (ngModelChange)="onNumSharesChange($event)"
-              (keypress)="allowIntegerOnly($event)"
-              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
-            />
+  id="numShares"
+  required
+  type="number"
+  min="1"
+  [(ngModel)]="numShares"
+  #numSharesInput="ngModel"
+  name="numShares"
+  placeholder="--Enter Here--"
+  (ngModelChange)="onNumSharesChange($event)"
+  (keypress)="allowIntegerOnly($event)"
+  class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
+/>
             <span
               *ngIf="numSharesInput.touched && numShares === null"
               class="text-red-600 text-sm block mt-1"
@@ -523,17 +524,18 @@
               Minimum Investment Shares
             </label>
             <input
-              id="minimumShare"
-              required
-              type="number"
-              [(ngModel)]="minimumShare"
-              #minimumShareInput="ngModel"
-              name="minimumShare"
-              placeholder="--Enter Here--"
-              (keypress)="allowIntegerOnly($event)"
-              pattern="^[1-9]\d*$"
-              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
-            />
+  id="minimumShare"
+  required
+  type="number"
+  min="1"
+  [(ngModel)]="minimumShare"
+  #minimumShareInput="ngModel"
+  name="minimumShare"
+  placeholder="--Enter Here--"
+  (keypress)="allowIntegerOnly($event)"
+  pattern="^[1-9]\d*$"
+  class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
+/>
             <span
               *ngIf="
                 minimumShareInput.touched &&
@@ -567,16 +569,17 @@
               Maximum Investment Shares
             </label>
             <input
-              id="maximumShare"
-              required
-              type="number"
-              [(ngModel)]="maximumShare"
-              #maximumShareInput="ngModel"
-              name="maximumShare"
-              placeholder="--Enter Here--"
-              (keypress)="allowIntegerOnly($event)"
-              class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
-            />
+  id="maximumShare"
+  required
+  type="number"
+  min="1"
+  [(ngModel)]="maximumShare"
+  #maximumShareInput="ngModel"
+  name="maximumShare"
+  placeholder="--Enter Here--"
+  (keypress)="allowIntegerOnly($event)"
+  class="form-control block w-full p-2 border border-gray-300 rounded-md text-black dark:text-white bg-tileLight dark:bg-tileBlack"
+/>
             <span
               *ngIf="
                 maximumShareInput.touched &&

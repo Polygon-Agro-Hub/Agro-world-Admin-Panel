@@ -363,17 +363,31 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
     }
 
     if (this.editMinShares > this.editNumShares) {
-    Swal.fire({
-      title: 'Validation Error',
-      text: 'The Minimum Investment Shares cannot be larger than the defined number of shares.',
-      icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'The Minimum Investment Shares cannot be larger than the defined number of shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
+
+    // Add this validation
+    if (this.editMaxShares > this.editNumShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'The Maximum Investment Shares cannot be larger than the defined number of shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
 
     if (this.editMaxShares < this.editMinShares) {
       Swal.fire({
@@ -388,6 +402,7 @@ export class ViewAllApprovedGovicareRequestsComponent implements OnInit {
       return;
     }
 
+    // Rest of your code remains the same...
     this.isSavingShares = true;
 
     const updateData = {

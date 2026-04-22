@@ -276,40 +276,41 @@ export class AuditPersonalInfoComponent implements OnInit {
 
   DevideRequest(form: any) {
     if (form.invalid) {
-    form.form.markAllAsTouched();
-    return;
-  }
+      form.form.markAllAsTouched();
+      return;
+    }
 
-  if (!this.numShares || this.numShares <= 0) return;
+    if (!this.numShares || this.numShares <= 0) return;
 
-  if (this.minimumShare !== null && this.numShares < this.minimumShare) return;
+    if (this.minimumShare !== null && this.numShares < this.minimumShare)
+      return;
 
-  // NEW: block if maximumShare exceeds numShares
-  if (this.maximumShare !== null && this.maximumShare > this.numShares) {
-    Swal.fire({
-      title: 'Validation Error',
-      text: 'The Maximum Investment Shares cannot be larger than the defined number of shares.',
-      icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
+    // NEW: block if maximumShare exceeds numShares
+    if (this.maximumShare !== null && this.maximumShare > this.numShares) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'The Maximum Investment Shares cannot be larger than the defined number of shares.',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
 
-  if ((this.maximumShare ?? 0) < (this.minimumShare ?? 0)) {
-    Swal.fire({
-      title: 'Validation Error',
-      text: 'Maximum Investment Shares cannot be less than Minimum Investment Shares',
-      icon: 'error',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-      },
-    });
-    return;
-  }
+    if ((this.maximumShare ?? 0) < (this.minimumShare ?? 0)) {
+      Swal.fire({
+        title: 'Validation Error',
+        text: 'Maximum Investment Shares cannot be less than Minimum Investment Shares',
+        icon: 'error',
+        customClass: {
+          popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+          title: 'font-semibold text-lg',
+        },
+      });
+      return;
+    }
 
     this.openDevideSharesPopUp = false;
 
@@ -317,7 +318,7 @@ export class AuditPersonalInfoComponent implements OnInit {
 
     this.devideRequestObj.totalValue = this.sharesData.totalValue;
     this.devideRequestObj.numShares = this.numShares;
-    this.devideRequestObj.shareValue = Number(this.shareValue.toFixed(2));
+    this.devideRequestObj.shareValue = Math.ceil(this.shareValue);
     this.devideRequestObj.minimumShare = this.minimumShare!;
     this.devideRequestObj.maximumShare = this.maximumShare!;
     this.devideRequestObj.id = this.sharesData.id;

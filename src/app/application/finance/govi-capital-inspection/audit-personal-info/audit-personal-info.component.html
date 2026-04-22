@@ -512,7 +512,11 @@
             </label>
             <input
               id="shareValue"
-              [value]="shareValue === 0 ? '--Auto-fill--' : shareValue"
+              [value]="
+                shareValue === 0
+                  ? '--Auto-fill--'
+                  : (shareValue | number: '1.0-0')
+              "
               name="shareValue"
               readonly
               class="form-control block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack"

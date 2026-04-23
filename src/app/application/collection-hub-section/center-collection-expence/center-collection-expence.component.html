@@ -152,65 +152,66 @@
     </div>
 
     <!-- Table -->
-    <div class="w-full mt-8 border-gray-100 border-[2px] rounded-lg dark:border-[#202021] overflow-x-auto">
-      <table class="w-full min-w-max divide-y-2 border-[1px] border-gray-300 rounded-lg overflow-hidden">
-        <thead class="dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021] text-[#4B5563]">
-          <tr>
-            <th class="px-4 py-3 text-left text-sm font-medium">No</th>
-            <th class="px-3 py-3 text-left text-sm font-medium">GRN No</th>
-            <th class="px-3 py-3 text-left text-sm font-medium">Amount (Rs.)</th>
-            <th class="px-3 py-3 text-left text-sm font-medium">Farmer NIC</th>
-            <th class="px-3 py-3 text-center text-sm font-medium">Collected Time</th>
-            <th class="px-3 py-3 text-center text-sm font-medium"></th>
-          </tr>
-        </thead>
-        <tbody class="bg-white text-[#000000] dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
-          <tr
-            *ngFor="
-              let item of farmerPaymentsArr
-                | paginate
-                  : {
-                      itemsPerPage: itemsPerPage,
-                      currentPage: page,
-                      totalItems: totalItems
-                    };
-              let i = index
-            "
-          >
-            <td class="px-4 py-4 text-[#000000] dark:text-gray-300">
-              {{
-                (page - 1) * itemsPerPage + i + 1 < 10
-                  ? "0" + ((page - 1) * itemsPerPage + i + 1)
-                  : (page - 1) * itemsPerPage + i + 1
-              }}
-            </td>
-            <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
-              {{ item.invNo }}
-            </td>
-            <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
-              {{ item.totalAmount | number : "1.2-2" }}
-            </td>
-            <td class="px-3 py-4 text-left text-[#000000] dark:text-gray-300">
-              {{ item.nic }}
-            </td>
-            <td class="px-3 py-4 text-center text-[#646464] dark:text-gray-300">
-              <span class="block">{{ item.createdAt | date : "MMM d, y" }}</span>
-              <span class="block">{{ item.createdAt | date : "h:mm a" }}</span>
-            </td>
-            <td
-              *ngIf="
-                permissionService.hasPermission('Navigate To Farmer Report Invoice') ||
-                tokenService.getUserDetails().role === '1'
-              "
-              (click)="navigateToFarmerReport(item.invNo)"
-              class="px-3 py-4 text-center dark:text-gray-300 cursor-pointer"
-            >
-              <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF]"></i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="w-full mt-8 border-gray-100 border-[2px] rounded-lg dark:border-[#202021] overflow-hidden">
+  <table class="w-full min-w-max border-separate border-spacing-0">
+    <thead class="dark:text-gray-300 dark:bg-[#0F0F0F] text-[#4B5563]">
+      <tr>
+        <th class="px-4 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">No</th>
+        <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">GRN No</th>
+        <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">Amount (Rs.)</th>
+        <th class="px-3 py-3 text-left text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">Farmer NIC</th>
+        <th class="px-3 py-3 text-center text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]">Collected Time</th>
+        <th class="px-3 py-3 text-center text-sm font-medium border-b-2 border-gray-300 dark:border-[#202021]"></th>
+      </tr>
+    </thead>
+    <tbody class="bg-white text-[#000000] dark:bg-[#1D1D1F]">
+      <tr
+        *ngFor="
+          let item of farmerPaymentsArr
+            | paginate
+              : {
+                  itemsPerPage: itemsPerPage,
+                  currentPage: page,
+                  totalItems: totalItems
+                };
+          let i = index
+        "
+        class="border-b border-gray-200 dark:border-[#202021] last:border-b-0"
+      >
+        <td class="px-4 py-4 text-[#000000] dark:text-gray-300">
+          {{
+            (page - 1) * itemsPerPage + i + 1 < 10
+              ? "0" + ((page - 1) * itemsPerPage + i + 1)
+              : (page - 1) * itemsPerPage + i + 1
+          }}
+        </td>
+        <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
+          {{ item.invNo }}
+        </td>
+        <td class="px-3 py-4 text-[#000000] dark:text-gray-300">
+          {{ item.totalAmount | number : "1.2-2" }}
+        </td>
+        <td class="px-3 py-4 text-left text-[#000000] dark:text-gray-300">
+          {{ item.nic }}
+        </td>
+        <td class="px-3 py-4 text-center text-[#646464] dark:text-gray-300">
+          <span class="block">{{ item.createdAt | date : "MMM d, y" }}</span>
+          <span class="block">{{ item.createdAt | date : "h:mm a" }}</span>
+        </td>
+        <td
+          *ngIf="
+            permissionService.hasPermission('Navigate To Farmer Report Invoice') ||
+            tokenService.getUserDetails().role === '1'
+          "
+          (click)="navigateToFarmerReport(item.invNo)"
+          class="px-3 py-4 text-center dark:text-gray-300 cursor-pointer"
+        >
+          <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF]"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
     <!-- Pagination -->
     <div class="flex justify-end items-center my-5 pt-3 dark:bg-[#262f45] text-right">

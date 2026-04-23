@@ -283,7 +283,7 @@ export class ViewExpencesFarmerReportComponent implements OnInit {
       ],
       x,
       y,
-      [40, 50, 30, 30], // Column widths
+      [40, 50, 60, 30], // Column widths
       7,  // lineHeight
       3,  // padding
       '#434343',  // Header text color (red)

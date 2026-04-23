@@ -92,7 +92,7 @@
     <!-- Row 1: Title + Search -->
     <div class="flex flex-row items-center justify-between mt-6">
       <p class="font-semibold text-lg dark:text-white whitespace-nowrap">
-        All Transactions ( {{ totalItems }} )
+        All Transactions ( {{ totalItems | number:'2.0-0' }} )
       </p>
 
       <div class="flex flex-row items-center gap-5">

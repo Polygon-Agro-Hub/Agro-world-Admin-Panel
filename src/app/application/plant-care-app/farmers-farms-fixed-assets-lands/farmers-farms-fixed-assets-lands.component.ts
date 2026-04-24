@@ -16,8 +16,8 @@ interface LandDetails {
   perennialCrop?: string;
   landFenced?: string;
   extentha?: number;
-  extentac?: number,
-  extentp?: number,
+  extentac?: number;
+  extentp?: number;
   totalExtentInHectares?: number;
 }
 
@@ -49,7 +49,7 @@ interface ApiResponse {
   standalone: true,
   imports: [LoadingSpinnerComponent, CommonModule, FormsModule],
   templateUrl: './farmers-farms-fixed-assets-lands.component.html',
-  styleUrl: './farmers-farms-fixed-assets-lands.component.css'
+  styleUrl: './farmers-farms-fixed-assets-lands.component.css',
 })
 export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
   isLoading = false;
@@ -69,8 +69,8 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private assetsService: AssetsService
-  ) { }
+    private assetsService: AssetsService,
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -83,7 +83,7 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
         landfixedassetId: this.landfixedassetId,
         fullName: this.fullName,
         farmName: this.farmName,
-        category: this.category
+        category: this.category,
       });
 
       if (this.landfixedassetId) {
@@ -103,7 +103,10 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
         // Assign each part of the response to separate properties
         this.landDetails = response.landDetails || null;
         this.ownershipDetails = response.ownershipDetails || null;
-        this.ownershipType = response.ownershipType || null;
+        this.ownershipType =
+          response.ownershipType === 'Permited'
+            ? 'Permitted'
+            : response.ownershipType;
 
         this.hasData = !!(response.landDetails && response.ownershipDetails);
         console.log('Land ownership details:', response);
@@ -120,11 +123,9 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
         } else {
           this.errorMessage = 'An error occurred while fetching land details.';
         }
-      }
+      },
     );
   }
-  
-  
 
   navigatePath(path: string): void {
     this.router.navigate([path]);

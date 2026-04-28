@@ -7,31 +7,15 @@ import { FormsModule } from '@angular/forms';
 import { GovishopService } from '../../../services/govi-shop/govishop.service';
 
 interface Product {
-  id: number;
-  categoryId: number;
-  prodCode: string;
   prodName: string;
-  isMRP: number;
-  allertLevel: number;
-  baseUom: string;
-  discription: string;
   thumbnail: string;
-  searchKeyWord: string;
-  bgColor: string;
-  isActive: number;
-  isAvailable: number;
-  updateAt: string;
-  createdAt: string;
-  branchProductId: number;
-  branchId: number;
-  branchProductCreatedAt: string;
+  catName: string;
 }
 
 interface Category {
   categoryId: number;
-  categoryName: string;
+  catName: string;
   thumbnail: string;
-  isActive: number;
 }
 
 @Component({
@@ -70,6 +54,7 @@ export class ViewBranchProductsComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.branchId = +params['branchId']; // or 'id' — match your route definition
       console.log('branchId:', this.branchId);
+      console.log('Parsed branchId:', this.branchId); // Debug
     });
 
     // shopName and branchName are query params, not route params
@@ -143,21 +128,15 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   loadCategoriesFromResponse(categories: Category[]): void {
-    console.log('Loading categories:', categories); // Debug log
-
-    // Reset category options (keep only All Categories)
-    this.categoryOptions = [{ label: 'All Categories', value: 'all' }];
-
-    // Add categories from API response
-    categories.forEach((category) => {
-      this.categoryOptions.push({
-        label: category.categoryName,
-        value: category.categoryId.toString(),
-      });
+  this.categoryOptions = [{ label: 'All Categories', value: 'all' }];
+  
+  categories.forEach((category) => {
+    this.categoryOptions.push({
+      label: category.catName,
+      value: category.categoryId.toString(), // Use categoryId as value
     });
-
-    console.log('Category options:', this.categoryOptions); // Debug log
-  }
+  });
+}
 
   back(): void {
     this.location.back();

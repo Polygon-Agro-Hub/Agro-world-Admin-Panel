@@ -2138,7 +2138,7 @@ export const routes: Routes = [
                 component: ViewBranchesPerShopComponent,
               },
               {
-                path: 'branch-products/:id',
+                path: 'branch-products/:branchId',
                 component: ViewBranchProductsComponent,
               },
               {

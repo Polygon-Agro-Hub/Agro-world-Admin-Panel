@@ -128,7 +128,7 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   loadCategoriesFromResponse(categories: Category[]): void {
-  this.categoryOptions = [{ label: 'All Categories', value: 'all' }];
+  this.categoryOptions = [{ label: 'Categories', value: 'all' }];
   
   categories.forEach((category) => {
     this.categoryOptions.push({

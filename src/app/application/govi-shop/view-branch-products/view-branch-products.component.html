@@ -1,0 +1,120 @@
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<button
+  class="mb-5 text-textLight dark:text-textDark flex items-center gap-2"
+  (click)="back()"
+>
+  <i class="fa-solid fa-arrow-left"></i>
+  Back
+</button>
+
+<div class="pt-5 pr-8 pl-8 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h2 class="text-xl font-semibold text-[#292929] dark:text-textDark">
+        {{ shopName }} <span class="text-gray-400 font-normal">({{ filteredProducts.length | number:'2.0' }})</span>
+      </h2>
+      <p class="text-sm text-blue-500 mt-0.5">{{ branchName }}</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Category Dropdown -->
+      <p-dropdown
+        [options]="categoryOptions"
+        [(ngModel)]="selectedCategoryId"
+        (ngModelChange)="onCategoryChange()"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Category"
+        styleClass="border border-1 rounded-xl h-8 items-center border-[#828282] dark:border-[#AFAFAF]"
+        [style]="{
+          background: 'var(--dropdown-bg)',
+          color: 'var(--dropdown-text)'
+        }"
+      ></p-dropdown>
+
+      <!-- Search Bar -->
+      <div
+        class="flex items-center rounded-full bg-gray-100 dark:bg-[#272F45] px-4 py-2 w-72 group relative"
+      >
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          placeholder="Search Products.."
+          class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300 text-sm"
+        />
+
+        <!-- Tooltip -->
+        <div
+          class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-200 text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10 pointer-events-none"
+        >
+          Search by Product Name, Code or Keyword
+        </div>
+
+        <button
+          type="button"
+          (click)="onSearch()"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none mr-1"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 10-14 0 7 7 0 0014 0z"/>
+          </svg>
+        </button>
+
+        <button
+          *ngIf="searchQuery"
+          type="button"
+          (click)="clearSearch()"
+          class="text-gray-500 hover:text-gray-700 focus:outline-none"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="grid grid-cols-3 gap-4" *ngIf="filteredProducts.length > 0; else noProducts">
+    <div
+      *ngFor="let product of filteredProducts"
+      class="flex items-center gap-3 bg-white dark:bg-[#1E2636] border border-gray-100 dark:border-[#2D3748] rounded-xl p-3 cursor-pointer hover:shadow-md transition-shadow duration-200"
+    >
+      <!-- Product Image -->
+      <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-[#272F45] flex items-center justify-center">
+        <img
+          *ngIf="product.thumbnail; else placeholderImg"
+          [src]="product.thumbnail"
+          [alt]="product.prodName"
+          class="w-full h-full object-cover"
+        />
+        <ng-template #placeholderImg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </ng-template>
+      </div>
+
+      <!-- Product Info -->
+      <div class="flex flex-col min-w-0">
+        <span class="text-sm font-medium text-[#292929] dark:text-textDark truncate">{{ product.prodName }}</span>
+        <span class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Code: {{ product.prodCode }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <ng-template #noProducts>
+    <div class="flex flex-col items-center justify-center py-16 text-gray-400 dark:text-gray-600">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/>
+      </svg>
+      <p class="text-sm">No products found in this category</p>
+    </div>
+  </ng-template>
+
+</div>

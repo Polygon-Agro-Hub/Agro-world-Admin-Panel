@@ -292,6 +292,7 @@ import { AllDeletedSuppliersComponent } from './application/govi-shop/all-delete
 import { ViewAllShopsComponent } from './application/govi-shop/view-all-shops/view-all-shops.component';
 import { ViewBranchDetailsComponent } from './application/govi-shop/view-branch-details/view-branch-details.component';
 import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branches-per-shop/view-branches-per-shop.component';
+import { ViewBranchProductsComponent } from './application/govi-shop/view-branch-products/view-branch-products.component';
 
 export const routes: Routes = [
   {
@@ -814,7 +815,6 @@ export const routes: Routes = [
                   },
                 ],
               },
-
             ],
           },
         ],
@@ -1129,7 +1129,7 @@ export const routes: Routes = [
                   },
                   {
                     path: 'govishop-users',
-                    component:GovishopUsersComponent,
+                    component: GovishopUsersComponent,
                   },
                   {
                     path: 'edit-govi-shop-pos-user',
@@ -1144,7 +1144,6 @@ export const routes: Routes = [
                     path: 'update-govi-shop/:id',
                     component: UpdateGoviShopComponent,
                   },
-
                 ],
               },
 
@@ -2138,7 +2137,10 @@ export const routes: Routes = [
                 path: 'all-branches-pershop',
                 component: ViewBranchesPerShopComponent,
               },
-
+              {
+                path: 'branch-products/:id',
+                component: ViewBranchProductsComponent,
+              },
               {
                 path: 'update-govi-shop/:id',
                 component: UpdateGoviShopComponent,
@@ -2154,12 +2156,12 @@ export const routes: Routes = [
               },
               {
                 path: 'view-branch-details/:id',
-                component: ViewBranchDetailsComponent
-              }
+                component: ViewBranchDetailsComponent,
+              },
             ],
-          }
-        ]
-      }
+          },
+        ],
+      },
     ],
   },
   { path: '**', component: NotFoundComponent },
@@ -2169,4 +2171,4 @@ export const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

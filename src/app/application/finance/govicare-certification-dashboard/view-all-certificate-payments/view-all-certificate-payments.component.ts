@@ -15,6 +15,7 @@ interface CertificatePayment {
   expireDate: string;
   validityPeriod: string;
   sortDate: string;
+  payType?: string;
 }
 
 @Component({

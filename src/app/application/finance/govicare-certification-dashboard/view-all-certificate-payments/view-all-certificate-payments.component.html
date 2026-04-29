@@ -79,11 +79,16 @@
     </div>
   </div>
 
-  <!-- No Data Message -->
-  <div *ngIf="!hasData && !isLoading" class="flex flex-col items-center w-full px-10 py-20">
+  <div *ngIf="!hasDateRangeSelected && !isLoading" class="flex flex-col items-center w-full px-10 py-20">
+    <p class="text-[#494949] my-6 dark:text-textDark">--Please select a date range first--</p>
+    <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
+</div>
+
+<!-- Show this when date range is selected but no data found -->
+<div *ngIf="hasDateRangeSelected && !hasData && !isLoading" class="flex flex-col items-center w-full px-10 py-20">
     <p class="text-[#494949] my-6 dark:text-textDark">--No Data Available--</p>
     <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
-  </div>
+</div>
 
   <!-- Table -->
   <div *ngIf="hasData" class="overflow-x-auto">

@@ -51,6 +51,7 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   maxDate: Date = new Date(); // Today's date
   minDate: Date | null = null; // No minimum date restriction
   maxFromDate: Date | null = null; // Add max date for From Date
+  hasDateRangeSelected: boolean = false; // Add this new property
 
   constructor(
     private router: Router,
@@ -60,31 +61,36 @@ export class ViewAllServicePaymentsComponent implements OnInit {
   ngOnInit() {
     this.hasData = false;
     this.isFilterApplied = false;
+    this.hasDateRangeSelected = false; // Initialize as false
   }
 
   onFromDateSelect() {
     if (this.fromDate) {
-      // Set minDate to the selected fromDate for the "To" field
       this.minDate = new Date(this.fromDate);
       
-      // If toDate is set and is before fromDate, reset it
       if (this.toDate && this.toDate < this.fromDate) {
         this.toDate = null;
       }
     } else {
-      // If no fromDate is selected, remove the minDate restriction
       this.minDate = null;
     }
+    
+    // Reset date range selection status when dates change
+    this.hasDateRangeSelected = false;
+    this.hasData = false;
   }
+
 
   onToDateSelect() {
     if (this.toDate) {
-      // Set maxFromDate to the selected toDate for the "From" field
       this.maxFromDate = new Date(this.toDate);
     } else {
-      // If no toDate is selected, remove the maxFromDate restriction
       this.maxFromDate = null;
     }
+    
+    // Reset date range selection status when dates change
+    this.hasDateRangeSelected = false;
+    this.hasData = false;
   }
 
   formatDateForAPI(date: Date | null): string {
@@ -185,9 +191,14 @@ export class ViewAllServicePaymentsComponent implements OnInit {
 
   applyDateFilter() {
     this.page = 1;
-    if (this.fromDate || this.toDate) {
+    // Check if both from and to dates are selected
+    this.hasDateRangeSelected = !!(this.fromDate && this.toDate);
+    
+    if (this.hasDateRangeSelected) {
       this.fetchServicePayments();
     } else {
+      // Show message that both dates are required
+      console.log('Please select both from and to dates');
       this.hasData = false;
       this.isFilterApplied = false;
       this.servicePayments = [];
@@ -204,9 +215,11 @@ export class ViewAllServicePaymentsComponent implements OnInit {
     this.page = 1;
     this.hasData = false;
     this.isFilterApplied = false;
+    this.hasDateRangeSelected = false; // Reset this too
     this.servicePayments = [];
     this.totalItems = 0;
   }
+
 
   back(): void {
     this.router.navigate(['/finance/action/govilink-services-dashboard']);

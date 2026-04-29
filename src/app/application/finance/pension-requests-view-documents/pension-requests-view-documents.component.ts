@@ -184,15 +184,18 @@ export class PensionRequestsViewDocumentsComponent implements OnInit {
         popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white rounded-xl',
         title: 'font-semibold text-lg',
         actions: 'flex-row-reverse justify-start',
-        confirmButton: 'rounded-lg', // Add rounded corners to confirm button
-        cancelButton: 'rounded-lg',   // Add rounded corners to cancel button
+        confirmButton: 'rounded-lg',
+        cancelButton: 'rounded-lg',
       },
     }).then((result) => {
       if (result.isConfirmed) {
         this.approveRequest();
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Navigate to pension requests page when "No, Go Back" is clicked
+        this.router.navigate(['/finance/action/pension-requests']);
       }
     });
-  }
+}
 
   onRejectClick(): void {
     Swal.fire({

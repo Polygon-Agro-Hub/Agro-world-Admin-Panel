@@ -48,29 +48,25 @@
           ></p-dropdown>
         </div>
         <div class="mr-5 flex items-center">
-          <p-calendar
-            [(ngModel)]="selectedDate"
-            (onSelect)="onDateChange($event)"
-            (onClear)="clearDate()"
-            [showIcon]="true"
-            [showButtonBar]="false"
-            dateFormat="yy-mm-dd"
-            placeholder="Select Date"
-            styleClass="flex items-center border-2 rounded-xl overflow-hidden
-              bg-[#F1F1F1] dark:bg-[#272F45]
-              border-[#D1D5DB] dark:border-[#AFAFAF]
-              focus-within:border-[#6366F1] dark:focus-within:border-[#818CF8]
-              transition-colors duration-200 w-full"
-            panelStyleClass="rounded-xl border border-[#D1D5DB] dark:border-[#AFAFAF]
-                   bg-[#F1F1F1] dark:bg-[#272F45] shadow-lg mt-1"
-            [readonlyInput]="true"
-            [showClear]="true"
-          >
-            <ng-template pTemplate="clearicon">
-              <i class="pi pi-times"></i>
-            </ng-template>
-          </p-calendar>
-        </div>
+  <p-calendar
+    [(ngModel)]="selectedDate"
+    (onSelect)="onDateChange($event)"
+    (onClear)="clearDate()"
+    [showIcon]="true"
+    [showButtonBar]="false"
+    dateFormat="yy-mm-dd"
+    placeholder="Select Date"
+    [readonlyInput]="true"
+    [showClear]="true"
+    [style]="{ width: '12rem', height: '2rem' }"
+    inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45]"
+    panelStyleClass="custom-calendar-panel"
+  >
+    <ng-template pTemplate="clearicon">
+      <i class="pi pi-times"></i>
+    </ng-template>
+  </p-calendar>
+</div>
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >

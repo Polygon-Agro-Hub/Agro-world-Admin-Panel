@@ -66,6 +66,13 @@ export class GovishopViewShopsComponent implements OnInit {
   pendingToggleStatus: number = 0;
   showToggleModal = false;
 
+    text: string = ''
+    mobileNumber: string = ''
+  
+    showDeleteModal = false;
+    shopToDelete: Shop | null = null;
+    textAreaTouched: boolean = false;
+
   activeStatusOptions = [
     { label: 'Active', value: 'Active' },
     { label: 'Inactive', value: 'Inactive' }
@@ -104,7 +111,7 @@ export class GovishopViewShopsComponent implements OnInit {
     this.urlSegment = segments[segments.length - 1];
     console.log('First segment:', this.urlSegment);
 
-    if (this.urlSegment === 'all-govi-shops') {
+    if (this.urlSegment === 'all-shop-requests') {
       this.fetchAllGoViShopRequests();
     } else {
       this.route.queryParamMap.subscribe((params) => {
@@ -172,12 +179,24 @@ export class GovishopViewShopsComponent implements OnInit {
   }
 
   selectMethodToFilter() {
-    if (this.urlSegment === 'all-govi-shops') {
+    if (this.urlSegment === 'all-shop-requests') {
       this.fetchAllGoViShopRequests()
     } else {
       this.fetchGoviShopsForSeletectedUser();
     }
   }
+
+  openDeleteModal(shop: Shop): void {
+      this.shopToDelete = shop;
+      this.showDeleteModal = true;
+    }
+  
+    cancelDelete(): void {
+      this.showDeleteModal = false;
+      this.shopToDelete = null;
+      this.text = '';
+      this.mobileNumber = '';
+    }
 
 deleteGoViShop(id: number) {
   Swal.fire({
@@ -247,7 +266,7 @@ deleteGoViShop(id: number) {
   navigateEdit(id: number) {
     this.router.navigate([`/govi-shop/action/update-govi-shop/${id}`]);
 
-    if (this.urlSegment === 'all-govi-shops') {
+    if (this.urlSegment === 'all-shop-requests') {
       this.router.navigate([`/govi-shop/action/update-govi-shop/${id}`]);
     } else {
       this.router.navigate([`/steckholders/action/govi-shop-suppliers/update-govi-shop/${id}`]);
@@ -256,7 +275,7 @@ deleteGoViShop(id: number) {
 
   previewGoViShop(id: number) {
 
-    if (this.urlSegment === 'all-govi-shops') {
+    if (this.urlSegment === 'all-shop-requests') {
       this.router.navigate([`/govi-shop/action/preview-govi-shop/${id}`]);
     } else {
       this.router.navigate([`/steckholders/action/govi-shop-suppliers/preview-govi-shop/${id}`]);

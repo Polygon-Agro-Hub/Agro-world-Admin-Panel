@@ -61,7 +61,7 @@
     <div class="flex justify-between items-center mb-8 mt-4">
       <div class="flex items-center">
         <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
-          {{ urlSegment === "all-govi-shops" ? "Shop Requests" : name }} ({{
+          {{ urlSegment === "all-shop-requests" ? "Shop Requests" : name }} ({{
             totalItems < 10 ? "0" + totalItems : totalItems
           }})
         </h2>
@@ -76,7 +76,7 @@
 
         <p class="text-xl dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5">Filter By</p> -->
 
-        <div *ngIf="urlSegment !== 'all-govi-shops'" class="mr-5">
+        <div *ngIf="urlSegment !== 'all-shop-requests'" class="mr-5">
           <p-dropdown
             styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
             [options]="activeStatusOptions"
@@ -121,7 +121,7 @@
           <input
             type="text"
             placeholder="{{
-              urlSegment === 'all-govi-shops'
+              urlSegment === 'all-shop-requests'
                 ? 'Search Shop Name, Contact..'
                 : 'Search Shop Name, Phone..'
             }}"
@@ -202,28 +202,28 @@
               Shop Name
             </th>
             <th
-              *ngIf="urlSegment === 'all-govi-shops'"
+              *ngIf="urlSegment === 'all-shop-requests'"
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Action
             </th>
             <th
-              *ngIf="urlSegment === 'all-govi-shops'"
+              *ngIf="urlSegment === 'all-shop-requests'"
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Owner Name
             </th>
             <th
-              *ngIf="urlSegment === 'all-govi-shops'"
+              *ngIf="urlSegment === 'all-shop-requests'"
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Owner's Contact
             </th>
             <th
-              *ngIf="urlSegment !== 'all-govi-shops'"
+              *ngIf="urlSegment !== 'all-shop-requests'"
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center"
               style="white-space: nowrap"
             >
@@ -242,14 +242,14 @@
               Business Type
             </th>
             <th
-              *ngIf="urlSegment !== 'all-govi-shops'"
+              *ngIf="urlSegment !== 'all-shop-requests'"
               class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left"
               style="white-space: nowrap"
             >
               Phone Number
             </th>
             <th
-              *ngIf="urlSegment !== 'all-govi-shops'"
+              *ngIf="urlSegment !== 'all-shop-requests'"
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
               style="white-space: nowrap"
             >
@@ -308,28 +308,28 @@
             </td>
 
             <td
-              *ngIf="urlSegment === 'all-govi-shops'"
+              *ngIf="urlSegment === 'all-shop-requests'"
               class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark"
             >
               create
             </td>
 
             <td
-              *ngIf="urlSegment === 'all-govi-shops'"
+              *ngIf="urlSegment === 'all-shop-requests'"
               class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark"
             >
               {{ item.ownerName }}
             </td>
 
             <td
-              *ngIf="urlSegment === 'all-govi-shops'"
+              *ngIf="urlSegment === 'all-shop-requests'"
               class="px-4 py-3 text-left whitespace-nowrap text-[#000000] dark:text-textDark"
             >
               {{ item.ownerPhone }}
             </td>
 
             <td
-              *ngIf="urlSegment !== 'all-govi-shops'"
+              *ngIf="urlSegment !== 'all-shop-requests'"
               class="py-3 px-3 text-center"
             >
               <div class="flex justify-center">
@@ -373,13 +373,13 @@
               {{ item.shopType }}
             </td>
             <td
-              *ngIf="urlSegment !== 'all-govi-shops'"
+              *ngIf="urlSegment !== 'all-shop-requests'"
               class="px-4 py-3 text-left text-[#000000] dark:text-textDark"
             >
               {{ item.phone }}
             </td>
             <td
-              *ngIf="urlSegment !== 'all-govi-shops'"
+              *ngIf="urlSegment !== 'all-shop-requests'"
               class="px-4 py-3 text-left text-[#000000] dark:text-textDark"
             >
               {{ item.email }}
@@ -429,12 +429,12 @@
               </button>
             </td>
             <td
-              *ngIf="urlSegment !== 'all-govi-shops'"
+              *ngIf="urlSegment !== 'all-shop-requests'"
               class="px-4 py-3 text-center text-textLight dark:text-textDark"
             >
               <button
                 class="text-red-500 hover:text-red-700"
-                (click)="deleteGoViShop(item.id)"
+                (click)="openDeleteModal(item)"
               >
                 <svg
                   aria-hidden="true"
@@ -482,3 +482,6 @@
     </div>
   </div>
 </div>
+
+
+

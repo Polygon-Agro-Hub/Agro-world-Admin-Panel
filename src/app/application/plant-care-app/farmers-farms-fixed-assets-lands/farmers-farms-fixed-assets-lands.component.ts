@@ -42,7 +42,9 @@ interface ApiResponse {
   landDetails: LandDetails;
   ownershipDetails: OwnershipDetails;
   ownershipType: string;
-  leaseDetails: LeaseDetails
+  leaseDetails: LeaseDetails;
+  ownLandDetails: OwnLandDetails;
+  sharedLandDetails: SharedLandDetails;
 }
 
 @Component({
@@ -62,6 +64,8 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
   // Separate properties matching API response structure
   landDetails: LandDetails | null = null;
   leaseDeatils!: LeaseDetails;
+  ownLandDetails!: OwnLandDetails;
+  sharedLandDetails!: SharedLandDetails;
   ownershipDetails: OwnershipDetails | null = null;
   ownershipType: string | null = null;
 
@@ -106,6 +110,8 @@ export class FarmersFarmsFixedAssetsLandComponent implements OnInit {
         this.landDetails = response.landDetails || null;
         this.ownershipDetails = response.ownershipDetails || null;
         this.leaseDeatils = response.leaseDetails;
+        this.ownLandDetails = response.ownLandDetails;
+        this.sharedLandDetails = response.sharedLandDetails;
         console.log('leaseDeatils', this.leaseDeatils)
         this.ownershipType =
           response.ownershipType === 'Permited'
@@ -141,4 +147,12 @@ class LeaseDetails {
   durationYears!: number;
   durationMonths!: number;
   leastAmountAnnually!: number;
+}
+
+class OwnLandDetails {
+  estimateValue!: number;
+}
+
+class SharedLandDetails {
+  paymentAnnually!: number;
 }

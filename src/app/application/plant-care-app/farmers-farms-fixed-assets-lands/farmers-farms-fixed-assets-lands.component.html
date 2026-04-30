@@ -72,15 +72,6 @@
             </span>
           </div>
 
-          <!-- Est. Value for Own Land -->
-          <div class="flex items-start space-x-4" *ngIf="ownershipType === 'Own' && ownershipDetails?.estimateValue">
-            <span class="text-black dark:text-gray-300 min-w-28">Est. Value</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              Rs. {{ ownershipDetails?.estimateValue | number: "1.0-0" }}
-            </span>
-          </div>
-
           <!-- Issued Date for Own Land -->
           <div class="flex items-start space-x-4" *ngIf="ownershipType === 'Own' && ownershipDetails?.issuedDate">
             <span class="text-black dark:text-gray-300 min-w-28">Issued Date</span>
@@ -108,18 +99,6 @@
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-medium flex-1">
               {{ ownershipDetails?.issuedDate | date: " dd MMM, yyyy" }}
-            </span>
-          </div>
-
-
-          <!-- Payment for Shared -->
-          <div class="flex items-start space-x-4" *ngIf="
-              ownershipType === 'Shared' && ownershipDetails?.paymentAnnually
-            ">
-            <span class="text-black dark:text-gray-300 min-w-28">Annual Payment</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              Rs. {{ ownershipDetails?.paymentAnnually | number: "1.0-0" }}
             </span>
           </div>
 
@@ -164,6 +143,16 @@
             </span>
           </div>
 
+          <!-- Est. Value for Own Land -->
+          <div class="flex items-start space-x-4" *ngIf="ownershipType === 'Own' && ownLandDetails.estimateValue">
+            <span class="text-black dark:text-gray-300 min-w-28">Est. Value</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-medium flex-1">
+              Rs. {{ ownLandDetails.estimateValue | number: "1.0-0" }}
+            </span>
+          </div>
+          
+
           <!-- Lease Amount for Lease -->
           <div class="flex items-start space-x-4" *ngIf="
               ownershipType === 'Lease' && leaseDeatils.leastAmountAnnually
@@ -202,15 +191,6 @@
             </span>
           </div>
 
-          <!-- Type -->
-          <div class="flex items-start space-x-4">
-            <span class="text-black dark:text-gray-300 min-w-28">Perennial Crops</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1" style="text-transform: capitalize">
-              {{ landDetails?.perennialCrop || "N/A" }}
-            </span>
-          </div>
-
           <!-- Permit Fee for Permitted -->
           <div class="flex items-start space-x-4" *ngIf="
               ownershipType === 'Permitted' &&
@@ -222,6 +202,28 @@
               Rs. {{ ownershipDetails?.permitFeeAnnually | number: "1.0-0" }}
             </span>
           </div>
+
+          <!-- Payment for Shared -->
+          <div class="flex items-start space-x-4" *ngIf="
+              ownershipType === 'Shared' && sharedLandDetails.paymentAnnually
+            ">
+            <span class="text-black dark:text-gray-300 min-w-28">Annual Payment</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-medium flex-1">
+              Rs. {{ sharedLandDetails.paymentAnnually | number: "1.0-0" }}
+            </span>
+          </div>
+
+          <!-- Type -->
+          <div class="flex items-start space-x-4">
+            <span class="text-black dark:text-gray-300 min-w-28">Perennial Crops</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-medium flex-1" style="text-transform: capitalize">
+              {{ landDetails?.perennialCrop || "N/A" }}
+            </span>
+          </div>
+
+          
 
         </div>
       </div>

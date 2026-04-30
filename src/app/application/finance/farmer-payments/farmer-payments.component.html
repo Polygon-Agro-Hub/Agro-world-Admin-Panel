@@ -9,19 +9,21 @@
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full"
 >
   <div
-    class="pt-5 pr-12 pl-12 pb-5 min-w-[1600px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
+    class="pt-5 pr-12 pl-12 pb-10 min-w-[1600px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
   >
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center whitespace-nowrap">
-        <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
+        <h2 class="text-2xl font-normal text-[#292929] dark:text-textDark">
           Farmer Payments
         </h2>
-        <span class="ml-2 mr-5 text-xl dark:text-white">
+        <span
+          class="ml-2 mr-5 font-normal text-2xl text-[#292929] dark:text-white"
+        >
           ({{ getTotalRecords() }})
         </span>
       </div>
       <div class="flex items-center">
-        <i class="mr-6 w-6 h-6 fill-current text-gray-500">
+        <i class="mr-6 w-6 h-6 fill-current text-[#4A4A4A]">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <path
               d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"
@@ -29,7 +31,7 @@
           </svg>
         </i>
         <p
-          class="md:text-2xl lg:text-lg dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5"
+          class="md:text-2xl lg:text-lg text-[#4A4A4A] dark:text-textDark whitespace-nowrap flex-shrink-0 mr-5"
         >
           Filter By
         </p>
@@ -46,24 +48,25 @@
           ></p-dropdown>
         </div>
         <div class="mr-5 flex items-center">
-          <p-calendar
-            [(ngModel)]="selectedDate"
-            (onSelect)="onDateChange($event)"
-            (onClear)="clearDate()"
-            [showIcon]="true"
-            [showButtonBar]="false"
-            dateFormat="yy-mm-dd"
-            placeholder="Select Date"
-            styleClass="border border-2 rounded-xl h-8 bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
-            inputStyleClass="bg-transparent border-none text-textLight dark:text-textDark"
-            [readonlyInput]="true"
-            [showClear]="true"
-          >
-            <ng-template pTemplate="clearicon">
-              <i class="pi pi-times"></i>
-            </ng-template>
-          </p-calendar>
-        </div>
+  <p-calendar
+    [(ngModel)]="selectedDate"
+    (onSelect)="onDateChange($event)"
+    (onClear)="clearDate()"
+    [showIcon]="true"
+    [showButtonBar]="false"
+    dateFormat="yy-mm-dd"
+    placeholder="Select Date"
+    [readonlyInput]="true"
+    [showClear]="true"
+    [style]="{ width: '12rem', height: '2rem' }"
+    inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45]"
+    panelStyleClass="custom-calendar-panel"
+  >
+    <ng-template pTemplate="clearicon">
+      <i class="pi pi-times"></i>
+    </ng-template>
+  </p-calendar>
+</div>
         <div
           class="flex items-center rounded-full px-4 py-2 w-96 bg-[#F1F1F1] dark:bg-[#272F45]"
         >

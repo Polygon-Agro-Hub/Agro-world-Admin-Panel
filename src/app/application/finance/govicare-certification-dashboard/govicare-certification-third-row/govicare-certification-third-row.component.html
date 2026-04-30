@@ -9,7 +9,7 @@
         tokenService.getUserDetails().role === '1'
       "
       (click)="ViewAll()"
-      class="dark:bg-[#061E2C] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
+      class="dark:bg-[#061E2C] bg-[#FFFFFF] dark:text-white font-medium py-2 px-5 rounded-lg text-lg flex mb-5 items-center gap-2 shadow dark:shadow-slate-700"
     >
       View All
       <i class="fa-solid fa-arrow-up-right-from-square text-[#415cff] ml-2"></i>
@@ -21,19 +21,34 @@
         class="bg-gray-50 dark:bg-[#061E2C] dark:text-gray-400 border-b-4 dark:border-b-2"
       >
         <tr>
-          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-[#4B5563] dark:text-white"
+          >
             Transaction ID
           </th>
-          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-[#4B5563] dark:text-white"
+          >
             Farmer Name
           </th>
-          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-[#4B5563] dark:text-white"
+          >
             Validity Period
           </th>
-          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-[#4B5563] dark:text-white"
+          >
             Amount (Rs.)
           </th>
-          <th scope="col" class="px-6 py-3 text-left dark:text-white">
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-[#4B5563] dark:text-white"
+          >
             Date & Time
           </th>
         </tr>
@@ -45,21 +60,30 @@
         >
           <th
             scope="row"
-            class="font-normal px-6 py-4 text-gray-900 dark:text-[#C8C8C8] text-left"
+            class="font-normal px-6 py-4 text-[#000000] dark:text-[#C8C8C8] text-left"
           >
             {{ payment.transactionId }}
           </th>
-          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+          <td
+            class="font-normal text-[#000000] px-6 py-4 text-left dark:text-[#C8C8C8]"
+          >
             {{ payment.farmerName }}
           </td>
-          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+          <td
+            class="font-normal text-[#000000] px-6 py-4 text-left dark:text-[#C8C8C8]"
+          >
             {{ payment.validityPeriod }}
           </td>
-          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
+          <td
+            class="font-normal text-[#000000] px-6 py-4 text-left dark:text-[#C8C8C8]"
+          >
             {{ payment.amount }}
           </td>
-          <td class="px-6 py-4 text-left dark:text-[#C8C8C8]">
-            {{ payment.dateTime }}
+          <td
+            class="font-normal text-[#000000] px-6 py-4 text-left dark:text-[#C8C8C8]"
+          >
+            {{ formatDate(payment.dateTime) }}
+            {{ formatTime(payment.dateTime) }}
           </td>
         </tr>
         <tr *ngIf="recentPayments.length === 0">

@@ -110,3 +110,13 @@
   background-color: #2d354d !important;
   color: #B1B1B1 !important;
 }
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-month {
+  margin-right: 2px !important;
+  font-size: medium !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
+  margin-left: 2px !important;
+  font-size: medium !important;
+}

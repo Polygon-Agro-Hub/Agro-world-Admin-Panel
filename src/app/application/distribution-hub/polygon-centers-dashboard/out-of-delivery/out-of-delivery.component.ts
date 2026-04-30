@@ -67,10 +67,10 @@ export class OutOfDeliveryComponent implements OnChanges {
   }
 
   onDateClear() {
-    console.log('Date clear event triggered');
-    this.selectDate = new Date();
-    this.fetchData();
-  }
+  console.log('Date clear event triggered');
+  this.selectDate = null;  // ← Change new Date() to null
+  this.fetchData();
+}
 
   onSearch() {
     this.searchText = this.searchText.trim();

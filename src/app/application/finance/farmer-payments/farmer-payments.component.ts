@@ -374,9 +374,9 @@ export class FarmerPaymentsComponent implements OnInit {
     );
   }
 
-  getTotalRecords(): number {
-    return this.filteredPayments.length;
-  }
+  getTotalRecords(): string {
+    return this.filteredPayments.length.toString().padStart(2, '0');
+}
 
   back(): void {
     this.router.navigate(['finance/action/govicare-finance']);

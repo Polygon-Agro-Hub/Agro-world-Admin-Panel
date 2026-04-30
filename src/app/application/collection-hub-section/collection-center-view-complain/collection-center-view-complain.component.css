@@ -24,11 +24,10 @@
     color: #B1B1B1 !important;
   }
 
-  /* Reduce dropdown item padding */
+/* Reduce dropdown item padding */
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+  padding-left: 0.75rem !important;  /* changed from 0.1rem */
 }
-
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 0.1rem !important;
+  padding-left: 0.75rem !important;  /* changed from 0.1rem */
 }

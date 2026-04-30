@@ -74,3 +74,13 @@
   transform: scale(0.9);
   transform-origin: top left;
 }
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-month {
+  margin-right: 2px !important;
+  font-size: medium !important;
+}
+
+::ng-deep .p-datepicker .p-datepicker-title .p-datepicker-year {
+  margin-left: 2px !important;
+  font-size: medium !important;
+}

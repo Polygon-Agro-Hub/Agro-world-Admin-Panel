@@ -70,6 +70,32 @@
               "sourceMap": true,
               "baseHref": "/admin/",
               "deployUrl": "/admin/"
+            },
+            "uat": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environment/environment.ts",
+                  "with": "src/app/environment/environment.uat.ts"
+                }
+              ],
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "12MB",
+                  "maximumError": "12MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "1MB",
+                  "maximumError": "1MB"
+                }
+              ],
+              "outputHashing": "all",
+              "baseHref": "/admin/",
+              "deployUrl": "/admin/"
             }
           },
           "defaultConfiguration": "production"
@@ -82,6 +108,9 @@
             },
             "development": {
               "buildTarget": "plantr_care-admin:build:development"
+            },
+            "uat": {
+              "buildTarget": "plantr_care-admin:build:uat"
             }
           },
           "defaultConfiguration": "development"

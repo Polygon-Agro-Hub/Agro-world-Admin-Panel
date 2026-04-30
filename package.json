@@ -4,9 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:uat": "ng serve --configuration=uat",
     "build": "ng build",
     "build:dev": "ng build --configuration=development",
     "build:prod": "ng build --configuration=production",
+    "build:uat": "ng build --configuration=uat",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "clean": "ng cache clean",

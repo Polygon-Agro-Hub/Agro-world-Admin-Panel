@@ -40,9 +40,11 @@
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="flex flex-row justify-between">
         <div class="flex flex-col justify-between mr-6">
-          <label class="block text-gray-700 dark:text-textDark ">Complainent</label>
+          <label class="block text-gray-700 dark:text-textDark ">Complainant</label>
           <label class="block text-gray-700 dark:text-textDark mb-2">({{complain.jobRole === 'Collection Centre Head' ?
-            'CCH' : complain.jobRole === 'Collection Centre Manager' ? 'CCM' : 'COO' }})</label>
+            'CCH' : complain.jobRole === 'Collection Centre Manager' ? 'CCM' : 
+            complain.jobRole === 'Distribution Centre Manager' ? 'DCM' :
+            complain.jobRole === 'Distribution Centre Head' ? 'DCH' : 'COO' }})</label>
         </div>
 
         <input type="text" [value]="complain.firstName + ' ' + complain.lastName"
@@ -53,7 +55,9 @@
         <div class="flex flex-col">
           <label class="block text-gray-700 dark:text-textDark">Contact</label>
           <label class="block text-gray-700 dark:text-textDark">({{complain.jobRole === 'Collection Centre Head' ?
-            'CCH' : complain.jobRole === 'Collection Centre Manager' ? 'CCM' : 'COO' }})</label>
+            'CCH' : complain.jobRole === 'Collection Centre Manager' ? 'CCM' : 
+            complain.jobRole === 'Distribution Centre Manager' ? 'DCM' :
+            complain.jobRole === 'Distribution Centre Head' ? 'DCH' : 'COO' }})</label>
         </div>
         <input type="text" [value]="complain.phoneCode01+complain.phoneNumber01"
           class="w-full p-4 border rounded-lg bg-gray-100 text-textLight dark:text-textDark dark:bg-tileBlack"

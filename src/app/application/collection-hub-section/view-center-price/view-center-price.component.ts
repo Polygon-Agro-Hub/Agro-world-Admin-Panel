@@ -12,15 +12,15 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-view-center-price',
   standalone: true,
-  imports: [  
-      CommonModule,
-      LoadingSpinnerComponent,
-      NgxPaginationModule,
-      DropdownModule,
-      FormsModule,
+  imports: [
+    CommonModule,
+    LoadingSpinnerComponent,
+    NgxPaginationModule,
+    DropdownModule,
+    FormsModule,
   ],
   templateUrl: './view-center-price.component.html',
-  styleUrl: './view-center-price.component.css'
+  styleUrl: './view-center-price.component.css',
 })
 export class ViewCenterPriceComponent {
   centerId!: any;
@@ -30,10 +30,10 @@ export class ViewCenterPriceComponent {
   isLoading = false;
   currentDate: string;
   market: MarketPrice[] = [];
-  selectedCrop: Crop | null = null; 
+  selectedCrop: Crop | null = null;
   crops!: Crop[];
 
-  selectedGrade: Viraity | null = null; 
+  selectedGrade: Viraity | null = null;
   grades!: Viraity[];
 
   page: number = 1;
@@ -41,7 +41,6 @@ export class ViewCenterPriceComponent {
   searchNIC: string = '';
   search: string = '';
 
-  // Add these properties for last upload info
   lastUploadDate: string = '';
   lastUploadTime: string = '';
   lastUploadBy: string = '';
@@ -50,8 +49,8 @@ export class ViewCenterPriceComponent {
     private router: Router,
     private route: ActivatedRoute,
     private marketSrv: MarketPriceService,
-    private location: Location 
-  ) { 
+    private location: Location,
+  ) {
     this.currentDate = new Date().toLocaleDateString();
   }
 
@@ -59,11 +58,11 @@ export class ViewCenterPriceComponent {
     this.centerId = this.route.snapshot.params['centerId'];
     this.companyId = this.route.snapshot.params['companyId'];
     this.centerName = this.route.snapshot.params['centerName'];
-    
+
     this.Cname = this.route.snapshot.queryParams['Cname'];
     console.log('Cname from query params:', this.Cname);
-    
-    this.route.queryParams.subscribe(params => {
+
+    this.route.queryParams.subscribe((params) => {
       this.Cname = params['Cname'];
       console.log('Cname updated:', this.Cname);
     });
@@ -74,68 +73,82 @@ export class ViewCenterPriceComponent {
     this.grades = [
       { id: '1', Vgrade: 'A' },
       { id: '2', Vgrade: 'B' },
-      { id: '3', Vgrade: 'C' }
+      { id: '3', Vgrade: 'C' },
     ];
   }
 
   fetchAllMarketPrices() {
     this.isLoading = true;
 
-    const cropId = this.selectedCrop?.id || ''; 
-    const grade = this.selectedGrade?.Vgrade || ''; 
+    const cropId = this.selectedCrop?.id || '';
+    const grade = this.selectedGrade?.Vgrade || '';
 
-    this.marketSrv.getAllMarketPriceAgro(cropId, grade, this.searchNIC, this.centerId, this.companyId).subscribe(
-      (res) => {
-        this.isLoading = false;
-        this.market = res.results;
-        this.totalItems = res.total;
-        
-        // Extract last upload information from the response
-        this.extractLastUploadInfo(res.results);
-      },
-      (error) => {
-        console.error('Error fetching market price:', error);
-        this.isLoading = false;
-        Swal.fire(
-          'Error!',
-          'There was an error fetching market prices.',
-          'error'
-        );
-      }
-    );
+    this.marketSrv
+      .getAllMarketPriceAgro(
+        cropId,
+        grade,
+        this.searchNIC,
+        this.centerId,
+        this.companyId,
+      )
+      .subscribe(
+        (res) => {
+          this.isLoading = false;
+          this.market = res.results;
+          this.totalItems = res.total;
+
+          this.extractLastUploadInfo(res.results);
+        },
+        (error) => {
+          console.error('Error fetching market price:', error);
+          this.isLoading = false;
+          Swal.fire(
+            'Error!',
+            'There was an error fetching market prices.',
+            'error',
+          );
+        },
+      );
   }
 
-  // Add this method to extract last upload information
   extractLastUploadInfo(marketData: MarketPrice[]) {
+    let latestDate: Date | null = null;
+    let latestUserName: string = '';
+    marketData.forEach((item) => {
+      if (item.updateAt) {
+        const itemDate = new Date(item.updateAt);
+        if (!latestDate || itemDate > latestDate) {
+          latestDate = itemDate;
+          latestUserName = item.userName || 'System';
+        }
+      }
+    });
     if (marketData && marketData.length > 0) {
-      // Find the most recent update date
       const validDates = marketData
-        .filter(item => item.updateAt)
-        .map(item => new Date(item.updateAt));
-      
+        .filter((item) => item.updateAt)
+        .map((item) => new Date(item.updateAt));
+
       if (validDates.length > 0) {
-        const latestDate = new Date(Math.max(...validDates.map(date => date.getTime())));
-        
-        // Format date as YYYY/MM/DD
+        const latestDate = new Date(
+          Math.max(...validDates.map((date) => date.getTime())),
+        );
+
         const year = latestDate.getFullYear();
         const month = String(latestDate.getMonth() + 1).padStart(2, '0');
         const day = String(latestDate.getDate()).padStart(2, '0');
         this.lastUploadDate = `${year}/${month}/${day}`;
-        
-        // Format time as HH.MM AM/PM
+
         let hours = latestDate.getHours();
         const minutes = String(latestDate.getMinutes()).padStart(2, '0');
         const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
+        hours = hours ? hours : 12;
         const formattedHours = String(hours).padStart(2, '0');
         this.lastUploadTime = `${formattedHours}.${minutes} ${ampm}`;
       }
     }
-    
-    // For now, set a default uploader name since it might not be in the response
-    // You might need to get this from a different API endpoint or from the response
-    this.lastUploadBy = 'System'; // Change this as needed
+
+    this.lastUploadBy = latestUserName;
   }
 
   getAllCrops() {
@@ -145,12 +158,8 @@ export class ViewCenterPriceComponent {
       },
       (error) => {
         console.error('Error fetching crops:', error);
-        Swal.fire(
-          'Error!',
-          'There was an error fetching crops.',
-          'error'
-        );
-      }
+        Swal.fire('Error!', 'There was an error fetching crops.', 'error');
+      },
     );
   }
 
@@ -199,11 +208,12 @@ class MarketPrice {
   startTime!: Date;
   endTime!: Date;
   updateAt!: string;
-  updatedBy?: string; // Add this if available in your API response
+  updatedBy?: string;
+  userName?: string;
 }
 
 class Crop {
-  id!: string; 
+  id!: string;
   cropNameEnglish!: string;
 }
 

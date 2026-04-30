@@ -42,6 +42,9 @@
                 No
               </th>
               <th class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal">
+                Farmer Name
+              </th>
+              <th class="px-4 py-3 text-left dark:text-gray-400 whitespace-nowrap font-normal">
                 Farmer NIC
               </th>
               <th
@@ -72,6 +75,10 @@
               class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
               <td class="px-4 py-3 text-[#000000] dark:text-textDark text-left">
                 {{ (i + 1).toString().padStart(3, "0") }}
+              </td>
+
+              <td class="px-4 py-3 text-[#000000] dark:text-textDark">
+                {{ formatNIC(request.Farmer_Name) }}
               </td>
 
               <td class="px-4 py-3 text-[#000000] dark:text-textDark">

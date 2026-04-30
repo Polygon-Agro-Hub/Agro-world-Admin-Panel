@@ -628,7 +628,7 @@
         <label for="insNo" class="block text-sm font-medium text-gray-700 dark:text-textDark">
           Insurance Number *
         </label>
-        <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo"
+        <input id="insNo" type="text" #insurenceNoInput="ngModel" name="insNo" [(ngModel)]="driverObj.insNo" [maxlength]="13"
           class="form-control mt-1 block w-full p-2 border border-gray-300 rounded-md text-textLight dark:text-textDark bg-tileLight dark:bg-tileBlack" />
           <div>
             <span class="text-red-600 text-sm" *ngIf="insurenceNoInput.touched && !driverObj.insNo">

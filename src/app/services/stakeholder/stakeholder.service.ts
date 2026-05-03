@@ -585,18 +585,6 @@ export class StakeholderService {
     );
   }
 
-  deleteGoViShop(id: number): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-    return this.http.delete(
-      `${this.apiUrl}auth/delete-govi-shop/${id}`,
-      {
-        headers,
-      }
-    );
-  }
-
   approveGoviShop(id: number): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.token}`,
@@ -626,6 +614,18 @@ export class StakeholderService {
   const url = `${this.apiUrl}shop/toggle-shop-status/${shopId}`;
   return this.http.put<any>(url, { isActive }, { headers });
 }
+
+deleteGoviShop(id: number, reason: string | null): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.delete(`${this.apiUrl}shop/delete-govi-shop/${id}`, {
+      headers,
+      body: { reason }
+    });
+  }
 
 }
 

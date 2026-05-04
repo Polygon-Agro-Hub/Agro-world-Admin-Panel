@@ -94,8 +94,8 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "/admin/",
-              "deployUrl": "/admin/"
+              "baseHref": "/",
+              "deployUrl": "/"
             }
           },
           "defaultConfiguration": "production"

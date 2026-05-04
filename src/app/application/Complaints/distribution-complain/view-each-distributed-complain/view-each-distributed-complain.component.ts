@@ -11,7 +11,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenService } from '../../../../services/token/services/token.service';
 import { ComplaintsService } from '../../../../services/complaints/complaints.service';
 import Swal from 'sweetalert2';
-import { environment } from '../../../../environment/environment.development';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-view-each-distributed-complain',

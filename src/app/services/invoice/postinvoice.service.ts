@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TokenService } from '../token/services/token.service';
-import { environment } from '../../environment/environment.development';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
+import { environment } from '../../environment/environment';
 
 interface InvoiceData {
   invoiceNumber: string;

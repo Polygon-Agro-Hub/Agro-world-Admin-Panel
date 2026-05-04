@@ -1,7 +1,7 @@
 import { CommonModule, Location } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DropdownModule } from 'primeng/dropdown';
 import { CollectionCenterService } from '../../../services/collection-center/collection-center.service';
@@ -198,54 +198,134 @@ export class GovishopViewShopsComponent implements OnInit {
       this.mobileNumber = '';
     }
 
-deleteGoViShop(id: number) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you really want to delete this GoViShop? This action cannot be undone.',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold',
-    },
-    confirmButtonColor: '#2563eb',
-    cancelButtonColor: '#dc2626',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.goviShopService.deleteGoViShop(id).subscribe(
-        (res) => {
-          if (res) {
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'The GoViShop has been deleted.',
-              icon: 'success',
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold',
-              },
-              confirmButtonColor: '#2563eb',
-            });
-            this.selectMethodToFilter();
-          }
-        },
-        (error) => {
+
+    onTextareaClick() {
+        this.textAreaTouched = true;
+      }
+    
+      confirmDelete(form: NgForm): void {
+    
+        form.form.markAllAsTouched();
+        this.textAreaTouched = true;
+        if(this.shopToDelete && this.text !== '' && this.mobileNumber && this.mobileNumber === this.shopToDelete.phone) {
           Swal.fire({
-            title: 'Error!',
-            text: 'Error occured while deleting the GoViShop.',
-            icon: 'error',
+            icon: 'info',
+            title: 'Are you sure?',
+            text: 'Do you really want to Delete this GoViShop?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'No, Cancel',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold',
+              title: 'font-semibold text-lg',
             },
-            confirmButtonColor: '#2563eb',
+            buttonsStyling: true,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.confirmDeleteShop();
+            } else {
+              // User cancelled
+              this.isLoading = false;
+            }
           });
         }
-      );
-    }
-  });
-}
+        
+      }
+    
+      confirmDeleteShop() {
+          this.isLoading = true;
+          this.goviShopService.deleteGoviShop(this.shopToDelete!.id, this.text).subscribe({
+            next: (response) => {
+              if (response.status) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                html: 'GoViShop deleted Successfully',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+            }
+              this.showDeleteModal = false;
+              this.isLoading = false;
+              this.shopToDelete = null;
+              this.text = '';
+              this.mobileNumber = '';
+              
+              this.fetchGoviShopsForSeletectedUser();
+            },
+            error: (error) => {
+              console.error('Error deleting GoViShop:', error);
+              this.isLoading = false;
+              this.showDeleteModal = false;
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                html: 'Error deleting GoViShop',
+                confirmButtonText: 'OK',
+                customClass: {
+                  popup: 'bg-white dark:bg-[#363636] text-[#534E4E] dark:text-textDark',
+                  title: 'font-semibold text-lg',
+                  htmlContainer: 'text-left',
+                },
+              });
+              this.text = '';
+              this.mobileNumber = '';
+            }
+          });
+      }
+
+// deleteGoViShop(id: number) {
+//   Swal.fire({
+//     title: 'Are you sure?',
+//     text: 'Do you really want to delete this GoViShop? This action cannot be undone.',
+//     icon: 'warning',
+//     showCancelButton: true,
+//     confirmButtonText: 'Yes, delete it!',
+//     cancelButtonText: 'Cancel',
+//     customClass: {
+//       popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+//       title: 'font-semibold',
+//     },
+//     confirmButtonColor: '#2563eb',
+//     cancelButtonColor: '#dc2626',
+//   }).then((result) => {
+//     if (result.isConfirmed) {
+//       this.goviShopService.deleteGoviShop(id).subscribe(
+//         (res) => {
+//           if (res) {
+//             Swal.fire({
+//               title: 'Deleted!',
+//               text: 'The GoViShop has been deleted.',
+//               icon: 'success',
+//               customClass: {
+//                 popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+//                 title: 'font-semibold',
+//               },
+//               confirmButtonColor: '#2563eb',
+//             });
+//             this.selectMethodToFilter();
+//           }
+//         },
+//         (error) => {
+//           Swal.fire({
+//             title: 'Error!',
+//             text: 'Error occured while deleting the GoViShop.',
+//             icon: 'error',
+//             customClass: {
+//               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+//               title: 'font-semibold',
+//             },
+//             confirmButtonColor: '#2563eb',
+//           });
+//         }
+//       );
+//     }
+//   });
+// }
 
   onPageChange(event: number) {
     this.page = event;

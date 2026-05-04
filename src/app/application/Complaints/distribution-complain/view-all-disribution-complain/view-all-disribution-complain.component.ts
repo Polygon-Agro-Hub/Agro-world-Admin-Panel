@@ -8,10 +8,10 @@ import { CollectionCenterService } from '../../../../services/collection-center/
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { TokenService } from '../../../../services/token/services/token.service';
-import { environment } from '../../../../environment/environment.development';
 import Swal from 'sweetalert2';
 import { ComplaintsService } from '../../../../services/complaints/complaints.service';
 import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { environment } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-view-all-disribution-complain',

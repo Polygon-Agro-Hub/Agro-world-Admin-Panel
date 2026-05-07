@@ -6,7 +6,7 @@
 </button>
 
 
-<div class="flex space-x-4">
+<!-- <div class="flex space-x-4">
   <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
     (click)="addNewApp()" *ngIf="permissionService.hasPermission('Add application') || tokenService.getUserDetails().role === '1'">
     <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,12 +15,12 @@
     </svg>
     Add New
   </button>
-</div>
+</div> -->
 
 <div
   class="fixed-width-container overflow-x-auto scrollbar-thin scrollbar-thumb-scrollBarColor scrollbar-track-transparent scrollbar-thumb-rounded-full">
 
-  <div class="bg-white p-6 rounded-lg shadow dark:bg-tileBlack">
+  <div class="bg-white w-2/3 p-6 rounded-lg shadow dark:bg-tileBlack">
 
     <div class="flex items-center mb-8">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
@@ -34,9 +34,9 @@
           <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark w-25">Application Name</th>
           <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark">No. of Categories</th>
           <th class=" py-2 font-normal text-[#5C5C5C] text-center dark:text-textDark" *ngIf="permissionService.hasPermission('View complaint categories') || tokenService.getUserDetails().role === '1'">View Categories</th>
-          <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark whitespace-nowrap">Last Modified By
+          <!-- <th class=" py-2 font-normal text-[#5C5C5C] text-left dark:text-textDark whitespace-nowrap">Last Modified By
           </th>
-          <th class="text-left py-2" *ngIf="permissionService.hasPermission('Edit application') || tokenService.getUserDetails().role === '1'"></th>
+          <th class="text-left py-2" *ngIf="permissionService.hasPermission('Edit application') || tokenService.getUserDetails().role === '1'"></th> -->
         </tr>
       </thead>
       <tbody>
@@ -58,7 +58,7 @@
             </button>
 
           </td>
-          <td class="py-2 vertical-align: middle text-left dark:text-white text-gray-500">{{app.modifiedBy || '--'}}
+          <!-- <td class="py-2 vertical-align: middle text-left dark:text-white text-gray-500">{{app.modifiedBy || '--'}}
           </td>
           <td class="py-2" *ngIf="permissionService.hasPermission('Edit application') || tokenService.getUserDetails().role === '1'">
             <button (click)="editApp(app.systemAppId, app.systemAppName)"
@@ -72,10 +72,10 @@
               </svg>
             </button>
 
-          </td>
-          <td class="py-2">
+          </td> -->
+          <!-- <td class="py-2">
 
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </table>

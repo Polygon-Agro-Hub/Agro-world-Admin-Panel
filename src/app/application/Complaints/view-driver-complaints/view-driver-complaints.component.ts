@@ -175,7 +175,7 @@ export class ViewDriverComplaintsComponent {
       });
 
       this.http
-        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/Transport`, {
+        .get<any>(`${environment.API_URL}auth/get-all-complain-category-list-super/7`, {
           headers,
         })
         .subscribe(

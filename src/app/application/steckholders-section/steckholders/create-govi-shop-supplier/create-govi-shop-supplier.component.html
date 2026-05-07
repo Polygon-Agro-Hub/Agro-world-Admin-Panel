@@ -169,17 +169,8 @@
         </button>
         <button
           type="submit"
-          class="px-6 py-2 rounded-lg text-white transition-colors w-32"
-          [ngClass]="{
-            'bg-gray-500 cursor-not-allowed hover:bg-gray-500':
-              form.invalid ||
-              (selectedSubscription === 'Premium' && !selectedFile),
-
-            'bg-[#3980C0] hover:bg-[#2d6ca3]':
-              form.valid &&
-              (selectedSubscription === 'Standard' ||
-              (selectedSubscription === 'Premium' && selectedFile))
-          }"
+          class="px-6 py-2 rounded-lg text-white bg-[#3980C0] transition-colors w-32"
+          
         >
           <span *ngIf="!isLoading">Next</span>
           <span *ngIf="isLoading">Processing...</span>
@@ -237,11 +228,6 @@
           placeholder="X"
           class="otp-box" />
       </div>
-
-      <!-- Resend -->
-      <!-- <div class="text-[#0023F6] text-[18px] font-[600] mb-16 mt-6 cursor-pointer">
-        Resend in <span class="underline">10:00</span>
-      </div> -->
 
       <div 
         class="text-[#0023F6] text-[18px] mb-16 mt-8 "

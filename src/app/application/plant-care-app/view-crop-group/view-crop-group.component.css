@@ -136,26 +136,72 @@
     /* gray-300 */
 }
 
-/* making pop up small*/
-
-::ng-deep .calendar-popup-small {
-    width: 320px !important;
-    /* Adjust as needed */
-    min-width: 280px !important;
+/* Reduce dropdown item padding */
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
 }
 
-::ng-deep .calendar-popup-small .p-datepicker-calendar {
-    font-size: 0.875rem;
-    /* Smaller font */
+::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding-left: 15px !important;
 }
 
-::ng-deep .calendar-popup-small .p-datepicker-calendar td {
-    padding: 0.25rem !important;
-    /* Smaller cell padding */
+.dark .p-dropdown .p-dropdown-label {
+    color: #ffffff !important;
+  }
+
+  ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+    color: white;
+  }
+
+  /* Hides clear icon when dropdown has no selected value */
+::ng-deep .p-dropdown .p-dropdown-clear {
+  display: none;
 }
 
-::ng-deep .calendar-popup-small .p-datepicker-calendar td span {
-    width: 1.5rem !important;
-    height: 1.5rem !important;
-    line-height: 1.5rem !important;
+/* Show the clear button only when a value is selected */
+::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
+  display: inline-flex !important;
 }
+
+::ng-deep .dark .p-dropdown-panel {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+  border-radius: 6px !important;
+  overflow: hidden;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
+  background-color: #3a4160 !important;
+  color: #fff !important;
+}
+
+::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
+  background-color: #2d354d !important;
+  color: #B1B1B1 !important;
+}
+
+
+::ng-deep .custom-center-dropdown .p-dropdown {
+  padding-left: 10px !important;
+}
+
+::ng-deep .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 10px !important;
+}
+
+/* For dark mode */
+::ng-deep .dark .custom-center-dropdown .p-dropdown {
+  padding-left: 10px !important;
+}
+
+::ng-deep .dark .custom-center-dropdown .p-dropdown .p-dropdown-label {
+  padding-left: 10px !important;
+}
+
+/* The rest of your existing calendar styles... */
+

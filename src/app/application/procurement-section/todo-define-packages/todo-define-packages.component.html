@@ -46,22 +46,14 @@
             <p-calendar id="deliveryDate" [(ngModel)]="dateFilter" (onSelect)="onFilterChange()"
               (onClear)="onDateFilterClear()" placeholder="Delivery Date" [showIcon]="true" [showClear]="true"
               [showButtonBar]="true" dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true"
-              yearRange="1900:2030" iconDisplay="input" [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
-                   [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
-                   [&_.p-datepicker-header]:dark:bg-[#2d354d] 
-                   [&_.p-datepicker-header]:dark:text-white
-                   [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
-                   [&_.p-button:hover]:dark:bg-[#6b7280]
-                   [&_.p-datepicker-calendar_td.p-datepicker-today_span]:bg-blue-500
-                   [&_.p-datepicker-calendar_td.p-datepicker-today_span]:text-white
-                   [&_.p-datepicker-calendar_td.p-datepicker-today_span]:rounded
-                   [&_.p-datepicker-calendar_td.p-datepicker-today_span]:font-bold
-                   [&_.p-datepicker-calendar_td_span.p-highlight]:bg-indigo-600
-                   [&_.p-datepicker-calendar_td_span.p-highlight]:text-white
-                   [&_.p-datepicker-calendar_td_span.p-highlight]:rounded
-                   [&_.p-highlight]:dark:bg-indigo-500
-                   [&_.p-highlight]:dark:text-white"
+              yearRange="1900:2030" iconDisplay="input" 
+              [style]="{ width: '16rem', height: '2rem' }" panelStyleClass="calendar-popup-small rounded-xl dark:bg-[#2d354d] dark:text-textDark dark:border-gray-600 
+         [&_.p-datepicker-calendar_td_span:hover]:dark:bg-[#4a5568] 
+         [&_.p-datepicker-calendar_td_span:hover]:dark:text-white
+         [&_.p-datepicker-header]:dark:bg-[#2d354d] 
+         [&_.p-datepicker-header]:dark:text-white
+         [&_.p-datepicker-buttonbar]:dark:bg-[#2d354d]
+         [&_.p-button:hover]:dark:bg-[#6b7280]"
               inputStyleClass="p-2 border cursor-pointer rounded-xl bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark w-64 h-8 pr-12"
               [appendTo]="'body'" />
           </div>

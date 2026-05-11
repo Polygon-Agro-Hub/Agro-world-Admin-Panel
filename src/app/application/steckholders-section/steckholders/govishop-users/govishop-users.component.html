@@ -25,10 +25,11 @@
           [(ngModel)]="searchTerm"
           placeholder="Search Name, Phone..."
           class="bg-transparent outline-none w-full dark:text-textDark text-gray-500 text-sm"
+          (keyup.enter)="onSearch()" (keyup.esc)="clearSearch()"
         />
         <button
           type="button"
-          (click)="onSearch()"
+          (click)="onSearch()" 
           class="text-gray-400 hover:text-gray-600 focus:outline-none"
           title="Search"
         >
@@ -67,8 +68,8 @@
           <tr class="border-b border-gray-200 dark:border-gray-600">
             <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 w-12">No</th>
             <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">User Name</th>
-            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400">Shop</th>
-            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400">Branch</th>
+            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">Shop</th>
+            <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">Branch</th>
             <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">Phone Number</th>
             <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">Email Address</th>
             <th class="py-3 px-3 font-normal text-gray-500 dark:text-gray-400 whitespace-nowrap">Last Updated By</th>
@@ -85,13 +86,13 @@
             <td class="py-3 px-3 text-textLight dark:text-textDark">
               {{ i + 1 | number: '2.0' }}
             </td>
-            <td class="py-3 px-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-3 text-textLight dark:text-textDark whitespace-nowrap">
               {{ user.userName }}
             </td>
-            <td class="py-3 px-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-3 text-textLight dark:text-textDark whitespace-nowrap">
               {{ user.shop }}
             </td>
-            <td class="py-3 px-3 text-textLight dark:text-textDark">
+            <td class="py-3 px-3 text-textLight dark:text-textDark whitespace-nowrap">
               {{ user.branch }}
             </td>
             <td class="py-3 px-3 text-textLight dark:text-textDark">

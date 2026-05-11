@@ -278,6 +278,37 @@ export class GovishopViewShopsComponent implements OnInit {
           });
       }
 
+      openImageInNewTab(imageUrl: string): void {
+          if (imageUrl.startsWith('data:')) {
+            const newWindow = window.open();
+            if (newWindow) {
+              newWindow.document.write(`
+              <html>
+                <head><title>Image Preview</title></head>
+                <body style="margin:0">
+                  <img src="${imageUrl}" style="width:100%; height:100%" />
+                </body>
+              </html>
+            `);
+              newWindow.document.close();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Popup Blocked',
+                text: 'Please allow popups for this site to view the image.',
+              });
+            }
+          } else if (imageUrl.startsWith('http')) {
+            window.open(imageUrl, '_blank');
+          } else {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Invalid Image URL',
+              text: 'Image URL is not valid. Cannot open in new tab.',
+            });
+          }
+        }
+
 // deleteGoViShop(id: number) {
 //   Swal.fire({
 //     title: 'Are you sure?',

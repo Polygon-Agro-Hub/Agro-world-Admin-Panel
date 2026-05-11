@@ -148,6 +148,7 @@
       <thead>
         <tr class="border-b border-gray-200 dark:border-gray-600">
           <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 w-12">No</th>
+          <th *ngIf="!shopId" class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap">Shop Name</th>
           <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 whitespace-nowrap">Branch Name</th>
           <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center">Managers</th>
           <th class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap">POS Users</th>
@@ -170,6 +171,12 @@
           <!-- No -->
           <td class="py-3 px-3 text-[#000000] dark:text-textDark">
             {{ (page - 1) * itemsPerPage + i + 1 | number: "2.0" }}
+          </td>
+
+          <td *ngIf="!shopId" class="py-3 px-3 text-[#000000] dark:text-textDark">
+            <span class="block whitespace-nowrap max-w-[180px] truncate" [title]="branch.shopName">
+              {{ branch.shopName }}
+            </span>
           </td>
 
           <!-- Branch Name -->

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
@@ -18,6 +18,7 @@ export interface Branch {
   posCount: number;
   updatedAt: Date | null;
   updatedBy: string | null;
+  shopName: string;
 }
 
 @Component({
@@ -101,20 +102,20 @@ export class ViewBranchesPerShopComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private govishopService: GovishopService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.shopId = params['shopId'] ? Number(params['shopId']) : null;
       this.shopName = params['shopName'] || 'Shop';
-      if (this.shopId) {
-        this.loadBranches();
-      }
+      this.loadBranches();
     });
   }
 
   loadBranches(): void {
-    if (!this.shopId) return;
+
+    console.log('shopId', this.shopId)
     this.isLoading = true;
 
     this.govishopService
@@ -209,12 +210,16 @@ export class ViewBranchesPerShopComponent implements OnInit {
   }
 
   editBranch(branchId: number): void {
-    // navigate to edit page or open edit modal
+    this.router.navigate(['govi-shop/action/edit-branch', branchId])
   }
 
   back(): void {
-    this.router.navigate(['govi-shop/action/all-govi-shops'], {
+    if (this.shopId) {
+      this.router.navigate(['govi-shop/action/all-govi-shops'], {
       queryParams: {},
     });
+    } else {
+      this.location.back();
+    }
   }
 }

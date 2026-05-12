@@ -151,7 +151,7 @@ export class EditBranchComponent implements OnInit {
       missingFields.push('Mobile Phone Number must be a valid number');
     }
 
-    if (!mobilePattern.test(this.branchObj.landPhone) && this.branchObj.landPhone) {
+    if (!mobilePattern.test(this.branchObj.LandPhone) && this.branchObj.LandPhone) {
       missingFields.push('Land Phone Number must be a valid number');
     }
 
@@ -183,7 +183,7 @@ export class EditBranchComponent implements OnInit {
     Swal.fire({
       icon: 'info',
       title: 'Are you sure?',
-      text: 'Do you really want to update this GoVi Shop?',
+      text: 'Do you really want to update this GoVi Shop Branch?',
       showCancelButton: true,
       confirmButtonText: 'Yes, Update',
       cancelButtonText: 'No, Cancel',
@@ -342,84 +342,85 @@ updateProvince(event: DropdownChangeEvent): void {
 updateBranch() {
   this.isLoading = true;
   this.isVerification = false;
-  // this.goviShopService.updateBranchData(
-  //   this.branchObj,
-  //   )
-  //   .subscribe(
-  //     (res) => {
-  //       this.isLoading= false;
-  //       if (res?.status) {
-  //         Swal.fire({
-  //           icon: 'success',
-  //           title: 'Success!',
-  //           text: 'GoViShop Branch Updated Successfully',
-  //           customClass: {
-  //             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-  //             title: 'font-semibold text-lg',
-  //             htmlContainer: 'text-left',
-  //             confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-  //           },
-  //         }
+  console.log('branchObj',  this.branchObj)
+  this.goviShopService.updateBranchData(
+    this.branchObj,
+    )
+    .subscribe(
+      (res) => {
+        this.isLoading= false;
+        if (res?.status) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'GoViShop Branch Updated Successfully',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
+          }
             
-  //         );
-  //         this.location.back();
-  //       } else {
-  //         this.isLoading= false;
-  //         Swal.fire({
-  //           icon: 'error',
-  //           title: 'Error!',
-  //           text: 'GoViShop Branch Update failed',
-  //           customClass: {
-  //             popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-  //             title: 'font-semibold text-lg',
-  //             htmlContainer: 'text-left',
-  //             confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-  //           },
-  //         });
-  //       }
-  //     },
-  //     (error: any) => {
-  //       this.isLoading = false;
-  //       let errorMessage = 'An unexpected error occurred';
-  //       let messages: string[] = [];
+          );
+          this.location.back();
+        } else {
+          this.isLoading= false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'GoViShop Branch Update failed',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+            },
+          });
+        }
+      },
+      (error: any) => {
+        this.isLoading = false;
+        let errorMessage = 'An unexpected error occurred';
+        let messages: string[] = [];
 
-  //       if (error.error && Array.isArray(error.error.errors)) {
-  //         messages = error.error.errors.map((err: string) => {
-  //           switch (err) {
+        if (error.error && Array.isArray(error.error.errors)) {
+          messages = error.error.errors.map((err: string) => {
+            switch (err) {
               
-  //             case 'mobilePhone':
-  //               return 'Mobile Phone Number is already exists.';
-  //             case 'landPhone':
-  //               return 'Land Phone Number is already exists.';
-  //             default:
-  //               return 'Validation error: ' + err;
-  //           }
-  //         });
-  //       }
+              case 'mobilePhone':
+                return 'Mobile Phone Number is already exists.';
+              case 'LandPhone':
+                return 'Land Phone Number is already exists.';
+              default:
+                return 'Validation error: ' + err;
+            }
+          });
+        }
 
-  //       if (messages.length > 0) {
-  //         errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
-  //         messages.forEach(m => {
-  //           errorMessage += `<li>${m}</li>`;
-  //         });
-  //         errorMessage += '</ul></div>';
+        if (messages.length > 0) {
+          errorMessage = '<div class="text-left"><p class="mb-2">Please fix the following Duplicate field issues:</p><ul class="list-disc pl-5">';
+          messages.forEach(m => {
+            errorMessage += `<li>${m}</li>`;
+          });
+          errorMessage += '</ul></div>';
 
-  //         Swal.fire({
-  //           icon: 'error',
-  //           title: 'Duplicate Information',
-  //           html: errorMessage,
-  //           confirmButtonText: 'OK',
-  //           customClass: {
-  //             popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
-  //             title: 'font-semibold text-lg',
-  //             htmlContainer: 'text-left',
-  //             confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
-  //           },
-  //         });
-  //         return;
-  //       }
-  //     }
-  //   );
+          Swal.fire({
+            icon: 'error',
+            title: 'Duplicate Information',
+            html: errorMessage,
+            confirmButtonText: 'OK',
+            customClass: {
+              popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
+              title: 'font-semibold text-lg',
+              htmlContainer: 'text-left',
+              confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
+            },
+          });
+          return;
+        }
+      }
+    );
 }
 
 
@@ -431,7 +432,7 @@ class Branch {
   address!: string;
   email!: string;
   mobilePhone!: string;
-  landPhone!: string;
+  LandPhone!: string;
   district!: string;
   province!: string;
 }

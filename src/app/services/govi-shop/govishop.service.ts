@@ -213,19 +213,19 @@ getBranchForUpdate(id: number) {
   }
 
 
-// updateBranchData(shopData: any): Observable<any> {
+updateBranchData(shopData: any): Observable<any> {
 
-//     const headers = new HttpHeaders({
-//       Authorization: `Bearer ${this.token}`,
-//       'Content-Type': 'application/json'
-//     });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
 
-//     return this.http.post(`${this.apiUrl}shop/update-govi-shop`,
-//     shopData,
-//       {
-//         headers
-//       });
-// }
+    return this.http.post(`${this.apiUrl}update-govi-shop-branch`,
+    shopData,
+      {
+        headers
+      });
+}
 
 
 }

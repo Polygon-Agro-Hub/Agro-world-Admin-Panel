@@ -231,11 +231,13 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
 
       const margin = 20;
       const chartStartX = 50;
-      const chartStartY = 60; // Reduced from 70 to decrease gap after title
+      const chartStartY = 30; // Reduced from 70 to decrease gap after title
       const barHeight = 8;
       const gap = 2;
       const chartHeight = 100;
       const chartWidth = 100;
+      const yAxisTitleX = 20;
+
 
       const colors = {
         gradeA: '#FF9263',
@@ -315,9 +317,8 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       // Draw y-axis title at the TOP
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      const textX = yAxisX - 15;
-      const textY = barAreaStartY - 8; // Position above the first tick mark
-      doc.text('Crop Variety', textX, textY, { angle: 360, align: 'center' });
+      const textY = (barAreaStartY + barAreaEndY) / 2;
+      doc.text('Crop Variety', yAxisTitleX, textY, { angle: 90, align: 'center' });
 
       // Draw y-axis tick marks and crop name labels
       let currentBarY = barAreaStartY;
@@ -428,9 +429,11 @@ export class CollectionofficerDistrictReportComponent implements OnInit, OnDestr
       // Draw x-axis title
       doc.setFontSize(10);
       doc.setTextColor('#738AC0');
-      doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, {
-        align: 'right',
-      });
+      // doc.text('Total Weight (kg)', xAxisStartX + 130, xAxisY + 5, {
+      //   align: 'center',
+      // });
+      doc.text('Total Weight (kg)', xAxisStartX + (chartWidth / 2), xAxisY + 5, { align: 'center' });
+
 
       // Summary Table
       const tableStartY = xAxisY + 15; // Reduced from 30 to decrease gap between chart and table

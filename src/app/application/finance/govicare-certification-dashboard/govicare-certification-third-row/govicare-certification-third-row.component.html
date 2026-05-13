@@ -56,10 +56,9 @@
       <tbody class="divide-y divide-gray-100">
         <tr
           *ngFor="let payment of recentPayments"
-          class="bg-white border-b-2 dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+          class="bg-white  dark:bg-[#061E2C] dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
           <th
-            scope="row"
             class="font-normal px-6 py-4 text-[#000000] dark:text-[#C8C8C8] text-left"
           >
             {{ payment.transactionId }}
@@ -82,8 +81,8 @@
           <td
             class="font-normal text-[#000000] px-6 py-4 text-left dark:text-[#C8C8C8]"
           >
-            {{ formatDate(payment.dateTime) }}
-            {{ formatTime(payment.dateTime) }}
+            {{ payment.dateTime | date:'dd MMM yyyy' }}
+            {{ payment.dateTime | date:'hh:mm a' }}
           </td>
         </tr>
         <tr *ngIf="recentPayments.length === 0">

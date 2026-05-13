@@ -2,10 +2,7 @@
 
 <div class="container mx-auto px-4 py-6">
   <!-- Back Button -->
-  <button
-    class="mb-5 text-textLight dark:text-textDark"
-    (click)="navigateToCollectionHub()"
-  >
+  <button class="mb-5 text-textLight dark:text-textDark" (click)="navigateToCollectionHub()">
     <i class="fa-solid fa-arrow-left"></i>
     Back
   </button>
@@ -13,23 +10,19 @@
   <!-- Top Cards Row -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-8 mb-6">
     <!-- Center Name Card -->
-    <div
-      class="flex justify-center items-center p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg"
-    >
+    <div class="flex justify-center items-center p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg">
       <p class="font-bold text-black text-lg dark:text-white text-center">
         {{ centerName }}
       </p>
     </div>
 
     <!-- Market Price Card -->
-    <div
-      *ngIf="
+    <div *ngIf="
         permissionService.hasPermission('View Polygon Centre Price') ||
         tokenService.getUserDetails().role === '1'
       "
       class="flex flex-row justify-center items-center p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer relative"
-      (click)="navigateToMarketPrice()"
-    >
+      (click)="navigateToMarketPrice()">
       <div class="flex flex-col justify-center items-center">
         <p class="font-bold text-black dark:text-white text-lg text-center">
           View Market Price
@@ -37,21 +30,15 @@
       </div>
       <div class="flex justify-between items-center absolute top-7.5 right-8">
         <div></div>
-        <i
-          class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] text-xl absolute"
-        ></i>
+        <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] text-xl absolute"></i>
       </div>
     </div>
 
     <!-- Assign Target Card -->
-    <div
-      class="flex flex-row items-center justify-center p-4 bg-[#415CFF] shadow-lg rounded-lg cursor-pointer"
-      *ngIf="
+    <div class="flex flex-row items-center justify-center p-4 bg-[#415CFF] shadow-lg rounded-lg cursor-pointer" *ngIf="
         permissionService.hasPermission('Add Polygon Centre Target') ||
         tokenService.getUserDetails().role === '1'
-      "
-      (click)="navigateAddTarget()"
-    >
+      " (click)="navigateAddTarget()">
       <p class="font-bold text-tileLight text-lg text-center">
         Assign Centre Target
       </p>
@@ -59,48 +46,34 @@
   </div>
 
   <!-- Middle Cards Row -->
-  <div
-    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 mb-6"
-  >
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 mb-6">
     <!-- Current Target Card -->
-    <div
-      *ngIf="
-        permissionService.hasPermission('View Current Centre Target') ||
-        tokenService.getUserDetails().role === '1'
-      "
-      class="flex flex-col justify-center items-center gap-y-3 p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
-      (click)="navigateToTarget()"
-    >
+    <div *ngIf="
+    permissionService.hasPermission('View Current Centre Target') ||
+    tokenService.getUserDetails().role === '1'
+  " class="relative flex flex-col justify-center items-center gap-y-3 p-4 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
+      (click)="navigateToTarget()">
       <i class="fa-solid fa-bullseye text-[#415CFF] text-5xl"></i>
+
       <div class="flex flex-col justify-center items-center">
         <p class="font-bold text-black text-lg dark:text-white">
           Current Target
         </p>
       </div>
-      <div class="flex flex-row w-full items-center justify-end">
-        <i
-          class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] text-xl mx-2"
-        ></i>
-      </div>
+
+      <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] text-xl absolute bottom-4 right-4"></i>
     </div>
 
     <!-- Today Collection Card -->
-    <div
-      class="flex flex-col items-center justify-center p-4 bg-[#FB923C] shadow-lg rounded-lg"
-    >
+    <div class="flex flex-col items-center justify-center p-4 bg-[#FB923C] shadow-lg rounded-lg">
       <i class="fa-solid fa-layer-group text-2xl text-white"></i>
       <div class="flex flex-col justify-center items-center">
         <p class="font-bold text-white text-lg">Today Collection</p>
         <p class="font-bold text-white text-lg">
           {{
-            transCount === 0
-              ? "0"
-              : transCount < 10
-                ? "0" + transCount
-                : transCount
-          }}
-          Transactions
-        </p>
+          transCount === 0
+          ? "0"
+          : transCount < 10 ? "0" + transCount : transCount }} Transactions </p>
       </div>
       <p class="font-bold text-white text-2xl my-2">
         {{ transAmount | currency: "Rs. " : "symbol" : "1.2-2" }}
@@ -110,37 +83,23 @@
     <!-- Expense and Officers Cards -->
     <div class="grid grid-cols-2 gap-2 md:gap-4">
       <!-- Expense Card -->
-      <div
-        *ngIf="
+      <div *ngIf="
           permissionService.hasPermission('Total Centre Collection Expenses') ||
           tokenService.getUserDetails().role === '1'
         "
         class="flex flex-col gap-y-1 items-center justify-between p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
-        (click)="navigateCollectionExpenses()"
-      >
+        (click)="navigateCollectionExpenses()">
         <div class="flex flex-row justify-end items-center self-end">
-          <i
-            *ngIf="expencePrecentage >= 0"
-            class="fa-solid fa-arrow-trend-up text-[#0D9488] mx-1 text-sm"
-          ></i>
-          <i
-            *ngIf="expencePrecentage < 0"
-            class="fa-solid fa-arrow-trend-down text-[#D70000] mx-1 text-sm"
-          ></i>
+          <i *ngIf="expencePrecentage >= 0" class="fa-solid fa-arrow-trend-up text-[#0D9488] mx-1 text-sm"></i>
+          <i *ngIf="expencePrecentage < 0" class="fa-solid fa-arrow-trend-down text-[#D70000] mx-1 text-sm"></i>
           <p class="text-[#627189] dark:text-white text-xs">
             {{ expencePrecentage }}
           </p>
         </div>
 
         <div class="bg-[#CCFBF1] p-2 rounded-full">
-          <i
-            *ngIf="expencePrecentage >= 0"
-            class="fa-solid fa-arrow-trend-up text-[#415CFF] text-xl"
-          ></i>
-          <i
-            *ngIf="expencePrecentage < 0"
-            class="fa-solid fa-arrow-trend-down text-[#D70000] text-xl"
-          ></i>
+          <i *ngIf="expencePrecentage >= 0" class="fa-solid fa-arrow-trend-up text-[#415CFF] text-xl"></i>
+          <i *ngIf="expencePrecentage < 0" class="fa-solid fa-arrow-trend-down text-[#D70000] text-xl"></i>
         </div>
 
         <p class="text-[#627189] dark:text-white text-xs text-center">
@@ -153,21 +112,17 @@
 
         <div class="flex flex-row items-center justify-end self-end">
           <p class="text-[#627189] dark:text-white text-xs">30 days</p>
-          <i
-            class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] mx-1 text-sm"
-          ></i>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] mx-1 text-sm"></i>
         </div>
       </div>
 
       <!-- Officers Card -->
-      <div
-        *ngIf="
+      <div *ngIf="
           permissionService.hasPermission('Polygon Centre Officers') ||
           tokenService.getUserDetails().role === '1'
         "
         class="flex flex-col gap-y-1 items-center justify-center p-2 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg cursor-pointer"
-        (click)="viewCenterOfficers()"
-      >
+        (click)="viewCenterOfficers()">
         <div class="text-center mt-10">
           <div class="bg-[#CCFBF1] p-2 rounded-full">
             <i class="fa-solid fa-users text-xl"></i>
@@ -177,140 +132,88 @@
           </p>
           <p class="font-bold text-black text-lg mt-3 dark:text-white">
             {{
-              centerNameObj.officerCount === 0
-                ? "0"
-                : centerNameObj.officerCount < 10
-                  ? "0" + centerNameObj.officerCount
-                  : centerNameObj.officerCount
-            }}
-          </p>
+            centerNameObj.officerCount === 0
+            ? "0"
+            : centerNameObj.officerCount < 10 ? "0" + centerNameObj.officerCount : centerNameObj.officerCount }} </p>
         </div>
         <div class="flex flex-row items-center justify-end self-end mt-5">
-          <i
-            class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] mx-1 text-sm"
-          ></i>
+          <i class="fa-solid fa-arrow-up-right-from-square text-[#415CFF] mx-1 text-sm"></i>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Table Section -->
-  <div
-    class="w-full p-4 md:p-6 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg mb-6"
-  >
+  <div class="w-full p-4 md:p-6 bg-tileLight dark:bg-[#363636] shadow-lg rounded-lg mb-6">
     <div class="flex flex-row items-center gap-4 md:gap-7 overflow-x-auto pb-2">
-      <div
-        class="py-1 font-semibold text-[#627189] cursor-pointer whitespace-nowrap"
-        [ngClass]="{
+      <div class="py-1 font-semibold text-[#627189] cursor-pointer whitespace-nowrap" [ngClass]="{
           'border-b-2 border-[#415CFF] text-black dark:text-white':
             selectTable === 'collection',
-        }"
-        *ngIf="
+        }" *ngIf="
           permissionService.hasPermission('Recent Collections') ||
           tokenService.getUserDetails().role === '1'
-        "
-        (click)="chooseTable('collection')"
-      >
+        " (click)="chooseTable('collection')">
         <p>Recent Collections</p>
       </div>
     </div>
 
-    <div
-      *ngIf="
+    <div *ngIf="
         (permissionService.hasPermission('Recent Collections') ||
           tokenService.getUserDetails().role === '1') &&
         selectTable === 'collection'
-      "
-      class="overflow-x-auto mt-4 md:mt-6 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]"
-    >
+      " class="overflow-x-auto mt-4 md:mt-6 border-gray-100 border-[2px] rounded-lg dark:border-[#202021]">
       <div class="min-w-[800px]">
         <table class="w-full divide-y-2">
-          <thead
-            class="text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021]"
-          >
+          <thead class="text-gray-700 dark:text-gray-300 dark:bg-[#0F0F0F] dark:border-[#202021]">
             <tr>
-              <th
-                class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base"
-              >
+              <th class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base">
                 No
               </th>
-              <th
-                class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base"
-              >
+              <th class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base">
                 Crop Name
               </th>
-              <th
-                class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base"
-              >
+              <th class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base">
                 Variety Name
               </th>
-              <th
-                class="px-4 py-2 md:px-6 md:py-3 text-center font-medium text-sm md:text-base"
-              >
+              <th class="px-4 py-2 md:px-6 md:py-3 text-center font-medium text-sm md:text-base">
                 Grade
               </th>
-              <th
-                class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base"
-              >
+              <th class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base">
                 Collected (kg)
               </th>
-              <th
-                class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base"
-              >
+              <th class="px-4 py-2 md:px-6 md:py-3 text-left font-medium text-sm md:text-base">
                 Value (Rs.)
               </th>
-              <th
-                class="px-4 py-2 md:px-6 md:py-3 text-center font-medium text-sm md:text-base"
-              >
+              <th class="px-4 py-2 md:px-6 md:py-3 text-center font-medium text-sm md:text-base">
                 Date
               </th>
             </tr>
           </thead>
 
-          <tbody
-            *ngIf="
+          <tbody *ngIf="
               resentCollectionArr && resentCollectionArr.length > 0;
               else noData
-            "
-            class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]"
-          >
-            <tr
-              *ngFor="let item of resentCollectionArr; let i = index"
-              class="hover:bg-gray-50 dark:hover:bg-[#2A2A2A]"
-            >
-              <td
-                class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base"
-              >
-                {{ i + 1 < 10 ? "0" + (i + 1) : i + 1 }}
-              </td>
-              <td
-                class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base"
-              >
+            " class="bg-white dark:bg-[#1D1D1F] dark:border-[#1D1D1F]">
+            <tr *ngFor="let item of resentCollectionArr; let i = index"
+              class="hover:bg-gray-50 dark:hover:bg-[#2A2A2A]">
+              <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
+                {{ i + 1 < 10 ? "0" + (i + 1) : i + 1 }} </td>
+              <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
                 {{ item.cropNameEnglish }}
               </td>
-              <td
-                class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base"
-              >
+              <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
                 {{ item.varietyNameEnglish }}
               </td>
-              <td
-                class="px-4 py-2 md:px-6 md:py-4 text-gray-900 text-center dark:text-gray-300 text-sm md:text-base"
-              >
+              <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 text-center dark:text-gray-300 text-sm md:text-base">
                 {{ item.grade }}
               </td>
-              <td
-                class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base"
-              >
+              <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
                 {{ item.totQty | number: "1.2-2" }}
               </td>
-              <td
-                class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base"
-              >
+              <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
                 {{ item.totPrice | number: "1.2-2" }}
               </td>
-              <td
-                class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base"
-              >
+              <td class="px-4 py-2 md:px-6 md:py-4 text-gray-900 dark:text-gray-300 text-sm md:text-base">
                 <div class="flex flex-col items-center justify-center">
                   <p>{{ item.date | date: "yyyy/MM/dd" }}</p>
                   <p>{{ item.date | date: "hh:mm a" }}</p>
@@ -323,17 +226,10 @@
         <!-- No data template -->
         <ng-template #noData>
           <tr>
-            <td
-              colspan="7"
-              class="text-center py-10 text-gray-500 dark:text-gray-300"
-            >
+            <td colspan="7" class="text-center py-10 text-gray-500 dark:text-gray-300">
               -- No Data Available --
               <div class="flex justify-center mt-4">
-                <img
-                  src="assets/images/NoData.png"
-                  alt="No Data"
-                  class="w-20 h-20"
-                />
+                <img src="assets/images/NoData.png" alt="No Data" class="w-20 h-20" />
               </div>
             </td>
           </tr>

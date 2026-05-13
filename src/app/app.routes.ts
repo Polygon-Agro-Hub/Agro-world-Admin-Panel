@@ -1101,6 +1101,8 @@ export const routes: Routes = [
               },
               {
                 path: 'govi-shop-suppliers',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View GoViShop Suppliers' },
                 children: [
                   {
                     path: '',

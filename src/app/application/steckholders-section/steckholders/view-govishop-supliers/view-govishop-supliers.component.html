@@ -6,7 +6,9 @@
 
 <div>
   <button class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center"
-    (click)="addNew()">
+    (click)="addNew()"
+    *ngIf="(permissionService.hasPermission('Add new GoviShop Supplier') || tokenService.getUserDetails().role === '1')"
+    >
     <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M4 12H20M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
@@ -179,18 +181,21 @@
               Onboard Status
             </th>
             <th
+            *ngIf="(permissionService.hasPermission('View Shops') || tokenService.getUserDetails().role === '1')"
               class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
             >
               Shops
             </th>
 
             <th
+            *ngIf="(permissionService.hasPermission('View Managers') || tokenService.getUserDetails().role === '1')"
               class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
             >
               Managers
             </th>
 
             <th
+            *ngIf="(permissionService.hasPermission('View POS Users') || tokenService.getUserDetails().role === '1')"
               class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
             >
               POS Users
@@ -279,7 +284,7 @@
                 {{ supplier.onbordStatus }}
               </span>
             </td>
-            <td class="py-3 px-3 text-center">
+            <td class="py-3 px-3 text-center" *ngIf="(permissionService.hasPermission('View Shops') || tokenService.getUserDetails().role === '1')">
               <button
                 class="text-blue-500 hover:text-blue-600"
                 title="View Details"
@@ -303,7 +308,7 @@
               </button>
             </td>
 
-            <td class="py-3 px-3 text-center">
+            <td class="py-3 px-3 text-center" *ngIf="(permissionService.hasPermission('View Managers') || tokenService.getUserDetails().role === '1')">
   <button
     class="text-blue-500 hover:text-blue-600"
     (click)="viewManagerUsers(supplier.id, supplier.ownername)"
@@ -326,7 +331,9 @@
   </button>
 </td>
 
-            <td class="py-3 px-3 text-center">
+            <td class="py-3 px-3 text-center"
+             *ngIf="(permissionService.hasPermission('View POS Users') || tokenService.getUserDetails().role === '1')"
+            >
   <button
     class="text-blue-500 hover:text-blue-600"
     (click)="viewPOSUsers(supplier.id, supplier.ownername)"
@@ -356,6 +363,7 @@
                 class="text-red-400 hover:text-red-600"
                 title="Remove"
                 (click)="openDeleteModal(supplier)"
+                *ngIf="(permissionService.hasPermission('Delete GoviShop Supplier') || tokenService.getUserDetails().role === '1')"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -378,7 +386,9 @@
 
             <td class="py-3 px-3 text-center">
               <button class="w-6 h-6 mr-3 text-[#367bfa] hover:text-[#83aefd] text-center"
-                (click)="editSupplier(supplier.id)">
+                (click)="editSupplier(supplier.id)"
+                *ngIf="(permissionService.hasPermission('Edit GoviShop Supplier') || tokenService.getUserDetails().role === '1')"
+                >
                 <svg fill="currentColor" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
                   <title>pen-to-square</title>
                   <path

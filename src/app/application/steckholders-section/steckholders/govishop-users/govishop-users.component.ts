@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { LoadingSpinnerComponent } from '../../../../components/loading-spinner/loading-spinner.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 export interface GoviShopUser {
   id: string;
@@ -42,7 +44,9 @@ export class GovishopUsersComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private goviShopService: StakeholderService
+    private goviShopService: StakeholderService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit(): void {

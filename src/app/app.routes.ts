@@ -293,6 +293,7 @@ import { ViewAllShopsComponent } from './application/govi-shop/view-all-shops/vi
 import { ViewBranchDetailsComponent } from './application/govi-shop/view-branch-details/view-branch-details.component';
 import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branches-per-shop/view-branches-per-shop.component';
 import { ViewBranchProductsComponent } from './application/govi-shop/view-branch-products/view-branch-products.component';
+import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-branch.component';
 
 export const routes: Routes = [
   {
@@ -2129,6 +2130,7 @@ export const routes: Routes = [
                 path: 'all-govi-shops',
                 component: ViewAllShopsComponent,
               },
+
               {
                 path: 'all-shop-requests',
                 component: GovishopViewShopsComponent,
@@ -2147,7 +2149,7 @@ export const routes: Routes = [
               },
 
               {
-                path: 'preview-govi-shop/:id',
+                path: 'all-govi-shops/preview-govi-shop/:id',
                 component: GoviShopPreviewShopComponent,
               },
               {
@@ -2157,6 +2159,16 @@ export const routes: Routes = [
               {
                 path: 'view-branch-details/:id',
                 component: ViewBranchDetailsComponent,
+              },
+
+              {
+                path: 'all-branches',
+                component: ViewBranchesPerShopComponent,
+              },
+
+              {
+                path: 'edit-branch/:branchId',
+                component: EditBranchComponent,
               },
             ],
           },

@@ -22,7 +22,7 @@
         id="fromDate"
         [(ngModel)]="fromDate"
         (ngModelChange)="onFromDateChange()"
-        placeholder="YYYY/MM/DD"
+        placeholder="Select Date"
         [showIcon]="true"
         [showClear]="false"
         [showButtonBar]="true"
@@ -48,7 +48,7 @@
       <p-calendar
         id="toDate"
         [(ngModel)]="toDate"
-        placeholder="YYYY/MM/DD"
+        placeholder="Select Date"
         [showIcon]="true"
         [showClear]="false"
         [showButtonBar]="true"
@@ -251,7 +251,7 @@
           <td
             class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm"
           >
-            {{ item.dateTime }}
+            {{ item.dateTime | date:'yyyy-MM-dd hh:mm a' }}
           </td>
         </tr>
       </tbody>

@@ -85,8 +85,8 @@ export class GovishopUsersComponent implements OnInit {
             branch: item.branchName || 'N/A',
             phoneNumber: item.phone,
             email: item.email,
-            lastUpdatedBy: null,
-            lastUpdatedAt: null,
+            lastUpdatedBy: item.updatedBy,
+            lastUpdatedAt: item.updatedAt,
             joinedAt: new Date(item.createdAt)
           }));
         } else if (response && Array.isArray(response.data)) {
@@ -97,9 +97,10 @@ export class GovishopUsersComponent implements OnInit {
             branch: item.branchName || 'N/A',
             phoneNumber: item.phone,
             email: item.email,
-            lastUpdatedBy: null,
-            lastUpdatedAt: null,
+            lastUpdatedBy: item.updatedBy,
+            lastUpdatedAt: item.updatedAt,
             joinedAt: new Date(item.createdAt)
+
           }));
         } else if (Array.isArray(response)) {
           this.users = response.map((item: any) => ({
@@ -109,8 +110,8 @@ export class GovishopUsersComponent implements OnInit {
             branch: item.branchName || 'N/A',
             phoneNumber: item.phone,
             email: item.email,
-            lastUpdatedBy: null,
-            lastUpdatedAt: null,
+            lastUpdatedBy: item.updatedBy,
+            lastUpdatedAt: item.updatedAt,
             joinedAt: new Date(item.createdAt)
           }));
         } else {

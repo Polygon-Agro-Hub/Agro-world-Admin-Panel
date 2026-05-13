@@ -155,15 +155,13 @@ export class ViewAllShopsComponent implements OnInit {
 
   viewShopDetails(id: number): void {
     this.router.navigate(
-      ['steckholders/action/govi-shop-suppliers/govishop-view-shops/shop-details'],
-      { queryParams: { shopId: id } }
+      ['govi-shop/action/all-govi-shops/preview-govi-shop', id]
     );
   }
 
   editShop(id: number): void {
     this.router.navigate(
-      ['steckholders/action/govi-shop-suppliers/govishop-view-shops/edit-shop'],
-      { queryParams: { shopId: id } }
+      ['govi-shop/action/update-govi-shop', id]
     );
   }
 

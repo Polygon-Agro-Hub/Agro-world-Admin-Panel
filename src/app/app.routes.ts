@@ -2130,15 +2130,22 @@ export const routes: Routes = [
               },
               {
                 path: 'all-govi-shops',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all govi shops' },
                 component: ViewAllShopsComponent,
+                
               },
 
               {
                 path: 'all-shop-requests',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all shop requests' },
                 component: GovishopViewShopsComponent,
               },
               {
                 path: 'all-branches-pershop',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View branches per shop' },
                 component: ViewBranchesPerShopComponent,
               },
               {
@@ -2147,15 +2154,21 @@ export const routes: Routes = [
               },
               {
                 path: 'update-govi-shop/:id',
+                canActivate: [PermissionGuard],
+                data: { permission: 'edit govi shop' },
                 component: UpdateGoviShopComponent,
               },
 
               {
                 path: 'all-govi-shops/preview-govi-shop/:id',
+                canActivate: [PermissionGuard],
+                data: { permission: 'preview govi shop' },
                 component: GoviShopPreviewShopComponent,
               },
               {
                 path: 'deleted-suppliers',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all deleted suppliers' },
                 component: AllDeletedSuppliersComponent,
               },
               {
@@ -2165,6 +2178,8 @@ export const routes: Routes = [
 
               {
                 path: 'all-branches',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all branches' },
                 component: ViewBranchesPerShopComponent,
               },
 

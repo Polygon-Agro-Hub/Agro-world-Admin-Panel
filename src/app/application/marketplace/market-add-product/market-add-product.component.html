@@ -95,6 +95,8 @@
         </div>
       </div>
 
+      <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
+
       <div class="mb-6" *ngIf="productObj.promo">
         <label class="text-[#534E4E] dark:text-textDark">Display Type *</label>
         <!-- <select id="displaytype" name="displaytype" (change)="changeType()" [(ngModel)]="productObj.displaytype"
@@ -116,7 +118,10 @@
         <div *ngIf="displayTypeField.invalid && displayTypeField.touched" class="text-red-500 text-sm mt-1">
           Display Type is required.
         </div>
+        <div class="border-t border-gray-300 dark:border-gray-600 my-10"></div>
       </div>
+
+      
 
       <div class="mb-6" *ngIf="
     (productObj.displaytype === 'D&AP' ||

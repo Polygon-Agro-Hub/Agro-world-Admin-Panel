@@ -287,7 +287,7 @@
             <p *ngIf="
                 productObj.displaytype === 'D&AP' && productObj.salePrice !== 0
               " class="text-[#00957D] my-1 text-base font-[500]">
-              Rs.{{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
+              Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
             </p>
 
             <p *ngIf="
@@ -295,7 +295,7 @@
                   productObj.displaytype === 'AP&SP&D') &&
                 productObj.salePrice !== 0
               " class="text-[#787878] my-1 line-through text-base ">
-              Rs.{{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
+              Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
             </p>
           </div>
 

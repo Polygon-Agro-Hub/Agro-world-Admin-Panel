@@ -293,7 +293,7 @@
             <div *ngIf="
               productObj.displaytype === 'AP&SP' ||
               productObj.displaytype === 'AP&SP&D'
-            " class="text-xl text-[#00957D] my-1">
+            " class="text-[16px] text-[#00957D] my-1">
               <p *ngIf="productObj.salePrice === 0">Rs.0.00</p>
               <p *ngIf="productObj.salePrice !== 0">
                 Rs. {{ (productObj.salePrice * productObj.startValue) || 0 | number:'1.2-2' }}
@@ -305,7 +305,7 @@
                 (productObj.displaytype === 'AP&SP' ||
                   productObj.displaytype === 'AP&SP&D') &&
                 productObj.salePrice !== 0
-              " class="text-[#787878] my-1 line-through text-base ">
+              " class="text-[#787878] my-1 line-through text-[12px] ">
             Rs. {{ (productObj.normalPrice * productObj.startValue) || 0 | number:'1.2-2' }}
           </p>
           <button class="flex flex-row justify-between shadow-xl border rounded-lg px-7 py-1 mb-10">

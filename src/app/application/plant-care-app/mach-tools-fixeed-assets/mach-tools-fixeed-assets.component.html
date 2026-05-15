@@ -39,6 +39,7 @@
       <thead>
         <tr>
           <th class="px-6 py-3 font-normal text-gray-500 dark:text-textDark text-left">Asset Name</th>
+          <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap ">Asset Type</th>
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap ">Other Type</th>
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap ">No.of Units</th>
           <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center whitespace-nowrap">Unit Price</th>
@@ -50,6 +51,7 @@
       <tbody>
         <tr *ngFor="let item of fixedAssetB">
           <td class="px-6 py-3 text-gray-500 dark:text-textDark text-left">{{ item.asset || 'NULL' }}</td>
+          <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.assetType || 'NULL' }}</td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.mentionOther || 'NULL' }}</td>
           <td class="px-4 py-3 text-gray-500 dark:text-textDark text-center">{{ item.numberOfUnits || 'NULL' }}</td>
       <td class="px-4 py-3 text-gray-500 dark:text-textDark whitespace-nowrap text-center">

@@ -6,25 +6,25 @@
 </button>
 
 <div class="pt-5 pr-12 pl-12 pb-5 w-100 bg-white dark:bg-tileBlack shadow-lg rounded-lg">
-    <p class="text-textLight dark:text-textDark text-xl py-8">
+    <p class="text-[#000000] dark:text-textDark text-xl py-8">
         {{name}} - {{farmName}}
     </p>
     <div *ngIf="assertReport.length > 0; else noData" class="flex justify-center overflow-x-auto">
         <table class="w-full divide-y divide-gray-200">
             <thead>
                 <tr>
-                    <th class=" py-3 font-normal text-gray-500 dark:text-textDark text-left">Category</th>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">Total Price (LKR)
+                    <th class=" py-3 font-normal text-[#5C5C5C] dark:text-textDark text-left">Category</th>
+                    <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">Total Price (LKR)
                     </th>
-                    <th class="px-4 py-3 font-normal text-gray-500 dark:text-textDark text-center">View</th>
+                    <th class="px-4 py-3 font-normal text-[#5C5C5C] dark:text-textDark text-center">View</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let assert of assertReport">
-                    <td class=" py-3 text-start dark:text-textDark">
+                    <td class=" py-3 text-start text-[#000000] dark:text-textDark">
                         {{assert.category}}
                     </td>
-                    <td class="px-4 py-3 dark:text-textDark text-center">
+                    <td class="px-4 py-3 text-[#000000] dark:text-textDark text-center">
                         {{ assert.totPrice | number:'1.0-2' }}
                     </td>
 

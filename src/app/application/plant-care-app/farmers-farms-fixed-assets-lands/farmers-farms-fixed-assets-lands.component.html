@@ -148,13 +148,13 @@
 
           <!-- Est. Value for Own Land -->
           <div class="grid grid-cols-[180px_10px_1fr] gap-x-4 items-start"
-            *ngIf="ownershipType === 'Own' && ownLandDetails.estimateValue">
-            <span class="text-black dark:text-gray-300">Est. Value</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium">
-              Rs. {{ ownLandDetails.estimateValue | number: "1.0-0" }}
-            </span>
-          </div>
+     *ngIf="ownershipType === 'Own' && ownLandDetails.estimateValue">
+    <span class="text-black dark:text-gray-300">Est. Value</span>
+    <span class="text-gray-500 dark:text-gray-400">:</span>
+    <span class="text-black dark:text-textDark font-medium">
+        Rs. {{ ownLandDetails.estimateValue | number: "1.2-2" }}
+    </span>
+</div>
 
           <!-- Lease Amount -->
           <div class="grid grid-cols-[180px_10px_1fr] gap-x-4 items-start"

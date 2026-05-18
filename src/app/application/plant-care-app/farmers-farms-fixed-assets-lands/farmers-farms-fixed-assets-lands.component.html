@@ -148,13 +148,13 @@
 
           <!-- Est. Value for Own Land -->
           <div class="grid grid-cols-[180px_10px_1fr] gap-x-4 items-start"
-            *ngIf="ownershipType === 'Own' && ownLandDetails.estimateValue">
-            <span class="text-black dark:text-gray-300">Est. Value</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium">
-              Rs. {{ ownLandDetails.estimateValue | number: "1.0-0" }}
-            </span>
-          </div>
+     *ngIf="ownershipType === 'Own' && ownLandDetails.estimateValue">
+    <span class="text-black dark:text-gray-300">Est. Value</span>
+    <span class="text-gray-500 dark:text-gray-400">:</span>
+    <span class="text-black dark:text-textDark font-medium">
+        Rs. {{ ownLandDetails.estimateValue | number: "1.2-2" }}
+    </span>
+</div>
 
           <!-- Lease Amount -->
           <div class="grid grid-cols-[180px_10px_1fr] gap-x-4 items-start"
@@ -162,7 +162,7 @@
             <span class="text-black dark:text-gray-300">Annual Leased Fee</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-medium">
-              Rs. {{ leaseDeatils.leastAmountAnnually | number: "1.0-0" }}
+              Rs. {{ leaseDeatils.leastAmountAnnually | number: "1.2-2" }}
             </span>
           </div>
 
@@ -196,7 +196,7 @@
             <span class="text-black dark:text-gray-300">Annual Permit Fee</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-medium">
-              Rs. {{ ownershipDetails?.permitFeeAnnually | number: "1.0-0" }}
+              Rs. {{ ownershipDetails?.permitFeeAnnually | number: "1.2-2" }}
             </span>
           </div>
 
@@ -206,7 +206,7 @@
             <span class="text-black dark:text-gray-300">Payment Annually</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-medium">
-              Rs. {{ sharedLandDetails.paymentAnnually | number: "1.0-0" }}
+              Rs. {{ sharedLandDetails.paymentAnnually | number: "1.2-2" }}
             </span>
           </div>
 

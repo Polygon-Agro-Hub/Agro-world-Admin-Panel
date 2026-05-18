@@ -7,6 +7,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { StakeholderService } from '../../../../services/stakeholder/stakeholder.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import Swal from 'sweetalert2';
+import { PermissionService } from '../../../../services/roles-permission/permission.service';
+import { TokenService } from '../../../../services/token/services/token.service';
 
 export interface Supplier {
   id: number;
@@ -53,6 +55,7 @@ export class ViewGovishopSupliersComponent implements OnInit {
 
   hasData: boolean = false;
   textAreaTouched: boolean = false;
+  urlSegment: string = '';
 
   planOptions = [
     { label: 'Standard', value: 'Standard' },
@@ -64,7 +67,9 @@ export class ViewGovishopSupliersComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private goviShopService: StakeholderService
+    private goviShopService: StakeholderService,
+    public tokenService: TokenService,
+    public permissionService: PermissionService,
   ) {}
 
   ngOnInit(): void {

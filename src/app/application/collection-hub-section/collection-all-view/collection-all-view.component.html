@@ -5,7 +5,7 @@
   Back
 </button>
 <button *ngIf="
-    (urlSegment === 'collection-hub' && permissionService.hasPermission('Add Collection Center')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Onboard Collection Centre')) ||
+    (urlSegment === 'collection-hub' && permissionService.hasPermission('Add Collection Center to table')) || (urlSegment === 'steckholders' && permissionService.hasPermission('Onboard Collection Centre')) ||
     tokenService.getUserDetails().role === '1'
   " class="bg-[#3980C0] text-white font-medium py-2 px-5 rounded text-lg flex mb-5 items-center" (click)="add()">
   <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

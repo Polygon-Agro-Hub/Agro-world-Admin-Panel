@@ -271,11 +271,13 @@ export class CollectionOfficerReportViewComponent implements OnInit, OnDestroy {
       // ✅ FIX 1: chartStartY dynamically derived from legendY so they never overlap
       const chartStartY = legendY + legendBoxSize + 8;
   
-      // ✅ FIX 2: Y-axis title is centred within the label column and tracks chart midpoint
-      const totalChartHeight = groupedData.length * rowGap;
-      const chartMidY = chartStartY + totalChartHeight / 2;
-      const yAxisTitleX = 15 + labelAreaWidth / 2;  // horizontal centre of the label column
-      doc.setFontSize(9);
+      const yAxisTotalHeight = groupedData.length * rowGap + 2;
+      const bottomGap = rowGap - barHeight + 2; // gap after last bar to axis line (~7mm)
+      const chartMidY = chartStartY + yAxisTotalHeight / 2 + bottomGap / (2 * groupedData.length);
+      const yAxisTitleX = 15 + labelAreaWidth / 2;
+      const textWidthInMm = (doc.getStringUnitWidth('Crop Variety') * 9) / doc.internal.scaleFactor;
+      const yLabelFontSize = textWidthInMm <= yAxisTotalHeight ? 9 : Math.max(5, (yAxisTotalHeight / textWidthInMm) * 9);
+      doc.setFontSize(yLabelFontSize);
       doc.setTextColor(0, 0, 0);
       doc.text('Crop Variety', yAxisTitleX, chartMidY, { angle: 90, align: 'center' });
   

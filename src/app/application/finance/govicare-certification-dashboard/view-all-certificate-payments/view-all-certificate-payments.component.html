@@ -7,7 +7,7 @@
 
 <!-- Header Section with Title and Filters -->
 <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-8 mb-6">
-  <h2 class="text-2xl font-normal text-textLight dark:text-textDark mb-8">
+  <h2 class="text-[24px] font-[600] text-[#000000] dark:text-textDark mb-8">
     Certification Payments
   </h2>
 
@@ -15,14 +15,14 @@
   <div class="flex items-center gap-4">
     <div class="flex items-center gap-3">
       <label
-        class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[45px]"
+        class="text-[18px] text-[#000000] font-[400] dark:text-textDark whitespace-nowrap min-w-[45px]"
         >From:</label
       >
       <p-calendar
         id="fromDate"
         [(ngModel)]="fromDate"
         (ngModelChange)="onFromDateChange()"
-        placeholder="YYYY/MM/DD"
+        placeholder="Select Date"
         [showIcon]="true"
         [showClear]="false"
         [showButtonBar]="true"
@@ -42,13 +42,13 @@
 
     <div class="flex items-center gap-3">
       <label
-        class="text-sm font-medium text-gray-700 dark:text-textDark whitespace-nowrap min-w-[30px]"
+        class="text-[18px] text-[#000000] font-[400]  dark:text-textDark whitespace-nowrap min-w-[30px]"
         >To:</label
       >
       <p-calendar
         id="toDate"
         [(ngModel)]="toDate"
-        placeholder="YYYY/MM/DD"
+        placeholder="Select Date"
         [showIcon]="true"
         [showClear]="false"
         [showButtonBar]="true"
@@ -70,7 +70,7 @@
 
     <button
       (click)="applyDateFilter()"
-      class="bg-[#3980C0] text-white px-8 py-2 rounded-md hover:bg-[#2c6ba0] transition duration-200 h-10 ml-2"
+      class="text-[16px] font-[500] bg-[#3980C0] text-white px-8 py-2 rounded-md hover:bg-[#2c6ba0] transition duration-200 h-10 ml-2"
     >
       Go
     </button>
@@ -81,7 +81,7 @@
 <div class="bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg p-8">
   <div class="flex justify-between items-center mb-6">
     <div class="flex items-center">
-      <h3 class="text-lg font-normal text-textLight dark:text-textDark">
+      <h3 class="text-[20px] font-[600] text-[#000000] dark:text-textDark">
         All ({{ totalItems | number: "2.0-0" }})
       </h3>
     </div>
@@ -168,34 +168,34 @@
   <div *ngIf="hasData" class="overflow-x-auto">
     <table class="w-full divide-y divide-gray-200">
       <thead>
-        <tr class="border-b border-gray-200 dark:border-gray-700">
+        <tr class="border-b  border-gray-200 dark:border-gray-700">
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm"
+            class="px-4 py-3 text-left font-[400] dark:text-textDark text-[#5C5C5C] text-[16px]"
           >
             No
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm"
+            class="px-4 py-3 text-left font-[400] dark:text-textDark text-[#5C5C5C] text-[16px]"
           >
             Transaction ID
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm"
+            class="px-4 py-3 text-left font-[400] dark:text-textDark text-[#5C5C5C] text-[16px]"
           >
-            Farmer Name / Cluster Name
+            Farmer Name
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm"
+            class="px-4 py-3 text-left font-[400] dark:text-textDark text-[#5C5C5C] text-[16px]"
           >
             Validity Period
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm"
+            class="px-4 py-3 text-left font-[400] dark:text-textDark text-[#5C5C5C] text-[16px]"
           >
             Amount (Rs.)
           </th>
           <th
-            class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left text-sm"
+            class="px-4 py-3 text-left font-[400] dark:text-textDark text-[#5C5C5C] text-[16px]"
           >
             Date & Time
           </th>
@@ -215,17 +215,17 @@
           "
         >
           <td
-            class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm"
+            class="px-4 py-4 text-left text-[#000000] font-[400] text-[16px] dark:text-textDark "
           >
             {{ (page - 1) * itemsPerPage + i + 1 }}
           </td>
           <td
-            class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm"
+            class="px-4 py-4 text-left text-[#000000] font-[400] text-[16px] dark:text-textDark"
           >
             {{ item.transactionId }}
           </td>
           <td
-            class="px-4 py-4 text-left text-sm"
+            class="px-4 py-4 text-left text-[16px] font-[400]"
             [ngClass]="{
               'text-[#000000]': item.payType === 'Farm',
               'text-[#395FBD]': item.payType === 'Cluster',
@@ -235,7 +235,7 @@
             {{ item.farmerName }}
           </td>
           <td
-            class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm"
+            class="px-4 py-4 text-left text-[#000000] font-[500] text-[16px] dark:text-textDark"
           >
             <span
               [ngClass]="{ 'text-red-500': item.validityPeriod === 'Expired' }"
@@ -244,14 +244,14 @@
             </span>
           </td>
           <td
-            class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm"
+            class="px-4 py-4 text-left text-[#3E3E3E] font-[500] text-[14px] dark:text-textDark"
           >
             {{ item.amount }}
           </td>
           <td
-            class="px-4 py-4 text-left text-textLight dark:text-textDark text-sm"
+            class="px-4 py-4 text-left text-[#3E3E3E] font-[500] text-[14px] dark:text-textDark"
           >
-            {{ item.dateTime }}
+            {{ item.dateTime | date:'yyyy-MM-dd hh:mm a' }}
           </td>
         </tr>
       </tbody>

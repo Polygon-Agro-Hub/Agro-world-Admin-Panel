@@ -101,9 +101,9 @@
             <span class="text-black dark:text-gray-300 min-w-28">Duration</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-medium flex-1">
-              <span *ngIf="ownershipDetails?.durationYears">{{ ownershipDetails?.durationYears }} years</span>
+              <span *ngIf="ownershipDetails?.durationYears">{{ ownershipDetails?.durationYears }} Year</span>
               <span *ngIf="ownershipDetails?.durationYears && ownershipDetails?.durationMonths"> </span>
-              <span *ngIf="ownershipDetails?.durationMonths">   {{ ownershipDetails?.durationMonths }} months</span>
+              <span *ngIf="ownershipDetails?.durationMonths">   {{ ownershipDetails?.durationMonths }} Month</span>
             </span>
           </div>
 
@@ -119,7 +119,7 @@
 
           <!-- Issued Date for Permit Building -->
           <div class="flex items-start space-x-4"
-            *ngIf="ownershipType === 'Permit Building' && ownershipDetails?.issuedDate">
+            *ngIf="ownershipType === 'Permitted Building' && ownershipDetails?.issuedDate">
             <span class="text-black dark:text-gray-300  min-w-28">Issued Date</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-medium flex-1">
@@ -127,15 +127,7 @@
             </span>
           </div>
 
-          <!-- Permit Fee for Permit Building -->
-          <div class="flex items-start space-x-4"
-            *ngIf="ownershipType === 'Permit Building' && ownershipDetails?.permitFeeAnnually">
-            <span class="text-black dark:text-gray-300  min-w-28">Permit Fee</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              Rs. {{ ownershipDetails?.permitFeeAnnually| number:'1.0-2' }}
-            </span>
-          </div>
+          
 
           <!-- Payment for Shared/No Ownership -->
           <div class="flex items-start space-x-4"
@@ -150,34 +142,44 @@
 
         <!-- Right Column -->
         <div class="space-y-6">
-          <!-- Type -->
-          <div class="flex items-start space-x-4">
-            <span class="text-black dark:text-gray-300  min-w-28">Type</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              {{ buildingDetails?.type || 'N/A' }}
-            </span>
-          </div>
+  <!-- Type -->
+  <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
+    <span class="text-black dark:text-gray-300">Type</span>
+    <span class="text-gray-500 dark:text-gray-400">:</span>
+    <span class="text-black dark:text-textDark font-medium">
+      {{ buildingDetails?.type || 'N/A' }}
+    </span>
+  </div>
 
-          <!-- Floor Area -->
-          <div class="flex items-start space-x-4">
-            <span class="text-black dark:text-gray-300  min-w-28">Floor Area</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              <span *ngIf="buildingDetails?.floorArea">{{ buildingDetails?.floorArea | number:'1.0-2' }} sq. ft.</span>
-              <span *ngIf="!buildingDetails?.floorArea">N/A</span>
-            </span>
-          </div>
+  <!-- Floor Area -->
+  <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
+    <span class="text-black dark:text-gray-300">Floor Area</span>
+    <span class="text-gray-500 dark:text-gray-400">:</span>
+    <span class="text-black dark:text-textDark font-medium">
+      <span *ngIf="buildingDetails?.floorArea">{{ buildingDetails?.floorArea | number:'1.0-2' }} sq. ft.</span>
+      <span *ngIf="!buildingDetails?.floorArea">N/A</span>
+    </span>
+  </div>
 
-          <!-- General Condition -->
-          <div class="flex items-start space-x-4">
-            <span class="text-black dark:text-gray-300 min-w-28">General Condition</span>
-            <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              {{ buildingDetails?.generalCondition || 'N/A' }}
-            </span>
-          </div>
-        </div>
+  <!-- Permit Fee for Permit Building -->
+  <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
+    *ngIf="ownershipType === 'Permitted Building' && ownershipDetails?.permitFeeAnnually">
+    <span class="text-black dark:text-gray-300">Annual Permit Fee</span>
+    <span class="text-gray-500 dark:text-gray-400">:</span>
+    <span class="text-black dark:text-textDark font-medium">
+      Rs. {{ ownershipDetails?.permitFeeAnnually| number:'1.0-2' }}
+    </span>
+  </div>
+
+  <!-- General Condition -->
+  <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
+    <span class="text-black dark:text-gray-300">General Condition</span>
+    <span class="text-gray-500 dark:text-gray-400">:</span>
+    <span class="text-black dark:text-textDark font-medium">
+      {{ buildingDetails?.generalCondition || 'N/A' }}
+    </span>
+  </div>
+</div>
       </div>
     </div>
 

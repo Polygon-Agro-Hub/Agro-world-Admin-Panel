@@ -128,7 +128,7 @@ export class GovishopService {
   }
 
   getBranchesByShopId(
-    shopId: number,
+    shopId: number | null,
     page: number = 1,
     limit: number = 10,
     province?: string,
@@ -202,6 +202,32 @@ getProductsByBranchId(
     { headers: this.getHeaders(), params }
   );
 }
+
+getBranchForUpdate(id: number) {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<any>(`${this.apiUrl}get-branch-for-update/${id}`, {
+      headers,
+    });
+  }
+
+
+updateBranchData(shopData: any): Observable<any> {
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post(`${this.apiUrl}update-govi-shop-branch`,
+    shopData,
+      {
+        headers
+      });
+}
+
+
 }
 
 export interface BranchDetailsShopInfo {

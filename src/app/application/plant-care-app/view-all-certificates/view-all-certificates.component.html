@@ -22,7 +22,7 @@
   >
     <div class="flex items-center justify-between mb-2">
       <h2 class="text-2xl font-normal text-textLight dark:text-textDark">
-        View Certificates
+        View Certificates ({{ (certificateArr.length || 0) < 10 ? '0' + (certificateArr.length || 0) : (certificateArr.length || 0) }})
       </h2>
 
       <div class="flex flex-row gap-x-3 items-center justify-center">
@@ -108,7 +108,7 @@
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"
             >
-              No ({{ certificateArr.length | number : "2.0" }})
+              No
             </th>
             <th
               class="px-4 py-3 font-normal text-textLight dark:text-textDark text-left"

@@ -293,6 +293,7 @@ import { ViewAllShopsComponent } from './application/govi-shop/view-all-shops/vi
 import { ViewBranchDetailsComponent } from './application/govi-shop/view-branch-details/view-branch-details.component';
 import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branches-per-shop/view-branches-per-shop.component';
 import { ViewBranchProductsComponent } from './application/govi-shop/view-branch-products/view-branch-products.component';
+import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-branch.component';
 
 export const routes: Routes = [
   {
@@ -1100,6 +1101,8 @@ export const routes: Routes = [
               },
               {
                 path: 'govi-shop-suppliers',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View GoViShop Suppliers' },
                 children: [
                   {
                     path: '',
@@ -2127,14 +2130,22 @@ export const routes: Routes = [
               },
               {
                 path: 'all-govi-shops',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all govi shops' },
                 component: ViewAllShopsComponent,
+                
               },
+
               {
                 path: 'all-shop-requests',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all shop requests' },
                 component: GovishopViewShopsComponent,
               },
               {
                 path: 'all-branches-pershop',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View branches per shop' },
                 component: ViewBranchesPerShopComponent,
               },
               {
@@ -2143,20 +2154,38 @@ export const routes: Routes = [
               },
               {
                 path: 'update-govi-shop/:id',
+                canActivate: [PermissionGuard],
+                data: { permission: 'edit govi shop' },
                 component: UpdateGoviShopComponent,
               },
 
               {
-                path: 'preview-govi-shop/:id',
+                path: 'all-govi-shops/preview-govi-shop/:id',
+                canActivate: [PermissionGuard],
+                data: { permission: 'preview govi shop' },
                 component: GoviShopPreviewShopComponent,
               },
               {
                 path: 'deleted-suppliers',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all deleted suppliers' },
                 component: AllDeletedSuppliersComponent,
               },
               {
                 path: 'view-branch-details/:id',
                 component: ViewBranchDetailsComponent,
+              },
+
+              {
+                path: 'all-branches',
+                canActivate: [PermissionGuard],
+                data: { permission: 'View all branches' },
+                component: ViewBranchesPerShopComponent,
+              },
+
+              {
+                path: 'edit-branch/:branchId',
+                component: EditBranchComponent,
               },
             ],
           },

@@ -51,7 +51,7 @@
 
         </div>
 
-        <div class="flex flex-row gap-4 items-start" *ngIf="urlSegment === 'govi-shop-suppliers' ">
+        <div class="flex flex-row gap-4 items-start" *ngIf="urlSegment === 'govi-shop-suppliers' || urlSegment === 'all-govi-shops'">
           
           <div *ngIf="officerObj.isActive === 1" >
             <button class="text-lg cursor-default font-medium px-3 py-1 text-center w-32 bg-[#BBFFC6] text-[#308233] rounded-xl shadow-lg">
@@ -206,7 +206,7 @@
         <div>
           <p class="text-[#627189]">Approved By</p>
           <p class="text-[#030308] font-[500] dark:text-[#ffffff]">
-            {{ officerObj.approvedBy || '----' }}
+            {{ officerObj.approvedBY || '----' }}
           </p>
         </div>
 

@@ -199,11 +199,21 @@
             Shop Name
           </th>
           <th
+          *ngIf="
+                permissionService.hasPermission('View branches per shop') ||
+                tokenService.getUserDetails().role === '1'
+            "
+
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
           >
             Branches
           </th>
           <th
+          *ngIf="
+                permissionService.hasPermission('change shop active status') ||
+                tokenService.getUserDetails().role === '1'
+            "
+
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
           >
             Active Status
@@ -239,9 +249,21 @@
             Last Updated At
           </th>
           <th
+          *ngIf="
+                permissionService.hasPermission('preview govi shop') ||
+                tokenService.getUserDetails().role === '1'
+            "
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
           >
             Details
+          </th>
+          <th
+          *ngIf="
+                permissionService.hasPermission('edit govi shop') ||
+                tokenService.getUserDetails().role === '1'
+            "
+            class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
+          >
           </th>
         </tr>
       </thead>
@@ -287,8 +309,14 @@
             </span>
           </td>
 
-          <td class="py-3 px-3 text-center">
+          <td 
+          *ngIf="
+                permissionService.hasPermission('View branches per shop') ||
+                tokenService.getUserDetails().role === '1'
+            "
+          class="py-3 px-3 text-center">
             <button
+            
               class="text-blue-500 hover:text-blue-600 flex items-center justify-center mx-auto"
               title="View Branches"
               (click)="viewBranches(shop)"
@@ -311,7 +339,12 @@
             </button>
           </td>
 
-          <td class="py-3 px-3 text-center">
+          <td 
+          *ngIf="
+                permissionService.hasPermission('change shop active status') ||
+                tokenService.getUserDetails().role === '1'
+            "
+            class="py-3 px-3 text-center">
             <div class="flex justify-center">
               <button
                 type="button"
@@ -369,7 +402,12 @@
             <span *ngIf="!shop.updatedAt">----</span>
           </td>
 
-          <td class="py-3 px-3 text-center">
+          <td 
+          *ngIf="
+                permissionService.hasPermission('preview govi shop') ||
+                tokenService.getUserDetails().role === '1'
+            "
+          class="py-3 px-3 text-center">
             <button
               class="text-blue-500 hover:text-blue-600 flex items-center justify-center mx-auto"
               title="View Details"
@@ -393,7 +431,12 @@
             </button>
           </td>
 
-          <td class="py-3 px-3 text-center">
+          <td 
+          *ngIf="
+                permissionService.hasPermission('edit govi shop') ||
+                tokenService.getUserDetails().role === '1'
+            "
+          class="py-3 px-3 text-center">
             <button
               class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center mx-auto"
               title="Edit Shop"

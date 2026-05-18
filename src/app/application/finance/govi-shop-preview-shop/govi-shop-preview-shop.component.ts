@@ -988,7 +988,7 @@ class GoViShop {
   mobileNumber!:string;
   updatedAt!:string;
   updatedBy!:string;
-  approvedBy!:string;
+  approvedBY!:string;
   approvedAt!:string;
   logo!: string;
   shopTypeImg!: string;

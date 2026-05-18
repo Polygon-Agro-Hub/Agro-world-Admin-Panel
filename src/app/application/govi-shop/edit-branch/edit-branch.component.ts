@@ -3,14 +3,15 @@ import { LoadingSpinnerComponent } from '../../../components/loading-spinner/loa
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { DropdownModule } from 'primeng/dropdown';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { StakeholderService } from '../../../services/stakeholder/stakeholder.service';
+import { GovishopService } from '../../../services/govi-shop/govishop.service';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 
 @Component({
-  selector: 'app-govi-shop-pos-user-edit',
+  selector: 'app-edit-branch',
   standalone: true,
   imports: [
     CommonModule,
@@ -19,12 +20,12 @@ import { StakeholderService } from '../../../services/stakeholder/stakeholder.se
     FormsModule,
     DropdownModule,
   ],
-  templateUrl: './govi-shop-pos-user-edit.component.html',
-  styleUrl: './govi-shop-pos-user-edit.component.css'
+  templateUrl: './edit-branch.component.html',
+  styleUrl: './edit-branch.component.css'
 })
-export class GoviShopPosUserEditComponent implements OnInit {
+export class EditBranchComponent implements OnInit {
 
-  userObj: User = new User();
+  branchObj: Branch = new Branch();
 
   errorMessage: string = '';
   isLoading = false;
@@ -32,53 +33,86 @@ export class GoviShopPosUserEditComponent implements OnInit {
   hasLeadingOrTrailingSpaces: boolean = false;
 
   isVerification: boolean = false;
-  
+  otpDigits: string = ''
+  referenceId: string = ''
+
+  timer: any;
+  timeLeft = 600; 
+  displayTime = '10:00';
+  canResend = false;
+
+  branchId!: number;
+  districtOptions: any[] = [];
+
   id!: number;
-  branchData: Branch[] = [];
-  branchOptions: any[] = [];
+
+  districts = [
+    { name: 'Ampara', province: 'Eastern' },
+    { name: 'Anuradhapura', province: 'North Central' },
+    { name: 'Badulla', province: 'Uva' },
+    { name: 'Batticaloa', province: 'Eastern' },
+    { name: 'Colombo', province: 'Western' },
+    { name: 'Galle', province: 'Southern' },
+    { name: 'Gampaha', province: 'Western' },
+    { name: 'Hambantota', province: 'Southern' },
+    { name: 'Jaffna', province: 'Northern' },
+    { name: 'Kalutara', province: 'Western' },
+    { name: 'Kandy', province: 'Central' },
+    { name: 'Kegalle', province: 'Sabaragamuwa' },
+    { name: 'Kilinochchi', province: 'Northern' },
+    { name: 'Kurunegala', province: 'North Western' },
+    { name: 'Mannar', province: 'Northern' },
+    { name: 'Matale', province: 'Central' },
+    { name: 'Matara', province: 'Southern' },
+    { name: 'Monaragala', province: 'Uva' },
+    { name: 'Mullaitivu', province: 'Northern' },
+    { name: 'Nuwara Eliya', province: 'Central' },
+    { name: 'Polonnaruwa', province: 'North Central' },
+    { name: 'Puttalam', province: 'North Western' },
+    { name: 'Rathnapura', province: 'Sabaragamuwa' },
+    { name: 'Trincomalee', province: 'Eastern' },
+    { name: 'Vavuniya', province: 'Northern' },
+  ];
+
 
   constructor(
     private router: Router,
     private location: Location,
-    private goviShopService: StakeholderService,
+    private goviShopService: GovishopService,
     private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
 
-    this.route.queryParamMap.subscribe((params) => {
-      const id = params.get('id');
-      console.log('Query parameter ID:', id);
-      
-      this.id = Number(id);
-      console.log('id', this.id)
-      this.fetchPosUserById();
-      });
+    this.branchId = Number(this.route.snapshot.paramMap.get('branchId'));
+    this.setupDropdownOptions();
+    console.log('branchId', this.branchId)
+
+    this.fetchBranchById()
   }
 
-  fetchPosUserById(
-    id: number = this.id,
+  setupDropdownOptions() {
+    this.districts = this.districts.sort((a, b) =>
+      a.name.localeCompare(b.name),
+    );
+    this.districtOptions = this.districts.map((district) => ({
+      label: district.name,
+      value: district.name,
+    }));
+  }
+
+  fetchBranchById(
+    id: number = this.branchId,
   ) {
     this.isLoading = true;
-    this.goviShopService.getPosUserById(id)
+    this.goviShopService.getBranchForUpdate(id)
       .subscribe(
         (response) => {
           console.log('response', response)
 
           this.isLoading = false;
-
-          this.branchData = response.data.branches;
-
-          // Set branchOptions FIRST
-          this.branchOptions = this.branchData.map((branch) => ({
-            label: branch.branchName,
-            value: branch.id,
-          }));
-        
-          // Then assign userObj so the dropdown can match branchId against populated options
-          this.userObj = response.data.posUser
-
-          console.log('branchOptions', this.branchOptions)
+          this.branchObj = response.data
+          console.log('response', this.branchObj)
       
         },
         (error) => {
@@ -93,28 +127,32 @@ export class GoviShopPosUserEditComponent implements OnInit {
     form.form.markAllAsTouched();
 
     const missingFields: string[] = [];
-    if (!this.userObj.fullName) {
-      missingFields.push('User Name is required');
-    }
-
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
-
-    if (!this.userObj.email) {
-      missingFields.push('Email Address is required');
-    } else if (!emailPattern.test(this.userObj.email)) {
-      missingFields.push('Email Address must be a valid address');
-    }
-
-    if (!this.userObj.branchId) {
+    if (!this.branchObj.branchName) {
       missingFields.push('Branch Name is required');
+    }
+
+    if (!this.branchObj.address) {
+      missingFields.push('Branch address is required');
+    }
+
+    if (!this.branchObj.district) {
+      missingFields.push('District is required');
+    }
+
+    if (!this.branchObj.province) {
+      missingFields.push('Province is required');
     }
 
     const mobilePattern = /^[0-9]{10}$/;
 
-    if (!this.userObj.mobileNumber) {
-      missingFields.push('Phone Number is required');
-    } else if (!mobilePattern.test(this.userObj.mobileNumber)) {
-      missingFields.push('Phone Number must be a valid number');
+    if (!this.branchObj.mobilePhone) {
+      missingFields.push('Mobile Phone Number is required');
+    } else if (!mobilePattern.test(this.branchObj.mobilePhone)) {
+      missingFields.push('Mobile Phone Number must be a valid number');
+    }
+
+    if (!mobilePattern.test(this.branchObj.LandPhone) && this.branchObj.LandPhone) {
+      missingFields.push('Land Phone Number must be a valid number');
     }
 
 
@@ -142,17 +180,10 @@ export class GoviShopPosUserEditComponent implements OnInit {
       return;
     }
 
-    const roleText =
-    this.userObj.role === 'POS'
-      ? 'POS User'
-      : this.userObj.role === 'Manager'
-      ? 'Manager'
-      : 'User';
-
     Swal.fire({
       icon: 'info',
       title: 'Are you sure?',
-      text: `Do you really want to update this GoViShop ${roleText}?`,
+      text: 'Do you really want to update this GoVi Shop Branch?',
       showCancelButton: true,
       confirmButtonText: 'Yes, Update',
       cancelButtonText: 'No, Cancel',
@@ -165,8 +196,7 @@ export class GoviShopPosUserEditComponent implements OnInit {
       buttonsStyling: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log('object', this.userObj)
-        this.updatePOSUser();
+        this.updateBranch();
       } else {
         this.isLoading = false;
       }
@@ -174,25 +204,7 @@ export class GoviShopPosUserEditComponent implements OnInit {
   }
 
   onBack(): void {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Are you sure?',
-      text: 'You may lose the added data after going back!',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Go Back',
-      cancelButtonText: 'No, Keep Editing',
-      customClass: {
-        popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-        title: 'font-semibold text-lg',
-        htmlContainer: 'text-left',
-        confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-      },
-      buttonsStyling: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.location.back();
-      }
-    });
+    this.location.back();
   }
 
 onCancel(): void {
@@ -254,10 +266,9 @@ blockInvalidPasteForPhone(event: ClipboardEvent) {
 onTrimInput(event: any): void {
   const inputElement = event.target as HTMLInputElement;
   const trimmedValue = inputElement.value.trimStart();
-  this.userObj.email = trimmedValue;
+  this.branchObj.email = trimmedValue;
   inputElement.value = trimmedValue;
 }
-
 
 onFormatInput2(event: any): void {  //trim spaces only from start
   const inputElement = event.target as HTMLInputElement;
@@ -270,7 +281,22 @@ onFormatInput2(event: any): void {  //trim spaces only from start
     value = value.charAt(0).toUpperCase() + value.slice(1);
 
     // Update model
-    this.userObj.fullName = value;
+    this.branchObj.branchName = value;
+
+    // Update input box value
+    inputElement.value = value;
+  }
+}
+
+onFormatInput1(event: any): void {  //trim spaces only from start
+  const inputElement = event.target as HTMLInputElement;
+
+  if (inputElement && inputElement.value) {
+    // Trim spaces only at the start
+    let value = inputElement.value.trimStart();
+
+    // Update model
+    this.branchObj.address = value;
 
     // Update input box value
     inputElement.value = value;
@@ -299,19 +325,26 @@ onPhoneInput(event: Event) {
   input.dispatchEvent(new Event('input'));
 }
 
-updatePOSUser() {
-  const roleText =
-    this.userObj.role === 'POS'
-      ? 'POS User'
-      : this.userObj.role === 'Manager'
-      ? 'Manager'
-      : 'User';
+updateProvince(event: DropdownChangeEvent): void {
+    const selectedDistrict = event.value;
 
+    const selected = this.districts.find(
+      (district) => district.name === selectedDistrict,
+    );
+
+    if (selected) {
+        this.branchObj.province = selected.province;
+      } else {
+        this.branchObj.province = '';
+      }
+  }
+
+updateBranch() {
   this.isLoading = true;
   this.isVerification = false;
-  console.log('userObg', this.userObj)
-  this.goviShopService.updatePOSUser(
-    this.userObj,
+  console.log('branchObj',  this.branchObj)
+  this.goviShopService.updateBranchData(
+    this.branchObj,
     )
     .subscribe(
       (res) => {
@@ -320,23 +353,23 @@ updatePOSUser() {
           Swal.fire({
             icon: 'success',
             title: 'Success!',
-            text: `GoViShop ${roleText} Updated Successfully`,
+            text: 'GoViShop Branch Updated Successfully',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
               htmlContainer: 'text-left',
               confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-            }
-          },
-           
+            },
+          }
+            
           );
           this.location.back();
         } else {
           this.isLoading= false;
           Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: `GoViShop ${roleText} Update failed`,
+            title: 'Error!',
+            text: 'GoViShop Branch Update failed',
             customClass: {
               popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
               title: 'font-semibold text-lg',
@@ -354,10 +387,11 @@ updatePOSUser() {
         if (error.error && Array.isArray(error.error.errors)) {
           messages = error.error.errors.map((err: string) => {
             switch (err) {
-              case 'Email':
-                return 'Email already exists.';
-              case 'phone':
-                return 'Mobile Number is already exists.';
+              
+              case 'mobilePhone':
+                return 'Mobile Phone Number is already exists.';
+              case 'LandPhone':
+                return 'Land Phone Number is already exists.';
               default:
                 return 'Validation error: ' + err;
             }
@@ -377,10 +411,10 @@ updatePOSUser() {
             html: errorMessage,
             confirmButtonText: 'OK',
             customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
+              popup: 'bg-tileLight dark:bg-[#363636] text-black dark:text-white',
               title: 'font-semibold text-lg',
               htmlContainer: 'text-left',
-              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
+              confirmButton: 'bg-red-500 dark:bg-red-500 hover:bg-red-600 dark:hover:bg-red-700',
             },
           });
           return;
@@ -389,102 +423,17 @@ updatePOSUser() {
     );
 }
 
-resetPassword() {
-  const roleText =
-    this.userObj.role === 'POS'
-      ? 'POS User'
-      : this.userObj.role === 'Manager'
-      ? 'Manager'
-      : 'User';
-  Swal.fire({
-    title: 'Are you sure?',
-    text: `You are about to reset the ${roleText} password. This action cannot be undone.`,
-    icon: 'info',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, reset password!',
-    cancelButtonText: 'Cancel',
-    customClass: {
-      popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-      title: 'font-semibold text-lg',
-      htmlContainer: 'text-left',
-      confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-    },
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.isLoading = true;
 
-      this.goviShopService.resetPassword(this.userObj).subscribe(
-        (res) => {
-          this.isLoading = false;
-          if (res.status) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: `The ${roleText} password reseted successfully.`,
-              showConfirmButton: false,
-              timer: 3000,
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-                htmlContainer: 'text-left',
-                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-              },
-            });
-            this.location.back();
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error!',
-              text: 'Something went wrong. Please try again.',
-              showConfirmButton: false,
-              timer: 3000,
-              customClass: {
-                popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-                title: 'font-semibold text-lg',
-                htmlContainer: 'text-left',
-                confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-              },
-            });
-          }
-        },
-        () => {
-          this.isLoading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'An error occurred while resetting password. Please try again.',
-            showConfirmButton: false,
-            timer: 3000,
-            customClass: {
-              popup: 'bg-tileLight dark:bg-tileBlack text-black dark:text-white',
-              title: 'font-semibold text-lg',
-              htmlContainer: 'text-left',
-              confirmButton: 'bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700',
-            },
-          });
-        }
-      );
-    }
-  });
-}
-
-}
-
-class User {
-  id!: number;
-  fullName!: string;
-  email!: string;
-  mobileNumber!: string;
-  branchId!: number;
-  shopName!: string;
-  shopId!: number;
-  role!: string;
-  branchName!: string;
 }
 
 class Branch {
   id!: number;
   branchName!: string;
+  address!: string;
+  email!: string;
+  mobilePhone!: string;
+  LandPhone!: string;
+  district!: string;
+  province!: string;
 }
+

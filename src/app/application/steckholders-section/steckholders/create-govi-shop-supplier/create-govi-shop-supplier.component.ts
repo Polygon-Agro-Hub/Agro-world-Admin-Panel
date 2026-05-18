@@ -507,6 +507,8 @@ verifyOtp(): void {
             },   
           });
           this.otpValues = ['', '', '', '', ''];
+          this.inputs.toArray().forEach(input => input.nativeElement.value = '');
+          this.inputs.first?.nativeElement.focus();
         }
       },
       (error) => {
@@ -686,6 +688,8 @@ handleResend() {
   if (!this.canResend) return;
 
   console.log('Resend triggered');
+  this.inputs.toArray().forEach(input => input.nativeElement.value = '');
+  this.inputs.first?.nativeElement.focus();
   this.sendOtp();
   this.startTimer(); // restart countdown
 }

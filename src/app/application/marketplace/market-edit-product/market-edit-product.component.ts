@@ -157,19 +157,24 @@ getProduct() {
     console.log('product:', res);
     this.storedDisplayType = res.displaytype;
     this.productObj = res;
+    
+    // Ensure quantity fields retain their original decimal places
+    this.productObj.startValue = parseFloat(res.startValue);
+    this.productObj.changeby = parseFloat(res.changeby);
+    if (res.maxQuantity) {
+      this.productObj.maxQuantity = parseFloat(res.maxQuantity);
+    }
+    
     this.productObj.selectId = res.cropGroupId;
     this.selectedImage = res.image;
     this.templateKeywords.update(() => res.tags || []);
-    this.productObj.promo = !!res.promo; // Convert to boolean
-    // Call onCropChange to populate selectedVarieties
+    this.productObj.promo = !!res.promo;
     this.onCropChange();
-    // Ensure varietyId is set correctly
     this.productObj.varietyId = res.varietyId;
-    this.selectVerityImage(); // Update the selected image
+    this.selectVerityImage();
     this.calculeSalePrice();
-    console.log('this is product', this.productObj);
-    console.log('this is variety ID', this.productObj.varietyId);
-    console.log('selected varieties', this.selectedVarieties);
+    
+    console.log('Start value from DB:', this.productObj.startValue); // Should show 1.5, not 1.500
   });
 }
   getAllCropVerity() {

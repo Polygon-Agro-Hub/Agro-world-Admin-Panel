@@ -226,6 +226,20 @@ updateBranchData(shopData: any): Observable<any> {
         headers
       });
 }
+getAllRemovedShops(
+  businessType?: string | null,
+  searchItem?: string | null,
+): Observable<{ results: any[]; total: number }> {
+  let params = new HttpParams();
+
+  if (businessType) params = params.set('businessType', businessType);
+  if (searchItem) params = params.set('searchItem', searchItem);
+
+  return this.http.get<{ results: any[]; total: number }>(
+    `${this.apiUrl}get-all-removed-shops`,
+    { headers: this.getHeaders(), params },
+  );
+}
 
 
 }

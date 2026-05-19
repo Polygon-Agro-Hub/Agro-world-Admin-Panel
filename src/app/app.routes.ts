@@ -294,6 +294,7 @@ import { ViewBranchDetailsComponent } from './application/govi-shop/view-branch-
 import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branches-per-shop/view-branches-per-shop.component';
 import { ViewBranchProductsComponent } from './application/govi-shop/view-branch-products/view-branch-products.component';
 import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-branch.component';
+import { ViewDeleteShopsComponent } from './application/govi-shop/view-delete-shops/view-delete-shops.component';
 
 export const routes: Routes = [
   {
@@ -2187,6 +2188,10 @@ export const routes: Routes = [
                 path: 'edit-branch/:branchId',
                 component: EditBranchComponent,
               },
+              
+              { path: 'view-delete-shops',
+                component: ViewDeleteShopsComponent,
+              }
             ],
           },
         ],

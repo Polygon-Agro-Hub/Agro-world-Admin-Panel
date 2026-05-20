@@ -269,7 +269,7 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let shop of shops; let i = index"
+          *ngFor="let shop of shops | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"
           class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           <td class="py-3 px-3 text-[#000000] dark:text-textDark">

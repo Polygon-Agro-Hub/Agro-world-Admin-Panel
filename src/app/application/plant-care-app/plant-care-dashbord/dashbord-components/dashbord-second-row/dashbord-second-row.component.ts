@@ -6,7 +6,7 @@ interface DashboardData {
   active_users: any;
   new_users: number;
   vegCultivation: number;
-  grainCultivation: number;
+  cerealsCultivation: number;
   fruitCultivation: number;
   mushCultivation: number;
   allusersTillPreviousMonth: number;

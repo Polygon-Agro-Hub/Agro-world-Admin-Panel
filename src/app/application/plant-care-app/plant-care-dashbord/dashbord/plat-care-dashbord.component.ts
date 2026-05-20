@@ -18,7 +18,7 @@ interface DashboardData {
   user_increase_percentage: number;
   qr_user_increase_percentage: number;
   vegCultivation: number;
-  grainCultivation: number;
+  cerealsCultivation: number;
   fruitCultivation: number;
   mushCultivation: number;
   leLegumesCultivation: number;
@@ -92,7 +92,7 @@ export class PlatCareDashbordComponent implements OnInit {
   calculateTotalCultivation(): void {
     this.totalCultivationCount =
       this.dashboardData.vegCultivation +
-      this.dashboardData.grainCultivation +
+      this.dashboardData.cerealsCultivation +
       this.dashboardData.fruitCultivation +
       this.dashboardData.leLegumesCultivation +
       this.dashboardData.spicesCultivation +
@@ -144,9 +144,9 @@ export class PlatCareDashbordComponent implements OnInit {
           subValue: this.dashboardData.fruitCultivation,
         },
         {
-          title: 'Grains',
+          title: 'Cereals',
           value: 'Total Enrollments',
-          subValue: this.dashboardData.grainCultivation,
+          subValue: this.dashboardData.cerealsCultivation,
         },
         {
           title: 'Spices',
@@ -357,18 +357,19 @@ export class PlatCareDashbordComponent implements OnInit {
         }
 
         const donutChartData = {
-          labels: ['Vegetables', 'Fruits', 'Grains', 'Mushrooms'],
+          labels: ['Vegetables', 'Spices', 'Cereals', 'Fruits', 'Mushrooms'],
           datasets: [
             {
               label: 'Crop Enrollments',
               data: [
                 this.dashboardData.vegCultivation,
+                this.dashboardData.spicesCultivation,
+                this.dashboardData.cerealsCultivation,
                 this.dashboardData.leLegumesCultivation,
                 this.dashboardData.fruitCultivation,
-                this.dashboardData.grainCultivation,
                 this.dashboardData.mushCultivation,
               ],
-              backgroundColor: ['#4E9F78', '#E68A3D', '#3D75E6', '#9156A0'],
+              backgroundColor: ['#2BA297', '#A54D00', '#3D75E6', '#E68A3D', '#9156A0'],
             },
           ],
         };

@@ -8,6 +8,7 @@ interface DashboardData {
   spicesCultivation: number;
   cerealsCultivation: number;
   fruitCultivation: number;
+  leLegumesCultivation: number;
   mushCultivation: number;
 }
 
@@ -49,6 +50,7 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
         this.dashboardData.spicesCultivation,
         this.dashboardData.cerealsCultivation,
         this.dashboardData.fruitCultivation,
+        this.dashboardData.leLegumesCultivation,
         this.dashboardData.mushCultivation
       );
     }
@@ -79,16 +81,17 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
     spicesCultivation: number,
     cerealsCultivation: number,
     fruitCultivation: number,
+    leLegumesCultivation: number,
     mushCultivation: number
   ) {
     const total =
-      vegCultivation + spicesCultivation + cerealsCultivation + fruitCultivation + mushCultivation;
+      vegCultivation + spicesCultivation + cerealsCultivation + fruitCultivation + leLegumesCultivation + mushCultivation;
 
     const calculatePercentage = (value: number) =>
       total ? ((value / total) * 100).toFixed(0) : '0';
 
     this.data = {
-      labels: ['Vegetables', 'Spices', 'Cereals', 'Fruits', 'Mushrooms'],
+      labels: ['Vegetables', 'Spices', 'Cereals', 'Fruits', 'Legumes', 'Mushrooms'],
       datasets: [
         {
           data: [
@@ -96,10 +99,11 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
             calculatePercentage(spicesCultivation),
             calculatePercentage(cerealsCultivation),
             calculatePercentage(fruitCultivation),
+            calculatePercentage(leLegumesCultivation),
             calculatePercentage(mushCultivation),
           ],
-          backgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C', '#A05CA6'],
-          hoverBackgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C',  '#A05CA6'],
+          backgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C', '#648885', '#9156A0'],
+          hoverBackgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C',  '#648885', '#9156A0'],
         },
       ],
     };

@@ -357,7 +357,7 @@ export class PlatCareDashbordComponent implements OnInit {
         }
 
         const donutChartData = {
-          labels: ['Vegetables', 'Spices', 'Cereals', 'Fruits', 'Mushrooms'],
+          labels: ['Vegetables', 'Spices', 'Cereals', 'Fruits', 'Legumes', 'Mushrooms'],
           datasets: [
             {
               label: 'Crop Enrollments',
@@ -365,11 +365,11 @@ export class PlatCareDashbordComponent implements OnInit {
                 this.dashboardData.vegCultivation,
                 this.dashboardData.spicesCultivation,
                 this.dashboardData.cerealsCultivation,
-                this.dashboardData.leLegumesCultivation,
                 this.dashboardData.fruitCultivation,
+                this.dashboardData.leLegumesCultivation,
                 this.dashboardData.mushCultivation,
               ],
-              backgroundColor: ['#2BA297', '#A54D00', '#3D75E6', '#E68A3D', '#9156A0'],
+              backgroundColor: ['#2BA297', '#A54D00', '#3D75E6', '#E68A3D', '#648885', '#9156A0'],
             },
           ],
         };

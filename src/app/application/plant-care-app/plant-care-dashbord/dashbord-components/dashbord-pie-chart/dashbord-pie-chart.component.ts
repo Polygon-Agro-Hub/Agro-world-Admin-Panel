@@ -5,8 +5,10 @@ import { Subscription } from 'rxjs';
 
 interface DashboardData {
   vegCultivation: number;
-  grainCultivation: number;
+  spicesCultivation: number;
+  cerealsCultivation: number;
   fruitCultivation: number;
+  leLegumesCultivation: number;
   mushCultivation: number;
 }
 
@@ -45,8 +47,10 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
     if (changes['dashboardData'] && changes['dashboardData'].currentValue) {
       this.initializeChart(
         this.dashboardData.vegCultivation,
-        this.dashboardData.grainCultivation,
+        this.dashboardData.spicesCultivation,
+        this.dashboardData.cerealsCultivation,
         this.dashboardData.fruitCultivation,
+        this.dashboardData.leLegumesCultivation,
         this.dashboardData.mushCultivation
       );
     }
@@ -74,28 +78,32 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
 
   initializeChart(
     vegCultivation: number,
-    grainCultivation: number,
+    spicesCultivation: number,
+    cerealsCultivation: number,
     fruitCultivation: number,
+    leLegumesCultivation: number,
     mushCultivation: number
   ) {
     const total =
-      vegCultivation + grainCultivation + fruitCultivation + mushCultivation;
+      vegCultivation + spicesCultivation + cerealsCultivation + fruitCultivation + leLegumesCultivation + mushCultivation;
 
     const calculatePercentage = (value: number) =>
       total ? ((value / total) * 100).toFixed(0) : '0';
 
     this.data = {
-      labels: ['Vegetables', 'Fruits', 'Grains', 'Mushrooms'],
+      labels: ['Vegetables', 'Spices', 'Cereals', 'Fruits', 'Legumes', 'Mushrooms'],
       datasets: [
         {
           data: [
             calculatePercentage(vegCultivation),
+            calculatePercentage(spicesCultivation),
+            calculatePercentage(cerealsCultivation),
             calculatePercentage(fruitCultivation),
-            calculatePercentage(grainCultivation),
+            calculatePercentage(leLegumesCultivation),
             calculatePercentage(mushCultivation),
           ],
-          backgroundColor: ['#4E9F78', '#E68A3D', '#3D75E6', '#9156A0'],
-          hoverBackgroundColor: ['#4E9F78', '#E68A3D', '#3D75E6', '#9156A0'],
+          backgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C', '#648885', '#9156A0'],
+          hoverBackgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C',  '#648885', '#9156A0'],
         },
       ],
     };

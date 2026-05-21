@@ -22,7 +22,7 @@ export class DashbordPieChartComponent implements AfterViewInit {
         datasets: [
           {
             data: this.pieData.count,
-            backgroundColor: ['#0DA87A', '#3B82F6', '#F59E0B', '#8B5CF6'], 
+            backgroundColor: ['#0D9488', '#A54D00', '#3B82F6', '#FB923C', '#648885', '#A05CA6'], 
             borderWidth: 2,
             borderColor: '#1e2a38',
           }

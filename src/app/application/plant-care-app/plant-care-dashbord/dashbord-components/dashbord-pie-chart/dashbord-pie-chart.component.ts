@@ -21,7 +21,7 @@ interface DashboardData {
 })
 export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
   @Input() dashboardData: DashboardData = {} as DashboardData;
-  
+
   data: any;
   options: any;
   private themeSubscription?: Subscription;
@@ -29,11 +29,7 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
   constructor(private themeService: ThemeService) {}
 
   ngOnInit(): void {
-    // Initialize chart with current theme
     this.updateChartTheme();
-    
-    // Subscribe to theme changes if your ThemeService has an observable
-    // If not, you can use a polling approach or event listener
     this.subscribeToThemeChanges();
   }
 
@@ -57,7 +53,6 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private subscribeToThemeChanges(): void {
-    // Subscribe to theme changes using the enhanced ThemeService
     this.themeSubscription = this.themeService.themeChanged$.subscribe(() => {
       this.updateChartTheme();
     });
@@ -66,12 +61,15 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
   private updateChartTheme(): void {
     const isDark = this.themeService.isDarkTheme();
     const labelColor = isDark ? '#ffffff' : '#333333';
-    
+
     if (this.options) {
       this.options.plugins.legend.labels = {
-        color: labelColor
+        color: labelColor,
+        usePointStyle: true,      // ← circle bullets
+        pointStyle: 'circle',     // ← circle bullets
+        pointStyleWidth: 15,
+        padding: 20,
       };
-      // Force chart to re-render
       this.options = { ...this.options };
     }
   }
@@ -85,7 +83,8 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
     mushCultivation: number
   ) {
     const total =
-      vegCultivation + spicesCultivation + cerealsCultivation + fruitCultivation + leLegumesCultivation + mushCultivation;
+      vegCultivation + spicesCultivation + cerealsCultivation +
+      fruitCultivation + leLegumesCultivation + mushCultivation;
 
     const calculatePercentage = (value: number) =>
       total ? ((value / total) * 100).toFixed(0) : '0';
@@ -103,12 +102,11 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
             calculatePercentage(mushCultivation),
           ],
           backgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C', '#648885', '#9156A0'],
-          hoverBackgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C',  '#648885', '#9156A0'],
+          hoverBackgroundColor: ['#2BA297', '#A54D00', '#3B82F6', '#FB923C', '#648885', '#9156A0'],
         },
       ],
     };
 
-    // Get current theme colors
     const isDark = this.themeService.isDarkTheme();
     const labelColor = isDark ? '#ffffff' : '#333333';
 
@@ -118,13 +116,17 @@ export class DashbordPieChartComponent implements OnChanges, OnInit, OnDestroy {
           position: 'bottom',
           labels: {
             color: labelColor,
+            usePointStyle: true,      // ← circle bullets
+            pointStyle: 'circle',     // ← circle bullets
+            pointStyleWidth: 15,      // ← bullet size
+            padding: 20,              // ← spacing between items
           },
         },
         tooltip: {
           callbacks: {
             label: (tooltipItem: any) => {
-              let dataset = tooltipItem.dataset.data;
-              let index = tooltipItem.dataIndex;
+              const dataset = tooltipItem.dataset.data;
+              const index = tooltipItem.dataIndex;
               return `${dataset[index]}%`;
             },
           },

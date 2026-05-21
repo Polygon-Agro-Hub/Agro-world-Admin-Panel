@@ -4,7 +4,7 @@
       <i class="fa-solid fa-layer-group text-white text-3xl mb-2"></i>
       <h2 class="text-white">Today Sales</h2>
       <h2 class="text-white text-lg">
-        <span class="text-xl font-bold">{{firstRow.todaySalses.count}}</span> Order
+        <span class="text-xl font-bold">{{firstRow.todaySalses.count}}</span> Orders
       </h2>
       <h2 class="text-white text-2xl font-bold">
         {{ (firstRow.todaySalses.total || 0) | number:'1.2-2' }}
@@ -15,7 +15,7 @@
       <i class="fa-solid fa-layer-group text-white text-3xl mb-2"></i>
       <h2 class="text-white">Yesterday Sales</h2>
       <h2 class="text-white text-lg">
-        <span class="text-xl font-bold">{{firstRow.yesterdaySalses.count}}</span> Order
+        <span class="text-xl font-bold">{{firstRow.yesterdaySalses.count}}</span> Orders
       </h2>
       <h2 class="text-white text-2xl font-bold">{{firstRow.yesterdaySalses.total | number:'1.2-2'}}</h2>
     </div>
@@ -24,7 +24,7 @@
       <i class="fa-solid fa-layer-group text-white text-3xl mb-2"></i>
       <h2 class="text-white">This Month Sales</h2>
       <h2 class="text-white text-lg">
-        <span class="text-xl font-bold">{{firstRow.thisMonthSales.count}}</span> Order
+        <span class="text-xl font-bold">{{firstRow.thisMonthSales.count}}</span> Orders
       </h2>
       <h2 class="text-white text-2xl font-bold">{{firstRow.thisMonthSales.total | number:'1.2-2'}}</h2>
     </div>

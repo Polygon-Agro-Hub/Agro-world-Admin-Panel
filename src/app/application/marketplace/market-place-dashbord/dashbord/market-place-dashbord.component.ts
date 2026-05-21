@@ -74,10 +74,13 @@ interface secondRow {
 interface SalesDayCount {
   count: number;
   total: number;
+  percentage: number; 
+  previousPeriodCount: number;
 }
 
 interface UserCount {
   userCount: number;
+  percentage: number;
 }
 
 interface AnalyzeReport {
@@ -94,4 +97,5 @@ interface Order {
   fullTotal:number 
   firstName:string 
   lastName:string 
+  percentage: number;
 }

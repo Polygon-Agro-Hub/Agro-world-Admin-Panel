@@ -113,30 +113,71 @@
 
   <!-- Total Orders Card -->
   <div
-    class="flex-1 flex items-center bg-white dark:bg-[#061E2C] shadow-lg rounded-lg p-5 min-h-[120px] gap-4">
-    <div class="flex justify-center items-center bg-[#DBEAFE] py-4 px-5 rounded-full">
-      <i class="fa-solid fa-bag-shopping text-3xl text-[#3C82F5]"></i>
+    class="flex-1 flex justify-between items-center bg-white dark:bg-[#061E2C] shadow-lg rounded-lg p-5 min-h-[120px] gap-4">
+    <div class="flex justify-center items-center gap-4">
+      <div class="flex justify-center items-center bg-[#DBEAFE] py-4 px-5 rounded-full">
+        <i class="fa-solid fa-bag-shopping text-3xl text-[#3C82F5]"></i>
+      </div>
+
+      <div class="flex flex-col">
+        <p class="text-gray-600 text-lg dark:text-[#BEBEBE]">Total Orders</p>
+        <p class="text-black text-xl dark:text-white font-semibold">
+          {{ secondRow.totalSales.count | number:'1.0' }}
+        </p>
+      </div>
     </div>
 
-    <div class="flex flex-col">
-      <p class="text-gray-600 text-lg dark:text-[#BEBEBE]">Total Orders</p>
-      <p class="text-black text-xl dark:text-white font-semibold">
-        {{ secondRow.totalSales.count | number:'1.0' }}
+    <div class="flex flex-col items-end">
+      <div *ngIf="secondRow.totalSales.percentage >= 0" class="flex items-center justify-end">
+        <i class="fa-solid fa-arrow-trend-up text-teal-600"></i>
+        <p class="text-teal-600 text-lg font-semibold ml-2">
+          {{ secondRow.totalSales.percentage | number:'1.2-2' }}%
+        </p>
+      </div>
+
+      <div *ngIf="secondRow.totalSales.percentage < 0" class="flex items-center justify-end">
+        <i class="fa-solid fa-arrow-trend-down text-red-600"></i>
+        <p class="text-red-600 text-lg font-semibold ml-2">
+          {{ secondRow.totalSales.percentage * -1 }}%
+        </p>
+      </div>
+      <p class="text-gray-400 text-sm mt-1 dark:text-gray-400">
+        Compared to {{ getPreviousMonth() }}
       </p>
     </div>
   </div>
 
   <!-- Total Customers Card -->
-  <div
-    class="flex-1 flex items-center bg-white dark:bg-[#061E2C] shadow-lg rounded-lg p-5 min-h-[120px] gap-4">
-    <div class="flex justify-center items-center bg-[#FFEDD5] py-4 px-5 rounded-full">
-      <i class="fa-regular fa-user text-3xl text-[#FB923C]"></i>
+  <div class="flex-1 flex justify-between items-center bg-white dark:bg-[#061E2C] shadow-lg rounded-lg p-5 min-h-[120px] gap-4">
+    <div class="flex justify-center items-center gap-4">
+      <div class="flex justify-center items-center bg-[#FFEDD5] py-4 px-5 rounded-full">
+        <i class="fa-regular fa-user text-3xl text-[#FB923C]"></i>
+      </div>
+
+      <div class="flex flex-col">
+        <p class="text-gray-600 text-lg dark:text-[#BEBEBE]">Total Customers</p>
+        <p class="text-black text-xl dark:text-white font-semibold">
+          {{ secondRow.totUsers.userCount | number:'1.0' }}
+        </p>
+      </div>
     </div>
 
-    <div class="flex flex-col">
-      <p class="text-gray-600 text-lg dark:text-[#BEBEBE]">Total Customers</p>
-      <p class="text-black text-xl dark:text-white font-semibold">
-        {{ secondRow.totUsers.userCount | number:'1.0' }}
+    <div class="flex flex-col items-end">
+      <div *ngIf="secondRow.totUsers.percentage >= 0" class="flex items-center justify-end">
+        <i class="fa-solid fa-arrow-trend-up text-teal-600"></i>
+        <p class="text-teal-600 text-lg font-semibold ml-2">
+          {{ secondRow.totUsers.percentage | number:'1.2-2' }}%
+        </p>
+      </div>
+
+      <div *ngIf="secondRow.totUsers.percentage < 0" class="flex items-center justify-end">
+        <i class="fa-solid fa-arrow-trend-down text-red-600"></i>
+        <p class="text-red-600 text-lg font-semibold ml-2">
+          {{ secondRow.totUsers.percentage * -1 }}%
+        </p>
+      </div>
+      <p class="text-gray-400 text-sm mt-1 dark:text-gray-400">
+        Compared to {{ getPreviousMonth() }}
       </p>
     </div>
   </div>

@@ -1,20 +1,29 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
 <!-- Toggle Confirmation Modal -->
-<div *ngIf="showToggleModal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-  <div class="bg-white dark:bg-[#1E2636] rounded-2xl shadow-2xl px-16 py-7 w-full max-w-2xl mx-auto text-center">
-
+<div
+  *ngIf="showToggleModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+>
+  <div
+    class="bg-white dark:bg-[#1E2636] rounded-2xl shadow-2xl px-16 py-7 w-full max-w-2xl mx-auto text-center"
+  >
     <h2 class="text-lg font-bold text-[#292929] dark:text-textDark mb-2">
-      {{ pendingToggleStatus === 0 ? 'Are you sure you want to disable this shop?' : 'Are you sure you want to enable this shop?' }}
+      {{
+        pendingToggleStatus === 0
+          ? "Are you sure you want to disable this shop?"
+          : "Are you sure you want to enable this shop?"
+      }}
     </h2>
 
     <p class="text-sm text-[#555] dark:text-gray-400 mb-6 leading-relaxed">
       <ng-container *ngIf="pendingToggleStatus === 0">
-        Once you disable this shop, all branches, manager and POS user accounts, as well as products, will also be disabled.
+        Once you disable this shop, all branches, manager and POS user accounts,
+        as well as products, will also be disabled.
       </ng-container>
       <ng-container *ngIf="pendingToggleStatus === 1">
-        Once you enable this shop, it will be accessible along with its branches, manager and POS user accounts, as well as products.
+        Once you enable this shop, it will be accessible along with its
+        branches, manager and POS user accounts, as well as products.
       </ng-container>
     </p>
 
@@ -22,17 +31,20 @@
       <button
         (click)="closeToggleModal()"
         class="px-7 py-2.5 rounded-lg text-white font-medium text-sm transition-opacity hover:opacity-90"
-        style="background-color: #74788D;">
+        style="background-color: #74788d"
+      >
         Cancel
       </button>
       <button
         (click)="confirmToggle()"
         class="px-7 py-2.5 rounded-lg text-white font-medium text-sm transition-opacity hover:opacity-90"
-        [style.background-color]="pendingToggleStatus === 0 ? '#D16D6A' : '#3980C0'">
-        {{ pendingToggleStatus === 0 ? 'Yes, Disable' : 'Yes, Enable' }}
+        [style.background-color]="
+          pendingToggleStatus === 0 ? '#D16D6A' : '#3980C0'
+        "
+      >
+        {{ pendingToggleStatus === 0 ? "Yes, Disable" : "Yes, Enable" }}
       </button>
     </div>
-
   </div>
 </div>
 
@@ -65,10 +77,10 @@
         styleClass="border border-1 rounded-xl h-8 items-center border-[#828282] dark:border-[#AFAFAF]"
         [style]="{
           background: 'var(--dropdown-bg)',
-          color: 'var(--dropdown-text)',
+          color: '#4A4A4A',
+          fontFamily: 'Roboto, Helvetica Neue, sans-serif',
         }"
-      >
-      </p-dropdown>
+      ></p-dropdown>
 
       <p-dropdown
         [options]="approvalOptions"
@@ -81,10 +93,10 @@
         styleClass="border border-1 rounded-xl h-8 items-center border-[#828282] dark:border-[#AFAFAF]"
         [style]="{
           background: 'var(--dropdown-bg)',
-          color: 'var(--dropdown-text)',
+          color: '#4A4A4A',
+          fontFamily: 'Roboto, Helvetica Neue, sans-serif',
         }"
-      >
-      </p-dropdown>
+      ></p-dropdown>
 
       <p-dropdown
         [options]="businessTypeOptions"
@@ -97,10 +109,10 @@
         styleClass="border border-1 rounded-xl h-8 items-center border-[#828282] dark:border-[#AFAFAF]"
         [style]="{
           background: 'var(--dropdown-bg)',
-          color: 'var(--dropdown-text)',
+          color: '#4A4A4A',
+          fontFamily: 'Roboto, Helvetica Neue, sans-serif',
         }"
-      >
-      </p-dropdown>
+      ></p-dropdown>
 
       <!-- FIX: New search bar with tooltip, matching provided style -->
       <div
@@ -111,7 +123,7 @@
           [(ngModel)]="searchTerm"
           (keydown.enter)="onSearch()"
           placeholder="Search Shop Name, Phone..."
-          class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300 text-sm"
+          class="bg-transparent outline-none w-full text-gray-600 dark:text-gray-300 text-sm placeholder:text-base"
         />
 
         <!-- Tooltip -->
@@ -199,21 +211,19 @@
             Shop Name
           </th>
           <th
-          *ngIf="
-                permissionService.hasPermission('View branches per shop') ||
-                tokenService.getUserDetails().role === '1'
+            *ngIf="
+              permissionService.hasPermission('View branches per shop') ||
+              tokenService.getUserDetails().role === '1'
             "
-
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
           >
             Branches
           </th>
           <th
-          *ngIf="
-                permissionService.hasPermission('change shop active status') ||
-                tokenService.getUserDetails().role === '1'
+            *ngIf="
+              permissionService.hasPermission('change shop active status') ||
+              tokenService.getUserDetails().role === '1'
             "
-
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center whitespace-nowrap"
           >
             Active Status
@@ -249,27 +259,35 @@
             Last Updated At
           </th>
           <th
-          *ngIf="
-                permissionService.hasPermission('preview govi shop') ||
-                tokenService.getUserDetails().role === '1'
+            *ngIf="
+              permissionService.hasPermission('preview govi shop') ||
+              tokenService.getUserDetails().role === '1'
             "
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
           >
             Details
           </th>
           <th
-          *ngIf="
-                permissionService.hasPermission('edit govi shop') ||
-                tokenService.getUserDetails().role === '1'
+            *ngIf="
+              permissionService.hasPermission('edit govi shop') ||
+              tokenService.getUserDetails().role === '1'
             "
             class="py-3 px-3 font-normal text-[#5C5C5C] dark:text-gray-400 text-center"
-          >
-          </th>
+          ></th>
         </tr>
       </thead>
       <tbody>
         <tr
-          *ngFor="let shop of shops | paginate: { itemsPerPage: itemsPerPage, currentPage: page, totalItems: totalItems }; let i = index"
+          *ngFor="
+            let shop of shops
+              | paginate
+                : {
+                    itemsPerPage: itemsPerPage,
+                    currentPage: page,
+                    totalItems: totalItems,
+                  };
+            let i = index
+          "
           class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           <td class="py-3 px-3 text-[#000000] dark:text-textDark">
@@ -278,7 +296,7 @@
 
           <td class="py-3 px-3">
             <div
-              class="w-9 h-9 rounded-full bg-white border  flex items-center justify-center overflow-hidden"
+              class="w-9 h-9 rounded-full bg-white border flex items-center justify-center overflow-hidden"
             >
               <img
                 *ngIf="shop.logo"
@@ -300,7 +318,7 @@
           </td>
 
           <!-- FIX: whitespace-nowrap + max-w + truncate for single-line Shop Name -->
-          <td class="py-3 px-3 text-[#000000] dark:text-textDark ">
+          <td class="py-3 px-3 text-[#000000] dark:text-textDark">
             <span
               class="block whitespace-nowrap max-w-[180px] truncate"
               [title]="shop.shopName"
@@ -309,14 +327,14 @@
             </span>
           </td>
 
-          <td 
-          *ngIf="
-                permissionService.hasPermission('View branches per shop') ||
-                tokenService.getUserDetails().role === '1'
+          <td
+            *ngIf="
+              permissionService.hasPermission('View branches per shop') ||
+              tokenService.getUserDetails().role === '1'
             "
-          class="py-3 px-3 text-center">
+            class="py-3 px-3 text-center"
+          >
             <button
-            
               class="text-blue-500 hover:text-blue-600 flex items-center justify-center mx-auto"
               (click)="viewBranches(shop)"
             >
@@ -338,12 +356,13 @@
             </button>
           </td>
 
-          <td 
-          *ngIf="
-                permissionService.hasPermission('change shop active status') ||
-                tokenService.getUserDetails().role === '1'
+          <td
+            *ngIf="
+              permissionService.hasPermission('change shop active status') ||
+              tokenService.getUserDetails().role === '1'
             "
-            class="py-3 px-3 text-center">
+            class="py-3 px-3 text-center"
+          >
             <div class="flex justify-center">
               <button
                 type="button"
@@ -401,12 +420,13 @@
             <span *ngIf="!shop.updatedAt">----</span>
           </td>
 
-          <td 
-          *ngIf="
-                permissionService.hasPermission('preview govi shop') ||
-                tokenService.getUserDetails().role === '1'
+          <td
+            *ngIf="
+              permissionService.hasPermission('preview govi shop') ||
+              tokenService.getUserDetails().role === '1'
             "
-          class="py-3 px-3 text-center">
+            class="py-3 px-3 text-center"
+          >
             <button
               class="text-blue-500 hover:text-blue-600 flex items-center justify-center mx-auto"
               (click)="viewShopDetails(shop.id)"
@@ -429,12 +449,13 @@
             </button>
           </td>
 
-          <td 
-          *ngIf="
-                permissionService.hasPermission('edit govi shop') ||
-                tokenService.getUserDetails().role === '1'
+          <td
+            *ngIf="
+              permissionService.hasPermission('edit govi shop') ||
+              tokenService.getUserDetails().role === '1'
             "
-          class="py-3 px-3 text-center">
+            class="py-3 px-3 text-center"
+          >
             <button
               class="w-6 h-6 text-[#367bfa] hover:text-[#83aefd] flex items-center justify-center mx-auto"
               (click)="editShop(shop.id)"
@@ -454,7 +475,7 @@
       </tbody>
     </table>
 
-    <div *ngIf="!isLoading && shops.length > 0" class="py-4 ">
+    <div *ngIf="!isLoading && shops.length > 0" class="py-4 bg-transparent">
       <pagination-controls
         (pageChange)="onPageChange($event)"
         [responsive]="true"

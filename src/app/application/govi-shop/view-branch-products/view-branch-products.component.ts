@@ -51,28 +51,24 @@ export class ViewBranchProductsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Load branchId and other params
     this.route.params.subscribe((params) => {
-      this.branchId = +params['branchId']; // or 'id' — match your route definition
+      this.branchId = +params['branchId'];
       console.log('branchId:', this.branchId);
-      console.log('Parsed branchId:', this.branchId); // Debug
+      
+      if (this.branchId) {
+        this.loadProducts();
+      } else if (this.branchId !== null) {
+        this.errorMessage = 'Invalid branch ID';
+      }
     });
 
-    // shopName and branchName are query params, not route params
+    // Load query params
     this.route.queryParams.subscribe((queryParams) => {
-      this.shopName = queryParams['shopName'] || 'Shop';
+      this.shopName = queryParams['shopName'] || 'Agri Shop';
       this.branchName = queryParams['branchName'] || 'Branch';
       console.log('shopName:', this.shopName);
       console.log('branchName:', this.branchName);
-    });
-
-    // Load products after both are ready
-    this.route.params.subscribe((params) => {
-      this.branchId = +params['branchId'];
-      if (this.branchId) {
-        this.loadProducts();
-      } else {
-        this.errorMessage = 'Invalid branch ID';
-      }
     });
   }
 
@@ -84,36 +80,46 @@ export class ViewBranchProductsComponent implements OnInit {
       branchId: this.branchId,
       categoryId: this.selectedCategoryId,
       searchItem: this.searchQuery,
-    }); // Debug log
+    });
+
+    // Don't make API call if branchId is null
+    if (!this.branchId) {
+      this.isLoading = false;
+      this.errorMessage = 'Branch ID is missing';
+      return;
+    }
 
     this.productService
       .getProductsByBranchId(
-        this.branchId!,
-        this.selectedCategoryId === 'all'
+        this.branchId,
+        this.selectedCategoryId === 'all' || !this.selectedCategoryId
           ? undefined
-          : this.selectedCategoryId || undefined,
+          : this.selectedCategoryId,
         this.searchQuery || undefined,
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response); // Debug log
-
+          console.log('API Response:', response);
           this.isLoading = false;
 
           if (response && response.success) {
             // Set products from response
             this.allProducts = response.products || [];
             this.filteredProducts = [...this.allProducts];
-
-            console.log('Products loaded:', this.allProducts.length); // Debug log
+            console.log('Products loaded:', this.allProducts.length);
 
             // Load categories from the response
             if (response.categories && response.categories.length > 0) {
               this.loadCategoriesFromResponse(response.categories);
+            } else {
+              // Ensure we still have the default option if no categories
+              this.categoryOptions = [{ label: 'All Categories', value: 'all' }];
             }
           } else {
             this.errorMessage = response?.error || 'Failed to load products';
             console.error('API returned error:', response);
+            this.allProducts = [];
+            this.filteredProducts = [];
           }
         },
         error: (error) => {
@@ -128,22 +134,32 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   loadCategoriesFromResponse(categories: Category[]): void {
-  this.categoryOptions = [{ label: 'Categories', value: 'all' }];
-  
-  categories.forEach((category) => {
-    this.categoryOptions.push({
-      label: category.catName,
-      value: category.categoryId.toString(), // Use categoryId as value
+    // Reset with correct default option
+    this.categoryOptions = [{ label: 'All Categories', value: 'all' }];
+    
+    // Add categories from API
+    categories.forEach((category) => {
+      this.categoryOptions.push({
+        label: category.catName,
+        value: category.categoryId.toString(),
+      });
     });
-  });
-}
+    
+    console.log('Categories loaded:', this.categoryOptions.length);
+    
+    // Reset selected category to 'all' when new categories are loaded
+    // Only if it's not already set or if we want to reset
+    if (this.selectedCategoryId === null || this.selectedCategoryId === undefined) {
+      this.selectedCategoryId = 'all';
+    }
+  }
 
   back(): void {
     this.location.back();
   }
 
   onSearch(): void {
-    console.log('Search triggered with query:', this.searchQuery); // Debug log
+    console.log('Search triggered with query:', this.searchQuery);
     this.loadProducts(); // Reload with search filter
   }
 
@@ -153,7 +169,7 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   onCategoryChange(): void {
-    console.log('Category changed to:', this.selectedCategoryId); // Debug log
+    console.log('Category changed to:', this.selectedCategoryId);
     this.loadProducts(); // Reload with category filter
   }
 }

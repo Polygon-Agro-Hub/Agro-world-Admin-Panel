@@ -108,7 +108,7 @@ export class ViewBranchesPerShopComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.shopId = params['shopId'] ? Number(params['shopId']) : null;
-      this.shopName = params['shopName'] || 'Shop';
+      this.shopName = params['shopName'] || '';
       this.loadBranches();
     });
   }

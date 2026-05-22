@@ -34,7 +34,7 @@ export class ViewBranchProductsComponent implements OnInit {
   branchId: number | null = null;
 
   searchQuery = '';
-  selectedCategoryId: string | null = 'all'; // Set default to 'all'
+  selectedCategoryId: string | null = null;
 
   categoryOptions: { label: string; value: string }[] = [
     { label: 'All Categories', value: 'all' },
@@ -48,7 +48,7 @@ export class ViewBranchProductsComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private productService: GovishopService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -89,10 +89,7 @@ export class ViewBranchProductsComponent implements OnInit {
     this.productService
       .getProductsByBranchId(
         this.branchId!,
-        this.selectedCategoryId === 'all'
-          ? undefined
-          : this.selectedCategoryId || undefined,
-        this.searchQuery || undefined,
+        this.selectedCategoryId === null ? undefined : this.selectedCategoryId || undefined,
       )
       .subscribe({
         next: (response) => {
@@ -128,15 +125,15 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   loadCategoriesFromResponse(categories: Category[]): void {
-  this.categoryOptions = [{ label: 'Categories', value: 'all' }];
-  
-  categories.forEach((category) => {
-    this.categoryOptions.push({
-      label: category.catName,
-      value: category.categoryId.toString(), // Use categoryId as value
+    this.categoryOptions = [];
+
+    categories.forEach((category) => {
+      this.categoryOptions.push({
+        label: category.catName,
+        value: category.categoryId.toString(),
+      });
     });
-  });
-}
+  }
 
   back(): void {
     this.location.back();

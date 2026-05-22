@@ -60,11 +60,8 @@
   class="pt-5 pr-8 pl-8 pb-5 bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg"
 >
   <div class="flex justify-between items-center mb-6">
-    <h2 class="text-xl font-normal text-[#292929] dark:text-textDark">
-      {{ shopName }} &nbsp;
-      <span class="text-base font-normal text-[#292929] dark:text-textDark">
-        ({{ totalBranches < 10 ? "0" + totalBranches : totalBranches }})
-      </span>
+    <h2 class="text-xl font-[500] text-[#292929] dark:text-textDark">
+      {{ shopId !== null ? shopName : "All Branches" }} ({{ totalBranches < 10 ? "0" + totalBranches : totalBranches }})
     </h2>
 
     <div class="flex items-center gap-3">
@@ -300,14 +297,14 @@
           <td
             class="py-3 px-3 text-[#000000] dark:text-textDark text-sm whitespace-nowrap"
           >
-            {{ branch.district || "----" }}
+            {{ branch.district || "--" }}
           </td>
 
           <!-- Province -->
           <td
             class="py-3 px-3 text-[#000000] dark:text-textDark text-sm whitespace-nowrap"
           >
-            {{ branch.province || "----" }}
+            {{ branch.province || "--" }}
           </td>
 
           <!-- NEW: Products -->

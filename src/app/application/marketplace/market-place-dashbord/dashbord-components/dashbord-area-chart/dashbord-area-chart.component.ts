@@ -23,31 +23,31 @@ export class DashbordAreaChartComponent implements AfterViewInit {
     data: {
       labels: this.areaData.months,
       datasets: [
-        {
-          label: "Sales",
-          data: this.areaData.salesCount,
-          borderColor: "#4E97FD",
-          backgroundColor: "rgba(78, 151, 253, 0.3)",
-          fill: false,
-          tension: 0.4
-        },
-        {
-          label: "Orders",
-          data: this.areaData.total,
-          borderColor: "#3DE188",
-          backgroundColor: "rgba(61, 225, 136, 0.3)",
-          fill: true,
-          tension: 0.4
-        },
-        {
-          label: "Visitors",
-          data: [3000, 2000, 4000, 3000, 2000, 3000, 4000, 3000, 4000, 2000, 3000, 4000],
-          borderColor: "#FF9263",
-          backgroundColor: "rgba(255, 146, 99, 0.3)",
-          fill: true,
-          tension: 0.4
-        }
-      ]
+  {
+    label: "Sales",
+    data: this.areaData.salesCount,
+    borderColor: "#2C78DC",
+    backgroundColor: "rgba(173, 213, 224, 0.3)", // ADDED OPACITY (0.3 = 30% opacity)
+    fill: false,
+    tension: 0.4
+  },
+  {
+    label: "Orders",
+    data: this.areaData.total,
+    borderColor: "#04D182",
+    backgroundColor: "rgba(205, 246, 230, 0.3)", // ADDED OPACITY (0.3 = 30% opacity)
+    fill: true,
+    tension: 0.4
+  },
+  {
+    label: "Visitors",
+    data: [3000, 2000, 4000, 3000, 2000, 3000, 4000, 3000, 4000, 2000, 3000, 4000],
+    borderColor: "#FF9DD2",
+    backgroundColor: "rgba(255, 157, 210, 0.3)", // ADDED OPACITY (0.3 = 30% opacity)
+    fill: true,
+    tension: 0.4
+  }
+]
     },
     options: {
       responsive: true,

@@ -52,109 +52,198 @@ export class MarketPlaceDashbordComponent implements OnInit {
   }
 
   async captureScreenshot(): Promise<void> {
-    this.isDownloading = true;
+  this.isDownloading = true;
 
-    try {
-      const element = this.reportSection.nativeElement;
+  try {
+    const element = this.reportSection.nativeElement;
 
-      // Hide no-print elements before capture
-      const noPrintElements = element.querySelectorAll('.no-print');
-      noPrintElements.forEach((el: HTMLElement) => (el.style.display = 'none'));
+    // Hide no-print elements before capture
+    const noPrintElements = element.querySelectorAll('.no-print');
+    noPrintElements.forEach(
+      (el: Element) => ((el as HTMLElement).style.display = 'none'),
+    );
 
-      const canvas = await html2canvas(element, {
-        scale: 1, // reduced from 2 → smaller file
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        scrollX: 0,
-        scrollY: -window.scrollY,
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight,
+    // ── Directly target status badge elements and save original styles ──
+    const statusCells = element.querySelectorAll('td:last-child');
+    const originalStyles: {
+      el: HTMLElement;
+      styles: Partial<CSSStyleDeclaration>;
+    }[] = [];
+
+    statusCells.forEach((td: Element) => {
+      const tdEl = td as HTMLElement;
+      tdEl.style.textAlign = 'center';
+      tdEl.style.verticalAlign = 'middle';
+
+      const innerEls = tdEl.querySelectorAll('*');
+      innerEls.forEach((inner: Element) => {
+        const innerEl = inner as HTMLElement;
+        originalStyles.push({
+          el: innerEl,
+          styles: {
+            backgroundColor: innerEl.style.backgroundColor,
+            background: innerEl.style.background,
+            border: innerEl.style.border,
+            boxShadow: innerEl.style.boxShadow,
+            borderRadius: innerEl.style.borderRadius,
+            color: innerEl.style.color,
+            padding: innerEl.style.padding,
+            marginLeft: innerEl.style.marginLeft,
+            marginRight: innerEl.style.marginRight,
+          },
+        });
+        innerEl.style.backgroundColor = 'transparent';
+        innerEl.style.background = 'none';
+        innerEl.style.border = 'none';
+        innerEl.style.boxShadow = 'none';
+        innerEl.style.borderRadius = '0';
+        innerEl.style.color = '#000000';
+        innerEl.style.padding = '0';
+        innerEl.style.marginLeft = 'auto';
+        innerEl.style.marginRight = 'auto';
       });
+    });
 
-      // Restore hidden elements after capture
-      noPrintElements.forEach((el: HTMLElement) => (el.style.display = ''));
+    // ── Remove circle backgrounds from second row icons ──
+    const iconOriginalStyles: {
+      el: HTMLElement;
+      styles: Partial<CSSStyleDeclaration>;
+    }[] = [];
 
-      // Compress: use JPEG instead of PNG — much smaller
-      const imgData = canvas.toDataURL('image/jpeg', 0.7); // 0.7 = 70% quality
+    const circleEls = element.querySelectorAll(
+      'app-dashbord-second-row [class*="icon"], app-dashbord-second-row [class*="circle"], app-dashbord-second-row [class*="bg"], app-dashbord-second-row [class*="avatar"], app-dashbord-second-row [class*="logo"]'
+    );
 
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
+    circleEls.forEach((el: Element) => {
+      const htmlEl = el as HTMLElement;
+      iconOriginalStyles.push({
+        el: htmlEl,
+        styles: {
+          backgroundColor: htmlEl.style.backgroundColor,
+          background: htmlEl.style.background,
+          borderRadius: htmlEl.style.borderRadius,
+          padding: htmlEl.style.padding,
+          boxShadow: htmlEl.style.boxShadow,
+        },
       });
+      htmlEl.style.backgroundColor = 'transparent';
+      htmlEl.style.background = 'none';
+      htmlEl.style.borderRadius = '0';
+      htmlEl.style.padding = '0';
+      htmlEl.style.boxShadow = 'none';
+    });
 
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const margin = 10;
-      const contentWidth = pageWidth - 2 * margin;
-      const contentHeight = pageHeight - 2 * margin;
+    // Small delay for styles to apply
+    await new Promise((r) => setTimeout(r, 80));
 
-      const canvasWidth = canvas.width;
-      const canvasHeight = canvas.height;
+    const canvas = await html2canvas(element, {
+      scale: 1.5,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      scrollX: 0,
+      scrollY: -window.scrollY,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
+    });
 
-      let remainingHeight = canvasHeight;
-      let sourceY = 0;
-      let isFirstPage = true;
+    // ── Restore status badge styles ──
+    originalStyles.forEach(({ el, styles }) => {
+      el.style.backgroundColor = styles.backgroundColor || '';
+      el.style.background = styles.background || '';
+      el.style.border = styles.border || '';
+      el.style.boxShadow = styles.boxShadow || '';
+      el.style.borderRadius = styles.borderRadius || '';
+      el.style.color = styles.color || '';
+      el.style.padding = styles.padding || '';
+      el.style.marginLeft = styles.marginLeft || '';
+      el.style.marginRight = styles.marginRight || '';
+    });
 
-      while (remainingHeight > 0) {
-        if (!isFirstPage) pdf.addPage();
+    // ── Restore second row icon styles ──
+    iconOriginalStyles.forEach(({ el, styles }) => {
+      el.style.backgroundColor = styles.backgroundColor || '';
+      el.style.background = styles.background || '';
+      el.style.borderRadius = styles.borderRadius || '';
+      el.style.padding = styles.padding || '';
+      el.style.boxShadow = styles.boxShadow || '';
+    });
 
-        const sliceHeight = Math.min(
-          (contentHeight / contentWidth) * canvasWidth,
-          remainingHeight,
-        );
+    // Restore no-print elements
+    noPrintElements.forEach((el: HTMLElement) => (el.style.display = ''));
 
-        const pageCanvas = document.createElement('canvas');
-        pageCanvas.width = canvasWidth;
-        pageCanvas.height = sliceHeight;
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
 
-        const pageCtx = pageCanvas.getContext('2d')!;
-        pageCtx.drawImage(
-          canvas,
-          0,
-          sourceY,
-          canvasWidth,
-          sliceHeight,
-          0,
-          0,
-          canvasWidth,
-          sliceHeight,
-        );
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 8;
+    const contentW = pageWidth - 2 * margin;
 
-        // JPEG at 70% quality for small size
-        const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.7);
-        const imgHeightMm = (sliceHeight * contentWidth) / canvasWidth;
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
 
-        pdf.addImage(
-          pageImgData,
-          'JPEG',
-          margin,
-          margin,
-          contentWidth,
-          imgHeightMm,
-        );
+    const footerSpace = 8;
+    const usablePageH = pageHeight - 2 * margin - footerSpace;
+    const pxPerPageH = (usablePageH / contentW) * canvasWidth;
 
-        sourceY += sliceHeight;
-        remainingHeight -= sliceHeight;
-        isFirstPage = false;
-      }
+    let sourceY = 0;
+    let isFirstPage = true;
 
-      pdf.setFontSize(8);
-      pdf.setTextColor(150);
+    while (sourceY < canvasHeight) {
+      if (!isFirstPage) pdf.addPage();
+
+      const sliceH = Math.min(pxPerPageH, canvasHeight - sourceY);
+
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width = canvasWidth;
+      pageCanvas.height = sliceH;
+      const pageCtx = pageCanvas.getContext('2d')!;
+
+      pageCtx.fillStyle = '#ffffff';
+      pageCtx.fillRect(0, 0, canvasWidth, sliceH);
+      pageCtx.drawImage(
+        canvas,
+        0, sourceY, canvasWidth, sliceH,
+        0, 0,       canvasWidth, sliceH,
+      );
+
+      const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.85);
+      const imgHeightMm = (sliceH / canvasWidth) * contentW;
+
+      pdf.addImage(
+        pageImgData,
+        'JPEG',
+        margin,
+        margin,
+        contentW,
+        imgHeightMm,
+        undefined,
+        'SLOW',
+      );
+
+      pdf.setFontSize(7);
+      pdf.setTextColor(160);
       pdf.text(
         `Report generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
         margin,
-        pageHeight - 4,
+        pageHeight - margin,
       );
 
-      pdf.save(
-        `market_place_report_${new Date().toISOString().slice(0, 10)}.pdf`,
-      );
-    } finally {
-      this.isDownloading = false;
+      sourceY += sliceH;
+      isFirstPage = false;
     }
+
+    pdf.save(
+      `market_place_report_${new Date().toISOString().slice(0, 10)}.pdf`,
+    );
+  } finally {
+    this.isDownloading = false;
   }
+}
 }
 
 interface Responce {

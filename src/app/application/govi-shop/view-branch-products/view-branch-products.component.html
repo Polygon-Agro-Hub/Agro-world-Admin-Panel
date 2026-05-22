@@ -21,7 +21,7 @@
       <p-dropdown [options]="categoryOptions" [(ngModel)]="selectedCategoryId" (ngModelChange)="onCategoryChange()"
         optionLabel="label" optionValue="value" placeholder="Select Category"
         [showClear]="selectedCategoryId !== 'all' && selectedCategoryId !== null" [checkmark]="false"
-        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-[#333333] dark:text-white border-[#828282] dark:border-[#AFAFAF] w-full"
+        styleClass="border border-2 rounded-xl h-8 items-center bg-[#F1F1F1] dark:bg-[#272F45] text-textLight dark:text-textDark border-[#yourLightColor] dark:border-[#AFAFAF]"
         [style]="{
       background: 'var(--dropdown-bg)',
       color: 'var(--dropdown-text)',
@@ -53,7 +53,7 @@
   <!-- Product Grid -->
   <div class="grid grid-cols-3 gap-4" *ngIf="filteredProducts.length > 0; else noProducts">
     <div *ngFor="let product of filteredProducts"
-      class="flex items-center gap-3 bg-white dark:bg-[#1E2636] border border-gray-100 dark:border-[#2D3748] rounded-xl p-3 cursor-pointer hover:shadow-md transition-shadow duration-200">
+      class="flex items-center gap-3 bg-white dark:bg-[#1E2636] border border-gray-100 dark:border-[#2D3748] rounded-xl p-3">
       <!-- Product Image -->
       <div
         class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-[#272F45] flex items-center justify-center">

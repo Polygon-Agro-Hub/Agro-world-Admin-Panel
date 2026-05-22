@@ -59,19 +59,22 @@ export class MarketPlaceDashbordComponent implements OnInit {
 
     // Hide no-print elements before capture
     const noPrintElements = element.querySelectorAll('.no-print');
-    noPrintElements.forEach((el: Element) => ((el as HTMLElement).style.display = 'none'));
+    noPrintElements.forEach(
+      (el: Element) => ((el as HTMLElement).style.display = 'none'),
+    );
 
     // ── Directly target status badge elements and save original styles ──
     const statusCells = element.querySelectorAll('td:last-child');
-    const originalStyles: { el: HTMLElement; styles: Partial<CSSStyleDeclaration> }[] = [];
+    const originalStyles: {
+      el: HTMLElement;
+      styles: Partial<CSSStyleDeclaration>;
+    }[] = [];
 
     statusCells.forEach((td: Element) => {
       const tdEl = td as HTMLElement;
-      // Center the td
       tdEl.style.textAlign = 'center';
       tdEl.style.verticalAlign = 'middle';
 
-      // Target all descendants inside the badge
       const innerEls = tdEl.querySelectorAll('*');
       innerEls.forEach((inner: Element) => {
         const innerEl = inner as HTMLElement;
@@ -79,33 +82,74 @@ export class MarketPlaceDashbordComponent implements OnInit {
           el: innerEl,
           styles: {
             backgroundColor: innerEl.style.backgroundColor,
-            background:       innerEl.style.background,
-            border:           innerEl.style.border,
-            boxShadow:        innerEl.style.boxShadow,
-            borderRadius:     innerEl.style.borderRadius,
-            color:            innerEl.style.color,
-            padding:          innerEl.style.padding,
-            marginLeft:       innerEl.style.marginLeft,
-            marginRight:      innerEl.style.marginRight,
+            background: innerEl.style.background,
+            border: innerEl.style.border,
+            boxShadow: innerEl.style.boxShadow,
+            borderRadius: innerEl.style.borderRadius,
+            color: innerEl.style.color,
+            padding: innerEl.style.padding,
+            marginLeft: innerEl.style.marginLeft,
+            marginRight: innerEl.style.marginRight,
           },
         });
         innerEl.style.backgroundColor = 'transparent';
-        innerEl.style.background       = 'none';
-        innerEl.style.border           = 'none';
-        innerEl.style.boxShadow        = 'none';
-        innerEl.style.borderRadius     = '0';
-        innerEl.style.color            = '#000000';
-        innerEl.style.padding          = '0';
-        innerEl.style.marginLeft       = 'auto';
-        innerEl.style.marginRight      = 'auto';
+        innerEl.style.background = 'none';
+        innerEl.style.border = 'none';
+        innerEl.style.boxShadow = 'none';
+        innerEl.style.borderRadius = '0';
+        innerEl.style.color = '#000000';
+        innerEl.style.padding = '0';
+        innerEl.style.marginLeft = 'auto';
+        innerEl.style.marginRight = 'auto';
       });
+    });
+
+    // ── Remove circle backgrounds from second row icons ──
+    const iconOriginalStyles: {
+      el: HTMLElement;
+      styles: Partial<CSSStyleDeclaration>;
+    }[] = [];
+
+    const circleEls = element.querySelectorAll(
+      'app-dashbord-second-row [class*="icon"], app-dashbord-second-row [class*="circle"], app-dashbord-second-row [class*="bg"], app-dashbord-second-row [class*="avatar"], app-dashbord-second-row [class*="logo"]'
+    );
+
+    circleEls.forEach((el: Element) => {
+      const htmlEl = el as HTMLElement;
+      iconOriginalStyles.push({
+        el: htmlEl,
+        styles: {
+          backgroundColor: htmlEl.style.backgroundColor,
+          background: htmlEl.style.background,
+          borderRadius: htmlEl.style.borderRadius,
+          padding: htmlEl.style.padding,
+          boxShadow: htmlEl.style.boxShadow,
+        },
+      });
+      htmlEl.style.backgroundColor = 'transparent';
+      htmlEl.style.background = 'none';
+      htmlEl.style.borderRadius = '0';
+      htmlEl.style.padding = '0';
+      htmlEl.style.boxShadow = 'none';
+    });
+
+    // ── Apply permanent borders + drop shadows to second row cards ──
+    const secondRowCards = element.querySelectorAll(
+      'app-dashbord-second-row .card, app-dashbord-second-row [class*="card"], app-dashbord-second-row .widget, app-dashbord-second-row [class*="widget"], app-dashbord-second-row .tile, app-dashbord-second-row [class*="tile"]'
+    );
+
+    secondRowCards.forEach((el: Element) => {
+      const htmlEl = el as HTMLElement;
+      htmlEl.style.border = '1px solid #cccccc';
+      htmlEl.style.borderRadius = '6px';
+      htmlEl.style.boxShadow = '0px 2px 8px rgba(0, 0, 0, 0.15)';
     });
 
     // Small delay for styles to apply
     await new Promise((r) => setTimeout(r, 80));
 
     const canvas = await html2canvas(element, {
-      scale: 1,
+      scale: 1.5,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
@@ -115,17 +159,26 @@ export class MarketPlaceDashbordComponent implements OnInit {
       windowHeight: element.scrollHeight,
     });
 
-    // ── Restore all original styles ──
+    // ── Restore status badge styles ──
     originalStyles.forEach(({ el, styles }) => {
       el.style.backgroundColor = styles.backgroundColor || '';
-      el.style.background       = styles.background       || '';
-      el.style.border           = styles.border           || '';
-      el.style.boxShadow        = styles.boxShadow        || '';
-      el.style.borderRadius     = styles.borderRadius     || '';
-      el.style.color            = styles.color            || '';
-      el.style.padding          = styles.padding          || '';
-      el.style.marginLeft       = styles.marginLeft       || '';
-      el.style.marginRight      = styles.marginRight      || '';
+      el.style.background = styles.background || '';
+      el.style.border = styles.border || '';
+      el.style.boxShadow = styles.boxShadow || '';
+      el.style.borderRadius = styles.borderRadius || '';
+      el.style.color = styles.color || '';
+      el.style.padding = styles.padding || '';
+      el.style.marginLeft = styles.marginLeft || '';
+      el.style.marginRight = styles.marginRight || '';
+    });
+
+    // ── Restore second row icon styles ──
+    iconOriginalStyles.forEach(({ el, styles }) => {
+      el.style.backgroundColor = styles.backgroundColor || '';
+      el.style.background = styles.background || '';
+      el.style.borderRadius = styles.borderRadius || '';
+      el.style.padding = styles.padding || '';
+      el.style.boxShadow = styles.boxShadow || '';
     });
 
     // Restore no-print elements
@@ -137,19 +190,19 @@ export class MarketPlaceDashbordComponent implements OnInit {
       format: 'a4',
     });
 
-    const pageWidth  = pdf.internal.pageSize.getWidth();
+    const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin     = 8;
-    const contentW   = pageWidth - 2 * margin;
+    const margin = 8;
+    const contentW = pageWidth - 2 * margin;
 
-    const canvasWidth  = canvas.width;
+    const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
 
     const footerSpace = 8;
     const usablePageH = pageHeight - 2 * margin - footerSpace;
-    const pxPerPageH  = (usablePageH / contentW) * canvasWidth;
+    const pxPerPageH = (usablePageH / contentW) * canvasWidth;
 
-    let sourceY     = 0;
+    let sourceY = 0;
     let isFirstPage = true;
 
     while (sourceY < canvasHeight) {
@@ -157,10 +210,10 @@ export class MarketPlaceDashbordComponent implements OnInit {
 
       const sliceH = Math.min(pxPerPageH, canvasHeight - sourceY);
 
-      const pageCanvas    = document.createElement('canvas');
-      pageCanvas.width    = canvasWidth;
-      pageCanvas.height   = sliceH;
-      const pageCtx       = pageCanvas.getContext('2d')!;
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width = canvasWidth;
+      pageCanvas.height = sliceH;
+      const pageCtx = pageCanvas.getContext('2d')!;
 
       pageCtx.fillStyle = '#ffffff';
       pageCtx.fillRect(0, 0, canvasWidth, sliceH);
@@ -170,10 +223,19 @@ export class MarketPlaceDashbordComponent implements OnInit {
         0, 0,       canvasWidth, sliceH,
       );
 
-      const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.7);
+      const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.85);
       const imgHeightMm = (sliceH / canvasWidth) * contentW;
 
-      pdf.addImage(pageImgData, 'JPEG', margin, margin, contentW, imgHeightMm);
+      pdf.addImage(
+        pageImgData,
+        'JPEG',
+        margin,
+        margin,
+        contentW,
+        imgHeightMm,
+        undefined,
+        'SLOW',
+      );
 
       pdf.setFontSize(7);
       pdf.setTextColor(160);
@@ -183,12 +245,13 @@ export class MarketPlaceDashbordComponent implements OnInit {
         pageHeight - margin,
       );
 
-      sourceY     += sliceH;
-      isFirstPage  = false;
+      sourceY += sliceH;
+      isFirstPage = false;
     }
 
-    pdf.save(`market_place_report_${new Date().toISOString().slice(0, 10)}.pdf`);
-
+    pdf.save(
+      `market_place_report_${new Date().toISOString().slice(0, 10)}.pdf`,
+    );
   } finally {
     this.isDownloading = false;
   }

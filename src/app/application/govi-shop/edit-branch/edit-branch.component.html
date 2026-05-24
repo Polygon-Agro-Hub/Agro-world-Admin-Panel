@@ -149,6 +149,7 @@
         <button
           type="submit"
           class="px-6 py-2 rounded-lg text-white transition-colors w-32"
+          [disabled]="form.invalid"
           [ngClass]="{
             'bg-gray-500 cursor-not-allowed hover:bg-gray-500':
               form.invalid,

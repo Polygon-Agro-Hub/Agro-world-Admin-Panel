@@ -55,7 +55,7 @@ export class ViewBranchProductsComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.branchId = +params['branchId'];
       console.log('branchId:', this.branchId);
-      
+
       if (this.branchId) {
         this.loadProducts();
       } else if (this.branchId !== null) {
@@ -131,15 +131,16 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   loadCategoriesFromResponse(categories: Category[]): void {
-  this.categoryOptions = [{ label: 'Categories', value: 'all' }];
-  
-  categories.forEach((category) => {
-    this.categoryOptions.push({
-      label: category.catName,
-      value: category.categoryId.toString(), // Use categoryId as value
+    this.categoryOptions = [];
+
+    categories.forEach((category) => {
+      this.categoryOptions.push({
+        label: category.catName,
+        value: category.categoryId.toString(),
+      });
     });
-  });
-}
+
+  }
 
   back(): void {
     this.location.back();

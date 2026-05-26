@@ -7,7 +7,7 @@
 
 <div *ngIf="!isVerification" class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
   <h2 class="text-xl font-normal text-[#292929] dark:text-textDark mb-2">
-    Edit GoViShop Supplier
+    Edit GoViShop Supplier - Shop
   </h2>
 
   <div class="px-12 pb-6">
@@ -100,6 +100,7 @@
         <button
           type="submit"
           class="px-6 py-2 rounded-lg text-white transition-colors w-32"
+          [disabled]="form.invalid"
           [ngClass]="{
             'bg-gray-500 cursor-not-allowed hover:bg-gray-500':
               form.invalid,

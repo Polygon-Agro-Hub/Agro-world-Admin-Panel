@@ -32,7 +32,7 @@
       >
         <!-- Area Chart -->
         <div class="flex-1 h-full w-[60%]">
-          <app-dashbord-area-chart class="h-full w-full" />
+          <app-dashbord-area-chart class="h-full w-full" (chartDataChanged)="onChartDataChanged($event)"/>
         </div>
 
         <!-- Pie Chart -->

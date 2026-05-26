@@ -394,8 +394,8 @@
   *ngIf="display"
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
-  <div class="bg-white dark:bg-tileBlack rounded-[20px] w-[600px] p-4">
-    <div class="dialog-header text-center">
+  <div class="bg-white dark:bg-tileBlack rounded-[20px] w-[600px] max-h-[90vh] flex flex-col p-4">
+    <div class="dialog-header text-center flex-shrink-0">
       <i
         class="fa-regular fa-envelope"
         style="font-size: 1.5rem; color: #999"
@@ -408,7 +408,7 @@
     </div>
 
     <div
-      class="dialog-content text-[16px] md:text-[18px] border rounded-[20px] border-gray-300 text-[#000000] dark:text-white mt-5 ml-4 mr-4 mb-5"
+      class="dialog-content text-[16px] md:text-[18px] border rounded-[20px] border-gray-300 text-[#000000] dark:text-white mt-5 mx-4 mb-5 overflow-y-auto scrollbar-thin scrollbar-thumb-[#FACD07] scrollbar-track-transparent scrollbar-thumb-rounded-full flex-1"
     >
       <div class="p-5">
         <div class="reply-header">
@@ -438,7 +438,7 @@
       </div>
     </div>
 
-    <div class="flex justify-end px-5 pb-4">
+    <div class="flex justify-end px-5 pb-4 flex-shrink-0">
       <button
         type="button"
         class="bg-[#74788D] text-[#D3D3D3] px-4 py-2 rounded-md"
@@ -450,4 +450,3 @@
     </div>
   </div>
 </div>
-

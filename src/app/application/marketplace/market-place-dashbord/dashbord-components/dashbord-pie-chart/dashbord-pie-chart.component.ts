@@ -1,32 +1,73 @@
-import { Component, AfterViewInit, Input } from '@angular/core';
+import { Component, AfterViewInit, Input, OnInit, OnDestroy } from '@angular/core';
 import { Chart, ChartType } from 'chart.js/auto';
+import { ThemeService } from '../../../../../services/theme.service';
+import { Subscription } from 'rxjs';
+
+interface PieData {
+  category: string[];
+  count: number[];
+}
 
 @Component({
   selector: 'app-dashbord-pie-chart',
   standalone: true,
   templateUrl: './dashbord-pie-chart.component.html',
-  styleUrls: ['./dashbord-pie-chart.component.css']
+  styleUrls: ['./dashbord-pie-chart.component.css'],
 })
-export class DashbordPieChartComponent implements AfterViewInit {
-    @Input() pieData!: PieData
-  
-  ngAfterViewInit() {
+export class DashbordPieChartComponent implements AfterViewInit, OnInit, OnDestroy {
+  @Input() pieData!: PieData;
+
+  private chartInstance?: Chart;
+  private themeSubscription?: Subscription;
+
+  constructor(private themeService: ThemeService) {}
+
+  ngOnInit(): void {
+    this.subscribeToThemeChanges();
+  }
+
+  ngAfterViewInit(): void {
     this.initializeChart();
   }
 
-  initializeChart() {
-    new Chart('pieChart', {
+  ngOnDestroy(): void {
+    this.themeSubscription?.unsubscribe();
+    this.chartInstance?.destroy();
+  }
+
+  private subscribeToThemeChanges(): void {
+    this.themeSubscription = this.themeService.themeChanged$.subscribe(() => {
+      this.updateChartTheme();
+    });
+  }
+
+  private getLabelColor(): string {
+    return this.themeService.isDarkTheme() ? '#ffffff' : '#333333';
+  }
+
+  private updateChartTheme(): void {
+    if (!this.chartInstance) return;
+
+    const labelColor = this.getLabelColor();
+    const legend = this.chartInstance.options.plugins?.legend;
+
+    if (legend?.labels) {
+      legend.labels.color = labelColor;
+      this.chartInstance.update();
+    }
+  }
+
+  initializeChart(): void {
+    this.chartInstance = new Chart('pieChart', {
       type: 'doughnut' as ChartType,
       data: {
         labels: this.pieData.category,
         datasets: [
           {
             data: this.pieData.count,
-            backgroundColor: ['#0DA87A', '#3B82F6', '#F59E0B', '#8B5CF6'], 
-            borderWidth: 2,
-            borderColor: '#1e2a38',
-          }
-        ]
+            backgroundColor: ['#0D9488', '#A54D00', '#3B82F6', '#FB923C', '#648885', '#A05CA6'],
+          },
+        ],
       },
       options: {
         plugins: {
@@ -34,16 +75,15 @@ export class DashbordPieChartComponent implements AfterViewInit {
             display: true,
             position: 'bottom',
             labels: {
-              color: '#fff'
-            }
-          }
+              color: this.getLabelColor(),  // ← reads current theme on init
+              usePointStyle: true,
+              pointStyle: 'circle',
+              pointStyleWidth: 15,
+              padding: 20,
+            },
+          },
         },
-      }
+      },
     });
   }
 }
-
-interface PieData{
-    category:string[];
-    count:number[];
-  }

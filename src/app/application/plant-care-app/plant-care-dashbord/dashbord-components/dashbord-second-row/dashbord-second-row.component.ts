@@ -6,7 +6,7 @@ interface DashboardData {
   active_users: any;
   new_users: number;
   vegCultivation: number;
-  grainCultivation: number;
+  cerealsCultivation: number;
   fruitCultivation: number;
   mushCultivation: number;
   allusersTillPreviousMonth: number;
@@ -43,9 +43,9 @@ export class DashbordSecondRowComponent implements OnInit {
   }
 
   formatPercentage(percentage: number): string {
-    if (!isFinite(percentage)) {
-      return percentage > 0 ? '100%' : '0%';
-    }
-    return percentage.toFixed(2) + '%';
+  if (!isFinite(percentage)) {
+    return percentage > 0 ? '100%' : '0%';
   }
+  return parseFloat(percentage.toFixed(2)) + '%';
+}
 }

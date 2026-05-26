@@ -21,7 +21,7 @@
         <th scope="col" class="px-6 py-3 text-center dark:text-white">
           STATUS
         </th>
-        <th scope="col" class="px-6 py-3 text-center dark:text-white">
+        <th scope="col" class="px-6 py-3 text-center dark:text-white no-print">
           INVOICE
         </th>
       </tr>
@@ -78,7 +78,7 @@
             {{ item.status === "Ordered" ? "Assigned" : item.status }}
           </span>
         </td>
-        <td class="px-6 py-4 text-center dark:text-[#C8C8C8]">
+        <td class="px-6 py-4 text-center dark:text-[#C8C8C8] no-print">
           <button
             (click)="downloadInvoice(item.id, item.invNo)"
             [disabled]="isDownloading(item.id)"

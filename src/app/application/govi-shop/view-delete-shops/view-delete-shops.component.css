@@ -8,15 +8,6 @@
     display: inline-flex !important;
 }
 
-/* Apply font family to dropdowns */
-::ng-deep .p-dropdown,
-::ng-deep .p-dropdown-panel,
-::ng-deep .p-dropdown-items,
-::ng-deep .p-dropdown-item,
-::ng-deep .p-dropdown-label {
-    font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
-}
-
 ::ng-deep .dark .p-dropdown-panel {
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
@@ -24,13 +15,11 @@
     /* <-- add this for rounded corners */
     overflow: hidden;
     /* ensures child items don't spill over rounded corners */
-    font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
     background-color: #2d354d !important;
     color: #B1B1B1 !important;
-    font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
@@ -149,71 +138,69 @@
 
 /* Reduce dropdown item padding */
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 15px !important;
+    padding-left: 15px !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-  padding-left: 15px !important;
+    padding-left: 15px !important;
 }
 
 .dark .p-dropdown .p-dropdown-label {
     color: #ffffff !important;
-  }
+}
 
-  ::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
+::ng-deep .dark .p-dropdown .p-dropdown-label:not(.p-placeholder) {
     color: white;
-  }
+}
 
-  /* Hides clear icon when dropdown has no selected value */
+/* Hides clear icon when dropdown has no selected value */
 ::ng-deep .p-dropdown .p-dropdown-clear {
-  display: none;
+    display: none;
 }
 
 /* Show the clear button only when a value is selected */
 ::ng-deep .p-dropdown.ng-dirty.ng-valid .p-dropdown-clear {
-  display: inline-flex !important;
+    display: inline-flex !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
-  border-radius: 6px !important;
-  overflow: hidden;
-  font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
+    border-radius: 6px !important;
+    overflow: hidden;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
-  font-family: 'Roboto', 'Helvetica Neue', sans-serif !important;
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item:hover {
-  background-color: #3a4160 !important;
-  color: #fff !important;
+    background-color: #3a4160 !important;
+    color: #fff !important;
 }
 
 ::ng-deep .dark .p-dropdown-panel .p-dropdown-item.p-highlight {
-  background-color: #2d354d !important;
-  color: #B1B1B1 !important;
+    background-color: #2d354d !important;
+    color: #B1B1B1 !important;
 }
 
 
 ::ng-deep .custom-center-dropdown .p-dropdown {
-  padding-left: 10px !important;
+    padding-left: 10px !important;
 }
 
 ::ng-deep .custom-center-dropdown .p-dropdown .p-dropdown-label {
-  padding-left: 10px !important;
+    padding-left: 10px !important;
 }
 
 /* For dark mode */
 ::ng-deep .dark .custom-center-dropdown .p-dropdown {
-  padding-left: 10px !important;
+    padding-left: 10px !important;
 }
 
 ::ng-deep .dark .custom-center-dropdown .p-dropdown .p-dropdown-label {
-  padding-left: 10px !important;
+    padding-left: 10px !important;
 }
 
 /* The rest of your existing calendar styles... */

@@ -2191,6 +2191,10 @@ export const routes: Routes = [
               
               { path: 'view-delete-shops',
                 component: ViewDeleteShopsComponent,
+              },
+              {
+                path: 'preview-govi-shop/:id',
+                component: GoviShopPreviewShopComponent,
               }
             ],
           },

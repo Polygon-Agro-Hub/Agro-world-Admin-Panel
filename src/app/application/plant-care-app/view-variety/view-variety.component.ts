@@ -139,6 +139,12 @@ export class ViewVarietyComponent {
     });
   }
 
+  viewVarity(id:number){
+    this.router.navigate(['/plant-care/action/view-a-crop-variety'], {
+      queryParams: { id },
+    });
+  }
+
   backCreate(): void {
     this.router.navigate(['/plant-care/action/view-crop-group']);
   }

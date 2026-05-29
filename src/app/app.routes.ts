@@ -295,6 +295,7 @@ import { ViewBranchesPerShopComponent } from './application/govi-shop/view-branc
 import { ViewBranchProductsComponent } from './application/govi-shop/view-branch-products/view-branch-products.component';
 import { EditBranchComponent } from './application/govi-shop/edit-branch/edit-branch.component';
 import { ViewDeleteShopsComponent } from './application/govi-shop/view-delete-shops/view-delete-shops.component';
+import { ViewCropVarietyComponent } from './application/plant-care-app/view-crop-variety/view-crop-variety.component';
 
 export const routes: Routes = [
   {
@@ -623,6 +624,11 @@ export const routes: Routes = [
                 canActivate: [PermissionGuard],
                 data: { permission: 'View audit farm cluster' },
               },
+              {
+                path: 'view-a-crop-variety',
+                canActivate: [PermissionGuard],
+                component: ViewCropVarietyComponent,
+              }
             ],
           },
         ],

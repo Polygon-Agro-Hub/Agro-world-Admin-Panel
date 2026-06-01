@@ -284,6 +284,12 @@ export class ViewCropGroupComponent {
     });
   }
 
+    aboutVariety(id: number) {
+    this.router.navigate(['/plant-care/action/view-crop-group-details'], {
+      queryParams: { id },
+    });
+  }
+
   editCropGroup(id: number) {
     this.router.navigate(['/plant-care/action/edit-crop-group'], {
       queryParams: { id },

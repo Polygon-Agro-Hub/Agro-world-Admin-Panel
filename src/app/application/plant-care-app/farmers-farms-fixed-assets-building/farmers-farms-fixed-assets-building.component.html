@@ -46,103 +46,84 @@
 
         <!-- Left Column -->
         <div class="space-y-6">
-          <!-- Ownership -->
-          <div class="flex items-start space-x-4">
-            <span class="text-black dark:text-gray-300  min-w-28">Ownership</span>
+
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
+            <span class="text-black dark:text-gray-300">Ownership</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              {{ buildingDetails?.ownership || 'N/A' }}
-            </span>
+            <span class="text-black dark:text-textDark font-medium">{{ buildingDetails?.ownership || 'N/A' }}</span>
           </div>
 
-          <!-- District -->
-          <div class="flex items-start space-x-4">
-            <span class="text-black dark:text-gray-300 min-w-28">District</span>
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
+            <span class="text-black dark:text-gray-300">District</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              {{ buildingDetails?.district || 'N/A' }}
-            </span>
+            <span class="text-black dark:text-textDark font-medium">{{ buildingDetails?.district || 'N/A' }}</span>
           </div>
 
-          <!-- Est. Value for Own Building -->
-          <div class="flex items-start space-x-4"
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
             *ngIf="ownershipType === 'Own Building (with title ownership)' && ownershipDetails?.estimateValue">
-            <span class="text-black dark:text-gray-300 min-w-28">Est. Value</span>
+            <span class="text-black dark:text-gray-300">Est. Value</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              Rs. {{ ownershipDetails?.estimateValue | number:'1.0-2' }}
-            </span>
+            <span class="text-black dark:text-textDark font-medium">Rs. {{ ownershipDetails?.estimateValue |
+              number:'1.0-2' }}</span>
           </div>
 
-          <!-- Issued Date for Own Building -->
-          <div class="flex items-start space-x-4"
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
             *ngIf="ownershipType === 'Own Building (with title ownership)' && ownershipDetails?.issuedDate">
-            <span class="text-black dark:text-gray-300 min-w-28">Issued Date</span>
+            <span class="text-black dark:text-gray-300">Issued Date</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-mediumflex-1">
-              {{ ownershipDetails?.issuedDate | date:'MMM dd, yyyy' }}
-            </span>
+            <span class="text-black dark:text-textDark font-medium">{{ ownershipDetails?.issuedDate | date:'MMM dd,
+              yyyy' }}</span>
           </div>
 
-          <!-- Start Date for Leased Building -->
-          <div class="flex items-start space-x-4"
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
             *ngIf="ownershipType === 'Leased Building' && ownershipDetails?.startDate">
-            <span class="text-black dark:text-gray-300 min-w-28">Start Date</span>
+            <span class="text-black dark:text-gray-300">Start Date</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              {{ ownershipDetails?.startDate | date:'MMM dd, yyyy' }}
-            </span>
+            <span class="text-black dark:text-textDark font-medium">{{ ownershipDetails?.startDate | date:'MMM dd, yyyy'
+              }}</span>
           </div>
 
-          <!-- Duration for Leased Building -->
-          <div class="flex items-start space-x-4"
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
             *ngIf="ownershipType === 'Leased Building' && (ownershipDetails?.durationYears || ownershipDetails?.durationMonths)">
-            <span class="text-black dark:text-gray-300 min-w-28">Duration</span>
+            <span class="text-black dark:text-gray-300">Duration</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
+            <span class="text-black dark:text-textDark font-medium">
               <span *ngIf="ownershipDetails?.durationYears">
                 {{ ownershipDetails?.durationYears }}
-                {{ ownershipDetails?.durationYears === 1 ? 'Year' : 'Year\'s' }}
+                {{ ownershipDetails?.durationYears === 1 ? 'Year' : "Year's" }}
               </span>
               <span *ngIf="ownershipDetails?.durationYears && ownershipDetails?.durationMonths"> </span>
               <span *ngIf="ownershipDetails?.durationMonths">
                 {{ ownershipDetails?.durationMonths }}
-                {{ ownershipDetails?.durationMonths === 1 ? 'Month' : 'Month\'s' }}
+                {{ ownershipDetails?.durationMonths === 1 ? 'Month' : "Month's" }}
               </span>
             </span>
           </div>
 
-          <!-- Lease Amount for Leased Building -->
-          <div class="flex items-start space-x-4"
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
             *ngIf="ownershipType === 'Leased Building' && ownershipDetails?.leastAmountAnnually">
-            <span class="text-black dark:text-gray-300 min-w-28">Annual Amount</span>
+            <span class="text-black dark:text-gray-300">Annual Amount</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              Rs. {{ ownershipDetails?.leastAmountAnnually | number:'1.0-2'}}
-            </span>
+            <span class="text-black dark:text-textDark font-medium">Rs. {{ ownershipDetails?.leastAmountAnnually |
+              number:'1.0-2' }}</span>
           </div>
 
-          <!-- Issued Date for Permit Building -->
-          <div class="flex items-start space-x-4"
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
             *ngIf="ownershipType === 'Permitted Building' && ownershipDetails?.issuedDate">
-            <span class="text-black dark:text-gray-300  min-w-28">Issued Date</span>
+            <span class="text-black dark:text-gray-300">Issued Date</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              {{ ownershipDetails?.issuedDate | date:'MMM dd, yyyy' }}
-            </span>
+            <span class="text-black dark:text-textDark font-medium">{{ ownershipDetails?.issuedDate | date:'MMM dd,
+              yyyy' }}</span>
           </div>
 
-
-
-          <!-- Payment for Shared/No Ownership -->
-          <div class="flex items-start space-x-4"
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
             *ngIf="ownershipType === 'Shared / No Ownership' && ownershipDetails?.paymentAnnually">
-            <span class="text-black dark:text-gray-300  min-w-28">Annual Payment</span>
+            <span class="text-black dark:text-gray-300">Annual Payment</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
-            <span class="text-black dark:text-textDark font-medium flex-1">
-              Rs. {{ ownershipDetails?.paymentAnnually | number:'1.0-2'}}
-            </span>
+            <span class="text-black dark:text-textDark font-medium">Rs. {{ ownershipDetails?.paymentAnnually |
+              number:'1.0-2' }}</span>
           </div>
+
         </div>
 
         <!-- Right Column -->

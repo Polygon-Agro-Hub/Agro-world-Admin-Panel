@@ -169,7 +169,7 @@
           <!-- Permit Fee for Permit Building -->
           <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
             *ngIf="ownershipType === 'Permitted Building' && ownershipDetails?.permitFeeAnnually">
-            <span class="text-black dark:text-gray-300">Annual Permit Fee</span>
+            <span class="text-black dark:text-gray-300 whitespace-nowrap">Annual Permit Fee</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-medium">
               Rs. {{ ownershipDetails?.permitFeeAnnually| number:'1.0-2' }}

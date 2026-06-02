@@ -41,8 +41,7 @@
     </div>
 
     <!-- Building Details Section -->
-    <div *ngIf="hasData"
-      class="bg-white dark:bg-gray-800 rounded-lg shadow-sm  p-6">
+    <div *ngIf="hasData" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm  p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
         <!-- Left Column -->
@@ -101,9 +100,15 @@
             <span class="text-black dark:text-gray-300 min-w-28">Duration</span>
             <span class="text-gray-500 dark:text-gray-400">:</span>
             <span class="text-black dark:text-textDark font-medium flex-1">
-              <span *ngIf="ownershipDetails?.durationYears">{{ ownershipDetails?.durationYears }} Year</span>
+              <span *ngIf="ownershipDetails?.durationYears">
+                {{ ownershipDetails?.durationYears }}
+                {{ ownershipDetails?.durationYears === 1 ? 'Year' : 'Year\'s' }}
+              </span>
               <span *ngIf="ownershipDetails?.durationYears && ownershipDetails?.durationMonths"> </span>
-              <span *ngIf="ownershipDetails?.durationMonths">   {{ ownershipDetails?.durationMonths }} Month</span>
+              <span *ngIf="ownershipDetails?.durationMonths">
+                {{ ownershipDetails?.durationMonths }}
+                {{ ownershipDetails?.durationMonths === 1 ? 'Month' : 'Month\'s' }}
+              </span>
             </span>
           </div>
 
@@ -127,7 +132,7 @@
             </span>
           </div>
 
-          
+
 
           <!-- Payment for Shared/No Ownership -->
           <div class="flex items-start space-x-4"
@@ -142,44 +147,44 @@
 
         <!-- Right Column -->
         <div class="space-y-6">
-  <!-- Type -->
-  <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
-    <span class="text-black dark:text-gray-300">Type</span>
-    <span class="text-gray-500 dark:text-gray-400">:</span>
-    <span class="text-black dark:text-textDark font-medium">
-      {{ buildingDetails?.type || 'N/A' }}
-    </span>
-  </div>
+          <!-- Type -->
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
+            <span class="text-black dark:text-gray-300">Type</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-medium">
+              {{ buildingDetails?.type || 'N/A' }}
+            </span>
+          </div>
 
-  <!-- Floor Area -->
-  <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
-    <span class="text-black dark:text-gray-300">Floor Area</span>
-    <span class="text-gray-500 dark:text-gray-400">:</span>
-    <span class="text-black dark:text-textDark font-medium">
-      <span *ngIf="buildingDetails?.floorArea">{{ buildingDetails?.floorArea | number:'1.0-2' }} sq. ft.</span>
-      <span *ngIf="!buildingDetails?.floorArea">N/A</span>
-    </span>
-  </div>
+          <!-- Floor Area -->
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
+            <span class="text-black dark:text-gray-300">Floor Area</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-medium">
+              <span *ngIf="buildingDetails?.floorArea">{{ buildingDetails?.floorArea | number:'1.0-2' }} sq. ft.</span>
+              <span *ngIf="!buildingDetails?.floorArea">N/A</span>
+            </span>
+          </div>
 
-  <!-- Permit Fee for Permit Building -->
-  <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
-    *ngIf="ownershipType === 'Permitted Building' && ownershipDetails?.permitFeeAnnually">
-    <span class="text-black dark:text-gray-300">Annual Permit Fee</span>
-    <span class="text-gray-500 dark:text-gray-400">:</span>
-    <span class="text-black dark:text-textDark font-medium">
-      Rs. {{ ownershipDetails?.permitFeeAnnually| number:'1.0-2' }}
-    </span>
-  </div>
+          <!-- Permit Fee for Permit Building -->
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2"
+            *ngIf="ownershipType === 'Permitted Building' && ownershipDetails?.permitFeeAnnually">
+            <span class="text-black dark:text-gray-300">Annual Permit Fee</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-medium">
+              Rs. {{ ownershipDetails?.permitFeeAnnually| number:'1.0-2' }}
+            </span>
+          </div>
 
-  <!-- General Condition -->
-  <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
-    <span class="text-black dark:text-gray-300">General Condition</span>
-    <span class="text-gray-500 dark:text-gray-400">:</span>
-    <span class="text-black dark:text-textDark font-medium">
-      {{ buildingDetails?.generalCondition || 'N/A' }}
-    </span>
-  </div>
-</div>
+          <!-- General Condition -->
+          <div class="grid grid-cols-[130px,20px,1fr] items-start gap-2">
+            <span class="text-black dark:text-gray-300">General Condition</span>
+            <span class="text-gray-500 dark:text-gray-400">:</span>
+            <span class="text-black dark:text-textDark font-medium">
+              {{ buildingDetails?.generalCondition || 'N/A' }}
+            </span>
+          </div>
+        </div>
       </div>
     </div>
 

@@ -54,7 +54,7 @@ export class ViewBranchProductsComponent implements OnInit {
     // Load branchId and other params
     this.route.params.subscribe((params) => {
       this.branchId = +params['branchId'];
-      console.log('branchId:', this.branchId);
+      
 
       if (this.branchId) {
         this.loadProducts();
@@ -67,8 +67,8 @@ export class ViewBranchProductsComponent implements OnInit {
     this.route.queryParams.subscribe((queryParams) => {
       this.shopName = queryParams['shopName'] || 'Agri Shop';
       this.branchName = queryParams['branchName'] || 'Branch';
-      console.log('shopName:', this.shopName);
-      console.log('branchName:', this.branchName);
+      
+      
     });
   }
 
@@ -76,11 +76,7 @@ export class ViewBranchProductsComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    console.log('Loading products with params:', {
-      branchId: this.branchId,
-      categoryId: this.selectedCategoryId,
-      searchItem: this.searchQuery,
-    });
+    
 
     // Don't make API call if branchId is null
     if (!this.branchId) {
@@ -96,14 +92,14 @@ export class ViewBranchProductsComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          console.log('API Response:', response);
+          
           this.isLoading = false;
 
           if (response && response.success) {
             // Set products from response
             this.allProducts = response.products || [];
             this.filteredProducts = [...this.allProducts];
-            console.log('Products loaded:', this.allProducts.length);
+            
 
             // Load categories from the response
             if (response.categories && response.categories.length > 0) {
@@ -147,7 +143,7 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   onSearch(): void {
-    console.log('Search triggered with query:', this.searchQuery);
+    
     this.loadProducts(); // Reload with search filter
   }
 
@@ -157,7 +153,7 @@ export class ViewBranchProductsComponent implements OnInit {
   }
 
   onCategoryChange(): void {
-    console.log('Category changed to:', this.selectedCategoryId);
+    
     this.loadProducts(); // Reload with category filter
   }
 }

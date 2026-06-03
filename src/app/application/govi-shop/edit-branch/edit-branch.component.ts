@@ -86,7 +86,7 @@ export class EditBranchComponent implements OnInit {
 
     this.branchId = Number(this.route.snapshot.paramMap.get('branchId'));
     this.setupDropdownOptions();
-    console.log('branchId', this.branchId)
+    
 
     this.fetchBranchById()
   }
@@ -108,11 +108,11 @@ export class EditBranchComponent implements OnInit {
     this.goviShopService.getBranchForUpdate(id)
       .subscribe(
         (response) => {
-          console.log('response', response)
+          
 
           this.isLoading = false;
           this.branchObj = response.data
-          console.log('response', this.branchObj)
+          
       
         },
         (error) => {
@@ -342,7 +342,7 @@ updateProvince(event: DropdownChangeEvent): void {
 updateBranch() {
   this.isLoading = true;
   this.isVerification = false;
-  console.log('branchObj',  this.branchObj)
+  
   this.goviShopService.updateBranchData(
     this.branchObj,
     )

@@ -95,12 +95,12 @@ export class ViewCollectiveOfficerProfileComponent {
     this.collectionService
       .fetchAllCollectionOfficerProfile(id)
       .subscribe((res: any) => {
-        console.log("this is data", res);
+        
 
         this.isLoading = false;
         this.officerObj = res.officerData.collectionOfficer;
 
-        console.log('officerObj', this.officerObj)
+        
 
         this.officerObj.claimStatus = this.officerObj.claimStatus;
         this.getRoleHeading();

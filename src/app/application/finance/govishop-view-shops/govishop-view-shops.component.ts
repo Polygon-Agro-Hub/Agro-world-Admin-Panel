@@ -109,7 +109,7 @@ export class GovishopViewShopsComponent implements OnInit {
     .filter(segment => segment.length > 0);
 
     this.urlSegment = segments[segments.length - 1];
-    console.log('First segment:', this.urlSegment);
+    
 
     if (this.urlSegment === 'all-shop-requests') {
       this.fetchAllGoViShopRequests();
@@ -117,7 +117,7 @@ export class GovishopViewShopsComponent implements OnInit {
       this.route.queryParamMap.subscribe((params) => {
         const id = params.get('id');
         const name = params.get('name');
-        console.log('Query parameter ID:', id);
+        
         
         this.id = Number(id);
         this.name = String(name);

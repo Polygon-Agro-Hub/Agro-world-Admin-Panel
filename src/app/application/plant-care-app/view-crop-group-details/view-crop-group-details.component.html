@@ -9,20 +9,14 @@
 
   <div class="h-[20px]"></div>
 
-  <div class="mx-auto p-6 bg-tileLight dark:bg-tileBlack rounded-lg shadow-lg">
+  <div class="px-12 py-10 max-w-[1000px] bg-tileLight dark:bg-tileBlack shadow-lg rounded-lg">
 
     <!-- Crop Image -->
-    <div class="flex justify-center mb-6">
-      <div
-        class="w-28 h-28 rounded-full flex items-center justify-center overflow-hidden"
-        [style.background-color]="cropGroup.bgColor || '#e8f5e9'"
-      >
-        <img
-          *ngIf="cropGroup.image"
-          [src]="cropGroup.image"
-          alt="Crop Image"
-          class="w-20 h-20 object-contain"
-        />
+    <div class="flex justify-center mb-7">
+      <div class="w-24 h-24 rounded-full flex items-center justify-center overflow-hidden"
+        [style.background-color]="cropGroup.bgColor || '#e8f5e9'">
+        <img *ngIf="cropGroup.image" [src]="cropGroup.image" alt="Crop Image"
+          class="w-full h-full object-contain p-2" />
       </div>
     </div>
 
@@ -30,152 +24,146 @@
 
       <!-- Crop Name English -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Crop Name By English
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.cropNameEnglish || '—' }}
         </div>
       </div>
 
       <!-- Crop Name Sinhala -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Crop Name By Sinhala
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.cropNameSinhala || '—' }}
         </div>
       </div>
 
       <!-- Crop Name Tamil -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Crop Name By Tamil
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.cropNameTamil || '—' }}
         </div>
       </div>
 
       <!-- Parent Category -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Parent Category
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.category || '—' }}
         </div>
       </div>
 
       <!-- Cost per Acre -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Cost per Acre Field (Rs.)
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.costFeild || '—' }}
         </div>
       </div>
 
       <!-- Income per Acre -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Income per Acre Field (Rs.)
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.incomeFeild || '—' }}
         </div>
       </div>
 
       <!-- Seed Rate -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Recommended Seed Rate per Unit (kg/ha)
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.seedRate || '—' }}
         </div>
       </div>
 
       <!-- Row Spacing -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Row Spacing (cm)
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.rowSpace || '—' }}
         </div>
       </div>
 
       <!-- Plant Spacing -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Plant Spacing (cm)
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.plantSpace || '—' }}
         </div>
       </div>
 
       <!-- Average Yield -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Average Yield per Plant (kg)
         </label>
         <div
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-        >
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
           {{ cropGroup.AvgYield || '—' }}
         </div>
       </div>
 
       <!-- NPK Ratio -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-textDark">
+        <label class="block text-sm font-medium text-[#534E4E] dark:text-textDark">
           Recommended NPK Ratio (kg/ha)
         </label>
-        <div class="flex items-center gap-4 mt-1 flex-wrap">
-          <span class="text-sm text-textLight dark:text-textDark">Nitrogen</span>
-          <div
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
-            {{ cropGroup.nitrogen || '—' }}
+        <div class="flex items-center gap-4 mt-1 flex-wrap w-1/3">
+          <div>
+            <span class="text-sm text-[#534E4E] dark:text-textDark font-medium">Nitrogen</span>
+            <div
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
+              {{ cropGroup.nitrogen || '—' }}
+            </div>
           </div>
-          <span class="text-sm text-textLight dark:text-textDark">Phosphorus</span>
-          <div
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
-            {{ cropGroup.phosphorus || '—' }}
+          <div>
+            <span class="text-sm text-[#534E4E] dark:text-textDark font-medium">Phosphorus</span>
+            <div
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
+              {{ cropGroup.phosphorus || '—' }}
+            </div>
           </div>
-          <span class="text-sm text-textLight dark:text-textDark">Potassium</span>
-          <div
-            class="w-28 px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-textLight dark:text-textDark"
-          >
-            {{ cropGroup.potassium || '—' }}
+          <div>
+            <span class="text-sm text-[#534E4E] dark:text-textDark font-medium">Potassium</span>
+            <div
+              class="w-28 px-3 py-2 border border-gray-300 rounded-md bg-white dark:bg-tileBlack text-[#000000] dark:text-textDark font-normal">
+              {{ cropGroup.potassium || '—' }}
+            </div>
           </div>
+
         </div>
       </div>
 
-    
+
 
     </div>
   </div>

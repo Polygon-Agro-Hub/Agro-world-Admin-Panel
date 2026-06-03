@@ -227,6 +227,42 @@ export class ViewRetailOrdersComponent implements OnInit {
 
     return enabledStatuses.includes(status);
   }
+
+  downloadQRCode(qrCodeUrl: string, invNo: string): void {
+    // Extract filename from URL or use invoice number
+    const fileName = `QR_${invNo}.png`;
+
+    // Fetch the image from the URL
+    fetch(qrCodeUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        // Create a blob URL
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        // Create an anchor element
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = fileName;
+
+        // Append to body, click, and remove
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL
+        window.URL.revokeObjectURL(blobUrl);
+      })
+      .catch(error => {
+        console.error('Error downloading QR code:', error);
+        // Optional: Show user-friendly error message
+        alert('Failed to download QR code. Please try again.');
+      });
+  }
 }
 
 class RetailOrders {
@@ -238,4 +274,5 @@ class RetailOrders {
   invNo!: string;
   status!: string;
   orderdDate!: Date;
+  qrCode!: string;
 }
